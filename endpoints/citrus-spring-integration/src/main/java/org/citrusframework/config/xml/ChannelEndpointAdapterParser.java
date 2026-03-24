@@ -86,7 +86,7 @@ public class ChannelEndpointAdapterParser extends AbstractBeanDefinitionParser {
         }
 
         @Override
-        public ChannelEndpointAdapter getObject() throws Exception {
+        public ChannelEndpointAdapter getObject() {
             ChannelEndpointAdapter endpointAdapter = new ChannelEndpointAdapter(endpointConfiguration);
 
             endpointAdapter.setTestContextFactory(testContextFactory);

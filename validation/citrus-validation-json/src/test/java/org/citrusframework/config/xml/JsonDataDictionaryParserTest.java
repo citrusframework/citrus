@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 public class JsonDataDictionaryParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testDataDictionaryParser() throws Exception {
+    public void testDataDictionaryParser() {
         Map<String, JsonMappingDataDictionary> dictionaries = beanDefinitionContext.getBeansOfType(JsonMappingDataDictionary.class);
 
         Assert.assertEquals(dictionaries.size(), 3L);

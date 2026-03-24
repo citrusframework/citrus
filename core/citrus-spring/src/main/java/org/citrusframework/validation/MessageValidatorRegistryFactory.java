@@ -42,7 +42,7 @@ public class MessageValidatorRegistryFactory implements FactoryBean<MessageValid
     }
 
     @Override
-    public MessageValidatorRegistry getObject() throws Exception {
+    public MessageValidatorRegistry getObject() {
         if (applicationContext != null) {
             applicationContext.getBeansOfType(MessageValidator.class)
                     .forEach(registry::addMessageValidator);

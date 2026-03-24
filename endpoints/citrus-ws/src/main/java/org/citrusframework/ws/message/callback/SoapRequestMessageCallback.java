@@ -57,7 +57,7 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
     /**
      * Callback method called before request message  is sent.
      */
-    public void doWithMessage(WebServiceMessage requestMessage) throws IOException, TransformerException {
+    public void doWithMessage(WebServiceMessage requestMessage) throws TransformerException {
         endpointConfiguration.getMessageConverter().convertOutbound(requestMessage, message, endpointConfiguration, context);
     }
 }

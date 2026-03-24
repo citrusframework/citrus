@@ -34,7 +34,7 @@ public class FtpEndpointComponentTest {
     private TestContext context = new TestContext();
 
     @Test
-    public void testCreateClientEndpoint() throws Exception {
+    public void testCreateClientEndpoint() {
         FtpEndpointComponent component = new FtpEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("ftp://localhost:2221", context);
@@ -59,7 +59,7 @@ public class FtpEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithParameters() throws Exception {
+    public void testCreateClientEndpointWithParameters() {
         FtpEndpointComponent component = new FtpEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("ftp:localhost:22220?user=admin&password=consol&timeout=10000", context);

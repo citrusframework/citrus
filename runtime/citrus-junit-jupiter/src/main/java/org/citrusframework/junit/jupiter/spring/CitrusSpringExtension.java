@@ -82,7 +82,7 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecu
     }
 
     @Override
-    public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+    public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
         delegate.interceptTestMethod(invocation, invocationContext, extensionContext);
     }
 

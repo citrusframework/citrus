@@ -49,7 +49,7 @@ public class TimeoutProducingEndpointAdapterParser extends AbstractBeanDefinitio
         private String name;
 
         @Override
-        public TimeoutProducingEndpointAdapter getObject() throws Exception {
+        public TimeoutProducingEndpointAdapter getObject() {
             TimeoutProducingEndpointAdapter endpointAdapter = new TimeoutProducingEndpointAdapter();
 
             endpointAdapter.setTestContextFactory(testContextFactory);

@@ -60,6 +60,6 @@ public class LoggingEndpointInterceptor extends LoggingInterceptorSupport implem
     /**
      * {@inheritDoc}
      */
-    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
+    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
     }
 }

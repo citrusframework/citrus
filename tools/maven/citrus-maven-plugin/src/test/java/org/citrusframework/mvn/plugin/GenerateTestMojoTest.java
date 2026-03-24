@@ -72,7 +72,7 @@ public class GenerateTestMojoTest {
     }
 
     @Test
-    public void testCreate() throws PrompterException, MojoExecutionException, MojoFailureException {
+    public void testCreate() throws MojoExecutionException, MojoFailureException {
         reset(xmlTestGenerator);
 
         TestConfiguration configuration = new TestConfiguration();
@@ -97,7 +97,7 @@ public class GenerateTestMojoTest {
     }
 
     @Test
-    public void testSuiteFromXsd() throws MojoExecutionException, PrompterException, MojoFailureException {
+    public void testSuiteFromXsd() throws MojoExecutionException, MojoFailureException {
         reset(xsdXmlTestGenerator);
 
         TestConfiguration configuration = new TestConfiguration();
@@ -134,7 +134,7 @@ public class GenerateTestMojoTest {
     }
 
     @Test
-    public void testSuiteFromWsdl() throws MojoExecutionException, PrompterException, MojoFailureException {
+    public void testSuiteFromWsdl() throws MojoExecutionException, MojoFailureException {
         reset(wsdlXmlTestGenerator);
 
         TestConfiguration configuration = new TestConfiguration();
@@ -170,7 +170,7 @@ public class GenerateTestMojoTest {
     }
 
     @Test
-    public void testSuiteFromSwagger() throws MojoExecutionException, PrompterException, MojoFailureException {
+    public void testSuiteFromSwagger() throws MojoExecutionException, MojoFailureException {
         reset(swaggerXmlTestGenerator);
 
         TestConfiguration configuration = new TestConfiguration();

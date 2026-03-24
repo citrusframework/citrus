@@ -48,7 +48,7 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteCheck() throws Exception {
+    public void testExecuteCheck() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         when(element.isSelected()).thenReturn(false);
@@ -65,7 +65,7 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteUncheck() throws Exception {
+    public void testExecuteUncheck() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         when(element.isSelected()).thenReturn(true);
@@ -81,7 +81,7 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteAlreadyChecked() throws Exception {
+    public void testExecuteAlreadyChecked() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         when(element.isSelected()).thenReturn(true);

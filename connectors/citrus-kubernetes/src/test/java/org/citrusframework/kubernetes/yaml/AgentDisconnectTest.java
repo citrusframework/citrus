@@ -53,7 +53,7 @@ public class AgentDisconnectTest extends AbstractYamlActionTest {
     }
 
     @Test
-    public void shouldLoadKubernetesActions() throws IOException {
+    public void shouldLoadKubernetesActions() {
         String namespace = "test";
         context.getReferenceResolver().bind("citrus-agent:port-forward", portForward);
         context.getReferenceResolver().bind("citrus-agent.client", serviceClient);

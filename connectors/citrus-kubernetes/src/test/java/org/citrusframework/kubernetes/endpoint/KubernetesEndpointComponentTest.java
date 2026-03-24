@@ -37,7 +37,7 @@ public class KubernetesEndpointComponentTest {
     private final TestContext context = new TestContext();
 
     @Test
-    public void testCreateClientEndpoint() throws Exception {
+    public void testCreateClientEndpoint() {
         KubernetesEndpointComponent component = new KubernetesEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("k8s:localhost:8443/", context);
@@ -55,7 +55,7 @@ public class KubernetesEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithParameters() throws Exception {
+    public void testCreateClientEndpointWithParameters() {
         KubernetesEndpointComponent component = new KubernetesEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("k8s:localhost:8443?namespace=myNamespace&timeout=10000", context);

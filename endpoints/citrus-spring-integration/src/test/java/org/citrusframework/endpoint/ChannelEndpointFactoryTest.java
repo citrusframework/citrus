@@ -33,7 +33,7 @@ public class ChannelEndpointFactoryTest {
     private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @Test
-    public void testResolveChannelEndpoint() throws Exception {
+    public void testResolveChannelEndpoint() {
         reset(referenceResolver);
         when(referenceResolver.resolveAll(EndpointComponent.class)).thenReturn(Collections.emptyMap());
         TestContext context = new TestContext();

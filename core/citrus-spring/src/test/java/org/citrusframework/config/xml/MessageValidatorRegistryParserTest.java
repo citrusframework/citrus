@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class MessageValidatorRegistryParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testNamespaceContextParser() throws Exception {
+    public void testNamespaceContextParser() {
         Map<String, MessageValidatorRegistry> messageValidators = beanDefinitionContext.getBeansOfType(MessageValidatorRegistry.class);
 
         Assert.assertEquals(messageValidators.size(), 1L);

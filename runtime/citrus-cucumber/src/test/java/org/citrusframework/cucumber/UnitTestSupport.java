@@ -53,7 +53,7 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
     protected Citrus citrus;
 
     @BeforeClass(alwaysRun = true)
-    public void beforeSuite() throws Exception {
+    public void beforeSuite() {
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
             Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())

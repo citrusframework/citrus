@@ -27,7 +27,7 @@ public class Complete extends CitrusCommand {
     }
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         String script = AutoComplete.bash(
                 spec.parent().name(),
                 spec.parent().commandLine());

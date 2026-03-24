@@ -34,12 +34,12 @@ public class ValidationUtilsTest extends AbstractTestNGUnitTest {
     }
 
     @Test(dataProvider = "testData")
-    public void testValidateValues(String actualValue, Object expectedValue, String path) throws Exception {
+    public void testValidateValues(String actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
     @Test(dataProvider = "testDataFailed", expectedExceptions = ValidationException.class)
-    public void testValidateValuesFailure(String actualValue, Object expectedValue, String path) throws Exception {
+    public void testValidateValuesFailure(String actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 

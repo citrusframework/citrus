@@ -378,7 +378,7 @@ public class SoapAttachment implements Attachment, Serializable {
         }
 
         @Override
-        public OutputStream getOutputStream() throws IOException {
+        public OutputStream getOutputStream() {
             throw new UnsupportedOperationException();
         }
     }
@@ -389,7 +389,7 @@ public class SoapAttachment implements Attachment, Serializable {
     private class FileResourceDataSource implements DataSource {
 
         @Override
-        public InputStream getInputStream() throws IOException {
+        public InputStream getInputStream() {
             return getFileResource().getInputStream();
         }
 
@@ -404,7 +404,7 @@ public class SoapAttachment implements Attachment, Serializable {
         }
 
         @Override
-        public OutputStream getOutputStream() throws IOException {
+        public OutputStream getOutputStream() {
             throw new UnsupportedOperationException();
         }
 

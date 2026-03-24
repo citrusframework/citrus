@@ -107,7 +107,7 @@ public class CamelControlBusActionParser extends AbstractCamelRouteActionParser 
         }
 
         @Override
-        public CamelControlBusAction getObject() throws Exception {
+        public CamelControlBusAction getObject() {
             builder.route(routeId, action);
             builder.language(languageType, languageExpression);
 

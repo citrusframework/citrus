@@ -60,7 +60,7 @@ public class RequestCachingServletFilterTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain(servlet, new RequestCachingServletFilter(), new OncePerRequestFilter() {
             @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
                 StreamUtils.copy(request.getInputStream(), System.out);
                 StreamUtils.copy(request.getInputStream(), System.out);
                 StreamUtils.copy(request.getInputStream(), System.out);
@@ -78,7 +78,7 @@ public class RequestCachingServletFilterTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain(servlet, new RequestCachingServletFilter(), new OncePerRequestFilter() {
             @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
                 StreamUtils.copy(request.getInputStream(), System.out);
                 Map<String, String[]> parameters = request.getParameterMap();
 
@@ -98,7 +98,7 @@ public class RequestCachingServletFilterTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain(servlet, new RequestCachingServletFilter(), new OncePerRequestFilter() {
             @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
                 StreamUtils.copy(request.getInputStream(), System.out);
                 Map<String, String[]> parameters = request.getParameterMap();
 

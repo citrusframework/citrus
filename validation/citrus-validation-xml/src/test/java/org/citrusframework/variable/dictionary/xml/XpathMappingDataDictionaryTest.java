@@ -50,7 +50,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
             + "</html>";
 
     @Test
-    public void testTranslate() throws Exception {
+    public void testTranslate() {
         Message message = new DefaultMessage(payload);
 
         Map<String, String> mappings = new HashMap<>();
@@ -71,7 +71,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testTranslateMultipleNodes() throws Exception {
+    public void testTranslateMultipleNodes() {
         Message message = new DefaultMessage(payload);
 
         Map<String, String> mappings = new HashMap<>();
@@ -91,7 +91,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testTranslateWithNamespaceLookup() throws Exception {
+    public void testTranslateWithNamespaceLookup() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\"><ns1:Text>Hello World!</ns1:Text><ns1:OtherText name=\"foo\">No changes</ns1:OtherText></ns1:TestMessage>");
 
         Map<String, String> mappings = new HashMap<>();
@@ -111,7 +111,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testTranslateWithNamespaceBuilder() throws Exception {
+    public void testTranslateWithNamespaceBuilder() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\"><ns1:Text>Hello World!</ns1:Text><ns1:OtherText name=\"foo\">No changes</ns1:OtherText></ns1:TestMessage>");
 
         Map<String, String> mappings = new HashMap<>();
@@ -137,7 +137,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testTranslateWithVariables() throws Exception {
+    public void testTranslateWithVariables() {
         Message message = new DefaultMessage(payload);
 
         Map<String, String> mappings = new HashMap<>();
@@ -159,7 +159,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testTranslateFromMappingFile() throws Exception {
+    public void testTranslateFromMappingFile() {
         Message message = new DefaultMessage(payload);
 
         XpathMappingDataDictionary dictionary = new XpathMappingDataDictionary();
@@ -196,7 +196,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testTranslateXhtml() throws Exception {
+    public void testTranslateXhtml() {
         Message message = new DefaultMessage(htmlPayload);
         message.setType(MessageType.XHTML.name());
 

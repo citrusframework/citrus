@@ -187,7 +187,7 @@ public class WaitParser implements BeanDefinitionParser {
         }
 
         @Override
-        public Wait getObject() throws Exception {
+        public Wait getObject() {
             return builder.build();
         }
 

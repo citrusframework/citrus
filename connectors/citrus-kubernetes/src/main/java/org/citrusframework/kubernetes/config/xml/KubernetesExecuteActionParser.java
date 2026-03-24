@@ -184,7 +184,7 @@ public class KubernetesExecuteActionParser<T extends KubernetesCommand<?, ?>> im
         }
 
         @Override
-        public KubernetesExecuteAction getObject() throws Exception {
+        public KubernetesExecuteAction getObject() {
             if (referenceResolver != null) {
                 builder.withReferenceResolver(referenceResolver);
             } else if (applicationContext != null && applicationContext.getBeansOfType(ReferenceResolver.class).size() == 1) {

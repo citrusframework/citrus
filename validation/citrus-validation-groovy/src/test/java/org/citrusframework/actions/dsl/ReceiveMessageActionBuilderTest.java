@@ -109,7 +109,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest impl
     }
 
     @Test
-    public void testReceiveBuilderWithValidationScriptResourcePath() throws IOException {
+    public void testReceiveBuilderWithValidationScriptResourcePath() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
@@ -160,7 +160,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest impl
     }
 
     @Test
-    public void testReceiveBuilderWithValidationScriptResource() throws IOException {
+    public void testReceiveBuilderWithValidationScriptResource() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);

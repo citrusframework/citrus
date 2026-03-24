@@ -49,7 +49,7 @@ public class ValidationMatcherRegistryFactory implements FactoryBean<ValidationM
     }
 
     @Override
-    public ValidationMatcherRegistry getObject() throws Exception {
+    public ValidationMatcherRegistry getObject() {
         if (applicationContext != null) {
             applicationContext.getBeansOfType(ValidationMatcherLibrary.class)
                     .forEach((key, value) -> registry.addValidationMatcherLibrary(value));

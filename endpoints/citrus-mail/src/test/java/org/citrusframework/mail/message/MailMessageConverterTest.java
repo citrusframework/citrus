@@ -29,7 +29,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class MailMessageConverterTest {
     @Test
-    public void testParseCharsetFromContentType() throws Exception {
+    public void testParseCharsetFromContentType() {
         assertEquals(parseCharsetFromContentType("text/plain; charset=UTF-8"), StandardCharsets.UTF_8.name());
         assertEquals(parseCharsetFromContentType("text/plain;charset=UTF-8"), StandardCharsets.UTF_8.name());
         assertEquals(parseCharsetFromContentType("text/*; charset=ISO-8859-1"), StandardCharsets.ISO_8859_1.name());

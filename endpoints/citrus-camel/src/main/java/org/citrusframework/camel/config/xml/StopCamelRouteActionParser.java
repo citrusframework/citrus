@@ -59,7 +59,7 @@ public class StopCamelRouteActionParser extends AbstractCamelRouteActionParser {
         private final StopCamelRouteAction.Builder builder = new StopCamelRouteAction.Builder();
 
         @Override
-        public StopCamelRouteAction getObject() throws Exception {
+        public StopCamelRouteAction getObject() {
             return builder.build();
         }
 

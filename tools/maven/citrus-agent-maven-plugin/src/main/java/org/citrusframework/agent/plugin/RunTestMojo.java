@@ -16,24 +16,6 @@
 
 package org.citrusframework.agent.plugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Stream;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
@@ -75,6 +57,24 @@ import org.citrusframework.report.TestResults;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.StringUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Stream;
+
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -83,7 +83,9 @@ import static java.util.stream.Collectors.joining;
 @Mojo(name = "test", defaultPhase = LifecyclePhase.INTEGRATION_TEST, requiresDependencyResolution = ResolutionScope.TEST)
 public class RunTestMojo extends AbstractAgentMojo {
 
-    /** Global url encoding */
+    /**
+     * Global url encoding
+     */
     private static final String ENCODING = "UTF-8";
 
     @Parameter(property = "citrus.agent.skip.test", defaultValue = "false")
@@ -106,7 +108,7 @@ public class RunTestMojo extends AbstractAgentMojo {
     private ObjectMapper mapper;
 
     @Override
-    public void doExecute() throws MojoExecutionException {
+    public void doExecute() {
         if (skipRun) {
             getLog().info("Citrus agent tests are skipped.");
             return;
@@ -410,10 +412,10 @@ public class RunTestMojo extends AbstractAgentMojo {
 
     /**
      * Check test results for failures.
+     *
      * @param results
-     * @throws IOException
      */
-    private void handleTestResults(TestResult[] results) throws IOException, MojoExecutionException {
+    private void handleTestResults(TestResult[] results) throws MojoExecutionException {
         StringWriter resultWriter = new StringWriter();
         resultWriter.append(String.format("%n"));
 
@@ -446,7 +448,7 @@ public class RunTestMojo extends AbstractAgentMojo {
                 .build();
 
         String[] reportFiles = {};
-        try (var response = getHttpClient().executeOpen(null, httpRequest, null)){
+        try (var response = getHttpClient().executeOpen(null, httpRequest, null)) {
             if (HttpStatus.SC_OK != response.getCode()) {
                 getLog().warn("Failed to get test reports from Citrus agent server");
             }
@@ -457,7 +459,7 @@ public class RunTestMojo extends AbstractAgentMojo {
         }
 
         File citrusReportsDirectory = new File(getOutputDirectory() + File.separator + getReport().getDirectory());
-        if (!citrusReportsDirectory.exists()&& !citrusReportsDirectory.mkdirs()) {
+        if (!citrusReportsDirectory.exists() && !citrusReportsDirectory.mkdirs()) {
             throw new MojoExecutionException("Unable to create reports output directory: " + citrusReportsDirectory.getPath());
         }
 
@@ -467,32 +469,33 @@ public class RunTestMojo extends AbstractAgentMojo {
         }
 
         Stream.of(reportFiles)
-            .filter(f -> !f.contains("/"))
-            .map(reportFile -> new File(citrusReportsDirectory, reportFile))
-            .forEach(reportFile -> {
-                try {
-                    loadAndSaveReportFile(reportFile, getServer().getUrl() + "/results/file/" + URLEncoder.encode(reportFile.getName(), ENCODING), ContentType.APPLICATION_XML.getMimeType());
-                } catch (IOException e) {
-                    getLog().warn("Failed to get report file: " + reportFile.getName(), e);
-                }
-            });
+                .filter(f -> !f.contains("/"))
+                .map(reportFile -> new File(citrusReportsDirectory, reportFile))
+                .forEach(reportFile -> {
+                    try {
+                        loadAndSaveReportFile(reportFile, getServer().getUrl() + "/results/file/" + URLEncoder.encode(reportFile.getName(), ENCODING), ContentType.APPLICATION_XML.getMimeType());
+                    } catch (IOException e) {
+                        getLog().warn("Failed to get report file: " + reportFile.getName(), e);
+                    }
+                });
 
         Stream.of(reportFiles)
-            .filter(f -> f.contains("/"))
-            .map(f -> f.split("/", 2))
-            .forEach(tokens -> {
-                try {
-                    File subDir = new File(citrusReportsDirectory, tokens[0]);
-                    File reportFile = new File(subDir, tokens[1]);
-                    loadAndSaveReportFile(reportFile, getServer().getUrl() + "/results/file/%s?folder=%s".formatted(URLEncoder.encode(reportFile.getName(), ENCODING), URLEncoder.encode(subDir.getName(), ENCODING)), ContentType.APPLICATION_XML.getMimeType());
-                } catch (IOException e) {
-                    getLog().warn("Failed to get report file: %s/%s".formatted(tokens[0], tokens[1]), e);
-                }
-            });
+                .filter(f -> f.contains("/"))
+                .map(f -> f.split("/", 2))
+                .forEach(tokens -> {
+                    try {
+                        File subDir = new File(citrusReportsDirectory, tokens[0]);
+                        File reportFile = new File(subDir, tokens[1]);
+                        loadAndSaveReportFile(reportFile, getServer().getUrl() + "/results/file/%s?folder=%s".formatted(URLEncoder.encode(reportFile.getName(), ENCODING), URLEncoder.encode(subDir.getName(), ENCODING)), ContentType.APPLICATION_XML.getMimeType());
+                    } catch (IOException e) {
+                        getLog().warn("Failed to get report file: %s/%s".formatted(tokens[0], tokens[1]), e);
+                    }
+                });
     }
 
     /**
      * Get report file content from server and save content to given file on local file system.
+     *
      * @param reportFile
      * @param serverUrl
      * @param contentType

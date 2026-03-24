@@ -55,7 +55,7 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
      * Callback method called with actual web service response message. Method constructs a Spring Integration
      * message from this web service message for further processing.
      */
-    public void doWithMessage(WebServiceMessage responseMessage) throws IOException, TransformerException {
+    public void doWithMessage(WebServiceMessage responseMessage) throws TransformerException {
         // convert and set response for later access via getResponse():
         response = endpointConfiguration.getMessageConverter().convertInbound(responseMessage, endpointConfiguration, context);
     }

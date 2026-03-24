@@ -53,7 +53,7 @@ public class CloseWindowActionParser extends AbstractBrowserActionParser {
         }
 
         @Override
-        public CloseWindowAction getObject() throws Exception {
+        public CloseWindowAction getObject() {
             return builder.build();
         }
 

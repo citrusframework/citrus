@@ -46,7 +46,7 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
     private final QueueChannel emptyChannel = Mockito.mock(QueueChannel.class);
 
     @Test
-    public void testPurgeWithChannelNames() throws Exception {
+    public void testPurgeWithChannelNames() {
         List<Message<?>> purgedMessages = new ArrayList<>();
         purgedMessages.add(MessageBuilder.withPayload("<TestRequest>Hello World!</TestRequest>").build());
 
@@ -64,7 +64,7 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
 
 	@SuppressWarnings("unchecked")
     @Test
-    public void testPurgeWithChannelObjects() throws Exception {
+    public void testPurgeWithChannelObjects() {
         List<Message<?>> purgedMessages = new ArrayList<>();
         purgedMessages.add(MessageBuilder.withPayload("<TestRequest>Hello World!</TestRequest>").build());
 
@@ -82,7 +82,7 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
     }
 
 	@Test
-    public void testPurgeWithMessageSelector() throws Exception {
+    public void testPurgeWithMessageSelector() {
         MessageSelector messageSelector = message -> false;
 
         List<Message<?>> purgedMessages = new ArrayList<>();

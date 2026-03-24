@@ -49,7 +49,7 @@ public class HttpsEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpoint() throws Exception {
+    public void testCreateClientEndpoint() {
         HttpsEndpointComponent component = new HttpsEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("https://localhost:8088/test", context);
@@ -63,7 +63,7 @@ public class HttpsEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithParameters() throws Exception {
+    public void testCreateClientEndpointWithParameters() {
         HttpsEndpointComponent component = new HttpsEndpointComponent();
 
         reset(referenceResolver);
@@ -80,7 +80,7 @@ public class HttpsEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithCustomParameters() throws Exception {
+    public void testCreateClientEndpointWithCustomParameters() {
         HttpsEndpointComponent component = new HttpsEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("https://localhost:8088/test?requestMethod=DELETE&customParam=foo", context);

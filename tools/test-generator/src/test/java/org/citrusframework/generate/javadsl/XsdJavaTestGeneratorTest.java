@@ -96,7 +96,7 @@ public class XsdJavaTestGeneratorTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unable to find element with name 'HiRequest'.*")
-    public void testUnknownRequest() throws IOException {
+    public void testUnknownRequest() {
         XsdJavaTestGenerator generator = new XsdJavaTestGenerator();
 
         generator.withAuthor("Christoph")

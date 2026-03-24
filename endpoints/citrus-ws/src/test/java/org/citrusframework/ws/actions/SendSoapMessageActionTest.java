@@ -48,7 +48,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithMtomAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithMtomAttachmentDataTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Text>cid:mtomText@citrusframework.org</Text></TestRequest>"));
 
@@ -87,7 +87,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithMtomInlineBase64BinaryAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithMtomInlineBase64BinaryAttachmentDataTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Image>cid:mtomImage</Image></TestRequest>"));
 
@@ -123,7 +123,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithMtomInlineHexBinaryAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithMtomInlineHexBinaryAttachmentDataTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Image>cid:mtomImage</Image></TestRequest>"));
 
@@ -159,7 +159,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithMtomMissingCidAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithMtomMissingCidAttachmentDataTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Text>mtomText</Text></TestRequest>"));
 
@@ -198,7 +198,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithMtomInlineMissingCidAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithMtomInlineMissingCidAttachmentDataTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Image>mtomImage</Image></TestRequest>"));
 
@@ -239,7 +239,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithMtomInlineInvalidEncodingTypeAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithMtomInlineInvalidEncodingTypeAttachmentDataTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Image>cid:mtomImage</Image></TestRequest>"));
 
@@ -269,7 +269,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithDefaultAttachmentDataTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -301,7 +301,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithAttachmentDataTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -336,7 +336,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithMultipleAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithMultipleAttachmentDataTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -387,7 +387,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithEmptyAttachmentContentTest() throws Exception {
+    public void testSoapMessageWithEmptyAttachmentContentTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -407,7 +407,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithAttachmentResourceTest() throws Exception {
+    public void testSoapMessageWithAttachmentResourceTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -439,7 +439,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithAttachmentDataVariableSupportTest() throws Exception {
+    public void testSoapMessageWithAttachmentDataVariableSupportTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -473,7 +473,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithAttachmentResourceVariablesSupportTest() throws Exception {
+    public void testSoapMessageWithAttachmentResourceVariablesSupportTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -507,7 +507,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithHeaderContentTest() throws Exception {
+    public void testSoapMessageWithHeaderContentTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -536,7 +536,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithMultipleHeaderContentTest() throws Exception {
+    public void testSoapMessageWithMultipleHeaderContentTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -568,7 +568,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithHeaderResourceTest() throws Exception {
+    public void testSoapMessageWithHeaderResourceTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -597,7 +597,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithHeaderContentVariableSupportTest() throws Exception {
+    public void testSoapMessageWithHeaderContentVariableSupportTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -628,7 +628,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSoapMessageWithHeaderResourceVariableSupportTest() throws Exception {
+    public void testSoapMessageWithHeaderResourceVariableSupportTest() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 

@@ -29,7 +29,7 @@ public class Agent extends CitrusCommand {
     }
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         new CommandLine(this).execute("--help");
         return 0;
     }

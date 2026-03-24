@@ -47,7 +47,7 @@ public class MessageListenersFactory implements FactoryBean<MessageListeners>, A
     }
 
     @Override
-    public MessageListeners getObject() throws Exception {
+    public MessageListeners getObject() {
         if (applicationContext != null) {
             applicationContext.getBeansOfType(MessageListener.class)
                     .forEach((key, value) -> listeners.addMessageListener(value));

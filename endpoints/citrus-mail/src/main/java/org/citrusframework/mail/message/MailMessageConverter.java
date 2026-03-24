@@ -250,7 +250,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     /**
      * Construct simple body part from binary data just adding file name as content.
      */
-    protected BodyPart handleBinaryPart(MimePart mediaPart, String contentType) throws IOException, MessagingException {
+    protected BodyPart handleBinaryPart(MimePart mediaPart, String contentType) throws MessagingException {
         String contentId = mediaPart.getContentID() != null ? "(" + mediaPart.getContentID() + ")" : "";
         return new BodyPart(mediaPart.getFileName() + contentId, contentType);
     }

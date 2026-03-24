@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class TimerParserTest extends AbstractActionParserTest<Timer> {
 
     @Test
-    public void testParse() throws Exception {
+    public void testParse() {
         assertActionCount(3);
         assertActionClassAndName(Timer.class, "timer");
 

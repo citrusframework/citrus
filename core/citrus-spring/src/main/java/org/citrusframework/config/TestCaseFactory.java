@@ -36,7 +36,7 @@ public class TestCaseFactory implements FactoryBean<TestCase> {
     private List<TestAction> finalActions;
 
     @Override
-    public TestCase getObject() throws Exception {
+    public TestCase getObject() {
         if (this.testActions != null && !this.testActions.isEmpty()) {
             for (TestAction action : testActions) {
                 testCase.addTestAction(action);

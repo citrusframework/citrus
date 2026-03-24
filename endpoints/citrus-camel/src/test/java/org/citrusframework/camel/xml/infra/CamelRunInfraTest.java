@@ -74,7 +74,7 @@ public class CamelRunInfraTest extends AbstractXmlActionTest {
     }
 
     @Test
-    public void shouldLoadCamelActions() throws Exception {
+    public void shouldLoadCamelActions() {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/infra/camel-run-infra.citrus.it.xml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();

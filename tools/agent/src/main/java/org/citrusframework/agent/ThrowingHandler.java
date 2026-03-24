@@ -17,5 +17,5 @@
 package org.citrusframework.agent;
 
 public interface ThrowingHandler<T> {
-    void handle(T t) throws Exception;
+    void handle(T t);
 }

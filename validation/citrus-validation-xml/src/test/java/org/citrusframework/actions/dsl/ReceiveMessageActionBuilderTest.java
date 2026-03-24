@@ -298,7 +298,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
     }
 
     @Test
-    public void testReceiveBuilderWithPayloadResource() throws IOException {
+    public void testReceiveBuilderWithPayloadResource() {
         reset(resource, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -678,7 +678,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
     }
 
     @Test
-    public void testReceiveBuilderWithHeaderResource() throws IOException {
+    public void testReceiveBuilderWithHeaderResource() {
         reset(resource, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -736,7 +736,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
     }
 
     @Test
-    public void testReceiveBuilderWithMultipleHeaderResource() throws IOException {
+    public void testReceiveBuilderWithMultipleHeaderResource() {
         reset(resource, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);

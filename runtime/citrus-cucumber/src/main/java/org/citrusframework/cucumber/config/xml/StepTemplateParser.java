@@ -106,9 +106,8 @@ public class StepTemplateParser implements BeanDefinitionParser {
         /**
          * Adds test actions to container when building object.
          * @return
-         * @throws Exception
          */
-        public StepTemplate getObject() throws Exception {
+        public StepTemplate getObject() {
             return builder.build();
         }
 

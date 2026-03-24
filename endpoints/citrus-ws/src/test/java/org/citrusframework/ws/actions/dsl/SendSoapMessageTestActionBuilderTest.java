@@ -333,7 +333,7 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testSoapAttachmentResource() throws IOException {
+    public void testSoapAttachmentResource() {
         reset(resource, soapClient, messageProducer);
         when(soapClient.createProducer()).thenReturn(messageProducer);
         when(soapClient.getActor()).thenReturn(null);

@@ -31,7 +31,7 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
     private SoapFormattingMessageProcessor messageProcessor = new SoapFormattingMessageProcessor();
 
     @Test
-    public void testProcessMessage() throws Exception {
+    public void testProcessMessage() {
         SoapMessage message = new SoapMessage("<root>"
                     + "<element attribute='attribute-value'>"
                         + "<sub-element>text-value</sub-element>"
@@ -45,7 +45,7 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testProcessSoapFault() throws Exception {
+    public void testProcessSoapFault() {
         SoapFault message = new SoapFault("<root>"
                     + "<element attribute='attribute-value'>"
                         + "<sub-element>text-value</sub-element>"
@@ -63,7 +63,7 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testProcessNonXmlMessage() throws Exception {
+    public void testProcessNonXmlMessage() {
         Message message = new DefaultMessage("This is plaintext");
         message.setType(MessageType.PLAINTEXT.name());
 

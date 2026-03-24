@@ -367,7 +367,7 @@ public class XMLUtilsTest {
     }
 
     @Test
-    public void testEncodingRoundTrip() throws Exception {
+    public void testEncodingRoundTrip() {
         String payload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<testRequest xmlns=\"http://citrusframework.org/test-default\">ÄäÖöÜü</testRequest>";
 
@@ -380,7 +380,7 @@ public class XMLUtilsTest {
     }
 
     @Test
-    public void testOmitXmlDeclaration() throws Exception {
+    public void testOmitXmlDeclaration() {
         String payload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 " <testRequest xmlns=\"http://citrusframework.org/test-default\">Test</testRequest>";
 

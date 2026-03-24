@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 public class RestDocTestNameFormatterTest {
 
     @Test
-    public void testFormat() throws Exception {
+    public void testFormat() {
         Assert.assertEquals(RestDocTestNameFormatter.format(getClass(), getClass().getSimpleName() + ".testName"), "testName");
         Assert.assertEquals(RestDocTestNameFormatter.format(getClass(), getClass().getSimpleName() + ".testNameIT"), "testNameIt");
         Assert.assertEquals(RestDocTestNameFormatter.format(getClass(), "someOtherName.testName"), "someOtherName.testName");

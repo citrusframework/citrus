@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 public class XPathPayloadMappingKeyExtractorTest {
 
     @Test
-    public void testExtractMappingKey() throws Exception {
+    public void testExtractMappingKey() {
         XPathPayloadMappingKeyExtractor extractor = new XPathPayloadMappingKeyExtractor();
         extractor.setXpathExpression("local-name(//MessageBody/*)");
 
@@ -36,7 +36,7 @@ public class XPathPayloadMappingKeyExtractorTest {
     }
 
     @Test
-    public void testExtractMappingKeyWithoutXpathExpressionSet() throws Exception {
+    public void testExtractMappingKeyWithoutXpathExpressionSet() {
         XPathPayloadMappingKeyExtractor extractor = new XPathPayloadMappingKeyExtractor();
 
         Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage(
@@ -47,7 +47,7 @@ public class XPathPayloadMappingKeyExtractorTest {
     }
 
     @Test
-    public void testRouteMessageWithBadXpathExpression() throws Exception {
+    public void testRouteMessageWithBadXpathExpression() {
         XPathPayloadMappingKeyExtractor extractor = new XPathPayloadMappingKeyExtractor();
         extractor.setXpathExpression("//I_DO_NOT_EXIST");
 

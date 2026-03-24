@@ -131,9 +131,8 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
 
     /**
      * Creates Citrus Spring bean application context with basic beans and settings for Citrus.
-     * @throws Exception
      */
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (endpointAdapterDelegate == null) {
             DirectSyncEndpointConfiguration endpointConfiguration = new DirectSyncEndpointConfiguration();
             endpointConfiguration.setQueueName(name + AbstractServer.DEFAULT_CHANNEL_ID_SUFFIX);

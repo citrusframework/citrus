@@ -107,7 +107,7 @@ public class GroovyActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public GroovyAction getObject() throws Exception {
+        public GroovyAction getObject() {
             return builder.build();
         }
 

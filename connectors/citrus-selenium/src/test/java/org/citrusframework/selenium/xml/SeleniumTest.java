@@ -111,7 +111,7 @@ public class SeleniumTest extends AbstractXmlActionTest {
     }
 
     @Test
-    public void shouldLoadSeleniumActions() throws IOException {
+    public void shouldLoadSeleniumActions() {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/selenium/xml/selenium.citrus.it.xml");
 
         context.getReferenceResolver().bind("seleniumBrowser", browser);

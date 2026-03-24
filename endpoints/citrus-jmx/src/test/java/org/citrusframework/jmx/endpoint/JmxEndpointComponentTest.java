@@ -35,7 +35,7 @@ public class JmxEndpointComponentTest {
     private TestContext context = new TestContext();
 
     @Test
-    public void testCreateClientEndpoint() throws Exception {
+    public void testCreateClientEndpoint() {
         JmxEndpointComponent component = new JmxEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("jmx:rmi:///jndi/rmi://localhost:1099/someService", context);
@@ -53,7 +53,7 @@ public class JmxEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithParameters() throws Exception {
+    public void testCreateClientEndpointWithParameters() {
         JmxEndpointComponent component = new JmxEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("jmx:rmi:///jndi/rmi://localhost:1099/someService?autoReconnect=false&timeout=10000", context);

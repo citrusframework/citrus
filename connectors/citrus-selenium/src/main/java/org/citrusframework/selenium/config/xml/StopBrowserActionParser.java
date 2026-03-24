@@ -43,7 +43,7 @@ public class StopBrowserActionParser extends AbstractBrowserActionParser {
         private final StopBrowserAction.Builder builder = new StopBrowserAction.Builder();
 
         @Override
-        public StopBrowserAction getObject() throws Exception {
+        public StopBrowserAction getObject() {
             return builder.build();
         }
 

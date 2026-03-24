@@ -32,7 +32,7 @@ public class HttpServerConnectorFactory implements FactoryBean<ServerConnector> 
     }
 
     @Override
-    public ServerConnector getObject() throws Exception {
+    public ServerConnector getObject() {
         return secureConnection.getServerConnector(securePort);
     }
 

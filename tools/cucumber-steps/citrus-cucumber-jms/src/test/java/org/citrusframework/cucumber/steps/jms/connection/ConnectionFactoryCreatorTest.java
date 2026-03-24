@@ -59,12 +59,12 @@ public class ConnectionFactoryCreatorTest {
      */
     private static class DummyConnectionFactory implements ConnectionFactory {
         @Override
-        public Connection createConnection() throws JMSException {
+        public Connection createConnection() {
             return null;
         }
 
         @Override
-        public Connection createConnection(String s, String s1) throws JMSException {
+        public Connection createConnection(String s, String s1) {
             return null;
         }
 

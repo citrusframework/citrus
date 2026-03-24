@@ -49,7 +49,7 @@ public class EmptyResponseEndpointAdapterParser extends AbstractBeanDefinitionPa
         private String name;
 
         @Override
-        public EmptyResponseEndpointAdapter getObject() throws Exception {
+        public EmptyResponseEndpointAdapter getObject() {
             EmptyResponseEndpointAdapter endpointAdapter = new EmptyResponseEndpointAdapter();
 
             endpointAdapter.setTestContextFactory(testContextFactory);

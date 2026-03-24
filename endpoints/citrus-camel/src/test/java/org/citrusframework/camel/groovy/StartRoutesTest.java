@@ -36,7 +36,7 @@ public class StartRoutesTest extends AbstractGroovyActionDslTest {
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.addRoutes(new RouteBuilder(citrusCamelContext) {
             @Override
-            public void configure() throws Exception {
+            public void configure() {
                 from("direct:hello")
                         .routeId("route_1")
                         .autoStartup(false)

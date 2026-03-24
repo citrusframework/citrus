@@ -36,7 +36,7 @@ public class JsonPathFunctionTest extends AbstractTestNGUnitTest {
     private final String jsonSource = "{ \"person\": { \"name\": \"Sheldon\", \"age\": \"29\" } }";
 
     @Test
-    public void testExecuteJsonPath() throws Exception {
+    public void testExecuteJsonPath() {
         List<String> parameters = new ArrayList<>();
         parameters.add(jsonSource);
         parameters.add("$.person.name");
@@ -44,7 +44,7 @@ public class JsonPathFunctionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteJsonPathFunctions() throws Exception {
+    public void testExecuteJsonPathFunctions() {
         List<String> parameters = new ArrayList<>();
         parameters.add(jsonSource);
         parameters.add("$.person.keySet()");
@@ -52,7 +52,7 @@ public class JsonPathFunctionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void testExecuteJsonPathUnknown() throws Exception {
+    public void testExecuteJsonPathUnknown() {
         List<String> parameters = new ArrayList<>();
         parameters.add(jsonSource);
         parameters.add("$.person.unknown");

@@ -31,7 +31,7 @@ public class SshEndpointComponentTest {
     private TestContext context = new TestContext();
 
     @Test
-    public void testCreateEndpoint() throws Exception {
+    public void testCreateEndpoint() {
         SshEndpointComponent component = new SshEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("ssh://localhost:2200", context);
@@ -44,7 +44,7 @@ public class SshEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpointWithoutPort() throws Exception {
+    public void testCreateEndpointWithoutPort() {
         SshEndpointComponent component = new SshEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("ssh:127.0.0.1", context);
@@ -57,7 +57,7 @@ public class SshEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpointWithParameters() throws Exception {
+    public void testCreateEndpointWithParameters() {
         SshEndpointComponent component = new SshEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("ssh://localhost:2200?timeout=10000&strictHostChecking=true&user=foo&password=12345678", context);

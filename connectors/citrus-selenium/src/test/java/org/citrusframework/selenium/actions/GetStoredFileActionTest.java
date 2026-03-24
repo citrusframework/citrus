@@ -44,7 +44,7 @@ public class GetStoredFileActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecute() throws Exception {
+    public void testExecute() {
         seleniumBrowser.storeFile("classpath:download/file.txt");
 
         GetStoredFileAction action =  new GetStoredFileAction.Builder()
@@ -57,7 +57,7 @@ public class GetStoredFileActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to access stored file.*")
-    public void testExecuteError() throws Exception {
+    public void testExecuteError() {
         GetStoredFileAction action =  new GetStoredFileAction.Builder()
                 .browser(seleniumBrowser)
                 .fileName("unknown.txt")

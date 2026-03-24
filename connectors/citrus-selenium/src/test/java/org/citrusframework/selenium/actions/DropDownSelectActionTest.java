@@ -52,7 +52,7 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteSelect() throws Exception {
+    public void testExecuteSelect() {
         WebElement option = Mockito.mock(WebElement.class);
 
         when(webDriver.findElement(any(By.class))).thenReturn(element);
@@ -72,7 +72,7 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteMultiSelect() throws Exception {
+    public void testExecuteMultiSelect() {
         WebElement option = Mockito.mock(WebElement.class);
 
         seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.IE.browserName());

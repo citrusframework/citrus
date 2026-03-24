@@ -54,7 +54,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testStart() throws Exception {
+    public void testStart() {
         when(seleniumBrowser.isStarted()).thenReturn(false);
 
         StartBrowserAction action =  new StartBrowserAction.Builder()
@@ -68,7 +68,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testStartWithStartPage() throws Exception {
+    public void testStartWithStartPage() {
         when(seleniumBrowser.isStarted()).thenReturn(false);
         when(seleniumBrowserConfiguration.getStartPageUrl()).thenReturn("http://localhost:8080");
 
@@ -89,7 +89,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testStartAlreadyStarted() throws Exception {
+    public void testStartAlreadyStarted() {
         when(seleniumBrowser.isStarted()).thenReturn(true);
 
         StartBrowserAction action =  new StartBrowserAction.Builder()
@@ -104,7 +104,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testStartAlreadyStartedNotAllowed() throws Exception {
+    public void testStartAlreadyStartedNotAllowed() {
         when(seleniumBrowser.isStarted()).thenReturn(true);
 
         StartBrowserAction action =  new StartBrowserAction.Builder()

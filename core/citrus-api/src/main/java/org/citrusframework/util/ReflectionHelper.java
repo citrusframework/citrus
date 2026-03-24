@@ -49,7 +49,7 @@ public class ReflectionHelper {
          *
          * @param field the field to operate on
          */
-        void doWith(Field field) throws IllegalArgumentException, IllegalAccessException;
+        void doWith(Field field) throws IllegalArgumentException;
     }
 
     /**
@@ -77,7 +77,7 @@ public class ReflectionHelper {
          *
          * @param clazz the class to operate on
          */
-        void doWith(Class<?> clazz) throws IllegalArgumentException, IllegalAccessException;
+        void doWith(Class<?> clazz) throws IllegalArgumentException;
     }
 
     /**
@@ -90,11 +90,7 @@ public class ReflectionHelper {
         // and then nested classes
         Class<?>[] classes = clazz.getDeclaredClasses();
         for (Class<?> aClazz : classes) {
-            try {
-                cc.doWith(aClazz);
-            } catch (IllegalAccessException ex) {
-                throw new IllegalStateException("Shouldn't be illegal to access class '" + aClazz.getName() + "': " + ex);
-            }
+            cc.doWith(aClazz);
         }
     }
 
@@ -111,11 +107,7 @@ public class ReflectionHelper {
         do {
             Field[] fields = targetClass.getDeclaredFields();
             for (Field field : fields) {
-                try {
-                    fc.doWith(field);
-                } catch (IllegalAccessException ex) {
-                    throw new IllegalStateException("Shouldn't be illegal to access field '" + field.getName() + "': " + ex);
-                }
+                fc.doWith(field);
             }
             targetClass = targetClass.getSuperclass();
         } while (targetClass != null && targetClass != Object.class);

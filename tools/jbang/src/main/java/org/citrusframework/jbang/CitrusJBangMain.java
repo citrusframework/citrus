@@ -59,7 +59,7 @@ public class CitrusJBangMain implements Callable<Integer> {
     }
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         commandLine.execute("--help");
         return 0;
     }

@@ -74,7 +74,7 @@ public class GzipServletFilterTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain(servlet, new GzipServletFilter(), new OncePerRequestFilter() {
             @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
                 Assert.assertEquals(FileUtils.readToString(request.getInputStream()), "Should be decompressed");
             }
         });
@@ -89,7 +89,7 @@ public class GzipServletFilterTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain(servlet, new GzipServletFilter(), new OncePerRequestFilter() {
             @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
                 response.getOutputStream().write("Should be compressed".getBytes());
             }
         });
@@ -110,7 +110,7 @@ public class GzipServletFilterTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain(servlet, new GzipServletFilter(), new OncePerRequestFilter() {
             @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
                 response.getOutputStream().write("Should not be compressed".getBytes());
             }
         });

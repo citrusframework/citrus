@@ -38,7 +38,7 @@ public class PurgeChannelsTest extends AbstractGroovyActionDslTest {
     private MessageSelector messageSelector;
 
     @Test
-    public void shouldLoadActions() throws Exception {
+    public void shouldLoadActions() {
         GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/springintegration/groovy/purge-channels.citrus.test.groovy");
 
         context.getReferenceResolver().bind("channelResolver", channelResolver);

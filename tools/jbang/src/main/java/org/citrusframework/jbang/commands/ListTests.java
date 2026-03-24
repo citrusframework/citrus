@@ -49,7 +49,7 @@ public class ListTests extends CitrusCommand {
     }
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         List<Row> rows = new ArrayList<>();
 
         final long cur = ProcessHandle.current().pid();

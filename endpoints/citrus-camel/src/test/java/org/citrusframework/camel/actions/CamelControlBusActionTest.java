@@ -43,7 +43,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     private final ProducerTemplate producerTemplate = Mockito.mock(ProducerTemplate.class);
 
     @Test
-    public void testControlBusRouteAction() throws Exception {
+    public void testControlBusRouteAction() {
         String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
         DefaultMessage message = new DefaultMessage(camelContext);
@@ -68,7 +68,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testControlBusRouteActionVariableSupport() throws Exception {
+    public void testControlBusRouteActionVariableSupport() {
         String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
         DefaultMessage message = new DefaultMessage(camelContext);
@@ -96,7 +96,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testControlBusRouteActionWithResult() throws Exception {
+    public void testControlBusRouteActionWithResult() {
         String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
         DefaultMessage message = new DefaultMessage(camelContext);
@@ -122,7 +122,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = ValidationException.class)
-    public void testControlBusRouteActionWithResultFailed() throws Exception {
+    public void testControlBusRouteActionWithResultFailed() {
         String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
         DefaultMessage message = new DefaultMessage(camelContext);
@@ -148,7 +148,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testControlBusLanguageAction() throws Exception {
+    public void testControlBusLanguageAction() {
         String endpointUri = "controlbus:language:simple";
 
         DefaultMessage message = new DefaultMessage(camelContext);
@@ -173,7 +173,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testControlBusLanguageActionVariableSupport() throws Exception {
+    public void testControlBusLanguageActionVariableSupport() {
         String endpointUri = "controlbus:language:simple";
 
         DefaultMessage message = new DefaultMessage(camelContext);
@@ -205,7 +205,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testControlBusLanguageActionWithResult() throws Exception {
+    public void testControlBusLanguageActionWithResult() {
         String endpointUri = "controlbus:language:simple";
 
         DefaultMessage message = new DefaultMessage(camelContext);

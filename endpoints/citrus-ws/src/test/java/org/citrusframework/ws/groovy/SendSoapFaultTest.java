@@ -71,7 +71,7 @@ public class SendSoapFaultTest extends AbstractGroovyActionDslTest {
     }
 
     @Test
-    public void shouldLoadSoapServerActions() throws IOException {
+    public void shouldLoadSoapServerActions() {
         GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/groovy/send-soap-fault.citrus.test.groovy");
 
         context.getReferenceResolver().bind("soapServer", soapServer);

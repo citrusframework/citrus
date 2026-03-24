@@ -30,7 +30,7 @@ public class HttpClientRequestFactoryBean implements FactoryBean<ClientHttpReque
     }
 
     @Override
-    public ClientHttpRequestFactory getObject() throws Exception {
+    public ClientHttpRequestFactory getObject() {
         return auth.getRequestFactory(requestUrl, null);
     }
 

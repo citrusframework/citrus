@@ -180,7 +180,7 @@ public class SQLActionParser implements BeanDefinitionParser {
         private final ExecuteSQLAction.Builder builder = new ExecuteSQLAction.Builder();
 
         @Override
-        public ExecuteSQLAction getObject() throws Exception {
+        public ExecuteSQLAction getObject() {
             return builder.build();
         }
 
@@ -215,7 +215,7 @@ public class SQLActionParser implements BeanDefinitionParser {
         private final ExecuteSQLQueryAction.Builder builder = new ExecuteSQLQueryAction.Builder();
 
         @Override
-        public ExecuteSQLQueryAction getObject() throws Exception {
+        public ExecuteSQLQueryAction getObject() {
             return builder.build();
         }
 

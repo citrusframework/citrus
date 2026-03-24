@@ -51,7 +51,7 @@ public class MailMarshallerTest {
     }
 
     @Test
-    public void testMarshal() throws Exception {
+    public void testMarshal() {
         MailRequest mailRequest = new MailRequest();
         mailRequest.setFrom("foo@mail.com");
         mailRequest.setTo("bar@mail.com,copy@mail.com");

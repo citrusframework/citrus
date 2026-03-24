@@ -92,7 +92,7 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
      *
      * @param schema
      */
-    protected void addImportedSchemas(Schema schema) throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
+    protected void addImportedSchemas(Schema schema) throws TransformerException, TransformerFactoryConfigurationError {
         for (Object imports : schema.getImports().values()) {
             for (SchemaImport schemaImport : (Vector<SchemaImport>)imports) {
                 // Prevent duplicate imports
@@ -119,7 +119,7 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
     /**
      * Recursively add all included schemas as schema resource.
      */
-    protected void addIncludedSchemas(Schema schema) throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
+    protected void addIncludedSchemas(Schema schema) throws TransformerException, TransformerFactoryConfigurationError {
         List<SchemaReference> includes = schema.getIncludes();
         for (SchemaReference schemaReference : includes) {
             String schemaLocation;

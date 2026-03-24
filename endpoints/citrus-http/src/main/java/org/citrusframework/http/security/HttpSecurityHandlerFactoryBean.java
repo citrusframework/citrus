@@ -29,7 +29,7 @@ public class HttpSecurityHandlerFactoryBean implements FactoryBean<SecurityHandl
     }
 
     @Override
-    public SecurityHandler getObject() throws Exception {
+    public SecurityHandler getObject() {
         return auth.getSecurityHandler(resourcePath);
     }
 
