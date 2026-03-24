@@ -37,7 +37,7 @@ public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
     private WebSocketMessageConverter messageConverter = new WebSocketMessageConverter();
 
     @Test
-    public void testConvertTextMessageOutbound() throws Exception {
+    public void testConvertTextMessageOutbound() {
         WebSocketEndpointConfiguration endpointConfiguration = new WebSocketClientEndpointConfiguration();
 
         WebSocketMessage message = new WebSocketMessage("Hello WebSocket!");
@@ -56,7 +56,7 @@ public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testConvertBinaryMessageOutbound() throws Exception {
+    public void testConvertBinaryMessageOutbound() {
         WebSocketEndpointConfiguration endpointConfiguration = new WebSocketClientEndpointConfiguration();
 
         WebSocketMessage message = new WebSocketMessage("Hello WebSocket!".getBytes(StandardCharsets.UTF_8));
@@ -68,7 +68,7 @@ public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testConvertTextMessageInbound() throws Exception {
+    public void testConvertTextMessageInbound() {
         WebSocketEndpointConfiguration endpointConfiguration = new WebSocketClientEndpointConfiguration();
         org.springframework.web.socket.WebSocketMessage externalMessage = new TextMessage("Hello WebSocket!");
 
@@ -87,7 +87,7 @@ public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testConvertBinaryMessageInbound() throws Exception {
+    public void testConvertBinaryMessageInbound() {
         WebSocketEndpointConfiguration endpointConfiguration = new WebSocketClientEndpointConfiguration();
         org.springframework.web.socket.WebSocketMessage externalMessage = new BinaryMessage("Hello WebSocket!".getBytes(StandardCharsets.UTF_8));
 

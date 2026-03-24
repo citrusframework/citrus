@@ -123,13 +123,13 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
 
     @Override
     public void doBody(OutputStream buffered) throws TransformerException,
-            IOException, SAXException {
+            SAXException {
         // no body information here.
     }
 
     @Override
     public void doHeader(OutputStream buffered) throws TransformerException,
-            IOException, SAXException {
+            SAXException {
         // no header information here.
     }
 

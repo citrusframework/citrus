@@ -36,7 +36,7 @@ public class JsonPathVariableExtractorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExtractVariables() throws Exception {
+    public void testExtractVariables() {
         JsonPathVariableExtractor variableExtractor = new JsonPathVariableExtractor.Builder()
                 .expression("$['index']", "index")
                 .expression("$.numbers", "numbers")

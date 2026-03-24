@@ -53,7 +53,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testCloseActiveWindow() throws Exception {
+    public void testCloseActiveWindow() {
         Set<String> windows = new HashSet<>();
         windows.add("active_window");
         windows.add("last_window");
@@ -77,7 +77,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testCloseActiveWindowReturnToDefault() throws Exception {
+    public void testCloseActiveWindowReturnToDefault() {
         Set<String> windows = new HashSet<>();
         windows.add("active_window");
         windows.add("main_window");
@@ -100,7 +100,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testCloseOtherWindow() throws Exception {
+    public void testCloseOtherWindow() {
         Set<String> windows = new HashSet<>();
         windows.add("active_window");
         windows.add("last_window");
@@ -128,7 +128,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testCloseOtherWindowNoActiveWindow() throws Exception {
+    public void testCloseOtherWindowNoActiveWindow() {
         Set<String> windows = new HashSet<>();
         windows.add("active_window");
         windows.add("other_window");
@@ -153,7 +153,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find window handle.*")
-    public void testCloseWindowInvalidWindowName() throws Exception {
+    public void testCloseWindowInvalidWindowName() {
         CloseWindowAction action =  new CloseWindowAction.Builder()
                 .browser(seleniumBrowser)
                 .window("myWindow")
@@ -162,7 +162,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find window.*")
-    public void testCloseWindowNotFound() throws Exception {
+    public void testCloseWindowNotFound() {
         Set<String> windows = new HashSet<>();
         windows.add("active_window");
         windows.add("last_window");

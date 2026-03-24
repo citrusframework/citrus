@@ -82,7 +82,7 @@ public class DirectEndpointAdapterParser extends AbstractBeanDefinitionParser {
         }
 
         @Override
-        public DirectEndpointAdapter getObject() throws Exception {
+        public DirectEndpointAdapter getObject() {
             DirectEndpointAdapter endpointAdapter = new DirectEndpointAdapter(endpointConfiguration);
 
             endpointAdapter.setTestContextFactory(testContextFactory);

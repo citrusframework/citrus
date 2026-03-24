@@ -64,7 +64,7 @@ public class CreateDocsMojo extends AbstractCitrusMojo {
     }
 
     @Override
-    public void doExecute() throws MojoExecutionException {
+    public void doExecute() {
         if (skipCreateDocs) {
             return;
         }

@@ -45,7 +45,7 @@ public class GenerateDocsMojoTest {
     }
 
     @Test
-    public void testCreateXls() throws PrompterException, MojoExecutionException, MojoFailureException {
+    public void testCreateXls() throws MojoExecutionException, MojoFailureException {
         reset(excelTestDocGenerator);
 
         DocsConfiguration docs = new DocsConfiguration();
@@ -72,7 +72,7 @@ public class GenerateDocsMojoTest {
     }
 
     @Test
-    public void testCreateHtml() throws PrompterException, MojoExecutionException, MojoFailureException {
+    public void testCreateHtml() throws MojoExecutionException, MojoFailureException {
         reset(htmlTestDocGenerator);
 
         DocsConfiguration docs = new DocsConfiguration();

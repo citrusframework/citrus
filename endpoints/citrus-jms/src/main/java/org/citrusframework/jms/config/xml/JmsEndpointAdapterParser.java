@@ -82,7 +82,7 @@ public class JmsEndpointAdapterParser extends AbstractBeanDefinitionParser {
         }
 
         @Override
-        public JmsEndpointAdapter getObject() throws Exception {
+        public JmsEndpointAdapter getObject() {
             JmsEndpointAdapter endpointAdapter = new JmsEndpointAdapter(endpointConfiguration);
 
             endpointAdapter.setTestContextFactory(testContextFactory);

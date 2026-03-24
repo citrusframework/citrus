@@ -56,7 +56,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testCustomCommand() throws Exception {
+    public void testCustomCommand() {
         InfoCmd command = Mockito.mock(InfoCmd.class);
         com.github.dockerjava.api.model.Info result = new com.github.dockerjava.api.model.Info();
 
@@ -76,7 +76,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testInfo() throws Exception {
+    public void testInfo() {
         InfoCmd command = Mockito.mock(InfoCmd.class);
         com.github.dockerjava.api.model.Info result = new com.github.dockerjava.api.model.Info();
 
@@ -96,7 +96,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testPing() throws Exception {
+    public void testPing() {
         PingCmd command = Mockito.mock(PingCmd.class);
 
         reset(dockerClient, command);
@@ -114,7 +114,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testVersion() throws Exception {
+    public void testVersion() {
         VersionCmd command = Mockito.mock(VersionCmd.class);
         com.github.dockerjava.api.model.Version result = new com.github.dockerjava.api.model.Version();
 
@@ -134,7 +134,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testCreate() throws Exception {
+    public void testCreate() {
         CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
         CreateContainerResponse response = new CreateContainerResponse();
         response.setId(UUID.randomUUID().toString());
@@ -159,7 +159,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testCreateNoName() throws Exception {
+    public void testCreateNoName() {
         CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
         InspectContainerCmd inspectCommand = Mockito.mock(InspectContainerCmd.class);
 
@@ -189,7 +189,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testCreateWithEnvArgs() throws Exception {
+    public void testCreateWithEnvArgs() {
     	CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
     	CreateContainerResponse response = Mockito.mock(CreateContainerResponse.class);
 
@@ -222,7 +222,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testCreateWithVolumeArgs() throws Exception {
+    public void testCreateWithVolumeArgs() {
     	CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
     	CreateContainerResponse response = Mockito.mock(CreateContainerResponse.class);
 
@@ -264,7 +264,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testInspectContainer() throws Exception {
+    public void testInspectContainer() {
         InspectContainerCmd command = Mockito.mock(InspectContainerCmd.class);
         InspectContainerResponse response = new InspectContainerResponse();
 
@@ -285,7 +285,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testInspectImage() throws Exception {
+    public void testInspectImage() {
         InspectImageCmd command = Mockito.mock(InspectImageCmd.class);
         InspectImageResponse response = new InspectImageResponse();
 
@@ -306,7 +306,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testRemoveContainer() throws Exception {
+    public void testRemoveContainer() {
         RemoveContainerCmd command = Mockito.mock(RemoveContainerCmd.class);
 
         reset(dockerClient, command);
@@ -325,7 +325,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testRemoveImage() throws Exception {
+    public void testRemoveImage() {
         RemoveImageCmd command = Mockito.mock(RemoveImageCmd.class);
 
         reset(dockerClient, command);
@@ -344,7 +344,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testStartContainer() throws Exception {
+    public void testStartContainer() {
         StartContainerCmd command = Mockito.mock(StartContainerCmd.class);
 
         reset(dockerClient, command);
@@ -363,7 +363,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testStopContainer() throws Exception {
+    public void testStopContainer() {
         StopContainerCmd command = Mockito.mock(StopContainerCmd.class);
 
         reset(dockerClient, command);
@@ -382,7 +382,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testWaitContainer() throws Exception {
+    public void testWaitContainer() {
         WaitContainerCmd command = Mockito.mock(WaitContainerCmd.class);
         final WaitResponse responseItem = Mockito.mock(WaitResponse.class);
 
@@ -410,7 +410,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testPullImage() throws Exception {
+    public void testPullImage() {
         PullImageCmd command = Mockito.mock(PullImageCmd.class);
         final PullResponseItem responseItem = Mockito.mock(PullResponseItem.class);
 
@@ -441,7 +441,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     }
 
     @Test
-    public void testBuildImage() throws Exception {
+    public void testBuildImage() {
         BuildImageCmd command = Mockito.mock(BuildImageCmd.class);
         final BuildResponseItem responseItem = Mockito.mock(BuildResponseItem.class);
 

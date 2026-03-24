@@ -53,7 +53,7 @@ public class NavigateActionParser extends AbstractBrowserActionParser {
         }
 
         @Override
-        public NavigateAction getObject() throws Exception {
+        public NavigateAction getObject() {
             return builder.build();
         }
 

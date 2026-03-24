@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 public class XpathDataDictionaryParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testDataDictionaryParser() throws Exception {
+    public void testDataDictionaryParser() {
         Map<String, XpathMappingDataDictionary> dictionaries = beanDefinitionContext.getBeansOfType(XpathMappingDataDictionary.class);
 
         Assert.assertEquals(dictionaries.size(), 3L);

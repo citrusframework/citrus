@@ -34,7 +34,7 @@ public class SftpEndpointComponentTest {
     private TestContext context = new TestContext();
 
     @Test
-    public void testCreateClientEndpoint() throws Exception {
+    public void testCreateClientEndpoint() {
         SftpEndpointComponent component = new SftpEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("sftp://localhost:2221", context);
@@ -59,7 +59,7 @@ public class SftpEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithParameters() throws Exception {
+    public void testCreateClientEndpointWithParameters() {
         SftpEndpointComponent component = new SftpEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("sftp:localhost:22220?user=admin&password=consol&timeout=10000", context);

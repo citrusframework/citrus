@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class DeleteSecretTest extends AbstractXmlActionTest {
 
     @Test
-    public void shouldLoadKubernetesActions() throws IOException {
+    public void shouldLoadKubernetesActions() {
         String namespace = "test";
         Secret secret = new SecretBuilder()
                 .withNewMetadata()

@@ -121,7 +121,7 @@ public class PurgeMessageChannelActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public PurgeMessageChannelAction getObject() throws Exception {
+        public PurgeMessageChannelAction getObject() {
             return builder.build();
         }
 

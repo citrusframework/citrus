@@ -104,7 +104,7 @@ public class ExecutePLSQLTestActionBuilderTest extends UnitTestSupport implement
     }
 
     @Test
-    public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
+    public void testExecutePLSQLBuilderWithSQLResource() {
         reset(jdbcTemplate, sqlResource);
         when(sqlResource.exists()).thenReturn(true);
         when(sqlResource.getInputStream()).thenReturn(new ByteArrayInputStream(("""
@@ -143,7 +143,7 @@ public class ExecutePLSQLTestActionBuilderTest extends UnitTestSupport implement
     }
 
     @Test
-    public void testExecutePLSQLBuilderWithSQLResourcePath() throws IOException {
+    public void testExecutePLSQLBuilderWithSQLResourcePath() {
         reset(jdbcTemplate);
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(plsql().jdbcTemplate(jdbcTemplate)

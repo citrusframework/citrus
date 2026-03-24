@@ -51,7 +51,7 @@ public class CamelEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpoint() throws Exception {
+    public void testCreateEndpoint() {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
         reset(referenceResolver);
@@ -75,7 +75,7 @@ public class CamelEndpointComponentTest {
     }
 
     @Test
-    public void testCreateSyncEndpoint() throws Exception {
+    public void testCreateSyncEndpoint() {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
         reset(referenceResolver);
@@ -99,7 +99,7 @@ public class CamelEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpointWithParameters() throws Exception {
+    public void testCreateEndpointWithParameters() {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
         Map<String, CamelContext> camelContextMap = new HashMap<>();
@@ -121,7 +121,7 @@ public class CamelEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpointWithCamelParameters() throws Exception {
+    public void testCreateEndpointWithCamelParameters() {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
         Map<String, CamelContext> camelContextMap = new HashMap<>();
@@ -143,7 +143,7 @@ public class CamelEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpointWithBeanReference() throws Exception {
+    public void testCreateEndpointWithBeanReference() {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
         reset(referenceResolver);

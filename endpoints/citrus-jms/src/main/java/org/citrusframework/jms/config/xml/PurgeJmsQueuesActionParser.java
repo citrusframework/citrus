@@ -133,7 +133,7 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public PurgeJmsQueuesAction getObject() throws Exception {
+        public PurgeJmsQueuesAction getObject() {
             return builder.build();
         }
 

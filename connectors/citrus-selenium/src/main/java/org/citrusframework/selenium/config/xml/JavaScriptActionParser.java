@@ -88,7 +88,7 @@ public class JavaScriptActionParser extends AbstractBrowserActionParser {
         }
 
         @Override
-        public JavaScriptAction getObject() throws Exception {
+        public JavaScriptAction getObject() {
             return builder.build();
         }
 

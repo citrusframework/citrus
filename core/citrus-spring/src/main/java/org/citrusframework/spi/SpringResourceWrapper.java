@@ -50,12 +50,12 @@ public class SpringResourceWrapper implements org.springframework.core.io.Resour
     }
 
     @Override
-    public URI getURI() throws IOException {
+    public URI getURI() {
         return delegate.getURI();
     }
 
     @Override
-    public File getFile() throws IOException {
+    public File getFile() {
         return delegate.getFile();
     }
 
@@ -69,7 +69,7 @@ public class SpringResourceWrapper implements org.springframework.core.io.Resour
     }
 
     @Override
-    public long lastModified() throws IOException {
+    public long lastModified() {
         try {
             return delegate.getFile().lastModified();
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class SpringResourceWrapper implements org.springframework.core.io.Resour
     }
 
     @Override
-    public org.springframework.core.io.Resource createRelative(String relativePath) throws IOException {
+    public org.springframework.core.io.Resource createRelative(String relativePath) {
         throw new UnsupportedOperationException();
     }
 
@@ -93,7 +93,7 @@ public class SpringResourceWrapper implements org.springframework.core.io.Resour
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         return delegate.getInputStream();
     }
 

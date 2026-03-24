@@ -57,7 +57,7 @@ public class FormUrlEncodedMessageValidatorTest extends AbstractTestNGUnitTest {
             </form-data>""";
 
     @Test
-    public void testValidateMessagePayload() throws Exception {
+    public void testValidateMessagePayload() {
         Message controlMessage = new DefaultMessage(expectedFormData);
 
         Message receivedMessage = new DefaultMessage("password=s%21cr%21t&username=test")
@@ -68,7 +68,7 @@ public class FormUrlEncodedMessageValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = ValidationException.class)
-    public void testValidationError() throws Exception {
+    public void testValidationError() {
         Message controlMessage = new DefaultMessage(expectedFormData);
 
         Message receivedMessage = new DefaultMessage("password=s%21cr%21t&username=other")
@@ -79,7 +79,7 @@ public class FormUrlEncodedMessageValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = ValidationException.class)
-    public void testValidationErrorMissingFormAction() throws Exception {
+    public void testValidationErrorMissingFormAction() {
         Message controlMessage = new DefaultMessage(expectedFormData);
 
         Message receivedMessage = new DefaultMessage("password=s%21cr%21t&username=test");

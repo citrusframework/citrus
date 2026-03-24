@@ -104,9 +104,8 @@ public class TemplateParser implements BeanDefinitionParser {
         /**
          * Adds test actions to container when building object.
          * @return
-         * @throws Exception
          */
-        public Template getObject() throws Exception {
+        public Template getObject() {
             return builder.build();
         }
 

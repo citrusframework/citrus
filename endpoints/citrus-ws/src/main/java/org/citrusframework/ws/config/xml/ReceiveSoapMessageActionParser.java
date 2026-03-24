@@ -122,7 +122,7 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
         }
 
         @Override
-        public ReceiveSoapMessageAction getObject() throws Exception {
+        public ReceiveSoapMessageAction getObject() {
             return builder.build();
         }
 

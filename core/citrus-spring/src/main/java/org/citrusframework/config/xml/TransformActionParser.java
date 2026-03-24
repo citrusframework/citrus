@@ -116,7 +116,7 @@ public class TransformActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public TransformAction getObject() throws Exception {
+        public TransformAction getObject() {
             return builder.build();
         }
 

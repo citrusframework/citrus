@@ -53,7 +53,7 @@ public class MakeScreenshotActionParser extends AbstractBrowserActionParser {
         }
 
         @Override
-        public MakeScreenshotAction getObject() throws Exception {
+        public MakeScreenshotAction getObject() {
             return builder.build();
         }
 

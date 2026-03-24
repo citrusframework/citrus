@@ -35,7 +35,7 @@ public class DefaultMessageHeaderValidatorTest extends AbstractTestNGUnitTest {
     private final HeaderValidationContext validationContext = new HeaderValidationContext.Builder().build();
 
     @Test
-    public void testValidateMessageHeadersHamcrestMatcherSupport() throws Exception {
+    public void testValidateMessageHeadersHamcrestMatcherSupport() {
         Message receivedMessage = new DefaultMessage("Hello World!")
                 .setHeader("foo", "foo_test")
                 .setHeader("additional", "additional")
@@ -48,7 +48,7 @@ public class DefaultMessageHeaderValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = ValidationException.class)
-    public void testValidateHamcrestMatcherError() throws Exception {
+    public void testValidateHamcrestMatcherError() {
         Message receivedMessage = new DefaultMessage("Hello World!")
                 .setHeader("foo", "foo_test")
                 .setHeader("bar", "bar_test");

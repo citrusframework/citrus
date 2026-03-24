@@ -53,7 +53,7 @@ public class StoreFileActionParser extends AbstractBrowserActionParser {
         }
 
         @Override
-        public StoreFileAction getObject() throws Exception {
+        public StoreFileAction getObject() {
             return builder.build();
         }
 

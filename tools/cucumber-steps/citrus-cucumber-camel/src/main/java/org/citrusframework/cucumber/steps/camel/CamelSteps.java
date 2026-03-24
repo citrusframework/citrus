@@ -182,7 +182,7 @@ public class CamelSteps {
     }
 
     @Given("^Camel route ([^\\s]+)\\.xml")
-    public void camelRouteXml(String id, String routeSpec) throws Exception {
+    public void camelRouteXml(String id, String routeSpec) {
         runner.run(camel().camelContext(camelContext())
                 .route()
                 .create(routeSpec)
@@ -190,7 +190,7 @@ public class CamelSteps {
     }
 
     @Given("^Camel route ([^\\s]+)\\.groovy")
-    public void camelRouteGroovy(String id, String route) throws Exception {
+    public void camelRouteGroovy(String id, String route) {
         runner.run(camel().camelContext(camelContext())
                 .route()
                 .create(route)

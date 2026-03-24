@@ -32,7 +32,7 @@ public class HttpClientConnectionManagerFactory implements FactoryBean<HttpClien
     }
 
     @Override
-    public HttpClientConnectionManager getObject() throws Exception {
+    public HttpClientConnectionManager getObject() {
         return secureConnection.getClientConnectionManager();
     }
 

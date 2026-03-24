@@ -127,7 +127,7 @@ public class FtpClientTest extends AbstractFtpClientTest {
     }
 
     @AfterClass
-    public void tearDown() throws Exception {
+    public void tearDown() {
         ftpClient.destroy();
         fakeFtpServer.stop();
     }

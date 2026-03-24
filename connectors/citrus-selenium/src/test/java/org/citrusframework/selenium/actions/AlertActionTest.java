@@ -58,7 +58,7 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteAccept() throws Exception {
+    public void testExecuteAccept() {
         when(locator.alert()).thenReturn(alert);
 
         AlertAction action = new AlertAction.Builder()
@@ -70,7 +70,7 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteDismiss() throws Exception {
+    public void testExecuteDismiss() {
         WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
         when(webDriver.switchTo()).thenReturn(locator);
         when(locator.alert()).thenReturn(alert);
@@ -85,7 +85,7 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteTextValidation() throws Exception {
+    public void testExecuteTextValidation() {
         when(locator.alert()).thenReturn(alert);
 
         AlertAction action = new AlertAction.Builder()
@@ -98,7 +98,7 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteTextValidationVariableSupport() throws Exception {
+    public void testExecuteTextValidationVariableSupport() {
         when(locator.alert()).thenReturn(alert);
 
         context.setVariable("alertText","This is a warning!");
@@ -112,7 +112,7 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteTextValidationMatcherSupport() throws Exception {
+    public void testExecuteTextValidationMatcherSupport() {
         when(locator.alert()).thenReturn(alert);
 
         AlertAction action = new AlertAction.Builder()
@@ -125,7 +125,7 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Failed to validate alert dialog text.*")
-    public void testExecuteTextValidationError() throws Exception {
+    public void testExecuteTextValidationError() {
         when(locator.alert()).thenReturn(alert);
 
         AlertAction action = new AlertAction.Builder()

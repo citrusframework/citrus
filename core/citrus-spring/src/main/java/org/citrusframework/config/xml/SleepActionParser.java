@@ -65,7 +65,7 @@ public class SleepActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public SleepAction getObject() throws Exception {
+        public SleepAction getObject() {
             return builder.build();
         }
 

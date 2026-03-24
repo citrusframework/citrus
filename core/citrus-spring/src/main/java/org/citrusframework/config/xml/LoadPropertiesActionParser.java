@@ -64,7 +64,7 @@ public class LoadPropertiesActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public LoadPropertiesAction getObject() throws Exception {
+        public LoadPropertiesAction getObject() {
             return builder.build();
         }
 

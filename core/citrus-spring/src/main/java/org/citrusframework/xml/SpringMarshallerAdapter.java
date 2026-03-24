@@ -53,7 +53,7 @@ public class SpringMarshallerAdapter implements org.springframework.oxm.Marshall
     }
 
     @Override
-    public Object unmarshal(Source source) throws IOException, XmlMappingException {
+    public Object unmarshal(Source source) throws XmlMappingException {
         try {
             return unmarshaller.unmarshal(source);
         } catch (Exception e) {
@@ -62,7 +62,7 @@ public class SpringMarshallerAdapter implements org.springframework.oxm.Marshall
     }
 
     @Override
-    public void marshal(Object graph, Result result) throws IOException, XmlMappingException {
+    public void marshal(Object graph, Result result) throws XmlMappingException {
         try {
             marshaller.marshal(graph, result);
         } catch (Exception e) {

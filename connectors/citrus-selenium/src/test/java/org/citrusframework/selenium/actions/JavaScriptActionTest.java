@@ -50,7 +50,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecute() throws Exception {
+    public void testExecute() {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
 
         JavaScriptAction action =  new JavaScriptAction.Builder()
@@ -66,7 +66,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteVariableSupport() throws Exception {
+    public void testExecuteVariableSupport() {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
 
         context.setVariable("text", "Hello");
@@ -84,7 +84,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteWithErrorValidation() throws Exception {
+    public void testExecuteWithErrorValidation() {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.singletonList("This went totally wrong!"));
 
         JavaScriptAction action =  new JavaScriptAction.Builder()
@@ -101,7 +101,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = ValidationException.class)
-    public void testExecuteWithErrorValidationFailed() throws Exception {
+    public void testExecuteWithErrorValidationFailed() {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
 
         JavaScriptAction action =  new JavaScriptAction.Builder()

@@ -96,9 +96,8 @@ public class SinglePublicKeyAuthenticatorTest {
      * Gets public key instance from resource.
      * @param pResource
      * @return
-     * @throws IOException
      */
-    private PublicKey getPublicKey(String pResource) throws IOException {
+    private PublicKey getPublicKey(String pResource) {
         return getPublicKeyFromStream(getClass().getResourceAsStream(pResource));
     }
 

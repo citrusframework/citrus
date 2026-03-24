@@ -90,7 +90,7 @@ public class AgentStart extends CitrusCommand {
     }
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         return start();
     }
 

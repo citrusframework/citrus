@@ -72,7 +72,7 @@ public class CreateVariablesActionParser implements BeanDefinitionParser {
         private final CreateVariablesAction.Builder builder = new CreateVariablesAction.Builder();
 
         @Override
-        public CreateVariablesAction getObject() throws Exception {
+        public CreateVariablesAction getObject() {
             return builder.build();
         }
 

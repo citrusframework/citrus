@@ -163,7 +163,7 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public DockerExecuteAction getObject() throws Exception {
+        public DockerExecuteAction getObject() {
             if (dockerClient != null) {
                 builder.client(dockerClient);
             }

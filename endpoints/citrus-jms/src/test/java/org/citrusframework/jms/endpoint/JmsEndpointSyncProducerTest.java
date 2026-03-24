@@ -229,7 +229,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Message is empty - unable to send empty message")
-    public void testSendEmptyMessage() throws JMSException {
+    public void testSendEmptyMessage() {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 

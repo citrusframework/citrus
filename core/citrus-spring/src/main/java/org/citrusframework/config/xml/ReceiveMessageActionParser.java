@@ -450,7 +450,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         private final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
         @Override
-        public ReceiveMessageAction getObject() throws Exception {
+        public ReceiveMessageAction getObject() {
             return builder.build();
         }
 

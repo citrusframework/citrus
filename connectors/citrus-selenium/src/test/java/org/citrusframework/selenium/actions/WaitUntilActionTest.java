@@ -53,7 +53,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testWaitForHidden() throws Exception {
+    public void testWaitForHidden() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(false);
 
@@ -68,7 +68,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = TimeoutException.class)
-    public void testWaitForHiddenTimeout() throws Exception {
+    public void testWaitForHiddenTimeout() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(true);
 
@@ -82,7 +82,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testWaitForVisible() throws Exception {
+    public void testWaitForVisible() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(true);
 
@@ -97,7 +97,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = TimeoutException.class)
-    public void testWaitForVisibleTimeout() throws Exception {
+    public void testWaitForVisibleTimeout() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(false);
 
@@ -111,7 +111,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void testUnsupportedWaitCondition() throws Exception {
+    public void testUnsupportedWaitCondition() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(false);
 

@@ -136,7 +136,7 @@ public class PurgeEndpointActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public PurgeEndpointAction getObject() throws Exception {
+        public PurgeEndpointAction getObject() {
             return builder.build();
         }
 

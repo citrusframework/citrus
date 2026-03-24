@@ -142,7 +142,7 @@ public class JavaActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public JavaAction getObject() throws Exception {
+        public JavaAction getObject() {
             return builder.build();
         }
 

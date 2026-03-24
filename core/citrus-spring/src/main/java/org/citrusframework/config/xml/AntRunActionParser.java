@@ -125,7 +125,7 @@ public class AntRunActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public AntRunAction getObject() throws Exception {
+        public AntRunAction getObject() {
             return builder.build();
         }
 

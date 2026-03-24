@@ -35,7 +35,7 @@ public class TestSuiteExecutionListener extends AbstractTestExecutionListener {
     private static final String SUITE_NAME = "citrus-junit4-suite";
 
     @Override
-    public void prepareTestInstance(TestContext testContext) throws Exception {
+    public void prepareTestInstance(TestContext testContext) {
         if (TestSuiteState.shouldExecuteBeforeSuite()) {
             ApplicationContext ctx = testContext.getApplicationContext();
 

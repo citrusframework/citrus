@@ -127,7 +127,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
     }
 
     @Test
-    public void testTranslateFromMappingFile() throws Exception {
+    public void testTranslateFromMappingFile() {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
 
         JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();

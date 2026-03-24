@@ -40,7 +40,7 @@ public class JmsSyncEndpointConfigParserExceptionTest extends AbstractTestNGUnit
     private ReferenceResolver referenceResolver;
 
     @BeforeClass
-    public void setup() throws JMSException {
+    public void setup() {
         MockitoAnnotations.openMocks(this);
     }
 

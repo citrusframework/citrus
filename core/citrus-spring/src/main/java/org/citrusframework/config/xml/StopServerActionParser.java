@@ -75,7 +75,7 @@ public class StopServerActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public StopServerAction getObject() throws Exception {
+        public StopServerAction getObject() {
             return builder.build();
         }
 

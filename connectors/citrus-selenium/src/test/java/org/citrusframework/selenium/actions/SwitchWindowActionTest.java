@@ -55,7 +55,7 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSwitchToActiveWindow() throws Exception {
+    public void testSwitchToActiveWindow() {
         Set<String> windows = new HashSet<>();
         windows.add("active_window");
         windows.add("last_window");
@@ -79,7 +79,7 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSwitchWindow() throws Exception {
+    public void testSwitchWindow() {
         Set<String> windows = new HashSet<>();
         windows.add("active_window");
         windows.add("other_window");
@@ -103,7 +103,7 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find window.*")
-    public void testSwitchWindowNotFound() throws Exception {
+    public void testSwitchWindowNotFound() {
         Set<String> windows = new HashSet<>();
         windows.add("active_window");
 

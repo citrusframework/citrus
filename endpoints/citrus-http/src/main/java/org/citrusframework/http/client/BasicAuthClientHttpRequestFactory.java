@@ -62,7 +62,7 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     /**
      * Construct the client factory bean with user credentials.
      */
-    public HttpComponentsClientHttpRequestFactory getObject() throws Exception {
+    public HttpComponentsClientHttpRequestFactory getObject() {
         assertNotNull(credentials, "User credentials not set properly!");
 
         return new HttpComponentsClientHttpRequestFactory(httpClient.build()) {

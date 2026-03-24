@@ -45,7 +45,7 @@ public class MailEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpoint() throws Exception {
+    public void testCreateClientEndpoint() {
         MailEndpointComponent component = new MailEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("smtp://localhost:22000", context);
@@ -74,7 +74,7 @@ public class MailEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithParameters() throws Exception {
+    public void testCreateClientEndpointWithParameters() {
         MailEndpointComponent component = new MailEndpointComponent();
 
         reset(referenceResolver);

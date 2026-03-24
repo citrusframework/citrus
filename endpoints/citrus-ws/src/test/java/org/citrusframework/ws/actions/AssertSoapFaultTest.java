@@ -49,7 +49,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     private SoapFaultValidator soapFaultValidator;
 
     @Test
-    public void testAssertSoapFault() throws Exception {
+    public void testAssertSoapFault() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -75,7 +75,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test
-    public void testAssertSoapFaultWithValidatorName() throws Exception {
+    public void testAssertSoapFaultWithValidatorName() {
         TestAction action = action(context -> {
                 SoapMessage faultMessage;
 
@@ -102,7 +102,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test
-    public void testAssertSoapFaultWithValidationMatchers() throws Exception {
+    public void testAssertSoapFaultWithValidationMatchers() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -128,7 +128,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test
-    public void testNoPrefix() throws Exception {
+    public void testNoPrefix() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -151,7 +151,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "SOAP fault validation failed! Fault code does not match - expected: '\\{http://citrusframework.org}TEC-1001' but was: '\\{http://citrusframework.org}TEC-2002'")
-    public void testWrongFaultCode() throws Exception {
+    public void testWrongFaultCode() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -174,7 +174,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "SOAP fault validation failed! Fault actor does not match - expected: 'SERVER' but was: 'CLIENT'")
-    public void testWrongFaultActor() throws Exception {
+    public void testWrongFaultActor() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -200,7 +200,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test
-    public void testWrongFaultString() throws Exception {
+    public void testWrongFaultString() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -230,7 +230,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test
-    public void testAssertSoapFaultDetail() throws Exception {
+    public void testAssertSoapFaultDetail() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -263,7 +263,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test
-    public void testAssertSoapFaultDetailVariableSupport() throws Exception {
+    public void testAssertSoapFaultDetailVariableSupport() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -298,7 +298,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test
-    public void testAssertSoapFaultDetailResource() throws Exception {
+    public void testAssertSoapFaultDetailResource() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -331,7 +331,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test
-    public void testAssertSoapFaultDetailResourceVariableSupport() throws Exception {
+    public void testAssertSoapFaultDetailResourceVariableSupport() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -366,7 +366,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test
-    public void testAssertMultipleSoapFaultDetails() throws Exception {
+    public void testAssertMultipleSoapFaultDetails() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 
@@ -402,7 +402,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
     }
 
     @Test
-    public void testAssertMultipleSoapFaultDetailsWithResource() throws Exception {
+    public void testAssertMultipleSoapFaultDetailsWithResource() {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
 

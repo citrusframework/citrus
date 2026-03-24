@@ -42,7 +42,7 @@ public class CamelControlbusIT extends TestNGCitrusSpringSupport implements Test
     public void shouldManageRoutes() throws Exception {
         camelContext.addRoutes(new RouteBuilder() {
             @Override
-            public void configure() throws Exception {
+            public void configure() {
                 from(direct("message"))
                     .routeId("message-to-words")
                     .autoStartup(false)

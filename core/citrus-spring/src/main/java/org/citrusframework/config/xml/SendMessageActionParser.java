@@ -118,7 +118,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         }
 
         @Override
-        public SendMessageAction getObject() throws Exception {
+        public SendMessageAction getObject() {
             return builder.build();
         }
 

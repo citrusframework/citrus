@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class JmsByteMessageJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
-    public void jmsByteMessage() throws IOException {
+    public void jmsByteMessage() {
         when(send("jms:queue:jms.binary.queue")
                 .message(new DefaultMessage(
                         FileUtils.copyToByteArray(

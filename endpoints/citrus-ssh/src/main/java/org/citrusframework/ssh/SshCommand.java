@@ -76,7 +76,7 @@ public class SshCommand implements Command, Runnable {
     }
 
     @Override
-    public void start(ChannelSession session, Environment env) throws IOException {
+    public void start(ChannelSession session, Environment env) {
         user = env.getEnv().get(Environment.ENV_USER);
         new Thread(this, "CitrusSshCommand: " + command).start();
     }

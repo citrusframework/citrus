@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class SendMessageActionParserTest extends AbstractActionParserTest<SendMessageAction> {
 
     @Test
-    public void testSendMessageActionParser() throws IOException {
+    public void testSendMessageActionParser() {
         assertActionCount(3);
         assertActionClassAndName(SendMessageAction.class, "send");
 

@@ -47,7 +47,7 @@ public class CustomTestCaseParserTest extends AbstractActionParserTest<EchoActio
     }
 
     @Test
-    public void testCustomTestCaseParser() throws IOException {
+    public void testCustomTestCaseParser() {
         Assert.assertTrue(getTestCase() instanceof CustomTestCase);
         Assert.assertTrue(getTestCase().getMetaInfo() instanceof CustomTestCaseMetaInfo);
         Assert.assertEquals(((CustomTestCaseMetaInfo)getTestCase().getMetaInfo()).getDescription(), "Foo bar: F#!$§ed up beyond all repair");

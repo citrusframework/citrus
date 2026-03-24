@@ -57,7 +57,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testNoBeansInContext() throws Exception {
+    public void testNoBeansInContext() {
         reset(httpServer);
         GenericApplicationContext applicationContext = new GenericApplicationContext();
         applicationContext.refresh();
@@ -67,7 +67,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testConfigureHandlerInterceptor() throws Exception {
+    public void testConfigureHandlerInterceptor() {
         List<Object> interceptors = new ArrayList<>();
         interceptors.add(new LoggingHandlerInterceptor());
 
@@ -92,7 +92,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testConfigureMessageController() throws Exception {
+    public void testConfigureMessageController() {
         reset(httpServer);
 
         when(httpServer.getInterceptors()).thenReturn(null);

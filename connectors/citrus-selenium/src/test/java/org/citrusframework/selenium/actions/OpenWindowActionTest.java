@@ -55,7 +55,7 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testOpenWindow() throws Exception {
+    public void testOpenWindow() {
         Set<String> windows = new HashSet<>();
         windows.add("active_window");
         windows.add("new_window");
@@ -79,7 +79,7 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to open new window")
-    public void testOpenWindowFailed() throws Exception {
+    public void testOpenWindowFailed() {
         when(webDriver.getWindowHandles()).thenReturn(Collections.singleton("active_window"));
         when(webDriver.getWindowHandle()).thenReturn("active_window");
 

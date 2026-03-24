@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class StaticResponseEndpointAdapterParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testParseBeanDefinition() throws Exception {
+    public void testParseBeanDefinition() {
         Map<String, StaticResponseEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(StaticResponseEndpointAdapter.class);
 
         Assert.assertEquals(adapters.size(), 2);

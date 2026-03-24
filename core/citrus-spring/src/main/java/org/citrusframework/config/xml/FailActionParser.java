@@ -56,7 +56,7 @@ public class FailActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public FailAction getObject() throws Exception {
+        public FailAction getObject() {
             return builder.build();
         }
 

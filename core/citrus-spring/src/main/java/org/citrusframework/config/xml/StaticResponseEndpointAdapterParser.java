@@ -140,7 +140,7 @@ public class StaticResponseEndpointAdapterParser extends AbstractBeanDefinitionP
         }
 
         @Override
-        public StaticResponseEndpointAdapter getObject() throws Exception {
+        public StaticResponseEndpointAdapter getObject() {
             StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
 
             if (messagePayload != null) {

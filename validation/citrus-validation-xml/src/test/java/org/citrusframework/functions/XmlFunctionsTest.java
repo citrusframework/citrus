@@ -27,17 +27,17 @@ import static org.citrusframework.functions.XmlFunctions.xPath;
 public class XmlFunctionsTest extends AbstractTestNGUnitTest {
 
     @Test
-    public void testCreateCDataSection() throws Exception {
+    public void testCreateCDataSection() {
         Assert.assertEquals(createCDataSection("<Test><Message>Some Text</Message></Test>", context), "<![CDATA[<Test><Message>Some Text</Message></Test>]]>");
     }
 
     @Test
-    public void testEscapeXml() throws Exception {
+    public void testEscapeXml() {
         Assert.assertEquals(escapeXml("<Test><Message>Some Text</Message></Test>", context), "&lt;Test&gt;&lt;Message&gt;Some Text&lt;/Message&gt;&lt;/Test&gt;");
     }
 
     @Test
-    public void testXpath() throws Exception {
+    public void testXpath() {
         Assert.assertEquals(xPath("<Test><Message>Some Text</Message></Test>", "/Test/Message", context), "Some Text");
     }
 

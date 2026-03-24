@@ -50,7 +50,7 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
     }
 
     @Test
-    public void shouldReceiveMessage() throws Exception {
+    public void shouldReceiveMessage() {
         String output = """
         Starting to receive messages from existing Camel: my-route (pid: 12345)
         Waiting for messages ...
@@ -91,7 +91,7 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
     }
 
     @Test
-    public void shouldReceiveMessageJsonOutput() throws Exception {
+    public void shouldReceiveMessageJsonOutput() {
         String output = """
         Starting to receive messages from existing Camel: my-route (pid: 12345)
         Waiting for messages ...
@@ -160,7 +160,7 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
     }
 
     @Test
-    public void shouldStoreLastMessage() throws Exception {
+    public void shouldStoreLastMessage() {
         String output = """
         Starting to receive messages from existing Camel: my-route (pid: 12345)
         Waiting for messages ...
@@ -243,7 +243,7 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = ActionTimeoutException.class)
-    public void shouldTimeoutWhenNoMessage() throws Exception {
+    public void shouldTimeoutWhenNoMessage() {
         String output = """
         Starting to receive messages from existing Camel: my-route (pid: 12345)
         Waiting for messages ...
@@ -269,7 +269,7 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = ActionTimeoutException.class)
-    public void shouldTimeoutWhenNoMessageJsonOutput() throws Exception {
+    public void shouldTimeoutWhenNoMessageJsonOutput() {
         String output = """
         Starting to receive messages from existing Camel: my-route (pid: 12345)
         Waiting for messages ...

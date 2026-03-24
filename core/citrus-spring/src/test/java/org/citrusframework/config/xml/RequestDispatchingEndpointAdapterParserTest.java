@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class RequestDispatchingEndpointAdapterParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testParseBeanDefinition() throws Exception {
+    public void testParseBeanDefinition() {
         Map<String, RequestDispatchingEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(RequestDispatchingEndpointAdapter.class);
 
         Assert.assertEquals(adapters.size(), 1);

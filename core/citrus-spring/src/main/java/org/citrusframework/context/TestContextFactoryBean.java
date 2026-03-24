@@ -198,7 +198,7 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (functionRegistry != null) {
             delegate.setFunctionRegistry(functionRegistry);
         }

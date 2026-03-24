@@ -75,7 +75,7 @@ public class InputActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public InputAction getObject() throws Exception {
+        public InputAction getObject() {
             return builder.build();
         }
 

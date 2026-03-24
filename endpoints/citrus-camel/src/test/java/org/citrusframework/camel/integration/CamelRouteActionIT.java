@@ -39,12 +39,12 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport implements Tes
 
     @Test
     @CitrusTest
-    public void shouldCreateRoutes() throws Exception {
+    public void shouldCreateRoutes() {
         given(camel().camelContext(camelContext)
             .route()
             .create(new RouteBuilder() {
                 @Override
-                public void configure() throws Exception {
+                public void configure() {
                     from("direct:messages")
                             .split().tokenize(" ")
                             .to("seda:words");
@@ -69,12 +69,12 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport implements Tes
 
     @Test
     @CitrusTest
-    public void shouldStartStopRoutes() throws Exception {
+    public void shouldStartStopRoutes() {
         given(camel().camelContext(camelContext)
                 .route()
                 .create(new RouteBuilder() {
                     @Override
-                    public void configure() throws Exception {
+                    public void configure() {
                         from(direct("text"))
                                 .routeId("split-text")
                                 .autoStartup(false)

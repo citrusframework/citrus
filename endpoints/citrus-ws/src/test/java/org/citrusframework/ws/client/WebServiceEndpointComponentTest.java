@@ -49,7 +49,7 @@ public class WebServiceEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpoint() throws Exception {
+    public void testCreateClientEndpoint() {
         WebServiceEndpointComponent component = new WebServiceEndpointComponent();
 
         reset(referenceResolver);
@@ -64,7 +64,7 @@ public class WebServiceEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithParameters() throws Exception {
+    public void testCreateClientEndpointWithParameters() {
         WebServiceEndpointComponent component = new WebServiceEndpointComponent();
 
         reset(referenceResolver);

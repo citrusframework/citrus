@@ -31,7 +31,7 @@ public class ZooExecuteActionTest extends AbstractTestNGUnitTest {
     private final ZooKeeper zookeeper = Mockito.mock(ZooKeeper.class);
 
     @Test
-    public void testInfo() throws Exception {
+    public void testInfo() {
         reset(zookeeper);
 
         when(zookeeper.getState()).thenReturn(ZooKeeper.States.CONNECTED);

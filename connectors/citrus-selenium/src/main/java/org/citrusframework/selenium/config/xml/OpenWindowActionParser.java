@@ -53,7 +53,7 @@ public class OpenWindowActionParser extends AbstractBrowserActionParser {
         }
 
         @Override
-        public OpenWindowAction getObject() throws Exception {
+        public OpenWindowAction getObject() {
             return builder.build();
         }
 

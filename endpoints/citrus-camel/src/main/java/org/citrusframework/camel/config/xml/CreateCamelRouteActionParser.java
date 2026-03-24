@@ -71,7 +71,7 @@ public class CreateCamelRouteActionParser extends AbstractCamelRouteActionParser
         }
 
         @Override
-        public CreateCamelRouteAction getObject() throws Exception {
+        public CreateCamelRouteAction getObject() {
             return builder.build();
         }
 

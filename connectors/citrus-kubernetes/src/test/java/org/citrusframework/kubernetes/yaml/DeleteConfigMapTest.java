@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class DeleteConfigMapTest extends AbstractYamlActionTest {
 
     @Test
-    public void shouldLoadKubernetesActions() throws IOException {
+    public void shouldLoadKubernetesActions() {
         String namespace = "test";
         ConfigMap configMap = new ConfigMapBuilder()
                 .withNewMetadata()

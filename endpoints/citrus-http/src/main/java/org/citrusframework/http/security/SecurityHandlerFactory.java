@@ -74,7 +74,7 @@ public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, Ini
     /**
      * Construct new security handler for basic authentication.
      */
-    public SecurityHandler getObject() throws Exception {
+    public SecurityHandler getObject() {
         ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
         securityHandler.setAuthenticator(authenticator);
         securityHandler.setRealmName(realm);

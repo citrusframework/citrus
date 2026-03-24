@@ -53,7 +53,7 @@ public class SwitchWindowActionParser extends AbstractBrowserActionParser {
         }
 
         @Override
-        public SwitchWindowAction getObject() throws Exception {
+        public SwitchWindowAction getObject() {
             return builder.build();
         }
 

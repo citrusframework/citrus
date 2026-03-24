@@ -87,7 +87,7 @@ public class RequestDispatchingEndpointAdapterParser extends AbstractBeanDefinit
         }
 
         @Override
-        public RequestDispatchingEndpointAdapter getObject() throws Exception {
+        public RequestDispatchingEndpointAdapter getObject() {
             RequestDispatchingEndpointAdapter endpointAdapter = new RequestDispatchingEndpointAdapter();
 
             if (mappingKeyExtractor != null) {

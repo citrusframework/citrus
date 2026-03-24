@@ -161,9 +161,8 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
     /**
      * Gets all test files from test directory.
      * @return
-     * @throws IOException
      */
-    List<File> getTestFiles() throws IOException {
+    List<File> getTestFiles() {
         if (testFiles == null) {
             testFiles = FileUtils.findFiles(Paths.get(srcDirectory, "resources").toString(), CitrusSettings.getXmlTestFileNamePattern());
         }

@@ -101,7 +101,7 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testHttpServerParser() throws IOException {
+    public void testHttpServerParser() {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st message sender

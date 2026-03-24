@@ -128,7 +128,7 @@ public class AgentRun extends CitrusCommand {
     }
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         return runTests();
     }
 

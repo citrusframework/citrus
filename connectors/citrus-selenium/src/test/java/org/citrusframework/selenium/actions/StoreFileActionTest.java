@@ -42,7 +42,7 @@ public class StoreFileActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecute() throws Exception {
+    public void testExecute() {
         StoreFileAction action =  new StoreFileAction.Builder()
                 .browser(seleniumBrowser)
                 .filePath("classpath:download/file.txt")
@@ -53,7 +53,7 @@ public class StoreFileActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteVariableSupport() throws Exception {
+    public void testExecuteVariableSupport() {
         context.setVariable("file", "classpath:download/file.xml");
 
         StoreFileAction action =  new StoreFileAction.Builder()

@@ -243,7 +243,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
             expectedExceptionsMessageRegExp = "Failed to find JMS reply destination for message correlation key: '123456789'")
-    public void testSendMessageWithMissingReplyTo() throws JMSException {
+    public void testSendMessageWithMissingReplyTo() {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 

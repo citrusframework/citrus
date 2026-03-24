@@ -32,7 +32,7 @@ public class NamespaceContextParserTest extends AbstractBeanDefinitionParserTest
     }
 
     @Test
-    public void testNamespaceContextParser() throws Exception {
+    public void testNamespaceContextParser() {
         beanDefinitionContext = createApplicationContext("context");
         Map<String, NamespaceContextBuilder> namespaceContexts = beanDefinitionContext.getBeansOfType(NamespaceContextBuilder.class);
 

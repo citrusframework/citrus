@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class SimpleSoapAttachmentValidatorTest {
 
     @Test
-    public void testSimpleValidation() throws IOException {
+    public void testSimpleValidation() {
         SoapAttachment controlAttachment = new SoapAttachment();
         controlAttachment.setContentId("soapAttachmentId");
         controlAttachment.setContentType("text/plain");
@@ -41,7 +41,7 @@ public class SimpleSoapAttachmentValidatorTest {
     }
 
     @Test
-    public void testSimpleValidationNoControlContentId() throws IOException {
+    public void testSimpleValidationNoControlContentId() {
         SoapAttachment receivedAttachment = new SoapAttachment();
         receivedAttachment.setContentId("soapAttachmentId");
         receivedAttachment.setContentType("text/plain");
@@ -59,7 +59,7 @@ public class SimpleSoapAttachmentValidatorTest {
     }
 
     @Test(expectedExceptions = ValidationException.class)
-    public void testSimpleValidationWrongContentId() throws IOException {
+    public void testSimpleValidationWrongContentId() {
         SoapAttachment receivedAttachment = new SoapAttachment();
         receivedAttachment.setContentId("soapAttachmentId");
         receivedAttachment.setContentType("text/plain");
@@ -78,7 +78,7 @@ public class SimpleSoapAttachmentValidatorTest {
     }
 
     @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Values not equal for attachment content 'soapAttachmentId', expected 'ThisisnotOK!' but was 'Thisisatest!'")
-    public void testSimpleValidationWrongContent() throws IOException {
+    public void testSimpleValidationWrongContent() {
         SoapAttachment receivedAttachment = new SoapAttachment();
         receivedAttachment.setContentId("soapAttachmentId");
         receivedAttachment.setContentType("text/plain");
@@ -97,7 +97,7 @@ public class SimpleSoapAttachmentValidatorTest {
     }
 
     @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Values not equal for attachment contentType, expected 'text/xml' but was 'text/plain'")
-    public void testSimpleValidationWrongContentType() throws IOException {
+    public void testSimpleValidationWrongContentType() {
         SoapAttachment receivedAttachment = new SoapAttachment();
         receivedAttachment.setContentId("soapAttachmentId");
         receivedAttachment.setContentType("text/plain");

@@ -74,7 +74,7 @@ public class AlertActionParser extends AbstractBrowserActionParser {
         }
 
         @Override
-        public AlertAction getObject() throws Exception {
+        public AlertAction getObject() {
             return builder.build();
         }
 
