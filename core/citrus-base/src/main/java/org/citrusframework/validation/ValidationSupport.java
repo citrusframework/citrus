@@ -64,12 +64,7 @@ public interface ValidationSupport extends Validations, ValidationContextLookupS
 
     @Override
     default SoapMessageValidationContextBuilder soap() {
-        return new SoapMessageValidationContextBuilder() {
-            @Override
-            public SoapFaultValidationContext.Builder fault() {
-                return new SoapFaultValidationContext.Builder();
-            }
-        };
+        return SoapFaultValidationContext.Builder::new;
     }
 
     @Override

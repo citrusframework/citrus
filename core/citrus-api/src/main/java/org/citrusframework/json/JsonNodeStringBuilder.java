@@ -37,22 +37,22 @@ public interface JsonNodeStringBuilder {
     JsonNodeStringBuilder withProperty(String name, long value);
 
     JsonNodeStringBuilder withObject();
+
     JsonNodeStringBuilder closeObject();
 
     JsonNodeStringBuilder withArray(List<String> items);
 
     default JsonNodeStringBuilder withArray(Map<String, Object> items) {
         JsonNodeStringBuilder builder = withArray();
-        items.forEach((key, value) -> {
-            builder.withObject()
-                    .withProperty("name", key)
-                    .withPropertyEscaped("value", String.valueOf(value))
-                .closeObject();
-        });
+        items.forEach((key, value) -> builder.withObject()
+                .withProperty("name", key)
+                .withPropertyEscaped("value", String.valueOf(value))
+                .closeObject());
         builder.closeArray();
         return this;
     }
 
     JsonNodeStringBuilder withArray();
+
     JsonNodeStringBuilder closeArray();
 }
