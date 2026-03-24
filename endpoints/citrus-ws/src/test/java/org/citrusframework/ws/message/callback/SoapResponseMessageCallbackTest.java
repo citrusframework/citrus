@@ -196,7 +196,7 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
     public void testSoapAttachment() throws TransformerException, IOException {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("attContentId");
-        attachment.setContent("This is a SOAP attachment" + System.getProperty("line.separator") + "with multi-line");
+        attachment.setContent("This is a SOAP attachment" + System.lineSeparator() + "with multi-line");
         attachment.setContentType("plain/text");
 
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);

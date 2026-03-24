@@ -602,7 +602,7 @@ public class HttpMessage extends DefaultMessage {
         final StringBuilder bodyBuilder = new StringBuilder();
         line = reader.readLine();
         while (StringUtils.hasText(line)) {
-            bodyBuilder.append(line).append(System.getProperty("line.separator"));
+            bodyBuilder.append(line).append(System.lineSeparator());
             line = reader.readLine();
         }
 
