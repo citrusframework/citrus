@@ -255,7 +255,7 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
         }
 
         public void reset(String name) {
-            entries.put(name, new ReportEntry(name));;
+            entries.put(name, new ReportEntry(name));
         }
 
         public List<ReportEntry> getEntries() {
