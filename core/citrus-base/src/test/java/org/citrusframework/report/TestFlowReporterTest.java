@@ -16,12 +16,6 @@
 
 package org.citrusframework.report;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestResult;
@@ -36,13 +30,22 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static java.util.Objects.nonNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 public class TestFlowReporterTest {
 
@@ -55,12 +58,22 @@ public class TestFlowReporterTest {
 
     @Mock
     private Iterate iteration;
+    
     @Mock
     private Sequence sequence;
 
+    private AutoCloseable mocks;
+
     @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
+    public void setupMocks() {
+        mocks = openMocks(this);
+    }
+
+    @AfterClass
+    public void teardownMocks() throws Exception {
+        if (nonNull(mocks)) {
+            mocks.close();
+        }
     }
 
     @Test
@@ -97,7 +110,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
         [
           {
             "name": "fooTest",
@@ -162,7 +175,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
         [
           {
             "name": "fooTest",
@@ -233,7 +246,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
         [
           {
             "name": "fooTest",
@@ -310,7 +323,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
         [
           {
             "name": "fooTest",
@@ -394,7 +407,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
         [
           {
             "name": "fooTest",
@@ -458,7 +471,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
         [
           {
             "name": "fooTest",
@@ -534,7 +547,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getJsonReport(), """
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
         [
           {
             "name": "fooTest",
