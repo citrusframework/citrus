@@ -100,30 +100,22 @@ public class WatchPodLogsAction extends AbstractKubernetesAction {
 
     private long getDurationMillis() {
         if (timeout.indexOf(".") > 0) {
-            switch (timeUnit) {
-                case MILLISECONDS:
-                    return Math.round(Double.parseDouble(timeout));
-                case SECONDS:
-                    return Math.round(Double.parseDouble(timeout) * 1000);
-                case MINUTES:
-                    return Math.round(Double.parseDouble(timeout) * 60 * 1000);
-                default:
-                    throw new CitrusRuntimeException("Unsupported time expression for watch pod log action - " +
-                            "please use one of milliseconds, seconds, minutes");
-            }
+            return switch (timeUnit) {
+                case MILLISECONDS -> Math.round(Double.parseDouble(timeout));
+                case SECONDS -> Math.round(Double.parseDouble(timeout) * 1000);
+                case MINUTES -> Math.round(Double.parseDouble(timeout) * 60 * 1000);
+                default -> throw new CitrusRuntimeException("Unsupported time expression for watch pod log action - " +
+                        "please use one of milliseconds, seconds, minutes");
+            };
         }
 
-        switch (timeUnit) {
-            case MILLISECONDS:
-                return Long.parseLong(timeout);
-            case SECONDS:
-                return Long.parseLong(timeout) * 1000;
-            case MINUTES:
-                return Long.parseLong(timeout) * 60 * 1000;
-            default:
-                throw new CitrusRuntimeException("Unsupported time expression for watch pod log action - " +
-                        "please use one of milliseconds, seconds, minutes");
-        }
+        return switch (timeUnit) {
+            case MILLISECONDS -> Long.parseLong(timeout);
+            case SECONDS -> Long.parseLong(timeout) * 1000;
+            case MINUTES -> Long.parseLong(timeout) * 60 * 1000;
+            default -> throw new CitrusRuntimeException("Unsupported time expression for watch pod log action - " +
+                    "please use one of milliseconds, seconds, minutes");
+        };
     }
 
     /**
