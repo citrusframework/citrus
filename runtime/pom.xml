@@ -16,7 +16,7 @@
 
   <modules>
     <module>citrus-junit</module>
-    <module>citrus-junit5</module>
+    <module>citrus-junit-jupiter</module>
     <module>citrus-testng</module>
     <module>citrus-quarkus</module>
     <module>citrus-main</module>

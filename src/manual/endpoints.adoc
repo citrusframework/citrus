@@ -241,7 +241,7 @@ public class SendMessageIT extends TestNGCitrusSupport implements TestActionSupp
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestActionRunner;
@@ -447,7 +447,7 @@ public class ReceiveMessageIT extends TestNGCitrusSupport implements TestActionS
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestActionRunner;

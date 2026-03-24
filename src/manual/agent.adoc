@@ -87,7 +87,7 @@ The Citrus agent application supports the following settings.
 | The port to listen on for incoming client requests. Default port is `4567`.
 
 | citrus.agent.test.engine
-| The default engine used to run tests on this agent. One of junit, junit5, testng, cucumber. Default is `junit5`.
+| The default engine used to run tests on this agent. One of junit, junit-jupiter, junit4, testng, cucumber. Default is `junit-jupiter`.
 
 | citrus.agent.time.to.live
 | The time to wait after the tests have run as part of the startup procedure. Default is `-1` which means indefinite.
@@ -131,7 +131,7 @@ Same properties are settable via environment variables.
 | The port to listen on for incoming client requests. Default port is `4567`.
 
 | CITRUS_AGENT_TEST_ENGINE
-| The default engine used to run tests on this agent. One of junit, junit5, testng, cucumber. Default is `junit5`.
+| The default engine used to run tests on this agent. One of junit, junit-jupiter, junit4, testng, cucumber. Default is `junit-jupiter`.
 
 | CITRUS_AGENT_TIME_TO_LIVE
 | The time to wait after the tests have run as part of the startup procedure. Default is `-1` which means indefinite.

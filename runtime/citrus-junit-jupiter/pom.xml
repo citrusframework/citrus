@@ -9,9 +9,9 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>citrus-junit5</artifactId>
-  <name>Citrus :: Runtime :: JUnit5</name>
-  <description>Citrus JUnit5 framework integration</description>
+  <artifactId>citrus-junit-jupiter</artifactId>
+  <name>Citrus :: Runtime :: JUnit Jupiter</name>
+  <description>Citrus JUnit Jupiter framework integration</description>
 
   <dependencies>
     <dependency>

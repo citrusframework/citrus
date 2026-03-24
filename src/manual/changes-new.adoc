@@ -60,13 +60,13 @@ Test execution modules such as JUnit, TestNG and Cucumber representing different
 |===
 |Module | Description
 
-|citrus-cucumber   | Run Citrus tests as Cucumber BDD feature files
-|citrus-testng     | Run tests via TestNG unit test framework
-|citrus-junit      | Run tests via JUnit4 unit test framework
-|citrus-junit5     | Run tests via JUnit5 unit test framework
-|citrus-main       | Run tests via Java main CLI
-|citrus-arquillian | Run Citrus tests with Arquillian framework
-|citrus-groovy     | Run Groovy scripts as part of the test
+|citrus-cucumber      | Run Citrus tests as Cucumber BDD feature files
+|citrus-testng        | Run tests via TestNG unit test framework
+|citrus-junit         | Run tests via JUnit4 unit test framework
+|citrus-junit-jupiter | Run tests via JUnit Jupiter unit test framework
+|citrus-main          | Run tests via Java main CLI
+|citrus-arquillian    | Run Citrus tests with Arquillian framework
+|citrus-groovy        | Run Groovy scripts as part of the test
 |===
 
 - [Endpoint modules](https://github.com/citrusframework/citrus/tree/3.x/endpoints)

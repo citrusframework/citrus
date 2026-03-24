@@ -65,7 +65,7 @@ import picocli.CommandLine.Parameters;
 @Command(name = "run", description = "Run as local Citrus test")
 public class Run extends CitrusCommand {
 
-    @Option(names = { "--engine" }, description = "Name of the test engine that is used to run tests. One of junit, junit5, testng, cucumber")
+    @Option(names = { "--engine" }, description = "Name of the test engine that is used to run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
     private String engine;
 
     @Option(names = { "--verbose" }, defaultValue = "true", description = "Should the test engine print verbose test summary information.")

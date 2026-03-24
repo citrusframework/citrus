@@ -16,15 +16,15 @@
 
 package org.citrusframework.mvn.plugin;
 
-import org.citrusframework.generate.UnitFramework;
-import org.citrusframework.mvn.plugin.config.docs.DocsConfiguration;
-import org.citrusframework.mvn.plugin.config.tests.TestConfiguration;
+import java.util.List;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
-
-import java.util.List;
+import org.citrusframework.generate.UnitFramework;
+import org.citrusframework.mvn.plugin.config.docs.DocsConfiguration;
+import org.citrusframework.mvn.plugin.config.tests.TestConfiguration;
 
 /**
  * @since 2.7.4
@@ -47,10 +47,10 @@ public abstract class AbstractCitrusMojo extends AbstractMojo {
     private String type = "java";
 
     /**
-     * Which unit test framework to use for test execution (default: testng; options: testng, junit4, junit5)
+     * Which unit test framework to use for test execution (default: junit-jupiter; options: cucumber, testng, junit4, junit, junit-jupiter)
      */
-    @Parameter(property = "citrus.test.framework", defaultValue = "testng")
-    private String framework = "testng";
+    @Parameter(property = "citrus.test.framework", defaultValue = "junit-jupiter")
+    private String framework = "junit-jupiter";
 
     /**
      * Test configurations configured directly.

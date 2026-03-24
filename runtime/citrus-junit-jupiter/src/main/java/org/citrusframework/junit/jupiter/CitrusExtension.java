@@ -47,7 +47,7 @@ import static org.citrusframework.annotations.CitrusAnnotations.injectCitrusFram
 import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.*;
 
 /**
- * JUnit5 extension adding {@link TestCaseRunner} support as well as Citrus annotation based resource injection
+ * JUnit Jupiter extension adding {@link TestCaseRunner} support as well as Citrus annotation based resource injection
  * and lifecycle management such as before/after suite.
  * <p>
  * Extension resolves method parameter of type {@link org.citrusframework.context.TestContext}, {@link TestCaseRunner}
@@ -62,7 +62,7 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
     /**
      * Test suite name
      */
-    private static final String SUITE_NAME = "citrus-junit5-suite";
+    private static final String SUITE_NAME = "citrus-junit-jupiter-suite";
 
     private static final AtomicBoolean reset = new AtomicBoolean(false);
     private static final AtomicBoolean beforeSuite = new AtomicBoolean(true);

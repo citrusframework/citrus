@@ -65,7 +65,7 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>core/citrus-junit5/target</directory>
+      <directory>core/citrus-junit-jupiter/target</directory>
       <outputDirectory/>
       <includes>
         <include>*sources.jar</include>

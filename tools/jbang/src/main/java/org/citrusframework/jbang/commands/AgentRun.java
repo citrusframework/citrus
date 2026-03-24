@@ -75,7 +75,7 @@ public class AgentRun extends CitrusCommand {
 
     private String file;
 
-    @Option(names = { "--engine" }, description = "Name of the test engine that is used ti run tests. One of junit, junit5, testng, cucumber")
+    @Option(names = { "--engine" }, description = "Name of the test engine that is used ti run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
     private String engine;
 
     @Option(names = { "--url" }, description = "Server endpoint URL to connect to.")

@@ -1,30 +1,30 @@
-[[runtime-junit5]]
-== JUnit5
+[[runtime-junit-jupiter]]
+== JUnit Jupiter
 
 With JUnit version 5 the famous unit test framework offers a new major version. The JUnit platform provides awesome extension
 points for other frameworks like Citrus to integrate with the unit testing execution.
 
-Citrus provides extensions in order to enable Citrus related dependency injection and parameter resolving in your JUnit5 test.
+Citrus provides extensions in order to enable Citrus related dependency injection and parameter resolving in your JUnit test.
 
-NOTE: The JUnit5 support is shipped in a separate Maven module. You need to include the module as a dependency in your
+NOTE: The JUnit support is shipped in a separate Maven module. You need to include the module as a dependency in your
 project.
 
-.JUnit5 module dependency
+.JUnit module dependency
 [source,xml]
 ----
 <dependency>
   <groupId>org.citrusframework</groupId>
-  <artifactId>citrus-junit5</artifactId>
+  <artifactId>citrus-junit-jupiter</artifactId>
   <version>${citrus.version}</version>
 </dependency>
 ----
 
-[[junit5-citrus-support]]
+[[junit-jupiter-citrus-support]]
 === Citrus extension
 
-You can use the Citrus JUnit5 extension on your test as follows:
+You can use the Citrus JUnit extension on your test as follows:
 
-.JUnit5 Citrus test
+.JUnit Citrus test
 [source,java]
 ----
 package org.citrusframework.samples;
@@ -54,12 +54,12 @@ public class Simple_IT implements TestActionSupport {
 }
 ----
 
-The class above is using the JUnit5 `@Test` annotation as a normal unit test would do. The `@CitrusSupport` annotation marks
-the test to use the Citrus JUnit5 extension. This enables us to use the `@CitrusTest` annotation on the test and adds
+The class above is using the JUnit `@Test` annotation as a normal unit test would do. The `@CitrusSupport` annotation marks
+the test to use the Citrus JUnit extension. This enables us to use the `@CitrusTest` annotation on the test and adds
 support for the parameter injection for the `TestActionRunner`.
 
 TIP: You can use the `@CitrusSupport` annotation, or you can use the classic `@ExtendWith(CitrusExtension.class)` annotation
-to enable the Citrus support for JUnit5.
+to enable the Citrus support for JUnit.
 
 The Citrus Java DSL runner is the entrance to the Java fluent API provided by Citrus. The sample above uses the Gherkin test runner
 variation for leveraging the BDD (Behavior Driven Development) style Given-When-Then syntax.
@@ -72,7 +72,7 @@ NOTE: The `TestActionSupport` interface brings quite a lot of methods. In case y
 
 NOTE: For those of you who are not able to use the `TestActionSupport` or other API interfaces the *DefaultTestActions* class also provides access to the test actions Java DSL API.
 
-.JUnit5 Citrus test
+.JUnit Citrus test
 [source,java]
 ----
 package org.citrusframework.samples;
@@ -110,13 +110,13 @@ NOTE: You can also combine Citrus with the Spring framework and its dependency i
 enable Spring support in Citrus add the `citrus-spring` module to your project and use the `@ExtendWith(CitrusSpringExtension.class)`
 annotation. With the Spring support in Citrus the test is able to load components via the Spring application context.
 
-[[junit5-endpoint-injection]]
+[[junit-jupiter-endpoint-injection]]
 === Endpoint injection
 
 In addition to injecting test resources you can also inject endpoints via `@CitrusEndpoint` annotated field injection in
 your test class. This enables you to inject endpoint components that are defined in the Citrus context configuration.
 
-.JUnit5 Citrus endpoint injection
+.JUnit Citrus endpoint injection
 [source,java]
 ----
 package org.citrusframework.samples;
@@ -148,15 +148,15 @@ public class Simple_IT implements TestActionSupport {
 }
 ----
 
-[[junit5-citrus-spring-support]]
+[[junit-jupiter-citrus-spring-support]]
 === Citrus Spring extension
 
-Spring is a famous dependency injection framework that also provides support for JUnit5. Citrus is able to load its
-components as Spring beans in an application context. The Citrus JUnit5 extension works great with the Spring extension.
+Spring is a famous dependency injection framework that also provides support for JUnit. Citrus is able to load its
+components as Spring beans in an application context. The Citrus JUnit extension works great with the Spring extension.
 
 The Spring extension loads the application context and Citrus adds all components to the Spring bean configuration.
 
-.JUnit5 Citrus Spring test
+.JUnit Citrus Spring test
 [source, java]
 ----
 @CitrusSpringSupport
@@ -190,14 +190,14 @@ Also, you can use the `@CitrusResource` annotations to inject the test action ru
 TIP: The Spring application context should use the basic `CitrusSpringConfig` configuration class to load all Citrus components as Spring beans.
 You can customize the Spring application context by adding more configuration classes.
 
-[[junit5-test-sharding]]
+[[junit-jupiter-test-sharding]]
 === Test Sharding
 
-You can run your JUnit5 test cases in order in a distributed manner, facilitating test sharding.
+You can run your JUnit test cases in order in a distributed manner, facilitating test sharding.
 The following snipped showcases you how to get started within a Spring/XML test case environment.
 Note that sharding is available with all kind of `Stream`-sources.
 
-.Sharded JUnit5 Spring/XML test
+.Sharded JUnit Spring/XML test
 [source,java]
 ----
 import static org.citrusframework.junit.jupiter.CitrusTestFactorySupport.springXml;

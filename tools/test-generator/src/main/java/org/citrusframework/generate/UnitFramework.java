@@ -22,16 +22,16 @@ package org.citrusframework.generate;
  */
 public enum UnitFramework {
     TESTNG,
-    JUNIT4,
-    JUNIT5;
+    JUNIT,
+    JUNIT4;
 
     public static UnitFramework fromString(String value) {
         if (value.equalsIgnoreCase("testng")) {
             return TESTNG;
-        } else if (value.equalsIgnoreCase("junit") || value.equalsIgnoreCase("junit4")) {
+        } else if (value.equalsIgnoreCase("junit4")) {
             return JUNIT4;
-        } else if (value.equalsIgnoreCase("junit5")) {
-            return JUNIT5;
+        } else if (value.equalsIgnoreCase("junit") || value.equalsIgnoreCase("junit-jupiter")) {
+            return JUNIT;
         } else {
             throw new IllegalArgumentException("Found unsupported unit test framework '" + value + "'");
         }

@@ -4,7 +4,7 @@
 Running Citrus tests in Groovy is a specialization of running Citrus tests in Java.
 The Groovy language gives you some syntax sugar and optimized statements that you can use to write your tests.
 
-As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. link:#runtime-junit5[JUnit Jupiter] or link:#runtime-testng[TestNG]).
+As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. link:#runtime-junit-jupiter[JUnit Jupiter] or link:#runtime-testng[TestNG]).
 You can then use the `@CitrusTestSource` annotation to load the Groovy code that represents the test case.
 
 .MyFirstGroovyIT.java

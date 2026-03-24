@@ -16,32 +16,44 @@
 
 package org.citrusframework.mvn.plugin;
 
-import org.citrusframework.generate.UnitFramework;
-import org.citrusframework.generate.javadsl.*;
-import org.citrusframework.generate.xml.*;
-import org.citrusframework.mvn.plugin.config.tests.*;
+import java.util.Collections;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.citrusframework.generate.UnitFramework;
+import org.citrusframework.generate.javadsl.JavaDslTestGenerator;
+import org.citrusframework.generate.javadsl.SwaggerJavaTestGenerator;
+import org.citrusframework.generate.javadsl.WsdlJavaTestGenerator;
+import org.citrusframework.generate.javadsl.XsdJavaTestGenerator;
+import org.citrusframework.generate.xml.SwaggerXmlTestGenerator;
+import org.citrusframework.generate.xml.WsdlXmlTestGenerator;
+import org.citrusframework.generate.xml.XmlTestGenerator;
+import org.citrusframework.generate.xml.XsdXmlTestGenerator;
+import org.citrusframework.mvn.plugin.config.tests.SwaggerConfiguration;
+import org.citrusframework.mvn.plugin.config.tests.TestConfiguration;
+import org.citrusframework.mvn.plugin.config.tests.WsdlConfiguration;
+import org.citrusframework.mvn.plugin.config.tests.XsdConfiguration;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class GenerateTestMojoTest {
 
-    private XmlTestGenerator xmlTestGenerator = Mockito.mock(XmlTestGenerator.class);
-    private XsdXmlTestGenerator xsdXmlTestGenerator = Mockito.mock(XsdXmlTestGenerator.class);
-    private WsdlXmlTestGenerator wsdlXmlTestGenerator = Mockito.mock(WsdlXmlTestGenerator.class);
-    private SwaggerXmlTestGenerator swaggerXmlTestGenerator = Mockito.mock(SwaggerXmlTestGenerator.class);
+    private final XmlTestGenerator xmlTestGenerator = Mockito.mock(XmlTestGenerator.class);
+    private final XsdXmlTestGenerator xsdXmlTestGenerator = Mockito.mock(XsdXmlTestGenerator.class);
+    private final WsdlXmlTestGenerator wsdlXmlTestGenerator = Mockito.mock(WsdlXmlTestGenerator.class);
+    private final SwaggerXmlTestGenerator swaggerXmlTestGenerator = Mockito.mock(SwaggerXmlTestGenerator.class);
 
-    private JavaDslTestGenerator javaTestGenerator = Mockito.mock(JavaDslTestGenerator.class);
-    private XsdJavaTestGenerator xsdJavaTestGenerator = Mockito.mock(XsdJavaTestGenerator.class);
-    private WsdlJavaTestGenerator wsdlJavaTestGenerator = Mockito.mock(WsdlJavaTestGenerator.class);
-    private SwaggerJavaTestGenerator swaggerJavaTestGenerator = Mockito.mock(SwaggerJavaTestGenerator.class);
+    private final JavaDslTestGenerator javaTestGenerator = Mockito.mock(JavaDslTestGenerator.class);
+    private final XsdJavaTestGenerator xsdJavaTestGenerator = Mockito.mock(XsdJavaTestGenerator.class);
+    private final WsdlJavaTestGenerator wsdlJavaTestGenerator = Mockito.mock(WsdlJavaTestGenerator.class);
+    private final SwaggerJavaTestGenerator swaggerJavaTestGenerator = Mockito.mock(SwaggerJavaTestGenerator.class);
 
     private GenerateTestMojo mojo;
 
@@ -69,7 +81,7 @@ public class GenerateTestMojoTest {
         configuration.setDescription("TODO");
         configuration.setPackageName("org.citrusframework.foo");
 
-        when(xmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(xmlTestGenerator);
+        when(xmlTestGenerator.withFramework(any(UnitFramework.class))).thenReturn(xmlTestGenerator);
         when(xmlTestGenerator.withDisabled(false)).thenReturn(xmlTestGenerator);
         when(xmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(xmlTestGenerator);
         when(xmlTestGenerator.withDescription("TODO")).thenReturn(xmlTestGenerator);
@@ -100,7 +112,7 @@ public class GenerateTestMojoTest {
         xsdConfiguration.setResponse("BookResponse");
         configuration.setXsd(xsdConfiguration);
 
-        when(xsdXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(xsdXmlTestGenerator);
+        when(xsdXmlTestGenerator.withFramework(any(UnitFramework.class))).thenReturn(xsdXmlTestGenerator);
         when(xsdXmlTestGenerator.withDisabled(false)).thenReturn(xsdXmlTestGenerator);
         when(xsdXmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(xsdXmlTestGenerator);
         when(xsdXmlTestGenerator.withDescription("TODO")).thenReturn(xsdXmlTestGenerator);
@@ -136,7 +148,7 @@ public class GenerateTestMojoTest {
         wsdlConfiguration.setFile("classpath:wsdl/BookStore.wsdl");
         configuration.setWsdl(wsdlConfiguration);
 
-        when(wsdlXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(wsdlXmlTestGenerator);
+        when(wsdlXmlTestGenerator.withFramework(any(UnitFramework.class))).thenReturn(wsdlXmlTestGenerator);
         when(wsdlXmlTestGenerator.withDisabled(false)).thenReturn(wsdlXmlTestGenerator);
         when(wsdlXmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(wsdlXmlTestGenerator);
         when(wsdlXmlTestGenerator.withDescription("TODO")).thenReturn(wsdlXmlTestGenerator);
@@ -172,7 +184,7 @@ public class GenerateTestMojoTest {
         swaggerConfiguration.setFile("classpath:swagger/user-login-api.json");
         configuration.setSwagger(swaggerConfiguration);
 
-        when(swaggerXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(swaggerXmlTestGenerator);
+        when(swaggerXmlTestGenerator.withFramework(any(UnitFramework.class))).thenReturn(swaggerXmlTestGenerator);
         when(swaggerXmlTestGenerator.withDisabled(false)).thenReturn(swaggerXmlTestGenerator);
         when(swaggerXmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(swaggerXmlTestGenerator);
         when(swaggerXmlTestGenerator.withDescription("TODO")).thenReturn(swaggerXmlTestGenerator);

@@ -16,23 +16,19 @@
 
 package org.citrusframework.junit.jupiter.integration;
 
-import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.junit.jupiter.CitrusSupport;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 @CitrusSupport
-public class ContextInjectionJUnit5RunnerIT implements TestActionSupport {
+public class ContextInjectionJUnitJupiterIT implements TestActionSupport {
 
     @CitrusResource
-    private GherkinTestActionRunner runner;
-
-    @CitrusResource
-    private TestContext globalContext;
+    private TestActionRunner runner;
 
     @Test
     @CitrusTest
@@ -40,7 +36,6 @@ public class ContextInjectionJUnit5RunnerIT implements TestActionSupport {
     void contextInjection(@CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
-        Assertions.assertEquals(context, globalContext);
-        runner.given(echo("${message}"));
+        runner.run(echo("${message}"));
     }
 }

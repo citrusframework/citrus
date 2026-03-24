@@ -130,7 +130,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             String author = prompter.prompt("Enter test author:", "Unknown");
             String description = prompter.prompt("Enter test description:", "");
             String targetPackage = prompter.prompt("Enter test package:", "org.citrusframework");
-            String framework = prompter.prompt("Choose unit test framework:", Arrays.asList("testng", "junit4", "junit5"), UnitFramework.TESTNG.name().toLowerCase());
+            String framework = prompter.prompt("Choose unit test framework:", Arrays.asList("testng", "junit", "junit-jupiter", "junit4"), "junit-jupiter");
             String type = prompter.prompt("Choose target code base type:", Arrays.asList("java", "xml"), "java");
 
             setType(type);

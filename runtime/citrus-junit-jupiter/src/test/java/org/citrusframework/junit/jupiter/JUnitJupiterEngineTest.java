@@ -70,7 +70,7 @@ public class JUnitJupiterEngineTest {
     @Test
     public void shouldResolveJUnitEngine() {
         TestRunConfiguration configuration = new TestRunConfiguration();
-        configuration.setEngine("junit5");
+        configuration.setEngine("junit-jupiter");
         Assert.assertEquals(TestEngine.lookup(configuration).getClass(), JUnitJupiterEngine.class);
     }
 

@@ -18,7 +18,7 @@
         <include>org.citrusframework:citrus-cucumber</include>
         <include>org.citrusframework:citrus-testng</include>
         <include>org.citrusframework:citrus-junit</include>
-        <include>org.citrusframework:citrus-junit5</include>
+        <include>org.citrusframework:citrus-junit-jupiter</include>
         <include>org.citrusframework:citrus-main</include>
         <include>org.citrusframework:citrus-arquillian</include>
         <include>org.citrusframework:citrus-groovy</include>
@@ -127,7 +127,7 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>core/citrus-junit5/target</directory>
+      <directory>core/citrus-junit-jupiter/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

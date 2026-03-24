@@ -43,7 +43,7 @@ import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.setCitrus;
 import static org.springframework.test.context.junit.jupiter.SpringExtension.getApplicationContext;
 
 /**
- * JUnit5 extension adding {@link TestCaseRunner} support as well as Citrus annotation based resource injection
+ * JUnit Jupiter extension adding {@link TestCaseRunner} support as well as Citrus annotation based resource injection
  * and lifecycle management such as before/after suite.
  * <p>
  * Extension resolves method parameter of type {@link org.citrusframework.context.TestContext}, {@link TestCaseRunner}

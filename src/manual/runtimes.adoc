@@ -132,7 +132,7 @@ This documentation tries to provide proper sample code for all supported test la
 The following sections have a closer look at the different runtimes for Citrus.
 
 include::runtimes-testng.adoc[]
-include::runtimes-junit5.adoc[]
+include::runtimes-junit-jupiter.adoc[]
 include::runtimes-junit4.adoc[]
 include::runtimes-quarkus.adoc[]
 include::runtimes-cucumber.adoc[]

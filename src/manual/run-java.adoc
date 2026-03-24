@@ -1,7 +1,7 @@
 [[run-java]]
 == Java
 
-You can code the Citrus test as you would do with any other unit test framework (e.g. link:#runtime-junit5[JUnit Jupiter] or link:#runtime-testng[TestNG]).
+You can code the Citrus test as you would do with any other unit test framework (e.g. link:#runtime-junit-jupiter[JUnit Jupiter] or link:#runtime-testng[TestNG]).
 In fact Citrus builds on top of those famous unit testing frameworks because the tooling and adoption throughout the industry is very high for these libraries.
 
 Citrus has a set of test engines that you can use to run Citrus tests with your favorite unit test framework.
@@ -47,7 +47,7 @@ public class HelloServiceIT extends TestNGCitrusSupport implements TestActionSup
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
@@ -127,7 +127,7 @@ public class HelloServiceIT extends TestNGCitrusSupport {
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
@@ -219,7 +219,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
@@ -514,7 +514,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
@@ -598,7 +598,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
@@ -715,7 +715,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
@@ -813,7 +813,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
@@ -943,7 +943,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
@@ -1043,7 +1043,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
@@ -1128,7 +1128,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestActionSupport;
@@ -1235,7 +1235,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestActionSupport;
@@ -1329,7 +1329,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 }
 ----
 
-.JUnit5
+.JUnit
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestActionSupport;
