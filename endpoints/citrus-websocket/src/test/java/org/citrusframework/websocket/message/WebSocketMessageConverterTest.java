@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @since 2.3
@@ -58,11 +59,11 @@ public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
     public void testConvertBinaryMessageOutbound() throws Exception {
         WebSocketEndpointConfiguration endpointConfiguration = new WebSocketClientEndpointConfiguration();
 
-        WebSocketMessage message = new WebSocketMessage("Hello WebSocket!".getBytes(Charset.forName("UTF-8")));
+        WebSocketMessage message = new WebSocketMessage("Hello WebSocket!".getBytes(StandardCharsets.UTF_8));
         org.springframework.web.socket.WebSocketMessage result = messageConverter.convertOutbound(message, endpointConfiguration, context);
 
         Assert.assertTrue(BinaryMessage.class.isInstance(result));
-        Assert.assertEquals(((BinaryMessage) result).getPayload().array(), "Hello WebSocket!".getBytes(Charset.forName("UTF-8")));
+        Assert.assertEquals(((BinaryMessage) result).getPayload().array(), "Hello WebSocket!".getBytes(StandardCharsets.UTF_8));
         Assert.assertEquals(result.isLast(), true);
     }
 
@@ -88,12 +89,12 @@ public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
     @Test
     public void testConvertBinaryMessageInbound() throws Exception {
         WebSocketEndpointConfiguration endpointConfiguration = new WebSocketClientEndpointConfiguration();
-        org.springframework.web.socket.WebSocketMessage externalMessage = new BinaryMessage("Hello WebSocket!".getBytes(Charset.forName("UTF-8")));
+        org.springframework.web.socket.WebSocketMessage externalMessage = new BinaryMessage("Hello WebSocket!".getBytes(StandardCharsets.UTF_8));
 
         Message internal = messageConverter.convertInbound(externalMessage, endpointConfiguration, context);
 
         Assert.assertTrue(WebSocketMessage.class.isInstance(internal));
-        Assert.assertEquals(internal.getPayload(ByteBuffer.class).array(), "Hello WebSocket!".getBytes(Charset.forName("UTF-8")));
+        Assert.assertEquals(internal.getPayload(ByteBuffer.class).array(), "Hello WebSocket!".getBytes(StandardCharsets.UTF_8));
         Assert.assertEquals(((WebSocketMessage) internal).isLast(), true);
     }
 }
