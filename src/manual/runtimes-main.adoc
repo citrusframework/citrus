@@ -47,10 +47,10 @@ Citrus application option usage:
 The `--engine` argument specifies which test framework to use when running the tests.
 Citrus supports these test engines as an argument value:
 
-- JUnit Jupiter (`junit5` or `junit-jupiter`)
+- JUnit Jupiter (`junit` or `junit-jupiter`)
 - Cucumber (`cucumber`)
 - TestNG (`testng`)
-- JUnit 4 (`junit`)
+- JUnit 4 (`junit4`)
 
 You may now use `--package`, `--test` and `--jar` to give a Java package name or test class name to run.
 With `--config` you can give a fully qualified class name that points to a Citrus endpoint configuration class.

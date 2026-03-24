@@ -11,7 +11,7 @@ NOTE: You need to have the runtime module `citrus-spring` enabled in your projec
 
 Citrus uses Spring bean definition parsers to load the XML test actions.
 The Spring application context loads the Spring XML test case file as a set of Spring bean configurations.
-Citrus runs the resulting test Spring bean as a normal unit test using one of the provided runtimes like link:#runtime-junit5[JUnit Jupiter] or link:#runtime-testng[TestNG].
+Citrus runs the resulting test Spring bean as a normal unit test using one of the provided runtimes like link:#runtime-junit-jupiter[JUnit Jupiter] or link:#runtime-testng[TestNG].
 
 You define the complete test logic in the Spring bean XML file:
 
@@ -92,7 +92,7 @@ Enter test name:: MyFirstCitrus_IT
 Enter test author: Unknown::
 Enter test description:: Sample XML test
 Enter test package: org.citrusframework::
-Choose unit test framework: (testng/junit4/junit5) testng::
+Choose unit test framework: (testng/junit/junit-jupiter/junit4) testng::
 Choose target code base type: (java/xml) java:: xml
 Create test with XML schema? (y/n) n::
 Create test with WSDL? (y/n) n::

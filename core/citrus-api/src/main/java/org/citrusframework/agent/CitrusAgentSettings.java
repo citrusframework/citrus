@@ -36,7 +36,7 @@ public final class CitrusAgentSettings {
 
     private static final String TEST_ENGINE_PROPERTY = AGENT_PROPERTY_PREFIX + "test.engine";
     private static final String TEST_ENGINE_ENV = AGENT_ENV_PREFIX + "TEST_ENGINE";
-    private static final String TEST_ENGINE_DEFAULT = "junit5";
+    private static final String TEST_ENGINE_DEFAULT = "junit-jupiter";
 
     private static final String WORK_DIRECTORY_PROPERTY = AGENT_PROPERTY_PREFIX + "work.directory";
     private static final String WORK_DIRECTORY_ENV = AGENT_ENV_PREFIX + "WORK_DIRECTORY";

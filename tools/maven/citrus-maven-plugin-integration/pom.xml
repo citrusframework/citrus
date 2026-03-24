@@ -68,7 +68,7 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-junit5</artifactId>
+      <artifactId>citrus-junit-jupiter</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
@@ -115,17 +115,17 @@
             </configuration>
           </execution>
           <execution>
-            <id>generate-tests-junit5</id>
+            <id>generate-tests-junit-jupiter</id>
             <phase>pre-integration-test</phase>
             <goals>
               <goal>generate-tests</goal>
             </goals>
             <configuration>
               <type>java</type>
-              <framework>junit5</framework>
+              <framework>junit-jupiter</framework>
               <tests>
                 <test>
-                  <name>JUnit5IT</name>
+                  <name>JUnitJupiterIT</name>
                 </test>
               </tests>
             </configuration>

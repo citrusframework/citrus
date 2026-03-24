@@ -28,8 +28,8 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 
-@ExtendWith({CitrusExtension.class, FailJUnit5IT.ShouldFailExtension.class})
-public class FailJUnit5IT implements TestActionSupport {
+@ExtendWith({CitrusExtension.class, FailJUnitJupiterIT.ShouldFailExtension.class})
+public class FailJUnitJupiterIT implements TestActionSupport {
 
     @Test
     @CitrusTest

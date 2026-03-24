@@ -27,9 +27,9 @@ import org.testng.annotations.Test;
 public class TestEngineLookupTest {
 
     @Test
-    public void shouldResolveJUnit5Engine() {
+    public void shouldResolveJUnitEngine() {
         TestRunConfiguration configuration = new TestRunConfiguration();
-        configuration.setEngine("junit5");
+        configuration.setEngine("junit");
         Assert.assertEquals(TestEngine.lookup(configuration).getClass(), JUnitJupiterEngine.class);
     }
 

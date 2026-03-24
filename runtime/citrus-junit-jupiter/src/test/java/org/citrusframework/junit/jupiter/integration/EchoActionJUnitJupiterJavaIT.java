@@ -16,26 +16,34 @@
 
 package org.citrusframework.junit.jupiter.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.context.TestContext;
 import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
 
 @CitrusSupport
-public class ContextInjectionJUnit5IT implements TestActionSupport {
-
-    @CitrusResource
-    private TestActionRunner runner;
+public class EchoActionJUnitJupiterJavaIT implements TestActionSupport {
 
     @Test
     @CitrusTest
-    @SuppressWarnings("squid:S2699")
-    void contextInjection(@CitrusResource TestContext context) {
-        context.setVariable("message", "Injection worked!");
+    void echoJavaTest(@CitrusResource TestActionRunner runner) {
+        runner.run(createVariable("time", "citrus:currentDate()"));
 
-        runner.run(echo("${message}"));
+        runner.run(echo("Hello Citrus!"));
+
+        runner.run(echo("CurrentTime is: ${time}"));
+    }
+
+    @Test
+    @CitrusTest(name = "EchoSampleTest")
+    void echoTest(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(createVariable("time", "citrus:currentDate()"));
+
+        runner.when(echo("Hello Citrus!"));
+
+        runner.then(echo("CurrentTime is: ${time}"));
     }
 }

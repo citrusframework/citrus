@@ -245,8 +245,7 @@
     <json-schema-validator.version>3.0.0</json-schema-validator.version>
     <json-smart.version>2.6.0</json-smart.version>
     <jtidy.version>r938</jtidy.version>
-    <junit.jupiter.version>5.14.1</junit.jupiter.version>
-    <junit.platform.version>1.14.1</junit.platform.version>
+    <junit.jupiter.version>6.0.3</junit.jupiter.version>
     <junit.version>4.13.2</junit.version>
     <junixsocket.version>2.10.1</junixsocket.version>
     <k8s.client.version>7.5.2</k8s.client.version>
@@ -580,17 +579,17 @@
       <dependency>
         <groupId>org.junit.platform</groupId>
         <artifactId>junit-platform-engine</artifactId>
-        <version>${junit.platform.version}</version>
+        <version>${junit.jupiter.version}</version>
       </dependency>
       <dependency>
         <groupId>org.junit.platform</groupId>
         <artifactId>junit-platform-commons</artifactId>
-        <version>${junit.platform.version}</version>
+        <version>${junit.jupiter.version}</version>
       </dependency>
       <dependency>
         <groupId>org.junit.platform</groupId>
         <artifactId>junit-platform-launcher</artifactId>
-        <version>${junit.platform.version}</version>
+        <version>${junit.jupiter.version}</version>
       </dependency>
       <dependency>
         <groupId>org.junit.vintage</groupId>

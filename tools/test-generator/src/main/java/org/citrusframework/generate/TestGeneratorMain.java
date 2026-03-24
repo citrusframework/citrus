@@ -55,7 +55,7 @@ public class TestGeneratorMain {
                     .withDescription(cmd.getOptionValue("description", "TODO: Description"))
                     .usePackage(cmd.getOptionValue("package", "org.citrusframework"))
                     .useSrcDirectory(cmd.getOptionValue("srcdir", CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY))
-                    .withFramework(UnitFramework.fromString(cmd.getOptionValue("framework", "testng")));
+                    .withFramework(UnitFramework.fromString(cmd.getOptionValue("framework", "junit-jupiter")));
 
             generator.create();
         } catch (ParseException e) {

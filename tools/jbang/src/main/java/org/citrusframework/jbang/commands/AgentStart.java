@@ -34,7 +34,7 @@ import picocli.CommandLine.Option;
 @Command(name = "start", description = "Starts the Citrus agent as a server")
 public class AgentStart extends CitrusCommand {
 
-    @Option(names = { "--engine" }, description = "Name of the test engine that is used ti run tests. One of junit, junit5, testng, cucumber")
+    @Option(names = { "--engine" }, description = "Name of the test engine that is used ti run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
     private String engine;
 
     @Option(names = { "--port" }, description = "Server port.")

@@ -70,7 +70,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
                 .addJavadoc(getJavaDoc())
                 .addMethod(getTestMethod(getMethodName()));
 
-        if (getFramework().equals(UnitFramework.JUNIT5)) {
+        if (getFramework().equals(UnitFramework.JUNIT)) {
             testTypeBuilder.addAnnotation(getBaseExtension());
         } else {
             testTypeBuilder.superclass(getBaseType());
@@ -116,8 +116,8 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
     }
 
     /**
-     * Gets the Junit5 base extension to use.
-     * @return The AnnotationSpec of the Junit5 extension
+     * Gets the Junit Jupiter base extension to use.
+     * @return The AnnotationSpec of the Junit Jupiter extension
      */
     protected AnnotationSpec getBaseExtension() {
         ClassName extension = ClassName.get("org.citrusframework.junit.jupiter", "CitrusExtension");
@@ -170,9 +170,9 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
      */
     private AnnotationSpec[] getTestAnnotations() {
         return switch (getFramework()) {
-            case JUNIT4 -> createJunit4TestAnnotations();
-            case JUNIT5 -> createJunit5Annotations();
             case TESTNG -> createTestNgTestAnnotations();
+            case JUNIT -> createJunitJupiterAnnotations();
+            case JUNIT4 -> createJunit4TestAnnotations();
         };
     }
 
@@ -217,7 +217,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
         this.mode = mode;
     }
 
-    private AnnotationSpec[] createJunit5Annotations() {
+    private AnnotationSpec[] createJunitJupiterAnnotations() {
         return createHJunitTestAnnotations(
                 createAnnotationBuilder("org.junit.jupiter.api", "Test"),
                 createAnnotationBuilder("org.junit.jupiter.api", "Disabled"));

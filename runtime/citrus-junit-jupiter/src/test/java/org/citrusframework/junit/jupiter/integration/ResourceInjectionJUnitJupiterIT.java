@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 @CitrusSupport
-public class ResourceInjectionJUnit5IT implements TestActionSupport {
+public class ResourceInjectionJUnitJupiterIT implements TestActionSupport {
 
     @CitrusFramework
     private Citrus citrus;

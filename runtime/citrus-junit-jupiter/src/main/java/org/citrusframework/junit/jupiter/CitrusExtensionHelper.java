@@ -195,7 +195,7 @@ public final class CitrusExtensionHelper {
         Citrus citrus = extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).get(Citrus.class.getName(), Citrus.class);
 
         if (citrus == null) {
-            throw new CitrusRuntimeException("Missing Citrus instance in JUnit5 extension context");
+            throw new CitrusRuntimeException("Missing Citrus instance in JUnit Jupiter extension context");
         }
 
         return citrus;

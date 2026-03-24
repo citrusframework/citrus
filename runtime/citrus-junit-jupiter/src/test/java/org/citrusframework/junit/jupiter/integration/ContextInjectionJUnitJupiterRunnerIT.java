@@ -17,33 +17,30 @@
 package org.citrusframework.junit.jupiter.integration;
 
 import org.citrusframework.GherkinTestActionRunner;
-import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 @CitrusSupport
-public class EchoActionJUnit5JavaIT implements TestActionSupport {
+public class ContextInjectionJUnitJupiterRunnerIT implements TestActionSupport {
+
+    @CitrusResource
+    private GherkinTestActionRunner runner;
+
+    @CitrusResource
+    private TestContext globalContext;
 
     @Test
     @CitrusTest
-    void echoJavaTest(@CitrusResource TestActionRunner runner) {
-        runner.run(createVariable("time", "citrus:currentDate()"));
+    @SuppressWarnings("squid:S2699")
+    void contextInjection(@CitrusResource TestContext context) {
+        context.setVariable("message", "Injection worked!");
 
-        runner.run(echo("Hello Citrus!"));
-
-        runner.run(echo("CurrentTime is: ${time}"));
-    }
-
-    @Test
-    @CitrusTest(name = "EchoSampleTest")
-    void echoTest(@CitrusResource GherkinTestActionRunner runner) {
-        runner.given(createVariable("time", "citrus:currentDate()"));
-
-        runner.when(echo("Hello Citrus!"));
-
-        runner.then(echo("CurrentTime is: ${time}"));
+        Assertions.assertEquals(context, globalContext);
+        runner.given(echo("${message}"));
     }
 }

@@ -1,8 +1,8 @@
 [[runtime-junit4]]
 == JUnit4
 
-JUnit4 is still very popular and widely supported by many tools even though there is a new major version with JUnit5 already
-available. In general Citrus supports both JUnit4 and JUnit5 as test execution framework.
+JUnit4 is still very popular and widely supported by many tools even though there is a new major version with JUnit Jupiter already
+available. In general Citrus supports both JUnit4 and JUnit Jupiter as test execution framework.
 
 NOTE: The JUnit4 support is shipped in a separate Maven module. You need to include the module as a dependency in your
 project.

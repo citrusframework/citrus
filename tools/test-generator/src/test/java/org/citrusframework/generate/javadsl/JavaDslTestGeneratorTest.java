@@ -41,12 +41,12 @@ public class JavaDslTestGeneratorTest {
     }
 
     @Test
-    public void create_should_pass_with_junit5() throws IOException {
+    public void create_should_pass_with_junit_jupiter() throws IOException {
 
         //GIVEN
         generatorUnderTest.withName("FooTest")
                 .withDisabled(false)
-                .withFramework(UnitFramework.JUNIT5)
+                .withFramework(UnitFramework.JUNIT)
                 .usePackage("org.citrusframework");
 
         //WHEN

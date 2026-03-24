@@ -40,7 +40,7 @@ public class TestRunConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(TestRunConfiguration.class);
 
     /** Test engine */
-    private String engine = "junit5";
+    private String engine = "junit-jupiter";
 
     /** Test to execute at runtime */
     private final List<TestSource> sources = new ArrayList<>();
@@ -82,7 +82,7 @@ public class TestRunConfiguration {
     /**
      * Sets the engine.
      */
-    @SchemaProperty(required = true, description = "The test engine to use when running tests", defaultValue = "junit5")
+    @SchemaProperty(required = true, description = "The test engine to use when running tests", defaultValue = "junit-jupiter")
     public void setEngine(String engine) {
         this.engine = engine;
     }

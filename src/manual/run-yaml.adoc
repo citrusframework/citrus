@@ -4,7 +4,7 @@
 As an alternative to coding tests in a programming language you can specify the test logic in YAML only, too.
 The YAML language gives you some XSD schema and a set of elements that you can choose from to specify test actions.
 
-As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. link:#runtime-junit5[JUnit Jupiter] or link:#runtime-testng[TestNG]).
+As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. link:#runtime-junit-jupiter[JUnit Jupiter] or link:#runtime-testng[TestNG]).
 You can then use the `@CitrusTestSource` annotation to load the YAML file that represents the test case.
 
 .MyFirstYamlIT.java
