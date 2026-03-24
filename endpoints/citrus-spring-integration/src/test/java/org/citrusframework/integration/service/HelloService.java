@@ -27,5 +27,5 @@ public interface HelloService {
      * @param request the hello request.
      * @return the hello response.
      */
-    public Message<HelloResponse> sayHello(Message<HelloRequest> request);
+    Message<HelloResponse> sayHello(Message<HelloRequest> request);
 }
