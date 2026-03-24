@@ -71,7 +71,7 @@ public class ExecutePLSQLActionParser implements BeanDefinitionParser {
         private final ExecutePLSQLAction.Builder builder = new ExecutePLSQLAction.Builder();
 
         @Override
-        public ExecutePLSQLAction getObject() throws Exception {
+        public ExecutePLSQLAction getObject() {
             return builder.build();
         }
 

@@ -51,7 +51,7 @@ public class SeleniumEndpointComponentTest {
     }
 
     @Test
-    public void testCreateBrowserEndpoint() throws Exception {
+    public void testCreateBrowserEndpoint() {
         SeleniumEndpointComponent component = new SeleniumEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("selenium:browser", context);
@@ -69,7 +69,7 @@ public class SeleniumEndpointComponentTest {
     }
 
     @Test
-    public void testCreateBrowserEndpointWithParameters() throws Exception {
+    public void testCreateBrowserEndpointWithParameters() {
         SeleniumEndpointComponent component = new SeleniumEndpointComponent();
 
         reset(referenceResolver);

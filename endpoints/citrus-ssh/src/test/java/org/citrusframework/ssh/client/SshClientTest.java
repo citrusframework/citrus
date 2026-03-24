@@ -95,19 +95,19 @@ public class SshClientTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*knownHosts.*")
-    public void strictHostCheckingWithoutKnownHosts() throws JSchException {
+    public void strictHostCheckingWithoutKnownHosts() {
         strictHostChecking(true, null);
         send();
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*blaHosts.*")
-    public void strictHostCheckingWithFaultyKnownHosts() throws JSchException {
+    public void strictHostCheckingWithFaultyKnownHosts() {
         strictHostChecking(true, "classpath:/org/citrusframework/ssh/blaHosts");
         send();
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/does/not/exist.*")
-    public void strictHostCheckingWithFaultyKnownHosts2() throws JSchException {
+    public void strictHostCheckingWithFaultyKnownHosts2() {
         strictHostChecking(true, "/file/that/does/not/exist");
         send();
     }

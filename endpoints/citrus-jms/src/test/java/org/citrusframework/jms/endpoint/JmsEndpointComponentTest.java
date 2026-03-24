@@ -51,7 +51,7 @@ public class JmsEndpointComponentTest {
     }
 
     @Test
-    public void testCreateQueueEndpoint() throws Exception {
+    public void testCreateQueueEndpoint() {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
         reset(referenceResolver);
@@ -69,7 +69,7 @@ public class JmsEndpointComponentTest {
     }
 
     @Test
-    public void testResolveJmsEndpoint() throws Exception {
+    public void testResolveJmsEndpoint() {
         reset(referenceResolver);
 
         when(referenceResolver.resolveAll(EndpointComponent.class)).thenReturn(Collections.<String, EndpointComponent>emptyMap());
@@ -84,7 +84,7 @@ public class JmsEndpointComponentTest {
     }
 
     @Test
-    public void testCreateTopicEndpoint() throws Exception {
+    public void testCreateTopicEndpoint() {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
         reset(referenceResolver);
@@ -102,7 +102,7 @@ public class JmsEndpointComponentTest {
     }
 
     @Test
-    public void testCreateSyncQueueEndpoint() throws Exception {
+    public void testCreateSyncQueueEndpoint() {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
         reset(referenceResolver);
@@ -118,7 +118,7 @@ public class JmsEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpointWithParameters() throws Exception {
+    public void testCreateEndpointWithParameters() {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
         reset(referenceResolver);
@@ -137,7 +137,7 @@ public class JmsEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpointWithNullParameters() throws Exception {
+    public void testCreateEndpointWithNullParameters() {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
         reset(referenceResolver);
@@ -151,7 +151,7 @@ public class JmsEndpointComponentTest {
     }
 
     @Test
-    public void testCreateSyncEndpointWithParameters() throws Exception {
+    public void testCreateSyncEndpointWithParameters() {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
         reset(referenceResolver);
@@ -173,7 +173,7 @@ public class JmsEndpointComponentTest {
     }
 
     @Test
-    public void testInvalidEndpointUri() throws Exception {
+    public void testInvalidEndpointUri() {
         JmsEndpointComponent component = new JmsEndpointComponent();
         try {
             reset(referenceResolver);

@@ -88,7 +88,7 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport implem
     }
 
     @Test
-    public void testValidationScriptResource() throws IOException {
+    public void testValidationScriptResource() {
         List<Map<String, Object>> results = new ArrayList<>();
         results.add(Collections.<String, Object>singletonMap("NAME", "Radj"));
 
@@ -152,7 +152,7 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport implem
     }
 
     @Test
-    public void testGroovyValidationScriptResource() throws IOException {
+    public void testGroovyValidationScriptResource() {
         List<Map<String, Object>> results = new ArrayList<>();
         results.add(Collections.<String, Object>singletonMap("NAME", "Penny"));
         results.add(Collections.<String, Object>singletonMap("NAME", "Howard"));

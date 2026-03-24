@@ -35,7 +35,7 @@ public class RmiEndpointComponentTest {
     private final TestContext context = new TestContext();
 
     @Test
-    public void testCreateClientEndpoint() throws Exception {
+    public void testCreateClientEndpoint() {
         RmiEndpointComponent component = new RmiEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("rmi://localhost:2099", context);
@@ -83,7 +83,7 @@ public class RmiEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithParameters() throws Exception {
+    public void testCreateClientEndpointWithParameters() {
         RmiEndpointComponent component = new RmiEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("rmi://localhost:2099?binding=rmiBinding&timeout=10000", context);

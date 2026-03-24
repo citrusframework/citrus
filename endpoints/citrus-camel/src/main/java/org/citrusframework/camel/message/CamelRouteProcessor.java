@@ -126,7 +126,7 @@ public class CamelRouteProcessor extends CamelMessageProcessor {
             if (routeBuilder == null) {
                 routeBuilder = new RouteBuilder(camelContext) {
                     @Override
-                    public void configure() throws Exception {
+                    public void configure() {
                         RouteDefinition routeDefinition = from("direct:" + routeId)
                                 .routeId(routeId);
 

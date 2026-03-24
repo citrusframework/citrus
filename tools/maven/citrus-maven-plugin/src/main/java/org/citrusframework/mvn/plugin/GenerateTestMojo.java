@@ -96,7 +96,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
     }
 
     @Override
-    public void doExecute() throws MojoExecutionException, MojoFailureException {
+    public void doExecute() throws MojoExecutionException {
         if (skipGenerateTest) {
             return;
         }

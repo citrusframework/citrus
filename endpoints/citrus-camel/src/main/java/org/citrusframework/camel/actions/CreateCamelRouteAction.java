@@ -100,7 +100,7 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
             } else {
                 routeBuilder = new RouteBuilder(camelContext) {
                     @Override
-                    public void configure() throws Exception {
+                    public void configure() {
                         new GroovySupport()
                                 .withTestContext(context)
                                 .withDelegate(this)
@@ -129,7 +129,7 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
             if (!routesToUse.isEmpty()) {
                 camelContext.addRoutes(new RouteBuilder(camelContext) {
                     @Override
-                    public void configure() throws Exception {
+                    public void configure() {
                         for (RouteDefinition routeDefinition : routesToUse) {
                             try {
                                 getRouteCollection().getRoutes().add(routeDefinition);

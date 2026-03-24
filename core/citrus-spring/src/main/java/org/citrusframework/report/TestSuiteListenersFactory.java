@@ -47,7 +47,7 @@ public class TestSuiteListenersFactory implements FactoryBean<TestSuiteListeners
     }
 
     @Override
-    public TestSuiteListeners getObject() throws Exception {
+    public TestSuiteListeners getObject() {
         if (applicationContext != null) {
             applicationContext.getBeansOfType(TestSuiteListener.class)
                     .forEach((key, value) -> listeners.addTestSuiteListener(value));

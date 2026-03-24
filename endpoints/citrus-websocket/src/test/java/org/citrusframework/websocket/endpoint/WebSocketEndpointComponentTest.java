@@ -35,7 +35,7 @@ public class WebSocketEndpointComponentTest {
     private TestContext context = new TestContext();
 
     @Test
-    public void testCreateClientEndpoint() throws Exception {
+    public void testCreateClientEndpoint() {
         WebSocketEndpointComponent component = new WebSocketEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("ws://localhost:8088/test", context);
@@ -54,7 +54,7 @@ public class WebSocketEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithParameters() throws Exception {
+    public void testCreateClientEndpointWithParameters() {
         WebSocketEndpointComponent component = new WebSocketEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("ws:localhost:8088?timeout=10000", context);
@@ -66,7 +66,7 @@ public class WebSocketEndpointComponentTest {
     }
 
     @Test
-    public void testCreateClientEndpointWithCustomParameters() throws Exception {
+    public void testCreateClientEndpointWithCustomParameters() {
         WebSocketEndpointComponent component = new WebSocketEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("ws://localhost:8088/test?customParam=foo", context);

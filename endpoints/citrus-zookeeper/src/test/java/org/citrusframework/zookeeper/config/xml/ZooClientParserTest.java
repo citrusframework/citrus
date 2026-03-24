@@ -31,7 +31,7 @@ import static org.citrusframework.zookeeper.client.ZooClientConfig.ZooKeeperClie
 public class ZooClientParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testZooKeeperClientParser() throws IOException {
+    public void testZooKeeperClientParser() {
         Map<String, ZooClient> clients = beanDefinitionContext.getBeansOfType(ZooClient.class);
 
         Assert.assertEquals(clients.size(), 2);

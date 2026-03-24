@@ -34,12 +34,12 @@ public class AbstractTestDocsGeneratorTest {
 
     private final AbstractTestDocsGenerator abstractTestDocsGenerator = new AbstractTestDocsGenerator("", "") {
         @Override
-        public void doBody(final OutputStream buffered) throws TransformerException, IOException, SAXException {
+        public void doBody(final OutputStream buffered) throws TransformerException, SAXException {
 
         }
 
         @Override
-        public void doHeader(final OutputStream buffered) throws TransformerException, IOException, SAXException {
+        public void doHeader(final OutputStream buffered) throws TransformerException, SAXException {
 
         }
 

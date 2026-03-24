@@ -105,7 +105,7 @@ public class PageActionParser extends AbstractBrowserActionParser {
         }
 
         @Override
-        public PageAction getObject() throws Exception {
+        public PageAction getObject() {
             return builder.build();
         }
 

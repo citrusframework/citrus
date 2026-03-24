@@ -74,9 +74,8 @@ public abstract class AbstractCitrusMojo extends AbstractMojo {
     /**
      * Subclass execution logic.
      * @throws MojoExecutionException
-     * @throws MojoFailureException
      */
-    public abstract void doExecute() throws MojoExecutionException, MojoFailureException;
+    public abstract void doExecute() throws MojoExecutionException;
 
     /**
      * Gets the tests.

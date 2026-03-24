@@ -87,7 +87,7 @@ public class GlobalVariablesParser implements BeanDefinitionParser {
         private final GlobalVariables.Builder builder = new GlobalVariables.Builder();
 
         @Override
-        public GlobalVariables getObject() throws Exception {
+        public GlobalVariables getObject() {
             return builder.build();
         }
 

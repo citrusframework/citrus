@@ -66,7 +66,7 @@ public class TraceVariablesActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public TraceVariablesAction getObject() throws Exception {
+        public TraceVariablesAction getObject() {
             return builder.build();
         }
 

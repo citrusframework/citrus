@@ -47,7 +47,7 @@ public class SessionEnricherHandshakeInterceptor implements HandshakeInterceptor
     }
 
     @Override
-    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) {
         if (request instanceof ServletServerHttpRequest) {
             attributes.put(WebSocketMessageHeaders.WEB_SOCKET_ID, wsId);
             attributes.put(WebSocketMessageHeaders.WEB_SOCKET_PATH, wsPath);

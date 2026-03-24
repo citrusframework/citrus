@@ -52,7 +52,7 @@ public class FailJUnitJupiterIT implements TestActionSupport {
         static String message = "";
 
         @Override
-        public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        public void handleTestExecutionException(ExtensionContext context, Throwable throwable) {
             Assertions.assertEquals(message, throwable.getMessage());
         }
     }

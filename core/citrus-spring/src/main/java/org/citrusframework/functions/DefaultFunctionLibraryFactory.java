@@ -31,7 +31,7 @@ public class DefaultFunctionLibraryFactory implements FactoryBean<DefaultFunctio
     private final DefaultFunctionLibrary library = new DefaultFunctionLibrary();
 
     @Override
-    public DefaultFunctionLibrary getObject() throws Exception {
+    public DefaultFunctionLibrary getObject() {
         library.getMembers().forEach((key, member) -> {
             if (member instanceof ApplicationContextAware) {
                 ((ApplicationContextAware) member).setApplicationContext(applicationContext);

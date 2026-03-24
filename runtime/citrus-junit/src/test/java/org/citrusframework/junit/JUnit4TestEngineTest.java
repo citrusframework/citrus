@@ -71,7 +71,7 @@ public class JUnit4TestEngineTest {
         JUnit4TestEngine engine = new JUnit4TestEngine(configuration);
         engine.addRunListener(new RunListener() {
             @Override
-            public void testRunFinished(Result result) throws Exception {
+            public void testRunFinished(Result result) {
                 Assert.assertEquals(result.getFailureCount(), failure);
                 Assert.assertEquals(result.getRunCount(), passed);
             }

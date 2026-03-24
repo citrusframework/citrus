@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class JsonPayloadMappingKeyExtractorTest {
 
     @Test
-    public void testExtractMappingKey() throws Exception {
+    public void testExtractMappingKey() {
         JsonPayloadMappingKeyExtractor extractor = new JsonPayloadMappingKeyExtractor();
         extractor.setJsonPathExpression("$.person.name");
 
@@ -39,7 +39,7 @@ public class JsonPayloadMappingKeyExtractorTest {
     }
 
     @Test
-    public void testExtractMappingKeyWithoutJsonPathExpressionSet() throws Exception {
+    public void testExtractMappingKeyWithoutJsonPathExpressionSet() {
         JsonPayloadMappingKeyExtractor extractor = new JsonPayloadMappingKeyExtractor();
 
         Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage(
@@ -50,7 +50,7 @@ public class JsonPayloadMappingKeyExtractorTest {
     }
 
     @Test
-    public void testRouteMessageWithBadJsonPathExpression() throws Exception {
+    public void testRouteMessageWithBadJsonPathExpression() {
         JsonPayloadMappingKeyExtractor extractor = new JsonPayloadMappingKeyExtractor();
         extractor.setJsonPathExpression("$.I_DO_NOT_EXIST");
 

@@ -62,7 +62,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithDefaultAttachmentDataTest() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -100,7 +100,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSoapMessageWithAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithAttachmentDataTest() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -142,7 +142,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSoapMessageWithMultipleAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithMultipleAttachmentDataTest() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -199,7 +199,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSoapMessageWithEmptyAttachmentContentTest() throws Exception {
+    public void testSoapMessageWithEmptyAttachmentContentTest() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -240,7 +240,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSoapMessageWithNoAttachmentExpected() throws Exception {
+    public void testSoapMessageWithNoAttachmentExpected() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -266,7 +266,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSoapMessageWithAttachmentResourceTest() throws Exception {
+    public void testSoapMessageWithAttachmentResourceTest() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -308,7 +308,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSoapMessageWithAttachmentResourceVariablesSupportTest() throws Exception {
+    public void testSoapMessageWithAttachmentResourceVariablesSupportTest() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
@@ -352,7 +352,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSoapMessageWithAttachmentDataVariablesSupportTest() throws Exception {
+    public void testSoapMessageWithAttachmentDataVariablesSupportTest() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 

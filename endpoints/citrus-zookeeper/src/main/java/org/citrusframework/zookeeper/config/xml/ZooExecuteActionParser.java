@@ -208,7 +208,7 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public ZooExecuteAction getObject() throws Exception {
+        public ZooExecuteAction getObject() {
             if (zookeeperClient != null) {
                 builder.client(zookeeperClient);
             }

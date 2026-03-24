@@ -36,7 +36,7 @@ public class XpathFunctionTest extends AbstractTestNGUnitTest {
     private final String xmlSource = "<person><name>Sheldon</name><age>29</age></person>";
 
     @Test
-    public void testExecuteXpath() throws Exception {
+    public void testExecuteXpath() {
         List<String> parameters = new ArrayList<>();
         parameters.add(xmlSource);
         parameters.add("/person/name");
@@ -44,7 +44,7 @@ public class XpathFunctionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteXpathWithNamespaces() throws Exception {
+    public void testExecuteXpathWithNamespaces() {
         List<String> parameters = new ArrayList<>();
         String xmlSourceNamespace = "<person xmlns=\"http://citrus.sample.org/person\"><name>Sheldon</name><age>29</age></person>";
         parameters.add(xmlSourceNamespace);
@@ -56,7 +56,7 @@ public class XpathFunctionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void testExecuteXpathUnknown() throws Exception {
+    public void testExecuteXpathUnknown() {
         List<String> parameters = new ArrayList<>();
         parameters.add(xmlSource);
         parameters.add("/person/unknown");

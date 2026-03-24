@@ -59,7 +59,7 @@ public class RemoveCamelRouteActionParser extends AbstractCamelRouteActionParser
         private final RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder();
 
         @Override
-        public RemoveCamelRouteAction getObject() throws Exception {
+        public RemoveCamelRouteAction getObject() {
             return builder.build();
         }
 

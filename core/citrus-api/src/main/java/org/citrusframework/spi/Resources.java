@@ -169,15 +169,11 @@ public class Resources {
                 throw new CitrusRuntimeException(format("Failed to load classpath resource '%s' - does not exist", location));
             }
 
-            try {
-                File found = resolver.getResource(location);
-                if (found == null) {
-                    throw new CitrusRuntimeException(format("Failed to load classpath resource '%s' - does not exist", location));
-                }
-                return found;
-            } catch (IOException e) {
-                throw new CitrusRuntimeException(format("Failed to load classpath resource '%s'", location), e);
+            File found = resolver.getResource(location);
+            if (found == null) {
+                throw new CitrusRuntimeException(format("Failed to load classpath resource '%s' - does not exist", location));
             }
+            return found;
         }
 
         @Override

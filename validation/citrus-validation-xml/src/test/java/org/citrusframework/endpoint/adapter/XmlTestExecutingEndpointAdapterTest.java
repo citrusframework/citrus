@@ -78,7 +78,7 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
      * Test for handler routing by node content
      */
     @Test
-    public void testRouteMessageByElementTextContent() throws Exception {
+    public void testRouteMessageByElementTextContent() {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
         mappingNameExtractor.setXpathExpression("//Test/@name");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
@@ -98,7 +98,7 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
      * Test for handler routing without Xpath given (implementation takes the value of first node).
      */
     @Test
-    public void testRouteMessageWithDefaultXpath() throws Exception {
+    public void testRouteMessageWithDefaultXpath() {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
@@ -113,7 +113,7 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
      * Test for Xpath which is not found --> shall raise exception
      */
     @Test
-    public void testRouteMessageWithBadXpathExpression() throws Exception {
+    public void testRouteMessageWithBadXpathExpression() {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
         mappingNameExtractor.setXpathExpression("//I_DO_NOT_EXIST");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
@@ -131,7 +131,7 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
      * Test for correct xpath, but no handler bean is found --> shall raise exc
      */
     @Test
-    public void testRouteMessageWithBadHandlerConfiguration() throws Exception {
+    public void testRouteMessageWithBadHandlerConfiguration() {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
         mappingNameExtractor.setXpathExpression("//Test/@name");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);

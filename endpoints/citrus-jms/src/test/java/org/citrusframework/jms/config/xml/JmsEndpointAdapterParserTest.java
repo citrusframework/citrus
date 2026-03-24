@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 public class JmsEndpointAdapterParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testParseBeanDefinition() throws Exception {
+    public void testParseBeanDefinition() {
         Map<String, JmsEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(JmsEndpointAdapter.class);
 
         Assert.assertEquals(adapters.size(), 2);

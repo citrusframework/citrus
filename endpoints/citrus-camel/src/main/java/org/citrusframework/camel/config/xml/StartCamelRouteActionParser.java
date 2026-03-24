@@ -59,7 +59,7 @@ public class StartCamelRouteActionParser extends AbstractCamelRouteActionParser 
         private final StartCamelRouteAction.Builder builder = new StartCamelRouteAction.Builder();
 
         @Override
-        public StartCamelRouteAction getObject() throws Exception {
+        public StartCamelRouteAction getObject() {
             return builder.build();
         }
 

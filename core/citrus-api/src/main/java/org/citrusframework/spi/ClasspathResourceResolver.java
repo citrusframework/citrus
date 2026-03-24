@@ -61,7 +61,7 @@ public class ClasspathResourceResolver {
         return resources;
     }
 
-    public File getResource(String path) throws IOException {
+    public File getResource(String path) {
         if (path.endsWith("/*")) {
             path = path.substring(0, path.length() - 1);
         } else if (path.endsWith(".*")) {

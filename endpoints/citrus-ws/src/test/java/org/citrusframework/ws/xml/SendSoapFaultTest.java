@@ -71,7 +71,7 @@ public class SendSoapFaultTest extends AbstractXmlActionTest {
     }
 
     @Test
-    public void shouldLoadSoapServerActions() throws IOException {
+    public void shouldLoadSoapServerActions() {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/xml/send-soap-fault.citrus.it.xml");
 
         context.getReferenceResolver().bind("soapServer", soapServer);

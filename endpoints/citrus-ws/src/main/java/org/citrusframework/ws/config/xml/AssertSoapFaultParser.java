@@ -196,7 +196,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         }
 
         @Override
-        public AssertSoapFault getObject() throws Exception {
+        public AssertSoapFault getObject() {
             return builder.build();
         }
 

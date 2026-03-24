@@ -44,7 +44,7 @@ public class ClearBrowserCacheActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecute() throws Exception {
+    public void testExecute() {
         ClearBrowserCacheAction action =  new ClearBrowserCacheAction.Builder()
                 .browser(seleniumBrowser)
                 .build();

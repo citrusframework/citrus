@@ -259,7 +259,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
     }
 
     @Test
-    public void validateWithExplicitXMLSchema() throws SAXException, IOException, ParserConfigurationException {
+    public void validateWithExplicitXMLSchema() throws SAXException, ParserConfigurationException {
         Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
@@ -273,7 +273,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
     }
 
     @Test
-    public void validateWithExplicitSpringSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
+    public void validateWithExplicitSpringSchemaRepository() throws SAXException, ParserConfigurationException {
         Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
@@ -287,7 +287,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
     }
 
     @Test
-    public void validateWithExplicitCitrusSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
+    public void validateWithExplicitCitrusSchemaRepository() throws SAXException, ParserConfigurationException {
         Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
@@ -301,7 +301,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
     }
 
     @Test
-    public void validateWithDefaultSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
+    public void validateWithDefaultSchemaRepository() throws SAXException, ParserConfigurationException {
         Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
@@ -427,7 +427,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
     }
 
     @Test
-    public void validateNoSchemaRepositoryAtAll() throws SAXException, IOException, ParserConfigurationException {
+    public void validateNoSchemaRepositoryAtAll() throws SAXException, ParserConfigurationException {
         Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                 + "<correlationId>Kx1R123456789</correlationId>"
                 + "<bookingId>Bx1G987654321</bookingId>"

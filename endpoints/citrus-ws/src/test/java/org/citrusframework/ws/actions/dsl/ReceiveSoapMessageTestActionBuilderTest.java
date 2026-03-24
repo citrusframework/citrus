@@ -198,7 +198,7 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testSoapAttachmentResource() throws IOException {
+    public void testSoapAttachmentResource() {
         final Resource attachmentResource = Mockito.mock(Resource.class);
 
         reset(server, messageConsumer, configuration, resource, attachmentResource);

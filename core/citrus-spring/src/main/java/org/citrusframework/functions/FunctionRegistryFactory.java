@@ -49,7 +49,7 @@ public class FunctionRegistryFactory implements FactoryBean<FunctionRegistry>, A
     }
 
     @Override
-    public FunctionRegistry getObject() throws Exception {
+    public FunctionRegistry getObject() {
         if (applicationContext != null) {
             applicationContext.getBeansOfType(FunctionLibrary.class)
                     .forEach((key, value) -> registry.addFunctionLibrary(value));

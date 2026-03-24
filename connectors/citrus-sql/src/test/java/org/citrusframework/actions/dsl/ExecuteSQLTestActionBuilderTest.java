@@ -101,7 +101,7 @@ public class ExecuteSQLTestActionBuilderTest extends UnitTestSupport implements 
     }
 
     @Test
-    public void testExecuteSQLBuilderWithResource() throws IOException {
+    public void testExecuteSQLBuilderWithResource() {
         reset(jdbcTemplate);
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -127,7 +127,7 @@ public class ExecuteSQLTestActionBuilderTest extends UnitTestSupport implements 
     }
 
     @Test
-    public void testExecuteSQLBuilderWithResourcePath() throws IOException {
+    public void testExecuteSQLBuilderWithResourcePath() {
         reset(jdbcTemplate);
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(sql().jdbcTemplate(jdbcTemplate)

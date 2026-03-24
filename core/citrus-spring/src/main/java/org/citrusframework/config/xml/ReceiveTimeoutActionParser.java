@@ -115,7 +115,7 @@ public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public ReceiveTimeoutAction getObject() throws Exception {
+        public ReceiveTimeoutAction getObject() {
             return builder.build();
         }
 

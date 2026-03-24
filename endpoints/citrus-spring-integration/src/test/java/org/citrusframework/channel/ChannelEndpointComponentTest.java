@@ -50,7 +50,7 @@ public class ChannelEndpointComponentTest {
     }
 
     @Test
-    public void testCreateChannelEndpoint() throws Exception {
+    public void testCreateChannelEndpoint() {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
 
         reset(referenceResolver);
@@ -66,7 +66,7 @@ public class ChannelEndpointComponentTest {
     }
 
     @Test
-    public void testCreateSyncChannelEndpoint() throws Exception {
+    public void testCreateSyncChannelEndpoint() {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
 
         reset(referenceResolver);
@@ -81,7 +81,7 @@ public class ChannelEndpointComponentTest {
     }
 
     @Test
-    public void testCreateChannelEndpointWithParameters() throws Exception {
+    public void testCreateChannelEndpointWithParameters() {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
 
         reset(referenceResolver);

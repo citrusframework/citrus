@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class CreateRoutesTest extends AbstractXmlActionTest {
 
     @Test
-    public void shouldLoadCamelActions() throws Exception {
+    public void shouldLoadCamelActions() {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-create-routes.citrus.it.xml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();

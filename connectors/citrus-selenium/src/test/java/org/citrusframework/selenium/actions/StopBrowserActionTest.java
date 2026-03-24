@@ -46,7 +46,7 @@ public class StopBrowserActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testStop() throws Exception {
+    public void testStop() {
         context.setVariable(SeleniumHeaders.SELENIUM_BROWSER, "ChromeBrowser");
 
         StopBrowserAction action =  new StopBrowserAction.Builder()

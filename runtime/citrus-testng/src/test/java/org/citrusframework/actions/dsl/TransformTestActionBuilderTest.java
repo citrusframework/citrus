@@ -66,7 +66,7 @@ public class TransformTestActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testTransformBuilderWithResource() throws IOException {
+    public void testTransformBuilderWithResource() {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(transform().source(Resources.fromClasspath("org/citrusframework/actions/dsl/transform-source.xml"))
                 .xslt(Resources.fromClasspath("org/citrusframework/actions/dsl/transform.xslt"))

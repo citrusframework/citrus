@@ -178,7 +178,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
         }
 
         @Override
-        public SendSoapFaultAction getObject() throws Exception {
+        public SendSoapFaultAction getObject() {
             return builder.build();
         }
 

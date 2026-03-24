@@ -52,7 +52,7 @@ public class HoverActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecute() throws Exception {
+    public void testExecute() {
         Coordinates coordinates = Mockito.mock(Coordinates.class);
 
         when(element.getCoordinates()).thenReturn(coordinates);

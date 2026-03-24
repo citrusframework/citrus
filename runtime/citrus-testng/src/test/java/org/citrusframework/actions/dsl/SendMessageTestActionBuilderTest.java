@@ -210,7 +210,7 @@ public class SendMessageTestActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testSendBuilderWithPayloadResource() throws IOException {
+    public void testSendBuilderWithPayloadResource() {
         reset(resource, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);
@@ -430,7 +430,7 @@ public class SendMessageTestActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testSendBuilderWithHeaderDataResource() throws IOException {
+    public void testSendBuilderWithHeaderDataResource() {
         reset(resource, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);

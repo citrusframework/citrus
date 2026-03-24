@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class ReceiveMessageActionParserTest extends AbstractActionParserTest<ReceiveMessageAction> {
 
     @Test
-    public void testReceiveMessageActionParser() throws IOException {
+    public void testReceiveMessageActionParser() {
         assertActionCount(2);
         assertActionClassAndName(ReceiveMessageAction.class, "receive");
 

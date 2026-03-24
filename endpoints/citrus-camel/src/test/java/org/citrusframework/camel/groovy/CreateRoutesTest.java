@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class CreateRoutesTest extends AbstractGroovyActionDslTest {
 
     @Test
-    public void shouldLoadCamelActions() throws Exception {
+    public void shouldLoadCamelActions() {
         GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/groovy/camel-create-routes.citrus.test.groovy");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();

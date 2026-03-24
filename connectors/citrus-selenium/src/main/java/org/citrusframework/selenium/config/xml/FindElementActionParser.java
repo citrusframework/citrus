@@ -225,7 +225,7 @@ public class FindElementActionParser extends AbstractBrowserActionParser {
             getBuilder().element(by);
         }
 
-        public T getObject(B builder) throws Exception {
+        public T getObject(B builder) {
             builder.element(property, propertyValue);
             return builder.build();
         }

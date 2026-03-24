@@ -42,7 +42,7 @@ public class JBangTest extends AbstractXmlActionTest {
     }
 
     @Test
-    public void shouldLoadCamelActions() throws Exception {
+    public void shouldLoadCamelActions() {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-jbang.citrus.it.xml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();

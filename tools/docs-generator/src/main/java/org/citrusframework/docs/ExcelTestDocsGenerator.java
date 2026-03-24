@@ -59,7 +59,7 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
 
     @Override
     public void doHeader(OutputStream buffered) throws TransformerException,
-            IOException, SAXException {
+            SAXException {
         // no header information here.
     }
 

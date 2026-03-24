@@ -40,7 +40,7 @@ import org.testng.annotations.Test;
 public class FtpServerParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testFtpServerParser() throws IOException {
+    public void testFtpServerParser() {
         Map<String, FtpServer> servers = beanDefinitionContext.getBeansOfType(FtpServer.class);
 
         Assert.assertEquals(servers.size(), 4);

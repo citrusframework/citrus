@@ -71,7 +71,7 @@ public final class KubernetesManifestHelper {
         return cm.build();
     }
 
-    public static Collection<? extends HasMetadata> createDeploymentManifest(String agentName, String image) throws MojoExecutionException {
+    public static Collection<? extends HasMetadata> createDeploymentManifest(String agentName, String image) {
         List<HasMetadata> resources = new ArrayList<>();
 
         resources.add(new DeploymentBuilder()

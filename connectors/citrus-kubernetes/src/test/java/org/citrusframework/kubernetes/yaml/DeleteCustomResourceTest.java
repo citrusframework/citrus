@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class DeleteCustomResourceTest extends AbstractYamlActionTest {
 
     @Test
-    public void shouldLoadKubernetesActions() throws IOException {
+    public void shouldLoadKubernetesActions() {
         String namespace = "test";
         Foo foo = new Foo();
         foo.setSpec(new Foo.FooSpec());

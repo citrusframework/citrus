@@ -37,7 +37,7 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport implements Test
     private final Resource scriptResource = Mockito.mock(Resource.class);
 
     @Test
-    public void testGroovyBuilderWithResource() throws IOException {
+    public void testGroovyBuilderWithResource() {
         reset(scriptResource);
         when(scriptResource.exists()).thenReturn(true);
         when(scriptResource.getInputStream()).thenReturn(new ByteArrayInputStream("println 'Wow groovy!'".getBytes()));
@@ -72,7 +72,7 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport implements Test
     }
 
     @Test
-    public void testGroovyBuilderWithTemplate() throws IOException {
+    public void testGroovyBuilderWithTemplate() {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(script().groovy().script("context.setVariable('message', 'Groovy!')")
                         .template(Resources.fromClasspath("org/citrusframework/script/script-template.groovy")));

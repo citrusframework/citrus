@@ -48,7 +48,7 @@ public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest
     }
 
     @Test
-    public void testGzipBinaryBase64ValidationNoBinaryData() throws IOException {
+    public void testGzipBinaryBase64ValidationNoBinaryData() {
         Message receivedMessage = new DefaultMessage("SGVsbG8gV29ybGQh");
         Message controlMessage = new DefaultMessage(Base64.encodeBase64String("Hello World!".getBytes()));
 

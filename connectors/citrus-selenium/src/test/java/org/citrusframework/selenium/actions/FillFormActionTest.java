@@ -47,7 +47,7 @@ public class FillFormActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecute() throws Exception {
+    public void testExecute() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         FillFormAction action =  new FillFormAction.Builder()
@@ -63,7 +63,7 @@ public class FillFormActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteWithSelect() throws Exception {
+    public void testExecuteWithSelect() {
         WebElement option = Mockito.mock(WebElement.class);
 
         when(webDriver.findElement(any(By.class))).thenReturn(element);
@@ -83,7 +83,7 @@ public class FillFormActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteWithJson() throws Exception {
+    public void testExecuteWithJson() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         FillFormAction action =  new FillFormAction.Builder()
@@ -103,7 +103,7 @@ public class FillFormActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteWithFormSubmit() throws Exception {
+    public void testExecuteWithFormSubmit() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         FillFormAction action =  new FillFormAction.Builder()

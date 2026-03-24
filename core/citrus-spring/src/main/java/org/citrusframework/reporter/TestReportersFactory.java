@@ -51,7 +51,7 @@ public class TestReportersFactory implements FactoryBean<TestReporters>, Applica
     }
 
     @Override
-    public TestReporters getObject() throws Exception {
+    public TestReporters getObject() {
         if (applicationContext != null) {
             applicationContext.getBeansOfType(TestReporter.class)
                     .forEach((key, value) -> reporters.addTestReporter(value));

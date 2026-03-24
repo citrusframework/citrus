@@ -112,7 +112,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
     }
 
     @Override
-    public void doExecute() throws MojoExecutionException, MojoFailureException {
+    public void doExecute() throws MojoExecutionException {
         if (skipCreateTest) {
             return;
         }
@@ -224,9 +224,8 @@ public class CreateTestMojo extends AbstractCitrusMojo {
     /**
      * Creates test case with request and response messages from XML schema.
      * @param generator
-     * @throws MojoExecutionException
      */
-    public void createWithXsd(XsdTestGenerator generator) throws MojoExecutionException {
+    public void createWithXsd(XsdTestGenerator generator) {
         try {
             String xsd = null;
             while(!StringUtils.hasText(xsd)) {

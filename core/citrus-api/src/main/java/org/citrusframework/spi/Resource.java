@@ -93,7 +93,7 @@ public interface Resource {
      *
      * @see #getInputStream()
      */
-    default Reader getReader(Charset charset) throws IOException {
+    default Reader getReader(Charset charset) {
         return new InputStreamReader(getInputStream(), charset);
     }
 }

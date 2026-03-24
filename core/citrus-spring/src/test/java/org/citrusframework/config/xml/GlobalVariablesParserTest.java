@@ -33,7 +33,7 @@ public class GlobalVariablesParserTest extends BeanDefinitionParserTestSupport {
     }
 
     @Test
-    public void testGlobalVariablesParser() throws Exception {
+    public void testGlobalVariablesParser() {
         beanDefinitionContext = createApplicationContext("context");
         Map<String, GlobalVariables> globalVariables = beanDefinitionContext.getBeansOfType(GlobalVariables.class);
         Map<String, GlobalVariablesPropertyLoader> globalVariablesPropertyLoaders = beanDefinitionContext.getBeansOfType(GlobalVariablesPropertyLoader.class);
@@ -54,7 +54,7 @@ public class GlobalVariablesParserTest extends BeanDefinitionParserTestSupport {
     }
 
     @Test
-    public void testGlobalVariablesEmptyParser() throws Exception {
+    public void testGlobalVariablesEmptyParser() {
         beanDefinitionContext = createApplicationContext("empty");
         Map<String, GlobalVariables> globalVariables = beanDefinitionContext.getBeansOfType(GlobalVariables.class);
 

@@ -67,7 +67,7 @@ public class JmxEndpointMBean implements DynamicMBean {
      * Constructor using the managed bean type.
      * @param mbean
      */
-    public JmxEndpointMBean(ManagedBeanDefinition mbean, JmxEndpointConfiguration endpointConfiguration, EndpointAdapter endpointAdapter) throws NotCompliantMBeanException {
+    public JmxEndpointMBean(ManagedBeanDefinition mbean, JmxEndpointConfiguration endpointConfiguration, EndpointAdapter endpointAdapter) {
         this.mbean = mbean;
         this.endpointConfiguration = endpointConfiguration;
         this.endpointAdapter = endpointAdapter;
@@ -127,7 +127,7 @@ public class JmxEndpointMBean implements DynamicMBean {
     }
 
     @Override
-    public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException, ReflectionException {
+    public Object invoke(String actionName, Object[] params, String[] signature) {
         if (logger.isDebugEnabled()) {
             logger.debug("Received message on JMX server: '{}'", endpointConfiguration.getServerUrl());
         }

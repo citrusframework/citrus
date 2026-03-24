@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class TimeoutProducingEndpointAdapterParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testParseBeanDefinition() throws Exception {
+    public void testParseBeanDefinition() {
         Map<String, TimeoutProducingEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(TimeoutProducingEndpointAdapter.class);
 
         Assert.assertEquals(adapters.size(), 1);

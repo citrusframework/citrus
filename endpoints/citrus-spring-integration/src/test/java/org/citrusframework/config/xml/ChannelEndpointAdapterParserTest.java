@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class ChannelEndpointAdapterParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testParseBeanDefinition() throws Exception {
+    public void testParseBeanDefinition() {
         Map<String, ChannelEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(ChannelEndpointAdapter.class);
 
         Assert.assertEquals(adapters.size(), 2);

@@ -66,7 +66,7 @@ public class StopTimeActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public StopTimeAction getObject() throws Exception {
+        public StopTimeAction getObject() {
             return builder.build();
         }
 

@@ -69,7 +69,7 @@ public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testOutboundWsAddressingHeaders() throws TransformerException, IOException {
+    public void testOutboundWsAddressingHeaders() throws TransformerException {
         Message testMessage = new DefaultMessage(requestPayload);
 
         StringResult soapBodyResult = new StringResult();
@@ -105,7 +105,7 @@ public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testOverwriteWsAddressingHeaders() throws TransformerException, IOException {
+    public void testOverwriteWsAddressingHeaders() throws TransformerException {
         Message testMessage = new DefaultMessage(requestPayload)
                 .setHeader(WsAddressingMessageHeaders.FROM, "customFrom")
                 .setHeader(WsAddressingMessageHeaders.TO, "customTo")

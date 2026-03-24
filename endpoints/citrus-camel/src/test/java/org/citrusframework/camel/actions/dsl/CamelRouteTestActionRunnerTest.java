@@ -40,13 +40,13 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
     private DefaultCamelContext camelContext;
 
     @BeforeMethod
-    public void setupCamelContext() throws Exception {
+    public void setupCamelContext() {
         camelContext = new DefaultCamelContext();
         camelContext.start();
     }
 
     @AfterMethod(alwaysRun = true)
-    public void clearCamelContext() throws Exception {
+    public void clearCamelContext() {
         if (camelContext != null) {
             camelContext.shutdown();
         }
@@ -60,7 +60,7 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
                 .route()
                 .create(new RouteBuilder(camelContext) {
             @Override
-            public void configure() throws Exception {
+            public void configure() {
                 from("direct:news")
                         .routeId("route_1")
                         .setHeader("headline", simple("This is BIG news!"))
@@ -89,7 +89,7 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
     public void testStartCamelRouteBuilder() throws Exception {
         camelContext.addRoutes(new RouteBuilder(camelContext) {
             @Override
-            public void configure() throws Exception {
+            public void configure() {
                 from("direct:news")
                         .routeId("route_1")
                         .autoStartup(false)
@@ -130,7 +130,7 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
     public void testRemoveCamelRouteBuilder() throws Exception {
         camelContext.addRoutes(new RouteBuilder(camelContext) {
             @Override
-            public void configure() throws Exception {
+            public void configure() {
                 from("direct:news")
                         .routeId("route_1")
                         .autoStartup(false)
@@ -171,7 +171,7 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(camel().route().create(new RouteBuilder() {
             @Override
-            public void configure() throws Exception {
+            public void configure() {
                 from("direct:news")
                         .routeId("route_1")
                         .setHeader("headline", simple("This is BIG news!"))
@@ -200,7 +200,7 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
     public void testCamelControlBusBuilder() throws Exception {
         camelContext.addRoutes(new RouteBuilder(camelContext) {
             @Override
-            public void configure() throws Exception {
+            public void configure() {
                 from("direct:news")
                         .routeId("route_1")
                         .autoStartup(false)

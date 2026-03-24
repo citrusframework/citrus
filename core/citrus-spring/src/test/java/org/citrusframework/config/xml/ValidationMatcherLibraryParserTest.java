@@ -41,7 +41,7 @@ public class ValidationMatcherLibraryParserTest extends AbstractBeanDefinitionPa
     }
 
     @Test
-    public void testValidationMatcherParser() throws Exception {
+    public void testValidationMatcherParser() {
         beanDefinitionContext = createApplicationContext("context");
         Map<String, ValidationMatcherLibrary> matcherLibraries = beanDefinitionContext.getBeansOfType(ValidationMatcherLibrary.class);
 

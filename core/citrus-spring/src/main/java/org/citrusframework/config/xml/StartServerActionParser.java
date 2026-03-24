@@ -75,7 +75,7 @@ public class StartServerActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public StartServerAction getObject() throws Exception {
+        public StartServerAction getObject() {
             return builder.build();
         }
 

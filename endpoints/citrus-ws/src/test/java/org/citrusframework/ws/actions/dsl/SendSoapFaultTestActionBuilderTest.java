@@ -140,7 +140,7 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testSendSoapFaultWithDetailResource() throws IOException {
+    public void testSendSoapFaultWithDetailResource() {
         reset(resource, soapServer, messageProducer);
         when(soapServer.createProducer()).thenReturn(messageProducer);
         when(soapServer.getActor()).thenReturn(null);

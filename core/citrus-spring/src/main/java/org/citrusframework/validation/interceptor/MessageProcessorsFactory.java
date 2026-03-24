@@ -52,7 +52,7 @@ public class MessageProcessorsFactory implements FactoryBean<MessageProcessors>,
     }
 
     @Override
-    public MessageProcessors getObject() throws Exception {
+    public MessageProcessors getObject() {
         if (applicationContext != null) {
             applicationContext.getBeansOfType(MessageProcessor.class)
                     .entrySet()

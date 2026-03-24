@@ -97,7 +97,7 @@ public class RestDocSoapRequestConverter implements RequestConverter<MessageCont
         return httpHeaders;
     }
 
-    protected Collection<OperationRequestPart> extractParts(MessageContext messageContext) throws IOException {
+    protected Collection<OperationRequestPart> extractParts(MessageContext messageContext) {
         List<OperationRequestPart> parts = new ArrayList<>();
         return parts;
     }

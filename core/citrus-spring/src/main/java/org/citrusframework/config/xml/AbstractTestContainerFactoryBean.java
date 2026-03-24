@@ -39,9 +39,8 @@ public abstract class AbstractTestContainerFactoryBean<T extends TestActionConta
      * Adds test actions to container when building object.
      * @param container
      * @return
-     * @throws Exception
      */
-    public T getObject(T container) throws Exception {
+    public T getObject(T container) {
         container.setActions(actions);
         return container;
     }

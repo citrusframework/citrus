@@ -188,7 +188,7 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
     }
 
     @Override
-    public void interceptTestTemplateMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+    public void interceptTestTemplateMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
         Object testInstance = extensionContext.getRequiredTestInstance();
         Citrus citrus = getCitrus(extensionContext);
         TestContext context = getTestContext(extensionContext);
@@ -226,7 +226,7 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
     }
 
     @Override
-    public void afterEach(ExtensionContext extensionContext) throws Exception {
+    public void afterEach(ExtensionContext extensionContext) {
         extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE)
                 .remove(getBaseKey(extensionContext) + TestCaseRunner.class.getSimpleName());
     }

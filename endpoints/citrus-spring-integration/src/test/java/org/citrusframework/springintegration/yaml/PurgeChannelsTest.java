@@ -39,7 +39,7 @@ public class PurgeChannelsTest extends AbstractYamlActionTest {
     private MessageSelector messageSelector;
 
     @Test
-    public void shouldLoadActions() throws Exception {
+    public void shouldLoadActions() {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/springintegration/yaml/purge-channels.citrus.it.yaml");
 
         context.getReferenceResolver().bind("channelResolver", channelResolver);

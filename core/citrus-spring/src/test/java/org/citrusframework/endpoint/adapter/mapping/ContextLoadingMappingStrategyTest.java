@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class ContextLoadingMappingStrategyTest {
 
     @Test
-    public void testGetEndpointAdapter() throws Exception {
+    public void testGetEndpointAdapter() {
         ContextLoadingMappingStrategy mappingStrategy = new ContextLoadingMappingStrategy();
         mappingStrategy.setContextConfigLocation("classpath:org/citrusframework/endpoint/adapter-mapping-context.xml");
 

@@ -56,7 +56,7 @@ public class EchoActionParser implements BeanDefinitionParser {
         }
 
         @Override
-        public EchoAction getObject() throws Exception {
+        public EchoAction getObject() {
             return builder.build();
         }
 

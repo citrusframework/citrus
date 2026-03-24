@@ -49,7 +49,7 @@ public class VertxEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpoint() throws Exception {
+    public void testCreateEndpoint() {
         VertxEndpointComponent component = new VertxEndpointComponent();
 
         reset(referenceResolver);
@@ -75,7 +75,7 @@ public class VertxEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpointWithParameters() throws Exception {
+    public void testCreateEndpointWithParameters() {
         VertxEndpointComponent component = new VertxEndpointComponent();
 
         reset(referenceResolver);
@@ -93,7 +93,7 @@ public class VertxEndpointComponentTest {
     }
 
     @Test
-    public void testCreateEndpointCustomInstanceFactory() throws Exception {
+    public void testCreateEndpointCustomInstanceFactory() {
         VertxEndpointComponent component = new VertxEndpointComponent();
 
         reset(referenceResolver);
@@ -109,7 +109,7 @@ public class VertxEndpointComponentTest {
     }
 
     @Test
-    public void testInvalidEndpointUri() throws Exception {
+    public void testInvalidEndpointUri() {
         VertxEndpointComponent component = new VertxEndpointComponent();
 
         try {

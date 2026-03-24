@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 public class FtpServerTest extends AbstractTestNGUnitTest {
 
     @Test
-    public void startupAndShutdownTest() throws Exception {
+    public void startupAndShutdownTest() {
         FtpEndpointConfiguration endpointConfiguration = new FtpEndpointConfiguration();
         FtpServer server = new FtpServer(endpointConfiguration);
 

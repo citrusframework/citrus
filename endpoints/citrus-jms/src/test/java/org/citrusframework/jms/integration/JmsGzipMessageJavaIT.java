@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class JmsGzipMessageJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
-    public void jmsByteMessage() throws IOException {
+    public void jmsByteMessage() {
         when(send("jms:queue:jms.gzip.queue")
                 .message(new DefaultMessage(
                         FileUtils.copyToByteArray(

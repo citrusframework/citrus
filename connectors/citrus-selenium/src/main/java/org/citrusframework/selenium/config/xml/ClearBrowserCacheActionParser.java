@@ -43,7 +43,7 @@ public class ClearBrowserCacheActionParser extends AbstractBrowserActionParser {
         private final ClearBrowserCacheAction.Builder builder = new ClearBrowserCacheAction.Builder();
 
         @Override
-        public ClearBrowserCacheAction getObject() throws Exception {
+        public ClearBrowserCacheAction getObject() {
             return builder.build();
         }
 

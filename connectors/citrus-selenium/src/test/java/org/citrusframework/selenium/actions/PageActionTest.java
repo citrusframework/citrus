@@ -75,7 +75,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecutePageValidation() throws Exception {
+    public void testExecutePageValidation() {
         when(inputElement.getAttribute("value")).thenReturn("TestUser");
 
         PageAction action = new PageAction.Builder()
@@ -87,7 +87,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecutePageType() throws Exception {
+    public void testExecutePageType() {
         when(inputElement.getAttribute("value")).thenReturn("TestUser");
 
         PageAction action = new PageAction.Builder()
@@ -99,7 +99,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecutePageValidator() throws Exception {
+    public void testExecutePageValidator() {
         when(inputElement.getAttribute("value")).thenReturn("TestUser");
 
         UserFormPage userForm = new UserFormPage();
@@ -116,7 +116,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteAction() throws Exception {
+    public void testExecuteAction() {
         PageAction action = new PageAction.Builder()
                 .browser(seleniumBrowser)
                 .action("setUserName")
@@ -130,7 +130,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteActionWithArguments() throws Exception {
+    public void testExecuteActionWithArguments() {
         when(webDriver.findElement(By.id("form"))).thenReturn(formElement);
 
         PageAction action = new PageAction.Builder()
@@ -167,7 +167,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unsupported method signature for page action.*")
-    public void testExecuteActionNotMatchingArguments() throws Exception {
+    public void testExecuteActionNotMatchingArguments() {
         when(webDriver.findElement(By.id("form"))).thenReturn(formElement);
 
         PageAction action = new PageAction.Builder()
@@ -185,7 +185,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Page validation failed!")
-    public void testExecuteValidationFailed() throws Exception {
+    public void testExecuteValidationFailed() {
         PageAction action = new PageAction.Builder()
                 .browser(seleniumBrowser)
                 .action("validate")
@@ -195,7 +195,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to access page type.*")
-    public void testInvalidPageType() throws Exception {
+    public void testInvalidPageType() {
 
         PageAction action = new PageAction.Builder()
                 .browser(seleniumBrowser)

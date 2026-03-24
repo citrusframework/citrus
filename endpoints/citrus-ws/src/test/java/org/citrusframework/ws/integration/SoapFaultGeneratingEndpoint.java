@@ -22,7 +22,7 @@ import org.springframework.ws.server.endpoint.MessageEndpoint;
 
 public class SoapFaultGeneratingEndpoint implements MessageEndpoint {
 
-	public void invoke(MessageContext messageContext) throws Exception {
+	public void invoke(MessageContext messageContext) {
 		throw new CitrusRuntimeException();
 	}
 }

@@ -156,7 +156,7 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
     }
 
     @Test
-    public void testTranslateFromMappingFile() throws Exception {
+    public void testTranslateFromMappingFile() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text name=\"\">Hello World!</Text><OtherText>No changes</OtherText></TestMessage>");
 
         context.setVariable("newText", "Hello!");

@@ -51,7 +51,7 @@ public class StartBrowserActionParser extends AbstractBrowserActionParser {
         }
 
         @Override
-        public StartBrowserAction getObject() throws Exception {
+        public StartBrowserAction getObject() {
             return builder.build();
         }
 
