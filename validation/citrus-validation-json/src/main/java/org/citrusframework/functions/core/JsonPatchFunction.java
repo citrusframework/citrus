@@ -79,7 +79,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
     }
 
     private JsonNode add(JsonNode root, String path, String value) {
-        if (path.equals("") || path.equals("/")) {
+        if (path.isEmpty() || path.equals("/")) {
             return parseValue(value);
         }
 
@@ -109,7 +109,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
     }
 
     private JsonNode remove(JsonNode root, String path) {
-        if (path.equals("") || path.equals("/")) {
+        if (path.isEmpty() || path.equals("/")) {
             throw new CitrusRuntimeException("Cannot remove root");
         }
 
@@ -155,7 +155,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
     }
 
     private JsonNode getNodeAtPath(JsonNode root, String path) {
-        if (path.equals("") || path.equals("/")) {
+        if (path.isEmpty() || path.equals("/")) {
             return root;
         }
 

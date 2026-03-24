@@ -112,7 +112,7 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
         StringTokenizer tok = new StringTokenizer(customHeaders, ";");
 
         while (tok.hasMoreElements()) {
-            buf.append("<header>" + tok.nextToken() + "</header>");
+            buf.append("<header>").append(tok.nextToken()).append("</header>");
         }
 
         buf.append("</headers>");
