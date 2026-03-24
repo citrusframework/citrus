@@ -42,5 +42,5 @@ package org.citrusframework.validation;
 public enum CustomValidatorStrategy {
 
     COMBINED,
-    EXCLUSIVE;
+    EXCLUSIVE
 }

@@ -37,5 +37,5 @@ public interface StringFunction extends ParameterizedFunction<StringParameter> {
     @Override
     default StringParameter getParameters() {
         return new StringParameter();
-    };
+    }
 }
