@@ -68,20 +68,14 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
     private JsonNode applyOperation(JsonNode root, PatchOperation op) {
         String jsonPointer = convertToJsonPointer(op.getPath());
 
-        switch (op.getOperation()) {
-            case "add":
-                return add(root, jsonPointer, op.getValue());
-            case "remove":
-                return remove(root, jsonPointer);
-            case "replace":
-                return replace(root, jsonPointer, op.getValue());
-            case "move":
-                return move(root, jsonPointer, convertToJsonPointer(op.getValue()));
-            case "copy":
-                return copy(root, jsonPointer, convertToJsonPointer(op.getValue()));
-            default:
-                throw new CitrusRuntimeException("Unsupported operation: " + op.getOperation());
-        }
+        return switch (op.getOperation()) {
+            case "add" -> add(root, jsonPointer, op.getValue());
+            case "remove" -> remove(root, jsonPointer);
+            case "replace" -> replace(root, jsonPointer, op.getValue());
+            case "move" -> move(root, jsonPointer, convertToJsonPointer(op.getValue()));
+            case "copy" -> copy(root, jsonPointer, convertToJsonPointer(op.getValue()));
+            default -> throw new CitrusRuntimeException("Unsupported operation: " + op.getOperation());
+        };
     }
 
     private JsonNode add(JsonNode root, String path, String value) {
