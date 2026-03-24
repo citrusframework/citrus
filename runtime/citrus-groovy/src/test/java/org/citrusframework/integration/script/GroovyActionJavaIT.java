@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 public class GroovyActionJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     /** OS new line */
-    private static final String NEWLINE = System.getProperty("line.separator");
+    private static final String NEWLINE = System.lineSeparator();
 
     @CitrusTest
     public void groovyAction() {
