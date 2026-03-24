@@ -53,7 +53,7 @@ public class WebSocketServerParser extends HttpServerParser {
                 }
             }
 
-            if (webSocketReferences.size() > 0) {
+            if (!webSocketReferences.isEmpty()) {
                 builder.addPropertyValue("webSockets", webSocketReferences);
             }
 

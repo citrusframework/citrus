@@ -98,7 +98,7 @@ public class PageAction extends AbstractSeleniumAction {
             } else {
                 ReflectionHelper.doWithMethods(pageToUse.getClass(), method -> {
                     if (method.getName().equals(action)) {
-                        if (method.getParameterCount() == 0 && arguments.size() == 0) {
+                        if (method.getParameterCount() == 0 && arguments.isEmpty()) {
                             ReflectionHelper.invokeMethod(method, pageToUse);
                         } else if (method.getParameterCount() == 1 && method.getParameters()[0].getParameterizedType().getTypeName().equals(TestContext.class.getName())) {
                             ReflectionHelper.invokeMethod(method, pageToUse, context);

@@ -43,7 +43,7 @@ public class ExecutePLSQLActionParserTest extends AbstractActionParserTest<Execu
         Assert.assertEquals(action.getName(), "plsql:testDataSource");
         Assert.assertNotNull(action.getDataSource());
         Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertTrue(action.getScript().length() > 0);
+        Assert.assertTrue(!action.getScript().isEmpty());
         Assert.assertTrue(action.isIgnoreErrors());
         Assert.assertEquals(action.getTransactionManager(), beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class));
         Assert.assertEquals(action.getTransactionTimeout(), "5000");

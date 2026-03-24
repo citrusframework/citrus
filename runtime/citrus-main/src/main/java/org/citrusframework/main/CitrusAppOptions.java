@@ -62,7 +62,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
         options.add(new CliOption<>("d", "duration", "Maximum time in milliseconds the server should be up and running - server will terminate automatically when time exceeds") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
-                if (value != null && value.length() > 0) {
+                if (value != null && !value.isEmpty()) {
                     configuration.setTimeToLive(Long.parseLong(value));
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -d/--duration option");
