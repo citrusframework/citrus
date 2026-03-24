@@ -61,10 +61,11 @@ import java.util.Optional;
  */
 public class MailMessageConverter implements MessageConverter<MimeMailMessage, MimeMailMessage, MailEndpointConfiguration> {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(MailMessageConverter.class);
 
-    /** Mail delivery date format */
+    /**
+     * Mail delivery date format
+     */
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
     @Override
@@ -133,18 +134,14 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
     /**
      * Creates a new mail message model object from message headers.
-     * @param messageHeaders
-     * @param bodyPart
-     * @param marshaller
-     * @return
      */
     public MailMessage createMailRequest(Map<String, Object> messageHeaders, BodyPart bodyPart, MailMarshaller marshaller) {
         MailMessage message = MailMessage.request(messageHeaders)
-                        .marshaller(marshaller)
-                        .from(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString())
-                        .to(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString())
-                        .subject(messageHeaders.get(CitrusMailMessageHeaders.MAIL_SUBJECT).toString())
-                        .body(bodyPart);
+                .marshaller(marshaller)
+                .from(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString())
+                .to(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString())
+                .subject(messageHeaders.get(CitrusMailMessageHeaders.MAIL_SUBJECT).toString())
+                .body(bodyPart);
 
         if (StringUtils.hasText(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString())) {
             message.cc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString());
@@ -159,10 +156,8 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
     /**
      * Reads basic message information such as sender, recipients and mail subject to message headers.
-     * @param msg
-     * @return
      */
-    protected Map<String,Object> createMessageHeaders(MimeMailMessage msg) throws MessagingException, IOException {
+    protected Map<String, Object> createMessageHeaders(MimeMailMessage msg) throws MessagingException, IOException {
         Map<String, Object> headers = new HashMap<>();
         headers.put(CitrusMailMessageHeaders.MAIL_MESSAGE_ID, msg.getMimeMessage().getMessageID());
         headers.put(CitrusMailMessageHeaders.MAIL_FROM, String.join(",", Optional.ofNullable(msg.getMimeMessage().getFrom()).stream().flatMap(Arrays::stream).map(Object::toString).toList()));
@@ -179,9 +174,6 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
     /**
      * Process message part. Can be a text, binary or multipart instance.
-     * @param part
-     * @return
-     * @throws java.io.IOException
      */
     protected BodyPart handlePart(MimePart part) throws IOException, MessagingException {
         String contentType = parseContentType(part.getContentType());
@@ -201,9 +193,6 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
     /**
      * Construct multipart body with first part being the body content and further parts being the attachments.
-     * @param body
-     * @return
-     * @throws IOException
      */
     private BodyPart handleMultiPart(Multipart body) throws IOException, MessagingException {
         BodyPart bodyPart = null;
@@ -224,10 +213,6 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     /**
      * Construct body part form special application data. Based on known application content types delegate to text,
      * image or binary body construction.
-     * @param applicationData
-     * @param contentType
-     * @return
-     * @throws IOException
      */
     protected BodyPart handleApplicationContentPart(MimePart applicationData, String contentType) throws IOException, MessagingException {
         if (applicationData.isMimeType("application/pdf")) {
@@ -251,10 +236,6 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
     /**
      * Construct base64 body part from image data.
-     * @param image
-     * @param contentType
-     * @return
-     * @throws IOException
      */
     protected BodyPart handleImageBinaryPart(MimePart image, String contentType) throws IOException, MessagingException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -268,10 +249,6 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
     /**
      * Construct simple body part from binary data just adding file name as content.
-     * @param mediaPart
-     * @param contentType
-     * @return
-     * @throws IOException
      */
     protected BodyPart handleBinaryPart(MimePart mediaPart, String contentType) throws IOException, MessagingException {
         String contentId = mediaPart.getContentID() != null ? "(" + mediaPart.getContentID() + ")" : "";
@@ -280,10 +257,6 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
     /**
      * Construct simple binary body part with base64 data.
-     * @param textPart
-     * @param contentType
-     * @return
-     * @throws IOException
      */
     protected BodyPart handleTextPart(MimePart textPart, String contentType) throws IOException, MessagingException {
 
@@ -302,8 +275,6 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     /**
      * Removes SMTP mail body ending which is defined by single '.' character in separate line marking
      * the mail body end of file.
-     * @param textBody
-     * @return
      */
     private String stripMailBodyEnding(String textBody) throws IOException {
         BufferedReader reader = null;
@@ -334,10 +305,6 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     /**
      * Reads Citrus internal mail message model object from message payload. Either payload is actually a mail message object or
      * XML payload String is unmarshalled to mail message object.
-     *
-     * @param message
-     * @param endpointConfiguration
-     * @return
      */
     private MailRequest getMailRequest(Message message, MailEndpointConfiguration endpointConfiguration) {
         Object payload = message.getPayload();
@@ -362,27 +329,18 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     /**
      * When content type has multiple lines this method just returns plain content type information in first line.
      * This is the case when multipart mixed content type has boundary information in next line.
-     * @param contentType
-     * @return
-     * @throws IOException
      */
     static String parseContentType(String contentType) throws IOException {
-        if (contentType.indexOf(System.getProperty("line.separator")) > 0) {
-            BufferedReader reader = new BufferedReader(new StringReader(contentType));
-
-            try {
+        if (contentType.indexOf(System.lineSeparator()) > 0) {
+            try (BufferedReader reader = new BufferedReader(new StringReader(contentType))) {
                 String plainContentType = reader.readLine();
                 if (plainContentType != null && plainContentType.trim().endsWith(";")) {
                     plainContentType = plainContentType.trim().substring(0, plainContentType.length() - 1);
                 }
 
                 return plainContentType;
-            } finally {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    logger.warn("Failed to close reader", e);
-                }
+            } catch (IOException e) {
+                logger.warn("Failed to close reader", e);
             }
         }
 
@@ -391,6 +349,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
     /**
      * Parses the charset definition from a "Content-Type" header value, e.g. text/plain; charset=UTF-8, and returns it exclusively.
+     *
      * @param contentType 'Content-Type' header value as String
      * @return a charset information parsed from the Content-Type, or {@link CitrusSettings#CITRUS_FILE_ENCODING} as default if there is no charset definition
      */
