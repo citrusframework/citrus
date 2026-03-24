@@ -114,38 +114,27 @@ public class SoapAttachmentTest {
         Assert.assertEquals(soapAttachment.getSize(), resourceContent.length);
     }
 
-    private static class StaticTextDataSource implements DataSource {
-
-        private final String content;
-        private final String contentType;
-        private final String charsetName;
-        private final String contentId;
-
-        private StaticTextDataSource(String content, String contentType, String charsetName, String contentId) {
-            this.content = content;
-            this.contentType = contentType;
-            this.charsetName = charsetName;
-            this.contentId = contentId;
-        }
+    private record StaticTextDataSource(String content, String contentType, String charsetName,
+                                        String contentId) implements DataSource {
 
         @Override
-        public InputStream getInputStream() throws IOException {
-            return new ByteArrayInputStream(content.getBytes(charsetName));
-        }
+            public InputStream getInputStream() throws IOException {
+                return new ByteArrayInputStream(content.getBytes(charsetName));
+            }
 
-        @Override
-        public String getContentType() {
-            return contentType;
-        }
+            @Override
+            public String getContentType() {
+                return contentType;
+            }
 
-        @Override
-        public String getName() {
-            return contentId;
-        }
+            @Override
+            public String getName() {
+                return contentId;
+            }
 
-        @Override
-        public OutputStream getOutputStream() {
-            throw new UnsupportedOperationException();
+            @Override
+            public OutputStream getOutputStream() {
+                throw new UnsupportedOperationException();
+            }
         }
-    }
 }

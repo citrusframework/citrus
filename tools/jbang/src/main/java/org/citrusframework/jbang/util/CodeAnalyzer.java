@@ -39,7 +39,7 @@ public interface CodeAnalyzer {
      * Inspects the given source code and provides detailed information about it as a result.
      */
     default ScanResult scan(Resource sourceFile) throws IOException {
-        return scan(FileUtils.getFileName(sourceFile.getLocation()), FileUtils.readToString(sourceFile));
+        return scan(FileUtils.getFileName(sourceFile.location()), FileUtils.readToString(sourceFile));
     }
 
     /**

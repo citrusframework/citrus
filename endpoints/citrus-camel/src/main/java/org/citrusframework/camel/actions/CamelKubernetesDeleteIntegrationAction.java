@@ -85,7 +85,7 @@ public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelJBangAc
         if (StringUtils.hasText(integrationName)) {
             name = context.replaceDynamicContentInString(integrationName);
         } else if (integrationResource != null) {
-            name = FileUtils.getBaseName(integrationResource.getFile().getName());
+            name = FileUtils.getBaseName(integrationResource.file().getName());
         } else {
             name = "route";
         }
@@ -106,7 +106,7 @@ public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelJBangAc
         }
 
         if (integrationResource != null) {
-            camelJBang().workingDir(integrationResource.getFile().toPath().toAbsolutePath().getParent());
+            camelJBang().workingDir(integrationResource.file().toPath().toAbsolutePath().getParent());
         }
 
         ProcessAndOutput pao = camelJBang().kubernetes().delete(name, commandArgs.toArray(String[]::new));

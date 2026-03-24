@@ -62,7 +62,7 @@ public class AbstractDataDictionaryTest {
 
         // Setup mock resource
         doReturn(inputStream).when(mappingFile).getInputStream();
-        doReturn("test.properties").when(mappingFile).getLocation();
+        doReturn("test.properties").when(mappingFile).location();
 
         fixture.initialize();
 
@@ -83,7 +83,7 @@ public class AbstractDataDictionaryTest {
 
         // Setup mock resource
         doReturn(inputStream).when(mappingFile).getInputStream();
-        doReturn("test.properties.xml").when(mappingFile).getLocation(); // Note the .xml-suffix
+        doReturn("test.properties.xml").when(mappingFile).location(); // Note the .xml-suffix
 
         fixture.initialize();
 
@@ -97,7 +97,7 @@ public class AbstractDataDictionaryTest {
 
         // Setup mock resource
         doReturn(inputStream).when(mappingFile).getInputStream();
-        doReturn("test.properties.xml").when(mappingFile).getLocation(); // Note the .xml-suffix
+        doReturn("test.properties.xml").when(mappingFile).location(); // Note the .xml-suffix
 
         CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, () -> fixture.initialize());
         assertTrue(exception.getCause() instanceof InvalidPropertiesFormatException);

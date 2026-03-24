@@ -200,7 +200,7 @@ public final class TestNGHelper {
                 sourceFilePackageName = sourceFilePackageName.substring(0, sourceFilePackageName.lastIndexOf("/"));
             }
 
-            TestLoader testLoader = provider.createTestLoader(FileUtils.getBaseName(FileUtils.getFileName(file.getLocation())),
+            TestLoader testLoader = provider.createTestLoader(FileUtils.getBaseName(FileUtils.getFileName(file.location())),
                     sourceFilePackageName.replace("/","."), type);
 
             if (testLoader instanceof TestSourceAware) {

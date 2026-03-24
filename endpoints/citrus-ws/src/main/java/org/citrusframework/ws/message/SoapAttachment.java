@@ -400,7 +400,7 @@ public class SoapAttachment implements Attachment, Serializable {
 
         @Override
         public String getName() {
-            return FileUtils.getFileName(getFileResource().getLocation());
+            return FileUtils.getFileName(getFileResource().location());
         }
 
         @Override

@@ -71,9 +71,9 @@ public class ZipMessage extends DefaultMessage {
      */
     public ZipMessage addEntry(Resource resource) {
         try {
-            addEntry(new Entry(resource.getFile()));
+            addEntry(new Entry(resource.file()));
         } catch (IOException e) {
-            throw new CitrusRuntimeException(String.format("Failed to read zip entry content from given resource: %s", resource.getLocation()), e);
+            throw new CitrusRuntimeException(String.format("Failed to read zip entry content from given resource: %s", resource.location()), e);
         }
         return this;
     }

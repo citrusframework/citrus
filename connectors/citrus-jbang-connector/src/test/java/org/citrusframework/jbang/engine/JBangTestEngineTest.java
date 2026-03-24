@@ -32,13 +32,13 @@ public class JBangTestEngineTest {
     @Test
     public void testRunFromWorkDirectory() {
         TestRunConfiguration configuration = new TestRunConfiguration();
-        runTestEngine(configuration, Resources.fromClasspath("org/citrusframework/jbang/sample").getFile().toPath());
+        runTestEngine(configuration, Resources.fromClasspath("org/citrusframework/jbang/sample").file().toPath());
     }
 
     @Test
     public void testRunDirectory() {
         TestRunConfiguration configuration = new TestRunConfiguration();
-        configuration.setPackages(Collections.singletonList(Resources.fromClasspath("org/citrusframework/jbang/sample").getFile().getAbsolutePath()));
+        configuration.setPackages(Collections.singletonList(Resources.fromClasspath("org/citrusframework/jbang/sample").file().getAbsolutePath()));
         runTestEngine(configuration);
     }
 
@@ -46,7 +46,7 @@ public class JBangTestEngineTest {
     public void testRunSource() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setTestSources(Collections.singletonList(new TestSource("yaml", "hello",
-                Resources.fromClasspath("org/citrusframework/jbang/sample/hello.citrus.it.yaml").getFile().getAbsolutePath())));
+                Resources.fromClasspath("org/citrusframework/jbang/sample/hello.citrus.it.yaml").file().getAbsolutePath())));
 
         runTestEngine(configuration);
     }

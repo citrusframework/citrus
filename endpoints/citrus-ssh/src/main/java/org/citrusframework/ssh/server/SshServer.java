@@ -145,10 +145,10 @@ public class SshServer extends AbstractServer {
             Resource hostKey = FileUtils.getFileResource(hostKeyPath);
 
             if (hostKey instanceof Resources.ClasspathResource) {
-                ClassLoadableResourceKeyPairProvider resourceKeyPairProvider = new ClassLoadableResourceKeyPairProvider(Collections.singletonList(hostKey.getLocation()));
+                ClassLoadableResourceKeyPairProvider resourceKeyPairProvider = new ClassLoadableResourceKeyPairProvider(Collections.singletonList(hostKey.location()));
                 sshd.setKeyPairProvider(resourceKeyPairProvider);
             } else {
-                FileKeyPairProvider fileKeyPairProvider = new FileKeyPairProvider(Collections.singletonList(hostKey.getFile().toPath()));
+                FileKeyPairProvider fileKeyPairProvider = new FileKeyPairProvider(Collections.singletonList(hostKey.file().toPath()));
                 sshd.setKeyPairProvider(fileKeyPairProvider);
             }
         } else {

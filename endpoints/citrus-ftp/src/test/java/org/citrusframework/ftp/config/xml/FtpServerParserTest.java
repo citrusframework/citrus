@@ -16,7 +16,6 @@
 
 package org.citrusframework.ftp.config.xml;
 
-import java.io.IOException;
 import java.util.Map;
 
 import org.citrusframework.channel.ChannelEndpointAdapter;
@@ -76,7 +75,7 @@ public class FtpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getName(), "ftpServer4");
         Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
 
-        Assert.assertNotNull(server.getUserManagerProperties().getFile());
+        Assert.assertNotNull(server.getUserManagerProperties().file());
         Assert.assertFalse(server.isAutoStart());
         Assert.assertNotNull(server.getInterceptors());
         Assert.assertEquals(server.getInterceptors().size(), 0L);

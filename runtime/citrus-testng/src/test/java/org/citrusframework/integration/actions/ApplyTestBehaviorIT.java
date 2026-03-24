@@ -144,44 +144,32 @@ public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport implements Te
                 ));
     }
 
-    private static class SayHelloBehavior implements TestBehavior, TestActionSupport {
-        private final String greeting;
-
-        public SayHelloBehavior() {
-            this("Hello");
-        }
-
-        public SayHelloBehavior(String greeting) {
-            this.greeting = greeting;
-        }
+    private record SayHelloBehavior(String greeting) implements TestBehavior, TestActionSupport {
+            public SayHelloBehavior() {
+                this("Hello");
+            }
 
         @Override
-        public void apply(TestActionRunner runner) {
-            runner.run(echo(String.format("%s Citrus!", greeting)));
-        }
-    }
-
-    private static class InceptionBehavior implements TestBehavior, TestActionSupport {
-        private final String greeting;
-
-        public InceptionBehavior() {
-            this("Hello");
+            public void apply(TestActionRunner runner) {
+                runner.run(echo(String.format("%s Citrus!", greeting)));
+            }
         }
 
-        public InceptionBehavior(String greeting) {
-            this.greeting = greeting;
-        }
+    private record InceptionBehavior(String greeting) implements TestBehavior, TestActionSupport {
+            public InceptionBehavior() {
+                this("Hello");
+            }
 
         @Override
-        public void apply(TestActionRunner runner) {
-            runner.applyBehavior(new SayHelloBehavior(greeting));
+            public void apply(TestActionRunner runner) {
+                runner.applyBehavior(new SayHelloBehavior(greeting));
 
-            runner.run(sequential()
-                    .actions(
-                            echo("Now try inception:"),
-                            runner.applyBehavior(new SayHelloBehavior(greeting))
-                    ));
+                runner.run(sequential()
+                        .actions(
+                                echo("Now try inception:"),
+                                runner.applyBehavior(new SayHelloBehavior(greeting))
+                        ));
+            }
         }
-    }
 }
 

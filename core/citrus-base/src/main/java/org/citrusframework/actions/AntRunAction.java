@@ -91,7 +91,7 @@ public class AntRunAction extends AbstractTestAction {
 
         String buildFileResource = context.replaceDynamicContentInString(buildFilePath);
         try {
-            ProjectHelper.configureProject(project, Resources.fromClasspath(buildFileResource).getFile());
+            ProjectHelper.configureProject(project, Resources.fromClasspath(buildFileResource).file());
 
             for (Entry<Object, Object> entry : properties.entrySet()) {
                 String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";

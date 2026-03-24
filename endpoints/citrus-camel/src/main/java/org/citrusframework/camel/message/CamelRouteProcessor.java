@@ -145,24 +145,17 @@ public class CamelRouteProcessor extends CamelMessageProcessor {
     }
 
     /**
-     * Processor send exchange to given route builder using conventional direct endpoint.
-     */
-    private static class RouteProcessor implements Processor {
-        private final String routeId;
-        private final RouteBuilder routeBuilder;
-
-        public RouteProcessor(String routeId, RouteBuilder routeBuilder) {
-            this.routeId = routeId;
-            this.routeBuilder = routeBuilder;
-        }
+         * Processor send exchange to given route builder using conventional direct endpoint.
+         */
+        private record RouteProcessor(String routeId, RouteBuilder routeBuilder) implements Processor {
 
         @Override
-        public void process(Exchange exchange) throws Exception {
-            try (var producerTemplate = routeBuilder.getContext().createProducerTemplate()) {
-                producerTemplate.send("direct:" + routeId, exchange);
-            } finally {
-                routeBuilder.getContext().removeRoute(routeId);
+            public void process(Exchange exchange) throws Exception {
+                try (var producerTemplate = routeBuilder.getContext().createProducerTemplate()) {
+                    producerTemplate.send("direct:" + routeId, exchange);
+                } finally {
+                    routeBuilder.getContext().removeRoute(routeId);
+                }
             }
         }
-    }
 }

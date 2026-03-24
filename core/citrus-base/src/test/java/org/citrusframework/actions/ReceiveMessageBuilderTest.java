@@ -206,7 +206,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 		//WHEN
 		when(resource.exists()).thenReturn(true);
-		when(resource.getLocation()).thenReturn("dummy.xml");
+		when(resource.location()).thenReturn("dummy.xml");
 		when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<message>Hello</message>".getBytes(StandardCharsets.UTF_8)));
 
 		builder.message().body(this.resource);
@@ -222,7 +222,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 		//WHEN
 		when(resource.exists()).thenReturn(true);
-		when(resource.getLocation()).thenReturn("dummy.xml");
+		when(resource.location()).thenReturn("dummy.xml");
 		when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<message>Hello</message>".getBytes(StandardCharsets.UTF_8)));
 
 		builder.message().body(this.resource, Charset.defaultCharset());
@@ -305,7 +305,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 		//WHEN
 		when(resource.exists()).thenReturn(true);
-		when(resource.getLocation()).thenReturn("dummy.xml");
+		when(resource.location()).thenReturn("dummy.xml");
 		when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<message>Hello</message>".getBytes(StandardCharsets.UTF_8)));
 
 		builder.message().header(resource);
@@ -323,7 +323,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 		//WHEN
 		when(resource.exists()).thenReturn(true);
-		when(resource.getLocation()).thenReturn("dummy.xml");
+		when(resource.location()).thenReturn("dummy.xml");
 		when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<message>Hi</message>".getBytes(StandardCharsets.UTF_8)));
 
 		builder.message().header(resource, Charset.defaultCharset());
@@ -378,7 +378,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 		//WHEN
 		when(resource.exists()).thenReturn(true);
-		when(resource.getLocation()).thenReturn("dummy.groovy");
+		when(resource.location()).thenReturn("dummy.groovy");
 		when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert message == 'Hello'".getBytes(StandardCharsets.UTF_8)));
 
 		builder.validate(new DefaultScriptValidationContext.Builder()
@@ -404,7 +404,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 		//WHEN
 		when(resource.exists()).thenReturn(true);
-		when(resource.getLocation()).thenReturn("dummy.groovy");
+		when(resource.location()).thenReturn("dummy.groovy");
 		when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert message == 'Hello'".getBytes(StandardCharsets.UTF_8)));
 
 		builder.validate(new DefaultScriptValidationContext.Builder()

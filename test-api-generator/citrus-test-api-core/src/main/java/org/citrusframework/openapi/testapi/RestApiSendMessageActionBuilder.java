@@ -226,7 +226,7 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
         if (object instanceof byte[] bytes) {
             return bytes;
         } else if (object instanceof Resource resource) {
-            return new ClasspathResource(resource.getLocation());
+            return new ClasspathResource(resource.location());
         } else if (object instanceof org.springframework.core.io.Resource resource) {
             return resource;
         } else if (object instanceof String location) {

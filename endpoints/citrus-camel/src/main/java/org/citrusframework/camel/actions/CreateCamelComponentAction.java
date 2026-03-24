@@ -123,7 +123,7 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
             if (StringUtils.hasText(this.name)) {
                 return component(this.name, resource);
             } else {
-                return component(FileUtils.getBaseName(FileUtils.getFileName(resource.getLocation())), resource);
+                return component(FileUtils.getBaseName(FileUtils.getFileName(resource.location())), resource);
 
             }
         }
@@ -133,7 +133,7 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
             try {
                 return component(name, FileUtils.readToString(resource));
             } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to read Camel component from resource '%s'".formatted(resource.getLocation()), e);
+                throw new CitrusRuntimeException("Failed to read Camel component from resource '%s'".formatted(resource.location()), e);
             }
         }
 

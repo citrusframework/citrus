@@ -93,7 +93,7 @@ public class SSLConnection implements HttpSecureConnection {
 
             if (trustStore != null) {
                 sslContext = SSLContexts.custom()
-                    .loadTrustMaterial(trustStore.getFile(), trustStorePassword.toCharArray(),
+                    .loadTrustMaterial(trustStore.file(), trustStorePassword.toCharArray(),
                             new TrustSelfSignedStrategy());
             } else {
                 sslContext = SSLContexts.custom()
@@ -101,7 +101,7 @@ public class SSLConnection implements HttpSecureConnection {
             }
 
             if (keyStore != null) {
-                sslContext.loadKeyMaterial(KeyStore.getInstance(keyStore.getFile(), keyStorePassword.toCharArray()),
+                sslContext.loadKeyMaterial(KeyStore.getInstance(keyStore.file(), keyStorePassword.toCharArray()),
                         keyStorePassword.toCharArray());
             }
 
@@ -146,14 +146,14 @@ public class SSLConnection implements HttpSecureConnection {
         SslContextFactory.Server contextFactory = new SslContextFactory.Server();
 
         if (trustStore != null) {
-            contextFactory.setTrustStorePath(trustStore.getFile().getPath());
+            contextFactory.setTrustStorePath(trustStore.file().getPath());
             contextFactory.setTrustStorePassword(trustStorePassword);
         } else {
             contextFactory.setTrustAll(true);
         }
 
         if (keyStore != null) {
-            contextFactory.setKeyStorePath(keyStore.getFile().getPath());
+            contextFactory.setKeyStorePath(keyStore.file().getPath());
             contextFactory.setKeyStorePassword(keyStorePassword);
         }
 

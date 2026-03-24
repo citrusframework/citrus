@@ -63,7 +63,7 @@ public class SimpleJsonSchemaTest {
     @Test
     public void initialize_withUrlResource_parsesSchema() throws Exception {
         ClasspathResource resource = new ClasspathResource("classpath:org/citrusframework/json/schema/jsonSchema.json");
-        URL url = resource.getFile().toURI().toURL();
+        URL url = resource.file().toURI().toURL();
         SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(new UrlResource(url));
 
         simpleJsonSchema.initialize();
@@ -84,7 +84,7 @@ public class SimpleJsonSchemaTest {
     @Test
     public void initialize_withFileSystemResource_parsesSchema() {
         ClasspathResource resource = new ClasspathResource("classpath:org/citrusframework/json/schema/jsonSchema.json");
-        FileSystemResource fileSystemResource = new FileSystemResource(resource.getFile());
+        FileSystemResource fileSystemResource = new FileSystemResource(resource.file());
         SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(fileSystemResource);
 
         simpleJsonSchema.initialize();
@@ -96,7 +96,7 @@ public class SimpleJsonSchemaTest {
     public void initialize_withJarUrlResource_parsesSchema() throws Exception {
         ClasspathResource resource = new ClasspathResource("classpath:org/citrusframework/json/schema/test-schema.jar");
 
-        URL url = resource.getFile().toURI().toURL();
+        URL url = resource.file().toURI().toURL();
         URL jarUrl = new URL("jar:"+url+"!/jsonschema.json");
         SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(new UrlResource(jarUrl));
 

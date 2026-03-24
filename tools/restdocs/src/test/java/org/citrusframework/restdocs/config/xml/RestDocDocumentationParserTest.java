@@ -46,7 +46,7 @@ public class RestDocDocumentationParserTest extends AbstractBeanDefinitionParser
         Assert.assertNotNull(configurer.getContextProvider());
         // 1st interceptor
         RestDocClientInterceptor interceptor = interceptors.get("documentation1Interceptor");
-        Assert.assertNotNull(interceptor.getDocumentationGenerator());
+        Assert.assertNotNull(interceptor.documentationGenerator());
 
         Map<String, CitrusRestDocSoapConfigurer> soapConfigurers = beanDefinitionContext.getBeansOfType(CitrusRestDocSoapConfigurer.class);
         Assert.assertEquals(soapConfigurers.size(), 1);
@@ -58,7 +58,7 @@ public class RestDocDocumentationParserTest extends AbstractBeanDefinitionParser
         Assert.assertNotNull(soapConfigurer.getContextProvider());
         // 2nd interceptor
         RestDocSoapClientInterceptor soapInterceptor = soapInterceptors.get("documentation2Interceptor");
-        Assert.assertNotNull(soapInterceptor.getDocumentationGenerator());
+        Assert.assertNotNull(soapInterceptor.documentationGenerator());
 
         List<ClientHttpRequestInterceptor> documentation1 = beanDefinitionContext.getBean("documentation1", List.class);
         Assert.assertEquals(documentation1.size(), 2L);

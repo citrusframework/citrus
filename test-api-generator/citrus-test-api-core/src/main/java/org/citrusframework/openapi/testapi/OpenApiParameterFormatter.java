@@ -275,31 +275,25 @@ class OpenApiParameterFormatter {
         }
     }
 
-    private static class SimpleEncoder implements StyleEncoder {
-
-        private final FormatParameters formatParameters;
-
-        private SimpleEncoder(FormatParameters formatParameters) {
-            this.formatParameters = formatParameters;
-        }
+    private record SimpleEncoder(FormatParameters formatParameters) implements StyleEncoder {
 
         @Override
-        public String encodeAccordingToSpec(String parameterName, Object parameterValue,
-            boolean explode, boolean isObject) {
-            List<String> values = toList(parameterValue, isObject);
-            String prefix = formatParameters.prefix.replace(PARAMETER_NAME_TOKEN, parameterName);
+            public String encodeAccordingToSpec(String parameterName, Object parameterValue,
+                                                boolean explode, boolean isObject) {
+                List<String> values = toList(parameterValue, isObject);
+                String prefix = formatParameters.prefix.replace(PARAMETER_NAME_TOKEN, parameterName);
 
-            String encoded;
-            if (isObject && explode) {
-                encoded = prefix + formatExploded(values, formatParameters.separator);
-            } else {
-                encoded = prefix + values.stream()
-                    .collect(joining(formatParameters.separator));
+                String encoded;
+                if (isObject && explode) {
+                    encoded = prefix + formatExploded(values, formatParameters.separator);
+                } else {
+                    encoded = prefix + values.stream()
+                            .collect(joining(formatParameters.separator));
+                }
+
+                return encoded;
             }
-
-            return encoded;
         }
-    }
 
     private static class FormEncoder implements StyleEncoder {
 

@@ -114,8 +114,8 @@ public final class JUnit4Helper {
                 sourceFilePackageName = sourceFilePackageName.substring(0, sourceFilePackageName.lastIndexOf("/"));
             }
 
-            String testName = FileUtils.getBaseName(FileUtils.getFileName(file.getLocation()));
-            String ext = FileUtils.getFileExtension(file.getLocation());
+            String testName = FileUtils.getBaseName(FileUtils.getFileName(file.location()));
+            String ext = FileUtils.getFileExtension(file.location());
             CitrusFrameworkMethod frameworkMethod = new CitrusFrameworkMethod(method.getMethod(), type, testName,
                     sourceFilePackageName.replace("/","."));
             frameworkMethod.setSource(new TestSource(ext, testName, source));

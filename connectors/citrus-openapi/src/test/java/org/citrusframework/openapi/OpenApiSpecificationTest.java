@@ -185,7 +185,7 @@ public class OpenApiSpecificationTest {
 
         // Then
         assertNotNull(specification);
-        assertEquals(specification.getSpecUrl(), resource.getLocation());
+        assertEquals(specification.getSpecUrl(), resource.location());
         assertPingApi(specification);
     }
 
@@ -199,7 +199,7 @@ public class OpenApiSpecificationTest {
 
         // Then
         assertNotNull(specification);
-        assertEquals(specification.getSpecUrl(), resource.getLocation());
+        assertEquals(specification.getSpecUrl(), resource.location());
 
         assertNotNull(specification.getOpenApiDoc(null));
     }
@@ -454,7 +454,7 @@ public class OpenApiSpecificationTest {
         File fileMock = mock();
         doReturn("MyApi.json").when(fileMock).getName();
         Resource resourceMock = mock();
-        doReturn(fileMock).when(resourceMock).getFile();
+        doReturn(fileMock).when(resourceMock).file();
 
         Optional<String> alias = determineResourceAlias(resourceMock);
         assertTrue(alias.isPresent());
@@ -466,7 +466,7 @@ public class OpenApiSpecificationTest {
         URL urlMock = mock();
         doReturn("/C:/segment1/segment2/MyApi.json").when(urlMock).getPath();
         Resource resourceMock = mock();
-        doThrow(new RuntimeException("Forced Exception")).when(resourceMock).getFile();
+        doThrow(new RuntimeException("Forced Exception")).when(resourceMock).file();
         doReturn(urlMock).when(resourceMock).getURL();
 
         Optional<String> alias = determineResourceAlias(resourceMock);

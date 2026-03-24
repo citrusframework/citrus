@@ -81,7 +81,7 @@ public class ZipMessageTest {
         ZipMessage message = new ZipMessage();
         message.addEntry(new ZipMessage.Entry("foos/")
                                         .addEntry(new ZipMessage.Entry("foo.txt",
-                                                Resources.fromClasspath("org/citrusframework/archive/foo.txt").getFile())));
+                                                Resources.fromClasspath("org/citrusframework/archive/foo.txt").file())));
 
         File archive = new File (createTempDir().toFile(), "archive.zip");
         FileUtils.writeToFile(new ByteArrayInputStream(message.getPayload()), archive);
@@ -104,7 +104,7 @@ public class ZipMessageTest {
         message.addEntry(new ZipMessage.Entry("foos/"));
         message.addEntry(new ZipMessage.Entry("bars/")
                                        .addEntry(new ZipMessage.Entry("bar.txt",
-                                               Resources.fromClasspath("org/citrusframework/archive/bar.txt").getFile())));
+                                               Resources.fromClasspath("org/citrusframework/archive/bar.txt").file())));
 
         File archive = new File (createTempDir().toFile(), "archive.zip");
         FileUtils.writeToFile(new ByteArrayInputStream(message.getPayload()), archive);

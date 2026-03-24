@@ -126,7 +126,7 @@ public class FileResourcePayloadBuilder implements MessagePayloadBuilder, Messag
 
     public String getResourcePath() {
         if (resource != null) {
-            return resource.getLocation();
+            return resource.location();
         } else {
             return resourcePath;
         }

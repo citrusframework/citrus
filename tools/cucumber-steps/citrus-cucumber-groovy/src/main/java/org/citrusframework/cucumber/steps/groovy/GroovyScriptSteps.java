@@ -88,7 +88,7 @@ public class GroovyScriptSteps {
     public void loadEndpoint(String filePath) throws IOException {
         Resource scriptFile = ResourceUtils.resolve(filePath + ".groovy", context);
         String script = FileUtils.readToString(scriptFile);
-        final String fileName = FileUtils.getFileName(scriptFile.getLocation());
+        final String fileName = FileUtils.getFileName(scriptFile.location());
         final String baseName = Optional.of(fileName)
                 .map(f -> f.lastIndexOf("."))
                 .filter(index -> index >= 0)
@@ -113,7 +113,7 @@ public class GroovyScriptSteps {
     public void loadComponent(String filePath) throws IOException {
         Resource scriptFile = ResourceUtils.resolve(filePath + ".groovy", context);
         String script = FileUtils.readToString(scriptFile);
-        final String fileName = FileUtils.getFileName(scriptFile.getLocation());
+        final String fileName = FileUtils.getFileName(scriptFile.location());
         final String baseName = Optional.ofNullable(fileName)
                 .map(f -> f.lastIndexOf("."))
                 .filter(index -> index >= 0)
@@ -131,7 +131,7 @@ public class GroovyScriptSteps {
     public void loadActionScript(String filePath) throws IOException {
         Resource scriptFile = ResourceUtils.resolve(filePath + ".groovy", context);
         String script = FileUtils.readToString(scriptFile);
-        final String fileName = FileUtils.getFileName(scriptFile.getLocation());
+        final String fileName = FileUtils.getFileName(scriptFile.location());
         final String baseName = Optional.ofNullable(fileName)
                 .map(f -> f.lastIndexOf("."))
                 .filter(index -> index >= 0)

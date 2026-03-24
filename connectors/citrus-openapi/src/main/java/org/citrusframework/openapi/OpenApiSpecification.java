@@ -306,7 +306,7 @@ public class OpenApiSpecification implements Specification {
             .findFirst()
             .orElse(HTTP);
 
-        specification.setSpecUrl(resource.getLocation());
+        specification.setSpecUrl(resource.location());
         specification.setRequestUrl(
             format("%s://%s%s", schemeToUse, OasModelHelper.getHost(openApiDoc),
                 getBasePath(openApiDoc)));
@@ -790,7 +790,7 @@ public class OpenApiSpecification implements Specification {
         String resourceAlias = null;
 
         try {
-            File file = openApiResource.getFile();
+            File file = openApiResource.file();
             if (file != null) {
                 resourceAlias = file.getName();
                 int index = resourceAlias.lastIndexOf(".");

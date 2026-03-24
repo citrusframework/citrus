@@ -39,7 +39,7 @@ public class CitrusResourceWrapper implements Resource {
     }
 
     @Override
-    public String getLocation() {
+    public String location() {
         try {
             if (delegate instanceof ClassPathResource classPathResource) {
                 return classPathResource.getURI().toString();
@@ -66,7 +66,7 @@ public class CitrusResourceWrapper implements Resource {
     }
 
     @Override
-    public File getFile() {
+    public File file() {
         try {
             return delegate.getFile();
         } catch (IOException e) {

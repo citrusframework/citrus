@@ -38,16 +38,10 @@ import java.util.Map;
 
 public class CitrusSpringBackend extends CitrusBackend {
 
-    /**
-     * Logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(CitrusSpringBackend.class);
 
     /**
      * Constructor using resource loader.
-     *
-     * @param lookup
-     * @param container
      */
     public CitrusSpringBackend(Lookup lookup, Container container) {
         super(lookup, container);
@@ -68,23 +62,13 @@ public class CitrusSpringBackend extends CitrusBackend {
      * Initialization hook performs before suite actions and XML step initialization. Called as soon as citrus instance is requested
      * from outside for the first time. Performs only once.
      */
-    private static class XmlStepInstanceProcessor implements CitrusInstanceProcessor {
-
-        private final Glue glue;
-        private final List<URI> gluePaths;
-        private final Lookup lookup;
-
-        XmlStepInstanceProcessor(Glue glue, List<URI> gluePaths, Lookup lookup) {
-            this.glue = glue;
-            this.gluePaths = gluePaths;
-            this.lookup = lookup;
-        }
+    private record XmlStepInstanceProcessor(Glue glue, List<URI> gluePaths,
+                                            Lookup lookup) implements CitrusInstanceProcessor {
 
         @Override
         public void process(Citrus instance) {
             for (URI gluePath : gluePaths) {
                 String xmlStepConfigLocation = "classpath*:" + ClasspathSupport.resourceNameOfPackageName(ClasspathSupport.packageName(gluePath)) + "/**/*Steps.xml";
-
                 logger.info("Loading XML step definitions {}", xmlStepConfigLocation);
 
                 ApplicationContext ctx;
@@ -98,7 +82,7 @@ public class CitrusSpringBackend extends CitrusBackend {
 
                 for (StepTemplate stepTemplate : xmlSteps.values()) {
                     if (logger.isDebugEnabled()) {
-                        logger.debug("Found XML step definition: {} {}", stepTemplate.getName(), stepTemplate.getPattern().pattern());
+                        logger.info("Loading XML step definitions {}", xmlStepConfigLocation);
                     }
                     glue.addStepDefinition(new XmlStepDefinition(stepTemplate, lookup));
                 }

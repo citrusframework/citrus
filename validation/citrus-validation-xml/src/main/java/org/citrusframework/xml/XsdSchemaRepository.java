@@ -98,18 +98,18 @@ public class XsdSchemaRepository extends BaseRepository {
 
     @Override
     protected void addRepository(Resource resource) {
-        if (resource.getLocation().endsWith(".xsd")) {
+        if (resource.location().endsWith(".xsd")) {
             addXsdSchema(resource);
-        } else if (resource.getLocation().endsWith(".wsdl")) {
+        } else if (resource.location().endsWith(".wsdl")) {
             addWsdlSchema(resource);
         } else {
-            logger.warn("Skipped resource other than XSD schema for repository '{}'", resource.getLocation());
+            logger.warn("Skipped resource other than XSD schema for repository '{}'", resource.location());
         }
     }
 
     private void addWsdlSchema(Resource resource) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Loading WSDL schema resource '{}'", resource.getLocation());
+            logger.debug("Loading WSDL schema resource '{}'", resource.location());
         }
 
         WsdlXsdSchema wsdl = new WsdlXsdSchema(resource);
@@ -119,7 +119,7 @@ public class XsdSchemaRepository extends BaseRepository {
 
     private void addXsdSchema(Resource resource) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Loading XSD schema resource '{}'", resource.getLocation());
+            logger.debug("Loading XSD schema resource '{}'", resource.location());
         }
 
         SimpleXsdSchema schema = new SimpleXsdSchema(new ByteArrayResource(FileUtils.copyToByteArray(resource)));

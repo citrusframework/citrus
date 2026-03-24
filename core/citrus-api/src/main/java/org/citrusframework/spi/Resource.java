@@ -36,7 +36,7 @@ public interface Resource {
     /**
      * The location of the resource.
      */
-    String getLocation();
+    String location();
 
     /**
      * Whether this resource exists.
@@ -49,7 +49,7 @@ public interface Resource {
      * The default implementation creates a {@code URI} object from resource location.
      */
     default URI getURI() {
-        return URI.create(getLocation());
+        return URI.create(location());
     }
 
     /**
@@ -73,7 +73,7 @@ public interface Resource {
      * Return the file associated with this resource.
      * @return
      */
-    File getFile();
+    File file();
 
     /**
      * Returns a {@link Reader} that reads from the underlying resource using UTF-8 as charset.

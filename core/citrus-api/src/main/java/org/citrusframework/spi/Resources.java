@@ -130,62 +130,55 @@ public class Resources {
     }
 
     /**
-     * Resource loaded from classpath.
-     */
-    public static class ClasspathResource implements Resource {
+         * Resource loaded from classpath.
+         */
+        public record ClasspathResource(String location) implements Resource {
 
-        private static final ClasspathResourceResolver resolver = new ClasspathResourceResolver();
+            private static final ClasspathResourceResolver resolver = new ClasspathResourceResolver();
 
-        private final String location;
+            public ClasspathResource(String location) {
+                String raw = getRawPath(location).replace("\\", "/");
 
-        public ClasspathResource(String location) {
-            String raw = getRawPath(location).replace("\\", "/");
-
-            if (raw.startsWith("/")) {
-                this.location = raw.substring(1);
-            } else {
-                this.location = raw;
-            }
-        }
-
-        @Override
-        public String getLocation() {
-            return location;
-        }
-
-        @Override
-        public boolean exists() {
-            return this.getURI() != null;
-        }
-
-        @Override
-        public InputStream getInputStream() {
-            return ClassLoaderHelper.getClassLoader().getResourceAsStream(location);
-        }
-
-        @Override
-        public File getFile() {
-            if (!exists()) {
-                throw new CitrusRuntimeException(format("Failed to load classpath resource '%s' - does not exist", location));
+                if (raw.startsWith("/")) {
+                    this.location = raw.substring(1);
+                } else {
+                    this.location = raw;
+                }
             }
 
-            File found = resolver.getResource(location);
-            if (found == null) {
-                throw new CitrusRuntimeException(format("Failed to load classpath resource '%s' - does not exist", location));
+            @Override
+            public boolean exists() {
+                return this.getURI() != null;
             }
-            return found;
-        }
 
-        @Override
-        public URI getURI() {
-            URL url = ClassLoaderHelper.getClassLoader().getResource(location);
-            try {
-                return url != null ? url.toURI() : null;
-            } catch (URISyntaxException e) {
-                throw new CitrusRuntimeException("Failed to load classpath resource", e);
+            @Override
+            public InputStream getInputStream() {
+                return ClassLoaderHelper.getClassLoader().getResourceAsStream(location);
+            }
+
+            @Override
+            public File file() {
+                if (!exists()) {
+                    throw new CitrusRuntimeException(format("Failed to load classpath resource '%s' - does not exist", location));
+                }
+
+                File found = resolver.getResource(location);
+                if (found == null) {
+                    throw new CitrusRuntimeException(format("Failed to load classpath resource '%s' - does not exist", location));
+                }
+                return found;
+            }
+
+            @Override
+            public URI getURI() {
+                URL url = ClassLoaderHelper.getClassLoader().getResource(location);
+                try {
+                    return url != null ? url.toURI() : null;
+                } catch (URISyntaxException e) {
+                    throw new CitrusRuntimeException("Failed to load classpath resource", e);
+                }
             }
         }
-    }
 
     /**
      * Resource with given byte array content.
@@ -199,7 +192,7 @@ public class Resources {
         }
 
         @Override
-        public String getLocation() {
+        public String location() {
             return "";
         }
 
@@ -214,64 +207,53 @@ public class Resources {
         }
 
         @Override
-        public File getFile() {
+        public File file() {
             throw new UnsupportedOperationException(
                 "ByteArrayResource does not provide access to a file");
         }
     }
 
     /**
-     * Resource on the file system.
-     */
-    public static class FileSystemResource implements Resource {
+         * Resource on the file system.
+         */
+        public record FileSystemResource(File file) implements Resource {
 
-        private final File file;
-
-        public FileSystemResource(String path) {
-            this.file = new File(getRawPath(path));
-        }
-
-        public FileSystemResource(File file) {
-            this.file = file;
-        }
-
-        @Override
-        public String getLocation() {
-            return file.getPath();
-        }
-
-        @Override
-        public URI getURI() {
-            return file.toURI();
-        }
-
-        @Override
-        public boolean exists() {
-            return file.exists();
-        }
-
-        @Override
-        public InputStream getInputStream() {
-            if (!exists()) {
-                throw new CitrusRuntimeException(file + " does not exists");
+            public FileSystemResource(String path) {
+                this(new File(getRawPath(path)));
             }
 
-            if (file.isDirectory()) {
-                throw new UnsupportedOperationException(file + " is a directory");
-            }
-
-            try {
-                return new FileInputStream(file);
-            } catch (FileNotFoundException e) {
-                throw new CitrusRuntimeException(file + " does not exists", e);
-            }
-        }
-
         @Override
-        public File getFile() {
-            return file;
+            public String location() {
+                return file.getPath();
+            }
+
+            @Override
+            public URI getURI() {
+                return file.toURI();
+            }
+
+            @Override
+            public boolean exists() {
+                return file.exists();
+            }
+
+            @Override
+            public InputStream getInputStream() {
+                if (!exists()) {
+                    throw new CitrusRuntimeException(file + " does not exists");
+                }
+
+                if (file.isDirectory()) {
+                    throw new UnsupportedOperationException(file + " is a directory");
+                }
+
+                try {
+                    return new FileInputStream(file);
+                } catch (FileNotFoundException e) {
+                    throw new CitrusRuntimeException(file + " does not exists", e);
+                }
+            }
         }
-    }
 
     public static class UrlResource implements Resource {
 
@@ -282,7 +264,7 @@ public class Resources {
         }
 
         @Override
-        public String getLocation() {
+        public String location() {
             return url.toString();
         }
 
@@ -340,7 +322,7 @@ public class Resources {
         }
 
         @Override
-        public File getFile() {
+        public File file() {
             if (!"file".equals(url.getProtocol())) {
                 throw new CitrusRuntimeException(
                     format("Failed to resolve to absolute file path because it does not reside in the file system: %s", url)

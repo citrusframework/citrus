@@ -45,16 +45,16 @@ public class JsonSchemaRepository extends BaseRepository {
 
     @Override
     protected void addRepository(Resource resource) {
-        if (resource.getLocation().endsWith(".json")) {
+        if (resource.location().endsWith(".json")) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Loading json schema resource '{}'", resource.getLocation());
+                logger.debug("Loading json schema resource '{}'", resource.location());
             }
 
             SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(resource);
             simpleJsonSchema.initialize();
             schemas.add(simpleJsonSchema);
         } else {
-            logger.warn("Skipped resource other than json schema for repository '{}'", resource.getLocation());
+            logger.warn("Skipped resource other than json schema for repository '{}'", resource.location());
         }
     }
 

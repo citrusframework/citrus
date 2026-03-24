@@ -57,7 +57,7 @@ public class JBangTestEngine extends AbstractTestEngine {
                 .workingDir(Optional.ofNullable(getConfiguration().getWorkDir())
                         .filter(StringUtils::isNotEmpty)
                         .map(FileUtils::getFileResource)
-                        .map(Resource::getFile)
+                        .map(Resource::file)
                         .map(File::toPath)
                         .orElse(workingDir));
 
@@ -128,7 +128,7 @@ public class JBangTestEngine extends AbstractTestEngine {
                 } else if (StringUtils.hasText(source.getFilePath())) {
                     citrus.run(source.getFilePath(), Collections.emptyMap());
                 } else {
-                    citrus.run(source.getSourceFile().getLocation(), Collections.emptyMap());
+                    citrus.run(source.getSourceFile().location(), Collections.emptyMap());
                 }
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to run test source: %s".formatted(source.getName()), e);

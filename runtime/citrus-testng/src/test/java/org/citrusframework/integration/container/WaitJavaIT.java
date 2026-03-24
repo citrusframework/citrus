@@ -90,7 +90,7 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport implements TestActionS
     public void waitFile() {
         run(waitFor()
                 .file()
-                .resource(Resources.fromClasspath("citrus.properties").getFile()));
+                .resource(Resources.fromClasspath("citrus.properties").file()));
     }
 
     @CitrusTest

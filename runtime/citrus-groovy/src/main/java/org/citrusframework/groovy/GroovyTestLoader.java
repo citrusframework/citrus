@@ -40,9 +40,9 @@ public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAwa
 
             String basePath;
             if (scriptSource instanceof Resources.ClasspathResource) {
-                basePath = FileUtils.getBasePath(scriptSource.getLocation());
+                basePath = FileUtils.getBasePath(scriptSource.location());
             } else {
-                basePath = scriptSource.getFile().getParent();
+                basePath = scriptSource.file().getParent();
             }
 
             String source = FileUtils.readToString(scriptSource);

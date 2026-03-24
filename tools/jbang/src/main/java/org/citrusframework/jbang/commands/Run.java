@@ -310,7 +310,7 @@ public class Run extends CitrusCommand {
                 continue;
             }
 
-            File inputFile = FileUtils.getFileResource(file).getFile();
+            File inputFile = FileUtils.getFileResource(file).file();
             if (!inputFile.isFile()) {
                 continue;
             }

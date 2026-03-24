@@ -111,7 +111,7 @@ public class CitrusAgentConfiguration extends CitrusAppConfiguration {
         String testJarPath = CitrusAgentSettings.getTestJar();
         Resource testJar = Resources.create(testJarPath);
         if (testJar.exists()) {
-            configuration.setTestJar(testJar.getFile());
+            configuration.setTestJar(testJar.file());
         } else {
             logger.debug("Ignore test jar artifact {} - not found", testJarPath);
         }

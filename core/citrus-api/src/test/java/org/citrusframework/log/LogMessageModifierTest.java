@@ -54,17 +54,11 @@ public class LogMessageModifierTest {
         Assert.assertEquals(modifier.maskHeaders(message), Collections.singletonMap("key", CitrusLogSettings.getLogMaskValue()));
     }
 
-    private static class MockLogModifier implements LogMessageModifier {
-
-        private final String result;
-
-        private MockLogModifier(String result) {
-            this.result = result;
-        }
+    private record MockLogModifier(String result) implements LogMessageModifier {
 
         @Override
-        public String mask(String statement) {
-            return result;
+            public String mask(String statement) {
+                return result;
+            }
         }
-    }
 }

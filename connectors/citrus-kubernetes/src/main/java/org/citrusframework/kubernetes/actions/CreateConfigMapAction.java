@@ -56,7 +56,7 @@ public class CreateConfigMapAction extends AbstractKubernetesAction implements K
                 Resource file = FileUtils.getFileResource(filePath, context);
                 String resolvedFileContent = context.replaceDynamicContentInString(FileUtils.readToString(file, StandardCharsets.UTF_8));
 
-                data.put(FileUtils.getFileName(file.getLocation()),
+                data.put(FileUtils.getFileName(file.location()),
                         Base64.getEncoder().encodeToString(resolvedFileContent.getBytes(StandardCharsets.UTF_8)));
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to create config map from filepath", e);

@@ -73,7 +73,7 @@ public class XhtmlMessageConverter implements InitializingPhase {
             tidyInstance.setTidyMark(false);
 
             if (tidyConfiguration != null) {
-                tidyInstance.setConfigurationFromFile(tidyConfiguration.getFile().getAbsolutePath());
+                tidyInstance.setConfigurationFromFile(tidyConfiguration.file().getAbsolutePath());
             }
         }
     }

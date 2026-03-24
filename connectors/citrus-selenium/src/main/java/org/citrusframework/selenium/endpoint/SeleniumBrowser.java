@@ -174,11 +174,11 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
      */
     public String storeFile(Resource file) {
         try {
-            File newFile = new File(temporaryStorage.toFile(), FileUtils.getFileName(file.getLocation()));
+            File newFile = new File(temporaryStorage.toFile(), FileUtils.getFileName(file.location()));
 
             logger.info("Store file {} to {}", file, newFile);
 
-            org.apache.commons.io.FileUtils.copyFile(file.getFile(), newFile);
+            org.apache.commons.io.FileUtils.copyFile(file.file(), newFile);
 
             return newFile.getCanonicalPath();
         } catch (IOException e) {

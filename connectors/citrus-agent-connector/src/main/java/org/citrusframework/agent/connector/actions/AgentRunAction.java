@@ -77,8 +77,8 @@ public class AgentRunAction extends AbstractAgentAction {
             if (StringUtils.hasText(sourceCode)) {
                 source = context.replaceDynamicContentInString(sourceCode);
             } else if (sourceFile != null) {
-                fileExt = Optional.ofNullable(fileExt).orElse(FileUtils.getFileExtension(sourceFile.getLocation()));
-                testName = FileUtils.getBaseName(FileUtils.getFileName(sourceFile.getLocation()));
+                fileExt = Optional.ofNullable(fileExt).orElse(FileUtils.getFileExtension(sourceFile.location()));
+                testName = FileUtils.getBaseName(FileUtils.getFileName(sourceFile.location()));
                 source = context.replaceDynamicContentInString(FileUtils.readToString(sourceFile));
             } else if (StringUtils.hasText(sourceFilePath)) {
                 fileExt = Optional.ofNullable(fileExt).orElse(FileUtils.getFileExtension(sourceFilePath));

@@ -118,16 +118,16 @@ public class TestNGEngine extends AbstractTestEngine {
                 if (sourceDir instanceof Resources.ClasspathResource) {
                     try {
                         addTestSources(suite, new ClasspathResourceResolver()
-                                .getResources(sourceDir.getLocation())
+                                .getResources(sourceDir.location())
                                 .stream()
                                 .map(Path::toString)
                                 .map(TestSourceHelper::create)
                                 .collect(Collectors.toList()));
                     } catch (IOException e) {
-                        throw new CitrusRuntimeException("Failed to resolve files from resource directory '%s'".formatted(sourceDir.getLocation()), e);
+                        throw new CitrusRuntimeException("Failed to resolve files from resource directory '%s'".formatted(sourceDir.location()), e);
                     }
                 } else {
-                    addTestSources(suite, Optional.ofNullable(sourceDir.getFile().list())
+                    addTestSources(suite, Optional.ofNullable(sourceDir.file().list())
                             .stream()
                             .flatMap(Arrays::stream)
                             .map(file -> directory.getFilePath() + File.separator + file)
@@ -152,7 +152,7 @@ public class TestNGEngine extends AbstractTestEngine {
             if (StringUtils.hasText(source.getFilePath())) {
                 parameters.put(TestNGCitrusTest.TEST_SOURCE_FILE_PARAM, source.getFilePath());
             } else if (source.getSourceFile() != null) {
-                parameters.put(TestNGCitrusTest.TEST_SOURCE_FILE_PARAM, source.getSourceFile().getLocation());
+                parameters.put(TestNGCitrusTest.TEST_SOURCE_FILE_PARAM, source.getSourceFile().location());
             } else {
                 parameters.put(TestNGCitrusTest.TEST_SOURCE_FILE_PARAM, "");
             }

@@ -30,13 +30,8 @@ import java.util.Map;
 /**
  * @since 2.6
  */
-public class RestDocSoapClientInterceptor implements ClientInterceptor {
-
-    private final RestDocumentationGenerator<MessageContext, WebServiceMessage> documentationGenerator;
-
-    public RestDocSoapClientInterceptor(RestDocumentationGenerator<MessageContext, WebServiceMessage> documentationGenerator) {
-        this.documentationGenerator = documentationGenerator;
-    }
+public record RestDocSoapClientInterceptor(
+        RestDocumentationGenerator<MessageContext, WebServiceMessage> documentationGenerator) implements ClientInterceptor {
 
     @Override
     public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
@@ -87,7 +82,8 @@ public class RestDocSoapClientInterceptor implements ClientInterceptor {
      *
      * @return the documentationGenerator
      */
-    public RestDocumentationGenerator<MessageContext, WebServiceMessage> getDocumentationGenerator() {
+    @Override
+    public RestDocumentationGenerator<MessageContext, WebServiceMessage> documentationGenerator() {
         return documentationGenerator;
     }
 }

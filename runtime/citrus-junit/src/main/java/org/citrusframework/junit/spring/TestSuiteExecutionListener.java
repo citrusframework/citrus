@@ -50,21 +50,19 @@ public class TestSuiteExecutionListener extends AbstractTestExecutionListener {
      * Shutdown hook runnable gets executed during JVM shutdown.
      * This is our only chance to provide after suite logic when using JUnit. After
      * all tests are executed this after suite logic get executed before processing ends.
+     *
+     * @param citrus Citrus instance
      */
-    private static class AfterSuiteShutdownHook implements Runnable {
-        /** Citrus instance */
-        private final Citrus citrus;
-
+        private record AfterSuiteShutdownHook(Citrus citrus) implements Runnable {
         /**
          * Default constructor using citrus instance.
          */
-        public AfterSuiteShutdownHook(Citrus citrus) {
-            this.citrus = citrus;
+        private AfterSuiteShutdownHook {
         }
 
-        @Override
-        public void run() {
-            citrus.afterSuite(SUITE_NAME);
+            @Override
+            public void run() {
+                citrus.afterSuite(SUITE_NAME);
+            }
         }
-    }
 }

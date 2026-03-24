@@ -100,7 +100,7 @@ public class CamelKubernetesRunIntegrationTest extends AbstractXmlActionTest {
         Assert.assertEquals(action.getRuntime(), "quarkus");
 
         verify(camelJBang, times(3)).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
-                .getFile().getParentFile().toPath().toAbsolutePath().toString()));
+                .file().getParentFile().toPath().toAbsolutePath().toString()));
         verify(k8sPlugin).run(eq("route.yaml"), eq(new String[] {}));
         verify(k8sPlugin).run("route.yaml", "--runtime", "quarkus",
                 "--image-builder", "docker",

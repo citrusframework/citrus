@@ -185,7 +185,7 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
     private XmlObject compileWsdl(String wsdl) {
         File wsdlFile;
         try {
-            wsdlFile = Resources.create(wsdl).getFile();
+            wsdlFile = Resources.create(wsdl).file();
         } catch (Exception e) {
             wsdlFile = new File(wsdl);
         }

@@ -16,10 +16,6 @@
 
 package org.citrusframework.ftp.client;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
-
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.keyverifier.AcceptAllServerKeyVerifier;
 import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
@@ -41,6 +37,10 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @since 2.7.6
@@ -88,7 +88,7 @@ public class ScpClient extends SftpClient {
     @Override
     protected FtpMessage storeFile(PutCommand command, TestContext context) {
         try {
-            scpClient.upload(FileUtils.getFileResource(command.getFile().getPath(), context).getFile().getAbsolutePath(), command.getTarget().getPath());
+            scpClient.upload(FileUtils.getFileResource(command.getFile().getPath(), context).file().getAbsolutePath(), command.getTarget().getPath());
         } catch (IOException e) {
             logger.error("Failed to store file via SCP", e);
             return FtpMessage.error();
@@ -101,11 +101,11 @@ public class ScpClient extends SftpClient {
     protected FtpMessage retrieveFile(GetCommand command, TestContext context) {
         try {
             Resource target = FileUtils.getFileResource(command.getTarget().getPath(), context);
-            if (!Optional.ofNullable(target.getFile().getParentFile()).map(File::mkdirs).orElse(true)) {
-                logger.warn("Failed to create target directories in path: {}", target.getFile().getAbsolutePath());
+            if (!Optional.ofNullable(target.file().getParentFile()).map(File::mkdirs).orElse(true)) {
+                logger.warn("Failed to create target directories in path: {}", target.file().getAbsolutePath());
             }
 
-            scpClient.download(command.getFile().getPath(), target.getFile().getAbsolutePath());
+            scpClient.download(command.getFile().getPath(), target.file().getAbsolutePath());
         } catch (IOException e) {
             logger.error("Failed to retrieve file via SCP", e);
             return FtpMessage.error();
@@ -120,7 +120,7 @@ public class ScpClient extends SftpClient {
             client.start();
 
             if (getEndpointConfiguration().isStrictHostChecking()) {
-                client.setServerKeyVerifier(new KnownHostsServerKeyVerifier(RejectAllServerKeyVerifier.INSTANCE, FileUtils.getFileResource(getEndpointConfiguration().getKnownHosts()).getFile().toPath()));
+                client.setServerKeyVerifier(new KnownHostsServerKeyVerifier(RejectAllServerKeyVerifier.INSTANCE, FileUtils.getFileResource(getEndpointConfiguration().getKnownHosts()).file().toPath()));
             } else {
                 client.setServerKeyVerifier(AcceptAllServerKeyVerifier.INSTANCE);
             }
@@ -132,9 +132,9 @@ public class ScpClient extends SftpClient {
                 Resource privateKey = FileUtils.getFileResource(getPrivateKeyPath());
 
                 if (privateKey instanceof Resources.ClasspathResource) {
-                    new ClassLoadableResourceKeyPairProvider(privateKey.getLocation()).loadKeys(session).forEach(session::addPublicKeyIdentity);
+                    new ClassLoadableResourceKeyPairProvider(privateKey.location()).loadKeys(session).forEach(session::addPublicKeyIdentity);
                 } else {
-                    new FileKeyPairProvider(privateKey.getFile().toPath()).loadKeys(session).forEach(session::addPublicKeyIdentity);
+                    new FileKeyPairProvider(privateKey.file().toPath()).loadKeys(session).forEach(session::addPublicKeyIdentity);
                 }
             }
 

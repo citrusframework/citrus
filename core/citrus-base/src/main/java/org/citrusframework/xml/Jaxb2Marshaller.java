@@ -168,7 +168,7 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
             for (Resource resource : schemas) {
                 if (resource == null || !resource.exists()) {
                     throw new ValidationException(String.format("Resource does not exist: %s",
-                            Optional.ofNullable(resource).map(Resource::getLocation).orElse("null")));
+                            Optional.ofNullable(resource).map(Resource::location).orElse("null")));
                 }
 
                 InputSource inputSource = new InputSource(resource.getInputStream());

@@ -81,38 +81,29 @@ public class Parallel extends AbstractActionContainer {
 
     /**
      * Runnable wrapper for executing an action in separate Thread.
+     *
+     * @param action           Test action to execute
+     * @param context          Test context
+     * @param exceptionHandler Exception handler
      */
-    private static class ActionRunner implements Runnable {
-        /** Test action to execute */
-        private final TestAction action;
-
-        /** Test context */
-        private final TestContext context;
-
-        /** Exception handler */
-        private final Consumer<CitrusRuntimeException> exceptionHandler;
-
-        public ActionRunner(TestAction action, TestContext context, Consumer<CitrusRuntimeException> exceptionHandler) {
-            this.action = action;
-            this.context = context;
-            this.exceptionHandler = exceptionHandler;
-        }
+        private record ActionRunner(TestAction action, TestContext context,
+                                    Consumer<CitrusRuntimeException> exceptionHandler) implements Runnable {
 
         /**
-         * Run the test action
-         */
-        public void run() {
-            try {
-                action.execute(context);
-            } catch (CitrusRuntimeException e) {
-                logger.error("Parallel test action raised error", e);
-                exceptionHandler.accept(e);
-            } catch (Exception | Error e) {
-                logger.error("Parallel test action raised error", e);
-                exceptionHandler.accept(new CitrusRuntimeException(e));
+             * Run the test action
+             */
+            public void run() {
+                try {
+                    action.execute(context);
+                } catch (CitrusRuntimeException e) {
+                    logger.error("Parallel test action raised error", e);
+                    exceptionHandler.accept(e);
+                } catch (Exception | Error e) {
+                    logger.error("Parallel test action raised error", e);
+                    exceptionHandler.accept(new CitrusRuntimeException(e));
+                }
             }
         }
-    }
 
     /**
      * Action builder.

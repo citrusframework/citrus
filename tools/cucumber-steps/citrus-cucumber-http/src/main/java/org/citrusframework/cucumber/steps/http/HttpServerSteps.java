@@ -582,7 +582,7 @@ public class HttpServerSteps implements HttpSteps {
                 return tmpKeyStore.getPath();
             }
         } else {
-            return ResourceUtils.resolve(sslKeyStorePath, context).getLocation();
+            return ResourceUtils.resolve(sslKeyStorePath, context).location();
         }
     }
 

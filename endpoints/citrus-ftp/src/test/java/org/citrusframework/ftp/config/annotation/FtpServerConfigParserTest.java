@@ -16,8 +16,6 @@
 
 package org.citrusframework.ftp.config.annotation;
 
-import java.io.IOException;
-
 import org.apache.ftpserver.ftplet.UserManager;
 import org.citrusframework.TestActor;
 import org.citrusframework.annotations.CitrusAnnotations;
@@ -130,7 +128,7 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
         // 4th message sender
         Assert.assertEquals(ftpServer4.getName(), "ftpServer4");
         Assert.assertEquals(ftpServer4.getEndpointConfiguration().getPort(), 22224);
-        Assert.assertNotNull(ftpServer4.getUserManagerProperties().getFile());
+        Assert.assertNotNull(ftpServer4.getUserManagerProperties().file());
         Assert.assertFalse(ftpServer4.isAutoStart());
         Assert.assertNotNull(ftpServer4.getInterceptors());
         Assert.assertEquals(ftpServer4.getInterceptors().size(), 0L);

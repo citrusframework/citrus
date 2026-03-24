@@ -121,7 +121,7 @@ public class FtpMessage extends DefaultMessage {
      * @return
      */
     public static FtpMessage put(String localPath, DataType type) {
-        return put(localPath, FileUtils.getFileName(FileUtils.getFileResource(localPath).getLocation()), type);
+        return put(localPath, FileUtils.getFileName(FileUtils.getFileResource(localPath).location()), type);
     }
 
     /**
@@ -162,7 +162,7 @@ public class FtpMessage extends DefaultMessage {
      * @return
      */
     public static FtpMessage get(String remotePath, DataType type) {
-        return get(remotePath, FileUtils.getFileName(FileUtils.getFileResource(remotePath).getLocation()), type);
+        return get(remotePath, FileUtils.getFileName(FileUtils.getFileResource(remotePath).location()), type);
     }
 
     /**
