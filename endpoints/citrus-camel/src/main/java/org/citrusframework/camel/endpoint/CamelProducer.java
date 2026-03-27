@@ -61,7 +61,7 @@ public class CamelProducer implements Producer {
         String endpointUri = CamelUtils.resolveEndpointUri(context, endpointConfiguration);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending message to camel endpoint: '" + endpointUri + "'");
+            logger.debug("Sending message to camel endpoint: '{}'", endpointUri);
         }
 
         Exchange camelExchange;
@@ -81,7 +81,7 @@ public class CamelProducer implements Producer {
 
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to camel endpoint '" + endpointUri + "'");
+        logger.info("Message was sent to camel endpoint '{}'", endpointUri);
     }
 
     /**

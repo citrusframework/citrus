@@ -16,11 +16,6 @@
 
 package org.citrusframework.camel.actions;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
-
 import jakarta.xml.bind.JAXBException;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dsl.yaml.YamlRoutesBuilderLoader;
@@ -39,6 +34,11 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @since 2.4
@@ -133,7 +133,7 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
                         for (RouteDefinition routeDefinition : routesToUse) {
                             try {
                                 getRouteCollection().getRoutes().add(routeDefinition);
-                                logger.info(String.format("Created new Camel route '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()));
+                                logger.info("Created new Camel route '{}' in context '{}'", routeDefinition.getId(), camelContext.getName());
                             } catch (Exception e) {
                                 throw new CitrusRuntimeException(String.format("Failed to create route definition '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()), e);
                             }

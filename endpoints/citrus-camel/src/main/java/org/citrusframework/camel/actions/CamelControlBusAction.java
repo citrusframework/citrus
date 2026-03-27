@@ -90,7 +90,7 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
             String expectedResult = context.replaceDynamicContentInString(result);
 
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Validating Camel controlbus response = '%s'", expectedResult));
+                logger.debug("Validating Camel controlbus response = '{}'", expectedResult);
             }
 
             ValidationUtils.validateValues(response.getPayload(String.class), expectedResult, "camelControlBusResult", context);

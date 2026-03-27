@@ -16,6 +16,11 @@
 
 package org.citrusframework.jbang;
 
+import org.awaitility.core.ConditionTimeoutException;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,11 +30,6 @@ import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.awaitility.core.ConditionTimeoutException;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Process wrapper also holds the output that has been produced by the completed process.
@@ -182,7 +182,7 @@ public class ProcessAndOutput {
             return process.descendants()
                     .peek(p -> {
                         if (LOG.isDebugEnabled()) {
-                            LOG.info(String.format("Found descendant process (pid:%d) for process '%d'", p.pid(), getProcessId()));
+                            LOG.info("Found descendant process (pid:{}) for process '{}'", p.pid(), getProcessId());
                         }
                     })
                     .map(ProcessHandle::pid)

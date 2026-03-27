@@ -16,8 +16,6 @@
 
 package org.citrusframework.docker.client;
 
-import java.util.Objects;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.command.DockerCommand;
 import org.citrusframework.endpoint.AbstractEndpoint;
@@ -32,6 +30,8 @@ import org.citrusframework.messaging.SelectiveConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 /**
  * Docker client uses Java docker client implementation for executing docker commands.
  *
@@ -39,10 +39,11 @@ import org.slf4j.LoggerFactory;
  */
 public class DockerClient extends AbstractEndpoint implements Producer, ReplyConsumer {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(DockerClient.class);
 
-    /** Store of reply messages */
+    /**
+     * Store of reply messages
+     */
     private CorrelationManager<DockerCommand> correlationManager;
 
     /**
@@ -54,7 +55,6 @@ public class DockerClient extends AbstractEndpoint implements Producer, ReplyCon
 
     /**
      * Default constructor using endpoint configuration.
-     * @param endpointConfiguration
      */
     public DockerClient(DockerEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
@@ -74,13 +74,13 @@ public class DockerClient extends AbstractEndpoint implements Producer, ReplyCon
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending Docker request to: '" + getEndpointConfiguration().getDockerClientConfig().getDockerHost() + "'");
+            logger.debug("Sending Docker request to: '{}'", getEndpointConfiguration().getDockerClientConfig().getDockerHost());
         }
 
         DockerCommand command = message.getPayload(DockerCommand.class);
         command.execute(this, context);
 
-        logger.info("Docker request was sent to endpoint: '" + getEndpointConfiguration().getDockerClientConfig().getDockerHost() + "'");
+        logger.info("Docker request was sent to endpoint: '{}'", getEndpointConfiguration().getDockerClientConfig().getDockerHost());
 
         correlationManager.store(correlationKey, command);
 

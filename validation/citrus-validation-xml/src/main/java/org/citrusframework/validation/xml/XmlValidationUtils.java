@@ -16,9 +16,6 @@
 
 package org.citrusframework.validation.xml;
 
-import java.util.Set;
-import javax.xml.namespace.NamespaceContext;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.XMLUtils;
@@ -27,6 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import javax.xml.namespace.NamespaceContext;
+import java.util.Set;
 
 /**
  * @since 2.3
@@ -55,15 +55,14 @@ public abstract class XmlValidationUtils {
     public static boolean isElementIgnored(Node source, Node received, Set<String> ignoreExpressions, NamespaceContext namespaceContext) {
         if (isElementIgnored(received, ignoreExpressions, namespaceContext)) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Element: '" + received.getLocalName() + "' is on ignore list - skipped validation");
+                logger.debug("Element: '{}' is on ignore list - skipped validation", received.getLocalName());
             }
             return true;
         } else if (source.getFirstChild() != null &&
                 StringUtils.hasText(source.getFirstChild().getNodeValue()) &&
                 source.getFirstChild().getNodeValue().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Element: '" + received.getLocalName() + "' is ignored by placeholder '" +
-                        CitrusSettings.IGNORE_PLACEHOLDER + "'");
+                logger.debug("Element: '{}' is ignored by placeholder '" + CitrusSettings.IGNORE_PLACEHOLDER + "'", received.getLocalName());
             }
             return true;
         }
@@ -140,15 +139,14 @@ public abstract class XmlValidationUtils {
                                              Set<String> ignoreMessageElements, NamespaceContext namespaceContext) {
         if (isAttributeIgnored(receivedElement, receivedAttribute, ignoreMessageElements, namespaceContext)) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Attribute '" + receivedAttribute.getLocalName() + "' is on ignore list - skipped value validation");
+                logger.debug("Attribute '{}' is on ignore list - skipped value validation", receivedAttribute.getLocalName());
             }
 
             return true;
         } else if ((StringUtils.hasText(sourceAttribute.getNodeValue()) &&
                 sourceAttribute.getNodeValue().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER))) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Attribute: '" + receivedAttribute.getLocalName() + "' is ignored by placeholder '" +
-                        CitrusSettings.IGNORE_PLACEHOLDER + "'");
+                logger.debug("Attribute: '{}' is ignored by placeholder '" + CitrusSettings.IGNORE_PLACEHOLDER + "'", receivedAttribute.getLocalName());
             }
 
             return true;

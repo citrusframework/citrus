@@ -16,21 +16,6 @@
 
 package org.citrusframework.testng;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestClass;
@@ -58,6 +43,21 @@ import org.testng.xml.XmlClass;
 import org.testng.xml.XmlInclude;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @since 2.7.4
@@ -143,7 +143,7 @@ public class TestNGEngine extends AbstractTestEngine {
                 .toList();
 
         for (TestSource source : filtered) {
-            logger.info(String.format("Running test source %s", source.getName()));
+            logger.info("Running test source {}", source.getName());
 
             XmlTest test = new XmlTest(suite);
             Map<String, String> parameters = new HashMap<>();
@@ -186,7 +186,7 @@ public class TestNGEngine extends AbstractTestEngine {
 
         for (String packageName : packagesToRun) {
             if (StringUtils.hasText(packageName)) {
-                logger.info(String.format("Running tests in package %s", packageName));
+                logger.info("Running tests in package {}", packageName);
             }
 
             XmlTest test = new XmlTest(suite);
@@ -201,9 +201,8 @@ public class TestNGEngine extends AbstractTestEngine {
             }
 
             classesToRun.stream()
-                    .peek(testClass -> logger.info(String.format("Running test %s",
-                            Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
-                                    .orElseGet(testClass::getName))))
+                    .peek(testClass -> logger.info("Running test {}", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
+                            .orElseGet(testClass::getName)))
                     .map(testClass -> {
                         try {
                             Class<?> clazz;
@@ -215,7 +214,7 @@ public class TestNGEngine extends AbstractTestEngine {
                             }
                             return clazz;
                         } catch (ClassNotFoundException | MalformedURLException e) {
-                            logger.warn("Unable to read test class: " + testClass.getName());
+                            logger.warn("Unable to read test class: {}", testClass.getName());
                             return Void.class;
                         }
                     })
@@ -223,7 +222,7 @@ public class TestNGEngine extends AbstractTestEngine {
                     .map(XmlClass::new)
                     .forEach(test.getClasses()::add);
 
-            logger.info(String.format("Found %s test classes to execute", test.getClasses().size()));
+            logger.info("Found {} test classes to execute", test.getClasses().size());
         }
     }
 
@@ -236,9 +235,8 @@ public class TestNGEngine extends AbstractTestEngine {
                 .toList();
 
         for (TestClass testClass : testClasses) {
-            logger.info(String.format("Running test %s",
-                    Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
-                            .orElseGet(testClass::getName)));
+            logger.info("Running test {}", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
+                    .orElseGet(testClass::getName));
 
             XmlTest test = new XmlTest(suite);
             test.setClasses(new ArrayList<>());
@@ -259,7 +257,7 @@ public class TestNGEngine extends AbstractTestEngine {
 
                 test.getClasses().add(xmlClass);
             } catch (ClassNotFoundException | MalformedURLException e) {
-                logger.warn("Unable to read test class: " + testClass.getName());
+                logger.warn("Unable to read test class: {}", testClass.getName());
             }
         }
     }

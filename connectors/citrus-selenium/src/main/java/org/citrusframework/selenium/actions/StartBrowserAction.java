@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class StartBrowserAction extends AbstractSeleniumAction {
 
     /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(OpenWindowAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(StartBrowserAction.class);
 
     /**
      * Allow already started browser.

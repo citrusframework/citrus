@@ -16,13 +16,6 @@
 
 package org.citrusframework.kubernetes.actions;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import io.fabric8.kubernetes.api.model.GenericKubernetesResource;
 import io.fabric8.kubernetes.api.model.GenericKubernetesResourceList;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -38,6 +31,13 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.springframework.util.StringUtils;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Test action verifies that given Kubernetes resource matches a given condition (e.g. condition=ready). Raises errors
@@ -103,12 +103,11 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
             }
 
             if (resource != null) {
-                logger.info(String.format("Verified resource '%s' state '%s'!", getNameOrLabel(name, labelExpression), condition));
+                logger.info("Verified resource '{}' state '{}'!", getNameOrLabel(name, labelExpression), condition);
                 return;
             }
 
-            logger.warn(String.format("Waiting for resource '%s' in state '%s' - retry in %s ms",
-                    getNameOrLabel(name, labelExpression), condition, delayBetweenAttempts));
+            logger.warn("Waiting for resource '{}' in state '{}' - retry in {} ms", getNameOrLabel(name, labelExpression), condition, delayBetweenAttempts);
             try {
                 Thread.sleep(delayBetweenAttempts);
             } catch (InterruptedException e) {

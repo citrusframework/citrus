@@ -56,7 +56,7 @@ public class VerifyBrokerAction extends AbstractKnativeAction {
             throw new ValidationException(String.format("Knative broker '%s' is not ready", brokerName));
         }
 
-        logger.info(String.format("Knative broker %s is ready", brokerName));
+        logger.info("Knative broker {} is ready", brokerName);
     }
 
     private void verifyBroker(TestContext context) {
@@ -71,7 +71,7 @@ public class VerifyBrokerAction extends AbstractKnativeAction {
                     broker.getStatus().getConditions().stream()
                             .anyMatch(condition -> condition.getType().equals("Ready") &&
                                     condition.getStatus().equalsIgnoreCase("True"))) {
-                logger.info(String.format("Knative broker %s is ready", brokerName));
+                logger.info("Knative broker {} is ready", brokerName);
             } else {
                 throw new ValidationException(String.format("Knative broker '%s' is not ready", brokerName));
             }

@@ -79,7 +79,7 @@ public class VerifyPodAction extends AbstractKubernetesAction {
      */
     private void verifyPodLogs(Pod pod, String nameOrLabel, String namespace, String message) {
         if (printLogs) {
-            POD_LOG.info(String.format("Waiting for pod '%s' to log message", nameOrLabel));
+            POD_LOG.info("Waiting for pod '{}' to log message", nameOrLabel);
         }
 
         String log;
@@ -99,7 +99,7 @@ public class VerifyPodAction extends AbstractKubernetesAction {
             }
 
             if (!printLogs) {
-                logger.info(String.format("Waiting for pod '%s' to log message - retry in %s ms", nameOrLabel, delayBetweenAttempts));
+                logger.info("Waiting for pod '{}' to log message - retry in {} ms", nameOrLabel, delayBetweenAttempts);
             }
 
             try {
@@ -141,9 +141,9 @@ public class VerifyPodAction extends AbstractKubernetesAction {
      */
     private Pod verifyPod(String name, String labelExpression, String phase, String namespace) {
         if (StringUtils.hasText(name)) {
-            POD_STATUS_LOG.info(String.format("Waiting for pod '%s' to be in state '%s'", name, phase));
+            POD_STATUS_LOG.info("Waiting for pod '{}' to be in state '{}'", name, phase);
         } else {
-            POD_STATUS_LOG.info(String.format("Waiting for pod with label '%s' to be in state '%s'", labelExpression, phase));
+            POD_STATUS_LOG.info("Waiting for pod with label '{}' to be in state '{}'", labelExpression, phase);
         }
 
         for (int i = 0; i < maxAttempts; i++) {
@@ -155,12 +155,11 @@ public class VerifyPodAction extends AbstractKubernetesAction {
             }
 
             if (pod != null) {
-                logger.info(String.format("Verified pod '%s' state '%s'!", getNameOrLabel(name, labelExpression), phase));
+                logger.info("Verified pod '{}' state '{}'!", getNameOrLabel(name, labelExpression), phase);
                 return pod;
             }
 
-            logger.info(String.format("Waiting for pod '%s' in state '%s' - retry in %s ms",
-                    getNameOrLabel(name, labelExpression), phase, delayBetweenAttempts));
+            logger.info("Waiting for pod '{}' in state '{}' - retry in {} ms", getNameOrLabel(name, labelExpression), phase, delayBetweenAttempts);
             try {
                 Thread.sleep(delayBetweenAttempts);
             } catch (InterruptedException e) {
@@ -185,7 +184,7 @@ public class VerifyPodAction extends AbstractKubernetesAction {
         boolean verified = KubernetesSupport.verifyPodStatus(pod, phase);
 
         if (!verified) {
-            POD_STATUS_LOG.info(String.format("Pod '%s' not yet in state '%s'. Will keep checking ...", name, phase));
+            POD_STATUS_LOG.info("Pod '{}' not yet in state '{}'. Will keep checking ...", name, phase);
         }
 
         return verified ? pod : null;
@@ -209,7 +208,7 @@ public class VerifyPodAction extends AbstractKubernetesAction {
                 .list();
 
         if (pods.getItems().isEmpty()) {
-            POD_STATUS_LOG.info(String.format("Integration with label '%s' not yet available. Will keep checking ...", labelExpression));
+            POD_STATUS_LOG.info("Integration with label '{}' not yet available. Will keep checking ...", labelExpression);
         }
 
         return pods.getItems().stream()
@@ -217,7 +216,7 @@ public class VerifyPodAction extends AbstractKubernetesAction {
                     boolean verified = KubernetesSupport.verifyPodStatus(pod, phase);
 
                     if (!verified) {
-                        POD_STATUS_LOG.info(String.format("Pod with label '%s' not yet in state '%s'. Will keep checking ...", labelExpression, phase));
+                        POD_STATUS_LOG.info("Pod with label '{}' not yet in state '{}'. Will keep checking ...", labelExpression, phase);
                     }
 
                     return verified;

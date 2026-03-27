@@ -109,7 +109,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
 
             return testContextFactory.getObject();
         } catch (CucumberBackendException e) {
-            logger.warn("Failed to get proper TestContext from Cucumber Spring application context: " + e.getMessage());
+            logger.warn("Failed to get proper TestContext from Cucumber Spring application context: {}", e.getMessage());
             return CitrusInstanceManager.getOrDefault().getCitrusContext().createTestContext();
         }
     }

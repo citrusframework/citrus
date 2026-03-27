@@ -16,6 +16,17 @@
 
 package org.citrusframework.jmx.server;
 
+import org.citrusframework.endpoint.EndpointAdapter;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.jmx.endpoint.JmxEndpointConfiguration;
+import org.citrusframework.jmx.model.ManagedBeanDefinition;
+import org.citrusframework.jmx.model.ManagedBeanInvocation;
+import org.citrusframework.jmx.model.ManagedBeanResult;
+import org.citrusframework.jmx.model.OperationParam;
+import org.citrusframework.message.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
@@ -28,17 +39,6 @@ import javax.management.ReflectionException;
 import javax.xml.transform.Source;
 import java.util.List;
 import java.util.Map;
-
-import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.jmx.endpoint.JmxEndpointConfiguration;
-import org.citrusframework.jmx.model.ManagedBeanDefinition;
-import org.citrusframework.jmx.model.ManagedBeanInvocation;
-import org.citrusframework.jmx.model.ManagedBeanResult;
-import org.citrusframework.jmx.model.OperationParam;
-import org.citrusframework.message.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Managed bean implementation based on standard mbean implementation. This managed bean delegates incoming requests for operation calls and
@@ -129,7 +129,7 @@ public class JmxEndpointMBean implements DynamicMBean {
     @Override
     public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException, ReflectionException {
         if (logger.isDebugEnabled()) {
-            logger.debug("Received message on JMX server: '" + endpointConfiguration.getServerUrl() + "'");
+            logger.debug("Received message on JMX server: '{}'", endpointConfiguration.getServerUrl());
         }
 
         ManagedBeanInvocation mbeanInvocation = new ManagedBeanInvocation();

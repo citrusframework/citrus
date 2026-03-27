@@ -16,14 +16,14 @@
 
 package org.citrusframework.validation.matcher.hamcrest;
 
-import java.util.Optional;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.hamcrest.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * Matcher provider interface for custom matcher implementations.
@@ -49,7 +49,7 @@ public interface HamcrestMatcherProvider {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(matcherName));
         } catch (CitrusRuntimeException e) {
-            logger.warn(String.format("Failed to resolve Hamcrest matcher provider from resource '%s/%s'", RESOURCE_PATH, matcherName));
+            logger.warn("Failed to resolve Hamcrest matcher provider from resource '{}/{}'", RESOURCE_PATH, matcherName);
         }
 
         return Optional.empty();

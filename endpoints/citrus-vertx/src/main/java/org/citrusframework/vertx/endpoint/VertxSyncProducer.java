@@ -16,14 +16,14 @@
 
 package org.citrusframework.vertx.endpoint;
 
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.DeliveryOptions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ReplyMessageTimeoutException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.correlation.CorrelationManager;
 import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.ReplyConsumer;
-import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.DeliveryOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +62,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
     @Override
     public void send(Message message, final TestContext context) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending message to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+            logger.debug("Sending message to Vert.x event bus address: '{}'", endpointConfiguration.getAddress());
         }
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
@@ -70,7 +70,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        logger.info("Message was sent to Vert.x event bus address: '{}'", endpointConfiguration.getAddress());
 
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setSendTimeout(endpointConfiguration.getTimeout());

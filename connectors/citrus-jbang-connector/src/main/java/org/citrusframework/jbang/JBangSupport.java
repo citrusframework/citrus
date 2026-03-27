@@ -16,6 +16,12 @@
 
 package org.citrusframework.jbang;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -44,12 +50,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Support class prepares JBang executable and runs commands via spawned process using the JBang binary.
@@ -279,12 +279,12 @@ public class JBangSupport {
         Path installPath = Paths.get(System.getProperty("user.home")).toAbsolutePath().resolve(".jbang").toAbsolutePath();
 
         if (installPath.resolve(homePath).toFile().exists()) {
-            LOG.info("Using local JBang in " + installPath);
+            LOG.info("Using local JBang in {}", installPath);
             installDir = installPath.resolve(homePath);
             return;
         }
 
-        LOG.info("Downloading JBang from " + JBangSettings.getJBangDownloadUrl() + " and installing in " + installPath);
+        LOG.info("Downloading JBang from {} and installing in {}", JBangSettings.getJBangDownloadUrl(), installPath);
 
         try {
             Files.createDirectories(installPath);
@@ -432,7 +432,7 @@ public class JBangSupport {
             }
 
             if (LOG.isDebugEnabled() && p.exitValue() != OK_EXIT_CODE) {
-                LOG.debug("Command failed: " + String.join(" ", command));
+                LOG.debug("Command failed: {}", String.join(" ", command));
                 LOG.debug(output);
             }
 

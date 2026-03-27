@@ -16,8 +16,6 @@
 
 package org.citrusframework.variable.dictionary.xml;
 
-import java.util.Map;
-
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.util.XMLUtils;
@@ -25,6 +23,8 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
+
+import java.util.Map;
 
 /**
  * Very basic data dictionary that holds a list of mappings for message elements. Mapping key is the element path inside
@@ -44,7 +44,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
         if (getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.EXACT)) {
             if (mappings.containsKey(nodePath)) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, mappings.get(nodePath)));
+                    logger.debug("Data dictionary setting element '{}' with value: {}", nodePath, mappings.get(nodePath));
                 }
                 return convertIfNecessary(mappings.get(nodePath), value, context);
             }
@@ -52,7 +52,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (nodePath.endsWith(entry.getKey())) {
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
+                        logger.debug("Data dictionary setting element '{}' with value: {}", nodePath, entry.getValue());
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }
@@ -61,7 +61,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (nodePath.startsWith(entry.getKey())) {
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
+                        logger.debug("Data dictionary setting element '{}' with value: {}", nodePath, entry.getValue());
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }

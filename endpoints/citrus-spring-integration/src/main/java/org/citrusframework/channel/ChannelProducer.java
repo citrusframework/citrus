@@ -16,8 +16,6 @@
 
 package org.citrusframework.channel;
 
-import java.util.Optional;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
@@ -29,6 +27,8 @@ import org.springframework.integration.channel.AbstractMessageChannel;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageDeliveryException;
+
+import java.util.Optional;
 
 /**
  * @since 1.4
@@ -58,11 +58,11 @@ public class ChannelProducer implements Producer {
         String destinationChannelName = getDestinationChannelName();
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending message to channel: '" + destinationChannelName + "'");
+            logger.debug("Sending message to channel: '{}'", destinationChannelName);
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Message to send is:" + System.getProperty("line.separator") + message.toString());
+            logger.debug("Message to send is:" + System.lineSeparator() + message.toString());
         }
 
         try {
@@ -72,7 +72,7 @@ public class ChannelProducer implements Producer {
             throw new CitrusRuntimeException("Failed to send message to channel: '" + destinationChannelName + "'", e);
         }
 
-        logger.info("Message was sent to channel: '" + destinationChannelName + "'");
+        logger.info("Message was sent to channel: '{}'", destinationChannelName);
     }
 
     /**

@@ -16,8 +16,6 @@
 
 package org.citrusframework.selenium.actions;
 
-import java.util.Set;
-
 import org.citrusframework.actions.selenium.SeleniumOpenWindowActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -27,6 +25,8 @@ import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 /**
  * @since 2.7
@@ -69,7 +69,7 @@ public class OpenWindowAction extends AbstractSeleniumAction {
 
         if (!StringUtils.isEmpty(newWindow)) {
             browser.getWebDriver().switchTo().window(newWindow);
-            logger.info("Open window: " + newWindow);
+            logger.info("Open window: {}", newWindow);
             context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, newWindow);
             context.setVariable(windowName, newWindow);
         } else {

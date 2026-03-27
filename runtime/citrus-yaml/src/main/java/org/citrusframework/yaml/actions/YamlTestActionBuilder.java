@@ -16,15 +16,15 @@
 
 package org.citrusframework.yaml.actions;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Optional;
 
 public interface YamlTestActionBuilder {
 
@@ -46,7 +46,7 @@ public interface YamlTestActionBuilder {
         Map<String, TestActionBuilder<?>> builders = TYPE_RESOLVER.resolveAll();
 
         if (logger.isDebugEnabled()) {
-            builders.forEach((k, v) -> logger.debug(String.format("Found YAML test action builder '%s' as %s", k, v.getClass())));
+            builders.forEach((k, v) -> logger.debug("Found YAML test action builder '{}' as {}", k, v.getClass()));
         }
         return builders;
     }
@@ -65,9 +65,9 @@ public interface YamlTestActionBuilder {
             return Optional.of(TYPE_RESOLVER.resolve(name));
         } catch (CitrusRuntimeException e) {
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name), e);
+                logger.debug("Failed to resolve test action builder from resource '{}/{}'", RESOURCE_PATH, name, e);
             } else {
-                logger.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name));
+                logger.warn("Failed to resolve test action builder from resource '{}/{}'", RESOURCE_PATH, name);
             }
         }
 

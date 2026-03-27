@@ -16,12 +16,6 @@
 
 package org.citrusframework.generate.javadsl;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import io.swagger.models.ArrayModel;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Model;
@@ -58,6 +52,12 @@ import org.citrusframework.variable.dictionary.json.JsonPathMappingDataDictionar
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
@@ -176,7 +176,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
                 super.create();
 
-                logger.info("Successfully created new test case " + getTargetPackage() + "." + getName());
+                logger.info("Successfully created new test case {}.{}", getTargetPackage(), getName());
             }
         }
     }

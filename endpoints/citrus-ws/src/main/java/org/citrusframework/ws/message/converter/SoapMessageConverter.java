@@ -16,22 +16,6 @@
 
 package org.citrusframework.ws.message.converter;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.xml.namespace.QName;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.soap.MimeHeader;
 import jakarta.xml.soap.MimeHeaders;
@@ -64,6 +48,22 @@ import org.springframework.ws.transport.http.HttpServletConnection;
 import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+
+import javax.xml.namespace.QName;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Default converter implementation for SOAP messages. By default strips away the SOAP envelope and constructs internal message representation
@@ -320,7 +320,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             final MimeHeaders headers = soapMsg.getSaajMessage().getMimeHeaders();
             headers.setHeader(name, value.toString());
         } else {
-            logger.warn("Unsupported SOAP message implementation - unable to set mime message header '" + name + "'");
+            logger.warn("Unsupported SOAP message implementation - unable to set mime message header '{}'", name);
         }
     }
 
@@ -399,7 +399,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             final SoapAttachment soapAttachment = SoapAttachment.from(attachment);
 
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("SOAP message contains attachment with contentId '%s'", soapAttachment.getContentId()));
+                logger.debug("SOAP message contains attachment with contentId '{}'", soapAttachment.getContentId());
             }
 
             message.addAttachment(soapAttachment);
@@ -480,7 +480,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             }
 
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Adding attachment to SOAP message: '%s' ('%s')", contentId, attachment.getContentType()));
+                logger.debug("Adding attachment to SOAP message: '{}' ('{}')", contentId, attachment.getContentType());
             }
 
             soapRequest.addAttachment(contentId, attachment::getInputStream, attachment.getContentType());

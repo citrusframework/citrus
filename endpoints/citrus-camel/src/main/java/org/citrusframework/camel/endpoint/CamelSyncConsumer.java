@@ -16,8 +16,6 @@
 
 package org.citrusframework.camel.endpoint;
 
-import java.util.Map;
-
 import org.apache.camel.Exchange;
 import org.citrusframework.camel.message.CamelMessageHeaders;
 import org.citrusframework.context.TestContext;
@@ -32,6 +30,8 @@ import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * @since 1.4.1
@@ -71,7 +71,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Receiving message from camel endpoint: '" + endpointUri + "'");
+            logger.debug("Receiving message from camel endpoint: '{}'", endpointUri);
         }
 
         Exchange exchange;
@@ -85,7 +85,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
             throw new MessageTimeoutException(timeout, endpointUri);
         }
 
-        logger.info("Received message from camel endpoint: '" + endpointUri + "'");
+        logger.info("Received message from camel endpoint: '{}'", endpointUri);
 
         Message message = endpointConfiguration.getMessageConverter().convertInbound(exchange, endpointConfiguration, context);
         context.onInboundMessage(message);
@@ -110,14 +110,14 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         buildOutMessage(exchange, message);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending reply message to camel endpoint: '" + exchange.getFromEndpoint() + "'");
+            logger.debug("Sending reply message to camel endpoint: '{}'", exchange.getFromEndpoint());
         }
 
         getConsumerTemplate(context).doneUoW(exchange);
 
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to camel endpoint: '" + exchange.getFromEndpoint() + "'");
+        logger.info("Message was sent to camel endpoint: '{}'", exchange.getFromEndpoint());
     }
 
     /**

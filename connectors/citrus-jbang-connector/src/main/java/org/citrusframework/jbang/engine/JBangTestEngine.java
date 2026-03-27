@@ -16,17 +16,6 @@
 
 package org.citrusframework.jbang.engine;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestSource;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -38,6 +27,17 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
+
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Test engine implementation runs tests via Citrus JBang as a separate JVM process.
@@ -90,10 +90,9 @@ public class JBangTestEngine extends AbstractTestEngine {
 
         for (String packageName : packagesToRun) {
             if (StringUtils.hasText(packageName)) {
-                logger.info(String.format("Running tests in directory %s", packageName));
+                logger.info("Running tests in directory {}", packageName);
             } else {
-                logger.info(String.format("Running tests in current working directory %s",
-                        Optional.ofNullable(workingDir).map(Path::toString).orElse(".")));
+                logger.info("Running tests in current working directory {}", Optional.ofNullable(workingDir).map(Path::toString).orElse("."));
             }
 
             citrus.run(packageName, Collections.emptyMap());
@@ -106,7 +105,7 @@ public class JBangTestEngine extends AbstractTestEngine {
                 .toList();
 
         for (TestSource directory : directories) {
-            logger.info(String.format("Running tests in directory %s", directory.getName()));
+            logger.info("Running tests in directory {}", directory.getName());
             citrus.run(directory.getFilePath(), Collections.emptyMap());
         }
 
@@ -116,7 +115,7 @@ public class JBangTestEngine extends AbstractTestEngine {
 
         for (TestSource source : sources) {
             try {
-                logger.info(String.format("Running test source %s", source.getName()));
+                logger.info("Running test source {}", source.getName());
 
                 if (source.getSourceFile() instanceof Resources.ByteArrayResource) {
                     Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();

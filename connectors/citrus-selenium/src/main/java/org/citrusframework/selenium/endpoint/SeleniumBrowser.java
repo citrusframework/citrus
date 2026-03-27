@@ -16,13 +16,6 @@
 
 package org.citrusframework.selenium.endpoint;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.context.TestContext;
@@ -58,6 +51,13 @@ import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static com.gargoylesoftware.htmlunit.BrowserVersion.CHROME;
 import static com.gargoylesoftware.htmlunit.BrowserVersion.FIREFOX;
@@ -118,7 +118,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
 
             if (getEndpointConfiguration().getEventListeners() != null &&
                     !getEndpointConfiguration().getEventListeners().isEmpty()) {
-                logger.info("Add event listeners to web driver: " + getEndpointConfiguration().getEventListeners().size());
+                logger.info("Add event listeners to web driver: {}", getEndpointConfiguration().getEventListeners().size());
                 webDriver = new EventFiringDecorator(getEndpointConfiguration().getEventListeners().toArray(new WebDriverListener[0])).decorate(webDriver);
             }
         } else {
@@ -131,10 +131,10 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
      */
     public void stop() {
         if (isStarted()) {
-            logger.info("Stopping browser " + webDriver.getCurrentUrl());
+            logger.info("Stopping browser {}", webDriver.getCurrentUrl());
 
             try {
-                logger.info("Trying to close the browser " + webDriver + " ...");
+                logger.info("Trying to close the browser {} ...", webDriver);
                 webDriver.quit();
             } catch (UnreachableBrowserException e) {
                 // It happens for Firefox. It's ok: browser is already closed.
@@ -176,7 +176,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
         try {
             File newFile = new File(temporaryStorage.toFile(), FileUtils.getFileName(file.getLocation()));
 
-            logger.info("Store file " + file + " to " + newFile);
+            logger.info("Store file {} to {}", file, newFile);
 
             org.apache.commons.io.FileUtils.copyFile(file.getFile(), newFile);
 
@@ -296,7 +296,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
             Path tempDir = Files.createTempDirectory("selenium");
             tempDir.toFile().deleteOnExit();
 
-            logger.info("Download storage location is: " + tempDir);
+            logger.info("Download storage location is: {}", tempDir);
             return tempDir;
         } catch (IOException e) {
             throw new CitrusRuntimeException("Could not create temporary storage", e);

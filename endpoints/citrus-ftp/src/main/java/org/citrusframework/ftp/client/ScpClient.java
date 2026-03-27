@@ -16,6 +16,10 @@
 
 package org.citrusframework.ftp.client;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.keyverifier.AcceptAllServerKeyVerifier;
 import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
@@ -38,16 +42,11 @@ import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
-
 /**
  * @since 2.7.6
  */
 public class ScpClient extends SftpClient {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(ScpClient.class);
 
     private org.apache.sshd.scp.client.ScpClient scpClient;
@@ -61,7 +60,6 @@ public class ScpClient extends SftpClient {
 
     /**
      * Default constructor using endpoint configuration.
-     * @param endpointConfiguration
      */
     protected ScpClient(ScpEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
@@ -104,7 +102,7 @@ public class ScpClient extends SftpClient {
         try {
             Resource target = FileUtils.getFileResource(command.getTarget().getPath(), context);
             if (!Optional.ofNullable(target.getFile().getParentFile()).map(File::mkdirs).orElse(true)) {
-                logger.warn("Failed to create target directories in path: " + target.getFile().getAbsolutePath());
+                logger.warn("Failed to create target directories in path: {}", target.getFile().getAbsolutePath());
             }
 
             scpClient.download(command.getFile().getPath(), target.getFile().getAbsolutePath());

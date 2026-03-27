@@ -15,15 +15,15 @@
  */
 package org.citrusframework.channel;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Added selective consumption of messages according to a message selector implementation.
@@ -103,7 +103,7 @@ public class MessageSelectingQueueChannel extends QueueChannel {
             timeLeft -= pollingInterval;
 
             if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("No message received with message selector - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
+                RETRY_LOG.debug("No message received with message selector - retrying in {}ms", timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             }
 
             try {

@@ -16,16 +16,16 @@
 
 package org.citrusframework.main;
 
+import org.citrusframework.Citrus;
+import org.citrusframework.CitrusInstanceManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.citrusframework.Citrus;
-import org.citrusframework.CitrusInstanceManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Main command line application callable via static run methods and command line main method invocation.
@@ -80,7 +80,7 @@ public class CitrusApp {
                 try {
                     new CompletableFuture<Void>().get(citrusApp.configuration.getTimeToLive(), TimeUnit.MILLISECONDS);
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    logger.info(String.format("Shutdown Citrus application after %s ms", citrusApp.configuration.getTimeToLive()));
+                    logger.info("Shutdown Citrus application after {} ms", citrusApp.configuration.getTimeToLive());
                     citrusApp.stop();
                 }
             });
@@ -119,7 +119,7 @@ public class CitrusApp {
             return;
         }
 
-        logger.info(String.format("Running Citrus %s", Citrus.getVersion()));
+        logger.info("Running Citrus {}", Citrus.getVersion());
         configuration.setDefaultProperties();
         TestEngine.lookup(configuration).run();
     }

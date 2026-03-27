@@ -15,8 +15,6 @@
  */
 package org.citrusframework.message.selector;
 
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.XMLUtils;
@@ -27,6 +25,8 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.springframework.xml.xpath.XPathParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.ls.LSException;
+
+import java.util.Map;
 
 /**
  * Message selector accepts XML messages in case XPath expression evaluation result matches
@@ -59,7 +59,7 @@ public class XpathPayloadMessageSelector extends AbstractMessageSelector {
         try {
             doc = XMLUtils.parseMessagePayload(getPayloadAsString(message));
         } catch (LSException e) {
-            logger.warn("Ignoring non XML message for XPath message selector (" + e.getClass().getName() + ")");
+            logger.warn("Ignoring non XML message for XPath message selector ({})", e.getClass().getName());
             return false; // non XML message - not accepted
         }
 
@@ -81,7 +81,7 @@ public class XpathPayloadMessageSelector extends AbstractMessageSelector {
 
             return evaluate(value);
         } catch (XPathParseException e) {
-            logger.warn("Could not evaluate XPath expression for message selector - ignoring message (" + e.getClass().getName() + ")");
+            logger.warn("Could not evaluate XPath expression for message selector - ignoring message ({})", e.getClass().getName());
             return false; // wrong XML message - not accepted
         }
     }

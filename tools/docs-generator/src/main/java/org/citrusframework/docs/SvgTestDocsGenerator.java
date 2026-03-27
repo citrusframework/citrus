@@ -21,10 +21,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Properties;
 
@@ -60,7 +67,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
             List<File> testFiles = getTestFiles();
 
             for (var testFile : testFiles) {
-                logger.info("Working on test " + testFile.getName());
+                logger.info("Working on test {}", testFile.getName());
 
                 fos = getFileOutputStream(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
                 buffered = new BufferedOutputStream(fos);
@@ -70,7 +77,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
 
                 t.transform(xml, res);
 
-                logger.info("Finished test " + testFile.getName());
+                logger.info("Finished test {}", testFile.getName());
 
                 buffered.flush();
                 fos.close();

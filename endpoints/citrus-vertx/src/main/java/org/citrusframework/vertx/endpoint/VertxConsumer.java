@@ -16,13 +16,13 @@
 
 package org.citrusframework.vertx.endpoint;
 
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.MessageConsumer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.AbstractMessageConsumer;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.MessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
     @Override
     public Message receive(TestContext context, long timeout) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Receiving message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+            logger.debug("Receiving message on Vert.x event bus address: '{}'", endpointConfiguration.getAddress());
         }
 
         VertxSingleMessageHandler vertxMessageHandler = new VertxSingleMessageHandler();
@@ -72,9 +72,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
                 timeLeft -= endpointConfiguration.getPollingInterval();
 
                 if (RETRY_LOG.isDebugEnabled()) {
-                    RETRY_LOG.debug(String.format("Waiting for message on Vert.x event bus address '%s' - retrying in %s ms",
-                            endpointConfiguration.getAddress(),
-                            (timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft)));
+                    RETRY_LOG.debug("Waiting for message on Vert.x event bus address '{}' - retrying in {} ms", endpointConfiguration.getAddress(), (timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft));
                 }
 
                 try {
@@ -90,7 +88,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
                 throw new MessageTimeoutException(timeout, endpointConfiguration.getAddress());
             }
 
-            logger.info("Received message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+            logger.info("Received message on Vert.x event bus address: '{}'", endpointConfiguration.getAddress());
 
             context.onInboundMessage(message);
 
@@ -112,8 +110,8 @@ public class VertxConsumer extends AbstractMessageConsumer {
             if (message == null) {
                 this.message = event;
             } else {
-                logger.warn("Vert.x message handler ignored message on event bus address '" + endpointConfiguration.getAddress() + "'");
-                logger.debug("Vert.x message ignored is " + event);
+                logger.warn("Vert.x message handler ignored message on event bus address '{}'", endpointConfiguration.getAddress());
+                logger.debug("Vert.x message ignored is {}", event);
             }
         }
 

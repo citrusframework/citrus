@@ -16,11 +16,6 @@
 
 package org.citrusframework.camel.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import org.citrusframework.actions.camel.CamelJBangCmdReceiveActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
@@ -32,6 +27,11 @@ import org.citrusframework.message.Message;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
 
@@ -187,7 +187,7 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
                     throw new CitrusRuntimeException("Error while receiving messages via Camel JBang - detected error state in Camel receive operation");
                 }
 
-                logger.warn(String.format("Waiting for Camel message '%s' - retry in %s ms", integrationName, delayBetweenAttempts));
+                logger.warn("Waiting for Camel message '{}' - retry in {} ms", integrationName, delayBetweenAttempts);
 
                 try {
                     Thread.sleep(delayBetweenAttempts);
