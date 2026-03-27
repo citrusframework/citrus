@@ -51,7 +51,12 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
     private final ObjectMapper mapper;
     private final Jaxb2Marshaller marshaller;
 
-    private final Class<?>[] classesToBeBound = new Class[] {AcceptRequest.class, AcceptResponse.class, MailRequest.class, MailResponse.class};
+    private final Class<?>[] classesToBeBound = new Class[] {
+            AcceptRequest.class,
+            AcceptResponse.class,
+            MailRequest.class,
+            MailResponse.class
+    };
 
     /**
      * Default constructor
@@ -91,6 +96,13 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
                     throw new CitrusRuntimeException("Unable to read mail JSON object from source", io);
                 }
             }
+
+            try {
+                return marshaller.unmarshal(source);
+            } catch (JAXBException me) {
+                logger.warn("Failed to read mail model object from source: {}", me.getMessage());
+            }
+
             throw new CitrusRuntimeException("Failed to read mail JSON object from source:" + source);
         } else {
             throw new CitrusRuntimeException("Unsupported mail marshaller type: " + type);

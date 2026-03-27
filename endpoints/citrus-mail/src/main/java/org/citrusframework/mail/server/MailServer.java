@@ -173,7 +173,7 @@ public class MailServer extends AbstractServer {
                     try {
                         userManager.createUser(credentials[0], credentials[1], credentials[2]);
                     } catch (UserException e) {
-                        logger.warn(String.format("Failed to create known user: %s:%s:%s", credentials[0], credentials[1], credentials[2]));
+                        logger.warn("Failed to create known user: {}:{}:{}", credentials[0], credentials[1], credentials[2]);
                     }
                 });
     }

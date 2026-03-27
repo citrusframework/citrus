@@ -26,7 +26,22 @@ import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.actions.docker.DockerActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.client.DockerClient;
-import org.citrusframework.docker.command.*;
+import org.citrusframework.docker.command.AbstractDockerCommandBuilder;
+import org.citrusframework.docker.command.ContainerCreate;
+import org.citrusframework.docker.command.ContainerInspect;
+import org.citrusframework.docker.command.ContainerRemove;
+import org.citrusframework.docker.command.ContainerStart;
+import org.citrusframework.docker.command.ContainerStop;
+import org.citrusframework.docker.command.ContainerWait;
+import org.citrusframework.docker.command.DockerCommand;
+import org.citrusframework.docker.command.ImageBuild;
+import org.citrusframework.docker.command.ImageInspect;
+import org.citrusframework.docker.command.ImagePull;
+import org.citrusframework.docker.command.ImageRemove;
+import org.citrusframework.docker.command.Info;
+import org.citrusframework.docker.command.Ping;
+import org.citrusframework.docker.command.StaticDockerCommandBuilder;
+import org.citrusframework.docker.command.Version;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
@@ -44,24 +59,33 @@ import org.slf4j.LoggerFactory;
  */
 public class DockerExecuteAction extends AbstractTestAction {
 
-    /** Docker client instance  */
+    /**
+     * Docker client instance
+     */
     private final DockerClient dockerClient;
 
-    /** Docker command to execute */
+    /**
+     * Docker command to execute
+     */
     private final DockerCommand<?> command;
 
-    /** Expected command result for validation */
+    /**
+     * Expected command result for validation
+     */
     private final String expectedCommandResult;
 
-    /** JSON data binding */
+    /**
+     * JSON data binding
+     */
     private final ObjectMapper jsonMapper;
 
-    /** Validator used to validate expected json results */
+    /**
+     * Validator used to validate expected json results
+     */
     private final MessageValidator<? extends ValidationContext> jsonMessageValidator;
 
     public static final String DEFAULT_JSON_MESSAGE_VALIDATOR = "defaultJsonMessageValidator";
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(DockerExecuteAction.class);
 
     /**
@@ -81,13 +105,13 @@ public class DockerExecuteAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         try {
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Executing Docker command '%s'", command.getName()));
+                logger.debug("Executing Docker command '{}'", command.getName());
             }
             command.execute(dockerClient, context);
 
             validateCommandResult(command, context);
 
-            logger.info(String.format("Docker command execution successful: '%s'", command.getName()));
+            logger.info("Docker command execution successful: '{}'", command.getName());
         } catch (CitrusRuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -97,8 +121,6 @@ public class DockerExecuteAction extends AbstractTestAction {
 
     /**
      * Validate command results.
-     * @param command
-     * @param context
      */
     private void validateCommandResult(DockerCommand command, TestContext context) {
         logger.debug("Starting Docker command result validation");
@@ -125,8 +147,6 @@ public class DockerExecuteAction extends AbstractTestAction {
 
     /**
      * Find proper JSON message validator. Uses several strategies to lookup default JSON message validator.
-     * @param context
-     * @return
      */
     private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
         if (jsonMessageValidator != null) {
@@ -155,7 +175,6 @@ public class DockerExecuteAction extends AbstractTestAction {
 
     /**
      * Gets the docker command to execute.
-     * @return
      */
     public DockerCommand<?> getCommand() {
         return command;
@@ -163,7 +182,6 @@ public class DockerExecuteAction extends AbstractTestAction {
 
     /**
      * Gets the docker client.
-     * @return
      */
     public DockerClient getDockerClient() {
         return dockerClient;
@@ -171,7 +189,6 @@ public class DockerExecuteAction extends AbstractTestAction {
 
     /**
      * Gets the expected command result data.
-     * @return
      */
     public String getExpectedCommandResult() {
         return expectedCommandResult;
@@ -191,7 +208,6 @@ public class DockerExecuteAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
-         * @return
          */
         public static Builder docker() {
             return new Builder();

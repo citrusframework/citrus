@@ -16,10 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ReferenceResolver;
@@ -34,6 +30,10 @@ import org.springframework.integration.support.channel.BeanFactoryChannelResolve
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Action purges all messages from a message channel instance. Message channel must be
@@ -99,7 +99,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
             List<Message<?>> messages = ((QueueChannel)channel).purge(messageSelector);
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Purged channel " + ((QueueChannel)channel).getComponentName() + " - removed " + messages.size() + " messages");
+                logger.debug("Purged channel {} - removed {} messages", ((QueueChannel) channel).getComponentName(), messages.size());
             }
         }
     }

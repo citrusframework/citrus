@@ -51,7 +51,7 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        logger.info(String.format("Waiting %s ms for Web Socket message ...", timeout));
+        logger.info("Waiting {} ms for Web Socket message ...", timeout);
 
         WebSocketMessage<?> message = receive(endpointConfiguration, timeout);
         Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(message, endpointConfiguration, context);
@@ -84,7 +84,7 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
             try {
                 Thread.sleep(sleep);
             } catch (InterruptedException e) {
-                logger.warn(String.format("Thread interrupted while waiting for message on '%s'", endpointUri), e);
+                logger.warn("Thread interrupted while waiting for message on '{}'", endpointUri, e);
             }
 
             message = config.getHandler().getMessage();

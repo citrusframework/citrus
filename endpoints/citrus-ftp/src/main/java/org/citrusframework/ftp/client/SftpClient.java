@@ -16,19 +16,6 @@
 
 package org.citrusframework.ftp.client;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Vector;
-
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -55,6 +42,19 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Vector;
 
 /**
  * @since 2.7.5
@@ -277,7 +277,7 @@ public class SftpClient extends FtpClient {
 
                 getEndpointConfiguration().getSessionConfigs().entrySet()
                         .stream()
-                        .peek(entry -> logger.info(String.format("Setting session configuration: %s='%s'", entry.getKey(), entry.getValue())))
+                        .peek(entry -> logger.info("Setting session configuration: {}='{}'", entry.getKey(), entry.getValue()))
                         .forEach(entry -> session.setConfig(entry.getKey(), entry.getValue()));
 
                 session.connect((int) getEndpointConfiguration().getTimeout());

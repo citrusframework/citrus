@@ -16,12 +16,6 @@
 
 package org.citrusframework.generate.javadsl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
@@ -44,6 +38,12 @@ import org.citrusframework.ws.message.SoapMessage;
 import org.citrusframework.xml.XmlConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
@@ -76,7 +76,7 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
 
         logger.info("WSDL compilation successful");
         String serviceName = evaluateAsString(wsdlObject, wsdlNsDelaration + ".//wsdl:portType/@name");
-        logger.info("Found service: " + serviceName);
+        logger.info("Found service: {}", serviceName);
 
         if (!StringUtils.hasText(namePrefix)) {
             withNamePrefix(serviceName + "_");
@@ -145,7 +145,7 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
 
             super.create();
 
-            logger.info("Successfully created new test case " + getTargetPackage() + "." + getName());
+            logger.info("Successfully created new test case {}.{}", getTargetPackage(), getName());
         }
     }
 
@@ -176,7 +176,7 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
             return XmlObject.Factory.parse(wsdlFile.getFile(), (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
         } catch (XmlException e) {
             for (Object error : e.getErrors()) {
-                logger.error(((XmlError)error).getLine() + "" + error.toString());
+                logger.error("{}{}", ((XmlError) error).getLine(), error.toString());
             }
             throw new CitrusRuntimeException("WSDL could not be parsed", e);
         } catch (Exception e) {
@@ -213,7 +213,7 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
             schemaTypeSystem = XmlBeans.compileXsd(xsd, XmlBeans.getContextTypeLoader(), new XmlOptions());
         } catch (XmlException e) {
             for (Object error : e.getErrors()) {
-                logger.error("Line " + ((XmlError)error).getLine() + ": " + error.toString());
+                logger.error("Line {}: {}", ((XmlError) error).getLine(), error.toString());
             }
             throw new CitrusRuntimeException("Failed to compile XSD schema", e);
         } catch (Exception e) {

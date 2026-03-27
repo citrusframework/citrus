@@ -16,8 +16,6 @@
 
 package org.citrusframework.channel;
 
-import java.util.Optional;
-
 import org.citrusframework.channel.selector.DispatchingMessageSelector;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -31,6 +29,8 @@ import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.PollableChannel;
+
+import java.util.Optional;
 
 /**
  * @since 1.4
@@ -65,7 +65,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Receiving message from: " + destinationChannelName);
+            logger.debug("Receiving message from: {}", destinationChannelName);
         }
 
         Message message;
@@ -96,7 +96,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
             throw new MessageTimeoutException(timeout, destinationChannelName);
         }
 
-        logger.debug("Received message from: " + destinationChannelName);
+        logger.debug("Received message from: {}", destinationChannelName);
         return message;
     }
 

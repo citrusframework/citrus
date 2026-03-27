@@ -16,29 +16,32 @@
 
 package org.citrusframework.util;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @since 2.5
  */
 public abstract class SqlUtils {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(SqlUtils.class);
 
-    /** Constant representing SQL comment */
+    /**
+     * Constant representing SQL comment
+     */
     public static final String SQL_COMMENT = "--";
 
-    /** Default sql statement ending */
+    /**
+     * Default sql statement ending
+     */
     public static final String STMT_ENDING = ";";
 
     /**
@@ -63,7 +66,7 @@ public abstract class SqlUtils {
      * Reads SQL statements from external file resource. File resource can hold several
      * multi-line statements and comments.
      *
-     * @param sqlResource the sql file resource.
+     * @param sqlResource   the sql file resource.
      * @param lineDecorator optional line decorator for last script lines.
      * @return list of SQL statements.
      */
@@ -75,7 +78,7 @@ public abstract class SqlUtils {
 
         try {
             if (logger.isDebugEnabled()) {
-                logger.debug("Create statements from SQL file: " + sqlResource.getFile().getAbsolutePath());
+                logger.debug("Create statements from SQL file: {}", sqlResource.getFile().getAbsolutePath());
             }
 
             reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));
@@ -96,7 +99,7 @@ public abstract class SqlUtils {
                         String stmt = buffer.toString().trim();
 
                         if (logger.isDebugEnabled()) {
-                            logger.debug("Found statement: " + stmt);
+                            logger.debug("Found statement: {}", stmt);
                         }
 
                         stmts.add(stmt);
@@ -127,9 +130,6 @@ public abstract class SqlUtils {
 
     /**
      * Gets the SQL statement ending character sequence.
-     *
-     * @param lineDecorator
-     * @return
      */
     public static String getStatementEndingCharacter(LastScriptLineDecorator lineDecorator) {
         if (lineDecorator != null) {
@@ -145,14 +145,13 @@ public abstract class SqlUtils {
     public interface LastScriptLineDecorator {
         /**
          * Implementing classes may want to decorate last script line.
+         *
          * @param line the last script line finishing a SQL statement.
-         * @return
          */
         String decorate(String line);
 
         /**
          * Provides statement ending character sequence.
-         * @return
          */
         String getStatementEndingCharacter();
     }

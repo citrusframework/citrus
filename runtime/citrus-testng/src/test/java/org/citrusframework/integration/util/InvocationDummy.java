@@ -16,11 +16,10 @@
 
 package org.citrusframework.integration.util;
 
+import org.citrusframework.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
-
-import org.citrusframework.variable.VariableUtils;
 
 /**
  * Test class only used to explain the usage of java reflection in test examples
@@ -43,7 +42,7 @@ public class InvocationDummy {
         checkNotVariable(arg);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Constructor with argument: " + arg);
+            logger.debug("Constructor with argument: {}", arg);
         }
     }
 
@@ -57,7 +56,7 @@ public class InvocationDummy {
         checkNotVariable(text);
 
     	if (logger.isDebugEnabled()) {
-            logger.debug("Methode invoke with string argument: '" + text + "'");
+            logger.debug("Methode invoke with string argument: '{}'", text);
         }
     }
 
@@ -66,7 +65,7 @@ public class InvocationDummy {
             checkNotVariable(arg);
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Methode invoke with argument: " + arg);
+                logger.debug("Methode invoke with argument: {}", arg);
             }
         }
     }
@@ -76,9 +75,9 @@ public class InvocationDummy {
 
         if (logger.isDebugEnabled()) {
             logger.debug("Method invoke with arguments:");
-            logger.debug("arg1: " + arg1);
-            logger.debug("arg2: " + arg2);
-            logger.debug("arg3: " + arg3);
+            logger.debug("arg1: {}", arg1);
+            logger.debug("arg2: {}", arg2);
+            logger.debug("arg3: {}", arg3);
         }
     }
 
@@ -95,7 +94,7 @@ public class InvocationDummy {
             checkNotVariable(args[i]);
 
             if (logger.isDebugEnabled()) {
-                logger.debug("arg" + i + ": " + args[i]);
+                logger.debug("arg{}: {}", i, args[i]);
             }
         }
     }

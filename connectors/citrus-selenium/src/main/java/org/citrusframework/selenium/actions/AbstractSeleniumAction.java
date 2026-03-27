@@ -46,7 +46,7 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
     @Override
     public void doExecute(TestContext context) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Executing Selenium browser command '%s'", getName()));
+            logger.debug("Executing Selenium browser command '{}'", getName());
         }
 
         SeleniumBrowser browserToUse = browser;
@@ -64,7 +64,7 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
 
         execute(browserToUse, context);
 
-        logger.info(String.format("Selenium browser command execution successful: '%s'", getName()));
+        logger.info("Selenium browser command execution successful: '{}'", getName());
     }
 
     protected abstract void execute(SeleniumBrowser browser, TestContext context);

@@ -1,9 +1,5 @@
 package org.citrusframework.camel.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.citrusframework.actions.camel.CamelKubernetesIntegrationVerifyActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
@@ -13,6 +9,10 @@ import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Verifies Camel integration in kubernetes via Camel JBang. Waits for a log message to be present.
@@ -105,7 +105,7 @@ public class CamelKubernetesVerifyIntegrationAction extends AbstractCamelJBangAc
             }
 
             if (!printLogs) {
-                logger.warn(String.format("Waiting for Camel integration in kubernetes to log message - retry in %s ms", delayBetweenAttempts));
+                logger.warn("Waiting for Camel integration in kubernetes to log message - retry in {} ms", delayBetweenAttempts);
             }
 
             try {

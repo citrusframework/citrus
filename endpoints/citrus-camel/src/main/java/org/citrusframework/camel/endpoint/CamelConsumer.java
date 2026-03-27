@@ -72,7 +72,7 @@ public class CamelConsumer implements Consumer {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Receiving message from camel endpoint: '" + endpointUri + "'");
+            logger.debug("Receiving message from camel endpoint: '{}'", endpointUri);
         }
 
         Exchange exchange;
@@ -86,7 +86,7 @@ public class CamelConsumer implements Consumer {
             throw new MessageTimeoutException(timeout, endpointUri);
         }
 
-        logger.info("Received message from camel endpoint: '" + endpointUri + "'");
+        logger.info("Received message from camel endpoint: '{}'", endpointUri);
 
         Message message = endpointConfiguration.getMessageConverter().convertInbound(exchange, endpointConfiguration, context);
         context.onInboundMessage(message);

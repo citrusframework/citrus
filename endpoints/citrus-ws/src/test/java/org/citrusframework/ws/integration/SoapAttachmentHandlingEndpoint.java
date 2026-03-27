@@ -36,7 +36,7 @@ public class SoapAttachmentHandlingEndpoint implements MessageEndpoint {
 	    Iterator<Attachment> it = ((SoapMessage)messageContext.getRequest()).getAttachments();
 	    while(it.hasNext()) {
 	        Attachment attachment = it.next();
-	        logger.info("Endpoint handling SOAP attachment: " + attachment.getContentId() + "('" + attachment.getContentType() + "')");
+            logger.info("Endpoint handling SOAP attachment: {}('{}')", attachment.getContentId(), attachment.getContentType());
 	    }
 	}
 }

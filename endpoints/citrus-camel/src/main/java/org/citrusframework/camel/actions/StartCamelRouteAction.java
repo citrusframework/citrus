@@ -45,7 +45,7 @@ public class StartCamelRouteAction extends AbstractCamelRouteAction {
 
             try {
                 ((AbstractCamelContext) camelContext).startRoute(route);
-                logger.info(String.format("Started Camel route '%s' on context '%s'", route, camelContext.getName()));
+                logger.info("Started Camel route '{}' on context '{}'", route, camelContext.getName());
             } catch (Exception e) {
                 throw new CitrusRuntimeException("Failed to start Camel route: " + route, e);
             }

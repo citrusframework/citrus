@@ -23,8 +23,14 @@ import org.citrusframework.server.AbstractServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.*;
-import javax.management.remote.*;
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
+import javax.management.NotCompliantMBeanException;
+import javax.management.remote.JMXConnectorServer;
+import javax.management.remote.JMXConnectorServerFactory;
+import javax.management.remote.JMXServiceURL;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.rmi.RemoteException;
@@ -107,7 +113,7 @@ public class JmxServer extends AbstractServer {
                     server.unregisterMBean(mbean.createObjectName());
                 }
             } catch (Exception e) {
-                logger.warn("Failed to unregister mBean:" + e.getMessage());
+                logger.warn("Failed to unregister mBean:{}", e.getMessage());
             }
         }
 
@@ -115,7 +121,7 @@ public class JmxServer extends AbstractServer {
             try {
                 jmxConnectorServer.stop();
             } catch (IOException e) {
-                logger.warn("Error during jmx connector shutdown: " + e.getMessage());
+                logger.warn("Error during jmx connector shutdown: {}", e.getMessage());
             }
         }
 

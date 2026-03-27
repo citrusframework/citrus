@@ -16,10 +16,10 @@
 
 package org.citrusframework.camel.actions;
 
+import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.citrusframework.actions.camel.CamelRemoveRouteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +50,7 @@ public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
                 }
 
                 if (camelContext.removeRoute(route)) {
-                    logger.info(String.format("Removed Camel route '%s' from context '%s'", route, camelContext.getName()));
+                    logger.info("Removed Camel route '{}' from context '{}'", route, camelContext.getName());
                 } else {
                     throw new CitrusRuntimeException(String.format("Failed to remove Camel route '%s' from context '%s'", route, camelContext.getName()));
                 }

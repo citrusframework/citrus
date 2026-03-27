@@ -16,14 +16,6 @@
 
 package org.citrusframework.junit;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestClass;
@@ -39,6 +31,14 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.RunListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @since 2.7.4
@@ -72,7 +72,7 @@ public class JUnit4TestEngine extends AbstractTestEngine {
             List<TestSource> classesToRun = new ArrayList<>();
             for (String packageName : packagesToRun) {
                 if (StringUtils.hasText(packageName)) {
-                    logger.info(String.format("Running tests in package %s", packageName));
+                    logger.info("Running tests in package {}", packageName);
                 }
 
                 if (getConfiguration().getTestJar() != null) {
@@ -88,7 +88,7 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                 CitrusSettings.setWorkDir(getConfiguration().getWorkDir());
             }
 
-            logger.info(String.format("Found %s test classes to execute", classesToRun.size()));
+            logger.info("Found {} test classes to execute", classesToRun.size());
             run(classesToRun);
 
             if (getConfiguration().isReset()) {
@@ -113,12 +113,11 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                 .filter(source -> source.getType().equals("java"))
                 .peek(source -> {
                     if (source instanceof TestClass testClass) {
-                        logger.info(String.format("Running test %s",
-                                Optional.ofNullable(testClass.getMethod())
-                                        .map(method -> testClass.getName() + "#" + method)
-                                        .orElseGet(testClass::getName)));
+                        logger.info("Running test {}", Optional.ofNullable(testClass.getMethod())
+                                .map(method -> testClass.getName() + "#" + method)
+                                .orElseGet(testClass::getName));
                     } else {
-                        logger.info(String.format("Running test %s", source.getName()));
+                        logger.info("Running test {}", source.getName());
                     }
                 })
                 .map(source -> {
@@ -130,10 +129,10 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                         } else {
                             clazz = Class.forName(source.getName(), false, ClassLoaderHelper.getClassLoader());
                         }
-                        logger.debug("Found test candidate: " + source.getName());
+                        logger.debug("Found test candidate: {}", source.getName());
                         return clazz;
                     } catch (ClassNotFoundException | MalformedURLException e) {
-                        logger.warn("Unable to read test class: " + source.getName());
+                        logger.warn("Unable to read test class: {}", source.getName());
                         return Void.class;
                     }
                 })

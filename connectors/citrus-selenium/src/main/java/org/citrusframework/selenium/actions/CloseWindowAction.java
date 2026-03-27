@@ -16,8 +16,6 @@
 
 package org.citrusframework.selenium.actions;
 
-import java.util.Set;
-
 import org.citrusframework.actions.selenium.SeleniumCloseWindowActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -25,6 +23,8 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 /**
  * Close opened window by name.
@@ -59,8 +59,8 @@ public class CloseWindowAction extends AbstractSeleniumAction implements Seleniu
             throw new CitrusRuntimeException("Failed to find window for handle " + context.getVariable(windowName));
         }
 
-        logger.info("Current window: " + browser.getWebDriver().getWindowHandle());
-        logger.info("Window to close: " + context.getVariable(windowName));
+        logger.info("Current window: {}", browser.getWebDriver().getWindowHandle());
+        logger.info("Window to close: {}", context.getVariable(windowName));
 
         if (browser.getWebDriver().getWindowHandle().equals((context.getVariable(windowName)))) {
             browser.getWebDriver().close();

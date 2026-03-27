@@ -16,15 +16,6 @@
 
 package org.citrusframework.testng;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCaseRunner;
@@ -47,6 +38,15 @@ import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
 import org.testng.SkipException;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public final class TestNGHelper {
 
@@ -207,7 +207,7 @@ public final class TestNGHelper {
                 ((TestSourceAware) testLoader).setSource(TestSourceHelper.create(source));
                 methodTestLoaders.add(testLoader);
             } else {
-                logger.warn(String.format("Test loader %s is not able to handle test source %s", testLoader.getClass(), source));
+                logger.warn("Test loader {} is not able to handle test source {}", testLoader.getClass(), source);
             }
         }
 

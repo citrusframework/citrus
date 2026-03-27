@@ -16,8 +16,6 @@
 
 package org.citrusframework.variable.dictionary.json;
 
-import java.util.Map;
-
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -27,6 +25,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 import static java.lang.String.format;
 import static org.citrusframework.util.StringUtils.hasText;
@@ -75,7 +75,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
         if (getPathMappingStrategy().equals(PathMappingStrategy.EXACT)) {
             if (mappings.containsKey(jsonPath)) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug(format("Data dictionary setting element '%s' with value: %s", jsonPath, mappings.get(jsonPath)));
+                    logger.debug("Data dictionary setting element '{}' with value: {}", jsonPath, mappings.get(jsonPath));
                 }
                 return convertIfNecessary(mappings.get(jsonPath), value, context);
             }
@@ -83,7 +83,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (jsonPath.endsWith(entry.getKey())) {
                     if (logger.isDebugEnabled()) {
-                        logger.debug(format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
+                        logger.debug("Data dictionary setting element '{}' with value: {}", jsonPath, entry.getValue());
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }
@@ -92,7 +92,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (jsonPath.startsWith(entry.getKey())) {
                     if (logger.isDebugEnabled()) {
-                        logger.debug(format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
+                        logger.debug("Data dictionary setting element '{}' with value: {}", jsonPath, entry.getValue());
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }

@@ -16,9 +16,6 @@
 
 package org.citrusframework.xml;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.XMLUtils;
@@ -32,6 +29,9 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSParser;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.w3c.dom.ls.LSSerializer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class is loaded with Spring application context in Citrus. When loaded automatically initializes XML utilities
@@ -67,14 +67,14 @@ public class XmlConfigurer implements InitializingPhase {
             if (logger.isDebugEnabled()) {
                 DOMImplementationList domImplList = registry.getDOMImplementationList("LS");
                 for (int i = 0; i < domImplList.getLength(); i++) {
-                    logger.debug("Found DOMImplementationLS: " + domImplList.item(i));
+                    logger.debug("Found DOMImplementationLS: {}", domImplList.item(i));
                 }
             }
 
             domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Using DOMImplementationLS: " + domImpl.getClass().getName());
+                logger.debug("Using DOMImplementationLS: {}", domImpl.getClass().getName());
             }
         } catch (Exception e) {
             throw new CitrusRuntimeException(e);
@@ -231,7 +231,7 @@ public class XmlConfigurer implements InitializingPhase {
      * @param parameterName
      */
     private void logParameterNotSet(String parameterName, String componentName) {
-        logger.warn("Unable to set '" + parameterName + "' parameter on " + componentName);
+        logger.warn("Unable to set '{}' parameter on {}", parameterName, componentName);
     }
 
     /**

@@ -16,11 +16,6 @@
 
 package org.citrusframework.validation.json.schema;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.json.schema.SimpleJsonSchema;
@@ -28,6 +23,11 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for filtering {@link SimpleJsonSchema}s based on a {@link MessageValidationContext}.
@@ -63,7 +63,7 @@ public class JsonSchemaFilter {
                 referenceResolver.resolve(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Found specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".");
+            logger.debug("Found specified schema: \"{}\".", jsonMessageValidationContext.getSchema());
         }
 
         return Collections.singletonList(simpleJsonSchema);
@@ -74,8 +74,7 @@ public class JsonSchemaFilter {
         for (JsonSchemaRepository jsonSchemaRepository : schemaRepositories) {
             if (Objects.equals(jsonSchemaRepository.getName(), jsonMessageValidationContext.getSchemaRepository())) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Found specified schema-repository: \"" +
-                            jsonMessageValidationContext.getSchemaRepository() + "\".");
+                    logger.debug("Found specified schema-repository: \"{}\".", jsonMessageValidationContext.getSchemaRepository());
                 }
                 return jsonSchemaRepository.getSchemas();
             }

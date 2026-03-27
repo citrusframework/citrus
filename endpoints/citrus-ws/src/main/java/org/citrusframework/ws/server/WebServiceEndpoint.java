@@ -154,7 +154,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
             addMimeHeaders(response, replyMessage);
         } else {
             if (logger.isDebugEnabled()) {
-                logger.debug("No reply message from endpoint adapter '" + endpointAdapter + "'");
+                logger.debug("No reply message from endpoint adapter '{}'", endpointAdapter);
             }
             logger.warn("No SOAP response for calling client");
         }
@@ -208,7 +208,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
 
                     return true;
                 } else {
-                    logger.warn("Unable to set custom HTTP status code on connection other than HttpServletConnection (" + connection.getClass().getName() + ")");
+                    logger.warn("Unable to set custom HTTP status code on connection other than HttpServletConnection ({})", connection.getClass().getName());
                 }
             }
         }
@@ -232,7 +232,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
                     MimeHeaders headers = saajSoapMessage.getSaajMessage().getMimeHeaders();
                     headers.setHeader(headerName, headerEntry.getValue().toString());
                 } else {
-                    logger.warn("Unsupported SOAP message implementation - unable to set mime message header '" + headerName + "'");
+                    logger.warn("Unsupported SOAP message implementation - unable to set mime message header '{}'", headerName);
                 }
             }
         }

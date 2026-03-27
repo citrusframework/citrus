@@ -96,13 +96,13 @@ public class FtpMarshaller implements Marshaller, Unmarshaller {
                         } catch (JsonParseException | JsonMappingException e2) {
                             continue;
                         } catch (IOException io) {
-                            logger.warn("Failed to read ftp JSON object from source: " + io.getMessage());
+                            logger.warn("Failed to read FTP JSON object from source: {}", io.getMessage());
                             break;
                         }
                     }
                 }
 
-                throw new CitrusRuntimeException("Failed to read ftp XML object from source", e);
+                throw new CitrusRuntimeException("Failed to read FTP model object from source", e);
             }
         } else if (type.equalsIgnoreCase(MessageType.JSON.name())) {
             for (Class<?> type : classesToBeBound) {
@@ -111,19 +111,19 @@ public class FtpMarshaller implements Marshaller, Unmarshaller {
                 } catch (JsonParseException | JsonMappingException e2) {
                     // do nothing
                 } catch (IOException io) {
-                    throw new CitrusRuntimeException("Failed to read ftp JSON object from source", io);
+                    throw new CitrusRuntimeException("Failed to read FTP model object from source", io);
                 }
             }
 
             try {
                 return marshaller.unmarshal(source);
             } catch (JAXBException me) {
-                logger.warn("Failed to read ftp XML object from source: " + me.getMessage());
+                logger.warn("Failed to read FTP model object from source: {}", me.getMessage());
             }
 
-            throw new CitrusRuntimeException("Failed to read ftp JSON object from source" + source);
+            throw new CitrusRuntimeException("Failed to read FTP model object from source" + source);
         } else {
-            throw new CitrusRuntimeException("Unsupported ftp marshaller type: " + type);
+            throw new CitrusRuntimeException("Unsupported FTP marshaller type: " + type);
         }
     }
 
@@ -135,17 +135,17 @@ public class FtpMarshaller implements Marshaller, Unmarshaller {
                 try {
                     mapper.writer().writeValue(writer, graph);
                 } catch (IOException e) {
-                    throw new CitrusRuntimeException("Failed to write ftp JSON object graph to result", e);
+                    throw new CitrusRuntimeException("Failed to write FTP model object graph to result", e);
                 }
             }
         } else if (type.equalsIgnoreCase(MessageType.XML.name())) {
             try {
                 marshaller.marshal(graph, result);
             } catch (JAXBException e) {
-                throw new CitrusRuntimeException("Failed to write ftp XML object to result", e);
+                throw new CitrusRuntimeException("Failed to write FTP model object to result", e);
             }
         } else {
-            throw new CitrusRuntimeException("Unsupported ftp marshaller type: " + type);
+            throw new CitrusRuntimeException("Unsupported FTP marshaller type: " + type);
         }
     }
 

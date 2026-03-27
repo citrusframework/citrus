@@ -16,11 +16,6 @@
 
 package org.citrusframework.validation.xml;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
@@ -35,6 +30,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Processor implementation evaluating XPath expressions on message payload during message construction.
@@ -110,7 +110,7 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
             }
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Element " +  pathExpression + " was set to value: " + valueExpression);
+                logger.debug("Element {} was set to value: {}", pathExpression, valueExpression);
             }
         }
 

@@ -16,9 +16,6 @@
 
 package org.citrusframework.validation.json;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -34,6 +31,9 @@ import org.citrusframework.message.processor.json.JsonPathMessageProcessorBuilde
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @since 2.3
@@ -107,7 +107,7 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
                 }
 
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Element " + jsonPathExpression + " was set to value: " + valueExpression);
+                    logger.debug("Element {} was set to value: {}", jsonPathExpression, valueExpression);
                 }
             }
 

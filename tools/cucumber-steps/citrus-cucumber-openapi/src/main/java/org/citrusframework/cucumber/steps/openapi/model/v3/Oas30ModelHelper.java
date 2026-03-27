@@ -16,17 +16,6 @@
 
 package org.citrusframework.cucumber.steps.openapi.model.v3;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import io.apicurio.datamodels.core.models.common.Server;
 import io.apicurio.datamodels.core.models.common.ServerVariable;
 import io.apicurio.datamodels.openapi.models.OasResponse;
@@ -39,6 +28,17 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import org.citrusframework.cucumber.steps.openapi.model.OasModelHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public final class Oas30ModelHelper {
 
@@ -77,7 +77,7 @@ public final class Oas30ModelHelper {
                     try {
                         return new URL(serverUrl).getProtocol();
                     } catch (MalformedURLException e) {
-                        LOG.warn(String.format("Unable to determine base path from server URL: %s", serverUrl));
+                        LOG.warn("Unable to determine base path from server URL: {}", serverUrl);
                         return null;
                     }
                 })

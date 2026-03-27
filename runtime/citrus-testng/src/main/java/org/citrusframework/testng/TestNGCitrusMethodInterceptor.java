@@ -16,13 +16,6 @@
 
 package org.citrusframework.testng;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.spi.ClasspathResourceResolver;
@@ -32,6 +25,13 @@ import org.testng.IMethodInstance;
 import org.testng.IMethodInterceptor;
 import org.testng.ITestContext;
 import org.testng.internal.MethodInstance;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * TestNG method interceptor duplicates method instances for each package scan test and test name in
@@ -80,7 +80,7 @@ public class TestNGCitrusMethodInterceptor implements IMethodInterceptor {
                                 }
                             }
                         } catch (IOException e) {
-                            logger.error("Unable to locate file resources for test package '" + packageName + "'", e);
+                            logger.error("Unable to locate file resources for test package '{}'", packageName, e);
                         }
                     }
                 }

@@ -16,13 +16,17 @@
 
 package org.citrusframework.xml.schema;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Vector;
+import com.ibm.wsdl.extensions.schema.SchemaImpl;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ObjectHelper;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.xml.schema.locator.JarWSDLLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
+
 import javax.wsdl.Definition;
 import javax.wsdl.Import;
 import javax.wsdl.Types;
@@ -36,17 +40,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import com.ibm.wsdl.extensions.schema.SchemaImpl;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.Resource;
-import org.citrusframework.spi.Resources;
-import org.citrusframework.util.ObjectHelper;
-import org.citrusframework.util.StringUtils;
-import org.citrusframework.xml.schema.locator.JarWSDLLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Vector;
 
 /**
  * Wrapper implementation takes care of nested WSDL schema types. Exposes those WSDL schema types as
@@ -132,7 +132,7 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
                         }
                     }
                 } else {
-                    logger.warn("Found unsupported schema type implementation " + schemaObject.getClass());
+                    logger.warn("Found unsupported schema type implementation {}", schemaObject.getClass());
                 }
             }
         }
