@@ -16,23 +16,6 @@
 
 package org.citrusframework.junit.jupiter;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Path;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
@@ -59,6 +42,23 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Path;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -205,9 +205,8 @@ public class JUnitJupiterEngine extends AbstractTestEngine {
             }
 
             classesToRun.stream()
-                    .peek(testClass -> logger.info(String.format("Running test %s",
-                            Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
-                                    .orElseGet(testClass::getName))))
+                    .peek(testClass -> logger.info("Running test {}", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
+                            .orElseGet(testClass::getName)))
                     .map(testClass -> {
                         try {
                             Class<?> clazz;

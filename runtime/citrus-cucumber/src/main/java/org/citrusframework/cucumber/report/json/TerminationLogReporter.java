@@ -16,14 +16,6 @@
 
 package org.citrusframework.cucumber.report.json;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import io.cucumber.java.PendingException;
 import io.cucumber.plugin.event.EventPublisher;
 import io.cucumber.plugin.event.HookTestStep;
@@ -38,6 +30,14 @@ import org.citrusframework.cucumber.CucumberSettings;
 import org.citrusframework.cucumber.util.FeatureHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Reporter writing test results summary to termination log. This information will be accessible via
@@ -120,7 +120,7 @@ public class TerminationLogReporter extends CitrusReporter {
             terminationLogWriter.write(testResults.toJson());
             terminationLogWriter.flush();
         } catch (IOException e) {
-            LOG.warn(String.format("Failed to write termination logs to file '%s'", CucumberSettings.getTerminationLog()), e);
+            LOG.warn("Failed to write termination logs to file '{}'", CucumberSettings.getTerminationLog(), e);
         }
     }
 

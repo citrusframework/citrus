@@ -16,6 +16,12 @@
 
 package org.citrusframework.main;
 
+import org.citrusframework.TestSource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.yaml.SchemaProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,12 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
-import org.citrusframework.TestSource;
-import org.citrusframework.spi.Resources;
-import org.citrusframework.yaml.SchemaProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @since 2.7.4
@@ -233,7 +233,7 @@ public class TestRunConfiguration {
      */
     public void setDefaultProperties() {
         for (Map.Entry<String, String> entry : defaultProperties.entrySet()) {
-            logger.info(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
+            logger.info("Setting application property {}={}", entry.getKey(), entry.getValue());
             System.setProperty(entry.getKey(), Optional.ofNullable(entry.getValue()).orElse(""));
         }
     }

@@ -16,13 +16,6 @@
 
 package org.citrusframework.ftp.server;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.attribute.PosixFilePermission;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Set;
-
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.ftplet.DataType;
 import org.apache.sshd.common.session.Session;
@@ -41,6 +34,13 @@ import org.citrusframework.ssh.server.SshServer;
 import org.citrusframework.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @since 2.7.6
@@ -76,9 +76,7 @@ public class SftpServer extends SshServer implements ScpTransferEventListener, S
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Received request on ftp server: '%s':%n%s",
-                    request.getSignal(),
-                    request.getPayload(String.class)));
+            logger.debug("Received request on ftp server: '{}':\n{}", request.getSignal(), request.getPayload(String.class));
         }
 
         return Optional.ofNullable(getEndpointAdapter().handleMessage(request))
@@ -115,7 +113,7 @@ public class SftpServer extends SshServer implements ScpTransferEventListener, S
     @Override
     public void initialized(ServerSession session, int version) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Received new SFTP connection: '%s'", Arrays.toString(session.getSessionId())));
+            logger.debug("Received new SFTP connection: '{}'", Arrays.toString(session.getSessionId()));
         }
 
         if (!endpointConfiguration.isAutoConnect()) {
@@ -154,7 +152,7 @@ public class SftpServer extends SshServer implements ScpTransferEventListener, S
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Closing FTP connection: '%s'", session.getSessionId()));
+            logger.debug("Closing FTP connection: '{}'", session.getSessionId());
         }
     }
 

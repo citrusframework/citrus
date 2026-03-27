@@ -16,9 +16,6 @@
 
 package org.citrusframework.mail.client;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 import jakarta.mail.Authenticator;
 import jakarta.mail.MessagingException;
 import jakarta.mail.PasswordAuthentication;
@@ -34,6 +31,9 @@ import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMailMessage;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * @since 1.4
@@ -66,7 +66,7 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
     @Override
     public void send(Message message, TestContext context) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Sending mail message to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+            logger.debug("Sending mail message to host: '{}://{}:{}'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
         }
 
         MimeMailMessage mimeMessage = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
@@ -94,7 +94,7 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
 
         context.onOutboundMessage(mailMessage);
 
-        logger.info(String.format("Mail message was sent to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+        logger.info("Mail message was sent to host: '{}://{}:{}'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
     }
 
     /**

@@ -16,6 +16,11 @@
 
 package org.citrusframework.jbang;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -31,14 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class CitrusJBang {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CitrusJBang.class);
 
     private final JBangSupport app;
@@ -55,7 +54,7 @@ public class CitrusJBang {
 
         String version = version();
         if (logger.isDebugEnabled()) {
-            logger.debug("Citrus JBang version: " + version);
+            logger.debug("Citrus JBang version: {}", version);
         }
     }
 

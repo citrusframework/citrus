@@ -113,8 +113,8 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending message to JMX MBeanServer server: '" + getEndpointConfiguration().getServerUrl() + "'");
-            logger.debug("Message to send:\n" + message.getPayload(String.class));
+            logger.debug("Sending message to JMX MBeanServer server: '{}'", getEndpointConfiguration().getServerUrl());
+            logger.debug("Message to send:\n{}", message.getPayload(String.class));
         }
         context.onOutboundMessage(message);
 

@@ -122,8 +122,8 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
-            logger.debug("Message to send:\n" + ftpMessage.getPayload(String.class));
+            logger.debug("Sending FTP message to: ftp://'{}:{}'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
+            logger.debug("Message to send:\n{}", ftpMessage.getPayload(String.class));
         }
 
         try {
@@ -150,7 +150,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 }
             }
 
-            logger.info(String.format("FTP message was sent to: '%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+            logger.info("FTP message was sent to: '{}:{}'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
 
             correlationManager.store(correlationKey, response);
         } catch (IOException e) {
@@ -414,7 +414,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             ftpClient.connect(getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Connected to FTP server: " + ftpClient.getReplyString());
+                logger.debug("Connected to FTP server: {}", ftpClient.getReplyString());
             }
 
             int reply = ftpClient.getReplyCode();
@@ -427,7 +427,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
             if (getEndpointConfiguration().getUser() != null) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Login as user: '%s'", getEndpointConfiguration().getUser()));
+                    logger.debug("Login as user: '{}'", getEndpointConfiguration().getUser());
                 }
                 boolean login = ftpClient.login(getEndpointConfiguration().getUser(), getEndpointConfiguration().getPassword());
 
@@ -484,14 +484,14 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             @Override
             public void protocolCommandSent(ProtocolCommandEvent event) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Send FTP command: " + event.getCommand());
+                    logger.debug("Send FTP command: {}", event.getCommand());
                 }
             }
 
             @Override
             public void protocolReplyReceived(ProtocolCommandEvent event) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Received FTP command reply: " + event.getReplyCode());
+                    logger.debug("Received FTP command reply: {}", event.getReplyCode());
                 }
             }
         });

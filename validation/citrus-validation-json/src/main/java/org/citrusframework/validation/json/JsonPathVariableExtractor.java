@@ -16,10 +16,6 @@
 
 package org.citrusframework.validation.json;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import net.minidev.json.JSONArray;
@@ -38,6 +34,10 @@ import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.json.JsonPathVariableExtractorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Extractor implementation reads message elements via JSONPath expressions and saves the
@@ -88,7 +88,7 @@ public class JsonPathVariableExtractor implements VariableExtractor {
                                 "extractor path expression '%s'", jsonPathExpression)));
 
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Evaluating JSONPath expression: " + jsonPathExpression);
+                    logger.debug("Evaluating JSONPath expression: {}", jsonPathExpression);
                 }
 
                 Object jsonPathResult = JsonPathUtils.evaluate(readerContext, jsonPathExpression);

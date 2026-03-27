@@ -16,19 +16,19 @@
 
 package org.citrusframework.jbang.maven;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.camel.tooling.maven.MavenArtifact;
 import org.apache.camel.tooling.maven.MavenDownloader;
 import org.apache.camel.tooling.maven.MavenDownloaderImpl;
 import org.citrusframework.CitrusVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Dependency resolver is able to load Maven dependencies as artifacts and add it to the given classloader.
@@ -59,19 +59,19 @@ public class MavenDependencyResolver {
         try {
             Set<String> extraRepositories = new LinkedHashSet<>(repositories.values());
 
-            logger.info("Resolving Maven dependency: " + gav);
+            logger.info("Resolving Maven dependency: {}", gav);
 
             List<MavenArtifact> artifacts =
                     downloader.resolveArtifacts(Collections.singletonList(gav), extraRepositories, transitive,
                             useSnapshots);
 
             if (logger.isDebugEnabled()) {
-                artifacts.forEach(mavenArtifact -> logger.debug("Loaded Maven artifact: " + mavenArtifact));
+                artifacts.forEach(mavenArtifact -> logger.debug("Loaded Maven artifact: {}", mavenArtifact));
             }
 
             return artifacts;
         } catch (Throwable e) {
-            logger.warn(String.format("Error resolving artifact %s due to %s", gav, e.getMessage()), e);
+            logger.warn("Error resolving artifact {} due to {}", gav, e.getMessage(), e);
         }
 
         return Collections.emptyList();

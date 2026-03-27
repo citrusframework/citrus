@@ -50,7 +50,7 @@ public class HamcrestHeaderValidator implements HeaderValidator {
             }
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Header validation: " + headerName + "='" + controlValue + "': OK");
+                logger.debug("Header validation: {}='{}': OK", headerName, controlValue);
             }
             validationContext.updateStatus(ValidationStatus.PASSED);
         } catch (ValidationException e) {

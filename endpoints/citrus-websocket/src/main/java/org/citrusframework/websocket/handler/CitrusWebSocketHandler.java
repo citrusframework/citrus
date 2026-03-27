@@ -18,7 +18,12 @@ package org.citrusframework.websocket.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.socket.*;
+import org.springframework.web.socket.BinaryMessage;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.PongMessage;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketMessage;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import java.io.IOException;
@@ -33,53 +38,50 @@ import java.util.Queue;
  * @since 2.3
  */
 public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
-    /** Logger */
+
     private static final Logger logger = LoggerFactory.getLogger(CitrusWebSocketHandler.class);
 
-    /** Inbound message cache */
     private final Queue<WebSocketMessage<?>> inboundMessages = new LinkedList<>();
 
-    /** Web socket sessions */
     private final Map<String, WebSocketSession> sessions = new HashMap<>();
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        logger.debug(String.format("WebSocket connection established (%s)", session.getId()));
+    public void afterConnectionEstablished(WebSocketSession session) {
+        logger.debug("WebSocket connection established ({})", session.getId());
         sessions.put(session.getId(), session);
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        logger.debug(String.format("WebSocket endpoint (%s) received text message", session.getId()));
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+        logger.debug("WebSocket endpoint ({}) received text message", session.getId());
         inboundMessages.add(message);
     }
 
     @Override
-    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
-        logger.debug(String.format("WebSocket endpoint (%s) received binary message", session.getId()));
+    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
+        logger.debug("WebSocket endpoint ({}) received binary message", session.getId());
         inboundMessages.add(message);
     }
 
     @Override
-    protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
-        logger.debug(String.format("WebSocket endpoint (%s) received pong message", session.getId()));
+    protected void handlePongMessage(WebSocketSession session, PongMessage message) {
+        logger.debug("WebSocket endpoint ({}) received pong message", session.getId());
         inboundMessages.add(message);
     }
 
     @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        logger.error(String.format("WebSocket transport error (%s)", session.getId()), exception);
+    public void handleTransportError(WebSocketSession session, Throwable exception) {
+        logger.error("WebSocket transport error ({})", session.getId(), exception);
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        logger.debug(String.format("WebSocket session (%s) closed - status : %s", session.getId(), status));
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        logger.debug("WebSocket session ({}) closed - status : {}", session.getId(), status);
         sessions.remove(session.getId());
     }
 
     /**
      * Polls message from internal cache.
-     * @return
      */
     public WebSocketMessage<?> getMessage() {
         return inboundMessages.poll();
@@ -87,8 +89,6 @@ public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
 
     /**
      * Publish message to all sessions known to this handler.
-     * @param message
-     * @return
      */
     public boolean sendMessage(WebSocketMessage<?> message) {
         boolean sentSuccessfully = false;
@@ -102,10 +102,11 @@ public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
                     session.sendMessage(message);
                     sentSuccessfully = true;
                 } catch (IOException e) {
-                    logger.error(String.format("(%s) error sending message", session.getId()), e);
+                    logger.error("({}) error sending message", session.getId(), e);
                 }
             }
         }
+
         return sentSuccessfully;
     }
 }

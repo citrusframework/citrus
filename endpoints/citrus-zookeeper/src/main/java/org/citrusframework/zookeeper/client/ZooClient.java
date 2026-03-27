@@ -16,9 +16,9 @@
 
 package org.citrusframework.zookeeper.client;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,6 +109,6 @@ public class ZooClient {
     }
 
     private Watcher getConnectionWatcher() {
-        return event -> logger.debug(String.format("Connection Event: %s", event.toString()));
+        return event -> logger.debug("Connection Event: {}", event.toString());
     }
 }

@@ -40,8 +40,8 @@ public class WebSocketServerEndpointConfiguration extends AbstractWebSocketEndpo
     @Override
     public void setHandler(CitrusWebSocketHandler handler) {
         if (this.handler != null) {
-            logger.warn(String.format("Handler already set for Web Socket endpoint (path='%s'). " +
-                    "Check configuration to ensure that the Web Socket endpoint is not being used by multiple http-servers", getEndpointUri()));
+            logger.warn("Handler already set for Web Socket endpoint (path='{}'). " +
+                    "Check configuration to ensure that the Web Socket endpoint is not being used by multiple http-servers", getEndpointUri());
         }
         this.handler = handler;
     }

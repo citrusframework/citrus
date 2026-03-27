@@ -16,16 +16,6 @@
 
 package org.citrusframework.ftp.server;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.ftp.client.FtpEndpointConfiguration;
-import org.citrusframework.ftp.message.FtpMessage;
-import org.citrusframework.ftp.model.Command;
-import org.citrusframework.ftp.model.CommandResultType;
-import org.citrusframework.xml.StringResult;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.ftplet.DefaultFtpReply;
 import org.apache.ftpserver.ftplet.FtpException;
@@ -36,8 +26,18 @@ import org.apache.ftpserver.ftplet.Ftplet;
 import org.apache.ftpserver.ftplet.FtpletContext;
 import org.apache.ftpserver.ftplet.FtpletResult;
 import org.apache.ftpserver.ftplet.User;
+import org.citrusframework.endpoint.EndpointAdapter;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.ftp.client.FtpEndpointConfiguration;
+import org.citrusframework.ftp.message.FtpMessage;
+import org.citrusframework.ftp.model.Command;
+import org.citrusframework.ftp.model.CommandResultType;
+import org.citrusframework.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.lang.Integer.parseInt;
 
@@ -78,9 +78,7 @@ public class FtpServerFtpLet implements Ftplet {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Received request on ftp server: '%s':%n%s",
-                    request.getSignal(),
-                    request.getPayload(String.class)));
+            logger.debug("Received request on ftp server: '{}':\n{}", request.getSignal(), request.getPayload(String.class));
         }
 
         return Optional.ofNullable(endpointAdapter.handleMessage(request))
@@ -97,7 +95,7 @@ public class FtpServerFtpLet implements Ftplet {
     @Override
     public void init(FtpletContext ftpletContext) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Total FTP logins: %s", ftpletContext.getFtpStatistics().getTotalLoginNumber()));
+            logger.debug("Total FTP logins: {}", ftpletContext.getFtpStatistics().getTotalLoginNumber());
         }
     }
 
@@ -111,7 +109,7 @@ public class FtpServerFtpLet implements Ftplet {
         String command = request.getCommand().toUpperCase();
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Received FTP command: '%s'", command));
+            logger.debug("Received FTP command: '{}'", command);
         }
 
         if (endpointConfiguration.isAutoLogin() && (command.equals(FTPCmd.USER.getCommand()) || command.equals(FTPCmd.PASS.getCommand()))) {
@@ -139,7 +137,7 @@ public class FtpServerFtpLet implements Ftplet {
     @Override
     public FtpletResult onConnect(FtpSession session) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Received new FTP connection: '%s'", session.getSessionId()));
+            logger.debug("Received new FTP connection: '{}'", session.getSessionId());
         }
 
         if (!endpointConfiguration.isAutoConnect()) {
@@ -165,7 +163,7 @@ public class FtpServerFtpLet implements Ftplet {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Closing FTP connection: '%s'", session.getSessionId()));
+            logger.debug("Closing FTP connection: '{}'", session.getSessionId());
         }
 
         return FtpletResult.DISCONNECT;

@@ -16,16 +16,51 @@
 
 package org.citrusframework.config;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.citrusframework.config.handler.CitrusTestCaseNamespaceHandler;
-import org.citrusframework.config.xml.*;
+import org.citrusframework.config.xml.ActionParser;
+import org.citrusframework.config.xml.AntRunActionParser;
+import org.citrusframework.config.xml.AssertParser;
+import org.citrusframework.config.xml.AsyncParser;
+import org.citrusframework.config.xml.CallTemplateParser;
+import org.citrusframework.config.xml.CatchParser;
+import org.citrusframework.config.xml.ConditionalParser;
+import org.citrusframework.config.xml.CreateVariablesActionParser;
+import org.citrusframework.config.xml.DelayActionParser;
+import org.citrusframework.config.xml.EchoActionParser;
+import org.citrusframework.config.xml.FailActionParser;
+import org.citrusframework.config.xml.InputActionParser;
+import org.citrusframework.config.xml.IterateParser;
+import org.citrusframework.config.xml.JavaActionParser;
+import org.citrusframework.config.xml.LoadPropertiesActionParser;
+import org.citrusframework.config.xml.ParallelParser;
+import org.citrusframework.config.xml.PrintActionParser;
+import org.citrusframework.config.xml.PurgeEndpointActionParser;
+import org.citrusframework.config.xml.ReceiveMessageActionParser;
+import org.citrusframework.config.xml.ReceiveTimeoutActionParser;
+import org.citrusframework.config.xml.RepeatOnErrorUntilTrueParser;
+import org.citrusframework.config.xml.RepeatUntilTrueParser;
+import org.citrusframework.config.xml.SendMessageActionParser;
+import org.citrusframework.config.xml.SequenceParser;
+import org.citrusframework.config.xml.SleepActionParser;
+import org.citrusframework.config.xml.StartServerActionParser;
+import org.citrusframework.config.xml.StopServerActionParser;
+import org.citrusframework.config.xml.StopTimeActionParser;
+import org.citrusframework.config.xml.StopTimerParser;
+import org.citrusframework.config.xml.TemplateParser;
+import org.citrusframework.config.xml.TestCaseMetaInfoParser;
+import org.citrusframework.config.xml.TestCaseParser;
+import org.citrusframework.config.xml.TimerParser;
+import org.citrusframework.config.xml.TraceVariablesActionParser;
+import org.citrusframework.config.xml.TransformActionParser;
+import org.citrusframework.config.xml.WaitParser;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Registers bean definition parser for beans in test case, handled by {@link CitrusTestCaseNamespaceHandler}
@@ -121,7 +156,7 @@ public final class CitrusNamespaceParserRegistry {
             try {
                 BEAN_PARSER.put(name, TYPE_RESOLVER.resolve(name));
             } catch (Exception e) {
-                logger.warn(String.format("Unable to locate bean parser for '%s'", name), e);
+                logger.warn("Unable to locate bean parser for '{}'", name, e);
             }
         }
 

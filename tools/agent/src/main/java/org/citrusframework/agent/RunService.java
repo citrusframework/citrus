@@ -16,9 +16,6 @@
 
 package org.citrusframework.agent;
 
-import java.net.MalformedURLException;
-import java.util.List;
-
 import org.apache.camel.tooling.maven.MavenArtifact;
 import org.citrusframework.agent.util.ConfigurationHelper;
 import org.citrusframework.main.TestEngine;
@@ -28,6 +25,9 @@ import org.citrusframework.xml.actions.XmlTestActionBuilder;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.util.List;
 
 public class RunService {
 
@@ -59,7 +59,7 @@ public class RunService {
                 try {
                     ClassLoaderHelper.addArtifact(artifact.toString(), artifact.getFile().toURI().toURL(), false);
                 } catch (MalformedURLException e) {
-                    logger.warn(String.format("Error resolving artifact %s due to '%s'", artifact, e.getMessage()));
+                    logger.warn("Error resolving artifact {} due to '{}'", artifact, e.getMessage());
                 }
             }
 

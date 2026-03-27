@@ -16,8 +16,6 @@
 
 package org.citrusframework.selenium.actions;
 
-import java.util.Set;
-
 import org.citrusframework.actions.selenium.SeleniumSwitchWindowActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -25,6 +23,8 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 /**
  * @since 2.7
@@ -63,7 +63,7 @@ public class SwitchWindowAction extends AbstractSeleniumAction implements Seleni
             context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, lastWindow);
 
             browser.getWebDriver().switchTo().window(targetWindow);
-            logger.info("Switch window focus to " + windowName);
+            logger.info("Switch window focus to {}", windowName);
 
             context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, targetWindow);
         } else {

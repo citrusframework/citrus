@@ -16,10 +16,6 @@
 
 package org.citrusframework.kubernetes.command;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.client.KubernetesClientException;
@@ -33,6 +29,10 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @since 2.7
@@ -68,7 +68,7 @@ public abstract class AbstractWatchCommand<T extends HasMetadata, L extends Kube
                 if (results.isEmpty() && cachedResult == null) {
                     results.add(new WatchEventResult<>(resource, action));
                 } else {
-                    logger.debug("Ignoring watch result: " + action.name());
+                    logger.debug("Ignoring watch result: {}", action.name());
                 }
             }
 

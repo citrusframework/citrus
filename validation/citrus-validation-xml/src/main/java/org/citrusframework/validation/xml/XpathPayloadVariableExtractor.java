@@ -16,14 +16,6 @@
 
 package org.citrusframework.validation.xml;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.xml.namespace.NamespaceContext;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
@@ -41,6 +33,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
+import javax.xml.namespace.NamespaceContext;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Class reads message elements via XPath expressions and saves the text values as new test variables.
@@ -92,7 +92,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
                             "extractor path expression '%s'", pathExpression)));
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Evaluating XPath expression: " + pathExpression);
+                logger.debug("Evaluating XPath expression: {}", pathExpression);
             }
 
             Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));

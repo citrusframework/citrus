@@ -41,8 +41,8 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
 
         if (logger.isDebugEnabled()) {
             logger.debug("Validating SOAP attachment content ...");
-            logger.debug("Received attachment content: " + receivedContent);
-            logger.debug("Control attachment content: " + controlContent);
+            logger.debug("Received attachment content: {}", receivedContent);
+            logger.debug("Control attachment content: {}", controlContent);
         }
 
         if (StringUtils.hasText(receivedContent)) {

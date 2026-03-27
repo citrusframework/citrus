@@ -76,14 +76,14 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
         ObjectHelper.assertNotNull(replyAddress, "Failed to find reply address for message correlation key: '" + correlationKey + "'");
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending Vert.x message to event bus address: '" + replyAddress + "'");
+            logger.debug("Sending Vert.x message to event bus address: '{}'", replyAddress);
         }
 
         vertx.eventBus().send(replyAddress, message.getPayload());
 
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to Vert.x event bus address: '" + replyAddress + "'");
+        logger.info("Message was sent to Vert.x event bus address: '{}'", replyAddress);
     }
 
     /**
@@ -100,8 +100,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
             correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
         }  else {
-            logger.warn("Unable to retrieve reply address for message \n" +
-                    receivedMessage + "\n - no reply address found in message headers!");
+            logger.warn("Unable to retrieve reply address for message \n{}\n - no reply address found in message headers!", receivedMessage);
         }
     }
 

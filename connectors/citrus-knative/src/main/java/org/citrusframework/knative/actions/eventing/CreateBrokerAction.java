@@ -56,7 +56,7 @@ public class CreateBrokerAction extends AbstractKnativeAction {
     private void createLocalBroker(TestContext context) {
         String resolvedBrokerName = context.replaceDynamicContentInString(brokerName);
 
-        logger.info(String.format("Creating local Knative broker: %s", resolvedBrokerName));
+        logger.info("Creating local Knative broker: {}", resolvedBrokerName);
 
         HttpServer brokerServer;
         if (!context.getReferenceResolver().isResolvable(resolvedBrokerName, HttpServer.class)) {
@@ -75,7 +75,7 @@ public class CreateBrokerAction extends AbstractKnativeAction {
 
         context.setVariable(KnativeVariableNames.BROKER_PORT.value(), brokerServer.getPort());
 
-        logger.info(String.format("Successfully created Knative broker: %s", resolvedBrokerName));
+        logger.info("Successfully created Knative broker: {}", resolvedBrokerName);
     }
 
     /**
@@ -86,7 +86,7 @@ public class CreateBrokerAction extends AbstractKnativeAction {
         String resolvedBrokerName = context.replaceDynamicContentInString(brokerName);
         String brokerNamespace = namespace(context);
 
-        logger.info(String.format("Creating Knative broker '%s' in namespace %s", resolvedBrokerName, brokerNamespace));
+        logger.info("Creating Knative broker '{}' in namespace {}", resolvedBrokerName, brokerNamespace);
 
         Broker broker = new BrokerBuilder()
                 .withApiVersion(String.format("%s/%s", KnativeSupport.knativeEventingGroup(), KnativeSupport.knativeApiVersion()))
@@ -109,7 +109,7 @@ public class CreateBrokerAction extends AbstractKnativeAction {
                     .inNamespace(getNamespace()));
         }
 
-        logger.info(String.format("Successfully created Knative broker '%s' in namespace %s", resolvedBrokerName, brokerNamespace));
+        logger.info("Successfully created Knative broker '{}' in namespace {}", resolvedBrokerName, brokerNamespace);
     }
 
     /**

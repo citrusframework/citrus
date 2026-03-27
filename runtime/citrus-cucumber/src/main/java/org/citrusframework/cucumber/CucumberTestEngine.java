@@ -16,18 +16,6 @@
 
 package org.citrusframework.cucumber;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.eventbus.RandomUuidGenerator;
 import io.cucumber.core.eventbus.UuidGenerator;
@@ -53,6 +41,18 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CucumberTestEngine extends AbstractTestEngine {
 
@@ -104,7 +104,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
         if (packagesToRun == null || packagesToRun.isEmpty()) {
             logger.info("Running all tests in project");
         } else if (StringUtils.hasText(packagesToRun.get(0))) {
-            logger.info(String.format("Running tests in package %s", packagesToRun.get(0)));
+            logger.info("Running tests in package {}", packagesToRun.get(0));
             args.add(ClasspathSupport.CLASSPATH_SCHEME_PREFIX + packagesToRun.get(0).replaceAll("\\.", "/"));
 
             args.add("--glue");

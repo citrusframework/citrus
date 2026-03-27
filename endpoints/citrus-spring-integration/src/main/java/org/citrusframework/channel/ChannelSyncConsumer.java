@@ -72,8 +72,8 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
         ObjectHelper.assertNotNull(replyChannel, "Failed to find reply channel for message correlation key: " + correlationKey);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending message to reply channel: '" + replyChannel + "'");
-            logger.debug("Message to send is:\n" + message.toString());
+            logger.debug("Sending message to reply channel: '{}'", replyChannel);
+            logger.debug("Message to send is:\n{}", message.toString());
         }
 
         try {
@@ -83,7 +83,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
             throw new CitrusRuntimeException("Failed to send message to channel: '" + replyChannel + "'", e);
         }
 
-        logger.info("Message was sent to reply channel: '" + replyChannel + "'");
+        logger.info("Message was sent to reply channel: '{}'", replyChannel);
     }
 
     /**
@@ -105,8 +105,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
             correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, replyChannel);
         } else {
-            logger.warn("Unable to retrieve reply message channel for message \n" +
-                    receivedMessage + "\n - no reply channel found in message headers!");
+            logger.warn("Unable to retrieve reply message channel for message \n{}\n - no reply channel found in message headers!", receivedMessage);
         }
     }
 

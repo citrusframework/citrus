@@ -16,11 +16,6 @@
 
 package org.citrusframework.mail.model;
 
-import java.io.StringWriter;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -37,6 +32,11 @@ import tools.jackson.core.JacksonException;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import java.io.StringWriter;
 
 /**
  * @since 2.1
@@ -100,7 +100,7 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
             try {
                 return marshaller.unmarshal(source);
             } catch (JAXBException me) {
-                logger.warn("Failed to read ftp XML object from source: " + me.getMessage());
+                logger.warn("Failed to read ftp XML object from source: {}", me.getMessage());
             }
 
             throw new CitrusRuntimeException("Failed to read mail JSON object from source:" + source);

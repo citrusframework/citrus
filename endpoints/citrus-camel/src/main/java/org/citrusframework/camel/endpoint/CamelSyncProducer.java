@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.endpoint;
 
+import org.apache.camel.Exchange;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -24,7 +25,6 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.correlation.CorrelationManager;
 import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.ReplyConsumer;
-import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +64,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         String endpointUri = CamelUtils.resolveEndpointUri(context, endpointConfiguration);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Sending message to camel endpoint: '" + endpointUri + "'");
+            logger.debug("Sending message to camel endpoint: '{}'", endpointUri);
         }
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
@@ -76,10 +76,10 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         Exchange response = getProducerTemplate(context)
                 .request(endpointUri, exchange -> {
                     endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context);
-                    logger.info("Message was sent to camel endpoint: '" + endpointUri + "'");
+                    logger.info("Message was sent to camel endpoint: '{}'", endpointUri);
                 });
 
-        logger.info("Received synchronous reply message on camel endpoint: '" + endpointUri + "'");
+        logger.info("Received synchronous reply message on camel endpoint: '{}'", endpointUri);
         Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration, context);
         context.onInboundMessage(replyMessage);
         correlationManager.store(correlationKey, replyMessage);

@@ -16,6 +16,15 @@
 
 package org.citrusframework.util;
 
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.xml.StringSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Node;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,15 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-
-import org.citrusframework.CitrusSettings;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.xml.StringSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Node;
 
 public class DefaultTypeConverter implements TypeConverter {
 
@@ -168,7 +168,7 @@ public class DefaultTypeConverter implements TypeConverter {
             try {
                 return convertStringToType(String.valueOf(target), type);
             } catch (CitrusRuntimeException e) {
-                logger.warn(String.format("Unable to convert String object to type '%s' - try fallback strategies", type), e);
+                logger.warn("Unable to convert String object to type '{}' - try fallback strategies", type, e);
             }
         }
 

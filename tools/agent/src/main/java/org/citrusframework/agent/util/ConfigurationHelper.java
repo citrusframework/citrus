@@ -16,17 +16,6 @@
 
 package org.citrusframework.agent.util;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import io.vertx.core.MultiMap;
 import io.vertx.ext.web.RequestBody;
 import io.vertx.ext.web.RoutingContext;
@@ -47,6 +36,17 @@ import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class ConfigurationHelper {
 
@@ -176,7 +176,7 @@ public final class ConfigurationHelper {
                 options.getModules().addAll(Arrays.asList(scanResult.modules()));
                 options.getDependencies().addAll(Arrays.asList(scanResult.dependencies()));
             } catch (Exception e) {
-                logger.warn(String.format("Failed to analyze test source %s due to '%s'", fileName, e.getMessage()), e);
+                logger.warn("Failed to analyze test source {} due to '{}'", fileName, e.getMessage(), e);
             }
         }
 
@@ -198,7 +198,7 @@ public final class ConfigurationHelper {
                     try {
                         ClassLoaderHelper.addArtifact(mavenArtifact.toString(), mavenArtifact.getFile().toURI().toURL());
                     } catch (MalformedURLException e) {
-                        logger.warn(String.format("Error resolving artifact %s due to '%s'", mavenArtifact, e.getMessage()));
+                        logger.warn("Error resolving artifact {} due to '{}'", mavenArtifact, e.getMessage());
                     }
                 });
 

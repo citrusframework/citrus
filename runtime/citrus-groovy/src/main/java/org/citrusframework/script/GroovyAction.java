@@ -122,7 +122,7 @@ public class GroovyAction extends AbstractTestAction {
             }
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Executing Groovy script:\n" + code);
+                logger.debug("Executing Groovy script:\n{}", code);
             }
 
             // execute the Groovy script

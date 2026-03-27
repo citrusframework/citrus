@@ -16,13 +16,13 @@
 
 package org.citrusframework.main.spring;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.CitrusSpringSettings;
 import org.citrusframework.main.CitrusAppConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Optional;
 
 public class CitrusSpringAppConfiguration extends CitrusAppConfiguration {
 
@@ -32,7 +32,7 @@ public class CitrusSpringAppConfiguration extends CitrusAppConfiguration {
     @Override
     public void setDefaultProperties() {
         for (Map.Entry<String, String> entry : getDefaultProperties().entrySet()) {
-            logger.debug(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
+            logger.debug("Setting application property {}={}", entry.getKey(), entry.getValue());
             System.setProperty(entry.getKey(), Optional.ofNullable(entry.getValue()).orElse(""));
         }
 

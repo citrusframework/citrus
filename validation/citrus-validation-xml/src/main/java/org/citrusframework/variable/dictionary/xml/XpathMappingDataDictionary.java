@@ -16,10 +16,6 @@
 
 package org.citrusframework.variable.dictionary.xml;
 
-import java.util.Map;
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.xpath.XPathConstants;
-
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
@@ -32,6 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.xpath.XPathConstants;
+import java.util.Map;
 
 /**
  * Xml data dictionary implementation maps elements via XPath expressions. When element is identified by some expression
@@ -57,8 +57,7 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
 
             if (findings != null && containsNode(findings, node)) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Data dictionary setting element '%s' value: %s",
-                            XMLUtils.getNodesPathName(node), expressionEntry.getValue()));
+                    logger.debug("Data dictionary setting element '{}' value: {}", XMLUtils.getNodesPathName(node), expressionEntry.getValue());
                 }
                 return convertIfNecessary(expressionEntry.getValue(), value, context);
             }
@@ -106,8 +105,7 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
     public void initialize() {
         if (getPathMappingStrategy() != null &&
                 !getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.EXACT)) {
-            logger.warn(String.format("%s ignores path mapping strategy other than %s",
-                    getClass().getSimpleName(), DataDictionary.PathMappingStrategy.EXACT));
+            logger.warn("{} ignores path mapping strategy other than {}", getClass().getSimpleName(), PathMappingStrategy.EXACT);
         }
 
         super.initialize();

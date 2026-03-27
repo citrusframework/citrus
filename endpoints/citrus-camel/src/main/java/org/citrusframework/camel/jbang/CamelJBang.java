@@ -16,6 +16,17 @@
 
 package org.citrusframework.camel.jbang;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.jbang.JBangSupport;
+import org.citrusframework.jbang.ProcessAndOutput;
+import org.citrusframework.message.MessagePayloadUtils;
+import org.citrusframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -33,17 +44,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.jbang.JBangSupport;
-import org.citrusframework.jbang.ProcessAndOutput;
-import org.citrusframework.message.MessagePayloadUtils;
-import org.citrusframework.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
 
@@ -78,7 +78,7 @@ public class CamelJBang {
 
         String version = version();
         if (logger.isDebugEnabled()) {
-            logger.debug("Camel JBang version: " + version);
+            logger.debug("Camel JBang version: {}", version);
         }
     }
 

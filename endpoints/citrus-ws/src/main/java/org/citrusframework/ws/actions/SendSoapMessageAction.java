@@ -16,12 +16,6 @@
 
 package org.citrusframework.ws.actions;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.citrusframework.TestAction;
@@ -43,6 +37,12 @@ import org.citrusframework.ws.message.SoapMessageHeaders;
 import org.citrusframework.ws.message.SoapMessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Message send action able to add SOAP attachment support to normal message sending action.
@@ -85,12 +85,12 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
                         byte[] attachmentBinaryData = FileUtils.readToString(attachment.getInputStream(), Charset.forName(attachment.getCharsetName())).getBytes(Charset.forName(attachment.getCharsetName()));
                         if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_BASE64_BINARY)) {
                             if (logger.isDebugEnabled()) {
-                                logger.debug(String.format("Adding inline base64Binary data for attachment: %s", cid));
+                                logger.debug("Adding inline base64Binary data for attachment: {}", cid);
                             }
                             messagePayload = messagePayload.replaceAll(cid, Base64.encodeBase64String(attachmentBinaryData));
                         } else if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_HEX_BINARY)) {
                             if (logger.isDebugEnabled()) {
-                                logger.debug(String.format("Adding inline hexBinary data for attachment: %s", cid));
+                                logger.debug("Adding inline hexBinary data for attachment: {}", cid);
                             }
                             messagePayload = messagePayload.replaceAll(cid, Hex.encodeHexString(attachmentBinaryData).toUpperCase());
                         } else {

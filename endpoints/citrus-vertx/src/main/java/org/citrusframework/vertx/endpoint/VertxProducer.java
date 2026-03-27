@@ -16,13 +16,13 @@
 
 package org.citrusframework.vertx.endpoint;
 
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.DeliveryOptions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
-import io.vertx.core.eventbus.DeliveryOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.vertx.core.Vertx;
 
 /**
  * @since 1.4.1
@@ -74,7 +74,7 @@ public class VertxProducer implements Producer {
 
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        logger.info("Message was sent to Vert.x event bus address: '{}'", endpointConfiguration.getAddress());
     }
 
     /**
@@ -87,12 +87,12 @@ public class VertxProducer implements Producer {
 
         if (endpointConfiguration.isPubSubDomain()) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Publish Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
+                logger.debug("Publish Vert.x event bus message to address: '{}'", endpointConfiguration.getAddress());
             }
             vertx.eventBus().publish(endpointConfiguration.getAddress(), message.getPayload(), deliveryOptions);
         } else {
             if (logger.isDebugEnabled()) {
-                logger.debug("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
+                logger.debug("Sending Vert.x event bus message to address: '{}'", endpointConfiguration.getAddress());
             }
             vertx.eventBus().send(endpointConfiguration.getAddress(), message.getPayload(), deliveryOptions);
         }

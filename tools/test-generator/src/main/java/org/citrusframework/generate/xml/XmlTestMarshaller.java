@@ -16,14 +16,6 @@
 
 package org.citrusframework.generate.xml;
 
-import java.util.List;
-import javax.xml.XMLConstants;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -40,19 +32,28 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.util.List;
+
 /**
  * @since 2.5
  */
 public class XmlTestMarshaller {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(XmlTestMarshaller.class);
 
     private volatile JAXBContext jaxbContext;
     private final Schema schema;
     private String contextPath;
 
-    /** Namespace prefix mapper */
+    /**
+     * Namespace prefix mapper
+     */
     private NamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
 
     public XmlTestMarshaller() {
@@ -106,7 +107,7 @@ public class XmlTestMarshaller {
         if (jaxbContext == null) {
             synchronized (this) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Creating JAXBContext with context path %s", contextPath));
+                    logger.debug("Creating JAXBContext with context path {}", contextPath);
                 }
 
                 jaxbContext = JAXBContext.newInstance(contextPath);
@@ -117,7 +118,7 @@ public class XmlTestMarshaller {
 
     private Schema loadSchema(Resource resource) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Using marshaller validation schema '%s'", resource.getLocation()));
+            logger.debug("Using marshaller validation schema '{}'", resource.getLocation());
         }
 
         try {

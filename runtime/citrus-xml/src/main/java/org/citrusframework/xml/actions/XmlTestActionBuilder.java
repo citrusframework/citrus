@@ -16,14 +16,14 @@
 
 package org.citrusframework.xml.actions;
 
-import java.util.Optional;
-
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 public interface XmlTestActionBuilder {
 
@@ -68,9 +68,9 @@ public interface XmlTestActionBuilder {
             return Optional.of(builder);
         } catch (CitrusRuntimeException e) {
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name), e);
+                logger.debug("Failed to resolve test action builder from resource '{}/{}'", RESOURCE_PATH, name, e);
             } else {
-                logger.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name));
+                logger.warn("Failed to resolve test action builder from resource '{}/{}'", RESOURCE_PATH, name);
             }
         }
 
