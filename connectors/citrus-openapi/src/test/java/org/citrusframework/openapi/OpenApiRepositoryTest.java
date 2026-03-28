@@ -16,15 +16,17 @@
 
 package org.citrusframework.openapi;
 
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
 import org.citrusframework.spi.Resources;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;
 import static java.util.Collections.singletonList;
@@ -194,24 +196,24 @@ public class OpenApiRepositoryTest {
     }
 
     @Test
-    public void withOpenApiSpecifications_shouldExecuteReplacementWithoutInterruption() throws InterruptedException {
+    public void withOpenApiSpecifications_shouldExecuteReplacementWithoutInterruption() throws InterruptedException, ExecutionException, TimeoutException {
         var take = new AtomicBoolean(true);
 
         var singleThreadExecutor = Executors.newSingleThreadExecutor();
         try {
             var assertionTask = runAsync(() -> assertThatFixtureDoesNeverContainNullishOpenApiSpecifications(take), singleThreadExecutor);
 
-            replaceOpenApiSpecificationsWithNewList(take, singleThreadExecutor);
+            replaceOpenApiSpecificationsWithNewList();
 
             take.set(false);
-            assertThat(assertionTask)
-                    .isCompleted();
+            assertionTask.get(1000L, TimeUnit.MILLISECONDS);
+            assertThat(assertionTask).isCompleted();
         } finally {
             singleThreadExecutor.shutdown();
         }
     }
 
-    private void replaceOpenApiSpecificationsWithNewList(AtomicBoolean take, ExecutorService singleThreadExecutor) throws InterruptedException {
+    private void replaceOpenApiSpecificationsWithNewList() throws InterruptedException {
         sleep(100);
 
         fixture.withOpenApiSpecifications(
