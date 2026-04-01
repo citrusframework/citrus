@@ -32,7 +32,6 @@ import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.github.victools.jsonschema.generator.TypeContext;
 import org.citrusframework.agent.CitrusAgentConfiguration;
-import org.citrusframework.agent.connector.yaml.YamlSupport;
 import org.citrusframework.dsl.schema.Catalog;
 import org.citrusframework.dsl.schema.Test;
 import org.citrusframework.message.MessagePayloadUtils;
@@ -81,23 +80,23 @@ public class CitrusSchemaGenerator {
             writeFile(workingDir, "citrus-testcase.xsd", xsdSchema);
             writeFile(versionWorkingDir, "citrus-testcase.xsd", xsdSchema);
 
-            String actionCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getTestActionCatalog()));
+            String actionCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getTestActionCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-test-actions.json", actionCatalog + "\n");
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-test-actions.json", actionCatalog + "\n");
 
-            String containerCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getTestContainerCatalog()));
+            String containerCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getTestContainerCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-test-containers.json", containerCatalog + "\n");
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-test-containers.json", containerCatalog + "\n");
 
-            String endpointCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getEndpointCatalog()));
+            String endpointCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getEndpointCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog + "\n");
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog + "\n");
 
-            String functionsCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getFunctionsCatalog()));
+            String functionsCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getFunctionsCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog + "\n");
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog + "\n");
 
-            String validationMatcherCatalog = MessagePayloadUtils.prettyPrintJson(YamlSupport.json().writeValueAsString(catalog.getValidationMatcherCatalog()));
+            String validationMatcherCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getValidationMatcherCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog + "\n");
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog + "\n");
         } catch (IOException e) {
