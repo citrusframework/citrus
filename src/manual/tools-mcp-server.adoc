@@ -1,0 +1,417 @@
+[[citrus-mcp-server]]
+= Citrus MCP Server
+
+The Citrus MCP Server is a Model Context Protocol (MCP) server implementation that enables Large Language Models (LLMs) and AI assistants to interact with Citrus framework metadata, documentation, and schemas. This tool helps AI-powered development environments understand Citrus components and generate accurate test code.
+
+[[citrus-mcp-server-overview]]
+== Overview
+
+The MCP server exposes Citrus framework capabilities through standardized tools and resources that can be consumed by AI assistants like Claude, GitHub Copilot, and other MCP-compatible clients. It provides programmatic access to:
+
+* Catalog tools
+    ** **Catalog Information**: Query available components such as test actions, endpoints, functions, and validation matchers
+    ** **Component Information**: Query component details with module information and property specifications
+* Schema resources
+    ** **Component Schemas**: Retrieve JSON schemas for Citrus components such as test actions, endpoints, functions with detailed property specifications
+    ** **DSL Schemas**: Get YAML and XML DSL schemas for writing tests
+* Documentation tools
+    ** **Documentation index**: Query all available documentation files with filter criteria
+    ** **Documentation**: Access AsciiDoc documentation for specific Citrus components
+
+This enables AI assistants to provide context-aware suggestions, validate component usage, and generate syntactically correct Citrus tests.
+
+== What is MCP?
+
+The Model Context Protocol (MCP) is an open protocol that enables AI applications to securely connect to external data sources and tools. MCP provides a standardized way for:
+
+* **Tools**: Functions that the AI can call to perform actions or retrieve data
+* **Resources**: Static or dynamic content that can be read by the AI
+* **Prompts**: Reusable prompt templates for common tasks
+
+The Citrus MCP Server implements this protocol using the Quarkus MCP Server framework, providing both STDIO and HTTP/SSE transport mechanisms.
+
+For more information about MCP:
+
+* MCP Specification: https://modelcontextprotocol.io/
+* Quarkus MCP Server: https://docs.quarkiverse.io/quarkus-mcp-server/
+
+[[citrus-mcp-server-install]]
+== Installation
+
+The MCP server is packaged as an uber-JAR that can be run standalone or integrated with AI development tools.
+
+=== Maven Dependency
+
+If you need to add the MCP server module to your project:
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-mcp-server</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+=== Integrate with AI assistance tools
+
+You can integrate the Citrus MCP server into AI code assistance tools using a local `.mcp.json` configuration file in your project folder.
+
+[source,json]
+----
+{
+  "mcpServers": {
+    "citrus": {
+      "command": "jbang",
+        "args": [
+          "--quiet",
+          "org.citrusframework:citrus-mcp-server:${citrus.version}:runner"
+        ]
+      }
+  }
+}
+----
+
+NOTE: The very same approach also works with Claude desktop integration where you add this configuration to your `claude_desktop_config.json`.
+
+Running the MCP server with JBang is the most convenient way to do this.
+The --quiet flag prevents JBang’s output from interfering with the MCP protocol.
+
+NOTE: You can also run the server directly without using JBang - then it would be something like `java -jar <FULL PATH>/citrus-mcp-server-${citrus.version}-runner.jar`. JBang might be the simpler approach though because it automatically deals with downloading the JAR file from Maven central.
+
+[source,json]
+----
+{
+  "mcpServers": {
+    "citrus": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "/path/to/citrus-mcp-server-${citrus.version}-runner.jar"
+      ]
+    }
+  }
+}
+----
+
+=== Building from Source
+
+You can build the Citrus MCP server uber-JAR locally with:
+
+[source,bash]
+----
+./mvnw clean package -pl tools/mcp-server
+----
+
+The resulting JAR will be located at `tools/mcp-server/target/citrus-mcp-server-${citrus.version}-runner.jar`.
+
+[[citrus-mcp-server-run]]
+== Running the MCP Server
+
+Any MCP-compatible client can connect to the Citrus MCP Server using either:
+
+* **STDIO transport**: Execute the JAR as a subprocess and communicate via stdin/stdout
+* **HTTP/SSE transport**: Connect to the HTTP endpoint at `/mcp`
+
+=== STDIO Mode (Recommended for AI Assistants)
+
+The server runs in STDIO mode by default, which is the standard transport for MCP clients like Claude Desktop:
+
+.Run with JBang
+[source,bash]
+----
+jbang --quiet org.citrusframework:citrus-mcp-server:${citrus.version}:runner
+----
+
+.Java JAR runner
+[source,bash]
+----
+java -jar citrus-mcp-server-${citrus.version}-runner.jar
+----
+
+=== HTTP/SSE Mode
+
+For web-based integrations, the server can also run with HTTP transport:
+
+.Run with JBang
+[source,bash]
+----
+jbang --quiet \
+      -Dquarkus.http.host-enabled=true \
+      -Dquarkus.http.port=8080 \
+ org.citrusframework:citrus-mcp-server:${citrus.version}:runner
+----
+
+.Java JAR runner
+[source,bash]
+----
+java -Dquarkus.http.host-enabled=true \
+     -Dquarkus.http.port=8080 \
+     -jar citrus-mcp-server-${citrus.version}-runner.jar
+----
+
+The MCP endpoint will be available at `http://localhost:8080/mcp`.
+
+[[citrus-mcp-server-tools]]
+== Tools
+
+The Citrus MCP server provides several tools that AI assistants can call to query Citrus metadata.
+
+[[citrus-mcp-server-tools-catalog]]
+=== Catalog Tools
+
+==== Test actions catalog
+
+Lists available Citrus test actions and containers from the catalog.
+
+**Parameters:**
+* `filter` (optional): Filter actions by name, title, or description (case-insensitive substring match)
+* `group` (optional): Filter by group (e.g., camel, kubernetes, selenium)
+* `version` (optional): Citrus version to query (defaults to the server version)
+
+**Returns:**
+* Version information
+* Count of matching components
+* List of components with name, title, description, group, and module
+
+**Example Response:**
+[source,json]
+----
+{
+  "version": "5.0.0-SNAPSHOT",
+  "count": 3,
+  "components": [
+    {
+      "name": "print",
+      "fullName": "print",
+      "version": "5.0.0-SNAPSHOT",
+      "group": "core",
+      "module": "citrus-base",
+      "title": "Print",
+      "description": "Prints messages to the console",
+      "properties": []
+    }
+  ]
+}
+----
+
+==== Test action details
+
+Gets detailed information for a specific test action, including all properties.
+
+**Parameters:**
+* `name` (required): Test action name (e.g., send, receive, print)
+* `version` (optional): Citrus version to query
+
+**Returns:**
+Detailed component information including:
+* Component metadata (name, version, group, module)
+* Property list with name, description, type, required flag, and default value
+
+==== Test action schema
+
+Retrieves the complete JSON schema for a test action with all property definitions.
+
+**Parameters:**
+* `name` (required): Test action name
+* `version` (optional): Citrus version to query
+
+**Returns:**
+JSON schema string with complete property specifications
+
+==== Endpoint catalog
+
+Lists available Citrus endpoints.
+
+**Parameters:**
+* `filter` (optional): Filter endpoints by name (case-insensitive substring match)
+* `group` (optional): Filter by group (e.g., http, kafka, jms)
+* `version` (optional): Citrus version to query
+
+**Returns:**
+List of endpoint components with metadata and properties
+
+==== Endpoint details
+
+Gets detailed information for a specific endpoint.
+
+**Parameters:**
+* `name` (required): Endpoint name (e.g., kafka, http, file, timer)
+* `version` (optional): Citrus version to query
+
+**Returns:**
+Detailed endpoint information with all properties
+
+==== Endpoint schema
+
+Retrieves the complete JSON schema for an endpoint.
+
+**Parameters:**
+* `name` (required): Endpoint name (e.g., kafka, http, direct)
+* `version` (optional): Citrus version to query
+
+**Returns:**
+JSON schema string for the endpoint
+
+[[citrus-mcp-server-tools-docs]]
+=== Documentation Tools
+
+==== Documentation Index
+
+Lists all available Citrus documentation files.
+
+**Parameters:**
+* `filter` (optional): Filter documentation by file name (case-insensitive substring match)
+* `version` (optional): Citrus version to query
+
+**Returns:**
+List of documentation file names
+
+**Example Response:**
+[source,json]
+----
+[
+  "actions-send.adoc",
+  "actions-receive.adoc",
+  "endpoints-http.adoc",
+  "endpoints-kafka.adoc"
+]
+----
+
+==== Documentation Page
+
+Retrieves documentation content for a specific component.
+
+**Parameters:**
+* `kind` (required): Component type (e.g., action, endpoint, function, validationMatcher)
+* `searchKey` (required): Search key (e.g., name of a test action or endpoint)
+* `version` (optional): Citrus version to query
+
+**Returns:**
+* `fileName`: Name of the documentation file
+* `version`: Citrus version
+* `adoc`: AsciiDoc content
+
+**Example:**
+[source,json]
+----
+{
+  "fileName": "actions-send.adoc",
+  "version": "5.0.0-SNAPSHOT",
+  "adoc": "[[actions-send]]\n= Send Action\n\nThe send action..."
+}
+----
+
+[[citrus-mcp-server-resources]]
+== Resources
+
+Resources provide read-only access to schemas and specifications.
+
+=== YAML DSL Schema
+
+**URI:** `citrus://schema/dsl/yaml`
+
+Provides the JSON schema for the Citrus YAML DSL, enabling schema-aware test authoring.
+
+**MIME Type:** `application/json`
+
+=== XML DSL Schema
+
+**URI:** `citrus://schema/dsl/xml`
+
+Provides the XSD schema for the Citrus XML DSL.
+
+**MIME Type:** `application/xml`
+
+=== Test Action Schemas
+
+**URI Template:** `citrus://schema/action/{name}`
+
+Retrieves the JSON schema for a specific test action.
+
+**Parameters:**
+* `name`: Test action name (e.g., print, send, receive)
+
+**MIME Type:** `application/json`
+
+**Example URI:** `citrus://schema/action/send`
+
+=== Endpoint Schemas
+
+**URI Template:** `citrus://schema/endpoint/{name}`
+
+Retrieves the JSON schema for a specific endpoint.
+
+**Parameters:**
+* `name`: Endpoint name (e.g., kafka, http, direct)
+
+**MIME Type:** `application/json`
+
+**Example URI:** `citrus://schema/endpoint/kafka`
+
+[[citrus-mcp-server-configuration]]
+== Server Configuration
+
+The Citrus MCP server uses Quarkus MCP so the server can be configured using Quarkus application properties.
+
+=== Default Configuration
+
+The default configuration (`application.properties`) includes:
+
+[source,properties]
+----
+quarkus.application.name=citrus-mcp-server
+quarkus.application.version=${citrus.version}
+
+# Disable banner for cleaner stdio output
+quarkus.banner.enabled=false
+
+# Logging configuration
+quarkus.log.console.stderr=true
+quarkus.log.level=WARN
+quarkus.log.category."org.citrusframework".level=INFO
+quarkus.log.category."io.quarkiverse.mcp".level=INFO
+
+# Disable HTTP server for STDIO mode
+quarkus.http.host-enabled=false
+----
+
+=== Custom Configuration
+
+Override properties using system properties or environment variables:
+
+[source,bash]
+----
+java -Dquarkus.log.level=DEBUG \
+     -Dquarkus.http.host-enabled=true \
+     -Dquarkus.http.port=9090 \
+     -jar citrus-mcp-server-${citrus.version}-runner.jar
+----
+
+[[citrus-mcp-server-usecases]]
+== Use Cases
+
+=== AI-Assisted Test Generation
+
+AI assistants can use the MCP server to:
+
+1. **Discover available components**: Query catalog tools to find relevant test actions and endpoints
+2. **Validate syntax**: Retrieve schemas to ensure correct property usage
+3. **Access documentation**: Get detailed documentation for specific components
+4. **Generate code**: Create syntactically correct Citrus tests based on user requirements
+
+=== Schema Validation
+
+Development environments can use the schema resources to:
+
+* Provide autocomplete for YAML/XML test definitions
+* Validate test files against official schemas
+* Show inline documentation for properties
+
+=== Documentation Lookup
+
+Tools can query documentation resources to:
+
+* Display contextual help for components
+* Search documentation by component type and name
+* Provide code examples from documentation

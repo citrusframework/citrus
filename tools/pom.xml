@@ -23,6 +23,7 @@
     <module>agent</module>
     <module>cucumber-steps</module>
     <module>archetypes</module>
+    <module>mcp-server</module>
   </modules>
 
   <dependencyManagement>
