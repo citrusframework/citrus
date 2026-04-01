@@ -19,12 +19,12 @@ actions:
         body:
           data: Howdy
   - send:
-      endpoint: kafka:my-topic
+      endpoint: "kafka:my-topic"
       message:
         body:
           data: Hello ${id}
   - receive:
-      endpoint: kafka:my-topic
+      endpoint: "kafka:my-topic"
       message:
         body:
           data: @ignore@ @isNumber()@

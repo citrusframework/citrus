@@ -170,7 +170,9 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
             ComponentDefinition component = components.get(entry.getKey());
             String name = Optional.ofNullable(component.group()).orElse(entry.getKey());
 
-            if (code.contains("endpoint: %s".formatted(name))) {
+            if (code.contains("endpoint: %s".formatted(name))
+                    || code.contains("endpoint: '%s".formatted(name))
+                    || code.contains("endpoint: \"%s".formatted(name))) {
                 items.add(name);
                 if (StringUtils.hasText(component.module())) {
                     modules.add(component.module());
