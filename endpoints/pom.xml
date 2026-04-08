@@ -23,6 +23,7 @@
     <module>citrus-jmx</module>
     <module>citrus-kafka</module>
     <module>citrus-mail</module>
+    <module>citrus-mcp</module>
     <module>citrus-rmi</module>
     <module>citrus-ssh</module>
     <module>citrus-websocket</module>

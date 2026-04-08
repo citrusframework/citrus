@@ -266,8 +266,8 @@
     <org.openapitools.version>7.23.0</org.openapitools.version>
     <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.13</postgresql.version>
-    <quarkus.platform.version>3.38.0</quarkus.platform.version>
-    <quarkus.mcp-server.version>1.13.1</quarkus.mcp-server.version>
+    <quarkus.platform.version>3.40.1</quarkus.platform.version>
+    <quarkus.mcp-server.version>2.0.2</quarkus.mcp-server.version>
     <saaj.version>3.0.6</saaj.version>
     <selenium.version>4.44.0</selenium.version>
     <playwright.version>1.63.0</playwright.version>

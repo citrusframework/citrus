@@ -199,6 +199,10 @@ public abstract class AbstractServer extends AbstractEndpoint
 
     @Override
     public EndpointConfiguration getEndpointConfiguration() {
+        if (endpointAdapter == null) {
+            return null;
+        }
+
         return endpointAdapter.getEndpoint().getEndpointConfiguration();
     }
 

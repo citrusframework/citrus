@@ -1,0 +1,147 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.citrusframework.mcp.model;
+
+import java.io.StringWriter;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.xml.bind.JAXBException;
+import org.citrusframework.api.xml.Marshaller;
+import org.citrusframework.api.xml.StringResult;
+import org.citrusframework.api.xml.Unmarshaller;
+import org.citrusframework.base.xml.Jaxb2Marshaller;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.mcp.McpSettings;
+import org.citrusframework.message.MessageType;
+import org.citrusframework.spi.Resources;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
+public class McpMarshaller implements Marshaller, Unmarshaller {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(McpMarshaller.class);
+
+    /** Message type format: XML or JSON */
+    private String type = McpSettings.getMarshallerType();
+
+    private final ObjectMapper mapper;
+    private final Jaxb2Marshaller marshaller;
+
+    private final Class<?>[] classesToBeBound = new Class[] {
+            McpServerConfiguration.class,
+            McpToolInvocation.class,
+            McpToolResponse.class
+    };
+
+    /**
+     * Default constructor
+     */
+    public McpMarshaller() {
+        this.mapper = JsonMapper.builder()
+                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+                .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL))
+                .build();
+        this.marshaller = new Jaxb2Marshaller(Resources.fromClasspath("org/citrusframework/schema/citrus-mcp-message.xsd"), classesToBeBound);
+    }
+
+    public ObjectMapper json() {
+        return mapper;
+    }
+
+    public Object unmarshal(Source source) {
+        if (type.equalsIgnoreCase(MessageType.XML.name())) {
+            try {
+                return marshaller.unmarshal(source);
+            } catch (JAXBException e) {
+                if (source instanceof StreamSource) {
+                    for (Class<?> type : classesToBeBound) {
+                        try {
+                            return mapper.readValue(((StreamSource) source).getReader(), type);
+                        } catch (JacksonException je) {
+                            // ignore, do nothing
+                        }
+                    }
+                }
+
+                throw new CitrusRuntimeException("Failed to unmarshal source", e);
+            }
+        } else if (type.equalsIgnoreCase(MessageType.JSON.name())) {
+            for (Class<?> type : classesToBeBound) {
+                try {
+                    return mapper.readValue(((StreamSource) source).getReader(), type);
+                } catch (JacksonException je) {
+                    // ignore, do nothing
+                }
+            }
+
+            try {
+                return marshaller.unmarshal(source);
+            } catch (JAXBException me) {
+                logger.warn("Failed to read ftp XML object from source: {}", me.getMessage());
+            }
+
+            throw new CitrusRuntimeException("Failed to read mail JSON object from source:" + source);
+        } else {
+            throw new CitrusRuntimeException("Unsupported mail marshaller type: " + type);
+        }
+    }
+
+    public void marshal(Object graph, Result result) {
+        if (type.equalsIgnoreCase(MessageType.JSON.name())) {
+            if (result instanceof StringResult) {
+                StringWriter writer = new StringWriter();
+                ((StringResult) result).setWriter(writer);
+                try {
+                    mapper.writer().writeValue(writer, graph);
+                } catch (JacksonException e) {
+                    throw new CitrusRuntimeException("Failed to write mail object graph to result", e);
+                }
+            }
+        } else if (type.equalsIgnoreCase(MessageType.XML.name())) {
+            try {
+                marshaller.marshal(graph, result);
+            } catch (JAXBException e) {
+                throw new CitrusRuntimeException("Failed to marshal object graph", e);
+            }
+        } else {
+            throw new CitrusRuntimeException("Unsupported mail marshaller type: " + type);
+        }
+    }
+
+    /**
+     * Gets the type.
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Sets the type.
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+}

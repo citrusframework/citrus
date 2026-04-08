@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.citrusframework.org/schema/mcp/message"
+           targetNamespace="http://www.citrusframework.org/schema/mcp/message"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+    <xs:element name="tool-invocation">
+      <xs:annotation>
+        <xs:documentation>Mcp tool invocation specifies the tool name and optional arguments.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="args" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="arg" maxOccurs="unbounded">
+                  <xs:complexType>
+                    <xs:attribute name="name" use="required" type="xs:string"/>
+                    <xs:attribute name="value" use="required" type="xs:string"/>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="tool-response">
+      <xs:annotation>
+        <xs:documentation>Mcp tool response marks success or failure when processing the tool invocation.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="content" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="error" type="xs:boolean" default="false"/>
+      </xs:complexType>
+    </xs:element>
+</xs:schema>
