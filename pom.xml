@@ -219,7 +219,7 @@
     <htmlunit.version>4.13.0</htmlunit.version>
     <httpclient.version>5.5.1</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
-    <jackson.version>3.1.0</jackson.version>
+    <jackson.version>3.1.1</jackson.version>
     <jackson.annotations.version>2.21</jackson.annotations.version>
     <jackson-databind-nullable.version>0.2.9</jackson-databind-nullable.version>
     <jackson2.version>2.21.1</jackson2.version>
