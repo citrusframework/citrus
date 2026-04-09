@@ -78,7 +78,7 @@ public KubernetesClient k8sClient() {
                 .password("s!cr!t")
                 .namespace("user_namespace")
                 .messageConverter(messageConverter)
-                .objectMapper("objectMapper")
+                .jsonMapper("jsonMapper")
                 .build();
 }
 ----
@@ -96,7 +96,7 @@ public KubernetesClient k8sClient() {
                 .password("s!cr!t")
                 .namespace("user_namespace")
                 .messageConverter(messageConverter)
-                .objectMapper("objectMapper")
+                .jsonMapper("jsonMapper")
                 .build();
 }
 ----
@@ -112,7 +112,7 @@ public KubernetesClient k8sClient() {
               password="s!cr!t"
               namespace="user_namespace"
               message-converter="messageConverter"
-              object-mapper="objectMapper"/>
+              json-mapper="jsonMapper"/>
 ----
 
 NOTE: You have the option to set an `oauthToken` for the client instead of using `username` and `password`.
