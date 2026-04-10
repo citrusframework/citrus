@@ -251,7 +251,7 @@
     <k8s.client.version>7.5.2</k8s.client.version>
     <kafka.version>3.9.1</kafka.version>
     <knative-client.version>7.5.2</knative-client.version>
-    <log4j2.version>2.25.3</log4j2.version>
+    <log4j2.version>2.25.4</log4j2.version>
     <mockito.version>5.21.0</mockito.version>
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.2.10.Final</netty.version>
