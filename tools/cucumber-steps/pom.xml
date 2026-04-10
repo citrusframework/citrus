@@ -17,7 +17,7 @@
   <description>Citrus Cucumber Steps</description>
 
   <properties>
-    <activemq.version>6.2.2</activemq.version>
+    <activemq.version>6.2.4</activemq.version>
   </properties>
 
   <modules>
