@@ -28,6 +28,7 @@ import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import software.amazon.awssdk.services.s3.S3Client;
 
 public class StartLocalStackTest extends AbstractYamlActionTest {
 
@@ -45,6 +46,9 @@ public class StartLocalStackTest extends AbstractYamlActionTest {
         Assert.assertTrue(result.getTestResult().isSuccess());
 
         verifyContainer(context);
+
+        Assert.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
+        Assert.assertNotNull(context.getReferenceResolver().resolve("s3Client", S3Client.class));
     }
 
     private void verifyContainer(TestContext context) {

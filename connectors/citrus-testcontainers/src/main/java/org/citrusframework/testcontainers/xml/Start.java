@@ -69,7 +69,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         builder.autoCreateClients(container.isAutoCreateClients());
 
         if (container.getOptions() != null) {
-            container.getOptions().forEach(option -> builder.withOption(option.getName(), option.getValue()));
+            container.getOptions().getOptions().forEach(option -> builder.withOption(option.getName(), option.getValue()));
         }
 
         configureStartActionBuilder(builder, container);
@@ -532,7 +532,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         protected Services services;
 
         @XmlElement
-        protected List<Option> options;
+        protected Options options;
 
         public String getVersion() {
             return version;
@@ -558,11 +558,11 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             this.services = services;
         }
 
-        public List<Option> getOptions() {
+        public Options getOptions() {
             return options;
         }
 
-        public void setOptions(List<Option> options) {}
+        public void setOptions(Options options) {}
 
         public boolean isAutoCreateClients() {
             return autoCreateClients;
@@ -595,28 +595,49 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
+                "options"
         })
-        public static class Option {
+        public static class Options {
 
-            @XmlAttribute
-            private String name;
+            @XmlElement(name = "option")
+            private List<Option> options;
 
-            @XmlAttribute
-            private String value;
-
-            public String getName() {
-                return name;
+            public List<Option> getOptions() {
+                if (options == null) {
+                    options = new ArrayList<>();
+                }
+                return options;
             }
 
-            public void setName(String name) {
-                this.name = name;
+            public void setOptions(List<Option> services) {
+                this.options = options;
             }
 
-            public String getValue() {
-                return value;
-            }
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+            })
+            public static class Option {
 
-            public void setValue(String value) {}
+                @XmlAttribute
+                private String name;
+
+                @XmlAttribute
+                private String value;
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+
+                public String getValue() {
+                    return value;
+                }
+
+                public void setValue(String value) {}
+            }
         }
     }
 

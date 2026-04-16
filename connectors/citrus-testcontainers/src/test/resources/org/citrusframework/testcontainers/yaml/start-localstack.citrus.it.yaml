@@ -9,3 +9,5 @@ actions:
           autoRemove: false
           services:
             - "S3"
+          options:
+            buckets: some-bucket-name

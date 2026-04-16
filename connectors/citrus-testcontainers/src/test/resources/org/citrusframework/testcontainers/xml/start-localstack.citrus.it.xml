@@ -21,7 +21,11 @@
   <actions>
     <testcontainers>
       <start>
-        <localstack services="S3" auto-remove="false"/>
+        <localstack services="S3" auto-remove="false">
+          <options>
+            <option name="buckets" value="some-bucket-name"/>
+          </options>
+        </localstack>
       </start>
     </testcontainers>
   </actions>
