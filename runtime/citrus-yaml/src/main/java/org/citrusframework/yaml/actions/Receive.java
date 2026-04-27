@@ -319,7 +319,8 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         MessageSupport.configureExtract(builder, value);
     }
 
-    @SchemaProperty(required = true, description = "The message endpoint name or URI used to receive the message.")
+    @SchemaProperty(required = true, description = "The message endpoint name or URI used to receive the message. " +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setEndpoint(String value) {
         builder.endpoint(value);
     }

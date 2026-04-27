@@ -74,7 +74,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         this.actor = actor;
     }
 
-    @SchemaProperty(description = "Sets the SOAP Http client.")
+    @SchemaProperty(description = "Sets the SOAP Http client. " +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setClient(String soapClient) {
         if (builder == null) {
             builder = new SoapActionBuilder().client(soapClient);

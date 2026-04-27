@@ -63,7 +63,8 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
         MessageSupport.configureExtract(builder, value);
     }
 
-    @SchemaProperty(required = true, description = "The message endpoint name or URI.")
+    @SchemaProperty(required = true, description = "The message endpoint name or URI. " +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setEndpoint(String value) {
         builder.endpoint(value);
     }

@@ -35,7 +35,8 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
 
     protected List<Endpoint> endpoints;
 
-    @SchemaProperty(description = "The name of the endpoint to purge.")
+    @SchemaProperty(description = "The name of the endpoint to purge. " +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setEndpoint(String endpoint) {
         builder.endpoint(endpoint);
     }
@@ -112,12 +113,15 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
         public String getName() {
             return name;
         }
-        @SchemaProperty(description = "The name of the endpoint.")
+
+        @SchemaProperty(description = "The name of the endpoint. " +
+                "Uses an endpoint URI or references an endpoint name.")
         public void setName(String value) {
             this.name = value;
         }
 
-        @SchemaProperty(description = "Reference to the endpoint in the bean registry.")
+        @SchemaProperty(description = "Reference to the endpoint in the bean registry. " +
+                "Uses an endpoint URI or references an endpoint name.")
         public void setRef(String ref) {
             this.ref = ref;
         }

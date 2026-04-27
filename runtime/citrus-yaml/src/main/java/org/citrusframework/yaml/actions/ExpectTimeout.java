@@ -55,7 +55,8 @@ public class ExpectTimeout implements TestActionBuilder<ReceiveTimeoutAction> {
         }
     }
 
-    @SchemaProperty(required = true, description = "The message endpoint to consume messages from.")
+    @SchemaProperty(required = true, description = "The message endpoint to consume messages from. " +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setEndpoint(String endpointUri) {
         builder.endpoint(endpointUri);
     }
