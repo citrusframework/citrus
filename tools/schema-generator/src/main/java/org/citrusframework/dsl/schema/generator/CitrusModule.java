@@ -18,6 +18,8 @@ package org.citrusframework.dsl.schema.generator;
 
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
@@ -208,17 +210,28 @@ public class CitrusModule implements Module {
 
     protected void resolveMetadata(ObjectNode jsonSchemaAttributesNode, MemberScope<?, ?> member, SchemaGenerationContext context) {
         if (addMetaData) {
+            List<String> comments = new ArrayList<>();
             this.getSchemaPropertyAnnotation(member)
                     .map(SchemaProperty::metadata)
                     .ifPresent(metaData -> Stream.of(metaData)
                             .filter(data -> !data.key().isEmpty())
                             .filter(data -> !data.value().isEmpty())
-                            .forEach(data -> jsonSchemaAttributesNode.put(data.key(), data.value())));
+                            .forEach(data -> {
+                                if ("$comment".equals(data.key())) {
+                                    comments.add(data.value());
+                                } else {
+                                    jsonSchemaAttributesNode.put(data.key(), data.value());
+                                }
+                            }));
 
             this.getSchemaPropertyAnnotation(member)
                     .map(SchemaProperty::advanced)
                     .filter(advanced -> advanced)
-                    .ifPresent(advanced -> jsonSchemaAttributesNode.put("$comment", "group:advanced"));
+                    .ifPresent(advanced -> comments.add("group:advanced"));
+
+            if (!comments.isEmpty()) {
+                jsonSchemaAttributesNode.put("$comment", String.join(",", comments));
+            }
         }
     }
 

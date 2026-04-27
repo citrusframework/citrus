@@ -28,7 +28,7 @@ public class Stop implements TestActionBuilder<StopServerAction>, ReferenceResol
 
     private final StopServerAction.Builder builder = new StopServerAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Uses an endpoint URI or references an endpoint name.")
     public void setServer(String server) {
         builder.server(server);
     }
@@ -55,7 +55,7 @@ public class Stop implements TestActionBuilder<StopServerAction>, ReferenceResol
             return name;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Uses an endpoint URI or references an endpoint name.")
         public void setName(String value) {
             this.name = value;
         }

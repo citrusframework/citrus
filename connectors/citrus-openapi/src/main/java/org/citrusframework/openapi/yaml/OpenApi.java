@@ -88,7 +88,8 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         }
     }
 
-    @SchemaProperty(description = "Sets the Http client used to send requests.")
+    @SchemaProperty(description = "Sets the Http client used to send requests. " +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setClient(String httpClient) {
         if (builder == null) {
             builder = new OpenApiActionBuilder().client(httpClient);
@@ -103,7 +104,8 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
         }
     }
 
-    @SchemaProperty(description = "Sets the Http server that provides the Http API.")
+    @SchemaProperty(description = "Sets the Http server that provides the Http API. " +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setServer(String httpServer) {
         if (builder == null) {
             builder = new OpenApiActionBuilder().server(httpServer);

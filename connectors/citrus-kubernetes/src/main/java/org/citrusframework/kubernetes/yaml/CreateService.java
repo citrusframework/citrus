@@ -36,7 +36,7 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
         this.delegate.service(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Uses an endpoint URI or references an endpoint name.")
     public void setServer(String serverName) {
         this.delegate.server(serverName);
     }

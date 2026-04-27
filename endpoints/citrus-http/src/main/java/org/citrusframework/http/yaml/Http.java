@@ -71,7 +71,8 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         this.actor = actor;
     }
 
-    @SchemaProperty(description = "The Http client.")
+    @SchemaProperty(description = "The Http client. " +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setClient(String httpClient) {
         if (builder == null) {
             builder = new HttpActionBuilder().client(httpClient);
@@ -82,7 +83,8 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
     }
 
-    @SchemaProperty(description = "The Http server.")
+    @SchemaProperty(description = "The Http server. " +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setServer(String httpServer) {
         if (builder == null) {
             builder = new HttpActionBuilder().server(httpServer);

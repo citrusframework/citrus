@@ -28,7 +28,7 @@ public class Start implements TestActionBuilder<StartServerAction>, ReferenceRes
 
     private final StartServerAction.Builder builder = new StartServerAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Uses an endpoint URI or references an endpoint name.")
     public void setServer(String server) {
         builder.server(server);
     }
