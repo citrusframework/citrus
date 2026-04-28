@@ -73,7 +73,7 @@ public class JsonPathFunction implements ParameterizedFunction<JsonPathFunction.
             return source;
         }
 
-        @SchemaProperty(required = true, description = "The Json source.")
+        @SchemaProperty(required = true, description = "The Json source as inline data.")
         public void setSource(String source) {
             this.source = source;
         }

@@ -133,7 +133,7 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
             return data;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "The event message body as inline data.")
         public void setData(String data) {
             this.data = data;
         }

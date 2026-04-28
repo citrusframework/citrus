@@ -16,6 +16,11 @@
 
 package org.citrusframework.functions.core;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
@@ -25,11 +30,6 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Applies RFC 6902 JSON Patch operations to JSON content.
@@ -361,7 +361,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
             return source;
         }
 
-        @SchemaProperty(required = true, description = "The JSON source content to be patched.")
+        @SchemaProperty(required = true, description = "The JSON source content to be patched as inline data.")
         public void setSource(String source) {
             this.source = source;
         }
