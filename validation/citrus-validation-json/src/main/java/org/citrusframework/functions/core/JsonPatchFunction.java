@@ -237,7 +237,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
             return source;
         }
 
-        @SchemaProperty(required = true, description = "The JSON source content to be patched.")
+        @SchemaProperty(required = true, description = "The JSON source content to be patched as inline data.")
         public void setSource(String source) {
             this.source = source;
         }

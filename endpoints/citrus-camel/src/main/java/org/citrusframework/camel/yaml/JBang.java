@@ -211,7 +211,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                 return file;
             }
 
-            @SchemaProperty(description = "Camel integration source code.")
+            @SchemaProperty(description = "Camel integration source code as inline data.")
             public void setSource(String sourceCode) {
                 this.sourceCode = sourceCode;
             }
@@ -1317,7 +1317,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
                     return file;
                 }
 
-                @SchemaProperty(description = "The integration source code.")
+                @SchemaProperty(description = "The integration source code as inline data.")
                 public void setSource(String source) {
                     this.source = source;
                 }

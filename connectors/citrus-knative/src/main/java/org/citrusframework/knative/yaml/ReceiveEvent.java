@@ -110,9 +110,8 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
 
     public static class Event {
 
-        protected String data;
-
         protected List<Attribute> attributes;
+        protected String data;
 
         @SchemaProperty
         public void setAttributes(List<Attribute> attributes) {
@@ -130,7 +129,7 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
             return data;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "The event message body as inline data.")
         public void setData(String data) {
             this.data = data;
         }

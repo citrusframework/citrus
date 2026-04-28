@@ -24,7 +24,7 @@ public class ScriptDefinitionType {
     protected String file;
     protected String charset;
 
-    @SchemaProperty(description = "The script content.")
+    @SchemaProperty(description = "The script content as inline data.")
     public void setContent(String script) {
         this.value = script;
     }

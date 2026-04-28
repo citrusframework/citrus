@@ -260,7 +260,7 @@ public class Message {
             return data;
         }
 
-        @SchemaProperty(description = "The message body content.")
+        @SchemaProperty(description = "The message body content as inline data.")
         public void setData(String value) {
             this.data = value;
         }

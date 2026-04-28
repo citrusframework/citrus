@@ -22,12 +22,14 @@ import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.CreateCustomResourceAction;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.yaml.SchemaType;
 
+@SchemaType(oneOf = {"data", "file"})
 public class CreateCustomResource extends AbstractKubernetesAction.Builder<CreateCustomResourceAction, CreateCustomResource> {
 
     private final CreateCustomResourceAction.Builder delegate = new CreateCustomResourceAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "The custom resource specification as inline data.")
     public void setData(String content) {
         delegate.content(content);
     }
@@ -61,7 +63,7 @@ public class CreateCustomResource extends AbstractKubernetesAction.Builder<Creat
         delegate.apiVersion(apiVersion);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "The custom resource specification loaded from a file resource.")
     public void setFile(String path) {
         delegate.file(path);
     }

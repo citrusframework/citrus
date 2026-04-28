@@ -68,7 +68,7 @@ public class XpathFunction implements ParameterizedFunction<XpathFunction.Parame
             return source;
         }
 
-        @SchemaProperty(required = true, description = "The XML source.")
+        @SchemaProperty(required = true, description = "The XML source as inline data.")
         public void setSource(String source) {
             this.source = source;
         }
