@@ -56,7 +56,8 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     /**
      * Use a custom selenium browser.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the Selenium browser." +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setBrowser(String browser) {
         this.seleniumBrowser = browser;
     }
