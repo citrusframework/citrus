@@ -32,7 +32,8 @@ public class StopBrowser extends AbstractSeleniumAction.Builder<StopBrowserActio
 
     private ReferenceResolver referenceResolver;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the Selenium browser." +
+            "Uses an endpoint URI or references an endpoint name.")
     public void setBrowser(String browser) {
         this.seleniumBrowser = browser;
     }
