@@ -19,7 +19,7 @@ package org.citrusframework.kafka.embedded;
 import java.util.Map;
 
 /**
- * Embedded Kafka server with reference to embedded Zookeeper cluster for testing purpose. Starts single Zookeeper instance with logs in Java temp directory. Starts single Kafka server
+ * Embedded Kafka server with reference to embedded controller for testing purpose. Starts single server instance with logs in Java temp directory. Starts single Kafka server
  * and automatically creates given topics with admin client.
  *
  * @since 2.8
@@ -38,7 +38,6 @@ public class EmbeddedKafkaServerBuilder {
 
     /**
      * Constructor using Kafka server.
-     * @param kafkaServer
      */
     public EmbeddedKafkaServerBuilder(EmbeddedKafkaServer kafkaServer) {
         this.kafkaServer = kafkaServer;
@@ -46,8 +45,6 @@ public class EmbeddedKafkaServerBuilder {
 
     /**
      * Sets the Kafka server port
-     * @param port
-     * @return
      */
     public EmbeddedKafkaServerBuilder kafkaServerPort(int port) {
         kafkaServer.setKafkaServerPort(port);
@@ -55,19 +52,15 @@ public class EmbeddedKafkaServerBuilder {
     }
 
     /**
-     * Sets the Zookeeper server port
-     * @param port
-     * @return
+     * Sets the controller server port
      */
-    public EmbeddedKafkaServerBuilder zookeeperPort(int port) {
-        kafkaServer.setZookeeperPort(port);
+    public EmbeddedKafkaServerBuilder controllerPort(int port) {
+        kafkaServer.setControllerPort(port);
         return this;
     }
 
     /**
-     * Sets the topics to auto create on server as comma delimited list.
-     * @param topics
-     * @return
+     * Sets the topics to auto create on server as comma-delimited list.
      */
     public EmbeddedKafkaServerBuilder topics(String topics) {
         kafkaServer.setTopics(topics);
@@ -76,8 +69,6 @@ public class EmbeddedKafkaServerBuilder {
 
     /**
      * Sets the topics to auto create on embedded server.
-     * @param topics
-     * @return
      */
     public EmbeddedKafkaServerBuilder topics(String ... topics) {
         return topics(String.join(",", topics));
@@ -85,8 +76,6 @@ public class EmbeddedKafkaServerBuilder {
 
     /**
      * Sets the number of partitions to create for each topic.
-     * @param count
-     * @return
      */
     public EmbeddedKafkaServerBuilder partitions(int count) {
         kafkaServer.setPartitions(count);
@@ -95,8 +84,6 @@ public class EmbeddedKafkaServerBuilder {
 
     /**
      * Sets the kafka server broker properties.
-     * @param properties
-     * @return
      */
     public EmbeddedKafkaServerBuilder brokerProperties(Map<String, String> properties) {
         kafkaServer.setBrokerProperties(properties);
@@ -104,9 +91,7 @@ public class EmbeddedKafkaServerBuilder {
     }
 
     /**
-     * Sets the Zookeeper logger directory path.
-     * @param logDirPath
-     * @return
+     * Sets the Kafka server logger directory path.
      */
     public EmbeddedKafkaServerBuilder logDirPath(String logDirPath) {
         kafkaServer.setLogDirPath(logDirPath);
@@ -114,9 +99,7 @@ public class EmbeddedKafkaServerBuilder {
     }
 
     /**
-     * Sets the auto delete option for Zookeeper logs.
-     * @param autoDelete
-     * @return
+     * Sets the auto delete option for Kafka server logs.
      */
     public EmbeddedKafkaServerBuilder autoDeleteLogs(boolean autoDelete) {
         kafkaServer.setAutoDeleteLogs(autoDelete);
@@ -125,7 +108,6 @@ public class EmbeddedKafkaServerBuilder {
 
     /**
      * Builds the kafkaServer.
-     * @return
      */
     public EmbeddedKafkaServer build() {
         return kafkaServer;

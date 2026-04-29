@@ -38,7 +38,7 @@
           <k8s:result>
             {
               "result": {
-                "clientVersion": "7.5.2",
+                "clientVersion": "7.6.1",
                 "apiVersion": "${apiVersion}",
                 "kind":"Info",
                 "masterUrl": "@matches('http://(kubernetes\\.docker\\.internal|localhost):[0-9]+/')@",

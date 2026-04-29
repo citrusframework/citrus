@@ -16,12 +16,12 @@
 
 package org.citrusframework.kafka.config.xml;
 
+import java.util.Map;
+
 import org.citrusframework.kafka.embedded.EmbeddedKafkaServer;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @since 2.7
@@ -41,7 +41,7 @@ public class KafkaEmbeddedServerParserTest extends AbstractBeanDefinitionParserT
         Assert.assertTrue(kafkaServer.isAutoDeleteLogs());
         Assert.assertNull(kafkaServer.getLogDirPath());
         Assert.assertTrue(kafkaServer.getKafkaServerPort() >= 9092);
-        Assert.assertTrue(kafkaServer.getZookeeperPort() > 0);
+        Assert.assertTrue(kafkaServer.getControllerPort() > 0);
         Assert.assertEquals(kafkaServer.getBrokerProperties().size(), 0L);
 
         // 2nd server
@@ -51,7 +51,7 @@ public class KafkaEmbeddedServerParserTest extends AbstractBeanDefinitionParserT
         Assert.assertFalse(kafkaServer.isAutoDeleteLogs());
         Assert.assertEquals(kafkaServer.getLogDirPath(), "/path/to/logs");
         Assert.assertEquals(kafkaServer.getKafkaServerPort(), 9091);
-        Assert.assertEquals(kafkaServer.getZookeeperPort(), 21181);
+        Assert.assertEquals(kafkaServer.getControllerPort(), 21181);
         Assert.assertEquals(kafkaServer.getBrokerProperties().size(), 1L);
         Assert.assertEquals(kafkaServer.getBrokerProperties().get("broker.id"), "1");
     }

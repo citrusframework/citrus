@@ -16,6 +16,8 @@
 
 package org.citrusframework.http.server;
 
+import java.util.Random;
+
 import org.apache.hc.core5.http.ContentType;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
@@ -36,8 +38,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -99,7 +99,7 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
 
             Assert.assertTrue(request instanceof HttpMessage);
             Assert.assertEquals(request.getPayload(String.class), "");
-            Assert.assertEquals(request.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/plain;charset=UTF-8");
+            Assert.assertEquals(request.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/plain;charset=utf-8");
             Assert.assertEquals(request.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI), "/test/hello");
 
             return new HttpMessage("Hello user")

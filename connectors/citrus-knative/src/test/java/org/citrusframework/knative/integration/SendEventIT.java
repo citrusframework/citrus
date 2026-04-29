@@ -63,7 +63,7 @@ public class SendEventIT extends AbstractKnativeIT implements TestActionSupport 
                     .header("ce-id", "@notNull()@")
                     .header("ce-type", "org.citrusframework.event.test")
                     .header("ce-source", "citrus-test")
-                    .header("Content-Type", MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    .header("Content-Type", MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
         );
 
         then(

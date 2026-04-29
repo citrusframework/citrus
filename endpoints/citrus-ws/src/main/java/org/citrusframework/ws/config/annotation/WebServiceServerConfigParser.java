@@ -23,7 +23,7 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.ws.message.converter.WebServiceMessageConverter;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.citrusframework.ws.server.WebServiceServerBuilder;
-import org.eclipse.jetty.ee10.servlet.ServletHandler;
+import org.eclipse.jetty.ee11.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.springframework.ws.server.EndpointInterceptor;

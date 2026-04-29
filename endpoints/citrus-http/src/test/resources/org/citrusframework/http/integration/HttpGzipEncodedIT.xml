@@ -69,7 +69,7 @@
 
       <http:receive-response client="echoHttpClient">
         <http:headers status="200" reason-phrase="OK">
-          <http:header name="Content-Type" value="text/plain"/>
+          <http:header name="Content-Type" value="@startsWith(text/plain)@"/>
         </http:headers>
         <http:body type="plaintext">
           <http:data>${text}</http:data>

@@ -27,7 +27,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID"/>
-      <xs:attribute name="zookeeper-port" type="xs:string"/>
+      <xs:attribute name="controller-port" type="xs:string"/>
       <xs:attribute name="kafka-server-port" type="xs:string"/>
       <xs:attribute name="topics" type="xs:string"/>
       <xs:attribute name="partitions" type="xs:int"/>

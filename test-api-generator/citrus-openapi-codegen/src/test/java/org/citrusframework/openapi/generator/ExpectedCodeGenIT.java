@@ -141,7 +141,7 @@ class ExpectedCodeGenIT {
 
         // Replace "Generated" with a placeholder
         String generatedAnnotationPattern = "@jakarta\\.annotation\\.Generated\\(.*?\\)";
-        String placeholder = "@jakarta.annotation.Generated(value = \"org.citrusframework.openapi.generator.JavaCitrusCodegen\", date = \"TIMESTAMP\", comments = \"Generator version: VERSION\")";
+        String placeholder = "@jakarta.annotation.Generated(value = \"org.citrusframework.openapi.generator.CitrusJavaCodegen\", date = \"TIMESTAMP\", comments = \"Generator version: VERSION\")";
 
         actualContent = actualContent.replaceAll(generatedAnnotationPattern, placeholder);
         expectedContent = expectedContent.replaceAll(generatedAnnotationPattern, placeholder);

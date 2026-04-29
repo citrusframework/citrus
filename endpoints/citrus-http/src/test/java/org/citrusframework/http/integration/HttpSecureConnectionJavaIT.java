@@ -81,6 +81,6 @@ public class HttpSecureConnectionJavaIT extends TestNGCitrusSpringSupport implem
                 .response(HttpStatus.OK)
                 .message()
                 .body("Hi from secured Http server")
-                .contentType("text/plain"));
+                .contentType("@startsWith(text/plain)@"));
     }
 }

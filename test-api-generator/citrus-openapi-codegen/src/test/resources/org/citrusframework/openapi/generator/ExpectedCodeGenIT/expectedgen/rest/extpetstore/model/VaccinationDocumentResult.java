@@ -18,14 +18,13 @@ package org.citrusframework.openapi.generator.rest.extpetstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
-import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * VaccinationDocumentResult
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-24T14:15:35.039151600+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "TIMESTAMP", comments = "Generator version: 7.21.0")
 public class VaccinationDocumentResult {
   @jakarta.annotation.Nullable
   private String documentId;
@@ -53,6 +52,7 @@ public class VaccinationDocumentResult {
   public void setDocumentId(@jakarta.annotation.Nullable String documentId) {
     this.documentId = documentId;
   }
+
 
   @Override
   public boolean equals(Object o) {
@@ -85,10 +85,7 @@ public class VaccinationDocumentResult {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 
 }

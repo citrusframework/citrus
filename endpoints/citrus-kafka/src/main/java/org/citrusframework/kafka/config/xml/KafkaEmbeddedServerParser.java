@@ -37,7 +37,7 @@ public class KafkaEmbeddedServerParser extends AbstractBeanDefinitionParser {
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("log-dir-path"), "logDirPath");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("auto-delete-logs"), "autoDeleteLogs");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("zookeeper-port"), "zookeeperPort");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("controller-port"), "controllerPort");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("kafka-server-port"), "kafkaServerPort");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("topics"), "topics");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("partitions"), "partitions");

@@ -47,7 +47,7 @@ public interface HttpSteps {
                 MediaType.valueOf("application/zip"));
 
         if (contentType.equals(MediaType.APPLICATION_JSON_VALUE) ||
-                contentType.equals(MediaType.APPLICATION_JSON_UTF8_VALUE)) {
+                contentType.equalsIgnoreCase(MediaType.APPLICATION_JSON_VALUE + ";charset=utf-8")) {
             return MessageType.JSON.name();
         } else if (contentType.equals(MediaType.APPLICATION_XML_VALUE)) {
             return MessageType.XML.name();

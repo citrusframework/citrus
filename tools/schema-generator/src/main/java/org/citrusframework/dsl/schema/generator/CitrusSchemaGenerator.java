@@ -23,7 +23,6 @@ import java.nio.file.StandardOpenOption;
 
 import com.fasterxml.classmate.AnnotationConfiguration;
 import com.fasterxml.classmate.AnnotationInclusion;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.Option;
 import com.github.victools.jsonschema.generator.OptionPreset;
 import com.github.victools.jsonschema.generator.SchemaGenerator;
@@ -37,6 +36,7 @@ import org.citrusframework.dsl.schema.Test;
 import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
+import tools.jackson.databind.JsonNode;
 
 /**
  * Generates the full Citrus test case DSL schema based on annotated YAML model classes.

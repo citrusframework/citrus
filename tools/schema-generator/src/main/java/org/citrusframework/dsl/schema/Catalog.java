@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.Option;
 import org.citrusframework.CitrusVersion;
 import org.citrusframework.dsl.schema.generator.CitrusModule;
@@ -36,6 +35,7 @@ import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
+import tools.jackson.databind.JsonNode;
 
 import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
 import static org.citrusframework.yaml.SchemaProperty.Kind.CONTAINER;

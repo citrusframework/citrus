@@ -18,7 +18,7 @@
                                 auto-delete-logs="false"
                                 broker-properties="brokerProps"
                                 kafka-server-port="9091"
-                                zookeeper-port="21181"/>
+                                controller-port="21181"/>
 
   <util:map id="brokerProps">
     <entry key="broker.id" value="1"/>

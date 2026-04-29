@@ -63,7 +63,7 @@ public class ReceiveEventIT extends AbstractKnativeIT implements TestActionSuppo
                     .attribute("ce-id", "@notNull()@")
                     .attribute("ce-type", "org.citrusframework.event.test")
                     .attribute("ce-source", "citrus-test")
-                    .attribute("Content-Type", MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    .attribute("Content-Type", MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
         );
     }
 
