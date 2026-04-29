@@ -32,6 +32,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -235,6 +236,12 @@ public final class ParentDelegatingWebApplicationContext implements WebApplicati
     public <T> ObjectProvider<T> getBeanProvider(ResolvableType resolvableType) {
         return delegate.getBeanProvider(resolvableType);
     }
+
+    @Override
+    public <T> ObjectProvider<T> getBeanProvider(ParameterizedTypeReference<T> requiredType) {
+        return delegate.getBeanProvider(requiredType);
+    }
+
     @Override
     public boolean isTypeMatch(String name, Class<?> targetType)
             throws NoSuchBeanDefinitionException {

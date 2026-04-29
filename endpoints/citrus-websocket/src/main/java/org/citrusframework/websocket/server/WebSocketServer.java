@@ -19,8 +19,8 @@ package org.citrusframework.websocket.server;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.websocket.endpoint.WebSocketEndpoint;
 import org.citrusframework.websocket.servlet.CitrusWebSocketDispatcherServlet;
-import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
-import org.eclipse.jetty.ee10.websocket.server.config.JettyWebSocketServletContainerInitializer;
+import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee11.websocket.server.config.JettyWebSocketServletContainerInitializer;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import java.util.ArrayList;

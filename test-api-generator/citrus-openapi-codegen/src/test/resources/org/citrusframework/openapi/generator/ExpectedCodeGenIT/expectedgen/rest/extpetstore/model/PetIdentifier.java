@@ -18,14 +18,13 @@ package org.citrusframework.openapi.generator.rest.extpetstore.model;
 
 import java.util.Objects;
 import java.util.Arrays;
-import java.util.Locale;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * PetIdentifier
  */
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-24T14:15:35.039151600+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "TIMESTAMP", comments = "Generator version: 7.21.0")
 public class PetIdentifier {
   @jakarta.annotation.Nullable
   private String _name;
@@ -78,6 +77,7 @@ public class PetIdentifier {
     this.alias = alias;
   }
 
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -111,10 +111,7 @@ public class PetIdentifier {
    * (except the first line).
    */
   private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 
 }

@@ -16,38 +16,8 @@
 
 package org.citrusframework.kafka.embedded;
 
-import kafka.server.KafkaConfig;
-import kafka.server.KafkaServer;
-import kafka.utils.CoreUtils;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.CreateTopicsResult;
-import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.common.config.TopicConfig;
-import org.apache.kafka.common.network.ListenerName;
-import org.apache.kafka.common.security.auth.SecurityProtocol;
-import org.apache.kafka.common.utils.Time;
-import org.apache.kafka.coordinator.group.GroupCoordinatorConfig;
-import org.apache.kafka.metadata.BrokerState;
-import org.apache.kafka.network.SocketServerConfigs;
-import org.apache.kafka.server.config.ReplicationConfigs;
-import org.apache.kafka.server.config.ServerConfigs;
-import org.apache.kafka.server.config.ServerLogConfigs;
-import org.apache.kafka.server.config.ZkConfigs;
-import org.apache.kafka.storage.internals.log.CleanerConfig;
-import org.apache.zookeeper.server.NIOServerCnxnFactory;
-import org.apache.zookeeper.server.ServerCnxnFactory;
-import org.apache.zookeeper.server.ZooKeeperServer;
-import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.common.ShutdownPhase;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.SocketUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -58,10 +28,48 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import kafka.server.BrokerServer;
+import kafka.server.ControllerServer;
+import kafka.server.KafkaConfig;
+import kafka.server.KafkaRaftServer;
+import kafka.server.Server;
+import kafka.server.SharedServer;
+import kafka.server.StandardFaultHandlerFactory;
+import kafka.utils.CoreUtils;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.CreateTopicsResult;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.config.TopicConfig;
+import org.apache.kafka.common.network.ListenerName;
+import org.apache.kafka.common.utils.Time;
+import org.apache.kafka.coordinator.group.GroupCoordinatorConfig;
+import org.apache.kafka.metadata.BrokerState;
+import org.apache.kafka.metadata.properties.MetaProperties;
+import org.apache.kafka.metadata.properties.MetaPropertiesEnsemble;
+import org.apache.kafka.metadata.properties.MetaPropertiesVersion;
+import org.apache.kafka.metadata.properties.PropertiesUtils;
+import org.apache.kafka.network.SocketServerConfigs;
+import org.apache.kafka.raft.QuorumConfig;
+import org.apache.kafka.server.ServerSocketFactory;
+import org.apache.kafka.server.config.KRaftConfigs;
+import org.apache.kafka.server.config.ReplicationConfigs;
+import org.apache.kafka.server.config.ServerConfigs;
+import org.apache.kafka.server.config.ServerLogConfigs;
+import org.apache.kafka.storage.internals.log.CleanerConfig;
+import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.SocketUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * Embedded Kafka server with reference to embedded Zookeeper cluster for testing purpose. Starts single Zookeeper instance with logs in Java temp directory. Starts single Kafka server
+ * Embedded Kafka server with reference to embedded controller for testing purpose. Starts single controller instance with logs in Java temp directory. Starts single Kafka server
  * and automatically creates given topics with admin client.
  *
  * @since 2.8
@@ -71,15 +79,12 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(EmbeddedKafkaServer.class);
 
-    /** Zookeeper embedded server and factory */
-    private ZooKeeperServer zookeeper;
-    private ServerCnxnFactory serverFactory;
-
-    /** Zookeeper server port */
-    private int zookeeperPort = SocketUtils.findAvailableTcpPort();
-
     /** Kafka server instance */
-    private KafkaServer kafkaServer;
+    private BrokerServer kafkaServer;
+    private ControllerServer controllerServer;
+
+    /** Controller port */
+    private int controllerPort = SocketUtils.findAvailableTcpPort();
 
     /** Kafka server port */
     private int kafkaServerPort = SocketUtils.findAvailableTcpPort(9092);
@@ -90,7 +95,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     /** Topics to create on embedded server */
     private String topics = "citrus";
 
-    /** Path to logger directory for Zookeeper server */
+    /** Path to logger directory for Kafka server */
     private String logDirPath;
 
     /** Auto delete logger dir on exit */
@@ -100,7 +105,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     private Map<String, String> brokerProperties = Collections.emptyMap();
 
     /**
-     * Start embedded server instances for Kafka and Zookeeper.
+     * Start embedded server instances for Kafka and controller.
      */
     public void start() {
         if (kafkaServer != null) {
@@ -108,17 +113,10 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
             return;
         }
 
+        int nodeId = 1;
         File logDir = createLogDir();
-        zookeeper = createZookeeperServer(logDir);
-        serverFactory = createServerFactory();
 
-        try {
-            serverFactory.startup(zookeeper);
-        } catch (InterruptedException | IOException e) {
-            throw new CitrusRuntimeException("Failed to start embedded zookeeper server", e);
-        }
-
-        Properties brokerConfigProperties = createBrokerProperties("localhost:" + zookeeperPort, kafkaServerPort, logDir);
+        Properties brokerConfigProperties = createBrokerProperties(String.valueOf(nodeId), controllerPort, kafkaServerPort, logDir);
         brokerConfigProperties.setProperty(ReplicationConfigs.REPLICA_SOCKET_TIMEOUT_MS_CONFIG, "1000");
         brokerConfigProperties.setProperty(ReplicationConfigs.CONTROLLER_SOCKET_TIMEOUT_MS_CONFIG, "1000");
         brokerConfigProperties.setProperty(GroupCoordinatorConfig.OFFSETS_TOPIC_REPLICATION_FACTOR_CONFIG, "1");
@@ -128,42 +126,84 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
             brokerConfigProperties.putAll(brokerProperties);
         }
 
-        kafkaServer = new KafkaServer(new KafkaConfig(brokerConfigProperties),
-                Time.SYSTEM,
-                scala.Option.apply(null),
-                false);
+        KafkaConfig kafkaConfig = new KafkaConfig(brokerConfigProperties);
+
+        String clusterId = UUID.randomUUID().toString();
+        var metaProperties = new MetaProperties.Builder()
+                .setVersion(MetaPropertiesVersion.V1)
+                .setClusterId(clusterId)
+                .setNodeId(nodeId)
+                .build();
+
+        try {
+            var metaPropertiesFile = Paths.get(kafkaConfig.metadataLogDir()).toAbsolutePath()
+                    .resolve(MetaPropertiesEnsemble.META_PROPERTIES_NAME).toFile();
+            PropertiesUtils.writePropertiesFile(
+                    metaProperties.toProperties(),
+                    metaPropertiesFile.getAbsolutePath(),
+                    false
+            );
+        } catch (IOException exception) {
+            throw new CitrusRuntimeException("Failed to write meta properties for the embedded Kafka server", exception);
+        }
+
+        var metaData = KafkaRaftServer.initializeLogDirs(kafkaConfig, logger, "[KafkaRaftServer nodeId=%s] ".formatted(kafkaConfig.nodeId()));
+
+        var metrics = Server.initializeMetrics(
+            kafkaConfig,
+            Time.SYSTEM,
+            clusterId
+        );
+
+        SharedServer sharedServer = new SharedServer(kafkaConfig, metaData._1(), Time.SYSTEM, metrics,
+                CompletableFuture.completedFuture(QuorumConfig.parseVoterConnections(kafkaConfig.quorumConfig().voters())),
+                QuorumConfig.parseBootstrapServers(kafkaConfig.quorumConfig().bootstrapServers()),
+                new StandardFaultHandlerFactory(), ServerSocketFactory.INSTANCE);
+
+        controllerServer = new ControllerServer(sharedServer, KafkaRaftServer.configSchema(), metaData._2());
+        kafkaServer = new BrokerServer(sharedServer);
+
+        // Controller component must be started before the broker component so that the controller endpoints are passed to the KRaft manager
+        controllerServer.startup();
         kafkaServer.startup();
-        kafkaServer.boundPort(ListenerName.forSecurityProtocol(SecurityProtocol.PLAINTEXT));
+
+        kafkaServer.boundPort(ListenerName.normalised("BROKER"));
 
         createKafkaTopics(Arrays.stream(topics.split(",")).collect(Collectors.toSet()));
     }
 
     /**
-     * Shutdown embedded Kafka and Zookeeper server instances
+     * Shutdown embedded Kafka and Controller server instances
      */
     public void stop() {
         if (kafkaServer != null) {
             try {
                 if (kafkaServer.brokerState() != BrokerState.NOT_RUNNING) {
-                    kafkaServer.shutdown();
-                    kafkaServer.awaitShutdown();
+                    try {
+                        kafkaServer.shutdown();
+                    } catch (Exception e) {
+                        logger.warn("Failed to shutdown Kafka embedded server", e);
+                    }
                 }
-            } catch (Exception e) {
-                logger.warn("Failed to shutdown Kafka embedded server", e);
-            }
 
-            try {
-                CoreUtils.delete(kafkaServer.config().logDirs());
-            } catch (Exception e) {
-                logger.warn("Failed to remove logs on Kafka embedded server", e);
-            }
-        }
+                if (controllerServer != null) {
+                    try {
+                        controllerServer.shutdown();
+                    } catch (Exception e) {
+                        logger.warn("Failed to shutdown Controller instance", e);
+                    }
+                }
 
-        if (serverFactory != null) {
-            try {
-                serverFactory.shutdown();
-            } catch (Exception e) {
-                logger.warn("Failed to shutdown Zookeeper instance", e);
+                kafkaServer.awaitShutdown();
+                if (controllerServer != null) {
+                    controllerServer.awaitShutdown();
+                }
+            } finally {
+                try {
+                    CoreUtils.delete(kafkaServer.config().logDirs());
+                } catch (Exception e) {
+                    logger.warn("Failed to remove logs on Kafka embedded server", e);
+                }
             }
         }
     }
@@ -179,22 +219,8 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     }
 
     /**
-     * Creates new embedded Zookeeper server.
-     * @return
-     */
-    protected ZooKeeperServer createZookeeperServer(File logDir) {
-        try {
-            return new ZooKeeperServer(logDir, logDir, 2000);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to create embedded zookeeper server", e);
-        }
-    }
-
-    /**
-     * Creates Zookeeper logger directory. By default logs are created in Java temp directory.
-     * By default directory is automatically deleted on exit.
-     *
-     * @return
+     * Creates Kafka server logger directory. By default, logs are created in Java temp directory.
+     * By default, directory is automatically deleted on exit.
      */
     protected File createLogDir() {
         File logDir = Optional.ofNullable(logDirPath)
@@ -210,27 +236,16 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
             }
         }
 
-        File logs = new File(logDir, "zookeeper" + System.currentTimeMillis()).getAbsoluteFile();
+        File logs = new File(logDir, "embedded-kafka" + System.currentTimeMillis()).getAbsoluteFile();
+        if (!logs.mkdirs()) {
+            logger.warn("Unable to create logger directory: {}", logs.getAbsolutePath());
+        }
 
         if (autoDeleteLogs) {
             logs.deleteOnExit();
         }
 
         return logs;
-    }
-
-    /**
-     * Create server factory for embedded Zookeeper server instance.
-     * @return
-     */
-    protected ServerCnxnFactory createServerFactory() {
-        try {
-            ServerCnxnFactory serverFactory = new NIOServerCnxnFactory();
-            serverFactory.configure(new InetSocketAddress(zookeeperPort), 5000);
-            return serverFactory;
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to create default zookeeper server factory", e);
-        }
     }
 
     /**
@@ -255,31 +270,41 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Creates Kafka broker properties.
-     * @param zooKeeperConnect
-     * @param kafkaServerPort
-     * @param logDir
-     * @return
      */
-    protected Properties createBrokerProperties(String zooKeeperConnect, int kafkaServerPort, File logDir) {
+    protected Properties createBrokerProperties(String nodeId, int controllerPort, int kafkaServerPort, File logDir) {
         Properties props = new Properties();
 
-        props.put(ServerConfigs.BROKER_ID_CONFIG, "0");
-        props.put(ZkConfigs.ZK_CONNECT_CONFIG, zooKeeperConnect);
-        props.put(ZkConfigs.ZK_CONNECTION_TIMEOUT_MS_CONFIG, "10000");
+        props.put(KRaftConfigs.PROCESS_ROLES_CONFIG, "broker,controller");
+        props.put(KRaftConfigs.NODE_ID_CONFIG, nodeId);
+        props.put(ServerConfigs.BROKER_ID_CONFIG, nodeId);
+
+        props.put(ReplicationConfigs.INTER_BROKER_LISTENER_NAME_CONFIG, "BROKER");
+        props.put(KRaftConfigs.CONTROLLER_LISTENER_NAMES_CONFIG, "CONTROLLER");
+
+        props.put(SocketServerConfigs.LISTENERS_CONFIG, "BROKER://localhost:%d,CONTROLLER://localhost:%d".formatted(kafkaServerPort, controllerPort));
+        props.put(SocketServerConfigs.ADVERTISED_LISTENERS_CONFIG, "BROKER://localhost:%d".formatted(kafkaServerPort));
+        props.put(SocketServerConfigs.LISTENER_SECURITY_PROTOCOL_MAP_CONFIG, "BROKER:PLAINTEXT,CONTROLLER:PLAINTEXT");
+
+        props.put(QuorumConfig.QUORUM_VOTERS_CONFIG, "%s@localhost:%d".formatted(nodeId, controllerPort));
+
+        // The total memory used for log deduplication across all cleaner threads, keep it small to not exhaust suite memory
+        props.put(CleanerConfig.LOG_CLEANER_DEDUPE_BUFFER_SIZE_PROP, "2097152");
+
         props.put(ReplicationConfigs.REPLICA_SOCKET_TIMEOUT_MS_CONFIG, "1500");
         props.put(ReplicationConfigs.CONTROLLER_SOCKET_TIMEOUT_MS_CONFIG, "1500");
         props.put(ServerConfigs.CONTROLLED_SHUTDOWN_ENABLE_CONFIG, "false");
         props.put(ServerConfigs.DELETE_TOPIC_ENABLE_CONFIG, "true");
         props.put(ServerLogConfigs.LOG_DELETE_DELAY_MS_CONFIG, "1000");
-        props.put(ServerConfigs.CONTROLLED_SHUTDOWN_RETRY_BACKOFF_MS_CONFIG, "100");
-        props.put(CleanerConfig.LOG_CLEANER_DEDUPE_BUFFER_SIZE_PROP, "2097152");
-        props.put(TopicConfig.MESSAGE_TIMESTAMP_DIFFERENCE_MAX_MS_CONFIG, Long.MAX_VALUE);
+        props.put(TopicConfig.MESSAGE_TIMESTAMP_BEFORE_MAX_MS_CONFIG, Long.MAX_VALUE);
+        props.put(TopicConfig.MESSAGE_TIMESTAMP_AFTER_MAX_MS_CONFIG, Long.MAX_VALUE);
         props.put(GroupCoordinatorConfig.OFFSETS_TOPIC_REPLICATION_FACTOR_CONFIG, "1");
         props.put(GroupCoordinatorConfig.OFFSETS_TOPIC_PARTITIONS_CONFIG, "5");
         props.put(GroupCoordinatorConfig.GROUP_INITIAL_REBALANCE_DELAY_MS_CONFIG, "0");
-        props.put(ServerLogConfigs.LOG_DIR_CONFIG, logDir.getAbsolutePath());
 
-        props.put(SocketServerConfigs.LISTENERS_CONFIG, SecurityProtocol.PLAINTEXT.name + "://localhost:" + kafkaServerPort);
+        props.put(ServerLogConfigs.LOG_DIR_CONFIG, logDir.getAbsolutePath());
+        props.put(ServerLogConfigs.LOG_DIRS_CONFIG, logDir.getAbsolutePath());
+        props.put(ServerLogConfigs.AUTO_CREATE_TOPICS_ENABLE_CONFIG, "true");
+        props.put(ServerLogConfigs.LOG_FLUSH_INTERVAL_MESSAGES_CONFIG, "1");
 
         if (logger.isDebugEnabled()) {
             props.forEach((key, value) -> logger.debug("Using default Kafka broker property {}='{}'", key, value));
@@ -289,27 +314,21 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     }
 
     /**
-     * Gets the zookeeperPort.
-     *
-     * @return
+     * Gets the controllerPort.
      */
-    public int getZookeeperPort() {
-        return zookeeperPort;
+    public int getControllerPort() {
+        return controllerPort;
     }
 
     /**
-     * Sets the zookeeperPort.
-     *
-     * @param zookeeperPort
+     * Sets the controllerPort.
      */
-    public void setZookeeperPort(int zookeeperPort) {
-        this.zookeeperPort = zookeeperPort;
+    public void setControllerPort(int controllerPort) {
+        this.controllerPort = controllerPort;
     }
 
     /**
      * Gets the kafkaServerPort.
-     *
-     * @return
      */
     public int getKafkaServerPort() {
         return kafkaServerPort;
@@ -317,8 +336,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Sets the kafkaServerPort.
-     *
-     * @param kafkaServerPort
      */
     public void setKafkaServerPort(int kafkaServerPort) {
         this.kafkaServerPort = kafkaServerPort;
@@ -326,8 +343,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Gets the partitions.
-     *
-     * @return
      */
     public int getPartitions() {
         return partitions;
@@ -335,8 +350,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Sets the partitions.
-     *
-     * @param partitions
      */
     public void setPartitions(int partitions) {
         this.partitions = partitions;
@@ -344,8 +357,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Gets the topics.
-     *
-     * @return
      */
     public String getTopics() {
         return topics;
@@ -353,8 +364,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Sets the topics.
-     *
-     * @param topics
      */
     public void setTopics(String topics) {
         this.topics = topics;
@@ -362,8 +371,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Gets the brokerProperties.
-     *
-     * @return
      */
     public Map<String, String> getBrokerProperties() {
         return brokerProperties;
@@ -371,8 +378,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Sets the brokerProperties.
-     *
-     * @param brokerProperties
      */
     public void setBrokerProperties(Map<String, String> brokerProperties) {
         this.brokerProperties = brokerProperties;
@@ -380,8 +385,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Gets the logDirPath.
-     *
-     * @return
      */
     public String getLogDirPath() {
         return logDirPath;
@@ -389,8 +392,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Sets the logDirPath.
-     *
-     * @param logDirPath
      */
     public void setLogDirPath(String logDirPath) {
         this.logDirPath = logDirPath;
@@ -398,8 +399,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Gets the autoDeleteLogs.
-     *
-     * @return
      */
     public boolean isAutoDeleteLogs() {
         return autoDeleteLogs;
@@ -407,8 +406,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /**
      * Sets the autoDeleteLogs.
-     *
-     * @param autoDeleteLogs
      */
     public void setAutoDeleteLogs(boolean autoDeleteLogs) {
         this.autoDeleteLogs = autoDeleteLogs;

@@ -26,7 +26,7 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.message.converter.WebServiceMessageConverter;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
-import org.eclipse.jetty.ee10.servlet.ServletHandler;
+import org.eclipse.jetty.ee11.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.springframework.ws.server.EndpointInterceptor;

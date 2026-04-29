@@ -38,7 +38,7 @@ import java.time.OffsetDateTime;
 import org.citrusframework.openapi.generator.rest.petstore.model.User;
 
 @SuppressWarnings("unused")
-@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "2025-09-24T14:15:33.859186700+02:00[Europe/Zurich]", comments = "Generator version: 7.15.0")
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.CitrusJavaCodegen", date = "TIMESTAMP", comments = "Generator version: 7.21.0")
 public class UserApi implements GeneratedApi
 {
 

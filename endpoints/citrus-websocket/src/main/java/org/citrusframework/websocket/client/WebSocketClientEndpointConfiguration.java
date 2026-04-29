@@ -19,7 +19,7 @@ package org.citrusframework.websocket.client;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.websocket.endpoint.AbstractWebSocketEndpointConfiguration;
 import org.citrusframework.websocket.handler.CitrusWebSocketHandler;
-import org.eclipse.jetty.ee10.websocket.jakarta.common.JakartaWebSocketExtension;
+import org.eclipse.jetty.ee11.websocket.jakarta.common.JakartaWebSocketExtension;
 import org.eclipse.jetty.websocket.core.internal.PerMessageDeflateExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

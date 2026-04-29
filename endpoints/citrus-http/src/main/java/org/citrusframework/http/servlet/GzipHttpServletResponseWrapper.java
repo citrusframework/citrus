@@ -16,18 +16,18 @@
 
 package org.citrusframework.http.servlet;
 
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.WriteListener;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpServletResponseWrapper;
-import org.springframework.http.HttpHeaders;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
+
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
+import org.springframework.http.HttpHeaders;
 
 /**
  * Response wrapper wraps response output stream with gzip output stream. Write operations on that stream are
@@ -43,8 +43,6 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
     /**
      * Constructs a response adaptor wrapping the given response.
-     *
-     * @param response
      * @throws IllegalArgumentException if the response is null
      */
     public GzipHttpServletResponseWrapper(HttpServletResponse response) {
@@ -54,8 +52,6 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
     /**
      * Finish response stream by closing.
-     *
-     * @throws IOException
      */
     public void finish() throws IOException {
         if (printWriter != null) {
@@ -118,9 +114,6 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
         /**
          * Default constructor using wrapped output stream.
-         *
-         * @param response
-         * @throws IOException
          */
         public GzipServletOutputStream(HttpServletResponse response) throws IOException {
             this.response = response;
@@ -133,18 +126,33 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
         @Override
         public void close() throws IOException {
             if (isOpen.compareAndSet(true, false)) {
-                gzipStream.finish();
-                byte[] bytes = byteArrayOutputStream.toByteArray();
-                gzipStream.close();
-                byteArrayOutputStream.close();
+                if (isNoContent()) {
+                    gzipStream.close();
+                    byteArrayOutputStream.close();
+                    outputStream.close();
 
-                response.setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(bytes.length));
-                response.setHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
+                    response.setHeader(HttpHeaders.CONTENT_LENGTH, "0");
+                } else {
+                    gzipStream.finish();
+                    byte[] bytes = byteArrayOutputStream.toByteArray();
+                    gzipStream.close();
+                    byteArrayOutputStream.close();
 
-                outputStream.write(bytes);
-                outputStream.flush();
-                outputStream.close();
+                    response.setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(bytes.length));
+                    response.setHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
+
+                    outputStream.write(bytes);
+                    outputStream.flush();
+                    outputStream.close();
+                }
             }
+        }
+
+        /**
+         * Determine if response should not have content based on the status code.
+         */
+        private boolean isNoContent() {
+            return response.getStatus() == HttpServletResponse.SC_NO_CONTENT;
         }
 
         @Override
@@ -186,6 +194,7 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
         @Override
         public void setWriteListener(WriteListener writeListener) {
+            outputStream.setWriteListener(writeListener);
         }
     }
 }

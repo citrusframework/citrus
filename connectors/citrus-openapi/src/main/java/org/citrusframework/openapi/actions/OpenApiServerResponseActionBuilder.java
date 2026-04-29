@@ -56,7 +56,6 @@ import static org.citrusframework.openapi.OpenApiSettings.getResponseAutoFillRan
 import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabled;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
@@ -310,7 +309,8 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                 String mediaTypeName = schemaForMediaType.adapted();
 
                 // Support any json for now. Especially: application/json, application/json;charset=UTF-8
-                if (APPLICATION_JSON_VALUE.equals(mediaTypeName) || APPLICATION_JSON_UTF8_VALUE.equals(mediaTypeName)) {
+                if (APPLICATION_JSON_VALUE.equals(mediaTypeName) ||
+                        "application/json;charset=UTF-8".equalsIgnoreCase(mediaTypeName)) {
                     // Json Schema
                     message.setPayload(
                         createOutboundPayload(schemaForMediaType.node(), openApiSpecification));

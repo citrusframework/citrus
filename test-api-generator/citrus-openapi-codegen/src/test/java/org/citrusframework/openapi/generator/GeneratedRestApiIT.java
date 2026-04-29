@@ -2946,7 +2946,7 @@ class GeneratedRestApiIT {
                             "template", templateData,
                             "optIntVal", "100",
                             "optBoolVal", "true",
-                            "optDateVal", "[2024,12,1]",
+                            "optDateVal", "\"2024-12-01\"",
                             "optNumberVal", "1",
                             "optStringVal", "a"))
                 )

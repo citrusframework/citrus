@@ -78,7 +78,7 @@ public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport implements Te
                 .response(HttpStatus.OK)
                 .message()
                 .body("Hi from secured Http server")
-                .contentType("text/plain"));
+                .contentType("@startsWith(text/plain)@"));
     }
 
     @CitrusTest

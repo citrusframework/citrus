@@ -29,7 +29,7 @@ import org.citrusframework.websocket.message.WebSocketMessageConverter;
 import org.citrusframework.websocket.server.WebSocketServer;
 import org.citrusframework.websocket.server.WebSocketServerBuilder;
 import org.citrusframework.websocket.server.WebSocketServerEndpointConfiguration;
-import org.eclipse.jetty.ee10.servlet.ServletHandler;
+import org.eclipse.jetty.ee11.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.springframework.web.servlet.HandlerInterceptor;

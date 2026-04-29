@@ -73,6 +73,6 @@ public class HttpClientSideGzipJavaIT extends TestNGCitrusSpringSupport implemen
                 .receive()
                 .response()
                 .message()
-                .contentType(MediaType.TEXT_PLAIN_VALUE));
+                .contentType("@startsWith(%s)@".formatted(MediaType.TEXT_PLAIN_VALUE)));
     }
 }

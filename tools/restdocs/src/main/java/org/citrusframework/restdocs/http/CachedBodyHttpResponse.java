@@ -48,11 +48,6 @@ public class CachedBodyHttpResponse implements ClientHttpResponse {
     }
 
     @Override
-    public int getRawStatusCode() throws IOException {
-        return this.response.getRawStatusCode();
-    }
-
-    @Override
     public String getStatusText() throws IOException {
         return this.response.getStatusText();
     }

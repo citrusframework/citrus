@@ -31,7 +31,7 @@ import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.server.AbstractServerBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
-import org.eclipse.jetty.ee10.servlet.ServletHandler;
+import org.eclipse.jetty.ee11.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.springframework.http.HttpStatus;

@@ -131,7 +131,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
     private Map<String, String> getCustomHeaders(HttpHeaders httpHeaders, Map<String, Object> mappedHeaders) {
         Map<String, String> customHeaders = new HashMap<>();
 
-        for (Map.Entry<String, List<String>> header : httpHeaders.entrySet()) {
+        for (Map.Entry<String, List<String>> header : httpHeaders.headerSet()) {
             if (!mappedHeaders.containsKey(header.getKey())) {
                 customHeaders.put(header.getKey(), String.join(",", header.getValue()));
             }
@@ -182,7 +182,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         for (Map.Entry<String, Object> header : messageHeaders.entrySet()) {
             if (!header.getKey().startsWith(MessageHeaders.PREFIX) &&
                     !MessageHeaderUtils.isSpringInternalHeader(header.getKey()) &&
-                    !httpHeaders.containsKey(header.getKey())) {
+                    !httpHeaders.containsHeader(header.getKey())) {
                 httpHeaders.add(header.getKey(), header.getValue().toString());
             }
         }

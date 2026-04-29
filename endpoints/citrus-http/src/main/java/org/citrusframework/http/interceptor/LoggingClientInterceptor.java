@@ -184,7 +184,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      * @param builder
      */
     private void appendHeaders(HttpHeaders headers, StringBuilder builder) {
-        for (Entry<String, List<String>> headerEntry : headers.entrySet()) {
+        for (Entry<String, List<String>> headerEntry : headers.headerSet()) {
             builder.append(headerEntry.getKey());
             builder.append(":");
             builder.append(join(",", headerEntry.getValue()));
@@ -209,12 +209,6 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         @Override
         public HttpStatusCode getStatusCode() throws IOException {
             return this.response.getStatusCode();
-        }
-
-        @Override
-        @Deprecated(forRemoval = true)
-        public int getRawStatusCode() throws IOException {
-            return this.response.getRawStatusCode();
         }
 
         @Override

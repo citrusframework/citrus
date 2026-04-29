@@ -16,6 +16,12 @@
 
 package org.citrusframework.http.message;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
@@ -32,12 +38,6 @@ import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.messaging.MessageHeaders;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -374,7 +374,7 @@ public class HttpMessageConverterTest {
     @Test
     public void testHttpEntityDefaultMessageBodyIsSetOnInbound() {
         // GIVEN
-        final HttpEntity<String> httpEntity = new HttpEntity<>(null);
+        final HttpEntity<String> httpEntity = new HttpEntity<>(HttpHeaders.EMPTY);
 
         // WHEN
         final HttpMessage httpMessage = messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
@@ -426,7 +426,7 @@ public class HttpMessageConverterTest {
     @Test
     public void testCustomStatusCodeIsSetOnInbound() {
         // GIVEN
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(null, null, 555);
+        final ResponseEntity<?> responseEntity = new ResponseEntity<>(null, HttpHeaders.EMPTY, 555);
 
         // WHEN
         final HttpMessage httpMessage = messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);

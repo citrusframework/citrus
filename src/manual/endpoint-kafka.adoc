@@ -702,13 +702,12 @@ about dynamic endpoints in chapter link:#dynamic-endpoint-components[dynamic end
 [[embedded-kafka-server]]
 == Embedded Kafka Server
 
-The Kafka message broker is composed of a Zookeeper server and a Kafka server. Citrus provides an embedded server (*for testing purpose only!*)
-that is able to start within your integration test environment. The server cluster is configured with one single Zookeeper
-server and a single Kafka server. You can define server ports and broker properties such as topics, number of partitions and
+The Kafka message broker is composed of a Kafka server that uses some default configuration options. Citrus provides an embedded server (*for testing purpose only!*)
+that is able to start within your integration test environment. The server cluster is configured with one single Kafka node. You can define server ports and broker properties such as topics, number of partitions and
 broker ids. Given topics are automatically added via admin client on the Kafka server with given amount of partitions.
 
 You can add the embedded server component to the Spring application context as normal Spring bean. The server will automatically
-start and stop within the application context lifecycle. The Zookeeper log directory is located in the Java temp directory
+start and stop within the application context lifecycle. The server log directory is located in the Java temp directory
 and is automatically deleted on JVM exit.
 
 See the following configuration how to use the embedded server component:
@@ -747,10 +746,6 @@ The embedded server component provides following properties to set:
 | java.lang.Integer
 | Port of the embedded Kafka server
 
-| zookeeper-port
-| java.lang.Integer
-| Zookeeper server port. By default, a random port is used.
-
 | broker-properties
 | java.util.Map
 | Map of broker property key-value pairs that overwrite the default broker properties. For a list of available properties
@@ -762,11 +757,11 @@ The embedded server component provides following properties to set:
 
 | log-dir-path
 | java.lang.String
-| Path to Zookeeper log directory. The Zookeeper server will create its data directory in this directory. By default, the
+| Path to server log directory. The server will create its data directory in this directory. By default, the
   Java temp directory is used.
 
 | auto-delete-logs
 | java.lang.Boolean
-| Auto delete Zookeeper log directories on exit. Default is true.
+| Auto delete server log directories on exit. Default is true.
 
 |===
