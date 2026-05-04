@@ -178,13 +178,13 @@ Lists available Citrus test actions and containers from the catalog.
 [source,json]
 ----
 {
-  "version": "5.0.0-SNAPSHOT",
+  "version": "4.11.0-SNAPSHOT",
   "count": 3,
   "components": [
     {
       "name": "print",
       "fullName": "print",
-      "version": "5.0.0-SNAPSHOT",
+      "version": "4.11.0-SNAPSHOT",
       "group": "core",
       "module": "citrus-base",
       "title": "Print",
@@ -297,7 +297,7 @@ Retrieves documentation content for a specific component.
 ----
 {
   "fileName": "actions-send.adoc",
-  "version": "5.0.0-SNAPSHOT",
+  "version": "4.11.0-SNAPSHOT",
   "adoc": "[[actions-send]]\n= Send Action\n\nThe send action..."
 }
 ----

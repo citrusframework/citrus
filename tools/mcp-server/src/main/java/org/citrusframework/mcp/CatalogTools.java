@@ -20,13 +20,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import io.quarkiverse.mcp.server.ToolCallException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.citrusframework.CitrusVersion;
-import tools.jackson.databind.JsonNode;
 
 /**
  * MCP Tools for querying the Citrus catalog and its component definitions using Quarkus MCP Server.
@@ -251,22 +252,22 @@ public class CatalogTools {
     private ComponentDetailResult toComponentDetailResult(CatalogService.ComponentDefinition definition) {
         List<PropertyInfo> properties = new ArrayList<>();
         if (definition.propertiesSchema() != null) {
-            Optional.ofNullable(definition.propertiesSchema().asObject().get("properties"))
+            Optional.ofNullable(definition.propertiesSchema().get("properties"))
                     .map(JsonNode::properties)
                     .orElseGet(Collections::emptySet)
                     .forEach(property -> properties.add(new PropertyInfo(
                         property.getKey(),
                         Optional.ofNullable(property.getValue().get("description"))
-                                .map(JsonNode::stringValue)
+                                .map(JsonNode::textValue)
                                 .orElse(null),
-                        Optional.ofNullable(property.getValue().get("type")).map(JsonNode::stringValue).orElse(null),
+                        Optional.ofNullable(property.getValue().get("type")).map(JsonNode::textValue).orElse(null),
                         Optional.ofNullable(definition.propertiesSchema().get("required"))
-                                .map(JsonNode::asArray)
+                                .map(o -> (ArrayNode) o)
                                 .map(array -> array.valueStream()
-                                        .anyMatch(node -> property.getKey().equals(node.stringValue())))
+                                        .anyMatch(node -> property.getKey().equals(node.textValue())))
                                 .orElse(false),
                         Optional.ofNullable(property.getValue().get("defaultValue"))
-                                .map(JsonNode::stringValue)
+                                .map(JsonNode::textValue)
                                 .orElse(null))));
         }
 

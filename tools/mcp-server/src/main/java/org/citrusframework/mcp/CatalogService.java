@@ -22,14 +22,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.citrusframework.CitrusVersion;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
-import tools.jackson.core.JacksonException;
-import tools.jackson.databind.JsonNode;
 
 /**
  * Shared service for loading and caching Citrus catalogs.
@@ -107,12 +106,16 @@ public class CatalogService {
     }
 
     private CatalogIndex loadCatalogIndex(String version) {
-        if (StringUtils.hasText(version)) {
-            return JsonSupport.json().readValue(ClassLoaderHelper.getClassLoader()
-                    .getResourceAsStream("citrus-catalog/citrus/%s/index.json".formatted(version)), CatalogIndex.class);
-        } else {
-            return JsonSupport.json().readValue(ClassLoaderHelper.getClassLoader()
-                    .getResourceAsStream("citrus-catalog/citrus/index.json"), CatalogIndex.class);
+        try {
+            if (StringUtils.hasText(version)) {
+                return JsonSupport.json().readValue(ClassLoaderHelper.getClassLoader()
+                        .getResourceAsStream("citrus-catalog/citrus/%s/index.json".formatted(version)), CatalogIndex.class);
+            } else {
+                return JsonSupport.json().readValue(ClassLoaderHelper.getClassLoader()
+                        .getResourceAsStream("citrus-catalog/citrus/index.json"), CatalogIndex.class);
+            }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to load catalog index for version '%s'".formatted(version), e);
         }
     }
 
@@ -139,10 +142,10 @@ public class CatalogService {
         try {
             Map<String, ComponentDefinition> components = new HashMap<>();
             JsonNode raw = JsonSupport.json().readTree(ClassLoaderHelper.getClassLoader().getResourceAsStream("citrus-catalog/citrus/%s/%s".formatted(version, file)));
-            raw.propertyNames().forEach(
+            raw.fieldNames().forEachRemaining(
                     name -> components.put(name, JsonSupport.json().convertValue(raw.get(name), ComponentDefinition.class)));
             return components;
-        } catch (JacksonException e) {
+        } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read component aggregate schema definitions of kind '%s'".formatted(kind), e);
         }
     }
