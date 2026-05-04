@@ -18,8 +18,8 @@
 
 //JAVA 17+
 //REPOS mavencentral
-//DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:4.10.0}@pom
-//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.10.0}
+//DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:4.10.1}@pom
+//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.10.1}
 package main;
 
 import org.citrusframework.jbang.CitrusJBangMain;
