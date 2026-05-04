@@ -573,8 +573,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.10.0,</span>
-<span id="revdate">2026-03-19</span>
+<span id="revnumber">version 4.10.1,</span>
+<span id="revdate">2026-05-04</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -1103,10 +1103,18 @@ $(addBlockSwitches);
 <li><a href="#tools-cucumber-steps-testcontainers">50.12. Testcontainers steps</a></li>
 </ul>
 </li>
-<li><a href="#spring-restdocs">51. Spring Restdocs support</a>
+<li><a href="#citrus-mcp-server">51. Citrus MCP Server</a>
 <ul class="sectlevel2">
-<li><a href="#spring-restdocs-using-http">51.1. Spring Restdocs using Http</a></li>
-<li><a href="#spring-restdocs-using-soap">51.2. Spring Restdocs using SOAP</a></li>
+<li><a href="#citrus-mcp-server-overview">51.1. Overview</a></li>
+<li><a href="#what-is-mcp">51.2. What is MCP?</a></li>
+<li><a href="#citrus-mcp-server-install">51.3. Installation</a></li>
+<li><a href="#citrus-mcp-server-run">51.4. Running the MCP Server</a></li>
+<li><a href="#citrus-mcp-server-tools">51.5. Tools</a></li>
+<li><a href="#citrus-mcp-server-resources">51.6. Resources</a></li>
+<li><a href="#citrus-mcp-server-configuration">51.7. Server Configuration</a></li>
+<li><a href="#citrus-mcp-server-usecases">51.8. Use Cases</a></li>
+<li><a href="#spring-restdocs-using-http">51.9. Spring Restdocs using Http</a></li>
+<li><a href="#spring-restdocs-using-soap">51.10. Spring Restdocs using SOAP</a></li>
 </ul>
 </li>
 <li><a href="#tracing-messages">52. Tracing messages</a></li>
@@ -1127,7 +1135,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.10.0</strong></p>
+<p><strong>Version: 4.10.1</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -62645,8 +62653,620 @@ Citrus is able to run these database containers as part of the test.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="spring-restdocs"><a class="anchor" href="#spring-restdocs"></a><a class="link" href="#spring-restdocs">51. Spring Restdocs support</a></h2>
+<h2 id="citrus-mcp-server"><a class="anchor" href="#citrus-mcp-server"></a><a class="link" href="#citrus-mcp-server">51. Citrus MCP Server</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The Citrus MCP Server is a Model Context Protocol (MCP) server implementation that enables Large Language Models (LLMs) and AI assistants to interact with Citrus framework metadata, documentation, and schemas. This tool helps AI-powered development environments understand Citrus components and generate accurate test code.</p>
+</div>
+<div class="sect2">
+<h3 id="citrus-mcp-server-overview"><a class="anchor" href="#citrus-mcp-server-overview"></a><a class="link" href="#citrus-mcp-server-overview">51.1. Overview</a></h3>
+<div class="paragraph">
+<p>The MCP server exposes Citrus framework capabilities through standardized tools and resources that can be consumed by AI assistants like Claude, GitHub Copilot, and other MCP-compatible clients. It provides programmatic access to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Catalog tools</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Catalog Information</strong>: Query available components such as test actions, endpoints, functions, and validation matchers</p>
+</li>
+<li>
+<p><strong>Component Information</strong>: Query component details with module information and property specifications</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Schema resources</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Component Schemas</strong>: Retrieve JSON schemas for Citrus components such as test actions, endpoints, functions with detailed property specifications</p>
+</li>
+<li>
+<p><strong>DSL Schemas</strong>: Get YAML and XML DSL schemas for writing tests</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Documentation tools</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Documentation index</strong>: Query all available documentation files with filter criteria</p>
+</li>
+<li>
+<p><strong>Documentation</strong>: Access AsciiDoc documentation for specific Citrus components</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This enables AI assistants to provide context-aware suggestions, validate component usage, and generate syntactically correct Citrus tests.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="what-is-mcp"><a class="anchor" href="#what-is-mcp"></a><a class="link" href="#what-is-mcp">51.2. What is MCP?</a></h3>
+<div class="paragraph">
+<p>The Model Context Protocol (MCP) is an open protocol that enables AI applications to securely connect to external data sources and tools. MCP provides a standardized way for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Tools</strong>: Functions that the AI can call to perform actions or retrieve data</p>
+</li>
+<li>
+<p><strong>Resources</strong>: Static or dynamic content that can be read by the AI</p>
+</li>
+<li>
+<p><strong>Prompts</strong>: Reusable prompt templates for common tasks</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Citrus MCP Server implements this protocol using the Quarkus MCP Server framework, providing both STDIO and HTTP/SSE transport mechanisms.</p>
+</div>
+<div class="paragraph">
+<p>For more information about MCP:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>MCP Specification: <a href="https://modelcontextprotocol.io/" class="bare">https://modelcontextprotocol.io/</a></p>
+</li>
+<li>
+<p>Quarkus MCP Server: <a href="https://docs.quarkiverse.io/quarkus-mcp-server/" class="bare">https://docs.quarkiverse.io/quarkus-mcp-server/</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="citrus-mcp-server-install"><a class="anchor" href="#citrus-mcp-server-install"></a><a class="link" href="#citrus-mcp-server-install">51.3. Installation</a></h3>
+<div class="paragraph">
+<p>The MCP server is packaged as an uber-JAR that can be run standalone or integrated with AI development tools.</p>
+</div>
+<div class="sect3">
+<h4 id="maven-dependency"><a class="anchor" href="#maven-dependency"></a><a class="link" href="#maven-dependency">51.3.1. Maven Dependency</a></h4>
+<div class="paragraph">
+<p>If you need to add the MCP server module to your project:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.citrusframework&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-mcp-server&lt;/artifactId&gt;
+  &lt;version&gt;${citrus.version}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="integrate-with-ai-assistance-tools"><a class="anchor" href="#integrate-with-ai-assistance-tools"></a><a class="link" href="#integrate-with-ai-assistance-tools">51.3.2. Integrate with AI assistance tools</a></h4>
+<div class="paragraph">
+<p>You can integrate the Citrus MCP server into AI code assistance tools using a local <code>.mcp.json</code> configuration file in your project folder.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "mcpServers": {
+    "citrus": {
+      "command": "jbang",
+        "args": [
+          "--quiet",
+          "org.citrusframework:citrus-mcp-server:${citrus.version}:runner"
+        ]
+      }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The very same approach also works with Claude desktop integration where you add this configuration to your <code>claude_desktop_config.json</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Running the MCP server with JBang is the most convenient way to do this.
+The --quiet flag prevents JBang’s output from interfering with the MCP protocol.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can also run the server directly without using JBang - then it would be something like <code>java -jar &lt;FULL PATH&gt;/citrus-mcp-server-${citrus.version}-runner.jar</code>. JBang might be the simpler approach though because it automatically deals with downloading the JAR file from Maven central.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "mcpServers": {
+    "citrus": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "/path/to/citrus-mcp-server-${citrus.version}-runner.jar"
+      ]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="building-from-source"><a class="anchor" href="#building-from-source"></a><a class="link" href="#building-from-source">51.3.3. Building from Source</a></h4>
+<div class="paragraph">
+<p>You can build the Citrus MCP server uber-JAR locally with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw clean package -pl tools/mcp-server</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The resulting JAR will be located at <code>tools/mcp-server/target/citrus-mcp-server-${citrus.version}-runner.jar</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="citrus-mcp-server-run"><a class="anchor" href="#citrus-mcp-server-run"></a><a class="link" href="#citrus-mcp-server-run">51.4. Running the MCP Server</a></h3>
+<div class="paragraph">
+<p>Any MCP-compatible client can connect to the Citrus MCP Server using either:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>STDIO transport</strong>: Execute the JAR as a subprocess and communicate via stdin/stdout</p>
+</li>
+<li>
+<p><strong>HTTP/SSE transport</strong>: Connect to the HTTP endpoint at <code>/mcp</code></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="stdio-mode-recommended-for-ai-assistants"><a class="anchor" href="#stdio-mode-recommended-for-ai-assistants"></a><a class="link" href="#stdio-mode-recommended-for-ai-assistants">51.4.1. STDIO Mode (Recommended for AI Assistants)</a></h4>
+<div class="paragraph">
+<p>The server runs in STDIO mode by default, which is the standard transport for MCP clients like Claude Desktop:</p>
+</div>
+<div class="listingblock">
+<div class="title">Run with JBang</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jbang --quiet org.citrusframework:citrus-mcp-server:${citrus.version}:runner</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java JAR runner</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar citrus-mcp-server-${citrus.version}-runner.jar</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="httpsse-mode"><a class="anchor" href="#httpsse-mode"></a><a class="link" href="#httpsse-mode">51.4.2. HTTP/SSE Mode</a></h4>
+<div class="paragraph">
+<p>For web-based integrations, the server can also run with HTTP transport:</p>
+</div>
+<div class="listingblock">
+<div class="title">Run with JBang</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jbang --quiet \
+      -Dquarkus.http.host-enabled=true \
+      -Dquarkus.http.port=8080 \
+ org.citrusframework:citrus-mcp-server:${citrus.version}:runner</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java JAR runner</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -Dquarkus.http.host-enabled=true \
+     -Dquarkus.http.port=8080 \
+     -jar citrus-mcp-server-${citrus.version}-runner.jar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The MCP endpoint will be available at <code><a href="http://localhost:8080/mcp" class="bare">http://localhost:8080/mcp</a></code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="citrus-mcp-server-tools"><a class="anchor" href="#citrus-mcp-server-tools"></a><a class="link" href="#citrus-mcp-server-tools">51.5. Tools</a></h3>
+<div class="paragraph">
+<p>The Citrus MCP server provides several tools that AI assistants can call to query Citrus metadata.</p>
+</div>
+<div class="sect3">
+<h4 id="citrus-mcp-server-tools-catalog"><a class="anchor" href="#citrus-mcp-server-tools-catalog"></a><a class="link" href="#citrus-mcp-server-tools-catalog">51.5.1. Catalog Tools</a></h4>
+<div class="sect4">
+<h5 id="test-actions-catalog"><a class="anchor" href="#test-actions-catalog"></a><a class="link" href="#test-actions-catalog">Test actions catalog</a></h5>
+<div class="paragraph">
+<p>Lists available Citrus test actions and containers from the catalog.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters:</strong>
+* <code>filter</code> (optional): Filter actions by name, title, or description (case-insensitive substring match)
+* <code>group</code> (optional): Filter by group (e.g., camel, kubernetes, selenium)
+* <code>version</code> (optional): Citrus version to query (defaults to the server version)</p>
+</div>
+<div class="paragraph">
+<p><strong>Returns:</strong>
+* Version information
+* Count of matching components
+* List of components with name, title, description, group, and module</p>
+</div>
+<div class="paragraph">
+<p><strong>Example Response:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "version": "4.11.0-SNAPSHOT",
+  "count": 3,
+  "components": [
+    {
+      "name": "print",
+      "fullName": "print",
+      "version": "4.11.0-SNAPSHOT",
+      "group": "core",
+      "module": "citrus-base",
+      "title": "Print",
+      "description": "Prints messages to the console",
+      "properties": []
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="test-action-details"><a class="anchor" href="#test-action-details"></a><a class="link" href="#test-action-details">Test action details</a></h5>
+<div class="paragraph">
+<p>Gets detailed information for a specific test action, including all properties.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters:</strong>
+* <code>name</code> (required): Test action name (e.g., send, receive, print)
+* <code>version</code> (optional): Citrus version to query</p>
+</div>
+<div class="paragraph">
+<p><strong>Returns:</strong>
+Detailed component information including:
+* Component metadata (name, version, group, module)
+* Property list with name, description, type, required flag, and default value</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="test-action-schema"><a class="anchor" href="#test-action-schema"></a><a class="link" href="#test-action-schema">Test action schema</a></h5>
+<div class="paragraph">
+<p>Retrieves the complete JSON schema for a test action with all property definitions.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters:</strong>
+* <code>name</code> (required): Test action name
+* <code>version</code> (optional): Citrus version to query</p>
+</div>
+<div class="paragraph">
+<p><strong>Returns:</strong>
+JSON schema string with complete property specifications</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="endpoint-catalog"><a class="anchor" href="#endpoint-catalog"></a><a class="link" href="#endpoint-catalog">Endpoint catalog</a></h5>
+<div class="paragraph">
+<p>Lists available Citrus endpoints.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters:</strong>
+* <code>filter</code> (optional): Filter endpoints by name (case-insensitive substring match)
+* <code>group</code> (optional): Filter by group (e.g., http, kafka, jms)
+* <code>version</code> (optional): Citrus version to query</p>
+</div>
+<div class="paragraph">
+<p><strong>Returns:</strong>
+List of endpoint components with metadata and properties</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="endpoint-details"><a class="anchor" href="#endpoint-details"></a><a class="link" href="#endpoint-details">Endpoint details</a></h5>
+<div class="paragraph">
+<p>Gets detailed information for a specific endpoint.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters:</strong>
+* <code>name</code> (required): Endpoint name (e.g., kafka, http, file, timer)
+* <code>version</code> (optional): Citrus version to query</p>
+</div>
+<div class="paragraph">
+<p><strong>Returns:</strong>
+Detailed endpoint information with all properties</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="endpoint-schema"><a class="anchor" href="#endpoint-schema"></a><a class="link" href="#endpoint-schema">Endpoint schema</a></h5>
+<div class="paragraph">
+<p>Retrieves the complete JSON schema for an endpoint.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters:</strong>
+* <code>name</code> (required): Endpoint name (e.g., kafka, http, direct)
+* <code>version</code> (optional): Citrus version to query</p>
+</div>
+<div class="paragraph">
+<p><strong>Returns:</strong>
+JSON schema string for the endpoint</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="citrus-mcp-server-tools-docs"><a class="anchor" href="#citrus-mcp-server-tools-docs"></a><a class="link" href="#citrus-mcp-server-tools-docs">51.5.2. Documentation Tools</a></h4>
+<div class="sect4">
+<h5 id="documentation-index"><a class="anchor" href="#documentation-index"></a><a class="link" href="#documentation-index">Documentation Index</a></h5>
+<div class="paragraph">
+<p>Lists all available Citrus documentation files.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters:</strong>
+* <code>filter</code> (optional): Filter documentation by file name (case-insensitive substring match)
+* <code>version</code> (optional): Citrus version to query</p>
+</div>
+<div class="paragraph">
+<p><strong>Returns:</strong>
+List of documentation file names</p>
+</div>
+<div class="paragraph">
+<p><strong>Example Response:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">[
+  "actions-send.adoc",
+  "actions-receive.adoc",
+  "endpoints-http.adoc",
+  "endpoints-kafka.adoc"
+]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="documentation-page"><a class="anchor" href="#documentation-page"></a><a class="link" href="#documentation-page">Documentation Page</a></h5>
+<div class="paragraph">
+<p>Retrieves documentation content for a specific component.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters:</strong>
+* <code>kind</code> (required): Component type (e.g., action, endpoint, function, validationMatcher)
+* <code>searchKey</code> (required): Search key (e.g., name of a test action or endpoint)
+* <code>version</code> (optional): Citrus version to query</p>
+</div>
+<div class="paragraph">
+<p><strong>Returns:</strong>
+* <code>fileName</code>: Name of the documentation file
+* <code>version</code>: Citrus version
+* <code>adoc</code>: AsciiDoc content</p>
+</div>
+<div class="paragraph">
+<p><strong>Example:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "fileName": "actions-send.adoc",
+  "version": "4.11.0-SNAPSHOT",
+  "adoc": "[[actions-send]]\n= Send Action\n\nThe send action..."
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="citrus-mcp-server-resources"><a class="anchor" href="#citrus-mcp-server-resources"></a><a class="link" href="#citrus-mcp-server-resources">51.6. Resources</a></h3>
+<div class="paragraph">
+<p>Resources provide read-only access to schemas and specifications.</p>
+</div>
+<div class="sect3">
+<h4 id="yaml-dsl-schema"><a class="anchor" href="#yaml-dsl-schema"></a><a class="link" href="#yaml-dsl-schema">51.6.1. YAML DSL Schema</a></h4>
+<div class="paragraph">
+<p><strong>URI:</strong> <code>citrus://schema/dsl/yaml</code></p>
+</div>
+<div class="paragraph">
+<p>Provides the JSON schema for the Citrus YAML DSL, enabling schema-aware test authoring.</p>
+</div>
+<div class="paragraph">
+<p><strong>MIME Type:</strong> <code>application/json</code></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="xml-dsl-schema"><a class="anchor" href="#xml-dsl-schema"></a><a class="link" href="#xml-dsl-schema">51.6.2. XML DSL Schema</a></h4>
+<div class="paragraph">
+<p><strong>URI:</strong> <code>citrus://schema/dsl/xml</code></p>
+</div>
+<div class="paragraph">
+<p>Provides the XSD schema for the Citrus XML DSL.</p>
+</div>
+<div class="paragraph">
+<p><strong>MIME Type:</strong> <code>application/xml</code></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="test-action-schemas"><a class="anchor" href="#test-action-schemas"></a><a class="link" href="#test-action-schemas">51.6.3. Test Action Schemas</a></h4>
+<div class="paragraph">
+<p><strong>URI Template:</strong> <code>citrus://schema/action/{name}</code></p>
+</div>
+<div class="paragraph">
+<p>Retrieves the JSON schema for a specific test action.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters:</strong>
+* <code>name</code>: Test action name (e.g., print, send, receive)</p>
+</div>
+<div class="paragraph">
+<p><strong>MIME Type:</strong> <code>application/json</code></p>
+</div>
+<div class="paragraph">
+<p><strong>Example URI:</strong> <code>citrus://schema/action/send</code></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="endpoint-schemas"><a class="anchor" href="#endpoint-schemas"></a><a class="link" href="#endpoint-schemas">51.6.4. Endpoint Schemas</a></h4>
+<div class="paragraph">
+<p><strong>URI Template:</strong> <code>citrus://schema/endpoint/{name}</code></p>
+</div>
+<div class="paragraph">
+<p>Retrieves the JSON schema for a specific endpoint.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameters:</strong>
+* <code>name</code>: Endpoint name (e.g., kafka, http, direct)</p>
+</div>
+<div class="paragraph">
+<p><strong>MIME Type:</strong> <code>application/json</code></p>
+</div>
+<div class="paragraph">
+<p><strong>Example URI:</strong> <code>citrus://schema/endpoint/kafka</code></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="citrus-mcp-server-configuration"><a class="anchor" href="#citrus-mcp-server-configuration"></a><a class="link" href="#citrus-mcp-server-configuration">51.7. Server Configuration</a></h3>
+<div class="paragraph">
+<p>The Citrus MCP server uses Quarkus MCP so the server can be configured using Quarkus application properties.</p>
+</div>
+<div class="sect3">
+<h4 id="default-configuration"><a class="anchor" href="#default-configuration"></a><a class="link" href="#default-configuration">51.7.1. Default Configuration</a></h4>
+<div class="paragraph">
+<p>The default configuration (<code>application.properties</code>) includes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.application.name=citrus-mcp-server
+quarkus.application.version=${citrus.version}
+
+# Disable banner for cleaner stdio output
+quarkus.banner.enabled=false
+
+# Logging configuration
+quarkus.log.console.stderr=true
+quarkus.log.level=WARN
+quarkus.log.category."org.citrusframework".level=INFO
+quarkus.log.category."io.quarkiverse.mcp".level=INFO
+
+# Disable HTTP server for STDIO mode
+quarkus.http.host-enabled=false</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="custom-configuration"><a class="anchor" href="#custom-configuration"></a><a class="link" href="#custom-configuration">51.7.2. Custom Configuration</a></h4>
+<div class="paragraph">
+<p>Override properties using system properties or environment variables:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -Dquarkus.log.level=DEBUG \
+     -Dquarkus.http.host-enabled=true \
+     -Dquarkus.http.port=9090 \
+     -jar citrus-mcp-server-${citrus.version}-runner.jar</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="citrus-mcp-server-usecases"><a class="anchor" href="#citrus-mcp-server-usecases"></a><a class="link" href="#citrus-mcp-server-usecases">51.8. Use Cases</a></h3>
+<div class="sect3">
+<h4 id="ai-assisted-test-generation"><a class="anchor" href="#ai-assisted-test-generation"></a><a class="link" href="#ai-assisted-test-generation">51.8.1. AI-Assisted Test Generation</a></h4>
+<div class="paragraph">
+<p>AI assistants can use the MCP server to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Discover available components</strong>: Query catalog tools to find relevant test actions and endpoints</p>
+</li>
+<li>
+<p><strong>Validate syntax</strong>: Retrieve schemas to ensure correct property usage</p>
+</li>
+<li>
+<p><strong>Access documentation</strong>: Get detailed documentation for specific components</p>
+</li>
+<li>
+<p><strong>Generate code</strong>: Create syntactically correct Citrus tests based on user requirements</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="schema-validation-2"><a class="anchor" href="#schema-validation-2"></a><a class="link" href="#schema-validation-2">51.8.2. Schema Validation</a></h4>
+<div class="paragraph">
+<p>Development environments can use the schema resources to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Provide autocomplete for YAML/XML test definitions</p>
+</li>
+<li>
+<p>Validate test files against official schemas</p>
+</li>
+<li>
+<p>Show inline documentation for properties</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="documentation-lookup"><a class="anchor" href="#documentation-lookup"></a><a class="link" href="#documentation-lookup">51.8.3. Documentation Lookup</a></h4>
+<div class="paragraph">
+<p>Tools can query documentation resources to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Display contextual help for components</p>
+</li>
+<li>
+<p>Search documentation by component type and name</p>
+</li>
+<li>
+<p>Provide code examples from documentation
+= Spring Restdocs support</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>Spring Restdocs project helps to easily generate API documentation for RESTful services. While messages are exchanged the Restdocs library generates request/response snippets and API documentation. You can add the Spring Restdocs documentation to the Citrus client components for Http <strong>and</strong> SOAP endpoints.</p>
 </div>
@@ -62671,8 +63291,10 @@ The Spring Restdocs support components in Citrus are kept in a separate Maven mo
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+</div>
+</div>
 <div class="sect2">
-<h3 id="spring-restdocs-using-http"><a class="anchor" href="#spring-restdocs-using-http"></a><a class="link" href="#spring-restdocs-using-http">51.1. Spring Restdocs using Http</a></h3>
+<h3 id="spring-restdocs-using-http"><a class="anchor" href="#spring-restdocs-using-http"></a><a class="link" href="#spring-restdocs-using-http">51.9. Spring Restdocs using Http</a></h3>
 <div class="paragraph">
 <p>First of all we concentrate on adding the Spring Restdocs feature to Http client communication. The next sample configuration uses the new Spring Restdocs components in Citrus:</p>
 </div>
@@ -62975,7 +63597,7 @@ public RestDocClientInterceptor restDocumentationInterceptor() {
 </div>
 </div>
 <div class="sect2">
-<h3 id="spring-restdocs-using-soap"><a class="anchor" href="#spring-restdocs-using-soap"></a><a class="link" href="#spring-restdocs-using-soap">51.2. Spring Restdocs using SOAP</a></h3>
+<h3 id="spring-restdocs-using-soap"><a class="anchor" href="#spring-restdocs-using-soap"></a><a class="link" href="#spring-restdocs-using-soap">51.10. Spring Restdocs using SOAP</a></h3>
 <div class="paragraph">
 <p>You can use the Spring Restdocs features also for SOAP clients in Citrus. This is a controversy idea as SOAP endpoints are different to RESTful concepts. But at the end SOAP Http communication is Http communication with request and response messages. Why should we miss out the fantastic documentation feature here just because of ideology reasons.</p>
 </div>
@@ -63763,8 +64385,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.10.0<br>
-Last updated 2026-03-19 17:29:54 +0100
+Version 4.10.1<br>
+Last updated 2026-05-04 09:45:03 +0200
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
