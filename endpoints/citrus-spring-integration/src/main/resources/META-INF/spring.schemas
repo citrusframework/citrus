@@ -18,6 +18,7 @@ http\://www.citrusframework.org/schema/spring-integration/config/citrus-spring-i
 http\://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config-4.1.0.xsd=org/citrusframework/schema/citrus-spring-integration-config-4.1.0.xsd
 http\://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config-4.1.1.xsd=org/citrusframework/schema/citrus-spring-integration-config-4.1.1.xsd
 http\://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config-5.0.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-spring-integration-config-5.0.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config-4.10.1.xsd=org/citrusframework/schema/citrus-spring-integration-config-4.10.1.xsd
 http\://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config-4.10.0.xsd=org/citrusframework/schema/citrus-spring-integration-config-4.10.0.xsd
 http\://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config-4.2.0.xsd=org/citrusframework/schema/citrus-spring-integration-config-4.2.0.xsd
 http\://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config-4.2.1.xsd=org/citrusframework/schema/citrus-spring-integration-config-4.2.1.xsd
@@ -60,6 +61,7 @@ http\://www.citrusframework.org/schema/spring-integration/testcase/citrus-spring
 http\://www.citrusframework.org/schema/spring-integration/testcase/citrus-spring-integration-testcase-4.1.0.xsd=org/citrusframework/schema/citrus-spring-integration-testcase-4.1.0.xsd
 http\://www.citrusframework.org/schema/spring-integration/testcase/citrus-spring-integration-testcase-4.1.1.xsd=org/citrusframework/schema/citrus-spring-integration-testcase-4.1.1.xsd
 http\://www.citrusframework.org/schema/spring-integration/testcase/citrus-spring-integration-testcase-5.0.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-spring-integration-testcase-5.0.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/spring-integration/testcase/citrus-spring-integration-testcase-4.10.1.xsd=org/citrusframework/schema/citrus-spring-integration-testcase-4.10.1.xsd
 http\://www.citrusframework.org/schema/spring-integration/testcase/citrus-spring-integration-testcase-4.10.0.xsd=org/citrusframework/schema/citrus-spring-integration-testcase-4.10.0.xsd
 http\://www.citrusframework.org/schema/spring-integration/testcase/citrus-spring-integration-testcase-4.2.0.xsd=org/citrusframework/schema/citrus-spring-integration-testcase-4.2.0.xsd
 http\://www.citrusframework.org/schema/spring-integration/testcase/citrus-spring-integration-testcase-4.2.1.xsd=org/citrusframework/schema/citrus-spring-integration-testcase-4.2.1.xsd
