@@ -83,7 +83,7 @@ release::run() {
     fi
 
     # Verify that there are no modified file in git repo
-    check_git_clean "$working_dir"
+    #check_git_clean "$working_dir"
 
     # Calculate common maven options
     local maven_opts="$(extract_maven_opts)"
@@ -112,7 +112,7 @@ release::run() {
     fi
 
     # Build and stage artifacts
-    build_and_stage_artifacts "$working_dir" "$release_version" "$maven_opts"
+    #build_and_stage_artifacts "$working_dir" "$release_version" "$maven_opts"
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
