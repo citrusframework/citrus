@@ -19,11 +19,13 @@ package org.citrusframework.yaml;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
@@ -94,14 +96,32 @@ public class YamlTestCase {
                 }
 
                 delegate.getEndpoints().add(endpoint.getBuilder());
-            } else if (endpoint.getProperties().isEmpty()) {
-                delegate.getEndpointDefinitions().add(endpoint.getType());
+            } else if (StringUtils.hasText(endpoint.getUri())) {
+                delegate.getEndpointDefinitions().add(endpoint.getUri());
             } else {
-                delegate.getEndpointDefinitions().add("%s?%s".formatted(endpoint.getType(),
-                        endpoint.getProperties().entrySet()
-                                .stream()
-                                .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
-                                .collect(Collectors.joining("&"))));
+                Map<String, String> endpointProperties = new LinkedHashMap<>(endpoint.getProperties());
+
+                if (StringUtils.hasText(endpoint.getName())) {
+                    endpointProperties.put(EndpointComponent.ENDPOINT_NAME, endpoint.getName());
+                }
+
+                if (endpoint.isAutoClose() != CitrusSettings.isAutoCloseDynamicEndpoints()) {
+                    endpointProperties.put(EndpointComponent.AUTO_CLOSE, String.valueOf(endpoint.isAutoClose()));
+                }
+
+                if (endpoint.isAutoRemove() != CitrusSettings.isAutoRemoveDynamicEndpoints()) {
+                    endpointProperties.put(EndpointComponent.AUTO_REMOVE, String.valueOf(endpoint.isAutoRemove()));
+                }
+
+                if (endpointProperties.isEmpty()) {
+                    delegate.getEndpointDefinitions().add(endpoint.getType());
+                } else {
+                    delegate.getEndpointDefinitions().add("%s?%s".formatted(endpoint.getType(),
+                            endpointProperties.entrySet()
+                                    .stream()
+                                    .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
+                                    .collect(Collectors.joining("&"))));
+                }
             }
         });
     }
@@ -156,6 +176,9 @@ public class YamlTestCase {
 
         protected String type;
         protected String name;
+        protected String uri;
+        protected boolean autoClose;
+        protected boolean autoRemove;
         protected final Map<String, String> properties = new HashMap<>();
 
         private EndpointBuilder<?> builder;
@@ -189,6 +212,39 @@ public class YamlTestCase {
         public void setName(String value) {
             this.name = value;
             this.properties.put(EndpointComponent.ENDPOINT_NAME, value);
+        }
+
+        public String getUri() {
+            return uri;
+        }
+
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+                description = "The endpoint uri.")
+        public void setUri(String uri) {
+            this.uri = uri;
+        }
+
+        public boolean isAutoClose() {
+            return autoClose;
+        }
+
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+                description = "When enabled the dynamic endpoint is closed automatically after the test.")
+        public void setAutoClose(boolean enabled) {
+            this.autoClose = enabled;
+        }
+
+        public boolean isAutoRemove() {
+            return autoRemove;
+        }
+
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+                description = "When enabled the dynamic endpoint is removed automatically after the test.")
+        public void setAutoRemove(boolean enabled) {
+            this.autoRemove = enabled;
         }
 
         public Map<String, String> getProperties() {

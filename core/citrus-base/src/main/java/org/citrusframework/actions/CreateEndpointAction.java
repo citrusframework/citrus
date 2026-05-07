@@ -157,6 +157,16 @@ public class CreateEndpointAction extends AbstractTestAction {
         }
 
         @Override
+        public Builder autoClose(boolean enabled) {
+            return property(EndpointComponent.AUTO_CLOSE, String.valueOf(enabled));
+        }
+
+        @Override
+        public Builder autoRemove(boolean enabled) {
+            return property(EndpointComponent.AUTO_REMOVE, String.valueOf(enabled));
+        }
+
+        @Override
         public Builder property(String name, String value) {
             this.properties.put(name, value);
             return this;

@@ -20,7 +20,7 @@
   <description>Sample test in XML</description>
   <actions>
     <create-endpoint name="sayHello" uri="direct:hello"/>
-    <create-endpoint type="direct">
+    <create-endpoint type="direct" auto-close="true" auto-remove="true">
       <properties>
         <property name="queueName" value="hello"/>
         <property name="timeout" value="2000"/>

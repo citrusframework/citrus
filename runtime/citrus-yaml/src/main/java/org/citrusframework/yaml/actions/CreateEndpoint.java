@@ -19,6 +19,7 @@ package org.citrusframework.yaml.actions;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.CreateEndpointAction;
 import org.citrusframework.endpoint.EndpointBuilder;
@@ -30,8 +31,10 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
 
     protected EndpointBuilder<?> endpoint;
     protected String type;
-    protected String uri;
     protected String name;
+    protected String uri;
+    protected boolean autoClose;
+    protected boolean autoRemove;
     protected final Map<String, String> properties = new LinkedHashMap<>();
 
     public String getType() {
@@ -67,6 +70,28 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
         this.name = value;
     }
 
+    public boolean isAutoClose() {
+        return autoClose;
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+            description = "When enabled the dynamic endpoint is closed automatically after the test.")
+    public void setAutoClose(boolean enabled) {
+        this.autoClose = enabled;
+    }
+
+    public boolean isAutoRemove() {
+        return autoRemove;
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:generic" ) },
+            description = "When enabled the dynamic endpoint is removed automatically after the test.")
+    public void setAutoRemove(boolean enabled) {
+        this.autoRemove = enabled;
+    }
+
     public Map<String, String> getProperties() {
         return properties;
     }
@@ -100,6 +125,14 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
 
         if (name != null) {
             builder.endpointName(name);
+        }
+
+        if (autoClose != CitrusSettings.isAutoCloseDynamicEndpoints()) {
+            builder.autoClose(autoClose);
+        }
+
+        if (autoRemove != CitrusSettings.isAutoRemoveDynamicEndpoints()) {
+            builder.autoRemove(autoRemove);
         }
 
         builder.properties(properties);

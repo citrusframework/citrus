@@ -41,7 +41,7 @@ public class CreateEndpointTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getActionCount(), 4L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CreateEndpointAction.class);
         Assert.assertEquals(((CreateEndpointAction) result.getTestAction(0)).getEndpointUri(), "direct:hello");
-        Assert.assertEquals(((CreateEndpointAction) result.getTestAction(1)).getEndpointUri(), "direct?queueName=hello&timeout=2000");
+        Assert.assertEquals(((CreateEndpointAction) result.getTestAction(1)).getEndpointUri(), "direct?autoClose=true&autoRemove=true&queueName=hello&timeout=2000");
 
         Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder());
         Endpoint endpoint = ((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder().build();

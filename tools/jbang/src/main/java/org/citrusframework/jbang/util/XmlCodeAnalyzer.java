@@ -151,7 +151,10 @@ public class XmlCodeAnalyzer implements CodeAnalyzer {
                 ComponentDefinition component = components.get(entry.getKey());
                 String name = Optional.ofNullable(component.group()).orElse(entry.getKey());
 
-                if (endpointDefs.contains("<%s>".formatted(name))) {
+                if (endpointDefs.contains("<%s>".formatted(name)) ||
+                        endpointDefs.contains("<endpoint type=\"%s\"".formatted(name)) ||
+                        endpointDefs.contains("<endpoint type=\"%s:".formatted(name)) ||
+                        endpointDefs.contains("<endpoint uri=\"%s:".formatted(name))) {
                     items.add(name);
                     if (StringUtils.hasText(component.module())) {
                         modules.add(component.module());

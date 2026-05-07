@@ -17,7 +17,22 @@
 <test name="SendTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <endpoints>
+    <endpoint type="direct" name="greetings">
+      <properties>
+        <property name="queueName" value="greetings"/>
+      </properties>
+    </endpoint>
+  </endpoints>
   <actions>
+    <send endpoint="greetings">
+      <message>
+        <body>
+          <data>Hello from Citrus!</data>
+        </body>
+      </message>
+    </send>
+
     <send endpoint="helloEndpoint">
       <message>
         <headers>

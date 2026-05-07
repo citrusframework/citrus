@@ -8,6 +8,8 @@ actions:
       uri: "direct:hello"
   - createEndpoint:
       type: "direct"
+      autoClose: true
+      autoRemove: true
       properties:
         queueName: "hello"
         timeout: 2000

@@ -153,12 +153,38 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="endpoints" type="tns:TestEndpoints" minOccurs="0"/>
       <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
       <xs:element name="finally" type="tns:TestActions" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="author" type="xs:string"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="status" type="tns:StatusType"/>
+  </xs:complexType>
+
+  <xs:complexType name="TestEndpoints">
+    <xs:sequence>
+      <xs:element name="endpoint" minOccurs="0" maxOccurs="unbounded" type="tns:TestEndpoint"/>
+      <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TestEndpoint">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="properties" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="property" type="tns:PropertyType" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="uri" type="xs:string"/>
+    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="auto-close" type="xs:boolean"/>
+    <xs:attribute name="auto-remove" type="xs:boolean"/>
   </xs:complexType>
 
   <xs:complexType name="TestActions">
@@ -377,22 +403,6 @@
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="variable" type="tns:VariableType" maxOccurs="unbounded"/>
     </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="CreateEndpoint">
-    <xs:sequence>
-      <xs:element name="description" type="xs:string" minOccurs="0"/>
-      <xs:element name="properties" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="property" type="tns:PropertyType" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-    <xs:attribute name="name" type="xs:string"/>
-    <xs:attribute name="uri" type="xs:string"/>
-    <xs:attribute name="type" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="StopTimer">
@@ -722,7 +732,7 @@
   <xs:element name="catch" type="tns:Catch"/>
   <xs:element name="conditional" type="tns:Conditional"/>
   <xs:element name="create-variables" type="tns:CreateVariables"/>
-  <xs:element name="create-endpoint" type="tns:CreateEndpoint"/>
+  <xs:element name="create-endpoint" type="tns:TestEndpoint"/>
   <xs:element name="delay" type="tns:Delay"/>
   <xs:element name="echo" type="tns:Echo"/>
   <xs:element name="expect-timeout" type="tns:ExpectTimeout"/>

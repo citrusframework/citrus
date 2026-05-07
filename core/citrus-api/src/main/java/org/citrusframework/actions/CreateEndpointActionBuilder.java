@@ -33,6 +33,10 @@ public interface CreateEndpointActionBuilder<T extends TestAction>
 
     CreateEndpointActionBuilder<T> endpointName(String name);
 
+    CreateEndpointActionBuilder<T> autoClose(boolean enabled);
+
+    CreateEndpointActionBuilder<T> autoRemove(boolean enabled);
+
     CreateEndpointActionBuilder<T> property(String name, String value);
 
     CreateEndpointActionBuilder<T> properties(Map<String, String> properties);

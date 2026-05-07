@@ -24,13 +24,18 @@
     <variable name="foo" value="bar"/>
     <variable name="id" value="citrus:randomNumber(4)"/>
   </variables>
-  <!--
   <endpoints>
+    <endpoint type="jms" name="foo">
+      <properties>
+        <property name="destination" value="my-queue"/>
+      </properties>
+    </endpoint>
+    <!--
     <jms>
       <endpoint id="foo" destination="my-queue"/>
     </jms>
+    -->
   </endpoints>
-  -->
   <actions>
     <print>
       <message>Citrus rocks!</message>

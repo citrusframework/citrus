@@ -70,12 +70,15 @@ public class SendTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getName(), "SendTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 9L);
+        Assert.assertEquals(result.getActionCount(), 10L);
         Assert.assertEquals(result.getTestAction(0).getClass(), SendMessageAction.class);
 
         int actionIndex = 0;
 
         SendMessageAction action = (SendMessageAction) result.getTestAction(actionIndex++);
+        Assert.assertEquals(action.getEndpointUri(), "greetings");
+
+        action = (SendMessageAction) result.getTestAction(actionIndex++);
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.build(context, MessageType.PLAINTEXT.name()).getPayload(String.class), "Hello from Citrus!");

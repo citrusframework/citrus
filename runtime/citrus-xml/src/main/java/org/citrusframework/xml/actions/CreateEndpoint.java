@@ -25,6 +25,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.CreateEndpointAction;
 
@@ -36,9 +37,11 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
     private String type;
     private String uri;
     private String name;
+    private boolean autoClose = CitrusSettings.isAutoCloseDynamicEndpoints();
+    private boolean autoRemove = CitrusSettings.isAutoRemoveDynamicEndpoints();
     private Properties properties;
 
-    @XmlAttribute(required = true)
+    @XmlAttribute
     public void setType(String type) {
         this.type = type;
     }
@@ -61,6 +64,24 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
         this.name = value;
     }
 
+    @XmlAttribute(name = "auto-close")
+    public void setAutoClose(boolean autoClose) {
+        this.autoClose = autoClose;
+    }
+
+    public boolean isAutoClose() {
+        return autoClose;
+    }
+
+    @XmlAttribute(name = "auto-remove")
+    public void setAutoRemove(boolean autoRemove) {
+        this.autoRemove = autoRemove;
+    }
+
+    public boolean isAutoRemove() {
+        return autoRemove;
+    }
+
     public Properties getProperties() {
         return properties;
     }
@@ -80,6 +101,14 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
 
         if (name != null) {
             builder.endpointName(name);
+        }
+
+        if (autoClose != CitrusSettings.isAutoCloseDynamicEndpoints()) {
+            builder.autoClose(autoClose);
+        }
+
+        if (autoRemove != CitrusSettings.isAutoRemoveDynamicEndpoints()) {
+            builder.autoRemove(autoRemove);
         }
 
         if (properties != null) {
