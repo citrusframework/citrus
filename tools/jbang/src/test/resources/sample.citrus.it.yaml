@@ -1,5 +1,5 @@
 # modules: citrus-camel,citrus-testcontainers
-# deps: org.apache.camel:camel-aws2-s3:4.18.0
+# deps: org.apache.camel:camel-aws2-s3:4.20.0
 name: my-test
 variables:
   - name: foo
@@ -9,6 +9,7 @@ variables:
 endpoints:
   - jms:
       asynchronous:
+        name: foo
         destination: my-queue
 actions:
   - print:
@@ -18,6 +19,11 @@ actions:
       message:
         body:
           data: Howdy
+  - send:
+      endpoint: "camel:paho-mqtt5:${mqtt.topic}?brokerUrl=tcp://localhost:12883&amp;clientId=${mqtt.client.id}"
+      message:
+        body:
+          data: Hi
   - send:
       endpoint: "kafka:my-topic"
       message:

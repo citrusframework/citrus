@@ -25,14 +25,14 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.jbang.CitrusJBangMain.Settings.CAMEL_VERSION_DEFAULT;
 
-public class YamlCodeAnalyzerTest {
+public class XmlCodeAnalyzerTest {
 
     @Test
     public void shouldAnalyzeCode() throws IOException {
-        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
-        CodeAnalyzer.ScanResult scanResult = analyzer.scan(Resources.create("sample.citrus.it.yaml"));
+        XmlCodeAnalyzer analyzer = new XmlCodeAnalyzer();
+        CodeAnalyzer.ScanResult scanResult = analyzer.scan(Resources.create("sample.citrus.it.xml"));
 
-        Assert.assertEquals(scanResult.name(), "sample.citrus.it.yaml");
+        Assert.assertEquals(scanResult.name(), "sample.citrus.it.xml");
 
         Assert.assertEquals(scanResult.modules().length, 6L);
         String[] foundModules = Arrays.stream(scanResult.modules()).sorted().toArray(String[]::new);

@@ -27,12 +27,12 @@ import java.util.stream.Collectors;
 import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.util.StringUtils;
 
-public class YamlCodeAnalyzer implements CodeAnalyzer {
+public class XmlCodeAnalyzer implements CodeAnalyzer {
 
-    private static final Pattern DEPS_MODELINE_PATTERN = Pattern.compile("^#\\s*deps:\\s*(.+)\\s*$", Pattern.MULTILINE);
-    private static final Pattern MODULES_MODELINE_PATTERN = Pattern.compile("^#\\s*modules:\\s*(.+)\\s*$", Pattern.MULTILINE);
+    private static final Pattern DEPS_MODELINE_PATTERN = Pattern.compile("^<!--\\s*deps:\\s+(.+)\\s*-->$", Pattern.MULTILINE);
+    private static final Pattern MODULES_MODELINE_PATTERN = Pattern.compile("^<!--\\s*modules:\\s+(.+)\\s*-->$", Pattern.MULTILINE);
 
-    private static final Pattern CAMEL_ENDPOINT_PATTERN = Pattern.compile("^\\s+endpoint:\\s+\"?'?camel:([^\\s:?]+)\"?'?.*$", Pattern.MULTILINE);
+    private static final Pattern CAMEL_ENDPOINT_PATTERN = Pattern.compile("^\\s*<(send|receive) endpoint=\"camel:([^\\s:?]+).*$", Pattern.MULTILINE);
 
     @Override
     public Set<String> scanModules(String code) {
@@ -70,9 +70,9 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
         }
 
         // Special handling of Camel endpoint URIs
-        matcher = CAMEL_ENDPOINT_PATTERN.matcher(code.replaceAll("endpoint:\\s*[|>]\\s*\n", "endpoint: "));
+        matcher = CAMEL_ENDPOINT_PATTERN.matcher(code);
         while (matcher.find()) {
-            String componentName = matcher.group(1);
+            String componentName = matcher.group(2);
             items.add("org.apache.camel:camel-%s:%s".formatted(componentName, CitrusJBangMain.Settings.getCamelVersion()));
         }
 
@@ -93,11 +93,7 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
 
             boolean allMatch = true;
             for (int i = 0; i < tokens.length && allMatch; i++) {
-                if (i == 0) {
-                    allMatch = code.contains("- %s:".formatted(tokens[i]));
-                } else {
-                    allMatch = code.contains("%s:".formatted(tokens[i]));
-                }
+                allMatch = code.contains("<%s>".formatted(tokens[i])) || code.contains("<%s ".formatted(tokens[i]));
             }
 
             if (allMatch) {
@@ -132,7 +128,7 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
             ComponentDefinition component = components.get(entry.getKey());
             String name = resolveName(entry.getKey(), component.group(), actions);
 
-            if (code.contains("- %s:".formatted(name))) {
+            if (code.contains("<%s>".formatted(name)) || code.contains("<%s ".formatted(name))) {
                 items.add(name);
                 if (StringUtils.hasText(component.module())) {
                     modules.add(component.module());
@@ -149,13 +145,13 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
 
         Set<String> items = new HashSet<>();
 
-        if (code.contains("endpoints:") && code.indexOf("endpoints:") < code.indexOf("actions:")) {
-            String endpointDefs = code.substring(code.indexOf("endpoints:"), code.indexOf("actions:"));
+        if (code.contains("<endpoints>") && code.indexOf("<endpoints>") < code.indexOf("<actions>")) {
+            String endpointDefs = code.substring(code.indexOf("<endpoints>"), code.indexOf("<actions>"));
             for (Map.Entry<String, ComponentDefinition> entry : components.entrySet()) {
                 ComponentDefinition component = components.get(entry.getKey());
                 String name = Optional.ofNullable(component.group()).orElse(entry.getKey());
 
-                if (endpointDefs.contains("- %s:".formatted(name))) {
+                if (endpointDefs.contains("<%s>".formatted(name))) {
                     items.add(name);
                     if (StringUtils.hasText(component.module())) {
                         modules.add(component.module());
@@ -168,9 +164,7 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
             ComponentDefinition component = components.get(entry.getKey());
             String name = Optional.ofNullable(component.group()).orElse(entry.getKey());
 
-            if (code.contains("endpoint: %s".formatted(name))
-                    || code.contains("endpoint: '%s".formatted(name))
-                    || code.contains("endpoint: \"%s".formatted(name))) {
+            if (code.contains("endpoint=\"%s".formatted(name))) {
                 items.add(name);
                 if (StringUtils.hasText(component.module())) {
                     modules.add(component.module());

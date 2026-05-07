@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!-- modules: citrus-camel,citrus-testcontainers -->
+<!-- deps: org.apache.camel:camel-aws2-s3:4.20.0 -->
+<test name="my-test" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+
+  <variables>
+    <variable name="foo" value="bar"/>
+    <variable name="id" value="citrus:randomNumber(4)"/>
+  </variables>
+  <!--
+  <endpoints>
+    <jms>
+      <endpoint id="foo" destination="my-queue"/>
+    </jms>
+  </endpoints>
+  -->
+  <actions>
+    <print>
+      <message>Citrus rocks!</message>
+    </print>
+    <send endpoint="http://localhost:8080/test">
+      <message>
+        <body>
+          <data>Howdy</data>
+        </body>
+      </message>
+    </send>
+    <send endpoint="camel:paho-mqtt5:${mqtt.topic}?brokerUrl=tcp://localhost:12883&amp;clientId=${mqtt.client.id}">
+      <message>
+        <body>
+          <data>Hi</data>
+        </body>
+      </message>
+    </send>
+    <send endpoint="kafka:my-topic">
+      <message>
+        <body>
+          <data>Hello ${id}</data>
+        </body>
+      </message>
+    </send>
+    <receive endpoint="kafka:my-topic">
+      <message>
+        <body>
+          <data>@ignore@ @isNumber()@</data>
+        </body>
+      </message>
+    </receive>
+    <iterate condition="i &lt; 10">
+      <actions>
+        <print>
+          <message>${i}</message>
+        </print>
+      </actions>
+    </iterate>
+  </actions>
+</test>

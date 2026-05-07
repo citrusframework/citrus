@@ -34,6 +34,8 @@ import org.citrusframework.util.StringUtils;
 
 public interface CodeAnalyzer {
 
+    String MODULE_PREFIX = "citrus-";
+
     /**
      * Inspects the given source code and provides detailed information about it as a result.
      */

@@ -107,7 +107,7 @@ public class CitrusJBangMain implements Callable<Integer> {
 
         private static final String CAMEL_VERSION_PROPERTY = "citrus.camel.jbang.version";
         private static final String CAMEL_VERSION_ENV = "CITRUS_CAMEL_JBANG_VERSION";
-        private static final String CAMEL_VERSION_DEFAULT = "4.18.0";
+        public static final String CAMEL_VERSION_DEFAULT = "4.20.0";
 
         private static final String MODULES_PROPERTY = JBANG_PROPERTY_PREFIX + "modules";
         private static final String MODULES_ENV = JBANG_ENV_PREFIX + "MODULES";
