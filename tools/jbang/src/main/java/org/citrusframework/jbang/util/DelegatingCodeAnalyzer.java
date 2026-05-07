@@ -35,6 +35,7 @@ public class DelegatingCodeAnalyzer implements CodeAnalyzer {
         return switch (ext) {
             case "yaml", "yml" -> new YamlCodeAnalyzer().scan(fileName, code);
             case "xml" -> new XmlCodeAnalyzer().scan(fileName, code);
+            case "groovy" -> new GroovyCodeAnalyzer().scan(fileName, code);
             default -> throw new CitrusRuntimeException("Failed to analyze code for the file type: %s".formatted(ext));
         };
     }
