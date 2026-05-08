@@ -16,6 +16,8 @@
 
 package org.citrusframework.endpoint.direct;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageCorrelator;
@@ -24,6 +26,7 @@ import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
 
+@XmlType(name = "", propOrder = {})
 public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyncEndpoint> {
 
     /** Endpoint target */
@@ -76,7 +79,13 @@ public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyn
     }
 
     @SchemaProperty(description = "The queue name.")
+    @XmlAttribute
     public void setQueue(String queueName) {
+        queue(queueName);
+    }
+
+    @XmlAttribute(name = "queue-name")
+    public void setQueueName(String queueName) {
         queue(queueName);
     }
 
@@ -97,6 +106,7 @@ public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyn
     }
 
     @SchemaProperty(description = "When set the queue is automatically created when it does not exist in bean registry.")
+    @XmlAttribute(name = "auto-create-queue")
     public void setAutoCreateQueue(boolean autoCreate) {
         autoCreateQueue(autoCreate);
     }
@@ -110,6 +120,7 @@ public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyn
     }
 
     @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    @XmlAttribute(name = "polling-interval")
     public void setPollingInterval(int pollingInterval) {
         pollingInterval(pollingInterval);
     }
@@ -123,6 +134,7 @@ public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyn
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
     }
@@ -136,6 +148,7 @@ public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyn
     }
 
     @SchemaProperty(description = "The timeout when receiving messages from the queue.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

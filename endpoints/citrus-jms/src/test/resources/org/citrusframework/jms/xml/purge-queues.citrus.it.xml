@@ -18,6 +18,13 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
+  <endpoints>
+    <jms>
+      <asynchronous name="foo"
+                    destination="foo-queue"
+                    connection-factory="myConnectionFactory"/>
+    </jms>
+  </endpoints>
   <actions>
     <purge-jms-queues>
       <queue name="JMS.Queue.1"/>

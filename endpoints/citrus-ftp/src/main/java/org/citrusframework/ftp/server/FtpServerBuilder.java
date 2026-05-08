@@ -16,6 +16,8 @@
 
 package org.citrusframework.ftp.server;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.citrusframework.ftp.message.FtpMarshaller;
@@ -32,6 +34,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.5
  */
 @SchemaType(module = "citrus-ftp")
+@XmlType(name = "", propOrder = {})
 public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServerBuilder> {
 
     /** Endpoint target */
@@ -84,6 +87,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(description = "The Ftp server port.")
+    @XmlAttribute
     public void setPort(int port) {
         port(port);
     }
@@ -97,6 +101,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(description = "When enabled the server uses automatic connect mode.")
+    @XmlAttribute(name = "auto-connect")
     public void setAutoConnect(boolean autoConnect) {
         autoConnect(autoConnect);
     }
@@ -110,6 +115,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(description = "When enabled the server uses automatic login mode.")
+    @XmlAttribute(name = "auto-login")
     public void setAutoLogin(boolean autoLogin) {
         autoLogin(autoLogin);
     }
@@ -123,6 +129,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(description = "The Ftp server host.")
+    @XmlAttribute
     public void setHost(String host) {
         host(host);
     }
@@ -136,6 +143,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(description = "Sets the allowed user name.")
+    @XmlAttribute
     public void setUser(String user) {
         user(user);
     }
@@ -152,6 +160,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the allowed user password."
     )
+    @XmlAttribute
     public void setPassword(String password) {
         password(password);
     }
@@ -165,6 +174,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(description = "Enables the auto handle commands mode.")
+    @XmlAttribute(name = "auto-handle-commands")
     public void setAutoHandleCommands(String autoHandleCommands) {
         autoHandleCommands(autoHandleCommands);
     }
@@ -178,6 +188,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(description = "When enabled the client automatically reads new files.")
+    @XmlAttribute(name = "auto-read-files")
     public void setAutoReadFiles(boolean autoReadFiles) {
         autoReadFiles(autoReadFiles);
     }
@@ -191,6 +202,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(description = "Enables the local passive mode.")
+    @XmlAttribute(name = "local-passive-mode")
     public void setLocalPassiveMode(boolean localPassiveMode) {
         localPassiveMode(localPassiveMode);
     }
@@ -204,6 +216,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(advanced = true, description = "Sets the Ftp server implementation.")
+    @XmlAttribute
     public void setServer(String server) {
         this.ftpServer = server;
     }
@@ -217,6 +230,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom user manager implementation.")
+    @XmlAttribute(name = "user-manager")
     public void setUserManager(String userManager) {
         this.userManager = userManager;
     }
@@ -230,6 +244,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom listener factory implementation.")
+    @XmlAttribute(name = "listener-factory")
     public void setListenerFactory(String listenerFactory) {
         this.listenerFactory = listenerFactory;
     }
@@ -243,6 +258,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(advanced = true, description = "Loads user manage properties from a file resource.")
+    @XmlAttribute(name = "user-manager-properties")
     public void setUserManagerProperties(String userManagerProperties) {
         userManagerProperties(FileUtils.getFileResource(userManagerProperties));
     }
@@ -256,6 +272,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom Ftp message marshaller.")
+    @XmlAttribute(name = "marshaller")
     public void setMarshaller(String marshaller) {
         this.marshaller = marshaller;
     }
@@ -269,6 +286,7 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
     }
@@ -285,7 +303,12 @@ public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:errorHandler") },
             description = "Sets the error handling strategy."
     )
-    public void setErrorHandlingStrategy(ErrorHandlingStrategy errorStrategy) {
-        errorHandlingStrategy(errorStrategy);
+    @XmlAttribute(name = "error-handling-strategy")
+    public void setErrorHandlingStrategy(String errorStrategy) {
+        try {
+            errorHandlingStrategy(ErrorHandlingStrategy.fromName(errorStrategy));
+        } catch (IllegalArgumentException e) {
+            errorHandlingStrategy(ErrorHandlingStrategy.valueOf(errorStrategy));
+        }
     }
 }

@@ -164,9 +164,1230 @@
 
   <xs:complexType name="TestEndpoints">
     <xs:sequence>
-      <xs:element name="endpoint" minOccurs="0" maxOccurs="unbounded" type="tns:TestEndpoint"/>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="endpoint" type="tns:TestEndpoint"/>
+        <xs:element name="camel" type="tns:CamelEndpoints"/>
+        <xs:element name="channel" type="tns:SpringMessageChannelEndpoints"/>
+        <xs:element name="context" type="tns:ContextEndpoints"/>
+        <xs:element name="direct" type="tns:DirectEndpoints"/>
+        <xs:element name="docker" type="tns:DockerEndpoints"/>
+        <xs:element name="ftp" type="tns:FtpEndpoints"/>
+        <xs:element name="scp" type="tns:ScpEndpoints"/>
+        <xs:element name="sftp" type="tns:SftpEndpoints"/>
+        <xs:element name="http" type="tns:HttpEndpoints"/>
+        <xs:element name="jms" type="tns:JmsEndpoints"/>
+        <xs:element name="jmx" type="tns:JmxEndpoints"/>
+        <xs:element name="kafka" type="tns:KafkaEndpoints"/>
+        <xs:element name="kubernetes" type="tns:KubernetesEndpoints"/>
+        <xs:element name="mail" type="tns:MailEndpoints"/>
+        <xs:element name="rmi" type="tns:RmiEndpoints"/>
+        <xs:element name="selenium" type="tns:SeleniumEndpoints"/>
+        <xs:element name="ssh" type="tns:SshEndpoints"/>
+        <xs:element name="soap" type="tns:SoapWebServiceEndpoints"/>
+        <xs:element name="websocket" type="tns:WebsocketEndpoints"/>
+        <xs:element name="vertx" type="tns:VertxEndpoints"/>
+      </xs:choice>
       <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CamelEndpoints">
+    <xs:choice>
+      <xs:element name="asynchronous">
+        <xs:annotation>
+          <xs:documentation>Camel endpoint for asynchronous communication</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="camel-context" type="xs:string"/>
+          <xs:attribute name="endpoint-uri" type="xs:string" use="required"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="synchronous">
+        <xs:annotation>
+          <xs:documentation>Camel endpoint for synchronous communication</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="camel-context" type="xs:string"/>
+          <xs:attribute name="endpoint-uri" type="xs:string" use="required"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="ContextEndpoints">
+    <xs:sequence>
+      <xs:element name="message-store">
+        <xs:annotation>
+          <xs:documentation>Endpoint connects to the Citrus context message store.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="message-name" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SpringMessageChannelEndpoints">
+    <xs:choice>
+      <xs:element name="asynchronous">
+        <xs:annotation>
+          <xs:documentation>Message channel endpoint able to produce and consume messages on a channel destination.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:restriction base="SpringMessageChannelEndpointType"/>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="synchronous">
+        <xs:annotation>
+          <xs:documentation>Message channel endpoint able to produce and consume messages on a channel destination.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="SpringMessageChannelEndpointType">
+              <xs:attribute name="polling-interval" type="xs:string"/>
+              <xs:attribute name="message-correlator" type="xs:string"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="SpringMessageChannelEndpointType">
+    <xs:annotation>
+      <xs:documentation>Basic channel endpoint properties.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:ID"/>
+    <xs:attribute name="messaging-template" type="xs:string"/>
+    <xs:attribute name="channel" type="xs:string"/>
+    <xs:attribute name="channel-name" type="xs:string"/>
+    <xs:attribute name="channel-resolver" type="xs:string"/>
+    <xs:attribute name="use-object-messages" type="xs:boolean"/>
+    <xs:attribute name="filter-internal-headers" type="xs:boolean" default="true"/>
+    <xs:attribute name="actor" type="xs:string"/>
+    <xs:attribute name="timeout" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="DirectEndpoints">
+    <xs:choice>
+      <xs:element name="asynchronous">
+        <xs:annotation>
+          <xs:documentation>Direct message queue endpoint able to produce and consume messages on a in memory destination.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:restriction base="DirectEndpointType"/>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="synchronous">
+        <xs:annotation>
+          <xs:documentation>Direct message queue endpoint able to produce and consume messages on a in memory destination.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="DirectEndpointType">
+              <xs:attribute name="polling-interval" type="xs:string"/>
+              <xs:attribute name="message-correlator" type="xs:string"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="DirectEndpointType">
+    <xs:annotation>
+      <xs:documentation>Basic direct endpoint properties.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:ID"/>
+    <xs:attribute name="queue" type="xs:string"/>
+    <xs:attribute name="queue-name" type="xs:string"/>
+    <xs:attribute name="actor" type="xs:string"/>
+    <xs:attribute name="timeout" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="DockerEndpoints">
+    <xs:sequence>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>Docker Http client component able to execute docker commands such as inspect, start, stop.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="url" type="xs:string"/>
+          <xs:attribute name="version" type="xs:string"/>
+          <xs:attribute name="username" type="xs:string"/>
+          <xs:attribute name="password" type="xs:string"/>
+          <xs:attribute name="email" type="xs:string"/>
+          <xs:attribute name="registry" type="xs:string"/>
+          <xs:attribute name="verify-tls" type="xs:boolean"/>
+          <xs:attribute name="cert-path" type="xs:string"/>
+          <xs:attribute name="config-path" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FtpEndpoints">
+    <xs:choice>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>Ftp client component sends commands to server instance and receives reply messages.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="host" type="xs:string"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="username" type="xs:string"/>
+          <xs:attribute name="password" type="xs:string"/>
+          <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="auto-read-files" type="xs:boolean"/>
+          <xs:attribute name="local-passive-mode" type="xs:boolean"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+          <xs:attribute name="error-strategy">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="throwsException"/>
+                <xs:enumeration value="propagateError"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>Ftp server implementation accepts client connections and receives messages via Ftp transport protocol.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="server" type="xs:string"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="auto-start" type="xs:boolean"/>
+          <xs:attribute name="auto-connect" type="xs:boolean"/>
+          <xs:attribute name="auto-login" type="xs:boolean"/>
+          <xs:attribute name="auto-handle-commands" type="xs:string" default="PORT,TYPE"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="user-manager" type="xs:string"/>
+          <xs:attribute name="user-manager-properties" type="xs:string"/>
+          <xs:attribute name="endpoint-adapter" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="ScpEndpoints">
+    <xs:choice>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>Sftp client component sends commands to server instance and receives reply messages.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="host" type="xs:string"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="port-option" type="xs:string"/>
+          <xs:attribute name="username" type="xs:string"/>
+          <xs:attribute name="password" type="xs:string"/>
+          <xs:attribute name="private-key-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to a private key, which can be either a plain file path or an class resource if prefixed with 'classpath:'
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="private-key-password" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Optional password for the private key
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+          <xs:attribute name="error-strategy">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="throwsException"/>
+                <xs:enumeration value="propagateError"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>SSH server component</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="port" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Port to listen to. Default is 22
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="auto-start" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>
+                Whether to start this SSH server automatically. Default is true. If set to false,
+                a test action is responsible for starting/stopping the server
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="auto-connect" type="xs:boolean"/>
+          <xs:attribute name="auto-login" type="xs:boolean"/>
+          <xs:attribute name="host-key-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to PEM encoded key pair (public and private key) which is used as host key.
+                By default, a standard, fixed keypair is used.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="user-home-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to user home directory. If not set ${user.dir}/target/{serverName}/home/{user} is used by default.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="user" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                User which is allowed to connect.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="password" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Password for authenticating the user.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="allowed-key-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to a public key in PEM format. If prefixed with 'classpath:' it is read
+                as a resource.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="endpoint-adapter" type="xs:string"/>
+          <xs:attribute name="interceptors" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="SftpEndpoints">
+    <xs:choice>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>Sftp client component sends commands to server instance and receives reply messages.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="host" type="xs:string"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="username" type="xs:string"/>
+          <xs:attribute name="password" type="xs:string"/>
+          <xs:attribute name="private-key-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to a private key, which can be either a plain file path or an class resource if prefixed with 'classpath:'
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="private-key-password" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Optional password for the private key
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="strict-host-checking" type="xs:boolean"/>
+          <xs:attribute name="known-hosts-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to a known hosts file. If prefixed with 'classpath:' this file is looked up as a resource in the classpath.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="preferred-authentications" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Ordered list of preferred authentications. Client will try to authentication with these methods first.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="session-configs" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Reference to a map of session properties as key-value pairs. Applied on Jsch session on client.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="auto-read-files" type="xs:boolean"/>
+          <xs:attribute name="local-passive-mode" type="xs:boolean"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+          <xs:attribute name="error-strategy">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="throwsException"/>
+                <xs:enumeration value="propagateError"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>SSH server component</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="port" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Port to listen to. Default is 22
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="auto-start" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>
+                Whether to start this SSH server automatically. Default is true. If set to false,
+                a test action is responsible for starting/stopping the server
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="auto-connect" type="xs:boolean"/>
+          <xs:attribute name="auto-login" type="xs:boolean"/>
+          <xs:attribute name="host-key-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to PEM encoded key pair (public and private key) which is used as host key.
+                By default, a standard, fixed keypair is used.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="user-home-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to user home directory. If not set ${user.dir}/target/{serverName}/home/{user} is used by default.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="user" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                User which is allowed to connect.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="password" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Password for authenticating the user.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="allowed-key-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to a public key in PEM format. If prefixed with 'classpath:' it is read
+                as a resource.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="endpoint-adapter" type="xs:string"/>
+          <xs:attribute name="interceptors" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="HttpEndpoints">
+    <xs:choice>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>Http client component sends messages to some Http server instance and receives synchronous response message.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="request-url" type="xs:string"/>
+          <xs:attribute name="request-method" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="endpoint-resolver" type="xs:string"/>
+          <xs:attribute name="request-factory" type="xs:string"/>
+          <xs:attribute name="rest-template" type="xs:string"/>
+          <xs:attribute name="charset" type="xs:string"/>
+          <xs:attribute name="content-type" type="xs:string"/>
+          <xs:attribute name="default-accept-header" type="xs:boolean"/>
+          <xs:attribute name="handle-cookies" type="xs:boolean"/>
+          <xs:attribute name="disable-redirect-handling" type="xs:boolean"/>
+          <xs:attribute name="interceptors" type="xs:string"/>
+          <xs:attribute name="binary-media-types" type="xs:string"/>
+          <xs:attribute name="error-handler" type="xs:string"/>
+          <xs:attribute name="error-handling-strategy">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="throwsException"/>
+                <xs:enumeration value="propagateError"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>Http server implementation accepts client connections and receives messages via Http transport protocol.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="auto-start" type="xs:boolean"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="context-config-location" type="xs:string"/>
+          <xs:attribute name="resource-base" type="xs:string"/>
+          <xs:attribute name="root-parent-context" type="xs:boolean"/>
+          <xs:attribute name="connector" type="xs:string"/>
+          <xs:attribute name="connectors" type="xs:string"/>
+          <xs:attribute name="filters" type="xs:string"/>
+          <xs:attribute name="filter-mappings" type="xs:string"/>
+          <xs:attribute name="binary-media-types" type="xs:string"/>
+          <xs:attribute name="servlet-name" type="xs:string"/>
+          <xs:attribute name="servlet-mapping-path" type="xs:string"/>
+          <xs:attribute name="context-path" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="servlet-handler" type="xs:string"/>
+          <xs:attribute name="security-handler" type="xs:string"/>
+          <xs:attribute name="endpoint-adapter" type="xs:string"/>
+          <xs:attribute name="handle-header-attributes" type="xs:boolean"/>
+          <xs:attribute name="handle-cookies" type="xs:boolean"/>
+          <xs:attribute name="default-status-code" type="xs:string"/>
+          <xs:attribute name="response-cache-size" type="xs:integer"/>
+          <xs:attribute name="interceptors" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
+          <xs:attribute name="actor" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="JmsEndpoints">
+    <xs:choice>
+      <xs:element name="asynchronous">
+        <xs:annotation>
+          <xs:documentation>JMS endpoint able to produce and consume messages on a JMS destination (queue or topic).</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="tns:JmsEndpointType">
+              <xs:attribute name="auto-start" type="xs:boolean"/>
+              <xs:attribute name="durable-subscription" type="xs:boolean"/>
+              <xs:attribute name="durable-subscriber-name" type="xs:string"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="synchronous">
+        <xs:annotation>
+          <xs:documentation>JMS synchronous endpoint able to produce and consume messages on a synchronous JMS
+            destination with reply message handling.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="tns:JmsEndpointType">
+              <xs:attribute name="reply-destination" type="xs:string"/>
+              <xs:attribute name="reply-destination-name" type="xs:string"/>
+              <xs:attribute name="message-correlator" type="xs:string"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="JmsEndpointType">
+    <xs:annotation>
+      <xs:documentation>Basic JMS endpoint properties.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:ID"/>
+    <xs:attribute name="destination" type="xs:string"/>
+    <xs:attribute name="destination-name" type="xs:string"/>
+    <xs:attribute name="connection-factory" type="xs:string"/>
+    <xs:attribute name="jms-template" type="xs:string"/>
+    <xs:attribute name="message-converter" type="xs:string"/>
+    <xs:attribute name="destination-resolver" type="xs:string"/>
+    <xs:attribute name="destination-name-resolver" type="xs:string"/>
+    <xs:attribute name="pub-sub-domain" type="xs:boolean"/>
+    <xs:attribute name="filter-internal-headers" type="xs:boolean" default="true"/>
+    <xs:attribute name="use-object-messages" type="xs:boolean"/>
+    <xs:attribute name="actor" type="xs:string"/>
+    <xs:attribute name="timeout" type="xs:string"/>
+    <xs:attribute name="polling-interval" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="JmxEndpoints">
+    <xs:choice>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>Jmx Http client component able to execute jmx commands such as exec.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="server-url" type="xs:string" default="platform"/>
+          <xs:attribute name="username" type="xs:string"/>
+          <xs:attribute name="password" type="xs:string"/>
+          <xs:attribute name="auto-reconnect" type="xs:string"/>
+          <xs:attribute name="delay-on-reconnect" type="xs:string"/>
+          <xs:attribute name="notification-filter" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>RMI server implementation registers one service in RMI registry and receives messages via RMI invocation.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="mbeans">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="mbean" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="operations" minOccurs="0">
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element name="operation" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                  <xs:sequence>
+                                    <xs:element name="parameter" minOccurs="0">
+                                      <xs:complexType>
+                                        <xs:sequence>
+                                          <xs:element name ="param" minOccurs="1" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                              <xs:attribute name="type" type="xs:string"/>
+                                            </xs:complexType>
+                                          </xs:element>
+                                        </xs:sequence>
+                                      </xs:complexType>
+                                    </xs:element>
+                                  </xs:sequence>
+                                  <xs:attribute name="name" type="xs:string" use="required"/>
+                                  <xs:attribute name="return-type" type="xs:string"/>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:element name="attributes" minOccurs="0">
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element name="attribute" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                  <xs:attribute name="name" type="xs:string" use="required"/>
+                                  <xs:attribute name="type" type="xs:string" use="required"/>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                      <xs:attribute name="type" type="xs:string"/>
+                      <xs:attribute name="name" type="xs:string"/>
+                      <xs:attribute name="objectDomain" type="xs:string"/>
+                      <xs:attribute name="objectName" type="xs:string"/>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="server-url" type="xs:string"/>
+          <xs:attribute name="host" type="xs:string" default="localhost"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="protocol" type="xs:string" default="rmi"/>
+          <xs:attribute name="mbeans" type="xs:string"/>
+          <xs:attribute name="binding" type="xs:string"/>
+          <xs:attribute name="create-registry" type="xs:boolean"/>
+          <xs:attribute name="auto-start" type="xs:boolean"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="environment-properties" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
+          <xs:attribute name="actor" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="KafkaEndpoints">
+    <xs:choice>
+      <xs:element name="asynchronous">
+        <xs:annotation>
+          <xs:documentation>Kafka endpoint able to produce and consume messages to and from topics on a Kafka message broker.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID"/>
+          <xs:attribute name="client-id" type="xs:string"/>
+          <xs:attribute name="consumer-group" type="xs:string"/>
+          <xs:attribute name="random-consumer-group" type="xs:boolean" default="false"/>
+          <xs:attribute name="auto-commit" type="xs:string"/>
+          <xs:attribute name="auto-commit-interval" type="xs:int"/>
+          <xs:attribute name="server" type="xs:string"/>
+          <xs:attribute name="offset-reset" type="xs:string"/>
+          <xs:attribute name="topic" type="xs:string"/>
+          <xs:attribute name="partition" type="xs:int"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="header-mapper" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="key-serializer" type="xs:string"/>
+          <xs:attribute name="key-deserializer" type="xs:string"/>
+          <xs:attribute name="value-serializer" type="xs:string"/>
+          <xs:attribute name="value-deserializer" type="xs:string"/>
+          <xs:attribute name="producer-properties" type="xs:string"/>
+          <xs:attribute name="consumer-properties" type="xs:string"/>
+          <xs:attribute name="use-thread-safe-consumer" type="xs:boolean" default="false"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="synchronous">
+        <xs:annotation>
+          <xs:documentation>Kafka endpoint able to produce and consume messages to and from topics on a Kafka message broker.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID"/>
+          <xs:attribute name="client-id" type="xs:string"/>
+          <xs:attribute name="consumer-group" type="xs:string"/>
+          <xs:attribute name="random-consumer-group" type="xs:boolean" default="false"/>
+          <xs:attribute name="auto-commit" type="xs:string"/>
+          <xs:attribute name="auto-commit-interval" type="xs:int"/>
+          <xs:attribute name="server" type="xs:string"/>
+          <xs:attribute name="offset-reset" type="xs:string"/>
+          <xs:attribute name="topic" type="xs:string"/>
+          <xs:attribute name="partition" type="xs:int"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="header-mapper" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="key-serializer" type="xs:string"/>
+          <xs:attribute name="key-deserializer" type="xs:string"/>
+          <xs:attribute name="value-serializer" type="xs:string"/>
+          <xs:attribute name="value-deserializer" type="xs:string"/>
+          <xs:attribute name="producer-properties" type="xs:string"/>
+          <xs:attribute name="consumer-properties" type="xs:string"/>
+          <xs:attribute name="thread-safe-consumer" type="xs:boolean" default="false"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="KubernetesEndpoints">
+    <xs:sequence>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>Kubernetes Http client component able to execute kubernetes commands such as inspect, start, stop.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="url" type="xs:string"/>
+          <xs:attribute name="version" type="xs:string"/>
+          <xs:attribute name="username" type="xs:string"/>
+          <xs:attribute name="password" type="xs:string"/>
+          <xs:attribute name="oauth-token" type="xs:string"/>
+          <xs:attribute name="namespace" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="json-mapper" type="xs:string"/>
+          <xs:attribute name="cert-file" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MailEndpoints">
+    <xs:choice>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>Mail client connects to SMTP server for publishing mail messages to recipients.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="host" type="xs:string" use="required"/>
+          <xs:attribute name="port" type="xs:string" use="required"/>
+          <xs:attribute name="protocol" type="xs:string"/>
+          <xs:attribute name="username" type="xs:string"/>
+          <xs:attribute name="password" type="xs:string"/>
+          <xs:attribute name="mail-properties" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="marshaller" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>Mail SMTP server component - accepts mail requests and validates mail content</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="endpoint-adapter" type="xs:string"/>
+          <xs:attribute name="auth-required" type="xs:boolean"/>
+          <xs:attribute name="auto-start" type="xs:boolean"/>
+          <xs:attribute name="auto-accept" type="xs:boolean"/>
+          <xs:attribute name="split-multipart" type="xs:boolean"/>
+          <xs:attribute name="mail-properties" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="known-users" type="xs:string"/>
+          <xs:attribute name="marshaller" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="SshEndpoints">
+    <xs:choice>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>Executes an SSH client request to a given server</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="host" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Host to connect to for sending an SSH Exec request. Default is 'localhost'
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="port" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Port to use. Default is 2222
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="private-key-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to a private key, which can be either a plain file path or an class resource
+                if prefixed with 'classpath:'
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="private-key-password" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Optional password for the private key
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="user" type="xs:string" use="required">
+            <xs:annotation>
+              <xs:documentation>
+                User used for connecting to the SSH server.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="password" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Password used for password based authentication. Might be combined
+                with "private-key-path" in which case both authentication mechanism are tried.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="strict-host-checking" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>
+                Whether the host key should be verified by looking it up in a 'known_hosts' file.
+                Default is false.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="known-hosts-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to a known hosts file. If prefixed with 'classpath:' this file is looked up as
+                a resource in the classpath.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="command-timeout" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>
+                Timeout in milliseconds for how long to wait for the SSH command to complete.
+                Default is 5 minutes.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="connection-timeout" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>
+                Timeout in milliseconds for how long to for a connectiuon to connect.
+                Default is 1 minute.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="actor" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Actor used for switching groups of actions. See the reference documentation
+                for details.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>SSH server component</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="port" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Port to listen to. Default is 22
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="auto-start" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>
+                Whether to start this SSH server automatically. Default is true. If set to false,
+                a test action is responsible for starting/stopping the server
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="host-key-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to PEM encoded key pair (public and private key) which is used as host key.
+                By default, a standard, fixed keypair is used.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="user-home-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to user home directory. If not set ${user.dir}/target/{serverName}/home/{user} is used by default.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="user" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                User which is allowed to connect.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="password" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Password for authenticating the user.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="allowed-key-path" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Path to a public key in PEM format. If prefixed with 'classpath:' it is read
+                as a resource.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="endpoint-adapter" type="xs:string"/>
+          <xs:attribute name="interceptors" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="RmiEndpoints">
+    <xs:choice>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>RMI client component sends messages to some RMI server instance and receives synchronous response message.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="server-url" type="xs:string"/>
+          <xs:attribute name="host" type="xs:string"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="binding" type="xs:string"/>
+          <xs:attribute name="method" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>RMI server implementation registers one service in RMI registry and receives messages via RMI invocation.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="host" type="xs:string"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="binding" type="xs:string" use="required"/>
+          <xs:attribute name="interface" type="xs:string" use="required"/>
+          <xs:attribute name="create-registry" type="xs:boolean"/>
+          <xs:attribute name="auto-start" type="xs:boolean"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
+          <xs:attribute name="actor" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="SeleniumEndpoints">
+    <xs:sequence>
+      <xs:element name="browser">
+        <xs:annotation>
+          <xs:documentation>Selenium browser configuration.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="type">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="custom"/>
+                <xs:enumeration value="htmlunit"/>
+                <xs:enumeration value="firefox"/>
+                <xs:enumeration value="safari"/>
+                <xs:enumeration value="chrome"/>
+                <xs:enumeration value="googlechrome"/>
+                <xs:enumeration value="internet explorer"/>
+                <xs:enumeration value="edge"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="start-page" type="xs:string"/>
+          <xs:attribute name="event-listeners" type="xs:string"/>
+          <xs:attribute name="remote-server" type="xs:string"/>
+          <xs:attribute name="javascript" type="xs:boolean"/>
+          <xs:attribute name="version" type="xs:string"/>
+          <xs:attribute name="web-driver" type="xs:string"/>
+          <xs:attribute name="firefox-profile" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SoapWebServiceEndpoints">
+    <xs:choice>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>SOAP client component sends SOAP messages to some Http web server instance and receives synchronous SOAP response message.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="request-url" type="xs:string" use="required"/>
+          <xs:attribute name="web-service-template" type="xs:string"/>
+          <xs:attribute name="message-factory" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="message-sender" type="xs:string"/>
+          <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="interceptor" type="xs:string"/>
+          <xs:attribute name="interceptors" type="xs:string"/>
+          <xs:attribute name="endpoint-resolver" type="xs:string"/>
+          <xs:attribute name="fault-strategy">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="throwsException"/>
+                <xs:enumeration value="propagateError"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>Http web server implementation accepts client connections and receives WebService messages via SOAP message protocol.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="auto-start" type="xs:boolean"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="context-config-location" type="xs:string"/>
+          <xs:attribute name="resource-base" type="xs:string"/>
+          <xs:attribute name="root-parent-context" type="xs:boolean"/>
+          <xs:attribute name="connector" type="xs:string"/>
+          <xs:attribute name="connectors" type="xs:string"/>
+          <xs:attribute name="servlet-name" type="xs:string"/>
+          <xs:attribute name="servlet-mapping-path" type="xs:string"/>
+          <xs:attribute name="context-path" type="xs:string"/>
+          <xs:attribute name="servlet-handler" type="xs:string"/>
+          <xs:attribute name="security-handler" type="xs:string"/>
+          <xs:attribute name="endpoint-adapter" type="xs:string"/>
+          <xs:attribute name="interceptors" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="message-factory" type="xs:string"/>
+          <xs:attribute name="handle-mime-headers" type="xs:boolean"/>
+          <xs:attribute name="handle-header-attributes" type="xs:boolean"/>
+          <xs:attribute name="keep-soap-envelope" type="xs:boolean"/>
+          <xs:attribute name="soap-header-namespace" type="xs:string"/>
+          <xs:attribute name="soap-header-prefix" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="WebsocketEndpoints">
+    <xs:choice>
+      <xs:element name="client">
+        <xs:annotation>
+          <xs:documentation>WebSocket client component for sending and receiving asynchronous requests to and from WebSocket server</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="url" type="xs:string"/>
+          <xs:attribute name="http-headers" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="endpoint-resolver" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>Http websocket server implementation accepts client connections and receives messages via Http WebSocket transport protocol.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="endpoints" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="endpoint" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:attribute name="ref" type="xs:string" use="required" />
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="auto-start" type="xs:boolean"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="context-config-location" type="xs:string"/>
+          <xs:attribute name="resource-base" type="xs:string"/>
+          <xs:attribute name="root-parent-context" type="xs:boolean"/>
+          <xs:attribute name="connector" type="xs:string"/>
+          <xs:attribute name="connectors" type="xs:string"/>
+          <xs:attribute name="servlet-name" type="xs:string"/>
+          <xs:attribute name="servlet-mapping-path" type="xs:string"/>
+          <xs:attribute name="context-path" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="servlet-handler" type="xs:string"/>
+          <xs:attribute name="security-handler" type="xs:string"/>
+          <xs:attribute name="endpoints" type="xs:string"/>
+          <xs:attribute name="endpoint-adapter" type="xs:string"/>
+          <xs:attribute name="interceptors" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
+          <xs:attribute name="actor" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="VertxEndpoints">
+    <xs:choice>
+      <xs:element name="asynchronous">
+        <xs:annotation>
+          <xs:documentation>Vert.x endpoint for asynchronous communication</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="host" type="xs:string"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="address" type="xs:string" use="required"/>
+          <xs:attribute name="vertx-factory" type="xs:string"/>
+          <xs:attribute name="pub-sub-domain" type="xs:boolean"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="synchronous">
+        <xs:annotation>
+          <xs:documentation>Vert.x endpoint for synchronous communication</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:ID" use="required"/>
+          <xs:attribute name="host" type="xs:string"/>
+          <xs:attribute name="port" type="xs:string"/>
+          <xs:attribute name="address" type="xs:string" use="required"/>
+          <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="vertx-factory" type="xs:string"/>
+          <xs:attribute name="pub-sub-domain" type="xs:boolean"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="polling-interval" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
   </xs:complexType>
 
   <xs:complexType name="TestEndpoint">
@@ -403,6 +1624,39 @@
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="variable" type="tns:VariableType" maxOccurs="unbounded"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CreateEndpoint">
+    <xs:complexContent>
+      <xs:extension base="tns:TestEndpoint">
+        <xs:sequence>
+          <xs:element name="description" type="xs:string" minOccurs="0"/>
+          <xs:choice minOccurs="0">
+            <xs:element name="camel" type="tns:CamelEndpoints"/>
+            <xs:element name="channel" type="tns:SpringMessageChannelEndpoints"/>
+            <xs:element name="context" type="tns:ContextEndpoints"/>
+            <xs:element name="direct" type="tns:DirectEndpoints"/>
+            <xs:element name="docker" type="tns:DockerEndpoints"/>
+            <xs:element name="ftp" type="tns:FtpEndpoints"/>
+            <xs:element name="scp" type="tns:ScpEndpoints"/>
+            <xs:element name="sftp" type="tns:SftpEndpoints"/>
+            <xs:element name="http" type="tns:HttpEndpoints"/>
+            <xs:element name="jms" type="tns:JmsEndpoints"/>
+            <xs:element name="jmx" type="tns:JmxEndpoints"/>
+            <xs:element name="kafka" type="tns:KafkaEndpoints"/>
+            <xs:element name="kubernetes" type="tns:KubernetesEndpoints"/>
+            <xs:element name="mail" type="tns:MailEndpoints"/>
+            <xs:element name="rmi" type="tns:RmiEndpoints"/>
+            <xs:element name="selenium" type="tns:SeleniumEndpoints"/>
+            <xs:element name="ssh" type="tns:SshEndpoints"/>
+            <xs:element name="soap" type="tns:SoapWebServiceEndpoints"/>
+            <xs:element name="websocket" type="tns:WebsocketEndpoints"/>
+            <xs:element name="vertx" type="tns:VertxEndpoints"/>
+          </xs:choice>
+          <xs:any processContents="lax" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="StopTimer">
@@ -732,7 +1986,7 @@
   <xs:element name="catch" type="tns:Catch"/>
   <xs:element name="conditional" type="tns:Conditional"/>
   <xs:element name="create-variables" type="tns:CreateVariables"/>
-  <xs:element name="create-endpoint" type="tns:TestEndpoint"/>
+  <xs:element name="create-endpoint" type="tns:CreateEndpoint"/>
   <xs:element name="delay" type="tns:Delay"/>
   <xs:element name="echo" type="tns:Echo"/>
   <xs:element name="expect-timeout" type="tns:ExpectTimeout"/>

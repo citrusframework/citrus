@@ -20,8 +20,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import com.icegreen.greenmail.util.GreenMail;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.server.AbstractServerBuilder;
@@ -33,6 +37,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.5
  */
 @SchemaType(module = "citrus-mail")
+@XmlType(name = "", propOrder = {})
 public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailServerBuilder> {
 
     /** Endpoint target */
@@ -74,6 +79,7 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
     }
 
     @SchemaProperty(description = "The mail server port.")
+    @XmlAttribute
     public void setPort(int port) {
         port(port);
     }
@@ -87,6 +93,7 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom mail message marshaller.")
+    @XmlAttribute
     public void setMarshaller(String marshaller) {
         this.marshaller = marshaller;
     }
@@ -100,10 +107,20 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
     }
 
     @SchemaProperty(advanced = true, description = "Custom properties passed to the java mail implementation.")
+    @XmlTransient
     public void setJavaMailProperties(Map<String, Object> javaMailProperties) {
         Properties props = new Properties();
         props.putAll(javaMailProperties);
         javaMailProperties(props);
+    }
+
+    @XmlAttribute(name = "mail-properties")
+    public void setJavaMailProperties(String javaMailProperties) {
+        setJavaMailProperties(Arrays.stream(javaMailProperties.split(","))
+                .map(String::trim)
+                .filter(expression -> expression.contains("="))
+                .map(expression -> expression.split("=", 2))
+                .collect(Collectors.toMap(tokens -> tokens[0].trim(), tokens -> tokens[1].trim())));
     }
 
     /**
@@ -118,6 +135,7 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "When enabled users must authenticate with the server."
     )
+    @XmlAttribute(name = "auth-required")
     public void setAuthRequired(boolean authRequired) {
         authRequired(authRequired);
     }
@@ -134,6 +152,7 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "When enabled server will auto accept client connections."
     )
+    @XmlAttribute(name = "auto-accept")
     public void setAutoAccept(boolean autoAccept) {
         autoAccept(autoAccept);
     }
@@ -147,6 +166,7 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the server splits multipart messages into individual parts.")
+    @XmlAttribute(name = "split-multipart")
     public void setSplitMultipart(boolean splitMultipart) {
         splitMultipart(splitMultipart);
     }
@@ -160,6 +180,7 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
     }
 
     @SchemaProperty(advanced = true, description = "Sets the SMTP implementation.")
+    @XmlAttribute
     public void setSmtp(String smtpServer) {
         this.smtpServer = smtpServer;
     }
@@ -173,6 +194,7 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
     }
 
     @SchemaProperty(advanced = true, description = "Sets custom message converter.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -189,8 +211,14 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets a list of known users that will be accepted when establishing a connection."
     )
+    @XmlTransient
     public void setKnownUsers(List<String> users) {
         knownUsers(users);
+    }
+
+    @XmlAttribute(name = "known-users")
+    public void setKnownUsers(String users) {
+        setKnownUsers(Arrays.asList(users.split(",")));
     }
 
     /**

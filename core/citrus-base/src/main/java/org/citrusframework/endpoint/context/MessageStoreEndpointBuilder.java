@@ -16,9 +16,12 @@
 
 package org.citrusframework.endpoint.context;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.yaml.SchemaProperty;
 
+@XmlType(name = "", propOrder = {})
 public class MessageStoreEndpointBuilder extends AbstractEndpointBuilder<MessageStoreEndpoint> {
 
     /** Endpoint target */
@@ -37,7 +40,8 @@ public class MessageStoreEndpointBuilder extends AbstractEndpointBuilder<Message
         return this;
     }
 
-    @SchemaProperty(description = "The message name.")
+    @SchemaProperty(description = "The message name in the context.")
+    @XmlAttribute(name = "message-name")
     public void setMessageName(String messageName) {
         messageName(messageName);
     }
@@ -51,6 +55,7 @@ public class MessageStoreEndpointBuilder extends AbstractEndpointBuilder<Message
     }
 
     @SchemaProperty(description = "The timeout when receiving messages from the message store.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

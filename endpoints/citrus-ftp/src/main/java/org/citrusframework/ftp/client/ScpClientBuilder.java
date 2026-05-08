@@ -16,6 +16,8 @@
 
 package org.citrusframework.ftp.client;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
@@ -27,6 +29,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.7.6
  */
 @SchemaType(module = "citrus-ftp")
+@XmlType(name = "", propOrder = {})
 public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
 
     /** Endpoint target */
@@ -59,6 +62,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the port option.")
+    @XmlAttribute(name = "port-option")
     public void setPortOption(String option) {
         portOption(option);
     }
@@ -72,6 +76,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
     }
 
     @SchemaProperty(description = "The Ftp server host.")
+    @XmlAttribute
     public void setHost(String host) {
         host(host);
     }
@@ -85,6 +90,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
     }
 
     @SchemaProperty(description = "The Ftp server port.")
+    @XmlAttribute
     public void setPort(int port) {
         port(port);
     }
@@ -98,6 +104,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
     }
 
     @SchemaProperty(description = "When enabled the client automatically reads new files.")
+    @XmlAttribute(name = "auto-read-files")
     public void setAutoReadFiles(boolean autoReadFiles) {
         autoReadFiles(autoReadFiles);
     }
@@ -114,6 +121,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the user name."
     )
+    @XmlAttribute
     public void setUsername(String username) {
         username(username);
     }
@@ -130,6 +138,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the user password."
     )
+    @XmlAttribute
     public void setPassword(String password) {
         password(password);
     }
@@ -146,6 +155,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the private key path."
     )
+    @XmlAttribute(name = "private-key-path")
     public void setPrivateKeyPath(String privateKeyPath) {
         privateKeyPath(privateKeyPath);
     }
@@ -162,6 +172,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the private key password."
     )
+    @XmlAttribute(name = "private-key-password")
     public void setPrivateKeyPassword(String privateKeyPassword) {
         privateKeyPassword(privateKeyPassword);
     }
@@ -178,6 +189,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Enable strict host checking."
     )
+    @XmlAttribute(name = "strict-host-checking")
     public void setStrictHostChecking(boolean strictHostChecking) {
         strictHostChecking(strictHostChecking);
     }
@@ -194,6 +206,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "List of known hosts."
     )
+    @XmlAttribute(name = "known-hosts")
     public void setKnownHosts(String knownHosts) {
         knownHosts(knownHosts);
     }
@@ -207,6 +220,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
     }
@@ -223,8 +237,13 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:errorHandler") },
             description = "Sets the error handling strategy."
     )
-    public void setErrorHandlingStrategy(ErrorHandlingStrategy errorStrategy) {
-        errorHandlingStrategy(errorStrategy);
+    @XmlAttribute(name = "error-handling-strategy")
+    public void setErrorHandlingStrategy(String errorStrategy) {
+        try {
+            errorHandlingStrategy(ErrorHandlingStrategy.fromName(errorStrategy));
+        } catch (IllegalArgumentException e) {
+            errorHandlingStrategy(ErrorHandlingStrategy.valueOf(errorStrategy));
+        }
     }
 
     /**
@@ -236,6 +255,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
     }
 
     @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    @XmlAttribute(name = "polling-interval")
     public void setPollingInterval(int pollingInterval) {
         pollingInterval(pollingInterval);
     }
@@ -249,6 +269,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
     }
 
     @SchemaProperty(description = "The endpoint timeout when waiting for messages.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

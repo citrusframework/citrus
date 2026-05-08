@@ -1,2 +1,3 @@
+type=org.citrusframework.ssh.endpoint.builder.SshEndpointBuilder
 client=org.citrusframework.ssh.client.SshClientBuilder
 server=org.citrusframework.ssh.server.SshServerBuilder

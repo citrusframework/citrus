@@ -16,8 +16,13 @@
 
 package org.citrusframework.ftp.server;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.ftp.client.SftpEndpointConfiguration;
 import org.citrusframework.server.AbstractServerBuilder;
 import org.citrusframework.yaml.SchemaProperty;
@@ -27,6 +32,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.5
  */
 @SchemaType(module = "citrus-ftp")
+@XmlType(name = "", propOrder = {})
 public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpServerBuilder> {
 
     /** Endpoint target */
@@ -46,6 +52,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
     }
 
     @SchemaProperty(description = "The Ftp server port.")
+    @XmlAttribute
     public void setPort(int port) {
         port(port);
     }
@@ -59,6 +66,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
     }
 
     @SchemaProperty(description = "When enabled the server uses automatic connect mode.")
+    @XmlAttribute(name = "auto-connect")
     public void setAutoConnect(boolean autoConnect) {
         autoConnect(autoConnect);
     }
@@ -72,6 +80,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
     }
 
     @SchemaProperty(description = "When enabled the server uses automatic login mode.")
+    @XmlAttribute(name = "auto-login")
     public void setAutoLogin(boolean autoLogin) {
         autoLogin(autoLogin);
     }
@@ -84,7 +93,11 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
         return this;
     }
 
-    @SchemaProperty(description = "Sets the allowed user name.")
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the allowed user name."
+    )
+    @XmlAttribute
     public void setUser(String user) {
         user(user);
     }
@@ -101,6 +114,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the allowed user password."
     )
+    @XmlAttribute
     public void setPassword(String password) {
         password(password);
     }
@@ -117,6 +131,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the host key certificate path."
     )
+    @XmlAttribute(name = "host-key-path")
     public void setHostKeyPath(String hostKeyPath) {
         hostKeyPath(hostKeyPath);
     }
@@ -130,6 +145,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
     }
 
     @SchemaProperty(description = "Sets the user home path directory.")
+    @XmlAttribute(name = "user-home-path")
     public void setUserHomePath(String userHomePath) {
         userHomePath(userHomePath);
     }
@@ -146,6 +162,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the allowed key certificate path."
     )
+    @XmlAttribute(name = "allowed-key-path")
     public void setAllowedKeyPath(String allowedKeyPath) {
         allowedKeyPath(allowedKeyPath);
     }
@@ -159,6 +176,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
     }
 
     @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    @XmlAttribute(name = "polling-interval")
     public void setPollingInterval(int pollingInterval) {
         pollingInterval(pollingInterval);
     }
@@ -175,6 +193,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Enable strict host checking."
     )
+    @XmlAttribute(name = "strict-host-checking")
     public void setStrictHostChecking(boolean strictHostChecking) {
         strictHostChecking(strictHostChecking);
     }
@@ -191,6 +210,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "List of known hosts."
     )
+    @XmlAttribute(name = "known-hosts")
     public void setKnownHosts(String knownHosts) {
         knownHosts(knownHosts);
     }
@@ -207,6 +227,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the private key certificate path."
     )
+    @XmlAttribute(name = "private-kay-path")
     public void setPrivateKeyPath(String privateKeyPath) {
         privateKeyPath(privateKeyPath);
     }
@@ -223,6 +244,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the private key password."
     )
+    @XmlAttribute(name = "private-key-password")
     public void setPrivateKeyPassword(String privateKeyPassword) {
         privateKeyPassword(privateKeyPassword);
     }
@@ -239,6 +261,7 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the preferred authentication mechanism."
     )
+    @XmlAttribute(name = "preferred-authentications")
     public void setPreferredAuthentications(String preferredAuthentications) {
         preferredAuthentications(preferredAuthentications);
     }
@@ -252,7 +275,17 @@ public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpSer
     }
 
     @SchemaProperty(description = "The session configuration.")
+    @XmlTransient
     public void setSessionConfigs(Map<String, String> sessionConfigs) {
         sessionConfigs(sessionConfigs);
+    }
+
+    @XmlAttribute(name = "session-configs")
+    public void setSessionConfigs(String sessionConfigs) {
+        setSessionConfigs(Arrays.stream(sessionConfigs.split(","))
+                .map(String::trim)
+                .filter(expression -> expression.contains("="))
+                .map(expression -> expression.split("=", 2))
+                .collect(Collectors.toMap(tokens -> tokens[0].trim(), tokens -> tokens[1].trim())));
     }
 }

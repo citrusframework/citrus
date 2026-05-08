@@ -21,6 +21,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.server.AbstractServerBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.message.converter.WebServiceMessageConverter;
@@ -35,6 +38,7 @@ import org.springframework.ws.server.EndpointInterceptor;
  * @since 2.5
  */
 @SchemaType(module = "citrus-ws")
+@XmlType(name = "", propOrder = {})
 public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceServer, WebServiceServerBuilder> {
 
     /**
@@ -92,6 +96,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(description = "The SOAP WebService server port.")
+    @XmlAttribute
     public void setPort(int port) {
         port(port);
     }
@@ -105,6 +110,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(advanced = true, description = "Sets the path to the Spring context configuration for this server.")
+    @XmlAttribute(name = "context-config-location")
     public void setContextConfigLocation(String configLocation) {
         contextConfigLocation(configLocation);
     }
@@ -118,6 +124,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(advanced = true, description = "Sets the resource base path where the server reads resources from.")
+    @XmlAttribute(name = "resource-base")
     public void setResourceBase(String resourceBase) {
         resourceBase(resourceBase);
     }
@@ -131,6 +138,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the server uses the root Spring application context.")
+    @XmlAttribute(name = "root-parent-context")
     public void setRootParentContext(boolean rootParentContext) {
         rootParentContext(rootParentContext);
     }
@@ -146,8 +154,14 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets a list of connectors for this server.")
+    @XmlTransient
     public void setConnectors(List<String> connectors) {
         this.connectors.addAll(connectors);
+    }
+
+    @XmlAttribute
+    public void setConnectors(String connectors) {
+        setConnectors(Arrays.asList(connectors.split(",")));
     }
 
     /**
@@ -161,6 +175,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Add a connector to this server.")
+    @XmlAttribute
     public void setConnector(String connector) {
         this.connectors.add(connector);
     }
@@ -176,6 +191,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets the servlet name.")
+    @XmlAttribute
     public void setServletName(String servletName) {
         servletName(servletName);
     }
@@ -191,6 +207,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets the servlet mapping path.")
+    @XmlAttribute(name = "servlet-mapping-path")
     public void setServletMappingPath(String servletMappingPath) {
         servletMappingPath(servletMappingPath);
     }
@@ -206,6 +223,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets the context path on this server.")
+    @XmlAttribute(name = "context-path")
     public void setContextPath(String contextPath) {
         contextPath(contextPath);
     }
@@ -221,6 +239,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets a custom servlet handler as a bean reference.")
+    @XmlAttribute(name = "servlet-handler")
     public void serServletHandler(String servletHandler) {
         this.servletHandler = servletHandler;
     }
@@ -236,6 +255,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the security handler as a bean reference.")
+    @XmlAttribute(name = "security-handler")
     public void setSecurityHandler(String securityHandler) {
         this.securityHandler = securityHandler;
     }
@@ -249,6 +269,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(advanced = true, description = "Sets the Http message converter bean reference.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -260,6 +281,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(description = "Sets the server timeout while waiting for incoming requests.", defaultValue = "5000")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }
@@ -275,10 +297,15 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:intercept") },
             description = "Sets the list of endpoint interceptor bean references.")
+    @XmlTransient
     public void setInterceptors(List<String> interceptors) {
         this.interceptors.addAll(interceptors);
     }
 
+    @XmlAttribute
+    public void setInterceptors(String interceptors) {
+        setInterceptors(Arrays.asList(interceptors.split(",")));
+    }
     /**
      * Sets the interceptors.
      */
@@ -298,6 +325,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:intercept") },
             description = "Sets a endpoint interceptor.")
+    @XmlAttribute
     public void setInterceptor(String interceptor) {
         this.interceptors.add(interceptor);
     }
@@ -311,6 +339,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom message factory.")
+    @XmlAttribute(name = "message-factory")
     public void setMessageFactory(String messageFactory) {
         messageFactory(messageFactory);
     }
@@ -326,6 +355,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     @SchemaProperty(
             advanced = true,
             description = "When enabled the server does not remove the SOAP envelope before processing messages.")
+    @XmlAttribute(name = "keep-soap-envelope")
     public void setKeepSoapEnvelope(boolean flag) {
         keepSoapEnvelope(flag);
     }
@@ -339,6 +369,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the server handles mime headers.")
+    @XmlAttribute(name = "handle-mime-headers")
     public void setHandleMimeHeaders(boolean handleMimeHeaders) {
         handleMimeHeaders(handleMimeHeaders);
     }
@@ -352,6 +383,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the server handles attribute headers.")
+    @XmlAttribute(name = "handle-attribute-headers")
     public void setHandleAttributeHeaders(boolean handleAttributeHeaders) {
         handleAttributeHeaders(handleAttributeHeaders);
     }
@@ -365,6 +397,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(advanced = true, description = "Sets the SOAP header namespace.")
+    @XmlAttribute(name = "soap-header-namespace")
     public void setSoapHeaderNamespace(String namespace) {
         soapHeaderNamespace(namespace);
     }
@@ -378,6 +411,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     }
 
     @SchemaProperty(advanced = true, description = "Sets the SOAP header namespace prefix.")
+    @XmlAttribute(name = "soap-header-prefix")
     public void setSoapHeaderPrefix(String prefix) {
         soapHeaderPrefix(prefix);
     }

@@ -16,6 +16,8 @@
 
 package org.citrusframework.camel.endpoint;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.camel.message.CamelMessageConverter;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
@@ -29,6 +31,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.5
  */
 @SchemaType(module = "citrus-camel")
+@XmlType(name = "", propOrder = {})
 public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncEndpoint> {
 
     /** Endpoint target */
@@ -71,6 +74,7 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
     }
 
     @SchemaProperty(description = "The Camel endpoint uri.")
+    @XmlAttribute(name = "endpoint-uri")
     public void setEndpointUri(String endpointUri) {
         endpointUri(endpointUri);
     }
@@ -92,6 +96,7 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
     }
 
     @SchemaProperty(description = "The Camel context to use.")
+    @XmlAttribute(name = "camel-context")
     public void setCamelContext(String camelContext) {
         this.camelContext = camelContext;
     }
@@ -105,6 +110,7 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -118,6 +124,7 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
     }
 
     @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    @XmlAttribute(name = "polling-interval")
     public void setPollingInterval(int pollingInterval) {
         pollingInterval(pollingInterval);
     }
@@ -131,6 +138,7 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
     }
@@ -144,6 +152,7 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
     }
 
     @SchemaProperty(description = "The endpoint timeout when waiting for messages.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

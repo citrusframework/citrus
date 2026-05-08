@@ -16,6 +16,8 @@
 
 package org.citrusframework.endpoint;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
 import org.citrusframework.TestActor;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.common.Named;
@@ -40,6 +42,7 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
     }
 
     @SchemaProperty(description = "The name of the endpoint")
+    @XmlAttribute
     public void setName(String endpointName) {
         name(endpointName);
     }
@@ -76,6 +79,7 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
     }
 
     @Override
+    @XmlTransient
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

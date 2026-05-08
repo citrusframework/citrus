@@ -16,20 +16,42 @@
 
 package org.citrusframework.ssh.server;
 
-import org.citrusframework.endpoint.EndpointAdapter;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.server.AbstractServerBuilder;
 import org.citrusframework.ssh.message.SshMessageConverter;
 import org.citrusframework.ssh.model.SshMarshaller;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
 @SchemaType(module = "citrus-ssh")
+@XmlType(name = "", propOrder = {})
 public class SshServerBuilder extends AbstractServerBuilder<SshServer, SshServerBuilder> {
 
     /** Endpoint target */
     private final SshServer endpoint = new SshServer();
+
+    private String messageConverter;
+    private String marshaller;
+
+    @Override
+    public SshServer build() {
+        if (referenceResolver != null) {
+            if (StringUtils.hasText(messageConverter)) {
+                messageConverter(referenceResolver.resolve(messageConverter, SshMessageConverter.class));
+            }
+
+            if (StringUtils.hasText(marshaller)) {
+                marshaller(referenceResolver.resolve(marshaller, SshMarshaller.class));
+            }
+        }
+
+        return super.build();
+    }
 
     @Override
     protected SshServer getEndpoint() {
@@ -38,121 +60,127 @@ public class SshServerBuilder extends AbstractServerBuilder<SshServer, SshServer
 
     /**
      * Sets the port property.
-     * @param port
-     * @return
      */
     public SshServerBuilder port(int port) {
         endpoint.setPort(port);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the port.")
+    @XmlAttribute
+    public void setPort(int port) {
+        port(port);
+    }
+
     /**
      * Sets the user property.
-     * @param user
-     * @return
      */
     public SshServerBuilder user(String user) {
         endpoint.setUser(user);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the username.")
+    @XmlAttribute
+    public void setUser(String user) {
+        user(user);
+    }
+
     /**
      * Sets the client password.
-     * @param password
-     * @return
      */
     public SshServerBuilder password(String password) {
         endpoint.setPassword(password);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the password.")
+    @XmlAttribute
+    public void setPassword(String password) {
+        password(password);
+    }
+
     /**
      * Sets the hostKeyPath property.
-     * @param hostKeyPath
-     * @return
      */
     public SshServerBuilder hostKeyPath(String hostKeyPath) {
         endpoint.setHostKeyPath(hostKeyPath);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the host key path")
+    @XmlAttribute(name = "host-key-path")
+    public void setHostKeyPath(String hostKeyPath) {
+        hostKeyPath(hostKeyPath);
+    }
+
     /**
      * Sets the userHomePath property.
-     * @param userHomePath
-     * @return
      */
     public SshServerBuilder userHomePath(String userHomePath) {
         endpoint.setUserHomePath(userHomePath);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the user home path")
+    @XmlAttribute(name = "user-home-path")
+    public void setUserHomePath(String userHomePath) {
+        userHomePath(userHomePath);
+    }
+
     /**
      * Sets the allowedKeyPath property.
-     * @param allowedKeyPath
-     * @return
      */
     public SshServerBuilder allowedKeyPath(String allowedKeyPath) {
         endpoint.setAllowedKeyPath(allowedKeyPath);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the allowed key path.")
+    @XmlAttribute(name = "allowed-key-path")
+    public void setAllowedKeyPath(String allowedKeyPath) {
+        allowedKeyPath(allowedKeyPath);
+    }
+
     /**
      * Sets the message converter.
-     * @param messageConverter
-     * @return
      */
     public SshServerBuilder messageConverter(SshMessageConverter messageConverter) {
         endpoint.setMessageConverter(messageConverter);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the message converter.")
+    @XmlAttribute(name = "message-converter")
+    public void setMessageConverter(String messageConverter) {
+        this.messageConverter = messageConverter;
+    }
+
     /**
      * Sets the marshaller.
-     * @param marshaller
-     * @return
      */
     public SshServerBuilder marshaller(SshMarshaller marshaller) {
         endpoint.setMarshaller(marshaller);
         return this;
     }
 
+    @SchemaProperty(description = "Sets the marshaller as a bean reference.")
+    @XmlAttribute
+    public void setMarshaller(String marshaller) {
+        this.marshaller = marshaller;
+    }
+
     /**
      * Sets the polling interval.
-     * @param pollingInterval
-     * @return
      */
     public SshServerBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
 
-    /**
-     * Sets the endpoint adapter.
-     * @param endpointAdapter
-     * @return
-     */
-    public SshServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
-        endpoint.setEndpointAdapter(endpointAdapter);
-        return this;
-    }
-
-    /**
-     * Sets the debug logging enabled flag.
-     * @param enabled
-     * @return
-     */
-    public SshServerBuilder debugLogging(boolean enabled) {
-        endpoint.setDebugLogging(enabled);
-        return this;
-    }
-
-    /**
-     * Sets the autoStart property.
-     * @param autoStart
-     * @return
-     */
-    public SshServerBuilder autoStart(boolean autoStart) {
-        endpoint.setAutoStart(autoStart);
-        return this;
+    @SchemaProperty(description = "Sets the polling interval.")
+    @XmlAttribute(name = "polling-interval")
+    public void setPollingInterval(int pollingInterval) {
+        pollingInterval(pollingInterval);
     }
 }

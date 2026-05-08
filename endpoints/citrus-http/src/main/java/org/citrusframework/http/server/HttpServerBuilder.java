@@ -16,12 +16,14 @@
 
 package org.citrusframework.http.server;
 
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.yaml.SchemaType;
 
 /**
  * @since 2.5
  */
 @SchemaType(module = "citrus-http")
+@XmlType(name = "", propOrder = {})
 public class HttpServerBuilder extends AbstractHttpServerBuilder<HttpServer, HttpServerBuilder> {
 
     public HttpServerBuilder() {

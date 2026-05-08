@@ -53,8 +53,6 @@ public class ManagedBeanDefinition {
     /**
      * Constructs proper object name either from given domain and name property or
      * by evaluating the mbean type class information.
-     *
-     * @return
      */
     public ObjectName createObjectName() {
         try {

@@ -16,6 +16,8 @@
 
 package org.citrusframework.channel;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
@@ -28,6 +30,7 @@ import org.springframework.messaging.core.DestinationResolver;
  * @since 2.7.6
  */
 @SchemaType(module = "citrus-spring-integration")
+@XmlType(name = "", propOrder = {})
 public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpoint> {
 
     /** Endpoint target */
@@ -70,7 +73,13 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
     }
 
     @SchemaProperty(description = "The Spring message channel name.")
+    @XmlAttribute
     public void setChannel(String channelName) {
+        channel(channelName);
+    }
+
+    @XmlAttribute(name = "channel-name")
+    public void setChannelName(String channelName) {
         channel(channelName);
     }
 
@@ -91,6 +100,7 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom messaging template.")
+    @XmlAttribute(name = "messaging-template")
     public void setMessagingTemplate(String messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
@@ -104,6 +114,7 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -117,6 +128,7 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
     }
 
     @SchemaProperty(advanced = true, description = "The channel destination resolver.")
+    @XmlAttribute(name = "channel-resolver")
     public void setChannelResolver(String resolver) {
         this.channelResolver = resolver;
     }
@@ -130,6 +142,7 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the endpoint uses object messages.")
+    @XmlAttribute(name = "use-object-messages")
     public void setUseObjectMessages(boolean useObjectMessages) {
         useObjectMessages(useObjectMessages);
     }
@@ -145,6 +158,7 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
     @SchemaProperty(
             advanced = true,
             description = "When enabled the endpoint removes all internal headers before sending a message.")
+    @XmlAttribute(name = "filter-internal-headers")
     public void setFilterInternalHeaders(boolean filterInternalHeaders) {
         filterInternalHeaders(filterInternalHeaders);
     }
@@ -158,6 +172,7 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
     }
 
     @SchemaProperty(description = "Sets the receive timeout when waiting for messages.", defaultValue = "5000")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

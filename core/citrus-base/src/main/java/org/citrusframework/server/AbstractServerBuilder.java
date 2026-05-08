@@ -16,6 +16,7 @@
 
 package org.citrusframework.server;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.util.StringUtils;
@@ -50,6 +51,7 @@ public abstract class AbstractServerBuilder<T extends AbstractServer, B extends 
     }
 
     @SchemaProperty(description = "When enabled the server is automatically started after creation.")
+    @XmlAttribute(name = "auto-start")
     public void setAutoStart(boolean autoStart) {
         autoStart(autoStart);
     }
@@ -63,6 +65,7 @@ public abstract class AbstractServerBuilder<T extends AbstractServer, B extends 
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom endpoint adapter to handle requests.")
+    @XmlAttribute(name = "endpoint-adapter")
     public void setEndpointAdapter(String endpointAdapter) {
         this.endpointAdapter = endpointAdapter;
     }
@@ -76,6 +79,7 @@ public abstract class AbstractServerBuilder<T extends AbstractServer, B extends 
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the server prints debug logging output.")
+    @XmlAttribute(name = "debug-logging")
     public void setDebugLogging(boolean enabled) {
         debugLogging(enabled);
     }
@@ -93,6 +97,7 @@ public abstract class AbstractServerBuilder<T extends AbstractServer, B extends 
     }
 
     @SchemaProperty(description = "The server timeout.", defaultValue = "5000")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

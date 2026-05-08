@@ -18,6 +18,8 @@ package org.citrusframework.jms.endpoint;
 
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.jms.message.JmsMessageConverter;
@@ -32,6 +34,7 @@ import org.springframework.jms.support.destination.DestinationResolver;
  * @since 2.5
  */
 @SchemaType(module = "citrus-jms")
+@XmlType(name = "", propOrder = {})
 public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpoint> {
 
     /** Endpoint target */
@@ -89,6 +92,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(description = "The JMS destination name.")
+    @XmlAttribute
     public void setDestination(String destinationName) {
         destination(destinationName);
     }
@@ -110,6 +114,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(description = "Sets the reply destination name.")
+    @XmlAttribute(name = "reply-destination")
     public void setReplyDestination(String replyDestination) {
         replyDestination(replyDestination);
     }
@@ -131,6 +136,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(description = "The JMS connection factory.")
+    @XmlAttribute(name = "connection-factory")
     public void setConnectionFactory(String connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
@@ -144,6 +150,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(advanced = true, description = "Sets the JMS template.")
+    @XmlAttribute(name = "jms-template")
     public void setJmsTemplate(String jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
     }
@@ -157,6 +164,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message converter bean reference.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -170,6 +178,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(advanced = true, description = "Sets the destination resolver.")
+    @XmlAttribute(name = "destination-resolver")
     public void setDestinationResolver(String resolver) {
         this.destinationResolver = resolver;
     }
@@ -183,6 +192,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(advanced = true, description = "Sets the destination name resolver.")
+    @XmlAttribute(name = "destination-name-resolver")
     public void setDestinationNameResolver(String resolver) {
         this.destinationNameResolver = resolver;
     }
@@ -196,6 +206,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the endpoint uses publish/subscribe mode.")
+    @XmlAttribute(name = "pub-sub-domain")
     public void setPubSubDomain(boolean pubSubDomain) {
         pubSubDomain(pubSubDomain);
     }
@@ -209,6 +220,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the endpoint uses object messages.")
+    @XmlAttribute(name = "use-object-messages")
     public void setUseObjectMessages(boolean useObjectMessages) {
         useObjectMessages(useObjectMessages);
     }
@@ -224,6 +236,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     @SchemaProperty(
             advanced = true,
             description = "When enabled the endpoint removes all internal headers before sending a message.")
+    @XmlAttribute(name = "filter-internal-headers")
     public void setFilterInternalHeaders(boolean filterInternalHeaders) {
         filterInternalHeaders(filterInternalHeaders);
     }
@@ -237,6 +250,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(advanced = true, description = "Sets the polling interval.")
+    @XmlAttribute(name = "polling-interval")
     public void setPollingInterval(int pollingInterval) {
         pollingInterval(pollingInterval);
     }
@@ -250,6 +264,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
     }
@@ -263,6 +278,7 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
     }
 
     @SchemaProperty(description = "Sets the receive timeout when the consumer waits for messages to arrive.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

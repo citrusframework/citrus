@@ -16,8 +16,13 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
@@ -33,6 +38,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.8
  */
 @SchemaType(module = "citrus-kafka")
+@XmlType(name = "", propOrder = {})
 public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint> {
 
     /** Endpoint target */
@@ -70,6 +76,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     }
 
     @SchemaProperty(description = "Sets the Kafka bootstrap server.")
+    @XmlAttribute
     public void setServer(String server) {
         server(server);
     }
@@ -83,6 +90,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     }
 
     @SchemaProperty(description = "Sets the Kafka topic.")
+    @XmlAttribute
     public void setTopic(String topic) {
         topic(topic);
     }
@@ -96,6 +104,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     }
 
     @SchemaProperty(description = "Sets the Kafka topic partition.")
+    @XmlAttribute
     public void setPartition(int partition) {
         partition(partition);
     }
@@ -111,8 +120,25 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:consume") },
             description = "Sets auto commit handling for this endpoint.")
+    @XmlAttribute(name = "auto-commit")
     public void setAutoCommit(boolean autoCommit) {
         autoCommit(autoCommit);
+    }
+
+    /**
+     * Sets the thread safe consumer property.
+     */
+    public KafkaEndpointBuilder useThreadSafeConsumer(boolean enabled) {
+        endpoint.getEndpointConfiguration().setUseThreadSafeConsumer(enabled);
+        return this;
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:consume") },
+            description = "Sets thread safe consumer option for this endpoint.")
+    @XmlAttribute(name = "use-thread-safe-consumer")
+    public void setUseThreadSafeConsumer(boolean enabled) {
+        useThreadSafeConsumer(enabled);
     }
 
     /**
@@ -126,6 +152,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:consume") },
             description = "Sets the auto commit interval.")
+    @XmlAttribute(name = "auto-commit-interval")
     public void setAutoCommitInterval(int autoCommitInterval) {
         autoCommitInterval(autoCommitInterval);
     }
@@ -141,6 +168,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:consume") },
             description = "Sets the offset reset.")
+    @XmlAttribute(name = "offset-reset")
     public void setOffsetReset(String offsetReset) {
         offsetReset(offsetReset);
     }
@@ -156,6 +184,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             advanced = true,
             description = "Sets the client id used to connect to the Kafka server.")
+    @XmlAttribute(name = "client-id")
     public void setClientId(String clientId) {
         clientId(clientId);
     }
@@ -171,6 +200,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:consume") },
             description = "Sets the consumer group used by the endpoint.")
+    @XmlAttribute(name = "consumer-group")
     public void setConsumerGroup(String group) {
         consumerGroup(group);
     }
@@ -184,6 +214,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -197,6 +228,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     }
 
     @SchemaProperty(advanced = true, description = "Sets the Kafka header mapper.")
+    @XmlAttribute(name = "header-mapper")
     public void setHeaderMapper(String headerMapper) {
         this.headerMapper = headerMapper;
     }
@@ -212,6 +244,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:serialize") },
             description = "Sets the fully qualified key serializer type class name.")
+    @XmlAttribute(name = "key-serializer")
     public void setKeySerializer(String serializerType) {
         try {
             keySerializer((Class<? extends Serializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
@@ -231,6 +264,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:serialize") },
             description = "Sets the fully qualified value serializer type class name.")
+    @XmlAttribute(name = "value-serializer")
     public void setValueSerializer(String serializerType) {
         try {
             valueSerializer((Class<? extends Serializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
@@ -250,6 +284,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:deserialize") },
             description = "Sets the fully qualified key deserializer type class name.")
+    @XmlAttribute(name = "key-deserializer")
     public void setKeyDeserializer(String serializerType) {
         try {
             keyDeserializer((Class<? extends Deserializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
@@ -269,6 +304,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:deserialize") },
             description = "Sets the fully qualified value deserializer type class name.")
+    @XmlAttribute(name = "value-deserializer")
     public void setValueDeserializer(String serializerType) {
         try {
             valueDeserializer((Class<? extends Deserializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
@@ -288,8 +324,18 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:produce") },
             description = "Sets the Kafka producer properties.")
+    @XmlTransient
     public void setProducerProperties(Map<String, Object> producerProperties) {
         producerProperties(producerProperties);
+    }
+
+    @XmlAttribute(name = "producer-properties")
+    public void setProducerProperties(String producerProperties) {
+        setProducerProperties(Arrays.stream(producerProperties.split(","))
+                .map(String::trim)
+                .filter(expression -> expression.contains("="))
+                .map(expression -> expression.split("=", 2))
+                .collect(Collectors.toMap(tokens -> tokens[0].trim(), tokens -> tokens[1].trim())));
     }
 
     /**
@@ -303,8 +349,18 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:consume") },
             description = "Sets the Kafka consumer properties.")
+    @XmlTransient
     public void setConsumerProperties(Map<String, Object> consumerProperties) {
         consumerProperties(consumerProperties);
+    }
+
+    @XmlAttribute(name = "consumer-properties")
+    public void setConsumerProperties(String consumerProperties) {
+        setProducerProperties(Arrays.stream(consumerProperties.split(","))
+                .map(String::trim)
+                .filter(expression -> expression.contains("="))
+                .map(expression -> expression.split("=", 2))
+                .collect(Collectors.toMap(tokens -> tokens[0].trim(), tokens -> tokens[1].trim())));
     }
 
     /**
@@ -318,6 +374,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:consume") },
             description = "Sets the Kafka consumer timeout.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

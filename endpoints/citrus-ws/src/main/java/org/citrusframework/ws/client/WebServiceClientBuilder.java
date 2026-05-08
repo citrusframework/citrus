@@ -17,8 +17,12 @@
 package org.citrusframework.ws.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.message.ErrorHandlingStrategy;
@@ -36,6 +40,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * @since 2.5
  */
 @SchemaType(module = "citrus-ws")
+@XmlType(name = "", propOrder = {})
 public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceClient> {
 
     /** Endpoint target */
@@ -100,6 +105,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
     }
 
     @SchemaProperty(description = "Sets the SOAP Web Service server url.")
+    @XmlAttribute(name = "default-uri")
     public void setDefaultUri(String defaultUri) {
         defaultUri(defaultUri);
     }
@@ -113,6 +119,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom message factory.")
+    @XmlAttribute(name = "message-factory")
     public void setMessageFactory(String messageFactory) {
         this.messageFactory = messageFactory;
     }
@@ -126,6 +133,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the client does not remove the SOAP envelope before processing the message.")
+    @XmlAttribute(name = "keep-soap-envelope")
     public void setKeepSoapEnvelope(boolean flag) {
         keepSoapEnvelope(flag);
     }
@@ -139,6 +147,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
     }
 
     @SchemaProperty(advanced = true, description = "Sets custom web service template reference.")
+    @XmlAttribute(name = "web-service-template")
     public void setWebServiceTemplate(String webServiceTemplate) {
         this.webServiceTemplate = webServiceTemplate;
     }
@@ -152,6 +161,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom message sender implementation.")
+    @XmlAttribute(name = "message-sender")
     public void setMessageSender(String messageSender) {
         this.messageSender = messageSender;
     }
@@ -165,6 +175,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom message converter implementation.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -181,6 +192,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:intercept") },
             description = "Sets a custom client interceptor."
     )
+    @XmlAttribute
     public void setInterceptor(String interceptor) {
         this.interceptors.add(interceptor);
     }
@@ -196,10 +208,15 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:intercept") },
             description = "Sets client interceptors."
     )
+    @XmlTransient
     public void setInterceptors(List<String> interceptors) {
         this.interceptors.addAll(interceptors);
     }
 
+    @XmlAttribute
+    public void setInterceptors(String interceptors) {
+        setInterceptors(Arrays.asList(interceptors.split(",")));
+    }
     /**
      * Sets the message correlator.
      */
@@ -209,6 +226,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
     }
@@ -222,6 +240,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
     }
 
     @SchemaProperty(advanced = true, description = "Sets the endpoint resolver.")
+    @XmlAttribute(name = "endpoint-resolver")
     public void setEndpointResolver(String resolver) {
         this.endpointResolver = resolver;
     }
@@ -238,8 +257,13 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:errorHandler") },
             description = "Sets the error handling strategy."
     )
-    public void setFaultStrategy(ErrorHandlingStrategy faultStrategy) {
-        faultStrategy(faultStrategy);
+    @XmlAttribute(name = "fault-strategy")
+    public void setFaultStrategy(String faultStrategy) {
+        try {
+            faultStrategy(ErrorHandlingStrategy.fromName(faultStrategy));
+        } catch (IllegalArgumentException e) {
+            faultStrategy(ErrorHandlingStrategy.valueOf(faultStrategy));
+        }
     }
 
     /**
@@ -251,6 +275,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
     }
 
     @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    @XmlAttribute(name = "polling-interval")
     public void setPollingInterval(int pollingInterval) {
         pollingInterval(pollingInterval);
     }
@@ -264,6 +289,7 @@ public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceC
     }
 
     @SchemaProperty(description = "Sets the receive timeout when the client waits for response messages.", defaultValue = "5000")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

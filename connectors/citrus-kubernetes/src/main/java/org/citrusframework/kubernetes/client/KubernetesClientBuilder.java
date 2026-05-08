@@ -17,6 +17,8 @@
 package org.citrusframework.kubernetes.client;
 
 import io.fabric8.kubernetes.client.ConfigBuilder;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.util.StringUtils;
@@ -28,6 +30,7 @@ import tools.jackson.databind.json.JsonMapper;
  * @since 2.7
  */
 @SchemaType(module = "citrus-kubernetes")
+@XmlType(name = "", propOrder = {})
 public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesClient> {
 
     /** Endpoint target */
@@ -72,6 +75,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
     }
 
     @SchemaProperty(advanced = true, description = "Sets the reference to the Kubernetes client implementation.")
+    @XmlAttribute
     public void setClient(String client) {
         this.client = client;
     }
@@ -85,6 +89,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
     }
 
     @SchemaProperty(advanced = true, description = "Sets the master URL in the client configuration.")
+    @XmlAttribute
     public void setUrl(String url) {
         url(url);
     }
@@ -98,6 +103,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
     }
 
     @SchemaProperty(advanced = true, description = "Sets the Kubernetes client version.")
+    @XmlAttribute
     public void setVersion(String version) {
         version(version);
     }
@@ -114,6 +120,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the user name used to connect to the Kubernetes cluster."
     )
+    @XmlAttribute
     public void setUsername(String username) {
         username(username);
     }
@@ -130,6 +137,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the user password used to connect to the Kubernetes cluster."
     )
+    @XmlAttribute
     public void setPassword(String password) {
         password(password);
     }
@@ -146,6 +154,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the OAuth token used to connect to the Kubernetes cluster."
     )
+    @XmlAttribute(name = "oauth-token")
     public void setOAuthToken(String oauthToken) {
         oauthToken(oauthToken);
     }
@@ -159,6 +168,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
     }
 
     @SchemaProperty(description = "Sets the namespace on the cluster.")
+    @XmlAttribute
     public void setNamespace(String namespace) {
         namespace(namespace);
     }
@@ -175,6 +185,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the client certificate."
     )
+    @XmlAttribute(name = "cert-file")
     public void setCertFile(String certFile) {
         certFile(certFile);
     }
@@ -188,6 +199,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -201,6 +213,7 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
     }
 
     @SchemaProperty(advanced = true, description = "Sets the JSON mapper.")
+    @XmlAttribute(name = "json-mapper")
     public void setJsonMapper(String jsonMapper) {
         this.jsonMapper = jsonMapper;
     }

@@ -17,8 +17,12 @@
 package org.citrusframework.selenium.endpoint;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
@@ -31,6 +35,7 @@ import org.openqa.selenium.support.events.WebDriverListener;
  * @since 2.7
  */
 @SchemaType(module = "citrus-selenium")
+@XmlType(name = "", propOrder = {})
 public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrowser> {
 
     /** Endpoint target */
@@ -75,6 +80,7 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
     }
 
     @SchemaProperty(description = "The Selenium browser type.", defaultValue = "htmlunit")
+    @XmlAttribute
     public void setType(String type) {
         type(type);
     }
@@ -91,6 +97,7 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:firefox" ) },
             description = "The Firefox profile."
     )
+    @XmlAttribute(name = "firefox-profile")
     public void setProfile(String profile) {
         this.firefoxProfile = profile;
     }
@@ -104,6 +111,7 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
     }
 
     @SchemaProperty(description = "When enabled the browser supports JavaScript.")
+    @XmlAttribute(name = "javascript")
     public void setJavaScript(boolean enabled) {
         javaScript(enabled);
     }
@@ -117,6 +125,7 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
     }
 
     @SchemaProperty(description = "The remote server URL.")
+    @XmlAttribute(name = "remote-server")
     public void setRemoteServerUrl(String url) {
         remoteServer(url);
     }
@@ -130,6 +139,7 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom web driver as a bean reference.")
+    @XmlAttribute(name = "web-driver")
     public void setWebDriver(String driver) {
         this.webDriver = driver;
     }
@@ -143,8 +153,14 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
     }
 
     @SchemaProperty(advanced = true, description = "Sets the list of event listeners.")
+    @XmlTransient
     public void setEventListeners(List<String> listeners) {
         this.eventListeners.addAll(listeners);
+    }
+
+    @XmlAttribute(name = "event-listeners")
+    public void setEventListeners(String listeners) {
+        setEventListeners(Arrays.asList(listeners.split(",")));
     }
 
     /**
@@ -156,6 +172,7 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
     }
 
     @SchemaProperty(advanced = true, description = "The browser version.")
+    @XmlAttribute
     public void setVersion(String version) {
         version(version);
     }
@@ -169,6 +186,7 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
     }
 
     @SchemaProperty(description = "The URL to the start page.")
+    @XmlAttribute(name = "start-page")
     public void setStartPage(String url) {
         startPage(url);
     }
@@ -182,6 +200,7 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
     }
 
     @SchemaProperty(description = "The browser timeout.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

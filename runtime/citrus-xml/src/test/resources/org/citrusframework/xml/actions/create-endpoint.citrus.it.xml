@@ -26,5 +26,10 @@
         <property name="timeout" value="2000"/>
       </properties>
     </create-endpoint>
+    <create-endpoint name="foo">
+      <direct>
+        <asynchronous queue="fooQueue"/>
+      </direct>
+    </create-endpoint>
   </actions>
 </test>
