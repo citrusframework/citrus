@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.Filter;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
@@ -121,6 +123,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(description = "The Http server port.")
+    @XmlAttribute
     public void setPort(int port) {
         port(port);
     }
@@ -136,6 +139,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "The secured port.")
+    @XmlAttribute(name = "secure-port")
     public void setSecurePort(int port) {
         securePort(port);
     }
@@ -149,6 +153,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(advanced = true, description = "Sets the Spring context configuration loaded for this Http server.")
+    @XmlAttribute(name = "context-config-location")
     public void setContextConfigLocation(String configLocation) {
         contextConfigLocation(configLocation);
     }
@@ -162,6 +167,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(advanced = true, description = "The server resource base path where resources get loaded from.")
+    @XmlAttribute(name = "resource-base")
     public void setResourceBase(String resourceBase) {
         resourceBase(resourceBase);
     }
@@ -175,6 +181,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the server uses the root Spring application context.")
+    @XmlAttribute(name = "root-parent-context")
     public void setRootParentContext(boolean rootParentContext) {
         rootParentContext(rootParentContext);
     }
@@ -190,6 +197,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:filter") },
             description = "When enabled the server uses the default set of Http servlet filters.")
+    @XmlAttribute(name = "use-default-filters")
     public void setUseDefaultFilters(boolean useDefaultFilters) {
         useDefaultFilters(useDefaultFilters);
     }
@@ -205,8 +213,14 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets a list of connectors for this server.")
+    @XmlTransient
     public void setConnectors(List<String> connectors) {
         this.connectors.addAll(connectors);
+    }
+
+    @XmlAttribute
+    public void setConnectors(String connectors) {
+        setConnectors(Arrays.asList(connectors.split(",")));
     }
 
     /**
@@ -220,6 +234,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Add a connector to this server.")
+    @XmlAttribute
     public void setConnector(String connector) {
         this.connectors.add(connector);
     }
@@ -235,8 +250,18 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:filter") },
             description = "Map of Http filters used on this server.")
+    @XmlTransient
     public void setFilters(Map<String, String> filters) {
         this.filters.putAll(filters);
+    }
+
+    @XmlAttribute
+    public void setFilters(String filters) {
+        setFilters(Arrays.stream(filters.split(","))
+                .map(String::trim)
+                .filter(expression -> expression.contains("="))
+                .map(expression -> expression.split("=", 2))
+                .collect(Collectors.toMap(tokens -> tokens[0].trim(), tokens -> tokens[1].trim())));
     }
 
     /**
@@ -250,8 +275,18 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:filter") },
             description = "Filter mapping used on this server.")
+    @XmlTransient
     public void setFilterMappings(Map<String, String> filterMappings) {
         filterMappings(filterMappings);
+    }
+
+    @XmlAttribute
+    public void setFilterMappings(String filterMappings) {
+        setFilterMappings(Arrays.stream(filterMappings.split(","))
+                .map(String::trim)
+                .filter(expression -> expression.contains("="))
+                .map(expression -> expression.split("=", 2))
+                .collect(Collectors.toMap(tokens -> tokens[0].trim(), tokens -> tokens[1].trim())));
     }
 
     /**
@@ -263,8 +298,14 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(advanced = true, description = "List of supported media types on this server.")
+    @XmlTransient
     public void setBinaryMediaTypes(List<String> binaryMediaTypes) {
         binaryMediaTypes(binaryMediaTypes.stream().map(MediaType::valueOf).toList());
+    }
+
+    @XmlAttribute(name = "binary-media-types")
+    public void setBinaryMediaTypes(String binaryMediaTypes) {
+        setBinaryMediaTypes(Arrays.asList(binaryMediaTypes.split(",")));
     }
 
     /**
@@ -278,6 +319,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets the servlet name.")
+    @XmlAttribute(name = "servlet-name")
     public void setServletName(String servletName) {
         servletName(servletName);
     }
@@ -293,6 +335,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets the servlet mapping path.")
+    @XmlAttribute(name = "servlet-mapping-path")
     public void setServletMappingPath(String servletMappingPath) {
         servletMappingPath(servletMappingPath);
     }
@@ -308,6 +351,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets the context path on this server.")
+    @XmlAttribute(name = "context-path")
     public void setContextPath(String contextPath) {
         contextPath(contextPath);
     }
@@ -323,7 +367,8 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets a custom servlet handler as a bean reference.")
-    public void serServletHandler(String servletHandler) {
+    @XmlAttribute(name = "servlet-handler")
+    public void setServletHandler(String servletHandler) {
         this.servletHandler = servletHandler;
     }
 
@@ -338,6 +383,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the security handler as a bean reference.")
+    @XmlAttribute(name = "security-handler")
     public void setSecurityHandler(String securityHandler) {
         this.securityHandler = securityHandler;
     }
@@ -351,6 +397,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(advanced = true, description = "Sets the Http message converter bean reference.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -364,6 +411,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the server handles attribute headers.")
+    @XmlAttribute(name = "handle-attribute-headers")
     public void setHandleAttributeHeaders(boolean flag) {
         handleAttributeHeaders(flag);
     }
@@ -377,6 +425,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the server handles cookies.")
+    @XmlAttribute(name = "handle-cookies")
     public void setHandleCookies(boolean flag) {
         handleCookies(flag);
     }
@@ -390,6 +439,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the server removes semicolon path content from headers.")
+    @XmlAttribute(name = "remove-semicolon-path-content")
     public void setRemoveSemicolonPathContent(boolean removeSemicolonPathContent) {
         removeSemicolonPathContent(removeSemicolonPathContent);
     }
@@ -403,6 +453,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(advanced = true, description = "Sets the default status returned by the server.")
+    @XmlAttribute(name = "default-status")
     public void setDefaultStatus(HttpStatus status) {
         defaultStatus(status);
     }
@@ -416,6 +467,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(advanced = true, description = "Sets the response cache size.")
+    @XmlAttribute(name = "response-cache-size")
     public void setResponseCacheSize(int size) {
         responseCacheSize(size);
     }
@@ -431,8 +483,14 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:intercept") },
             description = "Sets the list of handler interceptor bean references.")
+    @XmlTransient
     public void setInterceptors(List<String> interceptors) {
         this.interceptors.addAll(interceptors);
+    }
+
+    @XmlAttribute
+    public void setInterceptors(String interceptors) {
+        setInterceptors(Arrays.asList(interceptors.split(",")));
     }
 
     /**
@@ -446,6 +504,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:intercept") },
             description = "Sets a handler interceptor.")
+    @XmlAttribute
     public void setInterceptor(String interceptor) {
         this.interceptors.add(interceptor);
     }
@@ -457,6 +516,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @SchemaProperty(description = "Sets the server timeout while waiting for incoming requests.", defaultValue = "5000")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }
@@ -474,6 +534,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Use given authentication mechanism for all request paths.")
+    @XmlAttribute
     public void setAuthentication(String authentication) {
         this.authentication = authentication;
     }
@@ -491,6 +552,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Secure the connections on given secured port with given security mechanism.")
+    @XmlAttribute(name = "secured-connection")
     public void setSecuredConnection(String connection) {
         this.securedConnection = connection;
     }

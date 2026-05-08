@@ -18,9 +18,15 @@ package org.citrusframework.xml.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAnyElement;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -28,6 +34,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.CreateEndpointAction;
+import org.citrusframework.endpoint.EndpointBuilder;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.w3c.dom.Node;
 
 @XmlRootElement(name = "create-endpoint")
 public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
@@ -40,6 +49,8 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
     private boolean autoClose = CitrusSettings.isAutoCloseDynamicEndpoints();
     private boolean autoRemove = CitrusSettings.isAutoRemoveDynamicEndpoints();
     private Properties properties;
+
+    private Object anyEndpoint;
 
     @XmlAttribute
     public void setType(String type) {
@@ -91,6 +102,15 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
         this.properties = properties;
     }
 
+    public Object getAnyEndpoint() {
+        return anyEndpoint;
+    }
+
+    @XmlAnyElement(lax = true)
+    public void setAnyEndpoint(Object anyEndpoint) {
+        this.anyEndpoint = anyEndpoint;
+    }
+
     @Override
     public CreateEndpointAction build() {
         builder.type(type);
@@ -113,6 +133,30 @@ public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
 
         if (properties != null) {
             properties.getProperties().forEach(p -> builder.property(p.name, p.value));
+        }
+
+        if (anyEndpoint != null) {
+            Object endpoint = anyEndpoint;
+
+            if (anyEndpoint instanceof JAXBElement) {
+                endpoint = ((JAXBElement<?>) anyEndpoint).getValue();
+            }
+
+            if (anyEndpoint instanceof Node node) {
+                Optional<EndpointBuilder<?>> builder = EndpointBuilder.lookup(node.getLocalName());
+                if (builder.isPresent()) {
+                    try {
+                        Unmarshaller unmarshaller = JAXBContext.newInstance(builder.get().getClass()).createUnmarshaller();
+                        endpoint = unmarshaller.unmarshal(node, builder.get().getClass()).getValue();
+                    } catch (JAXBException e) {
+                        throw new CitrusRuntimeException("Failed to create XMLTestLoader instance", e);
+                    }
+                }
+            }
+
+            if (endpoint instanceof EndpointBuilder<?>) {
+                builder.endpoint((EndpointBuilder<?>) endpoint);
+            }
         }
 
         return builder.build();

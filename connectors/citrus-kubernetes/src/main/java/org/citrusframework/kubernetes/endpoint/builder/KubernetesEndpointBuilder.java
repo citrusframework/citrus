@@ -17,6 +17,10 @@
 package org.citrusframework.kubernetes.endpoint.builder;
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -25,12 +29,17 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
 
+@XmlType(name = "", propOrder = {
+        "client"
+})
+@XmlRootElement(name = "kubernetes")
 public class KubernetesEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;
     private ReferenceResolver referenceResolver;
 
     @SchemaProperty(description = "Sets the Kubernetes client endpoint.")
+    @XmlElement
     public void setClient(KubernetesClientBuilder client) {
         this.delegate = client;
     }
@@ -54,6 +63,7 @@ public class KubernetesEndpointBuilder implements EndpointBuilder<Endpoint>, Ref
     }
 
     @Override
+    @XmlTransient
     public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

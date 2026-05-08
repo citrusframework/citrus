@@ -16,6 +16,8 @@
 
 package org.citrusframework.vertx.endpoint;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.util.StringUtils;
@@ -28,6 +30,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.5
  */
 @SchemaType(module = "citrus-vertx")
+@XmlType(name = "", propOrder = {})
 public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncEndpoint> {
 
     /** Endpoint target */
@@ -70,6 +73,7 @@ public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncE
     }
 
     @SchemaProperty(description = "The Vert.x event bus host.")
+    @XmlAttribute
     public void setHost(String host) {
         host(host);
     }
@@ -83,6 +87,7 @@ public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncE
     }
 
     @SchemaProperty(description = "The Vert.x event bus port.")
+    @XmlAttribute
     public void setPort(int port) {
         port(port);
     }
@@ -96,6 +101,7 @@ public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncE
     }
 
     @SchemaProperty(description = "The event bus address.")
+    @XmlAttribute
     public void setAddress(String address) {
         address(address);
     }
@@ -109,6 +115,7 @@ public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncE
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom Vert.x factory.")
+    @XmlAttribute(name = "vertx-factory")
     public void setVertxFactory(String vertxFactory) {
         this.vertxFactory = vertxFactory;
     }
@@ -122,6 +129,7 @@ public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncE
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -135,6 +143,7 @@ public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncE
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the endpoint uses publish/subscribe mode.")
+    @XmlAttribute(name = "pub-sub-domain")
     public void setPubSubDomain(boolean pubSubDomain) {
         pubSubDomain(pubSubDomain);
     }
@@ -148,6 +157,7 @@ public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncE
     }
 
     @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    @XmlAttribute(name = "polling-interval")
     public void setPollingInterval(int pollingInterval) {
         pollingInterval(pollingInterval);
     }
@@ -161,6 +171,7 @@ public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncE
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
     }
@@ -174,6 +185,7 @@ public class VertxSyncEndpointBuilder extends AbstractEndpointBuilder<VertxSyncE
     }
 
     @SchemaProperty(description = "The endpoint timeout when waiting for messages.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

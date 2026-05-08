@@ -17,8 +17,12 @@
 package org.citrusframework.websocket.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.http.server.AbstractHttpServerBuilder;
 import org.citrusframework.websocket.endpoint.WebSocketEndpoint;
 import org.citrusframework.yaml.SchemaProperty;
@@ -28,6 +32,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.5
  */
 @SchemaType(module = "citrus-websocket")
+@XmlType(name = "", propOrder = {})
 public class WebSocketServerBuilder extends AbstractHttpServerBuilder<WebSocketServer, WebSocketServerBuilder> {
 
     private final List<String> webSockets = new ArrayList<>();
@@ -62,7 +67,13 @@ public class WebSocketServerBuilder extends AbstractHttpServerBuilder<WebSocketS
     }
 
     @SchemaProperty(description = "Sets the list of web sockets for this server.")
+    @XmlTransient
     public void setWebSockets(List<String> webSockets) {
         this.webSockets.addAll(webSockets);
+    }
+
+    @XmlAttribute
+    public void setWebSockets(String webSockets) {
+        setWebSockets(Arrays.asList(webSockets.split(",")));
     }
 }

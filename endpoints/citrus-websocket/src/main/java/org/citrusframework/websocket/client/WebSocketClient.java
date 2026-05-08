@@ -30,10 +30,13 @@ public class WebSocketClient extends WebSocketEndpoint {
         this(new WebSocketClientEndpointConfiguration());
     }
 
+    @Override
+    public WebSocketClientEndpointConfiguration getEndpointConfiguration() {
+        return (WebSocketClientEndpointConfiguration) super.getEndpointConfiguration();
+    }
+
     /**
      * Default constructor using endpoint configuration.
-     *
-     * @param endpointConfiguration
      */
     public WebSocketClient(WebSocketClientEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);

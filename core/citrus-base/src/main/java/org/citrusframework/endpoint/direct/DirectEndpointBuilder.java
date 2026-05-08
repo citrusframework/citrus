@@ -16,6 +16,8 @@
 
 package org.citrusframework.endpoint.direct;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
@@ -23,6 +25,7 @@ import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
 
+@XmlType(name = "", propOrder = {})
 public class DirectEndpointBuilder extends AbstractEndpointBuilder<DirectEndpoint> {
 
     /** Endpoint target */
@@ -70,7 +73,13 @@ public class DirectEndpointBuilder extends AbstractEndpointBuilder<DirectEndpoin
     }
 
     @SchemaProperty(description = "The queue name.")
+    @XmlAttribute
     public void setQueue(String queueName) {
+        queue(queueName);
+    }
+
+    @XmlAttribute(name = "queue-name")
+    public void setQueueName(String queueName) {
         queue(queueName);
     }
 
@@ -91,6 +100,7 @@ public class DirectEndpointBuilder extends AbstractEndpointBuilder<DirectEndpoin
     }
 
     @SchemaProperty(description = "When set the queue is automatically created when it does not exist in bean registry.")
+    @XmlAttribute(name = "auto-create-queue")
     public void setAutoCreateQueue(boolean autoCreate) {
         autoCreateQueue(autoCreate);
     }
@@ -104,6 +114,7 @@ public class DirectEndpointBuilder extends AbstractEndpointBuilder<DirectEndpoin
     }
 
     @SchemaProperty(description = "The timeout when receiving messages from the queue.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

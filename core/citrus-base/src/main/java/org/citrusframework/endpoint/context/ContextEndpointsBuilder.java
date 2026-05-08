@@ -17,6 +17,10 @@
 package org.citrusframework.endpoint.context;
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -24,12 +28,17 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
 
+@XmlType(name = "", propOrder = {
+        "message-store"
+})
+@XmlRootElement(name = "context")
 public class ContextEndpointsBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;
     private ReferenceResolver referenceResolver;
 
     @SchemaProperty(description = "Sets a message store endpoint .")
+    @XmlElement(name = "message-store")
     public void setMessageStore(MessageStoreEndpointBuilder builder) {
         this.delegate = builder;
     }
@@ -53,6 +62,7 @@ public class ContextEndpointsBuilder implements EndpointBuilder<Endpoint>, Refer
     }
 
     @Override
+    @XmlTransient
     public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

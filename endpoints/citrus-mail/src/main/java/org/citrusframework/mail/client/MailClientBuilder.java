@@ -16,9 +16,14 @@
 
 package org.citrusframework.mail.client;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
@@ -30,6 +35,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.5
  */
 @SchemaType(module = "citrus-mail")
+@XmlType(name = "", propOrder = {})
 public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
 
     /** Endpoint target */
@@ -66,6 +72,7 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
     }
 
     @SchemaProperty(description = "The mail server host to connect to.")
+    @XmlAttribute
     public void setHost(String host) {
         host(host);
     }
@@ -79,6 +86,7 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
     }
 
     @SchemaProperty(description = "The mail server port.")
+    @XmlAttribute
     public void setPort(int port) {
         port(port);
     }
@@ -92,6 +100,7 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
     }
 
     @SchemaProperty(description = "The mail protocol.")
+    @XmlAttribute
     public void setProtocol(String protocol) {
         protocol(protocol);
     }
@@ -108,6 +117,7 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "The client user name."
     )
+    @XmlAttribute
     public void setUsername(String username) {
         username(username);
     }
@@ -124,6 +134,7 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "The client user password."
     )
+    @XmlAttribute
     public void setPassword(String password) {
         password(password);
     }
@@ -137,10 +148,20 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Custom properties passed to the java mail implementation.")
+    @XmlTransient
     public void setJavaMailProperties(Map<String, Object> javaMailProperties) {
         Properties props = new Properties();
         props.putAll(javaMailProperties);
         javaMailProperties(props);
+    }
+
+    @XmlAttribute(name = "mail-properties")
+    public void setJavaMailProperties(String javaMailProperties) {
+        setJavaMailProperties(Arrays.stream(javaMailProperties.split(","))
+                .map(String::trim)
+                .filter(expression -> expression.contains("="))
+                .map(expression -> expression.split("=", 2))
+                .collect(Collectors.toMap(tokens -> tokens[0].trim(), tokens -> tokens[1].trim())));
     }
 
     /**
@@ -152,6 +173,7 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom mail message marshaller.")
+    @XmlAttribute
     public void setMarshaller(String marshaller) {
         this.marshaller = marshaller;
     }
@@ -165,6 +187,7 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets custom message converter.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -178,6 +201,7 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
     }
 
     @SchemaProperty(description = "Mail client timeout when waiting for a response.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

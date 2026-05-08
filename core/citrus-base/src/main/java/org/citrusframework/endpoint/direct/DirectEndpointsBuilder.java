@@ -17,6 +17,10 @@
 package org.citrusframework.endpoint.direct;
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -26,17 +30,21 @@ import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
 @SchemaType(oneOf = { "asynchronous", "synchronous" })
+@XmlType(name = "", propOrder = {})
+@XmlRootElement(name = "direct")
 public class DirectEndpointsBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;
     private ReferenceResolver referenceResolver;
 
     @SchemaProperty(description = "Sets the synchronous direct endpoint.")
+    @XmlElement
     public void setSynchronous(DirectSyncEndpointBuilder builder) {
         this.delegate = builder;
     }
 
     @SchemaProperty(description = "Sets the direct endpoint.")
+    @XmlElement
     public void setAsynchronous(DirectEndpointBuilder builder) {
         this.delegate = builder;
     }
@@ -60,6 +68,7 @@ public class DirectEndpointsBuilder implements EndpointBuilder<Endpoint>, Refere
     }
 
     @Override
+    @XmlTransient
     public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

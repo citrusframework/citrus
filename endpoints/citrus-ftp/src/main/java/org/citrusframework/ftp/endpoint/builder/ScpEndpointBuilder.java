@@ -17,6 +17,10 @@
 package org.citrusframework.ftp.endpoint.builder;
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -28,17 +32,24 @@ import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
 @SchemaType(oneOf = { "client", "server" }, module = "citrus-ftp")
+@XmlType(name = "", propOrder = {
+        "client",
+        "server"
+})
+@XmlRootElement(name = "scp")
 public class ScpEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;
     private ReferenceResolver referenceResolver;
 
     @SchemaProperty(description = "Sets the scp client endpoint.")
+    @XmlElement
     public void setClient(ScpClientBuilder client) {
         this.delegate = client;
     }
 
     @SchemaProperty(description = "Sets the sftp server endpoint.")
+    @XmlElement
     public void setServer(SftpServerBuilder server) {
         this.delegate = server;
     }
@@ -62,6 +73,7 @@ public class ScpEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceR
     }
 
     @Override
+    @XmlTransient
     public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

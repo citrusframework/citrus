@@ -18,7 +18,8 @@ package org.citrusframework.jms.endpoint;
 
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
-
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.jms.message.JmsMessageConverter;
@@ -32,6 +33,7 @@ import org.springframework.jms.support.destination.DestinationResolver;
  * @since 2.5
  */
 @SchemaType(module = "citrus-jms")
+@XmlType(name = "", propOrder = {})
 public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
 
     /** Endpoint target */
@@ -84,6 +86,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     }
 
     @SchemaProperty(description = "The JMS destination name.")
+    @XmlAttribute
     public void setDestination(String destinationName) {
         destination(destinationName);
     }
@@ -105,6 +108,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     }
 
     @SchemaProperty(description = "The JMS connection factory.")
+    @XmlAttribute(name = "connection-factory")
     public void setConnectionFactory(String connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
@@ -118,6 +122,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the JMS template.")
+    @XmlAttribute(name = "jms-template")
     public void setJmsTemplate(String jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
     }
@@ -131,6 +136,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message converter bean reference.")
+    @XmlAttribute(name = "message-converter")
     public  void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -144,6 +150,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the destination resolver.")
+    @XmlAttribute(name = "destination-resolver")
     public void setDestinationResolver(String resolver) {
         this.destinationResolver = resolver;
     }
@@ -157,6 +164,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the destination name resolver.")
+    @XmlAttribute(name = "destination-name-resolver")
     public void setDestinationNameResolver(String resolver) {
         this.destinationNameResolver = resolver;
     }
@@ -172,6 +180,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:publishSubscribe") },
             description = "When enabled the endpoint uses publish/subscribe mode.")
+    @XmlAttribute(name = "pub-sub-domain")
     public void setPubSubDomain(boolean pubSubDomain) {
         pubSubDomain(pubSubDomain);
     }
@@ -187,6 +196,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:publishSubscribe") },
             description = "When enabled the JMS consumer is started right after the endpoint is created.")
+    @XmlAttribute(name = "auto-start")
     public void setAutoStart(boolean autoStart) {
         autoStart(autoStart);
     }
@@ -202,6 +212,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:publishSubscribe") },
             description = "Enables/disables durable subscription mode.")
+    @XmlAttribute(name = "durable-subscription")
     public void setDurableSubscription(boolean durableSubscription) {
         durableSubscription(durableSubscription);
     }
@@ -217,6 +228,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:publishSubscribe") },
             description = "Sets the durable subscriber name.")
+    @XmlAttribute(name = "durable-subscriber-name")
     public void setDurableSubscriberName(String durableSubscriberName) {
         durableSubscriberName(durableSubscriberName);
     }
@@ -230,6 +242,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the endpoint uses object messages.")
+    @XmlAttribute(name = "use-object-messages")
     public void setUseObjectMessages(boolean useObjectMessages) {
         useObjectMessages(useObjectMessages);
     }
@@ -243,6 +256,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     }
 
     @SchemaProperty(advanced = true, description = "Filter internal headers.")
+    @XmlAttribute(name = "filter-internal-headers")
     public void setFilterInternalHeaders(boolean filterInternalHeaders) {
         filterInternalHeaders(filterInternalHeaders);
     }
@@ -256,6 +270,7 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     }
 
     @SchemaProperty(description = "Sets the receive timeout when the consumer waits for messages to arrive.", defaultValue = "5000")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

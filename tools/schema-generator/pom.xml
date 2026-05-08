@@ -109,6 +109,16 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-jmx</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-rmi</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-vertx</artifactId>
       <version>${project.version}</version>
     </dependency>

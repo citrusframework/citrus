@@ -17,6 +17,10 @@
 package org.citrusframework.docker.endpoint.builder;
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.docker.client.DockerClientBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
@@ -25,12 +29,17 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
 
+@XmlType(name = "", propOrder = {
+        "client"
+})
+@XmlRootElement(name = "docker")
 public class DockerEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;
     private ReferenceResolver referenceResolver;
 
     @SchemaProperty(description = "Sets the Docker client endpoint.")
+    @XmlElement
     public void setClient(DockerClientBuilder client) {
         this.delegate = client;
     }
@@ -54,6 +63,7 @@ public class DockerEndpointBuilder implements EndpointBuilder<Endpoint>, Referen
     }
 
     @Override
+    @XmlTransient
     public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

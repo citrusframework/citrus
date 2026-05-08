@@ -19,6 +19,8 @@ package org.citrusframework.xml.actions;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.CreateEndpointAction;
+import org.citrusframework.endpoint.direct.DirectEndpoint;
+import org.citrusframework.endpoint.direct.DirectEndpointsBuilder;
 import org.citrusframework.xml.XmlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,9 +36,15 @@ public class CreateEndpointTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getName(), "CreateEndpointTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
+        Assert.assertEquals(result.getActionCount(), 3L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CreateEndpointAction.class);
         Assert.assertEquals(((CreateEndpointAction) result.getTestAction(0)).getEndpointUri(), "direct:hello");
         Assert.assertEquals(((CreateEndpointAction) result.getTestAction(1)).getEndpointUri(), "direct?autoClose=true&autoRemove=true&queueName=hello&timeout=2000");
+        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder());
+        Assert.assertEquals(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder().getClass(), DirectEndpointsBuilder.class);
+
+        DirectEndpoint directEndpoint = (DirectEndpoint) ((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder().build();
+        Assert.assertEquals(directEndpoint.getName(), "foo");
+        Assert.assertEquals(directEndpoint.getEndpointConfiguration().getQueueName(), "fooQueue");
     }
 }

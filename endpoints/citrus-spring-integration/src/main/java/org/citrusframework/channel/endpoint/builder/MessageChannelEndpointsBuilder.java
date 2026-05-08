@@ -17,6 +17,10 @@
 package org.citrusframework.channel.endpoint.builder;
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.channel.ChannelEndpointBuilder;
 import org.citrusframework.channel.ChannelSyncEndpointBuilder;
 import org.citrusframework.endpoint.Endpoint;
@@ -28,17 +32,24 @@ import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
 @SchemaType(oneOf = { "asynchronous", "synchronous" }, module = "citrus-spring-integration")
+@XmlType(name = "", propOrder = {
+        "asynchronous",
+        "synchronous"
+})
+@XmlRootElement(name = "channel")
 public class MessageChannelEndpointsBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;
     private ReferenceResolver referenceResolver;
 
     @SchemaProperty(description = "Sets the synchronous Spring message channel endpoint.")
+    @XmlElement
     public void setSynchronous(ChannelSyncEndpointBuilder builder) {
         this.delegate = builder;
     }
 
     @SchemaProperty(description = "Sets the Spring message channel endpoint.")
+    @XmlElement
     public void setAsynchronous(ChannelEndpointBuilder builder) {
         this.delegate = builder;
     }
@@ -62,6 +73,7 @@ public class MessageChannelEndpointsBuilder implements EndpointBuilder<Endpoint>
     }
 
     @Override
+    @XmlTransient
     public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

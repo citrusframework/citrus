@@ -16,28 +16,37 @@
 
 package org.citrusframework.websocket.client;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
+import org.springframework.web.socket.WebSocketHttpHeaders;
 
 /**
  * @since 2.5
  */
 @SchemaType(module = "citrus-websocket")
+@XmlType(name = "", propOrder = {})
 public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketClient> {
 
     /** Endpoint target */
     private final WebSocketClient endpoint = new WebSocketClient();
 
+    private String httpHeaders;
     private String messageConverter;
     private String endpointResolver;
 
     @Override
     public WebSocketClient build() {
         if (referenceResolver != null) {
+            if (StringUtils.hasText(httpHeaders)) {
+                httpHeaders(referenceResolver.resolve(httpHeaders, WebSocketHttpHeaders.class));
+            }
+
             if (StringUtils.hasText(messageConverter)) {
                 messageConverter(referenceResolver.resolve(messageConverter, WebSocketMessageConverter.class));
             }
@@ -64,8 +73,23 @@ public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketCli
     }
 
     @SchemaProperty(description = "Sets the client request URL.")
+    @XmlAttribute(name = "request-url")
     public void setRequestUrl(String requestUrl) {
         requestUrl(requestUrl);
+    }
+
+    /**
+     * Sets the Websocket Http headers property.
+     */
+    public WebSocketClientBuilder httpHeaders(WebSocketHttpHeaders headers) {
+        endpoint.getEndpointConfiguration().setWebSocketHttpHeaders(headers);
+        return this;
+    }
+
+    @SchemaProperty(advanced = true, description = "Sets the Websocket Http headers.")
+    @XmlAttribute(name = "http-headers")
+    public void setHttpHeaders(String headers) {
+        this.httpHeaders = headers;
     }
 
     /**
@@ -77,6 +101,7 @@ public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketCli
     }
 
     @SchemaProperty(advanced = true, description = "Bean reference to a message converter.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -90,6 +115,7 @@ public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketCli
     }
 
     @SchemaProperty(advanced = true, description = "Sets the endpoint URI resolver.")
+    @XmlAttribute(name = "endpoint-resolver")
     public void setEndpointResolver(String resolver) {
         this.endpointResolver = resolver;
     }
@@ -103,6 +129,7 @@ public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketCli
     }
 
     @SchemaProperty(advanced = true, description = "Sets the polling interval when consuming messages.")
+    @XmlAttribute(name = "polling-interval")
     public void setPollingInterval(int pollingInterval) {
         pollingInterval(pollingInterval);
     }
@@ -116,6 +143,7 @@ public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketCli
     }
 
     @SchemaProperty(description = "The Http request timeout while waiting for a response", defaultValue = "5000")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

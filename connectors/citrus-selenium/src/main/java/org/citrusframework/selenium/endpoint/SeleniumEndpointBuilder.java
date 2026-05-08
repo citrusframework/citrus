@@ -17,6 +17,9 @@
 package org.citrusframework.selenium.endpoint;
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -24,6 +27,9 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;
 
+@XmlType(name = "", propOrder = {
+        "browser"
+})
 public class SeleniumEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;
@@ -36,6 +42,7 @@ public class SeleniumEndpointBuilder implements EndpointBuilder<Endpoint>, Refer
     }
 
     @SchemaProperty(description = "Sets the Selenium browser endpoint.")
+    @XmlElement
     public void setBrowser(SeleniumBrowserBuilder builder) {
         this.delegate = builder;
     }
@@ -59,6 +66,7 @@ public class SeleniumEndpointBuilder implements EndpointBuilder<Endpoint>, Refer
     }
 
     @Override
+    @XmlTransient
     public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

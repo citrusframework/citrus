@@ -17,6 +17,10 @@
 package org.citrusframework.http.endpoint.builder;
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -31,17 +35,24 @@ import org.citrusframework.yaml.SchemaType;
  * Endpoint builder delegates to either client od server endpoint builder.
  */
 @SchemaType(oneOf = { "client", "server" }, module = "citrus-http")
+@XmlType(name = "", propOrder = {
+        "client",
+        "server"
+})
+@XmlRootElement(name = "http")
 public class HttpEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;
     private ReferenceResolver referenceResolver;
 
     @SchemaProperty(description = "Sets the Http client endpoint.")
+    @XmlElement
     public void setClient(HttpClientBuilder client) {
         this.delegate = client;
     }
 
     @SchemaProperty(description = "Sets the Http server endpoint.")
+    @XmlElement
     public void setServer(HttpServerBuilder server) {
         this.delegate = server;
     }
@@ -65,6 +76,7 @@ public class HttpEndpointBuilder implements EndpointBuilder<Endpoint>, Reference
     }
 
     @Override
+    @XmlTransient
     public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

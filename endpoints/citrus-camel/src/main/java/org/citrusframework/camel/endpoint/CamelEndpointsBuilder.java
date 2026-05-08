@@ -17,6 +17,10 @@
 package org.citrusframework.camel.endpoint;
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -26,17 +30,24 @@ import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 
 @SchemaType(oneOf = { "asynchronous", "synchronous" }, module = "citrus-camel")
+@XmlType(name = "", propOrder = {
+        "asynchronous",
+        "synchronous"
+})
+@XmlRootElement(name = "camel")
 public class CamelEndpointsBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
 
     private EndpointBuilder<?> delegate;
     private ReferenceResolver referenceResolver;
 
     @SchemaProperty(description = "Sets the synchronous Camel endpoint.")
+    @XmlElement
     public void setSynchronous(CamelSyncEndpointBuilder builder) {
         this.delegate = builder;
     }
 
     @SchemaProperty(description = "Sets the Camel endpoint.")
+    @XmlElement
     public void setAsynchronous(CamelEndpointBuilder builder) {
         this.delegate = builder;
     }
@@ -60,6 +71,7 @@ public class CamelEndpointsBuilder implements EndpointBuilder<Endpoint>, Referen
     }
 
     @Override
+    @XmlTransient
     public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

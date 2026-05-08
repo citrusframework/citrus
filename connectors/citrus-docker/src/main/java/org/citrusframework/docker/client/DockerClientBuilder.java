@@ -16,6 +16,8 @@
 
 package org.citrusframework.docker.client;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import org.citrusframework.yaml.SchemaProperty;
@@ -25,6 +27,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.5
  */
 @SchemaType(module = "citrus-docker")
+@XmlType(name = "", propOrder = {})
 public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
 
     /** Endpoint target */
@@ -51,6 +54,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
     }
 
     @SchemaProperty(description = "The Docker host engine URL.")
+    @XmlAttribute
     public void setUrl(String url) {
         url(url);
     }
@@ -64,6 +68,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
     }
 
     @SchemaProperty(description = "The Docker client version.")
+    @XmlAttribute
     public void setVersion(String version) {
         version(version);
     }
@@ -79,6 +84,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "The Docker client username.")
+    @XmlAttribute
     public void setUsername(String username) {
         username(username);
     }
@@ -94,6 +100,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "The Docker client password.")
+    @XmlAttribute
     public void setPassword(String password) {
         password(password);
     }
@@ -110,6 +117,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "The Docker client email."
     )
+    @XmlAttribute
     public void setEmail(String email) {
         email(email);
     }
@@ -123,6 +131,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
     }
 
     @SchemaProperty(description = "The Docker registry URL.")
+    @XmlAttribute
     public void setRegistry(String url) {
         url(url);
     }
@@ -138,6 +147,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "When enabled the client verifies the Docker host TLS.")
+    @XmlAttribute(name = "verify-tls")
     public void setVerifyTls(boolean verify) {
         verifyTls(verify);
     }
@@ -153,6 +163,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the path to the client certificate.")
+    @XmlAttribute(name = "cert-path")
     public void setCertPath(String certPath) {
         certPath(certPath);
     }
@@ -165,6 +176,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the path to the client configuration file.")
+    @XmlAttribute(name = "config-path")
     public void setConfigPath(String configPath) {
         configPath(configPath);
     }

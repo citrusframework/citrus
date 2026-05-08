@@ -16,6 +16,8 @@
 
 package org.citrusframework.ftp.client;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
@@ -27,6 +29,7 @@ import org.citrusframework.yaml.SchemaType;
  * @since 2.5
  */
 @SchemaType(module = "citrus-ftp")
+@XmlType(name = "", propOrder = {})
 public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
 
     /** Endpoint target */
@@ -59,6 +62,7 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
     }
 
     @SchemaProperty(description = "The Ftp server host.")
+    @XmlAttribute
     public void setHost(String host) {
         host(host);
     }
@@ -72,6 +76,7 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
     }
 
     @SchemaProperty(description = "The Ftp server port.")
+    @XmlAttribute
     public void setPort(int port) {
         port(port);
     }
@@ -85,6 +90,7 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
     }
 
     @SchemaProperty(description = "When enabled the client automatically reads new files.")
+    @XmlAttribute(name = "auto-read-files")
     public void setAutoReadFiles(boolean autoReadFiles) {
         autoReadFiles(autoReadFiles);
     }
@@ -98,6 +104,7 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
     }
 
     @SchemaProperty(description = "SEnables the local passive mode.")
+    @XmlAttribute(name = "local-passive-mode")
     public void setLocalPassiveMode(boolean localPassiveMode) {
         localPassiveMode(localPassiveMode);
     }
@@ -114,6 +121,7 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the user name."
     )
+    @XmlAttribute
     public void setUsername(String username) {
         username(username);
     }
@@ -130,6 +138,7 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Sets the user password."
     )
+    @XmlAttribute
     public void setPassword(String password) {
         password(password);
     }
@@ -143,6 +152,7 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
     }
@@ -159,8 +169,13 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:errorHandler") },
             description = "Sets the error handling strategy."
     )
-    public void setErrorHandlingStrategy(ErrorHandlingStrategy errorStrategy) {
-        errorHandlingStrategy(errorStrategy);
+    @XmlAttribute(name = "error-handling-strategy")
+    public void setErrorHandlingStrategy(String errorStrategy) {
+        try {
+            errorHandlingStrategy(ErrorHandlingStrategy.fromName(errorStrategy));
+        } catch (IllegalArgumentException e) {
+            errorHandlingStrategy(ErrorHandlingStrategy.valueOf(errorStrategy));
+        }
     }
 
     /**
@@ -172,6 +187,7 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
     }
 
     @SchemaProperty(description = "Sets the polling interval when consuming messages.")
+    @XmlAttribute(name = "polling-interval")
     public void setPollingInterval(int pollingInterval) {
         pollingInterval(pollingInterval);
     }
@@ -185,6 +201,7 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
     }
 
     @SchemaProperty(description = "The endpoint timeout when waiting for messages.")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }

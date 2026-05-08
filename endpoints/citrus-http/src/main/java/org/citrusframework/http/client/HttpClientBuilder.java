@@ -19,6 +19,8 @@ package org.citrusframework.http.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.http.message.HttpMessageConverter;
@@ -42,6 +44,7 @@ import org.springframework.web.client.RestTemplate;
  * @since 2.5
  */
 @SchemaType(module = "citrus-http")
+@XmlType(name = "", propOrder = {})
 public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
 
     /** Endpoint target */
@@ -119,6 +122,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(description = "Sets the Http client request URL.")
+    @XmlAttribute(name = "request-url")
     public void setRequestUrl(String uri) {
         requestUrl(uri);
     }
@@ -132,6 +136,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "The reference to a REST template bean.")
+    @XmlAttribute(name = "rest-template")
     public void setRestTemplate(String restTemplate) {
         this.restTemplate = restTemplate;
     }
@@ -145,6 +150,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Reference to a request factory.")
+    @XmlAttribute(name = "request-factory")
     public void setRequestFactory(String requestFactory) {
         this.requestFactory = requestFactory;
     }
@@ -158,6 +164,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(description = "The default request method to use")
+    @XmlAttribute(name = "request-method")
     public void setRequestMethod(RequestMethod requestMethod) {
         requestMethod(requestMethod);
     }
@@ -171,6 +178,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Bean reference to a message converter.")
+    @XmlAttribute(name = "message-converter")
     public void setMessageConverter(String messageConverter) {
         this.messageConverter = messageConverter;
     }
@@ -184,6 +192,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the message correlator.")
+    @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
     }
@@ -197,6 +206,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the endpoint URI resolver.")
+    @XmlAttribute(name = "endpoint-resolver")
     public void setEndpointResolver(String resolver) {
         this.endpointResolver = resolver;
     }
@@ -210,6 +220,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "The default charset.")
+    @XmlAttribute
     public void setCharset(String charset) {
         charset(charset);
     }
@@ -223,6 +234,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the client adds the default accept header to requests.")
+    @XmlAttribute(name = "default-accept-header")
     public void setDefaultAcceptHeader(boolean flag) {
         defaultAcceptHeader(flag);
     }
@@ -236,6 +248,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the client handles cookies.")
+    @XmlAttribute(name = "handle-cookies")
     public void setHandleCookies(boolean flag) {
         handleCookies(flag);
     }
@@ -249,6 +262,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Disables the redirect handling for this client.")
+    @XmlAttribute(name = "disable-redirect-handling")
     public void setDisableRedirectHandling(boolean flag) {
         disableRedirectHandling(flag);
     }
@@ -262,6 +276,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the default content type header set for each request.")
+    @XmlAttribute(name = "content-type")
     public void setContentType(String contentType) {
         contentType(contentType);
     }
@@ -275,6 +290,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the polling interval when consuming messages.")
+    @XmlAttribute(name = "polling-interval")
     public void setPollingInterval(int pollingInterval) {
         pollingInterval(pollingInterval);
     }
@@ -290,8 +306,13 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:errorHandling") },
             description = "Sets the error handling strategy.")
-    public void setErrorHandlingStrategy(ErrorHandlingStrategy errorStrategy) {
-        errorHandlingStrategy(errorStrategy);
+    @XmlAttribute(name = "error-handling-strategy")
+    public void setErrorHandlingStrategy(String errorStrategy) {
+        try {
+            errorHandlingStrategy(ErrorHandlingStrategy.fromName(errorStrategy));
+        } catch (IllegalArgumentException e) {
+            errorHandlingStrategy(ErrorHandlingStrategy.valueOf(errorStrategy));
+        }
     }
 
     /**
@@ -306,6 +327,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:errorHandling") },
             description = "Sets a custom error handler."
     )
+    @XmlAttribute(name = "error-handler")
     public void setErrorHandler(String errorHandler) {
         this.errorHandler = errorHandler;
     }
@@ -321,6 +343,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:intercept") },
             description = "Sets the list of client interceptor bean references.")
+    @XmlAttribute
     public void setInterceptors(List<String> interceptors) {
         this.interceptors.addAll(interceptors);
     }
@@ -334,6 +357,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets the list of binary media types.")
+    @XmlAttribute(name = "binary-media-types")
     public void setBinaryMediaTypes(List<String> binaryMediaTypes) {
         binaryMediaTypes(binaryMediaTypes.stream().map(MediaType::valueOf).toList());
     }
@@ -349,6 +373,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:intercept") },
             description = "Sets a client interceptor.")
+    @XmlAttribute
     public void setInterceptor(String interceptor) {
         this.interceptors.add(interceptor);
     }
@@ -362,6 +387,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(advanced = true, description = "Sets a custom header mapper bean reference.")
+    @XmlAttribute(name = "header-mapper")
     public void setHeaderMapper(String headerMapper) {
         this.headerMapper = headerMapper;
     }
@@ -375,6 +401,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     @SchemaProperty(description = "The Http request timeout while waiting for a response", defaultValue = "5000")
+    @XmlAttribute
     public void setTimeout(long timeout) {
         timeout(timeout);
     }
@@ -390,6 +417,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Use given authentication mechanism.")
+    @XmlAttribute
     public void setAuthentication(String authentication) {
         this.authentication = authentication;
     }
@@ -407,6 +435,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
             description = "Secure the connection with given security mechanism.")
+    @XmlAttribute(name = "secured-connection")
     public void setSecuredConnection(String connection) {
         this.securedConnection = connection;
     }
