@@ -30,6 +30,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import jakarta.xml.bind.annotation.XmlValue;
 import org.citrusframework.TestActor;
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
@@ -37,7 +38,6 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.LocalStackSettings;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.testcontainers.kafka.StartKafkaAction;
@@ -122,6 +122,14 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         StartRedpandaAction.Builder builder = new StartRedpandaAction.Builder();
         if (container.getVersion() != null) {
             builder.version(container.getVersion());
+        }
+
+        builder.enableSasl(container.isEnableSasl());
+        builder.enableAuthorization(container.isEnableAuthorization());
+        builder.securedSchemaRegistry(container.isSecuredSchemaRegistry());
+
+        if (container.getSuperuser() != null) {
+            builder.superuser(container.getSuperuser());
         }
 
         configureStartActionBuilder(builder, container);
@@ -704,6 +712,14 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         @XmlAttribute
         protected String version;
+        @XmlAttribute(name = "enable-sasl")
+        protected boolean enableSasl;
+        @XmlAttribute(name = "enable-authorization")
+        protected boolean enableAuthorization;
+        @XmlAttribute(name = "secured-schema-registry")
+        protected boolean securedSchemaRegistry;
+        @XmlAttribute
+        protected String superuser;
 
         public String getVersion() {
             return version;
@@ -711,6 +727,38 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         public void setVersion(String version) {
             this.version = version;
+        }
+
+        public boolean isEnableSasl() {
+            return enableSasl;
+        }
+
+        public void setEnableSasl(boolean enabled) {
+            this.enableSasl = enabled;
+        }
+
+        public boolean isEnableAuthorization() {
+            return enableAuthorization;
+        }
+
+        public void setEnableAuthorization(boolean enabled) {
+            this.enableAuthorization = enabled;
+        }
+
+        public boolean isSecuredSchemaRegistry() {
+            return securedSchemaRegistry;
+        }
+
+        public void setSecuredSchemaRegistry(boolean enabled) {
+            this.securedSchemaRegistry = enabled;
+        }
+
+        public String getSuperuser() {
+            return superuser;
+        }
+
+        public void setSuperuser(String username) {
+            this.superuser = username;
         }
     }
 

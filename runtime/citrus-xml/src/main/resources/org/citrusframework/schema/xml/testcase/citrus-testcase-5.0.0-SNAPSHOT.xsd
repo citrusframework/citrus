@@ -3906,6 +3906,10 @@
                   <xs:attribute name="image" type="xs:string"/>
                   <xs:attribute name="command" type="xs:string"/>
                   <xs:attribute name="startup-timeout" type="xs:int"/>
+                  <xs:attribute name="enable-sasl" type="xs:boolean"/>
+                  <xs:attribute name="enable-authorization" type="xs:boolean"/>
+                  <xs:attribute name="secured-schema-registry" type="xs:boolean"/>
+                  <xs:attribute name="superuser" type="xs:string"/>
                 </xs:complexType>
               </xs:element>
               <xs:element name="postgresql">

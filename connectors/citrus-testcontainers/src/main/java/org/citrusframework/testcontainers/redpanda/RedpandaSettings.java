@@ -125,6 +125,9 @@ public class RedpandaSettings {
             context.setVariable(getEnvVarName(containerType, "PORT"), container.getMappedPort(RedpandaSettings.REDPANDA_PORT));
             context.setVariable(getEnvVarName(containerType, "SERVICE_LOCAL_BOOTSTRAP_SERVERS"), container.getBootstrapServers());
 
+            context.setVariable(getEnvVarName(containerType, "ADMIN_ADDRESS"), container.getAdminAddress());
+            context.setVariable(getEnvVarName(containerType, "SCHEMA_REGISTRY_ADDRESS"), container.getSchemaRegistryAddress());
+
             if (!KubernetesSupport.isConnected(context) || !TestContainersSettings.isKubedockEnabled()) {
                 context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
                 context.setVariable(getEnvVarName(containerType, "SERVICE_BOOTSTRAP_SERVERS"), container.getBootstrapServers());
