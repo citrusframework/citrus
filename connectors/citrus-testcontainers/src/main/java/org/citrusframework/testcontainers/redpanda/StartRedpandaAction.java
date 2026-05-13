@@ -21,6 +21,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
 import org.citrusframework.testcontainers.postgresql.PostgreSQLSettings;
+import org.citrusframework.util.StringUtils;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.redpanda.RedpandaContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -44,6 +45,11 @@ public class StartRedpandaAction extends StartTestcontainersAction<RedpandaConta
 
         private String redpandaVersion = RedpandaSettings.getRedpandaVersion();
 
+        private boolean enableSasl;
+        private boolean enableAuthorization;
+        private boolean securedSchemaRegistry;
+        private String superuser;
+
         public Builder() {
             withStartupTimeout(PostgreSQLSettings.getStartupTimeout());
         }
@@ -52,6 +58,30 @@ public class StartRedpandaAction extends StartTestcontainersAction<RedpandaConta
         public Builder version(String redpandaVersion) {
            this.redpandaVersion = redpandaVersion;
            return this;
+        }
+
+        @Override
+        public Builder enableSasl(boolean enabled) {
+            this.enableSasl = enabled;
+            return this;
+        }
+
+        @Override
+        public Builder enableAuthorization(boolean enabled) {
+            this.enableAuthorization = enabled;
+            return this;
+        }
+
+        @Override
+        public Builder securedSchemaRegistry(boolean enabled) {
+            this.securedSchemaRegistry = enabled;
+            return this;
+        }
+
+        @Override
+        public Builder superuser(String username) {
+            this.superuser = username;
+            return this;
         }
 
         @Override
@@ -99,6 +129,22 @@ public class StartRedpandaAction extends StartTestcontainersAction<RedpandaConta
                             cmd.withUser("root:root");
                         })
                         .withCommand("redpanda", "start", "--mode=dev-container", "--smp=1", "--memory=1G");
+
+                if (enableSasl) {
+                    redpandaContainer.enableSasl();
+                }
+
+                if (enableAuthorization) {
+                    redpandaContainer.enableAuthorization();
+                }
+
+                if (StringUtils.hasText(superuser)) {
+                    redpandaContainer.withSuperuser(superuser);
+                }
+
+                if (securedSchemaRegistry) {
+                    redpandaContainer.enableSchemaRegistryHttpBasicAuth();
+                }
             }
 
             container(redpandaContainer);

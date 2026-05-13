@@ -22,4 +22,12 @@ public interface TestcontainersRedpandaStartActionBuilder<C extends AutoCloseabl
         extends TestcontainersStartActionBuilderBase<C, T, B> {
 
     B version(String redpandaVersion);
+
+    B enableSasl(boolean enabled);
+
+    B enableAuthorization(boolean enabled);
+
+    B securedSchemaRegistry(boolean enabled);
+
+    B superuser(String username);
 }
