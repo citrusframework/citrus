@@ -573,8 +573,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.10.1,</span>
-<span id="revdate">2026-05-04</span>
+<span id="revnumber">version 5.0.0-M1,</span>
+<span id="revdate">2026-05-15</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -595,7 +595,7 @@ $(addBlockSwitches);
 <li><a href="#runtimes">4. Runtimes</a>
 <ul class="sectlevel2">
 <li><a href="#runtime-testng">4.1. TestNG</a></li>
-<li><a href="#runtime-junit5">4.2. JUnit5</a></li>
+<li><a href="#runtime-junit-jupiter">4.2. JUnit Jupiter</a></li>
 <li><a href="#runtime-junit4">4.3. JUnit4</a></li>
 <li><a href="#runtime-quarkus">4.4. QuarkusTest</a></li>
 <li><a href="#runtimes-cucumber">4.5. Cucumber</a></li>
@@ -1135,7 +1135,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.10.1</strong></p>
+<p><strong>Version: 5.0.0-M1</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1993,13 +1993,13 @@ exchange in your tests is ready to be performed in parallel (e.g. use message se
 </div>
 </div>
 <div class="sect2">
-<h3 id="runtime-junit5"><a class="anchor" href="#runtime-junit5"></a><a class="link" href="#runtime-junit5">4.2. JUnit5</a></h3>
+<h3 id="runtime-junit-jupiter"><a class="anchor" href="#runtime-junit-jupiter"></a><a class="link" href="#runtime-junit-jupiter">4.2. JUnit Jupiter</a></h3>
 <div class="paragraph">
 <p>With JUnit version 5 the famous unit test framework offers a new major version. The JUnit platform provides awesome extension
 points for other frameworks like Citrus to integrate with the unit testing execution.</p>
 </div>
 <div class="paragraph">
-<p>Citrus provides extensions in order to enable Citrus related dependency injection and parameter resolving in your JUnit5 test.</p>
+<p>Citrus provides extensions in order to enable Citrus related dependency injection and parameter resolving in your JUnit test.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2008,29 +2008,29 @@ points for other frameworks like Citrus to integrate with the unit testing execu
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The JUnit5 support is shipped in a separate Maven module. You need to include the module as a dependency in your
+The JUnit support is shipped in a separate Maven module. You need to include the module as a dependency in your
 project.
 </td>
 </tr>
 </table>
 </div>
 <div class="listingblock">
-<div class="title">JUnit5 module dependency</div>
+<div class="title">JUnit module dependency</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.citrusframework&lt;/groupId&gt;
-  &lt;artifactId&gt;citrus-junit5&lt;/artifactId&gt;
+  &lt;artifactId&gt;citrus-junit-jupiter&lt;/artifactId&gt;
   &lt;version&gt;${citrus.version}&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="junit5-citrus-support"><a class="anchor" href="#junit5-citrus-support"></a><a class="link" href="#junit5-citrus-support">4.2.1. Citrus extension</a></h4>
+<h4 id="junit-jupiter-citrus-support"><a class="anchor" href="#junit-jupiter-citrus-support"></a><a class="link" href="#junit-jupiter-citrus-support">4.2.1. Citrus extension</a></h4>
 <div class="paragraph">
-<p>You can use the Citrus JUnit5 extension on your test as follows:</p>
+<p>You can use the Citrus JUnit extension on your test as follows:</p>
 </div>
 <div class="listingblock">
-<div class="title">JUnit5 Citrus test</div>
+<div class="title">JUnit Citrus test</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.citrusframework.samples;
 
@@ -2060,8 +2060,8 @@ public class Simple_IT implements TestActionSupport {
 </div>
 </div>
 <div class="paragraph">
-<p>The class above is using the JUnit5 <code>@Test</code> annotation as a normal unit test would do. The <code>@CitrusSupport</code> annotation marks
-the test to use the Citrus JUnit5 extension. This enables us to use the <code>@CitrusTest</code> annotation on the test and adds
+<p>The class above is using the JUnit <code>@Test</code> annotation as a normal unit test would do. The <code>@CitrusSupport</code> annotation marks
+the test to use the Citrus JUnit extension. This enables us to use the <code>@CitrusTest</code> annotation on the test and adds
 support for the parameter injection for the <code>TestActionRunner</code>.</p>
 </div>
 <div class="admonitionblock tip">
@@ -2072,7 +2072,7 @@ support for the parameter injection for the <code>TestActionRunner</code>.</p>
 </td>
 <td class="content">
 You can use the <code>@CitrusSupport</code> annotation, or you can use the classic <code>@ExtendWith(CitrusExtension.class)</code> annotation
-to enable the Citrus support for JUnit5.
+to enable the Citrus support for JUnit.
 </td>
 </tr>
 </table>
@@ -2111,7 +2111,7 @@ For those of you who are not able to use the <code>TestActionSupport</code> or o
 </table>
 </div>
 <div class="listingblock">
-<div class="title">JUnit5 Citrus test</div>
+<div class="title">JUnit Citrus test</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.citrusframework.samples;
 
@@ -2161,13 +2161,13 @@ annotation. With the Spring support in Citrus the test is able to load component
 </div>
 </div>
 <div class="sect3">
-<h4 id="junit5-endpoint-injection"><a class="anchor" href="#junit5-endpoint-injection"></a><a class="link" href="#junit5-endpoint-injection">4.2.2. Endpoint injection</a></h4>
+<h4 id="junit-jupiter-endpoint-injection"><a class="anchor" href="#junit-jupiter-endpoint-injection"></a><a class="link" href="#junit-jupiter-endpoint-injection">4.2.2. Endpoint injection</a></h4>
 <div class="paragraph">
 <p>In addition to injecting test resources you can also inject endpoints via <code>@CitrusEndpoint</code> annotated field injection in
 your test class. This enables you to inject endpoint components that are defined in the Citrus context configuration.</p>
 </div>
 <div class="listingblock">
-<div class="title">JUnit5 Citrus endpoint injection</div>
+<div class="title">JUnit Citrus endpoint injection</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.citrusframework.samples;
 
@@ -2200,16 +2200,16 @@ public class Simple_IT implements TestActionSupport {
 </div>
 </div>
 <div class="sect3">
-<h4 id="junit5-citrus-spring-support"><a class="anchor" href="#junit5-citrus-spring-support"></a><a class="link" href="#junit5-citrus-spring-support">4.2.3. Citrus Spring extension</a></h4>
+<h4 id="junit-jupiter-citrus-spring-support"><a class="anchor" href="#junit-jupiter-citrus-spring-support"></a><a class="link" href="#junit-jupiter-citrus-spring-support">4.2.3. Citrus Spring extension</a></h4>
 <div class="paragraph">
-<p>Spring is a famous dependency injection framework that also provides support for JUnit5. Citrus is able to load its
-components as Spring beans in an application context. The Citrus JUnit5 extension works great with the Spring extension.</p>
+<p>Spring is a famous dependency injection framework that also provides support for JUnit. Citrus is able to load its
+components as Spring beans in an application context. The Citrus JUnit extension works great with the Spring extension.</p>
 </div>
 <div class="paragraph">
 <p>The Spring extension loads the application context and Citrus adds all components to the Spring bean configuration.</p>
 </div>
 <div class="listingblock">
-<div class="title">JUnit5 Citrus Spring test</div>
+<div class="title">JUnit Citrus Spring test</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
@@ -2256,14 +2256,14 @@ You can customize the Spring application context by adding more configuration cl
 </div>
 </div>
 <div class="sect3">
-<h4 id="junit5-test-sharding"><a class="anchor" href="#junit5-test-sharding"></a><a class="link" href="#junit5-test-sharding">4.2.4. Test Sharding</a></h4>
+<h4 id="junit-jupiter-test-sharding"><a class="anchor" href="#junit-jupiter-test-sharding"></a><a class="link" href="#junit-jupiter-test-sharding">4.2.4. Test Sharding</a></h4>
 <div class="paragraph">
-<p>You can run your JUnit5 test cases in order in a distributed manner, facilitating test sharding.
+<p>You can run your JUnit test cases in order in a distributed manner, facilitating test sharding.
 The following snipped showcases you how to get started within a Spring/XML test case environment.
 Note that sharding is available with all kind of <code>Stream</code>-sources.</p>
 </div>
 <div class="listingblock">
-<div class="title">Sharded JUnit5 Spring/XML test</div>
+<div class="title">Sharded JUnit Spring/XML test</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static org.citrusframework.junit.jupiter.CitrusTestFactorySupport.springXml;
 import static org.citrusframework.sharding.Shard.createShard;
@@ -2294,8 +2294,8 @@ class SpringBeanXml_IT {
 <div class="sect2">
 <h3 id="runtime-junit4"><a class="anchor" href="#runtime-junit4"></a><a class="link" href="#runtime-junit4">4.3. JUnit4</a></h3>
 <div class="paragraph">
-<p>JUnit4 is still very popular and widely supported by many tools even though there is a new major version with JUnit5 already
-available. In general Citrus supports both JUnit4 and JUnit5 as test execution framework.</p>
+<p>JUnit4 is still very popular and widely supported by many tools even though there is a new major version with JUnit Jupiter already
+available. In general Citrus supports both JUnit4 and JUnit Jupiter as test execution framework.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3617,7 +3617,7 @@ Citrus supports these test engines as an argument value:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>JUnit Jupiter (<code>junit5</code> or <code>junit-jupiter</code>)</p>
+<p>JUnit Jupiter (<code>junit</code> or <code>junit-jupiter</code>)</p>
 </li>
 <li>
 <p>Cucumber (<code>cucumber</code>)</p>
@@ -3626,7 +3626,7 @@ Citrus supports these test engines as an argument value:</p>
 <p>TestNG (<code>testng</code>)</p>
 </li>
 <li>
-<p>JUnit 4 (<code>junit</code>)</p>
+<p>JUnit 4 (<code>junit4</code>)</p>
 </li>
 </ul>
 </div>
@@ -3912,7 +3912,7 @@ actions {
 <div class="listingblock">
 <div class="title">Run my.citrus.it.feature</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang --deps org.citrusframework:citrus-cucumber-all:4.11.0-SNAPSHOT citrus run my.citrus.it.feature</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang --deps org.citrusframework:citrus-cucumber-all:5.0.0-SNAPSHOT citrus run my.citrus.it.feature</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -4000,7 +4000,7 @@ org.citrusframework:citrus-kafka:${citrus.version}</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-In case you want to run Cucumber BDD Gherkin feature files and use the predefined Citrus steps, you need to add this dependency accordingly: <code>org.citrusframework:citrus-cucumber-all:4.11.0-SNAPSHOT</code>
+In case you want to run Cucumber BDD Gherkin feature files and use the predefined Citrus steps, you need to add this dependency accordingly: <code>org.citrusframework:citrus-cucumber-all:5.0.0-SNAPSHOT</code>
 </td>
 </tr>
 </table>
@@ -4132,7 +4132,7 @@ We do our best to make all features equal in all supported languages. Some featu
 <div class="sect2">
 <h3 id="run-java"><a class="anchor" href="#run-java"></a><a class="link" href="#run-java">5.1. Java</a></h3>
 <div class="paragraph">
-<p>You can code the Citrus test as you would do with any other unit test framework (e.g. <a href="#runtime-junit5">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
+<p>You can code the Citrus test as you would do with any other unit test framework (e.g. <a href="#runtime-junit-jupiter">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
 In fact Citrus builds on top of those famous unit testing frameworks because the tooling and adoption throughout the industry is very high for these libraries.</p>
 </div>
 <div class="paragraph">
@@ -4184,7 +4184,7 @@ public class HelloServiceIT extends TestNGCitrusSupport implements TestActionSup
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -4296,7 +4296,7 @@ public class HelloServiceIT extends TestNGCitrusSupport {
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -4400,7 +4400,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -4755,7 +4755,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -4840,7 +4840,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -4963,7 +4963,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -5062,7 +5062,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -5196,7 +5196,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -5299,7 +5299,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -5396,7 +5396,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
@@ -5509,7 +5509,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
@@ -5607,7 +5607,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
@@ -5909,7 +5909,7 @@ The best thing about using the <strong>@CitrusTestSource</strong> annotation is 
 The XML language gives you some XSD schema and a set of elements that you can choose from to specify test actions.</p>
 </div>
 <div class="paragraph">
-<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit5">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
+<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit-jupiter">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
 You can then use the <code>@CitrusTestSource</code> annotation to load the XML file that represents the test case.</p>
 </div>
 <div class="listingblock">
@@ -6334,7 +6334,7 @@ But notice that variable changes inside the template then do not affect the test
 The YAML language gives you some XSD schema and a set of elements that you can choose from to specify test actions.</p>
 </div>
 <div class="paragraph">
-<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit5">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
+<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit-jupiter">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
 You can then use the <code>@CitrusTestSource</code> annotation to load the YAML file that represents the test case.</p>
 </div>
 <div class="listingblock">
@@ -6777,7 +6777,7 @@ But notice that variable changes inside the template then do not affect the test
 The Groovy language gives you some syntax sugar and optimized statements that you can use to write your tests.</p>
 </div>
 <div class="paragraph">
-<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit5">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
+<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit-jupiter">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
 You can then use the <code>@CitrusTestSource</code> annotation to load the Groovy code that represents the test case.</p>
 </div>
 <div class="listingblock">
@@ -7384,7 +7384,7 @@ You need to have the runtime module <code>citrus-spring</code> enabled in your p
 <div class="paragraph">
 <p>Citrus uses Spring bean definition parsers to load the XML test actions.
 The Spring application context loads the Spring XML test case file as a set of Spring bean configurations.
-Citrus runs the resulting test Spring bean as a normal unit test using one of the provided runtimes like <a href="#runtime-junit5">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>.</p>
+Citrus runs the resulting test Spring bean as a normal unit test using one of the provided runtimes like <a href="#runtime-junit-jupiter">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>.</p>
 </div>
 <div class="paragraph">
 <p>You define the complete test logic in the Spring bean XML file:</p>
@@ -7472,7 +7472,7 @@ In fact, you can generate the Java file from Citrus (e.g. Maven plugin).</p>
 Enter test author: Unknown::
 Enter test description:: Sample XML test
 Enter test package: org.citrusframework::
-Choose unit test framework: (testng/junit4/junit5) testng::
+Choose unit test framework: (testng/junit/junit-jupiter/junit4) testng::
 Choose target code base type: (java/xml) java:: xml
 Create test with XML schema? (y/n) n::
 Create test with WSDL? (y/n) n::
@@ -21317,7 +21317,7 @@ public class SendMessageIT extends TestNGCitrusSupport implements TestActionSupp
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActionSupport;
@@ -21548,7 +21548,7 @@ public class ReceiveMessageIT extends TestNGCitrusSupport implements TestActionS
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit5</div>
+<div class="title">JUnit</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActionSupport;
@@ -24237,14 +24237,13 @@ about dynamic endpoints in chapter <a href="#dynamic-endpoint-components">dynami
 <div class="sect2">
 <h3 id="embedded-kafka-server"><a class="anchor" href="#embedded-kafka-server"></a><a class="link" href="#embedded-kafka-server">13.7. Embedded Kafka Server</a></h3>
 <div class="paragraph">
-<p>The Kafka message broker is composed of a Zookeeper server and a Kafka server. Citrus provides an embedded server (<strong>for testing purpose only!</strong>)
-that is able to start within your integration test environment. The server cluster is configured with one single Zookeeper
-server and a single Kafka server. You can define server ports and broker properties such as topics, number of partitions and
+<p>The Kafka message broker is composed of a Kafka server that uses some default configuration options. Citrus provides an embedded server (<strong>for testing purpose only!</strong>)
+that is able to start within your integration test environment. The server cluster is configured with one single Kafka node. You can define server ports and broker properties such as topics, number of partitions and
 broker ids. Given topics are automatically added via admin client on the Kafka server with given amount of partitions.</p>
 </div>
 <div class="paragraph">
 <p>You can add the embedded server component to the Spring application context as normal Spring bean. The server will automatically
-start and stop within the application context lifecycle. The Zookeeper log directory is located in the Java temp directory
+start and stop within the application context lifecycle. The server log directory is located in the Java temp directory
 and is automatically deleted on JVM exit.</p>
 </div>
 <div class="paragraph">
@@ -24302,13 +24301,6 @@ public EmbeddedKafkaServer kafkaServer() {
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">zookeeper-port</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Zookeeper server port. By default, a random port is used.</p>
-</div></div></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">broker-properties</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -24327,7 +24319,7 @@ public EmbeddedKafkaServer kafkaServer() {
 <td class="tableblock halign-left valign-top"><p class="tableblock">log-dir-path</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path to Zookeeper log directory. The Zookeeper server will create its data directory in this directory. By default, the
+<p>Path to server log directory. The server will create its data directory in this directory. By default, the
   Java temp directory is used.</p>
 </div></div></td>
 </tr>
@@ -24335,7 +24327,7 @@ public EmbeddedKafkaServer kafkaServer() {
 <td class="tableblock halign-left valign-top"><p class="tableblock">auto-delete-logs</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Auto delete Zookeeper log directories on exit. Default is true.</p>
+<p>Auto delete server log directories on exit. Default is true.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -47357,7 +47349,7 @@ public KubernetesClient k8sClient() {
                 .password("s!cr!t")
                 .namespace("user_namespace")
                 .messageConverter(messageConverter)
-                .objectMapper("objectMapper")
+                .jsonMapper("jsonMapper")
                 .build();
 }</code></pre>
 </div>
@@ -47375,7 +47367,7 @@ public KubernetesClient k8sClient() {
                 .password("s!cr!t")
                 .namespace("user_namespace")
                 .messageConverter(messageConverter)
-                .objectMapper("objectMapper")
+                .jsonMapper("jsonMapper")
                 .build();
 }</code></pre>
 </div>
@@ -47391,7 +47383,7 @@ public KubernetesClient k8sClient() {
               password="s!cr!t"
               namespace="user_namespace"
               message-converter="messageConverter"
-              object-mapper="objectMapper"/&gt;</code></pre>
+              json-mapper="jsonMapper"/&gt;</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -54268,7 +54260,7 @@ The environment settings are well suited for both usual Java runtime environment
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.test.engine</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The default engine used to run tests on this agent. One of junit, junit5, testng, cucumber. Default is <code>junit5</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default engine used to run tests on this agent. One of junit, junit-jupiter, junit4, testng, cucumber. Default is <code>junit-jupiter</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.time.to.live</p></td>
@@ -54334,7 +54326,7 @@ The environment settings are well suited for both usual Java runtime environment
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_TEST_ENGINE</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The default engine used to run tests on this agent. One of junit, junit5, testng, cucumber. Default is <code>junit5</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default engine used to run tests on this agent. One of junit, junit-jupiter, junit4, testng, cucumber. Default is <code>junit-jupiter</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_TIME_TO_LIVE</p></td>
@@ -62934,13 +62926,13 @@ You can also run the server directly without using JBang - then it would be some
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "version": "4.11.0-SNAPSHOT",
+  "version": "5.0.0-SNAPSHOT",
   "count": 3,
   "components": [
     {
       "name": "print",
       "fullName": "print",
-      "version": "4.11.0-SNAPSHOT",
+      "version": "5.0.0-SNAPSHOT",
       "group": "core",
       "module": "citrus-base",
       "title": "Print",
@@ -63085,7 +63077,7 @@ List of documentation file names</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "fileName": "actions-send.adoc",
-  "version": "4.11.0-SNAPSHOT",
+  "version": "5.0.0-SNAPSHOT",
   "adoc": "[[actions-send]]\n= Send Action\n\nThe send action..."
 }</code></pre>
 </div>
@@ -64385,8 +64377,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.10.1<br>
-Last updated 2026-05-04 09:45:03 +0200
+Version 5.0.0-M1<br>
+Last updated 2026-05-15 13:07:26 +0200
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
