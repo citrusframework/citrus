@@ -35,4 +35,9 @@ public @interface CitrusSupport {
      * Supplier capable of setting application properties for the Quarkus application under test.
      */
     Class<? extends ApplicationPropertiesSupplier>[] applicationPropertiesSupplier() default {};
+
+    /**
+     * Set of Quarkus dev services properties that should be set as test variables.
+     */
+    String[] devServicesProperties() default { "kafka.bootstrap.servers" };
 }

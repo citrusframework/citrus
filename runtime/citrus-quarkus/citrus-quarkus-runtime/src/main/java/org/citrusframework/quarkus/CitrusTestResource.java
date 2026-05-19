@@ -17,11 +17,14 @@
 package org.citrusframework.quarkus;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import io.quarkus.test.common.DevServicesContext;
 import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusInstanceManager;
@@ -40,7 +43,7 @@ import org.citrusframework.util.ClassLoaderHelper;
  * Quarkus test resource that takes care of injecting Citrus resources
  * such as TestContext, TestCaseRunner, CitrusEndpoints and many more.
  */
-public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecycleManager<CitrusSupport> {
+public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecycleManager<CitrusSupport>, DevServicesContext.ContextAware {
 
     private Citrus citrus;
 
@@ -49,6 +52,8 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
     private TestContext context;
 
     private final Set<ApplicationPropertiesSupplier> applicationPropertiesSupplier = new HashSet<>();
+
+    private final Map<String, String> devServicesProperties = new HashMap<>();
 
     @Override
     public void init(CitrusSupport config) {
@@ -60,6 +65,13 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
                         .formatted(supplierType), e);
             }
         }
+
+        Set<String> configuredProperties = Arrays.stream(config.devServicesProperties()).collect(Collectors.toSet());
+        // filter dev services properties based on annotation configuration, preserves a set of default properties
+        devServicesProperties.keySet()
+                .stream()
+                .filter(key -> shouldExcludeProperty(key, configuredProperties))
+                .forEach(devServicesProperties::remove);
     }
 
     @Override
@@ -78,6 +90,11 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
                         .formatted(qualifiedClassName), e);
             }
         }
+    }
+
+    @Override
+    public void setIntegrationTestContext(DevServicesContext devServicesContext) {
+        devServicesProperties.putAll(devServicesContext.devServicesProperties());
     }
 
     @Override
@@ -112,6 +129,9 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
         }
 
         context = citrus.getCitrusContext().createTestContext();
+
+        devServicesProperties.forEach((key, value) -> context.setVariable(key, value));
+
         runner = TestCaseRunnerFactory.createRunner(context);
         runner.testClass(testInstance.getClass());
         runner.packageName(testInstance.getClass().getPackageName());
@@ -133,10 +153,31 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
 
     /**
      * Add new application properties supplier.
-     * @param supplier
      */
     public void registerApplicationPropertiesSupplier(ApplicationPropertiesSupplier supplier) {
         applicationPropertiesSupplier.add(supplier);
     }
 
+    /**
+     * Determine whether given dev service property should be excluded from set of exposed properties.
+     * If this evaluates to true the property will not be set as a test variable.
+     */
+    private static boolean shouldExcludeProperty(String propertyName, Set<String> configuredProperties) {
+        if (configuredProperties.contains("*")) {
+            // all properties wildcard found - nothing is excluded
+            return false;
+        }
+
+        if (configuredProperties.contains(propertyName)) {
+            // configured properties has property name - not excluded
+            return false;
+        }
+
+        // finally search for property wildcards matching the property name - exclude property if no match found
+        return configuredProperties.stream()
+                .filter(configured -> configured.endsWith("*"))
+                .map(configured -> configured.substring(0, configured.length() - 1))
+                .noneMatch(propertyName::startsWith);
+
+    }
 }
