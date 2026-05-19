@@ -18,13 +18,15 @@ package org.citrusframework.camel.message;
 
 import java.util.Map;
 
+import org.apache.camel.Exchange;
+import org.apache.camel.support.DefaultExchange;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.endpoint.CamelEndpointConfiguration;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
-import org.apache.camel.Exchange;
-import org.apache.camel.support.DefaultExchange;
+import org.citrusframework.message.MessageHeaderUtils;
 
 /**
  * Message converter able to read Camel exchange and create proper Spring Integration message
@@ -45,7 +47,10 @@ public class CamelMessageConverter implements MessageConverter<Exchange, Exchang
     public void convertOutbound(Exchange exchange, Message message, CamelEndpointConfiguration endpointConfiguration, TestContext context) {
         org.apache.camel.Message in = exchange.getIn();
         for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {
-            in.setHeader(header.getKey(), header.getValue());
+            if (CamelSettings.isFilterInternalMessageHeaders() &&
+                    !MessageHeaderUtils.isInternalMessageHeader(header.getKey())) {
+                in.setHeader(header.getKey(), header.getValue());
+            }
         }
         in.setBody(message.getPayload());
     }
