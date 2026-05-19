@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
@@ -43,22 +44,19 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
     /** Default Citrus annotation config parsers from classpath resource properties */
     TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
-    Map<String, AnnotationConfigParser> parsers = new HashMap<>();
+    Map<String, AnnotationConfigParser<?, ?>> parsers = new HashMap<>();
 
     /**
      * Parse given annotation to a proper endpoint instance.
-     * @param annotation
-     * @param referenceResolver
-     * @return
      */
-    T parse(A annotation, ReferenceResolver referenceResolver);
+    T parse(A annotation, ReferenceResolver referenceResolver, TestContext context);
 
     /**
      * Resolves all available annotation config parsers from resource path lookup. Scans classpath for annotation config parser meta information
      * and instantiates those parsers.
      * @return
      */
-    static Map<String, AnnotationConfigParser> lookup() {
+    static Map<String, AnnotationConfigParser<?, ?>> lookup() {
         if (parsers.isEmpty()) {
             parsers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
 
@@ -78,9 +76,9 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
      * @param parser
      * @return
      */
-    static Optional<AnnotationConfigParser> lookup(String parser) {
+    static Optional<AnnotationConfigParser<?, ?>> lookup(String parser) {
         try {
-            AnnotationConfigParser instance;
+            AnnotationConfigParser<?, ?> instance;
             if (parser.contains(".")) {
                 int separatorIndex = parser.lastIndexOf('.');
                 instance = TYPE_RESOLVER.resolve(parser.substring(0, separatorIndex), parser.substring(separatorIndex + 1));

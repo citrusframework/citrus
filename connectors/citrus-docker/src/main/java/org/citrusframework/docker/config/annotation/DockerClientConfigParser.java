@@ -17,6 +17,7 @@
 package org.citrusframework.docker.config.annotation;
 
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.client.DockerClientBuilder;
 import org.citrusframework.spi.ReferenceResolver;
@@ -28,41 +29,41 @@ import org.citrusframework.util.StringUtils;
 public class DockerClientConfigParser implements AnnotationConfigParser<DockerClientConfig, DockerClient> {
 
     @Override
-    public DockerClient parse(DockerClientConfig annotation, ReferenceResolver referenceResolver) {
+    public DockerClient parse(DockerClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         DockerClientBuilder builder = new DockerClientBuilder();
 
         if (StringUtils.hasText(annotation.url())) {
-            builder.url(annotation.url());
+            builder.url(context.replaceDynamicContentInString(annotation.url()));
         }
 
         if (StringUtils.hasText(annotation.version())) {
-            builder.version(annotation.version());
+            builder.version(context.replaceDynamicContentInString(annotation.version()));
         }
 
         if (StringUtils.hasText(annotation.username())) {
-            builder.username(annotation.username());
+            builder.username(context.replaceDynamicContentInString(annotation.username()));
         }
 
         if (StringUtils.hasText(annotation.password())) {
-            builder.password(annotation.password());
+            builder.password(context.replaceDynamicContentInString(annotation.password()));
         }
 
         if (StringUtils.hasText(annotation.email())) {
-            builder.email(annotation.email());
+            builder.email(context.replaceDynamicContentInString(annotation.email()));
         }
 
         if (StringUtils.hasText(annotation.registry())) {
-            builder.registry(annotation.registry());
+            builder.registry(context.replaceDynamicContentInString(annotation.registry()));
         }
 
         builder.verifyTls(annotation.verifyTls());
 
         if (StringUtils.hasText(annotation.certPath())) {
-            builder.certPath(annotation.certPath());
+            builder.certPath(context.replaceDynamicContentInString(annotation.certPath()));
         }
 
         if (StringUtils.hasText(annotation.configPath())) {
-            builder.configPath(annotation.configPath());
+            builder.configPath(context.replaceDynamicContentInString(annotation.configPath()));
         }
 
         return builder.initialize().build();

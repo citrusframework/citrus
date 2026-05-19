@@ -18,6 +18,7 @@ package org.citrusframework.rmi.config.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.rmi.message.RmiMessageConverter;
@@ -32,17 +33,17 @@ import org.citrusframework.util.StringUtils;
 public class RmiServerConfigParser implements AnnotationConfigParser<RmiServerConfig, RmiServer> {
 
     @Override
-    public RmiServer parse(RmiServerConfig annotation, ReferenceResolver referenceResolver) {
+    public RmiServer parse(RmiServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         RmiServerBuilder builder = new RmiServerBuilder();
 
         builder.autoStart(annotation.autoStart());
 
         if (StringUtils.hasText(annotation.serverUrl())) {
-            builder.serverUrl(annotation.serverUrl());
+            builder.serverUrl(context.replaceDynamicContentInString(annotation.serverUrl()));
         }
 
         if (StringUtils.hasText(annotation.host())) {
-            builder.host(annotation.host());
+            builder.host(context.replaceDynamicContentInString(annotation.host()));
         }
 
         builder.port(annotation.port());

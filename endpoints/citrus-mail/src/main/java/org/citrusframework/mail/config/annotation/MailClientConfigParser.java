@@ -20,6 +20,7 @@ import java.util.Properties;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.mail.client.MailClient;
 import org.citrusframework.mail.client.MailClientBuilder;
 import org.citrusframework.mail.message.MailMessageConverter;
@@ -33,20 +34,20 @@ import org.citrusframework.util.StringUtils;
 public class MailClientConfigParser implements AnnotationConfigParser<MailClientConfig, MailClient> {
 
     @Override
-    public MailClient parse(MailClientConfig annotation, ReferenceResolver referenceResolver) {
+    public MailClient parse(MailClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         MailClientBuilder builder = new MailClientBuilder();
 
-        builder.host(annotation.host());
+        builder.host(context.replaceDynamicContentInString(annotation.host()));
         builder.port(annotation.port());
 
-        builder.protocol(annotation.protocol());
+        builder.protocol(context.replaceDynamicContentInString(annotation.protocol()));
 
         if (StringUtils.hasText(annotation.username())) {
-            builder.username(annotation.username());
+            builder.username(context.replaceDynamicContentInString(annotation.username()));
         }
 
         if (StringUtils.hasText(annotation.password())) {
-            builder.password(annotation.password());
+            builder.password(context.replaceDynamicContentInString(annotation.password()));
         }
 
         if (StringUtils.hasText(annotation.javaMailProperties())) {

@@ -379,11 +379,11 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
             referenceResolverAware.setReferenceResolver(referenceResolver);
         }
 
+        PropertyUtils.configure(name, component, referenceResolver);
+
         if (component instanceof InitializingPhase initializingBean) {
             initializingBean.initialize();
         }
-
-        PropertyUtils.configure(name, component, referenceResolver);
 
         referenceResolver.bind(name, component);
 

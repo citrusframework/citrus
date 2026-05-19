@@ -18,6 +18,7 @@ package org.citrusframework.endpoint.direct.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.DirectEndpointBuilder;
 import org.citrusframework.message.MessageQueue;
@@ -27,18 +28,18 @@ import org.citrusframework.util.StringUtils;
 public class DirectEndpointConfigParser implements AnnotationConfigParser<DirectEndpointConfig, DirectEndpoint> {
 
     @Override
-    public DirectEndpoint parse(DirectEndpointConfig annotation, ReferenceResolver referenceResolver) {
+    public DirectEndpoint parse(DirectEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         DirectEndpointBuilder builder = new DirectEndpointBuilder();
 
         String queue = annotation.queue();
         String queueName = annotation.queueName();
 
         if (StringUtils.hasText(queue)) {
-            builder.queue(referenceResolver.resolve(annotation.queue(), MessageQueue.class));
+            builder.queue(referenceResolver.resolve(context.replaceDynamicContentInString(annotation.queue()), MessageQueue.class));
         }
 
         if (StringUtils.hasText(queueName)) {
-            builder.queue(annotation.queueName());
+            builder.queue(context.replaceDynamicContentInString(annotation.queueName()));
         }
 
         builder.timeout(annotation.timeout());

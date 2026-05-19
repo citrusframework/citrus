@@ -20,6 +20,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.channel.ChannelEndpoint;
 import org.citrusframework.channel.ChannelEndpointBuilder;
 import org.citrusframework.channel.ChannelMessageConverter;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
 import org.springframework.integration.core.MessagingTemplate;
@@ -32,18 +33,18 @@ import org.springframework.messaging.core.DestinationResolver;
 public class ChannelEndpointConfigParser implements AnnotationConfigParser<ChannelEndpointConfig, ChannelEndpoint> {
 
     @Override
-    public ChannelEndpoint parse(ChannelEndpointConfig annotation, ReferenceResolver referenceResolver) {
+    public ChannelEndpoint parse(ChannelEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         ChannelEndpointBuilder builder = new ChannelEndpointBuilder();
 
         String channel = annotation.channel();
         String channelName = annotation.channelName();
 
         if (StringUtils.hasText(channel)) {
-            builder.channel(referenceResolver.resolve(annotation.channel(), MessageChannel.class));
+            builder.channel(referenceResolver.resolve(context.replaceDynamicContentInString(annotation.channel()), MessageChannel.class));
         }
 
         if (StringUtils.hasText(channelName)) {
-            builder.channel(annotation.channelName());
+            builder.channel(context.replaceDynamicContentInString(annotation.channelName()));
         }
 
         if (StringUtils.hasText(annotation.messagingTemplate())) {

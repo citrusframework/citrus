@@ -25,7 +25,7 @@ public class AnnotationConfigParserTest {
 
     @Test
     public void testLookup() {
-        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
         Assert.assertEquals(validators.size(), 0L);
     }
 }

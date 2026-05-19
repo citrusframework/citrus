@@ -16,6 +16,8 @@
 
 package org.citrusframework.jms.config.annotation;
 
+import java.util.Map;
+
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
 import jakarta.jms.JMSException;
@@ -25,8 +27,6 @@ import jakarta.jms.TopicConnection;
 import jakarta.jms.TopicConnectionFactory;
 import jakarta.jms.TopicSession;
 import jakarta.jms.TopicSubscriber;
-import java.util.Map;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
@@ -201,7 +201,7 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testLookupAll() {
-        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
         Assert.assertEquals(validators.size(), 6L);
         Assert.assertNotNull(validators.get("direct.async"));
         Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);

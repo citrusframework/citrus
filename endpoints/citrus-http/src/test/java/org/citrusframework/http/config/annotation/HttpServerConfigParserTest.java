@@ -274,7 +274,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testLookupAll() {
-        Map<String, AnnotationConfigParser> validators = lookup();
+        Map<String, AnnotationConfigParser<?, ?>> validators = lookup();
         assertEquals(validators.size(), 8L);
         assertNotNull(validators.get("direct.async"));
         assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);

@@ -18,6 +18,7 @@ package org.citrusframework.websocket.config.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
@@ -31,10 +32,10 @@ import org.citrusframework.websocket.message.WebSocketMessageConverter;
 public class WebSocketClientConfigParser implements AnnotationConfigParser<WebSocketClientConfig, WebSocketClient> {
 
     @Override
-    public WebSocketClient parse(WebSocketClientConfig annotation, ReferenceResolver referenceResolver) {
+    public WebSocketClient parse(WebSocketClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         WebSocketClientBuilder builder = new WebSocketClientBuilder();
 
-        builder.requestUrl(annotation.requestUrl());
+        builder.requestUrl(context.replaceDynamicContentInString(annotation.requestUrl()));
 
         if (StringUtils.hasText(annotation.messageConverter())) {
             builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), WebSocketMessageConverter.class));

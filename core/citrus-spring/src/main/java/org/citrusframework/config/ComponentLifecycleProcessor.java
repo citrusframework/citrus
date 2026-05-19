@@ -47,12 +47,12 @@ public class ComponentLifecycleProcessor implements DestructionAwareBeanPostProc
             ((ReferenceResolverAware) bean).setReferenceResolver(referenceResolver);
         }
 
+        PropertyUtils.configure(beanName, bean, referenceResolver);
+
         if (bean instanceof InitializingPhase initializingBean) {
             logger.debug("Initializing component '{}'", beanName);
             initializingBean.initialize();
         }
-
-        PropertyUtils.configure(beanName, bean, referenceResolver);
 
         return bean;
     }

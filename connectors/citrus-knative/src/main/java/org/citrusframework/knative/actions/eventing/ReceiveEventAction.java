@@ -220,8 +220,8 @@ public class ReceiveEventAction extends AbstractKnativeAction {
                             .referenceResolver(referenceResolver)
                             .build();
 
-                    httpServer.initialize();
                     PropertyUtils.configure(serviceName, httpServer, referenceResolver);
+                    httpServer.initialize();
                 }
             }
 

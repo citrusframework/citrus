@@ -70,11 +70,11 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
             referenceResolverAware.setReferenceResolver(referenceResolver);
         }
 
+        PropertyUtils.configure(name, component, referenceResolver);
+
         if (component instanceof InitializingPhase initializingBean) {
             initializingBean.initialize();
         }
-
-        PropertyUtils.configure(name, component, referenceResolver);
 
         if (referenceResolver instanceof CamelReferenceResolver camelReferenceResolver) {
             camelReferenceResolver.bind(name, component);

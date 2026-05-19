@@ -20,6 +20,7 @@ import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jms.endpoint.JmsEndpoint;
@@ -36,7 +37,7 @@ import org.springframework.jms.support.destination.DestinationResolver;
 public class JmsEndpointConfigParser implements AnnotationConfigParser<JmsEndpointConfig, JmsEndpoint> {
 
     @Override
-    public JmsEndpoint parse(JmsEndpointConfig annotation, ReferenceResolver referenceResolver) {
+    public JmsEndpoint parse(JmsEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         JmsEndpointBuilder builder = new JmsEndpointBuilder();
 
         String jmsTemplate = annotation.jmsTemplate();
@@ -60,9 +61,9 @@ public class JmsEndpointConfigParser implements AnnotationConfigParser<JmsEndpoi
 
             //destination
             if (StringUtils.hasText(destination)) {
-                builder.destination(referenceResolver.resolve(annotation.destination(), Destination.class));
-            } else {
-                builder.destination(annotation.destinationName());
+                builder.destination(referenceResolver.resolve(context.replaceDynamicContentInString(annotation.destination()), Destination.class));
+            } else if (StringUtils.hasText(destinationName)) {
+                builder.destination(context.replaceDynamicContentInString(annotation.destinationName()));
             }
         } else if (StringUtils.hasText(jmsTemplate)) {
             if (StringUtils.hasText(annotation.connectionFactory())) {
@@ -90,7 +91,7 @@ public class JmsEndpointConfigParser implements AnnotationConfigParser<JmsEndpoi
         builder.autoStart(annotation.autoStart());
         builder.durableSubscription(annotation.durableSubscription());
         if (StringUtils.hasText(annotation.durableSubscriberName())) {
-            builder.durableSubscriberName(annotation.durableSubscriberName());
+            builder.durableSubscriberName(context.replaceDynamicContentInString(annotation.durableSubscriberName()));
         }
 
         builder.useObjectMessages(annotation.useObjectMessages());

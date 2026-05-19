@@ -16,8 +16,8 @@
 
 package org.citrusframework.jmx.config.annotation;
 
-import javax.management.NotificationFilter;
 import java.util.Map;
+import javax.management.NotificationFilter;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.annotations.CitrusAnnotations;
@@ -118,7 +118,7 @@ public class JmxClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testLookupAll() {
-        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
         Assert.assertEquals(validators.size(), 4L);
         Assert.assertNotNull(validators.get("direct.async"));
         Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);

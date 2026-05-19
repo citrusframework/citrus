@@ -67,13 +67,13 @@ public class EndpointConfigurationScript implements ReferenceResolverAware {
                 referenceResolverAware.setReferenceResolver(resolverToUse);
             }
 
+            PropertyUtils.configure(endpoint.getName(), endpoint, resolverToUse);
+
             if (endpoint instanceof InitializingPhase initializingBean) {
                 initializingBean.initialize();
             }
 
             onCreate(endpoint);
-
-            PropertyUtils.configure(endpoint.getName(), endpoint, resolverToUse);
 
             resolverToUse.bind(endpoint.getName(), endpoint);
         });

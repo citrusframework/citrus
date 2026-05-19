@@ -24,6 +24,7 @@ import java.util.Map;
 import jakarta.servlet.Filter;
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessageConverter;
@@ -48,7 +49,7 @@ import static org.citrusframework.util.StringUtils.hasText;
 public class HttpServerConfigParser implements AnnotationConfigParser<HttpServerConfig, HttpServer> {
 
     @Override
-    public HttpServer parse(HttpServerConfig annotation, ReferenceResolver referenceResolver) {
+    public HttpServer parse(HttpServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         HttpServerBuilder builder = new HttpServerBuilder();
 
         builder.autoStart(annotation.autoStart());
@@ -71,11 +72,11 @@ public class HttpServerConfigParser implements AnnotationConfigParser<HttpServer
         builder.port(annotation.port());
 
         if (hasText(annotation.contextConfigLocation())) {
-            builder.contextConfigLocation(annotation.contextConfigLocation());
+            builder.contextConfigLocation(context.replaceDynamicContentInString(annotation.contextConfigLocation()));
         }
 
         if (hasText(annotation.resourceBase())) {
-            builder.resourceBase(annotation.resourceBase());
+            builder.resourceBase(context.replaceDynamicContentInString(annotation.resourceBase()));
         }
 
         builder.rootParentContext(annotation.rootParentContext());

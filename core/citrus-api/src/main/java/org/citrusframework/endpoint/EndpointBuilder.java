@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusEndpointProperty;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ResourcePathTypeResolver;
@@ -66,7 +67,7 @@ public interface EndpointBuilder<T extends Endpoint> {
     /**
      * Builds the endpoint from given endpoint annotations.
      */
-    default T build(CitrusEndpoint endpointAnnotation, ReferenceResolver referenceResolver) {
+    default T build(CitrusEndpoint endpointAnnotation, ReferenceResolver referenceResolver, TestContext context) {
         Method nameSetter = ReflectionHelper.findMethod(this.getClass(), "name", String.class);
         if (nameSetter != null) {
             ReflectionHelper.invokeMethod(nameSetter, this, endpointAnnotation.name());
@@ -75,11 +76,12 @@ public interface EndpointBuilder<T extends Endpoint> {
         for (CitrusEndpointProperty endpointProperty : endpointAnnotation.properties()) {
             Method propertyMethod = ReflectionHelper.findMethod(this.getClass(), endpointProperty.name(), endpointProperty.type());
             if (propertyMethod != null) {
+                String resolvedPropertyValue = context.replaceDynamicContentInString(endpointProperty.value());
                 if (!endpointProperty.type().equals(String.class)
-                        && referenceResolver.isResolvable(endpointProperty.value())) {
-                    ReflectionHelper.invokeMethod(propertyMethod, this, referenceResolver.resolve(endpointProperty.value(), endpointProperty.type()));
+                        && referenceResolver.isResolvable(resolvedPropertyValue)) {
+                    ReflectionHelper.invokeMethod(propertyMethod, this, referenceResolver.resolve(resolvedPropertyValue, endpointProperty.type()));
                 } else {
-                    ReflectionHelper.invokeMethod(propertyMethod, this, TypeConversionUtils.convertStringToType(endpointProperty.value(), endpointProperty.type()));
+                    ReflectionHelper.invokeMethod(propertyMethod, this, TypeConversionUtils.convertStringToType(resolvedPropertyValue, endpointProperty.type()));
                 }
             }
         }

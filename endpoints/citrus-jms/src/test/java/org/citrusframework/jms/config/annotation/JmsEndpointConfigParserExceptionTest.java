@@ -16,9 +16,8 @@
 
 package org.citrusframework.jms.config.annotation;
 
-import static org.testng.Assert.fail;
+import java.lang.reflect.Field;
 
-import jakarta.jms.JMSException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jms.endpoint.JmsEndpoint;
 import org.citrusframework.spi.ReferenceResolver;
@@ -32,7 +31,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Field;
+import static org.testng.Assert.fail;
 
 public class JmsEndpointConfigParserExceptionTest extends AbstractTestNGUnitTest {
 
@@ -65,7 +64,7 @@ public class JmsEndpointConfigParserExceptionTest extends AbstractTestNGUnitTest
     public void testJmsEndpointParser(String fieldName, String exceptionMessage) {
         JmsEndpointConfig annotation = getJmsEndpointConfigAnnotationFromField(fieldName);
 
-        assertException(() -> new JmsEndpointConfigParser().parse(annotation, referenceResolver), exceptionMessage);
+        assertException(() -> new JmsEndpointConfigParser().parse(annotation, referenceResolver, context), exceptionMessage);
     }
 
     private static JmsEndpointConfig getJmsEndpointConfigAnnotationFromField(String fieldName) {

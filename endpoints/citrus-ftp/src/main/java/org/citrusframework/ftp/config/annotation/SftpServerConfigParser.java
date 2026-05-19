@@ -18,6 +18,7 @@ package org.citrusframework.ftp.config.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.ftp.server.SftpServer;
 import org.citrusframework.ftp.server.SftpServerBuilder;
@@ -30,29 +31,29 @@ import org.citrusframework.util.StringUtils;
 public class SftpServerConfigParser implements AnnotationConfigParser<SftpServerConfig, SftpServer> {
 
     @Override
-    public SftpServer parse(SftpServerConfig annotation, ReferenceResolver referenceResolver) {
+    public SftpServer parse(SftpServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         SftpServerBuilder builder = new SftpServerBuilder();
 
         builder.port(annotation.port());
 
         if (StringUtils.hasText(annotation.user())) {
-            builder.user(annotation.user());
+            builder.user(context.replaceDynamicContentInString(annotation.user()));
         }
 
         if (StringUtils.hasText(annotation.password())) {
-            builder.password(annotation.password());
+            builder.password(context.replaceDynamicContentInString(annotation.password()));
         }
 
         if (StringUtils.hasText(annotation.hostKeyPath())) {
-            builder.hostKeyPath(annotation.hostKeyPath());
+            builder.hostKeyPath(context.replaceDynamicContentInString(annotation.hostKeyPath()));
         }
 
         if (StringUtils.hasText(annotation.userHomePath())) {
-            builder.userHomePath(annotation.userHomePath());
+            builder.userHomePath(context.replaceDynamicContentInString(annotation.userHomePath()));
         }
 
         if (StringUtils.hasText(annotation.allowedKeyPath())) {
-            builder.allowedKeyPath(annotation.allowedKeyPath());
+            builder.allowedKeyPath(context.replaceDynamicContentInString(annotation.allowedKeyPath()));
         }
 
         builder.pollingInterval(annotation.pollingInterval());

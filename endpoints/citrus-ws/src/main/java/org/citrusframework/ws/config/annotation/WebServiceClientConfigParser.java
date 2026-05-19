@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessageCorrelator;
@@ -40,10 +41,10 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 public class WebServiceClientConfigParser implements AnnotationConfigParser<WebServiceClientConfig, WebServiceClient> {
 
     @Override
-    public WebServiceClient parse(WebServiceClientConfig annotation, ReferenceResolver referenceResolver) {
+    public WebServiceClient parse(WebServiceClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         WebServiceClientBuilder builder = new WebServiceClientBuilder();
 
-        builder.defaultUri(annotation.requestUrl());
+        builder.defaultUri(context.replaceDynamicContentInString(annotation.requestUrl()));
 
         if (StringUtils.hasText(annotation.webServiceTemplate()) && (StringUtils.hasText(annotation.messageFactory()) ||
                 StringUtils.hasText(annotation.messageSender()))) {

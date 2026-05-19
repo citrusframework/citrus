@@ -16,6 +16,8 @@
 
 package org.citrusframework.kafka.config.annotation;
 
+import java.util.Map;
+
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.IntegerDeserializer;
@@ -40,8 +42,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 import static org.mockito.Mockito.when;
 
@@ -147,7 +147,7 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testLookupAll() {
-        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
         Assert.assertEquals(validators.size(), 3L);
         Assert.assertNotNull(validators.get("direct.async"));
         Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);

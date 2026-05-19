@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.ftp.client.SftpClient;
 import org.citrusframework.ftp.client.SftpClientBuilder;
 import org.citrusframework.message.MessageCorrelator;
@@ -32,11 +33,11 @@ import org.citrusframework.util.StringUtils;
 public class SftpClientConfigParser implements AnnotationConfigParser<SftpClientConfig, SftpClient> {
 
     @Override
-    public SftpClient parse(SftpClientConfig annotation, ReferenceResolver referenceResolver) {
+    public SftpClient parse(SftpClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         SftpClientBuilder builder = new SftpClientBuilder();
 
         if (StringUtils.hasText(annotation.host())) {
-            builder.host(annotation.host());
+            builder.host(context.replaceDynamicContentInString(annotation.host()));
         }
 
         builder.port(annotation.port());
@@ -44,19 +45,19 @@ public class SftpClientConfigParser implements AnnotationConfigParser<SftpClient
         builder.localPassiveMode(annotation.localPassiveMode());
 
         if (StringUtils.hasText(annotation.username())) {
-            builder.username(annotation.username());
+            builder.username(context.replaceDynamicContentInString(annotation.username()));
         }
 
         if (StringUtils.hasText(annotation.password())) {
-            builder.password(annotation.password());
+            builder.password(context.replaceDynamicContentInString(annotation.password()));
         }
 
         if (StringUtils.hasText(annotation.privateKeyPath())) {
-            builder.privateKeyPath(annotation.privateKeyPath());
+            builder.privateKeyPath(context.replaceDynamicContentInString(annotation.privateKeyPath()));
         }
 
         if (StringUtils.hasText(annotation.privateKeyPassword())) {
-            builder.privateKeyPassword(annotation.privateKeyPassword());
+            builder.privateKeyPassword(context.replaceDynamicContentInString(annotation.privateKeyPassword()));
         }
 
         builder.strictHostChecking(annotation.strictHostChecking());

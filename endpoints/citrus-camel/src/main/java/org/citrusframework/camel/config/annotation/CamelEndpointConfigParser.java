@@ -23,16 +23,17 @@ import org.citrusframework.camel.endpoint.CamelEndpoint;
 import org.citrusframework.camel.endpoint.CamelEndpointBuilder;
 import org.citrusframework.camel.message.CamelMessageConverter;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
 
 public class CamelEndpointConfigParser implements AnnotationConfigParser<CamelEndpointConfig, CamelEndpoint> {
 
     @Override
-    public CamelEndpoint parse(CamelEndpointConfig annotation, ReferenceResolver referenceResolver) {
+    public CamelEndpoint parse(CamelEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         CamelEndpointBuilder builder = new CamelEndpointBuilder();
 
-        builder.endpointUri(annotation.endpointUri());
+        builder.endpointUri(context.replaceDynamicContentInString(annotation.endpointUri()));
 
         if (StringUtils.hasText(annotation.camelContext())) {
             builder.camelContext(referenceResolver.resolve(annotation.camelContext(), CamelContext.class));

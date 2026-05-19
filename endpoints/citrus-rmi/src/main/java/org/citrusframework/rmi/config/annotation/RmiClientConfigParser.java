@@ -18,6 +18,7 @@ package org.citrusframework.rmi.config.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.rmi.client.RmiClient;
 import org.citrusframework.rmi.client.RmiClientBuilder;
@@ -31,25 +32,25 @@ import org.citrusframework.util.StringUtils;
 public class RmiClientConfigParser implements AnnotationConfigParser<RmiClientConfig, RmiClient> {
 
     @Override
-    public RmiClient parse(RmiClientConfig annotation, ReferenceResolver referenceResolver) {
+    public RmiClient parse(RmiClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         RmiClientBuilder builder = new RmiClientBuilder();
 
         if (StringUtils.hasText(annotation.serverUrl())) {
-            builder.serverUrl(annotation.serverUrl());
+            builder.serverUrl(context.replaceDynamicContentInString(annotation.serverUrl()));
         }
 
         if (StringUtils.hasText(annotation.host())) {
-            builder.host(annotation.host());
+            builder.host(context.replaceDynamicContentInString(annotation.host()));
         }
 
         builder.port(annotation.port());
 
         if (StringUtils.hasText(annotation.binding())) {
-            builder.binding(annotation.binding());
+            builder.binding(context.replaceDynamicContentInString(annotation.binding()));
         }
 
         if (StringUtils.hasText(annotation.method())) {
-            builder.method(annotation.method());
+            builder.method(context.replaceDynamicContentInString(annotation.method()));
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {

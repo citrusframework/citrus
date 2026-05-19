@@ -19,6 +19,7 @@ package org.citrusframework.ftp.config.annotation;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.ftp.server.FtpServer;
 import org.citrusframework.ftp.server.FtpServerBuilder;
@@ -32,7 +33,7 @@ import org.citrusframework.util.StringUtils;
 public class FtpServerConfigParser implements AnnotationConfigParser<FtpServerConfig, FtpServer> {
 
     @Override
-    public FtpServer parse(FtpServerConfig annotation, ReferenceResolver referenceResolver) {
+    public FtpServer parse(FtpServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         FtpServerBuilder builder = new FtpServerBuilder();
 
         builder.autoStart(annotation.autoStart());

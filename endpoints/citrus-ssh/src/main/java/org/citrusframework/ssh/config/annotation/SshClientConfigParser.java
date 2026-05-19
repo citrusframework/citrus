@@ -18,6 +18,7 @@ package org.citrusframework.ssh.config.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.ssh.client.SshClient;
@@ -31,38 +32,38 @@ import org.citrusframework.util.StringUtils;
 public class SshClientConfigParser implements AnnotationConfigParser<SshClientConfig, SshClient> {
 
     @Override
-    public SshClient parse(SshClientConfig annotation, ReferenceResolver referenceResolver) {
+    public SshClient parse(SshClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         SshClientBuilder builder = new SshClientBuilder();
 
         if (StringUtils.hasText(annotation.host())) {
-            builder.host(annotation.host());
+            builder.host(context.replaceDynamicContentInString(annotation.host()));
         }
 
         builder.port(annotation.port());
 
         if (StringUtils.hasText(annotation.privateKeyPath())) {
-            builder.privateKeyPath(annotation.privateKeyPath());
+            builder.privateKeyPath(context.replaceDynamicContentInString(annotation.privateKeyPath()));
         }
 
         if (StringUtils.hasText(annotation.privateKeyPassword())) {
-            builder.privateKeyPassword(annotation.privateKeyPassword());
+            builder.privateKeyPassword(context.replaceDynamicContentInString(annotation.privateKeyPassword()));
         }
 
         builder.strictHostChecking(annotation.strictHostChecking());
 
         if (StringUtils.hasText(annotation.knownHosts())) {
-            builder.knownHosts(annotation.knownHosts());
+            builder.knownHosts(context.replaceDynamicContentInString(annotation.knownHosts()));
         }
 
         builder.commandTimeout(annotation.commandTimeout());
         builder.connectionTimeout(annotation.connectionTimeout());
 
         if (StringUtils.hasText(annotation.user())) {
-            builder.user(annotation.user());
+            builder.user(context.replaceDynamicContentInString(annotation.user()));
         }
 
         if (StringUtils.hasText(annotation.password())) {
-            builder.password(annotation.password());
+            builder.password(context.replaceDynamicContentInString(annotation.password()));
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {

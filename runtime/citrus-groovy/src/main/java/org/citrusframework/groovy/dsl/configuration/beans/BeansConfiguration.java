@@ -66,11 +66,11 @@ public class BeansConfiguration extends GroovyObjectSupport {
                 referenceResolverAware.setReferenceResolver(referenceResolver);
             }
 
+            PropertyUtils.configure(name, bean, referenceResolver);
+
             if (bean instanceof InitializingPhase initializingBean) {
                 initializingBean.initialize();
             }
-
-            PropertyUtils.configure(name, bean, referenceResolver);
 
             referenceResolver.bind(name, bean);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -89,11 +89,11 @@ public class BeansConfiguration extends GroovyObjectSupport {
                 referenceResolverAware.setReferenceResolver(referenceResolver);
             }
 
+            PropertyUtils.configure(name, bean, referenceResolver);
+
             if (bean instanceof InitializingPhase initializingBean) {
                 initializingBean.initialize();
             }
-
-            PropertyUtils.configure(name, bean, referenceResolver);
 
             referenceResolver.bind(name, bean);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -111,11 +111,11 @@ public class BeansConfiguration extends GroovyObjectSupport {
             referenceResolverAware.setReferenceResolver(referenceResolver);
         }
 
+        PropertyUtils.configure(name, bean, referenceResolver);
+
         if (bean instanceof InitializingPhase initializingBean) {
             initializingBean.initialize();
         }
-
-        PropertyUtils.configure(name, bean, referenceResolver);
 
         referenceResolver.bind(name, bean);
     }
@@ -151,11 +151,11 @@ public class BeansConfiguration extends GroovyObjectSupport {
                         referenceResolverAware.setReferenceResolver(referenceResolver);
                     }
 
+                    PropertyUtils.configure(name, bean, referenceResolver);
+
                     if (bean instanceof InitializingPhase initializingBean) {
                         initializingBean.initialize();
                     }
-
-                    PropertyUtils.configure(name, bean, referenceResolver);
 
                     referenceResolver.bind(name, bean);
                     return bean;
@@ -173,11 +173,11 @@ public class BeansConfiguration extends GroovyObjectSupport {
                     referenceResolverAware.setReferenceResolver(referenceResolver);
                 }
 
+                PropertyUtils.configure(name, bean, referenceResolver);
+
                 if (bean instanceof InitializingPhase initializingBean) {
                     initializingBean.initialize();
                 }
-
-                PropertyUtils.configure(name, bean, referenceResolver);
 
                 referenceResolver.bind(name, bean);
             }

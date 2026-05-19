@@ -20,6 +20,7 @@ import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jms.endpoint.JmsSyncEndpoint;
@@ -37,7 +38,7 @@ import org.springframework.jms.support.destination.DestinationResolver;
 public class JmsSyncEndpointConfigParser implements AnnotationConfigParser<JmsSyncEndpointConfig, JmsSyncEndpoint> {
 
     @Override
-    public JmsSyncEndpoint parse(JmsSyncEndpointConfig annotation, ReferenceResolver referenceResolver) {
+    public JmsSyncEndpoint parse(JmsSyncEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         JmsSyncEndpointBuilder builder = new JmsSyncEndpointBuilder();
 
         String jmsTemplate = annotation.jmsTemplate();
@@ -61,9 +62,9 @@ public class JmsSyncEndpointConfigParser implements AnnotationConfigParser<JmsSy
 
             //destination
             if (StringUtils.hasText(destination)) {
-                builder.destination(referenceResolver.resolve(annotation.destination(), Destination.class));
-            } else {
-                builder.destination(annotation.destinationName());
+                builder.destination(referenceResolver.resolve(context.replaceDynamicContentInString(annotation.destination()), Destination.class));
+            } else if (StringUtils.hasText(destinationName)) {
+                builder.destination(context.replaceDynamicContentInString(annotation.destinationName()));
             }
         } else if (StringUtils.hasText(jmsTemplate)) {
             if (StringUtils.hasText(annotation.connectionFactory())) {
@@ -101,7 +102,7 @@ public class JmsSyncEndpointConfigParser implements AnnotationConfigParser<JmsSy
         }
 
         if (StringUtils.hasText(annotation.replyDestinationName())) {
-            builder.replyDestination(annotation.replyDestinationName());
+            builder.replyDestination(context.replaceDynamicContentInString(annotation.replyDestinationName()));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {

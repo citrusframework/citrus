@@ -17,6 +17,7 @@
 package org.citrusframework.kubernetes.config.annotation;
 
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.client.KubernetesClientBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
@@ -32,7 +33,7 @@ import static org.citrusframework.util.StringUtils.hasText;
 public class KubernetesClientConfigParser implements AnnotationConfigParser<KubernetesClientConfig, KubernetesClient> {
 
     @Override
-    public KubernetesClient parse(KubernetesClientConfig annotation, ReferenceResolver referenceResolver) {
+    public KubernetesClient parse(KubernetesClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         KubernetesClientBuilder builder = new KubernetesClientBuilder();
 
         if (!isValid(annotation.username(), annotation.password(), annotation.oauthToken())) {
@@ -40,31 +41,31 @@ public class KubernetesClientConfigParser implements AnnotationConfigParser<Kube
         }
 
         if (hasText(annotation.url())) {
-            builder.url(annotation.url());
+            builder.url(context.replaceDynamicContentInString(annotation.url()));
         }
 
         if (hasText(annotation.version())) {
-            builder.version(annotation.version());
+            builder.version(context.replaceDynamicContentInString(annotation.version()));
         }
 
         if (hasText(annotation.username())) {
-            builder.username(annotation.username());
+            builder.username(context.replaceDynamicContentInString(annotation.username()));
         }
 
         if (hasText(annotation.password())) {
-            builder.password(annotation.password());
+            builder.password(context.replaceDynamicContentInString(annotation.password()));
         }
 
         if (hasText(annotation.oauthToken())) {
-            builder.oauthToken(annotation.oauthToken());
+            builder.oauthToken(context.replaceDynamicContentInString(annotation.oauthToken()));
         }
 
         if (hasText(annotation.namespace())) {
-            builder.namespace(annotation.namespace());
+            builder.namespace(context.replaceDynamicContentInString(annotation.namespace()));
         }
 
         if (hasText(annotation.certFile())) {
-            builder.certFile(annotation.certFile());
+            builder.certFile(context.replaceDynamicContentInString(annotation.certFile()));
         }
 
         if (hasText(annotation.messageConverter())) {

@@ -18,6 +18,7 @@ package org.citrusframework.ftp.config.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.ftp.client.ScpClient;
 import org.citrusframework.ftp.client.ScpClientBuilder;
 import org.citrusframework.message.MessageCorrelator;
@@ -30,30 +31,30 @@ import org.citrusframework.util.StringUtils;
 public class ScpClientConfigParser implements AnnotationConfigParser<ScpClientConfig, ScpClient> {
 
     @Override
-    public ScpClient parse(ScpClientConfig annotation, ReferenceResolver referenceResolver) {
+    public ScpClient parse(ScpClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         ScpClientBuilder builder = new ScpClientBuilder();
 
         if (StringUtils.hasText(annotation.host())) {
-            builder.host(annotation.host());
+            builder.host(context.replaceDynamicContentInString(annotation.host()));
         }
 
         builder.port(annotation.port());
         builder.portOption(annotation.portOption());
 
         if (StringUtils.hasText(annotation.username())) {
-            builder.username(annotation.username());
+            builder.username(context.replaceDynamicContentInString(annotation.username()));
         }
 
         if (StringUtils.hasText(annotation.password())) {
-            builder.password(annotation.password());
+            builder.password(context.replaceDynamicContentInString(annotation.password()));
         }
 
         if (StringUtils.hasText(annotation.privateKeyPath())) {
-            builder.privateKeyPath(annotation.privateKeyPath());
+            builder.privateKeyPath(context.replaceDynamicContentInString(annotation.privateKeyPath()));
         }
 
         if (StringUtils.hasText(annotation.privateKeyPassword())) {
-            builder.privateKeyPassword(annotation.privateKeyPassword());
+            builder.privateKeyPassword(context.replaceDynamicContentInString(annotation.privateKeyPassword()));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {

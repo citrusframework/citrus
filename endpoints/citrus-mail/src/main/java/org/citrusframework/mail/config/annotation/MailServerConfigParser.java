@@ -21,6 +21,7 @@ import java.util.Properties;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
@@ -35,7 +36,7 @@ import org.citrusframework.util.StringUtils;
 public class MailServerConfigParser implements AnnotationConfigParser<MailServerConfig, MailServer> {
 
     @Override
-    public MailServer parse(MailServerConfig annotation, ReferenceResolver referenceResolver) {
+    public MailServer parse(MailServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         MailServerBuilder builder = new MailServerBuilder();
 
         builder.autoStart(annotation.autoStart());
@@ -61,7 +62,7 @@ public class MailServerConfigParser implements AnnotationConfigParser<MailServer
         }
 
         if (annotation.knownUsers().length > 0) {
-            builder.knownUsers(Arrays.asList(annotation.knownUsers()));
+            builder.knownUsers(context.resolveDynamicValuesInList(Arrays.asList(annotation.knownUsers())));
         }
 
         if (StringUtils.hasText(annotation.marshaller())) {

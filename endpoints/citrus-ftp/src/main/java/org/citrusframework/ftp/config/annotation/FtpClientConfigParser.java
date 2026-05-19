@@ -18,6 +18,7 @@ package org.citrusframework.ftp.config.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.ftp.client.FtpClient;
 import org.citrusframework.ftp.client.FtpClientBuilder;
 import org.citrusframework.message.MessageCorrelator;
@@ -30,11 +31,11 @@ import org.citrusframework.util.StringUtils;
 public class FtpClientConfigParser implements AnnotationConfigParser<FtpClientConfig, FtpClient> {
 
     @Override
-    public FtpClient parse(FtpClientConfig annotation, ReferenceResolver referenceResolver) {
+    public FtpClient parse(FtpClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         FtpClientBuilder builder = new FtpClientBuilder();
 
         if (StringUtils.hasText(annotation.host())) {
-            builder.host(annotation.host());
+            builder.host(context.replaceDynamicContentInString(annotation.host()));
         }
 
         builder.port(annotation.port());
@@ -42,11 +43,11 @@ public class FtpClientConfigParser implements AnnotationConfigParser<FtpClientCo
         builder.localPassiveMode(annotation.localPassiveMode());
 
         if (StringUtils.hasText(annotation.username())) {
-            builder.username(annotation.username());
+            builder.username(context.replaceDynamicContentInString(annotation.username()));
         }
 
         if (StringUtils.hasText(annotation.password())) {
-            builder.password(annotation.password());
+            builder.password(context.replaceDynamicContentInString(annotation.password()));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {

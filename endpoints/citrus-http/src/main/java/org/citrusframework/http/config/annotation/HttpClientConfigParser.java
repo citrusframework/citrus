@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;
@@ -44,7 +45,7 @@ import org.springframework.web.client.RestTemplate;
 public class HttpClientConfigParser implements AnnotationConfigParser<HttpClientConfig, HttpClient> {
 
     @Override
-    public HttpClient parse(HttpClientConfig annotation, ReferenceResolver referenceResolver) {
+    public HttpClient parse(HttpClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         HttpClientBuilder builder = new HttpClientBuilder();
 
         if (StringUtils.hasText(annotation.restTemplate()) && StringUtils.hasText(annotation.requestFactory())) {
@@ -65,7 +66,7 @@ public class HttpClientConfigParser implements AnnotationConfigParser<HttpClient
             builder.requestFactory(referenceResolver.resolve(annotation.requestFactory(), ClientHttpRequestFactory.class));
         }
 
-        builder.requestUrl(annotation.requestUrl());
+        builder.requestUrl(context.replaceDynamicContentInString(annotation.requestUrl()));
         builder.requestMethod(annotation.requestMethod());
 
         if (StringUtils.hasText(annotation.messageConverter())) {

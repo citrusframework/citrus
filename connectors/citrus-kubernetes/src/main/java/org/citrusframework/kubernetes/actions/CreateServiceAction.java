@@ -261,8 +261,8 @@ public class CreateServiceAction extends AbstractKubernetesAction {
                             .referenceResolver(referenceResolver)
                             .build();
 
-                    httpServer.initialize();
                     PropertyUtils.configure(serverName, httpServer, referenceResolver);
+                    httpServer.initialize();
                 }
             }
 

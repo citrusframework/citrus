@@ -16,8 +16,11 @@
 
 package org.citrusframework.kafka.config.annotation;
 
+import java.util.Map;
+
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kafka.endpoint.KafkaEndpoint;
 import org.citrusframework.kafka.endpoint.KafkaEndpointBuilder;
@@ -26,25 +29,23 @@ import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
 
-import java.util.Map;
-
 /**
  * @since 2.8
  */
 public class KafkaEndpointConfigParser implements AnnotationConfigParser<KafkaEndpointConfig, KafkaEndpoint> {
 
     @Override
-    public KafkaEndpoint parse(KafkaEndpointConfig annotation, ReferenceResolver referenceResolver) {
+    public KafkaEndpoint parse(KafkaEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         KafkaEndpointBuilder builder = new KafkaEndpointBuilder();
 
-        String server = annotation.server();
+        String server = context.replaceDynamicContentInString(annotation.server());
 
         if (!StringUtils.hasText(server)) {
             throw new CitrusRuntimeException("Required server is missing for kafka configuration");
         }
 
         builder.server(server);
-        builder.topic(annotation.topic());
+        builder.topic(context.replaceDynamicContentInString(annotation.topic()));
         builder.partition(annotation.partition());
 
         builder.autoCommit(annotation.autoCommit());
@@ -52,10 +53,10 @@ public class KafkaEndpointConfigParser implements AnnotationConfigParser<KafkaEn
         builder.offsetReset(annotation.offsetReset());
 
         if (StringUtils.hasText(annotation.clientId())) {
-            builder.clientId(annotation.clientId());
+            builder.clientId(context.replaceDynamicContentInString(annotation.clientId()));
         }
 
-        builder.consumerGroup(annotation.consumerGroup());
+        builder.consumerGroup(context.replaceDynamicContentInString(annotation.consumerGroup()));
 
         if (StringUtils.hasText(annotation.producerProperties())) {
             builder.producerProperties(referenceResolver.resolve(annotation.producerProperties(), Map.class));

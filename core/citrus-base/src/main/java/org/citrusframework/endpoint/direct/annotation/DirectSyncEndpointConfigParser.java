@@ -18,6 +18,7 @@ package org.citrusframework.endpoint.direct.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.direct.DirectSyncEndpoint;
 import org.citrusframework.endpoint.direct.DirectSyncEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
@@ -28,18 +29,18 @@ import org.citrusframework.util.StringUtils;
 public class DirectSyncEndpointConfigParser implements AnnotationConfigParser<DirectSyncEndpointConfig, DirectSyncEndpoint> {
 
     @Override
-    public DirectSyncEndpoint parse(DirectSyncEndpointConfig annotation, ReferenceResolver referenceResolver) {
+    public DirectSyncEndpoint parse(DirectSyncEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         DirectSyncEndpointBuilder builder = new DirectSyncEndpointBuilder();
 
         String queue = annotation.queue();
         String queueName = annotation.queueName();
 
         if (StringUtils.hasText(queue)) {
-            builder.queue(referenceResolver.resolve(annotation.queue(), MessageQueue.class));
+            builder.queue(referenceResolver.resolve(context.replaceDynamicContentInString(annotation.queue()), MessageQueue.class));
         }
 
         if (StringUtils.hasText(queueName)) {
-            builder.queue(annotation.queueName());
+            builder.queue(context.replaceDynamicContentInString(annotation.queueName()));
         }
 
         builder.timeout(annotation.timeout());

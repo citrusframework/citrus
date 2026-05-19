@@ -17,6 +17,7 @@
 package org.citrusframework.selenium.config.annotation;
 
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumBrowserBuilder;
 import org.citrusframework.spi.ReferenceResolver;
@@ -31,23 +32,23 @@ import org.openqa.selenium.support.events.WebDriverListener;
 public class SeleniumBrowserConfigParser implements AnnotationConfigParser<SeleniumBrowserConfig, SeleniumBrowser> {
 
     @Override
-    public SeleniumBrowser parse(SeleniumBrowserConfig annotation, ReferenceResolver referenceResolver) {
+    public SeleniumBrowser parse(SeleniumBrowserConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         SeleniumBrowserBuilder builder = new SeleniumBrowserBuilder();
 
         if (StringUtils.hasText(annotation.startPage())) {
-            builder.startPage(annotation.startPage());
+            builder.startPage(context.replaceDynamicContentInString(annotation.startPage()));
         }
 
         if (StringUtils.hasText(annotation.version())) {
-            builder.version(annotation.version());
+            builder.version(context.replaceDynamicContentInString(annotation.version()));
         }
 
         if (StringUtils.hasText(annotation.remoteServer())) {
-            builder.remoteServer(annotation.remoteServer());
+            builder.remoteServer(context.replaceDynamicContentInString(annotation.remoteServer()));
         }
 
         if (StringUtils.hasText(annotation.type())) {
-            builder.type(annotation.type());
+            builder.type(context.replaceDynamicContentInString(annotation.type()));
         }
 
         if (StringUtils.hasText(annotation.webDriver())) {

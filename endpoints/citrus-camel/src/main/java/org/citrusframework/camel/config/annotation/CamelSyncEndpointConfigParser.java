@@ -23,6 +23,7 @@ import org.citrusframework.camel.endpoint.CamelSyncEndpoint;
 import org.citrusframework.camel.endpoint.CamelSyncEndpointBuilder;
 import org.citrusframework.camel.message.CamelMessageConverter;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
@@ -30,10 +31,10 @@ import org.citrusframework.util.StringUtils;
 public class CamelSyncEndpointConfigParser implements AnnotationConfigParser<CamelSyncEndpointConfig, CamelSyncEndpoint> {
 
     @Override
-    public CamelSyncEndpoint parse(CamelSyncEndpointConfig annotation, ReferenceResolver referenceResolver) {
+    public CamelSyncEndpoint parse(CamelSyncEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         CamelSyncEndpointBuilder builder = new CamelSyncEndpointBuilder();
 
-        builder.endpointUri(annotation.endpointUri());
+        builder.endpointUri(context.replaceDynamicContentInString(annotation.endpointUri()));
 
         if (StringUtils.hasText(annotation.camelContext())) {
             builder.camelContext(referenceResolver.resolve(annotation.camelContext(), CamelContext.class));

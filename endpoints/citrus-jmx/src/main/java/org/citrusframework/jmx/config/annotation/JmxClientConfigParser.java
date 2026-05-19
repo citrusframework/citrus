@@ -20,6 +20,7 @@ import javax.management.NotificationFilter;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.jmx.client.JmxClient;
 import org.citrusframework.jmx.client.JmxClientBuilder;
 import org.citrusframework.jmx.message.JmxMessageConverter;
@@ -33,17 +34,17 @@ import org.citrusframework.util.StringUtils;
 public class JmxClientConfigParser implements AnnotationConfigParser<JmxClientConfig, JmxClient> {
 
     @Override
-    public JmxClient parse(JmxClientConfig annotation, ReferenceResolver referenceResolver) {
+    public JmxClient parse(JmxClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         JmxClientBuilder builder = new JmxClientBuilder();
 
-        builder.serverUrl(annotation.serverUrl());
+        builder.serverUrl(context.replaceDynamicContentInString(annotation.serverUrl()));
 
         if (StringUtils.hasText(annotation.username())) {
-            builder.username(annotation.username());
+            builder.username(context.replaceDynamicContentInString(annotation.username()));
         }
 
         if (StringUtils.hasText(annotation.password())) {
-            builder.password(annotation.password());
+            builder.password(context.replaceDynamicContentInString(annotation.password()));
         }
 
         builder.autoReconnect(annotation.autoReconnect());

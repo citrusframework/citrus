@@ -18,6 +18,7 @@ package org.citrusframework.vertx.config.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
@@ -32,17 +33,17 @@ import org.citrusframework.vertx.message.VertxMessageConverter;
 public class VertxSyncEndpointConfigParser implements AnnotationConfigParser<VertxSyncEndpointConfig, VertxSyncEndpoint> {
 
     @Override
-    public VertxSyncEndpoint parse(VertxSyncEndpointConfig annotation, ReferenceResolver referenceResolver) {
+    public VertxSyncEndpoint parse(VertxSyncEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         VertxSyncEndpointBuilder builder = new VertxSyncEndpointBuilder();
 
         if (StringUtils.hasText(annotation.host())) {
-            builder.host(annotation.host());
+            builder.host(context.replaceDynamicContentInString(annotation.host()));
         }
 
         builder.port(annotation.port());
 
         if (StringUtils.hasText(annotation.address())) {
-            builder.address(annotation.address());
+            builder.address(context.replaceDynamicContentInString(annotation.address()));
         }
 
         builder.pubSubDomain(annotation.pubSubDomain());

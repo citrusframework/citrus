@@ -161,7 +161,7 @@ public class DirectSyncEndpointConfigParserTest {
 
     @Test
     public void testLookupAll() {
-        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
         Assert.assertEquals(validators.size(), 2L);
         Assert.assertNotNull(validators.get("direct.sync"));
         Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);

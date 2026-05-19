@@ -20,6 +20,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.channel.ChannelMessageConverter;
 import org.citrusframework.channel.ChannelSyncEndpoint;
 import org.citrusframework.channel.ChannelSyncEndpointBuilder;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
@@ -33,18 +34,18 @@ import org.springframework.messaging.core.DestinationResolver;
 public class ChannelSyncEndpointConfigParser implements AnnotationConfigParser<ChannelSyncEndpointConfig, ChannelSyncEndpoint> {
 
     @Override
-    public ChannelSyncEndpoint parse(ChannelSyncEndpointConfig annotation, ReferenceResolver referenceResolver) {
+    public ChannelSyncEndpoint parse(ChannelSyncEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         ChannelSyncEndpointBuilder builder = new ChannelSyncEndpointBuilder();
 
         String channel = annotation.channel();
         String channelName = annotation.channelName();
 
         if (StringUtils.hasText(channel)) {
-            builder.channel(referenceResolver.resolve(annotation.channel(), MessageChannel.class));
+            builder.channel(referenceResolver.resolve(context.replaceDynamicContentInString(annotation.channel()), MessageChannel.class));
         }
 
         if (StringUtils.hasText(channelName)) {
-            builder.channel(annotation.channelName());
+            builder.channel(context.replaceDynamicContentInString(annotation.channelName()));
         }
 
         if (StringUtils.hasText(annotation.messagingTemplate())) {

@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
@@ -42,7 +43,7 @@ import static org.citrusframework.util.StringUtils.hasText;
 public class WebSocketServerConfigParser implements AnnotationConfigParser<WebSocketServerConfig, WebSocketServer> {
 
     @Override
-    public WebSocketServer parse(WebSocketServerConfig annotation, ReferenceResolver referenceResolver) {
+    public WebSocketServer parse(WebSocketServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         WebSocketServerBuilder builder = new WebSocketServerBuilder();
 
         List<WebSocketEndpoint> webSockets = new ArrayList<>();
@@ -82,11 +83,11 @@ public class WebSocketServerConfigParser implements AnnotationConfigParser<WebSo
         builder.port(annotation.port());
 
         if (hasText(annotation.contextConfigLocation())) {
-            builder.contextConfigLocation(annotation.contextConfigLocation());
+            builder.contextConfigLocation(context.replaceDynamicContentInString(annotation.contextConfigLocation()));
         }
 
         if (hasText(annotation.resourceBase())) {
-            builder.resourceBase(annotation.resourceBase());
+            builder.resourceBase(context.replaceDynamicContentInString(annotation.resourceBase()));
         }
 
         builder.rootParentContext(annotation.rootParentContext());
@@ -100,7 +101,7 @@ public class WebSocketServerConfigParser implements AnnotationConfigParser<WebSo
         }
 
         if (hasText(annotation.servletName())) {
-            builder.servletName(annotation.servletName());
+            builder.servletName(context.replaceDynamicContentInString(annotation.servletName()));
         }
 
         if (hasText(annotation.servletMappingPath())) {
@@ -108,7 +109,7 @@ public class WebSocketServerConfigParser implements AnnotationConfigParser<WebSo
         }
 
         if (hasText(annotation.contextPath())) {
-            builder.contextPath(annotation.contextPath());
+            builder.contextPath(context.replaceDynamicContentInString(annotation.contextPath()));
         }
 
         if (hasText(annotation.servletHandler())) {

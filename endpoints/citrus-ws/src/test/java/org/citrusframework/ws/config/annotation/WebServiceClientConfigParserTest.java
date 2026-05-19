@@ -16,11 +16,9 @@
 
 package org.citrusframework.ws.config.annotation;
 
-import static org.citrusframework.ws.client.WsTestUtils.getInterceptors;
-import static org.mockito.Mockito.when;
-
 import java.util.Arrays;
 import java.util.Map;
+
 import org.citrusframework.TestActor;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
@@ -53,6 +51,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import static org.citrusframework.ws.client.WsTestUtils.getInterceptors;
+import static org.mockito.Mockito.when;
 
 public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
 
@@ -199,7 +200,7 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testLookupAll() {
-        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
         Assert.assertEquals(validators.size(), 8L);
         Assert.assertNotNull(validators.get("direct.async"));
         Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);

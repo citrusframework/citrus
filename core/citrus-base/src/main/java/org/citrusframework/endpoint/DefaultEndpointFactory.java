@@ -60,18 +60,8 @@ public class DefaultEndpointFactory implements EndpointFactory {
                 .or(() -> AnnotationConfigParser.lookup(qualifier))
                 .orElseThrow(() -> new CitrusRuntimeException(String.format("Unable to create endpoint annotation parser with name '%s'", qualifier)));
 
-        Endpoint endpoint = parser.parse(endpointConfig, context.getReferenceResolver());
-        endpoint.setName(endpointName);
-
-        if (endpoint instanceof ReferenceResolverAware referenceResolverAware) {
-            referenceResolverAware.setReferenceResolver(context.getReferenceResolver());
-        }
-
-        if (endpoint instanceof InitializingPhase initializingBean) {
-            initializingBean.initialize();
-        }
-
-        PropertyUtils.configure(endpointName, endpoint, context.getReferenceResolver());
+        Endpoint endpoint = parser.parse(endpointConfig, context.getReferenceResolver(), context);
+        initialize(endpointName, endpoint, context);
         return endpoint;
     }
 
@@ -89,9 +79,23 @@ public class DefaultEndpointFactory implements EndpointFactory {
                         .findFirst())
                 .orElseThrow(() -> new CitrusRuntimeException(String.format("Unable to create endpoint builder for type '%s'", endpointType.getName())));
 
-        Endpoint endpoint = builder.build(endpointConfig, context.getReferenceResolver());
-        endpoint.setName(endpointName);
+        Endpoint endpoint = builder.build(endpointConfig, context.getReferenceResolver(), context);
+        initialize(endpointName, endpoint, context);
         return endpoint;
+    }
+
+    private void initialize(String endpointName, Endpoint endpoint, TestContext context) {
+        endpoint.setName(endpointName);
+
+        if (endpoint instanceof ReferenceResolverAware referenceResolverAware) {
+            referenceResolverAware.setReferenceResolver(context.getReferenceResolver());
+        }
+
+        PropertyUtils.configure(endpointName, endpoint, context.getReferenceResolver());
+
+        if (endpoint instanceof InitializingPhase initializingBean) {
+            initializingBean.initialize();
+        }
     }
 
     @Override

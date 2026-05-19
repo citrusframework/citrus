@@ -18,6 +18,7 @@ package org.citrusframework.ssh.config.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.ssh.message.SshMessageConverter;
@@ -31,29 +32,29 @@ import org.citrusframework.util.StringUtils;
 public class SshServerConfigParser implements AnnotationConfigParser<SshServerConfig, SshServer> {
 
     @Override
-    public SshServer parse(SshServerConfig annotation, ReferenceResolver referenceResolver) {
+    public SshServer parse(SshServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         SshServerBuilder builder = new SshServerBuilder();
 
         builder.port(annotation.port());
 
         if (StringUtils.hasText(annotation.user())) {
-            builder.user(annotation.user());
+            builder.user(context.replaceDynamicContentInString(annotation.user()));
         }
 
         if (StringUtils.hasText(annotation.password())) {
-            builder.password(annotation.password());
+            builder.password(context.replaceDynamicContentInString(annotation.password()));
         }
 
         if (StringUtils.hasText(annotation.hostKeyPath())) {
-            builder.hostKeyPath(annotation.hostKeyPath());
+            builder.hostKeyPath(context.replaceDynamicContentInString(annotation.hostKeyPath()));
         }
 
         if (StringUtils.hasText(annotation.userHomePath())) {
-            builder.userHomePath(annotation.userHomePath());
+            builder.userHomePath(context.replaceDynamicContentInString(annotation.userHomePath()));
         }
 
         if (StringUtils.hasText(annotation.allowedKeyPath())) {
-            builder.allowedKeyPath(annotation.allowedKeyPath());
+            builder.allowedKeyPath(context.replaceDynamicContentInString(annotation.allowedKeyPath()));
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {

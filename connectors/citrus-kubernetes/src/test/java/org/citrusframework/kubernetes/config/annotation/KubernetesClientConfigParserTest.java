@@ -16,6 +16,8 @@
 
 package org.citrusframework.kubernetes.config.annotation;
 
+import java.util.Map;
+
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser;
@@ -31,8 +33,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import tools.jackson.databind.json.JsonMapper;
-
-import java.util.Map;
 
 import static org.citrusframework.annotations.CitrusAnnotations.injectEndpoints;
 import static org.citrusframework.config.annotation.AnnotationConfigParser.lookup;
@@ -116,7 +116,7 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testLookupAll() {
-        Map<String, AnnotationConfigParser> validators = lookup();
+        Map<String, AnnotationConfigParser<?, ?>> validators = lookup();
         assertEquals(validators.size(), 5L);
         assertNotNull(validators.get("direct.async"));
         assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);

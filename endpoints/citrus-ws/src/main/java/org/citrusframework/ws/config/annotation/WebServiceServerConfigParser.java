@@ -18,6 +18,7 @@ package org.citrusframework.ws.config.annotation;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.ws.message.converter.WebServiceMessageConverter;
@@ -36,7 +37,7 @@ import static org.citrusframework.util.StringUtils.hasText;
 public class WebServiceServerConfigParser implements AnnotationConfigParser<WebServiceServerConfig, WebServiceServer> {
 
     @Override
-    public WebServiceServer parse(WebServiceServerConfig annotation, ReferenceResolver referenceResolver) {
+    public WebServiceServer parse(WebServiceServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         WebServiceServerBuilder builder = new WebServiceServerBuilder();
 
         builder.handleMimeHeaders(annotation.handleMimeHeaders());
@@ -44,11 +45,11 @@ public class WebServiceServerConfigParser implements AnnotationConfigParser<WebS
         builder.keepSoapEnvelope(annotation.keepSoapEnvelope());
 
         if (hasText(annotation.soapHeaderNamespace())) {
-            builder.soapHeaderNamespace(annotation.soapHeaderNamespace());
+            builder.soapHeaderNamespace(context.replaceDynamicContentInString(annotation.soapHeaderNamespace()));
         }
 
         if (hasText(annotation.soapHeaderPrefix())) {
-            builder.soapHeaderPrefix(annotation.soapHeaderPrefix());
+            builder.soapHeaderPrefix(context.replaceDynamicContentInString(annotation.soapHeaderPrefix()));
         }
 
         if (hasText(annotation.messageFactory())) {
@@ -64,7 +65,7 @@ public class WebServiceServerConfigParser implements AnnotationConfigParser<WebS
         }
 
         if (hasText(annotation.contextConfigLocation())) {
-            builder.contextConfigLocation(annotation.contextConfigLocation());
+            builder.contextConfigLocation(context.replaceDynamicContentInString(annotation.contextConfigLocation()));
         }
 
         builder.connectors(referenceResolver.resolve(annotation.connectors(), Connector.class));
@@ -76,7 +77,7 @@ public class WebServiceServerConfigParser implements AnnotationConfigParser<WebS
         builder.rootParentContext(annotation.rootParentContext());
 
         if (hasText(annotation.servletName())) {
-            builder.servletName(annotation.servletName());
+            builder.servletName(context.replaceDynamicContentInString(annotation.servletName()));
         }
 
         if (hasText(annotation.servletMappingPath())) {
@@ -84,7 +85,7 @@ public class WebServiceServerConfigParser implements AnnotationConfigParser<WebS
         }
 
         if (hasText(annotation.contextPath())) {
-            builder.contextPath(annotation.contextPath());
+            builder.contextPath(context.replaceDynamicContentInString(annotation.contextPath()));
         }
 
         if (hasText(annotation.servletHandler())) {

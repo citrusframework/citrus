@@ -22,6 +22,7 @@ import java.util.Properties;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.jmx.message.JmxMessageConverter;
 import org.citrusframework.jmx.model.ManagedBeanDefinition;
 import org.citrusframework.jmx.model.ManagedBeanInvocation;
@@ -37,17 +38,17 @@ import org.citrusframework.util.StringUtils;
 public class JmxServerConfigParser implements AnnotationConfigParser<JmxServerConfig, JmxServer> {
 
     @Override
-    public JmxServer parse(JmxServerConfig annotation, ReferenceResolver referenceResolver) {
+    public JmxServer parse(JmxServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         JmxServerBuilder builder = new JmxServerBuilder();
 
         builder.autoStart(annotation.autoStart());
 
         if (StringUtils.hasText(annotation.serverUrl())) {
-            builder.serverUrl(annotation.serverUrl());
+            builder.serverUrl(context.replaceDynamicContentInString(annotation.serverUrl()));
         }
 
         if (StringUtils.hasText(annotation.host())) {
-            builder.host(annotation.host());
+            builder.host(context.replaceDynamicContentInString(annotation.host()));
         }
 
         builder.port(annotation.port());

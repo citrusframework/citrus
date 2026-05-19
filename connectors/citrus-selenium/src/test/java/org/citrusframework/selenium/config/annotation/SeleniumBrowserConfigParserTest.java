@@ -145,7 +145,7 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testLookupAll() {
-        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
         Assert.assertEquals(validators.size(), 5L);
         Assert.assertNotNull(validators.get("direct.async"));
         Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
