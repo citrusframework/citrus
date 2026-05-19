@@ -38,9 +38,6 @@ public final class MessageHeaderUtils {
      * <p>
      * This is given if header name starts with internal header prefix or
      * matches one of Spring's internal header names.
-     *
-     * @param headerName
-     * @return
      */
     public static boolean isSpringInternalHeader(String headerName) {
         // "springintegration_" makes Citrus work with Spring Integration 1.x release
@@ -80,9 +77,6 @@ public final class MessageHeaderUtils {
     /**
      * Safely sets header on message builder. Some headers need to be cast to specific type such
      * as PRIORITY.
-     * @param message
-     * @param name
-     * @param value
      */
     public static void setHeader(Message message, String name, String value) {
         switch (name) {
@@ -114,5 +108,9 @@ public final class MessageHeaderUtils {
             String size = headers.get(PRIORITY).toString();
             headers.put(PRIORITY, Integer.valueOf(size));
         }
+    }
+
+    public static boolean isInternalMessageHeader(String headerName) {
+        return headerName.startsWith(MessageHeaders.PREFIX);
     }
 }

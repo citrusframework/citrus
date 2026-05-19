@@ -44,13 +44,16 @@ public final class CamelSettings {
     private static final String PRINT_LOGS_ENV = CAMEL_ENV_PREFIX + "PRINT_LOGS";
     private static final String PRINT_LOGS_DEFAULT = "true";
 
+    private static final String FILTER_INTERNAL_HEADERS_PROPERTY = CAMEL_PROPERTY_PREFIX + "filter.internal.headers";
+    private static final String FILTER_INTERNAL_HEADERS_ENV = CAMEL_ENV_PREFIX + "FILTER_INTERNAL_HEADERS";
+    private static final String FILTER_INTERNAL_HEADERS_DEFAULT = "true";
+
     private CamelSettings() {
         // prevent instantiation of utility class
     }
 
     /**
      * Request timeout when receiving messages.
-     * @return
      */
     public static long getTimeout() {
         return Optional.ofNullable(System.getProperty(TIMEOUT_PROPERTY, System.getenv(TIMEOUT_ENV)))
@@ -60,7 +63,6 @@ public final class CamelSettings {
 
     /**
      * Default Camel context name to use when creating routes.
-     * @return
      */
     public static String getContextName() {
         return System.getProperty(CONTEXT_NAME_PROPERTY,
@@ -69,7 +71,6 @@ public final class CamelSettings {
 
     /**
      * Maximum number of attempts when polling for running state and log messages.
-     * @return
      */
     public static int getMaxAttempts() {
         return Integer.parseInt(System.getProperty(MAX_ATTEMPTS_PROPERTY,
@@ -78,7 +79,6 @@ public final class CamelSettings {
 
     /**
      * Delay in milliseconds to wait after polling attempt.
-     * @return
      */
     public static long getDelayBetweenAttempts() {
         return Long.parseLong(System.getProperty(DELAY_BETWEEN_ATTEMPTS_PROPERTY,
@@ -87,10 +87,17 @@ public final class CamelSettings {
 
     /**
      * When set to true test will print Camel JBang route logs e.g. while waiting for a log message.
-     * @return
      */
     public static boolean isPrintLogs() {
         return Boolean.parseBoolean(System.getProperty(PRINT_LOGS_PROPERTY,
                 System.getenv(PRINT_LOGS_ENV) != null ? System.getenv(PRINT_LOGS_ENV) : PRINT_LOGS_DEFAULT));
+    }
+
+    /**
+     * When enabled the Camel message converter will filter Citrus internal message headers when creating the Camel exchange.
+     */
+    public static boolean isFilterInternalMessageHeaders() {
+        return Boolean.parseBoolean(System.getProperty(FILTER_INTERNAL_HEADERS_PROPERTY,
+                System.getenv(FILTER_INTERNAL_HEADERS_ENV) != null ? System.getenv(FILTER_INTERNAL_HEADERS_ENV) : FILTER_INTERNAL_HEADERS_DEFAULT));
     }
 }
