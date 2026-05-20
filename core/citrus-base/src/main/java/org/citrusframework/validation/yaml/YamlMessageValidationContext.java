@@ -19,6 +19,8 @@ package org.citrusframework.validation.yaml;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 
+import java.util.Optional;
+
 /**
  * Validation context holding YAML specific validation information.
  * @since 4.6.1
@@ -38,6 +40,11 @@ public class YamlMessageValidationContext extends DefaultMessageValidationContex
      */
     public YamlMessageValidationContext(Builder builder) {
         super(builder);
+    }
+
+    @Override
+    public Optional<String> getCorrespondingValidationModule() {
+        return Optional.of("org.citrusframework:citrus-validation-yaml");
     }
 
     /**

@@ -16,14 +16,14 @@
 
 package org.citrusframework.validation.context;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Basic validation context holding validation specific information.
@@ -46,6 +46,13 @@ public interface ValidationContext {
      */
     default boolean requiresValidator() {
         return false;
+    }
+
+    /**
+     * Return the most likely implementation of {@link org.citrusframework.validation.MessageValidator} that can validate this context.
+     */
+    default Optional<String> getCorrespondingValidationModule() {
+        return Optional.empty();
     }
 
     /**

@@ -316,13 +316,31 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
                 }
             }
 
-            List<ValidationContext> unknown = validationContexts.stream()
+            List<ValidationContext> validationContextsWithUnknownValidationStatus = validationContexts.stream()
                     .filter(validationContext -> validationContext.getStatus() == ValidationStatus.UNKNOWN)
                     .toList();
-            if (!unknown.isEmpty()) {
-                unknown.forEach(validationContext -> logger.warn("Found validation context that has not been processed: {}", validationContext.getClass().getName()));
-                throw new ValidationException("Incomplete message validation of message with type %s - no validation has been performed on the following contexts: %s".formatted(messageType, unknown.stream().map(validationContext -> validationContext.getClass().getSimpleName()).collect(joining(", "))));
+            if (!validationContextsWithUnknownValidationStatus.isEmpty()) {
+                validationContextsWithUnknownValidationStatus.forEach(ReceiveMessageAction::logUnusedValidationContext);
+                var unusedValidationContextString = validationContextsWithUnknownValidationStatus.stream().map(validationContext -> validationContext.getClass().getSimpleName()).collect(joining(", "));
+                throw new ValidationException(
+                        "Incomplete message validation of message with type '%s'! Conduct the log for more details.%nNo validation has been performed on the following contexts: %s".formatted(
+                                messageType,
+                                unusedValidationContextString
+                        ));
             }
+        }
+    }
+
+    private static void logUnusedValidationContext(ValidationContext validationContext) {
+        if (validationContext.getCorrespondingValidationModule().isEmpty()) {
+            logger.warn("Found validation context that has not been processed: {}", validationContext.getClass().getName());
+        } else {
+            logger.warn(
+                    "Found validation context that has not been processed: {} - you most likely forgot to include '{}' in your dependencies!",
+                    validationContext.getClass().getName(),
+                    validationContext.getCorrespondingValidationModule()
+                            .orElseThrow(IllegalStateException::new)
+            );
         }
     }
 
@@ -332,8 +350,11 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
             Object encoding = message.getHeaders().get("Content-Transfer-Encoding");
             MessageType messageType = mapToMessageType(
                     contentTypeString,
-                    encoding != null ? encoding.toString() : null);
-            if (messageType != null) {
+                    encoding != null ? encoding.toString() : null
+            );
+
+            if (nonNull(messageType)) {
+                logger.debug("Assumed message type '{}' for content-type: {}", messageType, contentTypeString);
                 setMessageType(messageType);
                 return;
             }
