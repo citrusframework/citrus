@@ -40,6 +40,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCause;
+
 /**
  * Http client sends messages via Http protocol to some Http server instance, defined by a request endpoint url. Synchronous response
  * messages are cached in local memory and receive operations are able to fetch responses from this cache later on.
@@ -134,7 +136,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             logger.debug("HTTP message was sent to endpoint: '{}'", endpointUri);
             correlationManager.store(correlationKey, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration(), context));
         } catch (HttpErrorPropagatingException e) {
-            logger.warn("Caught HTTP rest client exception!", e);
+            logger.warn("Caught HTTP rest client exception: {}", getRootCause(e).getMessage());
             logger.debug("Propagating HTTP rest client exception according to error handling strategy");
             Message responseMessage = getEndpointConfiguration().getMessageConverter().convertInbound(
                     new ResponseEntity<>(e.getResponseBodyAsString(), e.getResponseHeaders(), e.getStatusCode()), getEndpointConfiguration(), context);

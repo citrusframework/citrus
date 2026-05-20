@@ -18,6 +18,7 @@ package org.citrusframework.validation.xml;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
@@ -63,6 +64,11 @@ public class XmlMessageValidationContext extends DefaultMessageValidationContext
         if (delegate != null) {
             delegate.updateStatus(status);
         }
+    }
+
+    @Override
+    public Optional<String> getCorrespondingValidationModule() {
+        return Optional.of("org.citrusframework:citrus-validation-xml");
     }
 
     /**

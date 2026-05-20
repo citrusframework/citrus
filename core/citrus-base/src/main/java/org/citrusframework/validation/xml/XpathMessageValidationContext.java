@@ -16,14 +16,14 @@
 
 package org.citrusframework.validation.xml;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Specialised Xml validation context adds XPath expression evaluation.
