@@ -16,15 +16,16 @@
 
 package org.citrusframework.validation.json;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.variable.VariableExtractor;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Specialised validation context adds JSON path expressions for message validation.
@@ -53,6 +54,11 @@ public class JsonPathMessageValidationContext extends DefaultValidationContext {
     @Override
     public boolean requiresValidator() {
         return true;
+    }
+
+    @Override
+    public Optional<String> getCorrespondingValidationModule() {
+        return Optional.of("org.citrusframework:citrus-validation-json");
     }
 
     /**
