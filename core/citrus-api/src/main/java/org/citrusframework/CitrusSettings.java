@@ -272,7 +272,7 @@ public final class CitrusSettings {
 
     public static final String CUSTOM_VALIDATOR_STRATEGY_PROPERTY = "citrus.custom.validator.strategy";
     public static final String CUSTOM_VALIDATOR_STRATEGY_ENV = "CITRUS_CUSTOM_VALIDATOR_STRATEGY";
-    public static final CustomValidatorStrategy CUSTOM_VALIDATOR_STRATEGY_DEFAULT = CustomValidatorStrategy.EXCLUSIVE;
+    public static final CustomValidatorStrategy CUSTOM_VALIDATOR_STRATEGY_DEFAULT = CustomValidatorStrategy.COMBINED;
 
     /**
      * Flag to enable/disable input stream caching
