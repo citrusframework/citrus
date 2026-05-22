@@ -30,6 +30,8 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
 
     T language(F factory);
 
+    T spec(Map<String, Object> spec);
+
     /**
      * Specify the constant expression value. <b>Important:</b> this is a fixed constant value that is only set once
      * during starting up the route, do not use this if you want dynamic values during routing.

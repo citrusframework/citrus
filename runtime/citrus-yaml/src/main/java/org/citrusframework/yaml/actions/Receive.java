@@ -319,6 +319,24 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         MessageSupport.configureExtract(builder, value);
     }
 
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:process") },
+            description = "Process the message content when received.")
+    public void setProcess(List<Message.Processor> processors) {
+        for (Message.Processor processor : processors) {
+            MessageSupport.configureProcessOrTransform(builder, processor);
+        }
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:transform") },
+            description = "Transforms the message content before the message is validated.")
+    public void setTransform(List<Message.Processor> processors) {
+        for (Message.Processor processor : processors) {
+            MessageSupport.configureProcessOrTransform(builder, processor);
+        }
+    }
+
     @SchemaProperty(required = true, description = "The message endpoint name or URI used to receive the message. " +
             "Uses an endpoint URI or references an endpoint name.")
     public void setEndpoint(String value) {

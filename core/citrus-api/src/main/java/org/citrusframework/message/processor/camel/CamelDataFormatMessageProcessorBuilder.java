@@ -16,6 +16,8 @@
 
 package org.citrusframework.message.processor.camel;
 
+import java.util.Map;
+
 import org.citrusframework.message.MessageProcessor;
 
 public interface CamelDataFormatMessageProcessorBuilder<T extends MessageProcessor, B extends CamelDataFormatMessageProcessorBuilder<T, B>>
@@ -24,6 +26,8 @@ public interface CamelDataFormatMessageProcessorBuilder<T extends MessageProcess
     B operation(String operation);
 
     B dataFormat(Object dataFormat);
+
+    B spec(Map<String, Object> spec);
 
     B allowNullBody(boolean allowNullBody);
 

@@ -1,0 +1,48 @@
+name: CamelMessageProcessorTest
+author: Christoph
+status: FINAL
+endpoints:
+  - type: "direct"
+    name: "messages"
+    properties:
+      queueName: "messages"
+actions:
+  - send:
+      endpoint: messages
+      message:
+        body:
+          data: "Hello from Citrus!"
+      process:
+        - camel:
+            marshal:
+              base64: {}
+  - send:
+      endpoint: messages
+      message:
+        body:
+          data: "Hello from Citrus!"
+      process:
+        - camel:
+            marshal:
+              base64:
+                lineLength: 5
+  - send:
+      endpoint: messages
+      message:
+        body:
+          data: "Hello from Citrus!"
+      process:
+        - camel:
+            convertBodyTo:
+              type: "java.io.InputStream"
+  - send:
+      endpoint: messages
+      message:
+        body:
+          data: |
+            { "message": "Citrus rocks!" }
+      process:
+        - camel:
+            transform:
+              jsonpath:
+                expression: $.message

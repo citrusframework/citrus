@@ -174,7 +174,6 @@ public class CamelMessageProcessor implements MessageProcessor {
 
         /**
          * Subclasses must build message processor.
-         * @return
          */
         public abstract T doBuild();
 

@@ -31,6 +31,7 @@ import org.citrusframework.message.MessageDirection;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.message.builder.SendMessageBuilderSupport;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
@@ -416,6 +417,22 @@ public class SendMessageAction extends AbstractTestAction implements Completable
                     this.messageBuilderSupport.dictionary(
                         referenceResolver.resolve(messageBuilderSupport.getDataDictionaryName(), DataDictionary.class));
                 }
+
+                for (String messageProcessor : getMessageProcessorRefs()) {
+                    if (referenceResolver.isResolvable(messageProcessor, MessageProcessor.class)) {
+                        process(referenceResolver.resolve(messageProcessor, MessageProcessor.class));
+                    }
+                }
+
+                for (MessageProcessor.Builder<?, ?> builder : messageProcessorBuilders) {
+                    if (builder instanceof ReferenceResolverAware referenceResolverAware) {
+                        referenceResolverAware.setReferenceResolver(referenceResolver);
+                    }
+                }
+            }
+
+            for (MessageProcessor.Builder<?, ?> builder : messageProcessorBuilders) {
+                process(builder.build());
             }
 
             return doBuild();
