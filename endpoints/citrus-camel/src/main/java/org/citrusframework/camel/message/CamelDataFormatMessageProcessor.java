@@ -16,15 +16,21 @@
 
 package org.citrusframework.camel.message;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.DataFormatClause;
+import org.apache.camel.dsl.yaml.deserializers.ModelDeserializersResolver;
 import org.apache.camel.model.DataFormatDefinition;
 import org.apache.camel.reifier.dataformat.DataFormatReifier;
+import org.apache.camel.spi.DataFormat;
 import org.apache.camel.support.processor.MarshalProcessor;
 import org.apache.camel.support.processor.UnmarshalProcessor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.processor.camel.CamelDataFormatMessageProcessorBuilder;
+import org.snakeyaml.engine.v2.api.ConstructNode;
 
 /**
  * Camel message processor working with data formats to marshal/unmarshal the message body.
@@ -46,7 +52,7 @@ public class CamelDataFormatMessageProcessor extends CamelMessageProcessor {
             implements CamelDataFormatMessageProcessorBuilder<CamelDataFormatMessageProcessor, Builder> {
 
         private final InlineProcessDefinition processDefinition = new InlineProcessDefinition(this);
-        private DataFormatClause.Operation operation;
+        private DataFormatClause.Operation operation = DataFormatClause.Operation.Marshal;
 
         private DataFormatDefinition dataFormat;
         private boolean allowNullBody;
@@ -96,6 +102,20 @@ public class CamelDataFormatMessageProcessor extends CamelMessageProcessor {
             }
         }
 
+        @Override
+        public Builder spec(Map<String, Object> spec) {
+            String format = spec.keySet().iterator().next();
+            Object value = spec.get(format);
+            ConstructNode constructNode = new ModelDeserializersResolver().resolve(format);
+            if (value instanceof Map<?, ?> map) {
+                dataFormat(constructNode.construct(CamelMessageConverter.createMappingNode(map)));
+            } else {
+                dataFormat(constructNode.construct(CamelMessageConverter.createMappingNode(Collections.emptyMap())));
+            }
+
+            return this;
+        }
+
         public Builder dataFormat(DataFormatDefinition dataFormat) {
             this.dataFormat = dataFormat;
             return this;
@@ -119,10 +139,12 @@ public class CamelDataFormatMessageProcessor extends CamelMessageProcessor {
             }
 
             Processor processor;
+            DataFormat df = DataFormatReifier.getDataFormat(camelContext, dataFormat);
+            df.start();
             if (operation.equals(DataFormatClause.Operation.Marshal)) {
-                processor = new MarshalProcessor(DataFormatReifier.getDataFormat(camelContext, dataFormat));
+                processor = new MarshalProcessor(df);
             } else {
-                processor = new UnmarshalProcessor(DataFormatReifier.getDataFormat(camelContext, dataFormat), allowNullBody);
+                processor = new UnmarshalProcessor(df, allowNullBody);
             }
 
             return new CamelDataFormatMessageProcessor(camelContext, processor);

@@ -26,6 +26,8 @@ public interface CamelMessageProcessors extends MessageProcessor.Builder<Message
 
     CamelRouteProcessorBuilder<?, ?> route();
 
+    CamelDataFormatMessageProcessorBuilder<?, ?> dataFormat();
+
     CamelDataFormatClause<? extends MessageProcessor.Builder<?, ?>, ?> marshal();
 
     CamelDataFormatClause<? extends MessageProcessor.Builder<?, ?>, ?> unmarshal();

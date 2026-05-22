@@ -18,6 +18,7 @@ package org.citrusframework.yaml.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.citrusframework.CitrusSettings;
@@ -309,6 +310,260 @@ public class Message {
         @SchemaProperty(required = true, description = "The expected expression result value.")
         public void setValue(String value) {
             this.value = value;
+        }
+    }
+
+    public static class Processor {
+        protected Gzip gzip;
+        protected Binary binary;
+        protected Xpath xpath;
+        protected Json json;
+        protected Camel camel;
+
+        @SchemaProperty(description = "Gzip message processor transforms content into zipped content.")
+        public void setGzip(Gzip gzip) {
+            this.gzip = gzip;
+        }
+
+        public Gzip getGzip() {
+            return gzip;
+        }
+
+        @SchemaProperty(description = "Message processor to create binary message content.")
+        public void setBinary(Binary binary) {
+            this.binary = binary;
+        }
+
+        public Binary getBinary() {
+            return binary;
+        }
+
+        @SchemaProperty(description = "Xml message processors.")
+        public void setXpath(Xpath xpath) {
+            this.xpath = xpath;
+        }
+
+        public Xpath getXpath() {
+            return xpath;
+        }
+
+        @SchemaProperty(description = "Json message processors.")
+        public void setJson(Json json) {
+            this.json = json;
+        }
+
+        public Json getJson() {
+            return json;
+        }
+
+        @SchemaProperty(description = "Camel message processors using transform capabilities of Apache Camel with supported data formats.")
+        public void setCamel(Camel camel) {
+            this.camel = camel;
+        }
+
+        public Camel getCamel() {
+            return camel;
+        }
+
+        public static class Gzip {
+            protected String encoding;
+
+            public String getEncoding() {
+                return encoding;
+            }
+
+            @SchemaProperty(description = "Sets a custom file encoding.", advanced = true)
+            public void setEncoding(String value) {
+                this.encoding = value;
+            }
+        }
+
+        public static class Binary {
+            protected String encoding;
+
+            public String getEncoding() {
+                return encoding;
+            }
+
+            @SchemaProperty(description = "Sets a custom file encoding.", advanced = true)
+            public void setEncoding(String value) {
+                this.encoding = value;
+            }
+        }
+
+        public static class Json {
+            protected List<Expression> expressions;
+
+            @SchemaProperty(description = "List of expressions to evaluate")
+            public void setExpressions(List<Expression> expressions) {
+                this.expressions = expressions;
+            }
+
+            public List<Expression> getExpressions() {
+                if (expressions == null) {
+                    expressions = new ArrayList<>();
+                }
+
+                return expressions;
+            }
+        }
+
+        public static class Xpath {
+            protected List<Expression> expressions;
+            protected List<Namespace> namespaces;
+
+            @SchemaProperty(description = "List of expressions to evaluate")
+            public void setExpressions(List<Expression> expressions) {
+                this.expressions = expressions;
+            }
+
+            public List<Expression> getExpressions() {
+                if (expressions == null) {
+                    expressions = new ArrayList<>();
+                }
+
+                return expressions;
+            }
+
+            @SchemaProperty(description = "List of namespaces that should be used with the expression evaluation.")
+            public void setNamespaces(List<Namespace> namespaces) {
+                this.namespaces = namespaces;
+            }
+
+            public List<Namespace> getNamespaces() {
+                if (namespaces == null) {
+                    namespaces = new ArrayList<>();
+                }
+
+                return namespaces;
+            }
+
+            public static class Namespace {
+                protected String prefix;
+                protected String uri;
+
+                public String getPrefix() {
+                    return prefix;
+                }
+
+                @SchemaProperty(required = true, description = "The namespace prefix.")
+                public void setPrefix(String value) {
+                    this.prefix = value;
+                }
+
+                public String getUri() {
+                    return uri;
+                }
+
+                @SchemaProperty(required = true, description = "The namespace uri.")
+                public void setUri(String value) {
+                    this.uri = value;
+                }
+            }
+        }
+
+        public static class Expression {
+            protected String path;
+            protected String value;
+
+            public String getPath() {
+                return path;
+            }
+
+            @SchemaProperty(description = "The path expression to evaluate.")
+            public void setPath(String value) {
+                this.path = value;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            @SchemaProperty(required = true, description = "The path expression value.")
+            public void setValue(String value) {
+                this.value = value;
+            }
+
+        }
+
+        public static class Camel {
+            protected String camelContext;
+            protected String processor;
+            protected Map<String, Object> transform;
+            protected Map<String, Object> marshal;
+            protected Map<String, Object> unmarshal;
+            protected ConvertBodyTo convertBodyTo;
+
+            public String getCamelContext() {
+                return camelContext;
+            }
+
+            @SchemaProperty(description = "Camel context used with this processor.")
+            public void setCamelContext(String camelContext) {
+                this.camelContext = camelContext;
+            }
+
+            public String getProcessor() {
+                return processor;
+            }
+
+            @SchemaProperty(description = "Camel message processor referenced by its bean name.")
+            public void setProcessor(String processor) {
+                this.processor = processor;
+            }
+
+            public Map<String, Object> getTransform() {
+                return transform;
+            }
+
+            @SchemaProperty(description = "Transform message content with a Camel expression.")
+            public void setTransform(Map<String, Object> transform) {
+                this.transform = transform;
+            }
+
+            public Map<String, Object> getMarshal() {
+                return marshal;
+            }
+
+            @SchemaProperty(description = "Marshal message content with a Camel data format.")
+            public void setMarshal(Map<String, Object> node) {
+                this.marshal = node;
+            }
+
+            public Map<String, Object> getUnmarshal() {
+                return unmarshal;
+            }
+
+            @SchemaProperty(description = "Unmarshal message content with a Camel data format.")
+            public void setUnmarshal(Map<String, Object> unmarshal) {
+                this.unmarshal = unmarshal;
+            }
+
+            public ConvertBodyTo getConvertBodyTo() {
+                return convertBodyTo;
+            }
+
+            @SchemaProperty(description = "Converts message body to given type.")
+            public void setConvertBodyTo(ConvertBodyTo convertBodyTo) {
+                this.convertBodyTo = convertBodyTo;
+            }
+
+            public static class ConvertBodyTo {
+                protected String type;
+
+                public String getType() {
+                    return type;
+                }
+
+                @SchemaProperty(required = true, description = "Fully qualified class name of the target type.")
+                public void setType(String type) {
+                    this.type = type;
+                }
+            }
+
+            public static class DataFormat {
+
+            }
         }
     }
 

@@ -19,8 +19,10 @@ package org.citrusframework.message.builder;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.CitrusSettings;
@@ -211,7 +213,8 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
     @Override
     public S process(MessageProcessor.Builder<?, ?> builder) {
-        return process(builder.build());
+        delegate.process(builder);
+        return self;
     }
 
     @Override
@@ -303,13 +306,14 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
         protected M messageBuilderSupport;
 
+        protected final List<MessageProcessor.Builder<?, ?>> messageProcessorBuilders = new ArrayList<>();
+        protected final Set<String> messageProcessorRefs = new HashSet<>();
+
         /** Basic bean reference resolver */
         protected ReferenceResolver referenceResolver;
 
         /**
          * Sets the message endpoint to send messages to.
-         * @param messageEndpoint
-         * @return
          */
         public B endpoint(Endpoint messageEndpoint) {
             this.endpoint = messageEndpoint;
@@ -318,8 +322,6 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
         /**
          * Sets the message endpoint uri to send messages to.
-         * @param messageEndpointUri
-         * @return
          */
         public B endpoint(String messageEndpointUri) {
             this.endpointUri = messageEndpointUri;
@@ -328,7 +330,6 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
         /**
          * Construct the control message for this action.
-         * @return
          */
         public M message() {
             return getMessageBuilderSupport();
@@ -336,8 +337,6 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
         /**
          * Sets the control message for this action.
-         * @param messageBuilder
-         * @return
          */
         public M message(MessageBuilder messageBuilder) {
             return getMessageBuilderSupport().from(messageBuilder);
@@ -345,9 +344,6 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
         /**
          * Builds message from given message.
-         *
-         * @param message
-         * @return
          */
         public M message(final Message message) {
             return getMessageBuilderSupport().from(message);
@@ -361,9 +357,15 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         }
 
         /**
+         * Adds message processor referenced by its name in the bean registry.
+         */
+        public B transform(String messageProcessor) {
+            this.messageProcessorRefs.add(messageProcessor);
+            return self;
+        }
+
+        /**
          * Adds message processor on the message.
-         * @param processor
-         * @return
          */
         public B transform(MessageProcessor processor) {
             return process(processor);
@@ -371,8 +373,6 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
         /**
          * Adds message processor on the message.
-         * @param adapter
-         * @return
          */
         public B transform(MessageProcessorAdapter adapter) {
             return process(adapter);
@@ -380,17 +380,21 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
         /**
          * Adds message processor on the message as fluent builder.
-         * @param builder
-         * @return
          */
         public B transform(MessageProcessor.Builder<?, ?> builder) {
-            return transform(builder.build());
+            return process(builder);
+        }
+
+        /**
+         * Adds message processor referenced by its name in the bean registry.
+         */
+        public B process(String messageProcessor) {
+            this.messageProcessorRefs.add(messageProcessor);
+            return self;
         }
 
         /**
          * Adds message processor on the message.
-         * @param processor
-         * @return
          */
         public B process(MessageProcessor processor) {
             if (processor instanceof VariableExtractor variableExtractor) {
@@ -403,17 +407,14 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
         /**
          * Adds message processor on the message as fluent builder.
-         * @param builder
-         * @return
          */
         public B process(MessageProcessor.Builder<?, ?> builder) {
-            return process(builder.build());
+            this.messageProcessorBuilders.add(builder);
+            return self;
         }
 
         /**
          * Adds message processor on the message as fluent builder.
-         * @param adapter
-         * @return
          */
         public B process(MessageProcessorAdapter adapter) {
             return process(adapter.asProcessor());
@@ -449,9 +450,16 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
             return messageProcessors;
         }
 
+        public Set<String> getMessageProcessorRefs() {
+            return messageProcessorRefs;
+        }
+
+        public List<MessageProcessor.Builder<?, ?>> getMessageProcessorBuilders() {
+            return messageProcessorBuilders;
+        }
+
         /**
          * Build method implemented by subclasses.
-         * @return
          */
         protected abstract T doBuild();
     }

@@ -54,6 +54,11 @@ public interface ReceiveActionBuilder<T extends TestAction, M extends ReceiveMes
     }
 
     /**
+     * Adds message processor referenced by its name in the bean registry.
+     */
+    B transform(String messageProcessor);
+
+    /**
      * Adds message processor on the message.
      */
     B transform(MessageProcessor processor);
@@ -104,9 +109,12 @@ public interface ReceiveActionBuilder<T extends TestAction, M extends ReceiveMes
     B validate(ValidationProcessor processor);
 
     /**
+     * Adds message processor referenced by its name in the bean registry.
+     */
+    B process(String messageProcessor);
+
+    /**
      * Adds message processor on the message.
-     * @param processor
-     * @return
      */
     B process(MessageProcessor processor);
 

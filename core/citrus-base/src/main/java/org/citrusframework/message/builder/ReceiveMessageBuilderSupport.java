@@ -35,6 +35,7 @@ public class ReceiveMessageBuilderSupport<T extends ReceiveMessageAction, B exte
         extends MessageBuilderSupport<T, B, S> implements ReceiveMessageBuilderFactory<T, S> {
 
     private final List<MessageProcessor> controlMessageProcessors = new ArrayList<>();
+    private final List<MessageProcessor.Builder<?, ?>> controlMessageProcessorBuilders = new ArrayList<>();
 
     private boolean headerNameIgnoreCase = false;
 
@@ -151,8 +152,18 @@ public class ReceiveMessageBuilderSupport<T extends ReceiveMessageAction, B exte
         return self;
     }
 
+    @Override
+    public S process(MessageProcessor.Builder<?, ?> builder) {
+        this.controlMessageProcessorBuilders.add(builder);
+        return self;
+    }
+
     public List<MessageProcessor> getControlMessageProcessors() {
         return controlMessageProcessors;
+    }
+
+    public List<MessageProcessor.Builder<?, ?>> getControlMessageProcessorBuilders() {
+        return controlMessageProcessorBuilders;
     }
 
     public boolean isHeaderNameIgnoreCase() {

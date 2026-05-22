@@ -20,13 +20,17 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.message.DefaultMessageProcessors;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageHeaderType;
+import org.citrusframework.message.MessageProcessorSupport;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.ScriptPayloadBuilder;
 import org.citrusframework.message.builder.MessageBuilderSupport;
+import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
@@ -169,6 +173,74 @@ public final class MessageSupport {
             }
             builder.message().extract(new DelegatingPayloadVariableExtractor.Builder()
                     .expressions(expressions));
+        }
+    }
+
+    public static void configureProcessOrTransform(MessageBuilderSupport.MessageActionBuilder<?, ?, ?> builder,
+                                                   Message.Processor value) {
+        MessageProcessorSupport processors = new DefaultMessageProcessors();
+
+        if (value.getGzip() != null) {
+            if (StringUtils.hasText(value.getGzip().getEncoding())) {
+                builder.process(processors.toGzip().encoding(value.getGzip().getEncoding()));
+            } else {
+                builder.process(processors.toGzip());
+            }
+        }
+
+        if (value.getBinary() != null) {
+            if (StringUtils.hasText(value.getGzip().getEncoding())) {
+                builder.process(processors.toBinary().encoding(value.getGzip().getEncoding()));
+            } else {
+                builder.process(processors.toBinary());
+            }
+        }
+
+        if (value.getXpath() != null) {
+            builder.process(processors.xpath()
+                    .expressions(value.getXpath().getExpressions()
+                            .stream()
+                            .collect(Collectors.toMap(Message.Processor.Expression::getPath,
+                                    Message.Processor.Expression::getValue)))
+            );
+        }
+
+        if (value.getJson() != null) {
+            builder.process(processors.jsonPath()
+                    .expressions(value.getJson().getExpressions()
+                            .stream()
+                            .collect(Collectors.toMap(Message.Processor.Expression::getPath,
+                                    Message.Processor.Expression::getValue)))
+            );
+        }
+
+        if (value.getCamel() != null) {
+            Message.Processor.Camel camel = value.getCamel();
+            if (StringUtils.hasText(camel.getProcessor())) {
+                builder.process(camel.getProcessor());
+            }
+
+            if (camel.getConvertBodyTo() != null) {
+                try {
+                    builder.process(processors.camel().convertBodyTo(
+                            Class.forName(camel.getConvertBodyTo().getType(), false,
+                                    ClassLoaderHelper.getClassLoader())));
+                } catch (ClassNotFoundException e) {
+                    throw new CitrusRuntimeException("Failed to load type %s"
+                            .formatted(camel.getConvertBodyTo().getType()), e);
+                }
+            }
+
+            if (camel.getMarshal() != null) {
+                builder.process(processors.camel().dataFormat()
+                        .spec(value.getCamel().getMarshal())
+                        .operation("Marshal"));
+            }
+
+            if (camel.getTransform() != null) {
+                builder.process(processors.camel().transform()
+                        .spec(value.getCamel().getTransform()));
+            }
         }
     }
 }

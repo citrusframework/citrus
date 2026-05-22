@@ -16,6 +16,16 @@
 
 package org.citrusframework.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
@@ -58,16 +68,6 @@ import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -691,6 +691,12 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
         }
 
         @Override
+        public B process(MessageProcessor.Builder<?, ?> builder) {
+            this.messageProcessorBuilders.add(builder);
+            return self;
+        }
+
+        @Override
         public final T build() {
             if (messageBuilderSupport == null) {
                 messageBuilderSupport = getMessageBuilderSupport();
@@ -722,6 +728,38 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
                     messageBuilderSupport.dictionary(
                             referenceResolver.resolve(messageBuilderSupport.getDataDictionaryName(), DataDictionary.class));
                 }
+
+                for (String messageProcessor : getMessageProcessorRefs()) {
+                    if (referenceResolver.isResolvable(messageProcessor, MessageProcessor.class)) {
+                        process(referenceResolver.resolve(messageProcessor, MessageProcessor.class));
+                    }
+                }
+
+                for (MessageProcessor.Builder<?, ?> builder : messageProcessorBuilders) {
+                    if (builder instanceof ReferenceResolverAware referenceResolverAware) {
+                        referenceResolverAware.setReferenceResolver(referenceResolver);
+                    }
+                }
+
+                for (MessageProcessor processor : getMessageBuilderSupport().getControlMessageProcessors()) {
+                    if (processor instanceof ReferenceResolverAware referenceResolverAware) {
+                        referenceResolverAware.setReferenceResolver(referenceResolver);
+                    }
+                }
+
+                for (MessageProcessor.Builder<?, ?> builder : getMessageBuilderSupport().getControlMessageProcessorBuilders()) {
+                    if (builder instanceof ReferenceResolverAware referenceResolverAware) {
+                        referenceResolverAware.setReferenceResolver(referenceResolver);
+                    }
+                }
+            }
+
+            for (MessageProcessor.Builder<?, ?> builder : messageProcessorBuilders) {
+                process(builder.build());
+            }
+
+            for (MessageProcessor.Builder<?, ?> builder : getMessageBuilderSupport().getControlMessageProcessorBuilders()) {
+                getMessageBuilderSupport().process(builder.build());
             }
 
             return doBuild();

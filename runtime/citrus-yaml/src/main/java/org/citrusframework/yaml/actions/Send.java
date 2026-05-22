@@ -15,6 +15,8 @@
  */
 package org.citrusframework.yaml.actions;
 
+import java.util.List;
+
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
 import org.citrusframework.actions.SendMessageAction;
@@ -61,6 +63,24 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
             description = "Extract message content to test variables before the message is sent.")
     public void setExtract(Message.Extract value) {
         MessageSupport.configureExtract(builder, value);
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:process") },
+            description = "Process the message content when received.")
+    public void setProcess(List<Message.Processor> processors) {
+        for (Message.Processor processor : processors) {
+            MessageSupport.configureProcessOrTransform(builder, processor);
+        }
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData( key = "$comment", value = "group:transform") },
+            description = "Transforms the message content before the message is validated.")
+    public void setTransform(List<Message.Processor> processors) {
+        for (Message.Processor processor : processors) {
+            MessageSupport.configureProcessOrTransform(builder, processor);
+        }
     }
 
     @SchemaProperty(required = true, description = "The message endpoint name or URI. " +

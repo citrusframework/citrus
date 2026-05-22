@@ -61,6 +61,14 @@ public class CamelMessageProcessorSupport implements CamelMessageProcessors {
     }
 
     @Override
+    public CamelDataFormatMessageProcessor.Builder dataFormat() {
+        CamelDataFormatMessageProcessor.Builder builder = new CamelDataFormatMessageProcessor.Builder()
+                .camelContext(camelContext);
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public CamelDataFormatClauseSupport<InlineProcessDefinition> marshal() {
         CamelDataFormatMessageProcessor.Builder builder = new CamelDataFormatMessageProcessor.Builder()
                 .camelContext(camelContext)

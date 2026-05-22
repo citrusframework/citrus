@@ -16,20 +16,38 @@
 
 package org.citrusframework.camel.message;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.apache.camel.BeanScope;
 import org.apache.camel.Expression;
 import org.apache.camel.ExpressionFactory;
 import org.apache.camel.builder.ExpressionClauseSupport;
+import org.apache.camel.dsl.yaml.deserializers.ModelDeserializersResolver;
 import org.apache.camel.support.builder.Namespaces;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.processor.camel.CamelExpressionClause;
+import org.snakeyaml.engine.v2.api.ConstructNode;
 
 public class CamelExpressionClauseSupport<T extends MessageProcessor.Builder<?, ?>> extends ExpressionClauseSupport<T>
         implements CamelExpressionClause<T, ExpressionFactory, Expression> {
 
     public CamelExpressionClauseSupport(T result) {
         super(result);
+    }
+
+    @Override
+    public T spec(Map<String, Object> spec) {
+        String language = spec.keySet().iterator().next();
+
+        Object value = spec.get(language);
+        ConstructNode constructNode = new ModelDeserializersResolver().resolve(language);
+        if (value instanceof Map<?, ?> map) {
+            return expression((Expression) constructNode.construct(CamelMessageConverter.createMappingNode(map)));
+        }
+
+        return expression((Expression) constructNode.construct(CamelMessageConverter.createMappingNode(Collections.emptyMap())));
     }
 
     @Override

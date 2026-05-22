@@ -16,6 +16,8 @@
 
 package org.citrusframework.camel.message;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.Exchange;
@@ -27,6 +29,12 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.message.MessageHeaderUtils;
+import org.snakeyaml.engine.v2.common.FlowStyle;
+import org.snakeyaml.engine.v2.common.ScalarStyle;
+import org.snakeyaml.engine.v2.nodes.MappingNode;
+import org.snakeyaml.engine.v2.nodes.NodeTuple;
+import org.snakeyaml.engine.v2.nodes.ScalarNode;
+import org.snakeyaml.engine.v2.nodes.Tag;
 
 /**
  * Message converter able to read Camel exchange and create proper Spring Integration message
@@ -78,5 +86,34 @@ public class CamelMessageConverter implements MessageConverter<Exchange, Exchang
         }
 
         return message;
+    }
+
+    /**
+     * Converts a basic Java Map<String, String> into a mapping node.
+     * Supports only String and boolean scalars as this is sufficient for data formats in Camel.
+     */
+    public static MappingNode createMappingNode(Map<?, ?> spec) {
+        List<NodeTuple> tuples = new ArrayList<>();
+
+        for (Map.Entry<?, ?> entry : spec.entrySet()) {
+            // Create a ScalarNode for the key
+            ScalarNode keyNode = new ScalarNode(Tag.STR, entry.getKey().toString(), ScalarStyle.PLAIN);
+
+            ScalarNode valueNode;
+            String stringValue = String.valueOf(entry.getValue());
+            // Create a ScalarNode for the value
+            if (stringValue.equals("true") || stringValue.equals("false")) {
+                valueNode = new ScalarNode(Tag.BOOL, stringValue, ScalarStyle.PLAIN);
+            } else {
+                valueNode = new ScalarNode(Tag.STR, stringValue, ScalarStyle.PLAIN);
+            }
+
+            // Pair them together in a NodeTuple
+            tuples.add(new NodeTuple(keyNode, valueNode));
+        }
+
+        // Return a new MappingNode holding the list of tuples
+        // Tag.MAP indicates it's a map, and FlowStyle.BLOCK outputs it nicely formatted on separate lines
+        return new MappingNode(Tag.MAP, tuples, FlowStyle.BLOCK);
     }
 }
