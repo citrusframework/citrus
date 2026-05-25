@@ -16,8 +16,6 @@
 
 package org.citrusframework.http.yaml;
 
-import java.util.Map;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
@@ -47,6 +45,8 @@ import org.springframework.http.HttpMethod;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
@@ -128,9 +128,8 @@ public class HttpServerTest extends AbstractYamlActionTest {
         int actionIndex = 0;
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 1);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
         Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
         Assert.assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);

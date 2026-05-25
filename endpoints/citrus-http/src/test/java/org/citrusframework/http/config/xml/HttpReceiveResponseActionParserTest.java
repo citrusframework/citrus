@@ -41,9 +41,8 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
 
         ReceiveMessageAction action = getNextTestActionFromTest();
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
@@ -58,9 +57,8 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
         Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
@@ -91,9 +89,8 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
         Assert.assertEquals(((DelegatingPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().get("$.user.id"), "userId");
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);

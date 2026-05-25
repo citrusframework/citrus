@@ -16,10 +16,6 @@
 
 package org.citrusframework.http.groovy;
 
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
@@ -46,7 +42,6 @@ import org.citrusframework.util.SocketUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
-import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
@@ -57,6 +52,10 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 
@@ -163,10 +162,9 @@ public class HttpClientTest extends AbstractGroovyActionDslTest {
         validator.validateMessage(request, controlMessage, context, new DefaultValidationContext());
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 1);
         Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
@@ -240,10 +238,9 @@ public class HttpClientTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 1);
         Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);

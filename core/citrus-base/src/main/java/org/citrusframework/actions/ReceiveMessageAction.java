@@ -826,8 +826,6 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
                     validationContext = new JsonMessageValidationContext();
                 } else if (type == MessageType.YAML) {
                     validationContext = new YamlMessageValidationContext();
-                } else if (type == MessageType.PLAINTEXT) {
-                    validationContext = new DefaultMessageValidationContext();
                 }
             }
 

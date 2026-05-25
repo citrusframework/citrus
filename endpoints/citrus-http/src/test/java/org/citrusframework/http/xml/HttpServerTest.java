@@ -16,8 +16,6 @@
 
 package org.citrusframework.http.xml;
 
-import java.util.Map;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
@@ -38,7 +36,6 @@ import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
-import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.xml.XmlTestLoader;
@@ -47,6 +44,8 @@ import org.springframework.http.HttpMethod;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
@@ -128,9 +127,8 @@ public class HttpServerTest extends AbstractXmlActionTest {
         int actionIndex = 0;
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 1);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
         Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
         Assert.assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
@@ -160,9 +158,8 @@ public class HttpServerTest extends AbstractXmlActionTest {
         Assert.assertEquals(sendMessageAction.getMessageProcessors().size(), 0);
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 1);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
         Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
 
         httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());

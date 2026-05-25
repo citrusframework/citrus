@@ -16,11 +16,6 @@
 
 package org.citrusframework.actions.dsl;
 
-import java.io.ByteArrayInputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
@@ -45,7 +40,6 @@ import org.citrusframework.validation.AbstractValidationProcessor;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
-import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
@@ -58,9 +52,20 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.ByteArrayInputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.citrusframework.message.MessageType.PLAINTEXT;
 import static org.citrusframework.message.MessageType.XML;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -173,9 +178,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
 
         assertEquals(action.getMessageType(), XML.name());
         assertEquals(action.getEndpoint(), messageEndpoint);
-        assertEquals(action.getValidationContexts().size(), 2);
+        assertEquals(action.getValidationContexts().size(), 1);
         assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        assertTrue(action.getValidationContexts().stream().anyMatch(DefaultMessageValidationContext.class::isInstance));
 
         assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()),
