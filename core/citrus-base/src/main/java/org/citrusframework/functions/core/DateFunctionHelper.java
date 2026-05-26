@@ -17,8 +17,8 @@
 package org.citrusframework.functions.core;
 
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import static java.lang.Integer.parseInt;
 
@@ -26,7 +26,7 @@ import static java.lang.Integer.parseInt;
  * Abstract date value handling function provides base date value manipulation helpers.
  * @since 1.3.1
  */
-public final class DateFunctionHelper {
+final class DateFunctionHelper {
 
     private DateFunctionHelper() {
         //prevent instantiation of utility class.
@@ -36,13 +36,14 @@ public final class DateFunctionHelper {
      * Adds/removes date value offset by parsing offset string for
      * year/month/day/hour/minute/second offsets.
      */
-    static void applyDateOffset(Calendar calendar, String offsetString) {
-        calendar.add(Calendar.YEAR, getDateValueOffset(offsetString, 'y'));
-        calendar.add(Calendar.MONTH, getDateValueOffset(offsetString, 'M'));
-        calendar.add(Calendar.DAY_OF_YEAR, getDateValueOffset(offsetString, 'd'));
-        calendar.add(Calendar.HOUR, getDateValueOffset(offsetString, 'h'));
-        calendar.add(Calendar.MINUTE, getDateValueOffset(offsetString, 'm'));
-        calendar.add(Calendar.SECOND, getDateValueOffset(offsetString, 's'));
+    static OffsetDateTime applyDateOffset(OffsetDateTime date, String offset) {
+        return date
+                .plusYears(DateFunctionHelper.getDateValueOffset(offset, 'y'))
+                .plusMonths(DateFunctionHelper.getDateValueOffset(offset, 'M'))
+                .plusDays(DateFunctionHelper.getDateValueOffset(offset, 'd'))
+                .plusHours(DateFunctionHelper.getDateValueOffset(offset, 'h'))
+                .plusMinutes(DateFunctionHelper.getDateValueOffset(offset, 'm'))
+                .plusSeconds(DateFunctionHelper.getDateValueOffset(offset, 's'));
     }
 
     /**
