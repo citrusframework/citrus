@@ -16,18 +16,24 @@
 
 package org.citrusframework.validation.context;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DefaultValidationContextTest {
 
-    @Test
-    public void getCorrespondingValidationModule_shouldReturnCitrusValidationJson() {
-        var fixture = new DefaultValidationContext() {
-        };
+    private DefaultValidationContext fixture;
 
+    @BeforeMethod
+    public void beforeMethod() {
+        fixture = new DefaultValidationContext();
+    }
+
+    @Test
+    public void getCorrespondingValidationModule_shouldReturnCitrusValidationText() {
         assertThat(fixture.getCorrespondingValidationModule())
-                .isEmpty();
+                .isNotEmpty()
+                .contains("org.citrusframework:citrus-validation-text");
     }
 }
