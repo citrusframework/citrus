@@ -46,18 +46,9 @@
       <artifactId>apicurio-data-models</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.atlassian.oai</groupId>
-      <artifactId>swagger-request-validator-core</artifactId>
-    </dependency>
-
-    <!--
-        Include mail API (and API only!) so com.atlassian.oai:swagger-request-validator-core builds correctly.
-        Note that this is a legacy dependency and should not be managed globally.
-    -->
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>javax.mail-api</artifactId>
-      <version>1.6.2</version>
+      <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-openapi-validator-shaded</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- Jackson 2.x -->

@@ -16,9 +16,6 @@
 
 package org.citrusframework.openapi.validation;
 
-import java.util.List;
-import javax.annotation.Nullable;
-
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.ApiOperation;
 import com.atlassian.oai.validator.model.Request;
@@ -26,11 +23,13 @@ import com.atlassian.oai.validator.model.Response;
 import com.atlassian.oai.validator.report.MessageResolver;
 import com.atlassian.oai.validator.report.ValidationReport.Message;
 import com.atlassian.oai.validator.schema.SchemaValidator;
-import com.atlassian.oai.validator.schema.SwaggerV20Library;
 import com.atlassian.oai.validator.whitelist.ValidationErrorsWhitelist;
 import com.atlassian.oai.validator.whitelist.rule.WhitelistRule;
 import io.swagger.v3.oas.models.OpenAPI;
 import jakarta.annotation.Nonnull;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Represents the context for OpenAPI validation, providing configuration and validators for request and response validation.
@@ -82,7 +81,7 @@ public class OpenApiValidationContext {
 
     public synchronized @Nonnull SchemaValidator getSchemaValidator() {
         if (schemaValidator == null) {
-            schemaValidator = new SchemaValidator(openApi, new MessageResolver(), SwaggerV20Library::schemaFactory);
+            schemaValidator = new SchemaValidator(openApi, new MessageResolver());
         }
         return schemaValidator;
     }
