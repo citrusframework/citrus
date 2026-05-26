@@ -32,7 +32,7 @@
                 </http:body>
             </http:send-response>
 
-            <assert exception="org.citrusframework.exceptions.ValidationException" message="@contains('Object has missing required properties ([&quot;name&quot;]): []')@">
+            <assert exception="org.citrusframework.exceptions.ValidationException" message="@contains('ERROR - required property &#39;name&#39; not found: []')@">
                 <when>
                     <petstore:receive-get-pet-by-id />
                 </when>

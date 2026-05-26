@@ -249,7 +249,7 @@
     <jsonschema-generator.version>5.0.0</jsonschema-generator.version>
     <json-path.version>3.0.0</json-path.version>
     <json-patch.version>1.13</json-patch.version>
-    <json-schema-validator.version>3.0.8</json-schema-validator.version>
+    <json-schema-validator.version>2.0.8</json-schema-validator.version>
     <json-smart.version>2.6.0</json-smart.version>
     <jtidy.version>r938</jtidy.version>
     <junit.jupiter.version>6.1.3</junit.jupiter.version>
@@ -263,6 +263,7 @@
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.2.19.Final</netty.version>
     <okhttp.version>5.5.0</okhttp.version>
+    <openapi-request-validator.version>3.0.0</openapi-request-validator.version>
     <org.openapitools.version>7.26.0</org.openapitools.version>
     <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.14</postgresql.version>
@@ -283,7 +284,6 @@
     <sshd.version>2.20.0</sshd.version>
     <swagger.version>2.2.37</swagger.version>
     <swagger.parser.version>2.1.48</swagger.parser.version>
-    <swagger-request-validator.version>2.46.1</swagger-request-validator.version>
     <system-stubs.version>2.1.8</system-stubs.version>
     <testcontainers.version>2.0.5</testcontainers.version>
     <testng.version>7.12.0</testng.version>
@@ -737,8 +737,8 @@
 
       <dependency>
         <groupId>com.atlassian.oai</groupId>
-        <artifactId>swagger-request-validator-core</artifactId>
-        <version>${swagger-request-validator.version}</version>
+        <artifactId>openapi-request-validator-core</artifactId>
+        <version>${openapi-request-validator.version}</version>
         <exclusions>
           <!--
             force com.sun.mail:mailapi to v2 major.
