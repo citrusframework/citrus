@@ -16,17 +16,23 @@
 
 package org.citrusframework.validation.context;
 
+import java.util.Optional;
+
 /**
  * Default validation context keeps track of its status to mark if this context has been processed during the validation.
+ *
  * @since 2.4
  */
 public class DefaultValidationContext implements ValidationContext {
 
-    /** The status of this context */
+    /**
+     * The status of this context
+     */
     private ValidationStatus status = ValidationStatus.UNKNOWN;
 
     /**
      * Updates the validation status if update is allowed according to the current status.
+     *
      * @param status the new status
      */
     public void updateStatus(ValidationStatus status) {
@@ -38,7 +44,6 @@ public class DefaultValidationContext implements ValidationContext {
     /**
      * Determine whether the status update is allowed.
      * In case the current state is FAILED the update is not allowed in order to not loose the failure state.
-     * @return
      */
     private boolean updateAllowed() {
         return this.status != ValidationStatus.FAILED;
@@ -47,5 +52,10 @@ public class DefaultValidationContext implements ValidationContext {
     @Override
     public ValidationStatus getStatus() {
         return status;
+    }
+
+    @Override
+    public Optional<String> getCorrespondingValidationModule() {
+        return Optional.of("org.citrusframework:citrus-validation-text");
     }
 }

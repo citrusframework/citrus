@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.xml;
+package org.citrusframework.validation.json;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class XmlMessageValidationContextTest {
+public class JsonMessageValidationContextTest {
 
-    private XmlMessageValidationContext fixture;
+    private JsonMessageValidationContext fixture;
 
     @BeforeMethod
     public void beforeMethod() {
-        fixture = new XmlMessageValidationContext();
+        fixture = new JsonMessageValidationContext();
     }
 
     @Test
-    public void getCorrespondingValidationModule_shouldReturnCitrusValidationXml() {
+    public void getCorrespondingValidationModule_shouldReturnCitrusValidationJson() {
         assertThat(fixture.getCorrespondingValidationModule())
                 .isNotEmpty()
-                .contains("org.citrusframework:citrus-validation-xml");
+                .contains("org.citrusframework:citrus-validation-json");
     }
 }
