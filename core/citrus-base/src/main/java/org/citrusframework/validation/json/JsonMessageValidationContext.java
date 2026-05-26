@@ -17,6 +17,7 @@
 package org.citrusframework.validation.json;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
@@ -40,6 +41,11 @@ public class JsonMessageValidationContext extends DefaultMessageValidationContex
      */
     public JsonMessageValidationContext(Builder builder) {
         super(builder);
+    }
+
+    @Override
+    public Optional<String> getCorrespondingValidationModule() {
+        return Optional.of("org.citrusframework:citrus-validation-json");
     }
 
     /**
