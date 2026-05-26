@@ -1,0 +1,173 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>citrus-connectors</artifactId>
+    <groupId>org.citrusframework</groupId>
+    <version>5.2.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>citrus-openapi-validator-shaded</artifactId>
+  <name>Citrus :: Connectors :: OpenAPI Validator (shaded)</name>
+  <description>
+    Atlassian OpenAPI request validator bundled with its own, relocated copy of com.networknt:json-schema-validator 2.x.
+    This allows the rest of Citrus to use com.networknt:json-schema-validator 3.x.
+  </description>
+
+  <properties>
+    <!-- versions as declared by openapi-request-validator-core and json-schema-validator, not managed globally on purpose -->
+    <caffeine.version>3.2.4</caffeine.version>
+    <itu.version>1.14.0</itu.version>
+    <jsr305.version>3.0.2</jsr305.version>
+  </properties>
+
+  <!--
+    Only openapi-request-validator-core and json-schema-validator are shaded into this artifact. Both are declared optional,
+    so that the unshaded jars never leak to consumers - neither inside the reactor nor through the dependency-reduced POM.
+    All other runtime dependencies of both libraries are therefore declared explicitly below.
+
+    Note that the relocated classes only exist in the packaged jar. Within the reactor, modules depending on this one must
+    be built with at least the "package" phase (e.g. "install" or "verify").
+  -->
+  <dependencies>
+    <!-- Shaded dependencies -->
+    <dependency>
+      <groupId>com.atlassian.oai</groupId>
+      <artifactId>openapi-request-validator-core</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.networknt</groupId>
+      <artifactId>json-schema-validator</artifactId>
+      <version>${openapi-request-validator.json-schema-validator.version}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- Runtime dependencies of openapi-request-validator-core -->
+    <dependency>
+      <groupId>io.swagger.parser.v3</groupId>
+      <artifactId>swagger-parser</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+      <version>${caffeine.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>${jsr305.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
+    </dependency>
+
+    <!-- Runtime dependencies of json-schema-validator 2.x -->
+    <dependency>
+      <groupId>com.ethlo.time</groupId>
+      <artifactId>itu</artifactId>
+      <version>${itu.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createSourcesJar>true</createSourcesJar>
+              <shadeSourcesContent>true</shadeSourcesContent>
+              <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+              <artifactSet>
+                <includes>
+                  <include>com.atlassian.oai:openapi-request-validator-core</include>
+                  <include>com.networknt:json-schema-validator</include>
+                </includes>
+              </artifactSet>
+              <relocations>
+                <relocation>
+                  <pattern>com.networknt</pattern>
+                  <shadedPattern>org.citrusframework.openapi.shaded.com.networknt</shadedPattern>
+                </relocation>
+              </relocations>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <!-- module descriptors still require the original, unrelocated modules -->
+                    <exclude>module-info.class</exclude>
+                    <exclude>META-INF/versions/*/module-info.class</exclude>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                    <exclude>META-INF/maven/**</exclude>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>com.networknt:json-schema-validator</artifact>
+                  <excludes>
+                    <!-- GraalVM configuration references the unrelocated class names -->
+                    <exclude>META-INF/native-image/**</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <configuration>
+          <!-- otherwise the shaded sources jar of a previous build is considered up-to-date and gets shaded again -->
+          <forceCreation>true</forceCreation>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <!-- otherwise the shaded jar of a previous build is considered up-to-date and gets shaded again -->
+          <forceCreation>true</forceCreation>
+        </configuration>
+        <executions>
+          <!-- this module has no sources, but Maven Central requires a javadoc artifact -->
+          <execution>
+            <id>javadoc-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>javadoc</classifier>
+              <classesDirectory>${project.basedir}/src/main/javadoc</classesDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
