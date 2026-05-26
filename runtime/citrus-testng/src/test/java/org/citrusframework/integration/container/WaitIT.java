@@ -16,17 +16,18 @@
 
 package org.citrusframework.integration.container;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
-
+import com.sun.net.httpserver.HttpServer;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import com.sun.net.httpserver.HttpServer;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 
 /**
  * @since 2.4
@@ -37,6 +38,10 @@ public class WaitIT extends TestNGCitrusSpringSupport {
 
     @BeforeClass
     public void startHttpServer() throws IOException {
+        if (System.getProperty("os.name", "").toLowerCase().contains("win")) {
+            throw new SkipException("Skipped on Windows - com.sun.net.httpserver.HttpServer does not reliably serve HTTP responses on Windows");
+        }
+
         server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
         server.createContext("/test", httpExchange -> httpExchange.sendResponseHeaders(200, 0));
         server.setExecutor(Executors.newSingleThreadExecutor());
