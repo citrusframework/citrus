@@ -54,7 +54,7 @@ public class RandomConfiguration {
         // Note that the order of generators in the list is relevant, as the list is traversed from start to end, to find the first matching generator for a schema, and some generators match for less significant schemas.
         generators.add(new RandomEnumGenerator());
         generators.add(randomGeneratorBuilder(TYPE_STRING, FORMAT_DATE).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:currentDate('yyyy-MM-dd')")));
-        generators.add(randomGeneratorBuilder(TYPE_STRING, FORMAT_DATE_TIME).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ssZ')")));
+        generators.add(randomGeneratorBuilder(TYPE_STRING, FORMAT_DATE_TIME).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ssXXX')")));
         generators.add(randomGeneratorBuilder(TYPE_STRING, FORMAT_UUID).build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomUUID()")));
         generators.add(randomGeneratorBuilder(TYPE_STRING, "email").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + EMAIL_PATTERN + "')")));
         generators.add(randomGeneratorBuilder(TYPE_STRING, "uri").build((randomContext, schema) -> randomContext.getRandomModelBuilder().appendSimpleQuoted("citrus:randomPattern('" + URI_PATTERN + "')")));
