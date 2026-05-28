@@ -190,7 +190,7 @@
     <exec.maven.plugin.version>3.6.3</exec.maven.plugin.version>
     <jaxb.maven.plugin.version>4.1.0</jaxb.maven.plugin.version>
 
-    <activemq.artemis.version>2.53.0</activemq.artemis.version>
+    <apache.artemis.version>2.54.0</apache.artemis.version>
     <angus-activation.version>2.0.3</angus-activation.version>
     <angus-mail.version>2.0.5</angus-mail.version>
     <apache.ant.version>1.10.17</apache.ant.version>
@@ -1372,9 +1372,9 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.apache.activemq</groupId>
+        <groupId>org.apache.artemis</groupId>
         <artifactId>artemis-jakarta-server</artifactId>
-        <version>${activemq.artemis.version}</version>
+        <version>${apache.artemis.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
