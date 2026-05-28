@@ -46,9 +46,9 @@
         <scope>provided</scope>
       </dependency>
       <dependency>
-        <groupId>org.apache.activemq</groupId>
+        <groupId>org.apache.artemis</groupId>
         <artifactId>artemis-jakarta-client</artifactId>
-        <version>${activemq.artemis.version}</version>
+        <version>${apache.artemis.version}</version>
         <scope>provided</scope>
       </dependency>
 
