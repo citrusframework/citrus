@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.EndpointUriBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
@@ -532,6 +533,15 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
         public static Builder receive(Endpoint messageEndpoint) {
             Builder builder = new Builder();
             builder.endpoint(messageEndpoint);
+            return builder;
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         */
+        public static Builder receive(EndpointUriBuilder endpointUriBuilder) {
+            Builder builder = new Builder();
+            builder.endpoint(endpointUriBuilder);
             return builder;
         }
 

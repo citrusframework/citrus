@@ -23,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import org.citrusframework.Completable;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.EndpointUriBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageAwareTestAction;
@@ -356,6 +357,15 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         public static Builder send(Endpoint messageEndpoint) {
             Builder builder = new Builder();
             builder.endpoint(messageEndpoint);
+            return builder;
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         */
+        public static Builder send(EndpointUriBuilder endpointUriBuilder) {
+            Builder builder = new Builder();
+            builder.endpoint(endpointUriBuilder);
             return builder;
         }
 
