@@ -54,7 +54,6 @@
     <module>core</module>
     <module>endpoints</module>
     <module>runtime</module>
-    <module>test-api-generator</module>
     <module>tools</module>
     <module>utils</module>
     <module>validation</module>
@@ -273,7 +272,7 @@
     <spring.restdocs.version>4.0.0</spring.restdocs.version>
     <sshd.version>2.16.0</sshd.version>
     <swagger.version>2.2.37</swagger.version>
-    <swagger.parser.version>2.1.22</swagger.parser.version>
+    <swagger.parser.version>2.1.38</swagger.parser.version>
     <swagger-request-validator.version>2.46.1</swagger-request-validator.version>
     <system-stubs.version>2.1.8</system-stubs.version>
     <testcontainers.version>2.0.5</testcontainers.version>
