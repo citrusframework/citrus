@@ -16,64 +16,58 @@
 
 package org.citrusframework.functions.core;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.List;
+
+import static org.citrusframework.util.StringUtils.hasText;
+
 /**
- * Function changes given date value by adding/subtracting day/month/year/hour/minute
- * offset values. Class uses special date format to parse date string to Calendar instance.
+ * Function changes given date value by adding/subtracting day/month/year/hour/minute offset values.
+ * Class uses a date format to parse date string to an {@link OffsetDateTime}.
  *
  * @since 1.3.1
  */
 public class ChangeDateFunction implements ParameterizedFunction<ChangeDateFunction.Parameters> {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(ChangeDateFunction.class);
-
-    private final CalendarProvider calendarProvider = new CalendarProvider();
 
     @Override
     public String execute(Parameters params, TestContext context) {
-        Calendar calendar = calendarProvider.getInstance();
+        DateTimeFormatter dateFormat = hasText(params.getDateFormat())
+                ? DateTimeFormatter.ofPattern(params.getDateFormat())
+                : DateTimeFormatter.ofPattern(DateFunctionHelper.getDefaultDateFormat().toPattern());
 
-        SimpleDateFormat dateFormat;
-        String result;
-
-        if (StringUtils.hasText(params.getDateFormat())) {
-            dateFormat = new SimpleDateFormat(params.getDateFormat());
-        } else {
-            dateFormat = DateFunctionHelper.getDefaultDateFormat();
-        }
+        OffsetDateTime date;
 
         try {
-            calendar.setTime(dateFormat.parse(params.getValue()));
-        } catch (ParseException e) {
+            date = parseDate(params.getValue(), dateFormat);
+        } catch (RuntimeException e) {
             throw new CitrusRuntimeException(e);
         }
 
-        if (StringUtils.hasText(params.getOffset())) {
-            DateFunctionHelper.applyDateOffset(calendar, params.getOffset());
+        if (hasText(params.getOffset())) {
+            date = applyDateOffset(date, params.getOffset());
         }
 
         try {
-            result = dateFormat.format(calendar.getTime());
+            return date.format(dateFormat);
         } catch (RuntimeException e) {
             logger.error("Error while formatting dateParameter value ", e);
             throw new CitrusRuntimeException(e);
         }
-
-        return result;
     }
 
     @Override
@@ -81,15 +75,31 @@ public class ChangeDateFunction implements ParameterizedFunction<ChangeDateFunct
         return new Parameters();
     }
 
-    static class CalendarProvider {
+    private OffsetDateTime parseDate(String value, DateTimeFormatter formatter) {
+        TemporalAccessor parsed = formatter.parseBest(value, OffsetDateTime::from, LocalDateTime::from, LocalDate::from);
 
-        private CalendarProvider () {
-            // This class allows mocking in unit tests
+        if (parsed instanceof OffsetDateTime offsetDateTime) {
+            return offsetDateTime;
         }
 
-        Calendar getInstance() {
-            return Calendar.getInstance();
+        if (parsed instanceof LocalDateTime localDateTime) {
+            ZoneId zone = ZoneId.systemDefault();
+            return localDateTime.atZone(zone).toOffsetDateTime();
         }
+
+        LocalDate localDate = (LocalDate) parsed;
+        ZoneId zone = ZoneId.systemDefault();
+        return localDate.atStartOfDay(zone).toOffsetDateTime();
+    }
+
+    private OffsetDateTime applyDateOffset(OffsetDateTime date, String offset) {
+        return date
+                .plusYears(DateFunctionHelper.getDateValueOffset(offset, 'y'))
+                .plusMonths(DateFunctionHelper.getDateValueOffset(offset, 'M'))
+                .plusDays(DateFunctionHelper.getDateValueOffset(offset, 'd'))
+                .plusHours(DateFunctionHelper.getDateValueOffset(offset, 'h'))
+                .plusMinutes(DateFunctionHelper.getDateValueOffset(offset, 'm'))
+                .plusSeconds(DateFunctionHelper.getDateValueOffset(offset, 's'));
     }
 
     public static class Parameters implements FunctionParameters {

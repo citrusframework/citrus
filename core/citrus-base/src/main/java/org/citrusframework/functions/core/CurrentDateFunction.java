@@ -16,57 +16,60 @@
 
 package org.citrusframework.functions.core;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.TimeZone;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.ParameterizedFunction;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.TimeZone;
+
+import static org.citrusframework.functions.core.DateFunctionHelper.applyDateOffset;
+import static org.citrusframework.util.StringUtils.hasText;
+
 /**
- * Function returning the actual date as formatted string value. User specifies format string
- * as argument. Function also supports additional date offset in order to manipulate result date value.
- *
+ * Function returning the actual date as formatted string value.
+ * User specifies format string as argument.
+ * Function also supports additional date offset in order to manipulate result date value.
  */
 public class CurrentDateFunction implements ParameterizedFunction<CurrentDateFunction.Parameters> {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CurrentDateFunction.class);
 
     @Override
     public String execute(Parameters params, TestContext context) {
-        Calendar calendar = Calendar.getInstance();
+        ZoneId zone = hasText(params.getTimeZone())
+                ? TimeZone.getTimeZone(normalizeTimeZoneId(params.getTimeZone())).toZoneId()
+                : ZoneId.systemDefault();
 
-        SimpleDateFormat dateFormat;
-        String result;
-        if (StringUtils.hasText(params.getDateFormat())) {
-            dateFormat = new SimpleDateFormat(params.getDateFormat());
-        } else {
-            dateFormat = DateFunctionHelper.getDefaultDateFormat();
+        OffsetDateTime date = OffsetDateTime.now(zone);
+        if (hasText(params.getOffset())) {
+            date = applyDateOffset(date, params.getOffset());
         }
 
-        if (StringUtils.hasText(params.getOffset())) {
-            DateFunctionHelper.applyDateOffset(calendar, params.getOffset());
-        }
-
-        if (StringUtils.hasText(params.getTimeZone())) {
-            dateFormat.setTimeZone(TimeZone.getTimeZone(params.getTimeZone()));
-        }
+        DateTimeFormatter formatter = hasText(params.getDateFormat())
+                ? DateTimeFormatter.ofPattern(params.getDateFormat())
+                : DateTimeFormatter.ofPattern(DateFunctionHelper.getDefaultDateFormat().toPattern());
 
         try {
-            result = dateFormat.format(calendar.getTime());
+            return date.format(formatter);
         } catch (RuntimeException e) {
-            logger.error("Error while formatting date value ", e);
+            logger.error("Error while formatting date value!", e);
             throw new CitrusRuntimeException(e);
         }
+    }
 
-        return result;
+    private String normalizeTimeZoneId(String timeZone) {
+        if (timeZone.startsWith("UTC+") || timeZone.startsWith("UTC-")) {
+            return "GMT" + timeZone.substring(3);
+        }
+
+        return timeZone;
     }
 
     @Override
