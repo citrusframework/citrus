@@ -29,6 +29,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.MessageBuilderFactory;
 import org.citrusframework.common.Named;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.EndpointUriBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageBuilder;
@@ -314,6 +315,13 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         public B endpoint(Endpoint messageEndpoint) {
             this.endpoint = messageEndpoint;
             return self;
+        }
+
+        /**
+         * Uses the endpoint URI builder to construct the message endpoint to send messages to.
+         */
+        public B endpoint(EndpointUriBuilder endpointUriBuilder) {
+            return endpoint(endpointUriBuilder.getUri());
         }
 
         /**

@@ -19,6 +19,7 @@ package org.citrusframework.actions;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.EndpointUriBuilder;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.MessageProcessor;
@@ -31,6 +32,8 @@ public interface SendActionBuilder<T extends TestAction, M extends SendMessageBu
     B endpoint(Endpoint endpoint);
 
     B endpoint(String endpointUri);
+
+    B endpoint(EndpointUriBuilder endpointUriBuilder);
 
     M message();
 
