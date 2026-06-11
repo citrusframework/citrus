@@ -1,0 +1,16 @@
+{
+  "name": "citrus-marketplace",
+  "description": "Citrus plugins for Claude Code, including the Citrus MCP server.",
+  "owner": {
+    "name": "Citrus Integration Test",
+    "email": "citrus-dev@googlegroups.com",
+    "url": "https://citrusframework.org"
+  },
+  "plugins": [
+    {
+      "name": "citrus-mcp",
+      "source": "./plugins/citrus-mcp",
+      "description": "Citrus MCP server: exposes the Citrus components in the form of a catalog plus specialized tools (catalog exploration, component schemas, DSL schemas for YAML and XML, detailed documentation material, and collected best practices) to AI coding assistants over the Model Context Protocol. Requires JBang on the PATH."
+    }
+  ]
+}

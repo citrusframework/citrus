@@ -55,7 +55,24 @@ If you need to add the MCP server module to your project:
 
 === Integrate with AI assistance tools
 
-You can integrate the Citrus MCP server into AI code assistance tools using a local `.mcp.json` configuration file in your project folder.
+==== Install as a plugin
+
+Claude Code can install the Citrus MCP server from the marketplace defined in the `citrusframework/citrus`
+repository, so you do not have to edit any configuration file by hand. JBang must still be installed
+and available on your PATH.
+
+[source,bash]
+----
+claude plugin marketplace add citrusframework/citrus
+claude plugin install citrus-mcp@citrus-marketplace
+----
+
+The first command registers the marketplace; the second installs the `citrus-mcp` plugin, which ships
+the MCP server configuration. The server is launched on demand over STDIO via JBang.
+
+==== Manual configuration
+
+Alternatively, add you can integrate the Citrus MCP server into AI code assistance tools using a local `.mcp.json` configuration file in your project folder.
 
 [source,json]
 ----

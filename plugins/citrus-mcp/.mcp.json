@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "citrus": {
+      "command": "jbang",
+      "args": [
+        "--quiet",
+        "org.citrusframework:citrus-mcp-server:LATEST:runner"
+      ]
+    }
+  }
+}
