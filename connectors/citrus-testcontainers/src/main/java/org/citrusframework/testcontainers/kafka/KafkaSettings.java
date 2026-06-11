@@ -54,7 +54,7 @@ public class KafkaSettings {
 
     private static final String APACHE_VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "apache.version";
     private static final String APACHE_VERSION_ENV = KAFKA_ENV_PREFIX + "APACHE_VERSION";
-    private static final String APACHE_VERSION_DEFAULT = "3.9.1";
+    private static final String APACHE_VERSION_DEFAULT = "4.2.1";
 
     private static final String CONFLUENT_IMAGE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "confluent.image.name";
     private static final String CONFLUENT_IMAGE_NAME_ENV = KAFKA_ENV_PREFIX + "CONFLUENT_IMAGE_NAME";
