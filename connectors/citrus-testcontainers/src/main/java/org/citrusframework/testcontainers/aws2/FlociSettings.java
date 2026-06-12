@@ -21,8 +21,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.stream.Stream;
+import java.util.Set;
 
+import io.floci.testcontainers.FlociContainer;
+import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
@@ -30,48 +32,45 @@ import software.amazon.awssdk.regions.Region;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
-public class LocalStackSettings {
+public class FlociSettings {
 
-    private static final String LOCALSTACK_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "localstack.";
-    private static final String LOCALSTACK_ENV_PREFIX = TestContainersSettings.TESTCONTAINERS_ENV_PREFIX + "LOCALSTACK_";
+    private static final String FLOCI_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "floci.";
+    private static final String FLOCI_ENV_PREFIX = TestContainersSettings.TESTCONTAINERS_ENV_PREFIX + "FLOCI_";
 
-    private static final String VERSION_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "version";
-    private static final String VERSION_ENV = LOCALSTACK_ENV_PREFIX + "VERSION";
-    public static final String VERSION_DEFAULT = "4.14.0";
+    private static final String VERSION_PROPERTY = FLOCI_PROPERTY_PREFIX + "version";
+    private static final String VERSION_ENV = FLOCI_ENV_PREFIX + "VERSION";
+    public static final String VERSION_DEFAULT = "latest";
 
-    private static final String IMAGE_NAME_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "image.name";
-    private static final String IMAGE_NAME_ENV = LOCALSTACK_ENV_PREFIX + "IMAGE_NAME";
-    private static final String IMAGE_NAME_DEFAULT = "localstack/localstack";
+    private static final String IMAGE_NAME_PROPERTY = FLOCI_PROPERTY_PREFIX + "image.name";
+    private static final String IMAGE_NAME_ENV = FLOCI_ENV_PREFIX + "IMAGE_NAME";
+    private static final String IMAGE_NAME_DEFAULT = "floci/floci";
 
-    private static final String SERVICE_NAME_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "service.name";
-    private static final String SERVICE_NAME_ENV = LOCALSTACK_ENV_PREFIX + "SERVICE_NAME";
-    public static final String SERVICE_NAME_DEFAULT = "citrus-localstack";
+    private static final String SERVICE_NAME_PROPERTY = FLOCI_PROPERTY_PREFIX + "service.name";
+    private static final String SERVICE_NAME_ENV = FLOCI_ENV_PREFIX + "SERVICE_NAME";
+    public static final String SERVICE_NAME_DEFAULT = "citrus-floci";
 
-    private static final String CONTAINER_NAME_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "container.name";
-    private static final String CONTAINER_NAME_ENV = LOCALSTACK_ENV_PREFIX + "CONTAINER_NAME";
+    private static final String CONTAINER_NAME_PROPERTY = FLOCI_PROPERTY_PREFIX + "container.name";
+    private static final String CONTAINER_NAME_ENV = FLOCI_ENV_PREFIX + "CONTAINER_NAME";
     public static final String CONTAINER_NAME_DEFAULT = "aws2Container";
 
-    private static final String AUTO_CREATE_CLIENTS_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "auto.create.clients";
-    private static final String AUTO_CREATE_CLIENTS_ENV = LOCALSTACK_ENV_PREFIX + "AUTO_CREATE_CLIENTS";
+    private static final String AUTO_CREATE_CLIENTS_PROPERTY = FLOCI_PROPERTY_PREFIX + "auto.create.clients";
+    private static final String AUTO_CREATE_CLIENTS_ENV = FLOCI_ENV_PREFIX + "AUTO_CREATE_CLIENTS";
     public static final String AUTO_CREATE_CLIENTS_DEFAULT = "true";
 
-    private static final String AUTH_TOKEN_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "auth.token";
-    private static final String AUTH_TOKEN_ENV = LOCALSTACK_ENV_PREFIX + "AUTH_TOKEN";
+    private static final String ACCOUNT_ID_PROPERTY = FLOCI_PROPERTY_PREFIX + "account.id";
+    private static final String ACCOUNT_ID_ENV = FLOCI_ENV_PREFIX + "ACCOUNT_ID";
+    public static final String ACCOUNT_ID_DEFAULT = "000000000000";
 
-    private static final String SECRET_KEY_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "secret.key";
-    private static final String SECRET_KEY_ENV = LOCALSTACK_ENV_PREFIX + "SECRET_KEY";
-    public static final String SECRET_KEY_DEFAULT = "secretkey";
+    private static final String AVAILABILITY_ZONE_PROPERTY = FLOCI_PROPERTY_PREFIX + "availability.zone";
+    private static final String AVAILABILITY_ZONE_ENV = FLOCI_ENV_PREFIX + "AVAILABILITY_ZONE";
+    public static final String AVAILABILITY_ZONE_DEFAULT = "us-east-1a";
 
-    private static final String ACCESS_KEY_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "access.key";
-    private static final String ACCESS_KEY_ENV = LOCALSTACK_ENV_PREFIX + "ACCESS_KEY";
-    public static final String ACCESS_KEY_DEFAULT = "accesskey";
-
-    private static final String REGION_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "region";
-    private static final String REGION_ENV = LOCALSTACK_ENV_PREFIX + "REGION";
+    private static final String REGION_PROPERTY = FLOCI_PROPERTY_PREFIX + "region";
+    private static final String REGION_ENV = FLOCI_ENV_PREFIX + "REGION";
     public static final String REGION_DEFAULT = Region.US_EAST_1.id();
 
-    private static final String STARTUP_TIMEOUT_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "startup.timeout";
-    private static final String STARTUP_TIMEOUT_ENV = LOCALSTACK_ENV_PREFIX + "STARTUP_TIMEOUT";
+    private static final String STARTUP_TIMEOUT_PROPERTY = FLOCI_PROPERTY_PREFIX + "startup.timeout";
+    private static final String STARTUP_TIMEOUT_ENV = FLOCI_ENV_PREFIX + "STARTUP_TIMEOUT";
 
     private static final String AWS_PROPERTY_PREFIX = "aws.";
 
@@ -81,12 +80,12 @@ public class LocalStackSettings {
     public static final String AWS_HOST_PROPERTY = AWS_PROPERTY_PREFIX + "host";
     public static final String AWS_PROTOCOL_PROPERTY = AWS_PROPERTY_PREFIX + "protocol";
 
-    private LocalStackSettings() {
+    private FlociSettings() {
         // prevent instantiation of utility class
     }
 
     /**
-     * LocalStack image name.
+     * Floci image name.
      * @return
      */
     public static String getImageName() {
@@ -95,7 +94,7 @@ public class LocalStackSettings {
     }
 
     /**
-     * LocalStack version.
+     * Floci version.
      * @return default Docker image version.
      */
     public static String getVersion() {
@@ -104,7 +103,7 @@ public class LocalStackSettings {
     }
 
     /**
-     * LocalStack service name.
+     * Floci service name.
      * @return the service name.
      */
     public static String getServiceName() {
@@ -113,7 +112,7 @@ public class LocalStackSettings {
     }
 
     /**
-     * LocalStack container name.
+     * Floci container name.
      * @return the container name.
      */
     public static String getContainerName() {
@@ -140,18 +139,14 @@ public class LocalStackSettings {
                 .orElseGet(TestContainersSettings::getStartupTimeout);
     }
 
-    public static String getAuthToken() {
-        return System.getProperty(AUTH_TOKEN_PROPERTY, System.getenv(AUTH_TOKEN_ENV));
+    public static String getAccountId() {
+        return System.getProperty(ACCOUNT_ID_PROPERTY,
+                System.getenv(ACCOUNT_ID_ENV) != null ? System.getenv(ACCOUNT_ID_ENV) : ACCOUNT_ID_DEFAULT);
     }
 
-    public static String getSecretKey() {
-        return System.getProperty(SECRET_KEY_PROPERTY,
-                System.getenv(SECRET_KEY_ENV) != null ? System.getenv(SECRET_KEY_ENV) : SECRET_KEY_DEFAULT);
-    }
-
-    public static String getAccessKey() {
-        return System.getProperty(ACCESS_KEY_PROPERTY,
-                System.getenv(ACCESS_KEY_ENV) != null ? System.getenv(ACCESS_KEY_ENV) : ACCESS_KEY_DEFAULT);
+    public static String getAvailabilityZone() {
+        return System.getProperty(AVAILABILITY_ZONE_PROPERTY,
+                System.getenv(AVAILABILITY_ZONE_ENV) != null ? System.getenv(AVAILABILITY_ZONE_ENV) : AVAILABILITY_ZONE_DEFAULT);
     }
 
     public static String getRegion() {
@@ -162,12 +157,13 @@ public class LocalStackSettings {
     /**
      * Exposes the container connection settings as test variables on the given context.
      * @param container the container holding the connection settings.
+     * @param services the set of enabled services.
      * @param serviceName the service name of the container.
      * @param context the test context to receive the test variables.
      */
-    public static void exposeConnectionSettings(LocalStackContainer container, String serviceName, TestContext context) {
+    public static void exposeConnectionSettings(FlociContainer container, Set<AwsService> services, String serviceName, TestContext context) {
         if (container.getContainerId() != null) {
-            URI serviceEndpoint = container.getServiceEndpoint();
+            URI serviceEndpoint = URI.create(container.getEndpoint());
 
             String dockerContainerId = container.getContainerId().substring(0, 12);
             String dockerContainerName = container.getContainerName();
@@ -176,7 +172,7 @@ public class LocalStackSettings {
                 dockerContainerName = dockerContainerName.substring(1);
             }
 
-            String containerType = "LOCALSTACK";
+            String containerType = "FLOCI";
             context.setVariable(getEnvVarName(containerType, "HOST"), container.getHost());
             context.setVariable(getEnvVarName(containerType, "CONTAINER_IP"), container.getHost());
             context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
@@ -195,7 +191,7 @@ public class LocalStackSettings {
                 context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), String.format("http://%s:%s", serviceName, serviceEndpoint.getPort()));
             }
 
-            Stream.of(container.getServices()).forEach(service -> {
+            services.forEach(service -> {
                 String aws2ServiceName = service.getServiceName().toUpperCase(Locale.US);
 
                 if (!KubernetesSupport.isConnected(context) || !TestContainersSettings.isKubedockEnabled()) {
@@ -220,16 +216,16 @@ public class LocalStackSettings {
     /**
      * Provides the connection properties to this container.
      * Clients may use these to initialize.
-     * @return set of connection properties.
+     * @return connection properties.
      */
-    private static Properties getConnectionProperties(LocalStackContainer container) {
+    private static Properties getConnectionProperties(FlociContainer container) {
         Properties properties = new Properties();
 
-        properties.put(LocalStackSettings.AWS_ACCESS_KEY_PROPERTY, container.getAccessKey());
-        properties.put(LocalStackSettings.AWS_SECRET_KEY_PROPERTY, container.getSecretKey());
-        properties.put(LocalStackSettings.AWS_REGION_PROPERTY, container.getRegion());
-        properties.put(LocalStackSettings.AWS_HOST_PROPERTY, container.getHost() + ":" + container.getMappedPort(LocalStackContainer.PORT));
-        properties.put(LocalStackSettings.AWS_PROTOCOL_PROPERTY, "http");
+        properties.put(FlociSettings.AWS_ACCESS_KEY_PROPERTY, container.getAccessKey());
+        properties.put(FlociSettings.AWS_SECRET_KEY_PROPERTY, container.getSecretKey());
+        properties.put(FlociSettings.AWS_REGION_PROPERTY, container.getRegion());
+        properties.put(FlociSettings.AWS_HOST_PROPERTY, container.getHost() + ":" + container.getMappedPort(FlociContainer.PORT));
+        properties.put(FlociSettings.AWS_PROTOCOL_PROPERTY, "http");
 
         return properties;
     }

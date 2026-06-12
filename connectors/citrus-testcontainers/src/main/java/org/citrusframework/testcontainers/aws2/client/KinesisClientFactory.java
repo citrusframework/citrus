@@ -19,8 +19,8 @@ package org.citrusframework.testcontainers.aws2.client;
 import java.util.Map;
 
 import org.citrusframework.actions.testcontainers.aws2.AwsService;
-import org.citrusframework.testcontainers.aws2.ClientFactory;
-import org.citrusframework.testcontainers.aws2.LocalStackContainer;
+import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
+import org.citrusframework.actions.testcontainers.aws2.AwsContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -29,7 +29,7 @@ import software.amazon.awssdk.services.kinesis.KinesisClient;
 public class KinesisClientFactory implements ClientFactory<KinesisClient> {
 
     @Override
-    public KinesisClient createClient(LocalStackContainer container, Map<String, String> options) {
+    public KinesisClient createClient(AwsContainer container, Map<String, String> options) {
         KinesisClient kinesisClient = KinesisClient.builder()
                 .endpointOverride(container.getServiceEndpoint())
                 .credentialsProvider(

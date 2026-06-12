@@ -1,0 +1,13 @@
+name: "StartFlociTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in YAML
+actions:
+  - testcontainers:
+      start:
+        floci:
+          autoRemove: false
+          services:
+            - "S3"
+          options:
+            buckets: some-bucket-name

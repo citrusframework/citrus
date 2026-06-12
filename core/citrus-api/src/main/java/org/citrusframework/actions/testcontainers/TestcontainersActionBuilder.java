@@ -42,6 +42,11 @@ public interface TestcontainersActionBuilder<T extends TestAction, B extends Tes
     TestcontainersLocalStackActionBuilder localstack();
 
     /**
+     * Manage Floci testcontainers.
+     */
+    TestcontainersFlociActionBuilder floci();
+
+    /**
      * Manage PostgreSQL testcontainers.
      */
     TestcontainersPostgreSQLActionBuilder postgreSQL();
