@@ -38,7 +38,9 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
+import org.citrusframework.testcontainers.aws2.FlociSettings;
 import org.citrusframework.testcontainers.aws2.LocalStackSettings;
+import org.citrusframework.testcontainers.aws2.StartFlociAction;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.testcontainers.kafka.StartKafkaAction;
 import org.citrusframework.testcontainers.mongodb.StartMongoDBAction;
@@ -78,6 +80,44 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         if (StringUtils.hasText(container.getAccessKey())) {
             builder.accessKey(container.getAccessKey());
+        }
+
+        if (StringUtils.hasText(container.getRegion())) {
+            builder.region(container.getRegion());
+        }
+
+        if (container.getOptions() != null) {
+            container.getOptions().getOptions().forEach(option -> builder.withOption(option.getName(), option.getValue()));
+        }
+
+        configureStartActionBuilder(builder, container);
+
+        if (container.getServices() != null) {
+            container.getServices().getServices().forEach(service -> builder.withService(AwsService.valueOf(service)));
+        }
+
+        if (container.getServiceList() != null) {
+            Stream.of(container.getServiceList().split(",")).forEach(service -> builder.withService(AwsService.valueOf(service)));
+        }
+
+        delegate = builder;
+    }
+
+    @XmlElement
+    public void setFloci(Floci container) {
+        StartFlociAction.Builder builder = new StartFlociAction.Builder();
+        if (container.getVersion() != null) {
+            builder.version(container.getVersion());
+        }
+
+        builder.autoCreateClients(container.isAutoCreateClients());
+
+        if (StringUtils.hasText(container.getAccountId())) {
+            builder.accountId(container.getAccountId());
+        }
+
+        if (StringUtils.hasText(container.getAvailabilityZone())) {
+            builder.availabilityZone(container.getAvailabilityZone());
         }
 
         if (StringUtils.hasText(container.getRegion())) {
@@ -597,6 +637,166 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         public void setAccessKey(String accessKey) {
             this.accessKey = accessKey;
+        }
+
+        public String getRegion() {
+            return region;
+        }
+
+        public void setRegion(String region) {
+            this.region = region;
+        }
+
+        public String getServiceList() {
+            return serviceList;
+        }
+
+        public void setServiceList(String serviceList) {
+            this.serviceList = serviceList;
+        }
+
+        public Services getServices() {
+            return services;
+        }
+
+        public void setServices(Services services) {
+            this.services = services;
+        }
+
+        public Options getOptions() {
+            return options;
+        }
+
+        public void setOptions(Options options) {}
+
+        public boolean isAutoCreateClients() {
+            return autoCreateClients;
+        }
+
+        public void setAutoCreateClients(boolean autoCreateClients) {
+            this.autoCreateClients = autoCreateClients;
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "services"
+        })
+        public static class Services {
+
+            @XmlElement(name = "service")
+            private List<String> services;
+
+            public List<String> getServices() {
+                if (services == null) {
+                    services = new ArrayList<>();
+                }
+                return services;
+            }
+
+            public void setServices(List<String> services) {
+                this.services = services;
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "options"
+        })
+        public static class Options {
+
+            @XmlElement(name = "option")
+            private List<Option> options;
+
+            public List<Option> getOptions() {
+                if (options == null) {
+                    options = new ArrayList<>();
+                }
+                return options;
+            }
+
+            public void setOptions(List<Option> services) {
+                this.options = options;
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+            })
+            public static class Option {
+
+                @XmlAttribute
+                private String name;
+
+                @XmlAttribute
+                private String value;
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+
+                public String getValue() {
+                    return value;
+                }
+
+                public void setValue(String value) {}
+            }
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "services",
+            "options"
+    })
+    public static class Floci extends Container {
+
+        @XmlAttribute
+        protected String version;
+
+        @XmlAttribute(name = "account-id")
+        protected String accountId;
+        @XmlAttribute(name = "availability-zone")
+        protected String availabilityZone;
+        @XmlAttribute
+        protected String region;
+
+        @XmlAttribute(name = "auto-create-clients")
+        protected boolean autoCreateClients = FlociSettings.isAutoCreateClients();
+
+        @XmlAttribute(name = "services")
+        protected String serviceList;
+
+        @XmlElement
+        protected Services services;
+
+        @XmlElement
+        protected Options options;
+
+        public String getVersion() {
+            return version;
+        }
+
+        public void setVersion(String version) {
+            this.version = version;
+        }
+
+        public String getAccountId() {
+            return accountId;
+        }
+
+        public void setAccountId(String accountId) {
+            this.accountId = accountId;
+        }
+
+        public String getAvailabilityZone() {
+            return availabilityZone;
+        }
+
+        public void setAvailabilityZone(String availabilityZone) {
+            this.availabilityZone = availabilityZone;
         }
 
         public String getRegion() {

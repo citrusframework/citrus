@@ -16,6 +16,7 @@
 
 package org.citrusframework.testcontainers.aws2;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,7 +24,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.citrusframework.actions.testcontainers.TestcontainersLocalStackStartActionBuilder;
+import io.floci.testcontainers.FlociContainer;
+import org.citrusframework.actions.testcontainers.TestcontainersFlociStartActionBuilder;
+import org.citrusframework.actions.testcontainers.aws2.AwsContainer;
 import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
 import org.citrusframework.context.TestContext;
@@ -35,56 +38,40 @@ import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.utility.DockerImageName;
 
-public class StartLocalStackAction extends StartTestcontainersAction<LocalStackContainer> {
+public class StartFlociAction extends StartTestcontainersAction<FlociContainer> {
 
-    /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(StartLocalStackAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(StartFlociAction.class);
 
     private final DefaultClientFactoryResolver clientFactoryResolver = new DefaultClientFactoryResolver();
     private final boolean autoCreateClients;
 
+    private final Set<AwsService> services;
     private final Map<String, String> options;
-    private final String authToken;
-    private final String secretKey;
-    private final String accessKey;
     private final String region;
 
-    public StartLocalStackAction(Builder builder) {
+    public StartFlociAction(Builder builder) {
         super(builder);
         this.autoCreateClients = builder.autoCreateClients;
+        this.services = builder.services;
         this.options = builder.options;
-        this.authToken = builder.authToken;
-        this.secretKey = builder.secretKey;
-        this.accessKey = builder.accessKey;
         this.region = builder.region;
     }
 
     @Override
-    protected void configure(LocalStackContainer container, TestContext context) {
-        if (StringUtils.hasText(authToken)) {
-            container.withAuthToken(context.replaceDynamicContentInString(authToken));
-        }
-
-        if (StringUtils.hasText(secretKey)) {
-            container.withSecretKey(context.replaceDynamicContentInString(secretKey));
-        }
-
-        if (StringUtils.hasText(accessKey)) {
-            container.withAccessKey(context.replaceDynamicContentInString(accessKey));
-        }
-
+    protected void configure(FlociContainer container, TestContext context) {
         if (StringUtils.hasText(region)) {
             container.withRegion(context.replaceDynamicContentInString(region));
         }
     }
 
     @Override
-    protected void exposeConnectionSettings(LocalStackContainer container, TestContext context) {
-        LocalStackSettings.exposeConnectionSettings(container, serviceName, context);
+    protected void exposeConnectionSettings(FlociContainer container, TestContext context) {
+        FlociSettings.exposeConnectionSettings(container, services, serviceName, context);
 
         if (autoCreateClients) {
-            for (AwsService service : container.getServices()) {
+            for (AwsService service : services) {
                 String clientName = "%sClient".formatted(service.getServiceName());
                 clientName = options.getOrDefault(clientName + "Name", clientName);
 
@@ -96,9 +83,8 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
 
                 Optional<ClientFactory<?>> clientFactory = clientFactoryResolver.resolve(context.getReferenceResolver(), service);
                 if (clientFactory.isPresent()) {
-                    Object client = clientFactory.get().createClient(container, context.resolveDynamicValuesInMap(options));
+                    Object client = clientFactory.get().createClient(new AwsContainerWrapper(container), context.resolveDynamicValuesInMap(options));
                     PropertyUtils.configure(clientName, client, context.getReferenceResolver());
-                    container.addClient(service, client);
                     logger.debug("Auto create client {} for service {}", clientName, service.name());
                     context.getReferenceResolver().bind(clientName, client);
                 } else {
@@ -111,48 +97,40 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractBuilder<LocalStackContainer, StartLocalStackAction, Builder>
-            implements TestcontainersLocalStackStartActionBuilder<LocalStackContainer, StartLocalStackAction, Builder> {
+    public static class Builder extends AbstractBuilder<FlociContainer, StartFlociAction, Builder>
+            implements TestcontainersFlociStartActionBuilder<FlociContainer, StartFlociAction, Builder> {
 
-        private String localStackVersion = LocalStackSettings.getVersion();
+        private String flociVersion = FlociSettings.getVersion();
 
         private final Set<AwsService> services = new HashSet<>();
 
-        private boolean autoCreateClients = LocalStackSettings.isAutoCreateClients();
+        private boolean autoCreateClients = FlociSettings.isAutoCreateClients();
 
         private final Map<String, String> options = new HashMap<>();
 
-        private String authToken = LocalStackSettings.getAuthToken();
-
-        private String secretKey = LocalStackSettings.getSecretKey();
-        private String accessKey = LocalStackSettings.getAccessKey();
-        private String region = LocalStackSettings.getRegion();
+        private String accountId = FlociSettings.getAccountId();
+        private String availabilityZone = FlociSettings.getAvailabilityZone();
+        private String region = FlociSettings.getRegion();
 
         public Builder() {
-            withStartupTimeout(LocalStackSettings.getStartupTimeout());
+            withStartupTimeout(FlociSettings.getStartupTimeout());
         }
 
         @Override
-        public Builder version(String localStackVersion) {
-           this.localStackVersion = localStackVersion;
+        public Builder version(String flociVersion) {
+           this.flociVersion = flociVersion;
            return this;
         }
 
         @Override
-        public Builder authToken(String authToken) {
-            this.authToken = authToken;
+        public Builder accountId(String accountId) {
+            this.accountId = accountId;
             return this;
         }
 
         @Override
-        public Builder secretKey(String secretKey) {
-            this.secretKey = secretKey;
-            return this;
-        }
-
-        @Override
-        public Builder accessKey(String accessKey) {
-            this.accessKey = accessKey;
+        public Builder availabilityZone(String availabilityZone) {
+            this.availabilityZone = availabilityZone;
             return this;
         }
 
@@ -201,15 +179,15 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
         @Override
         protected void prepareBuild() {
             if (containerName == null) {
-                containerName(LocalStackSettings.getContainerName());
+                containerName(FlociSettings.getContainerName());
             }
 
             if (serviceName == null) {
-                serviceName(LocalStackSettings.getServiceName());
+                serviceName(FlociSettings.getServiceName());
             }
 
             if (image == null) {
-                image(LocalStackSettings.getImageName());
+                image(FlociSettings.getImageName());
             }
 
             withLabel("app", "citrus");
@@ -218,28 +196,52 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
             withLabel("app.kubernetes.io/part-of", TestContainersSettings.getTestName());
             withLabel("app.openshift.io/connects-to", TestContainersSettings.getTestId());
 
-            LocalStackContainer localStack;
-            if (referenceResolver != null && referenceResolver.isResolvable(containerName, LocalStackContainer.class)) {
-                localStack = referenceResolver.resolve(containerName, LocalStackContainer.class);
-
-                if  (!localStack.isRunning()) {
-                    localStack.withNewServices(services.toArray(AwsService[]::new));
-                }
+            FlociContainer floci;
+            if (referenceResolver != null && referenceResolver.isResolvable(containerName, FlociContainer.class)) {
+                floci = referenceResolver.resolve(containerName, FlociContainer.class);
             } else {
-                localStack = new LocalStackContainer(image, localStackVersion)
-                        .withServices(services.toArray(AwsService[]::new))
+                floci = new FlociContainer(DockerImageName.parse(image).withTag(flociVersion))
                         .withNetwork(network)
                         .withNetworkAliases(serviceName)
-                        .waitingFor(Wait.forListeningPort()
+                        .withDefaultAccountId(accountId)
+                        .withDefaultAvailabilityZone(availabilityZone)
+                        .waitingFor(Wait.forHttp("/_floci/health")
+                                .forPort(FlociContainer.PORT)
                                 .withStartupTimeout(startupTimeout));
             }
 
-            container(localStack);
+            container(floci);
         }
 
         @Override
-        public StartLocalStackAction doBuild() {
-            return new StartLocalStackAction(this);
+        public StartFlociAction doBuild() {
+            return new StartFlociAction(this);
+        }
+    }
+
+    /**
+     * Wrapper for Floc container to implement common AWS container interface.
+     */
+    public record AwsContainerWrapper(FlociContainer delegate) implements AwsContainer {
+
+        @Override
+        public URI getServiceEndpoint() {
+            return URI.create(delegate.getEndpoint());
+        }
+
+        @Override
+        public String getRegion() {
+            return delegate.getRegion();
+        }
+
+        @Override
+        public String getAccessKey() {
+            return delegate.getAccessKey();
+        }
+
+        @Override
+        public String getSecretKey() {
+            return delegate.getSecretKey();
         }
     }
 }

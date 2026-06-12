@@ -3801,6 +3801,67 @@
                   <xs:attribute name="startup-timeout" type="xs:int"/>
                 </xs:complexType>
               </xs:element>
+              <xs:element name="floci">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="env" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="variable" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="services" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="service" maxOccurs="unbounded" type="xs:string"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="options" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="option" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="service-name" type="xs:string"/>
+                  <xs:attribute name="version" type="xs:string"/>
+                  <xs:attribute name="account-id" type="xs:string"/>
+                  <xs:attribute name="availability-zone" type="xs:string"/>
+                  <xs:attribute name="region" type="xs:string"/>
+                  <xs:attribute name="auto-remove" type="xs:boolean"/>
+                  <xs:attribute name="auto-create-clients" type="xs:boolean"/>
+                  <xs:attribute name="services" type="xs:string"/>
+                  <xs:attribute name="image" type="xs:string"/>
+                  <xs:attribute name="command" type="xs:string"/>
+                  <xs:attribute name="startup-timeout" type="xs:int"/>
+                </xs:complexType>
+              </xs:element>
               <xs:element name="mongodb">
                 <xs:complexType>
                   <xs:sequence>

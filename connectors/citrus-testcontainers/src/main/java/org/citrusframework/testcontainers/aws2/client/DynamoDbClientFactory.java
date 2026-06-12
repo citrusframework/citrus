@@ -19,8 +19,8 @@ package org.citrusframework.testcontainers.aws2.client;
 import java.util.Map;
 
 import org.citrusframework.actions.testcontainers.aws2.AwsService;
-import org.citrusframework.testcontainers.aws2.ClientFactory;
-import org.citrusframework.testcontainers.aws2.LocalStackContainer;
+import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
+import org.citrusframework.actions.testcontainers.aws2.AwsContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -36,7 +36,7 @@ import software.amazon.awssdk.services.dynamodb.model.StreamViewType;
 public class DynamoDbClientFactory implements ClientFactory<DynamoDbClient> {
 
     @Override
-    public DynamoDbClient createClient(LocalStackContainer container, Map<String, String> options) {
+    public DynamoDbClient createClient(AwsContainer container, Map<String, String> options) {
         DynamoDbClient ddbClient = DynamoDbClient.builder()
                 .endpointOverride(container.getServiceEndpoint())
                 .credentialsProvider(

@@ -19,8 +19,8 @@ package org.citrusframework.testcontainers.aws2.client;
 import java.util.Map;
 
 import org.citrusframework.actions.testcontainers.aws2.AwsService;
-import org.citrusframework.testcontainers.aws2.ClientFactory;
-import org.citrusframework.testcontainers.aws2.LocalStackContainer;
+import org.citrusframework.actions.testcontainers.aws2.AwsContainer;
+import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -29,7 +29,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class S3ClientFactory implements ClientFactory<S3Client> {
 
     @Override
-    public S3Client createClient(LocalStackContainer container, Map<String, String> options) {
+    public S3Client createClient(AwsContainer container, Map<String, String> options) {
         S3Client s3Client = S3Client.builder()
                 .endpointOverride(container.getServiceEndpoint())
                 .credentialsProvider(

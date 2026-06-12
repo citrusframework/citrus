@@ -31,7 +31,9 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
+import org.citrusframework.testcontainers.aws2.FlociSettings;
 import org.citrusframework.testcontainers.aws2.LocalStackSettings;
+import org.citrusframework.testcontainers.aws2.StartFlociAction;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.testcontainers.kafka.StartKafkaAction;
 import org.citrusframework.testcontainers.mongodb.StartMongoDBAction;
@@ -73,6 +75,40 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         if (StringUtils.hasText(container.getAccessKey())) {
             builder.accessKey(container.getAccessKey());
+        }
+
+        if (StringUtils.hasText(container.getRegion())) {
+            builder.region(container.getRegion());
+        }
+
+        if (container.getOptions() != null) {
+            builder.withOptions(container.getOptions());
+        }
+
+        configureStartActionBuilder(builder, container);
+
+        if (container.getServices() != null) {
+            container.getServices().forEach(service -> builder.withService(AwsService.valueOf(service)));
+        }
+
+        delegate = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
+    public void setFloci(Floci container) {
+        StartFlociAction.Builder builder = new StartFlociAction.Builder();
+        if (container.getVersion() != null) {
+            builder.version(container.getVersion());
+        }
+
+        builder.autoCreateClients(container.isAutoCreateClients());
+
+        if (StringUtils.hasText(container.getAccountId())) {
+            builder.accountId(container.getAccountId());
+        }
+
+        if (StringUtils.hasText(container.getAvailabilityZone())) {
+            builder.availabilityZone(container.getAvailabilityZone());
         }
 
         if (StringUtils.hasText(container.getRegion())) {
@@ -471,6 +507,97 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         )
         public void setAccessKey(String accessKey) {
             this.accessKey = accessKey;
+        }
+
+        public String getRegion() {
+            return region;
+        }
+
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+                description = "AWS region"
+        )
+        public void setRegion(String region) {
+            this.region = region;
+        }
+
+        public List<String> getServices() {
+            if (services == null) {
+                services = new ArrayList<>();
+            }
+            return services;
+        }
+
+        @SchemaProperty
+        public void setServices(List<String> services) {
+            this.services = services;
+        }
+
+    }
+
+    public static class Floci extends Container {
+
+        protected boolean autoCreateClients = FlociSettings.isAutoCreateClients();
+
+        protected String version;
+
+        protected String accountId;
+        protected String availabilityZone;
+        protected String region;
+
+        protected List<String> services;
+
+        protected Map<String, String> options;
+
+        public boolean isAutoCreateClients() {
+            return autoCreateClients;
+        }
+
+        @SchemaProperty
+        public void setAutoCreateClients(boolean autoCreateClients) {
+            this.autoCreateClients = autoCreateClients;
+        }
+
+        public Map<String, String> getOptions() {
+            return options;
+        }
+
+        @SchemaProperty
+        public void setOptions(Map<String, String> options) {
+            this.options = options;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        @SchemaProperty
+        public void setVersion(String version) {
+            this.version = version;
+        }
+
+        public String getAccountId() {
+            return accountId;
+        }
+
+        @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "AWS account id"
+        )
+        public void setAccountId(String accountId) {
+            this.accountId = accountId;
+        }
+
+        public String getAvailabilityZone() {
+            return availabilityZone;
+        }
+
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+                description = "AWS availability zone"
+        )
+        public void setAvailabilityZone(String availabilityZone) {
+            this.availabilityZone = availabilityZone;
         }
 
         public String getRegion() {

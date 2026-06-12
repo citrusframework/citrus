@@ -19,8 +19,8 @@ package org.citrusframework.testcontainers.aws2.client;
 import java.util.Map;
 
 import org.citrusframework.actions.testcontainers.aws2.AwsService;
-import org.citrusframework.testcontainers.aws2.ClientFactory;
-import org.citrusframework.testcontainers.aws2.LocalStackContainer;
+import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
+import org.citrusframework.actions.testcontainers.aws2.AwsContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -29,7 +29,7 @@ import software.amazon.awssdk.services.eventbridge.EventBridgeClient;
 public class EventBridgeClientFactory implements ClientFactory<EventBridgeClient> {
 
     @Override
-    public EventBridgeClient createClient(LocalStackContainer container, Map<String, String> options) {
+    public EventBridgeClient createClient(AwsContainer container, Map<String, String> options) {
         EventBridgeClient eventBridgeClient = EventBridgeClient.builder()
                 .endpointOverride(container.getServiceEndpoint())
                 .credentialsProvider(

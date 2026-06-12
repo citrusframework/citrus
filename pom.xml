@@ -211,6 +211,7 @@
     <cucumber.version>7.34.3</cucumber.version>
     <docker-java.version>3.7.1</docker-java.version>
     <dropwizard.metrics.version>4.2.39</dropwizard.metrics.version>
+    <floci.version>1.4.0</floci.version>
     <ftpserver.version>1.2.1</ftpserver.version>
     <groovy.version>3.0.25</groovy.version>
     <greenmail.version>2.1.8</greenmail.version>
@@ -622,6 +623,12 @@
         <groupId>org.testcontainers</groupId>
         <artifactId>testcontainers-kafka</artifactId>
         <version>${testcontainers.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.floci</groupId>
+        <artifactId>testcontainers-floci</artifactId>
+        <version>${floci.version}</version>
       </dependency>
 
       <dependency>

@@ -26,23 +26,24 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.citrusframework.actions.testcontainers.aws2.AwsContainer;
 import org.citrusframework.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.testcontainers.aws2.client.DefaultClientFactoryResolver;
 import org.citrusframework.util.StringUtils;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 
-public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
+public class LocalStackContainer extends GenericContainer<LocalStackContainer> implements AwsContainer {
 
-    private static final int PORT = 4566;
+    static final int PORT = 4566;
 
     private static final String HOSTNAME_EXTERNAL_ENV = "HOSTNAME_EXTERNAL";
     private static final String AUTH_TOKEN_ENV = "LOCALSTACK_AUTH_TOKEN";
@@ -50,6 +51,7 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
     private static final String DOCKER_IMAGE_NAME = LocalStackSettings.getImageName();
     private static final String DOCKER_IMAGE_TAG = LocalStackSettings.getVersion();
 
+    private final DefaultClientFactoryResolver clientFactoryResolver = new DefaultClientFactoryResolver();
     private final Set<AwsService> services = new HashSet<>();
     private final Map<AwsService, Object> clients = new HashMap<>();
 
@@ -169,25 +171,6 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
         return () -> AwsBasicCredentials.create(accessKey, secretKey);
     }
 
-    /**
-     * Provides the connection properties to this container.
-     * Clients may use these to initialize.
-     * @return set of connection properties.
-     */
-    public Properties getConnectionProperties() {
-        Properties properties = new Properties();
-
-        AwsCredentials credentials = getCredentialsProvider().resolveCredentials();
-
-        properties.put(LocalStackSettings.AWS_ACCESS_KEY_PROPERTY, credentials.accessKeyId());
-        properties.put(LocalStackSettings.AWS_SECRET_KEY_PROPERTY, credentials.secretAccessKey());
-        properties.put(LocalStackSettings.AWS_REGION_PROPERTY, LocalStackSettings.getRegion());
-        properties.put(LocalStackSettings.AWS_HOST_PROPERTY, getHost() + ":" + getMappedPort(PORT));
-        properties.put(LocalStackSettings.AWS_PROTOCOL_PROPERTY, "http");
-
-        return properties;
-    }
-
     public String getHostIpAddress() {
         try {
             return InetAddress.getByName(getHost()).getHostAddress();
@@ -224,7 +207,7 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
         }
 
         // lazy load client for this container
-        Optional<ClientFactory<?>> clientFactory = ClientFactory.lookup(service);
+        Optional<ClientFactory<?>> clientFactory = clientFactoryResolver.resolve(service);
         if (clientFactory.isPresent()) {
             client = clientFactory.get().createClient(this, Collections.emptyMap());
             clients.put(service, client);

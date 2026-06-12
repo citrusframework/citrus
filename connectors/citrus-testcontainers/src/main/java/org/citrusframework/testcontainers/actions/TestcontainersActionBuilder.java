@@ -18,12 +18,14 @@ package org.citrusframework.testcontainers.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.testcontainers.TestcontainersComposeActionBuilder;
+import org.citrusframework.actions.testcontainers.TestcontainersFlociActionBuilder;
 import org.citrusframework.actions.testcontainers.TestcontainersGenericContainerActionBuilder;
 import org.citrusframework.actions.testcontainers.TestcontainersKafkaActionBuilder;
 import org.citrusframework.actions.testcontainers.TestcontainersLocalStackActionBuilder;
 import org.citrusframework.actions.testcontainers.TestcontainersMongoDBActionBuilder;
 import org.citrusframework.actions.testcontainers.TestcontainersPostgreSQLActionBuilder;
 import org.citrusframework.actions.testcontainers.TestcontainersRedpandaActionBuilder;
+import org.citrusframework.testcontainers.aws2.StartFlociAction;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.testcontainers.compose.ComposeDownAction;
 import org.citrusframework.testcontainers.compose.ComposeUpAction;
@@ -54,6 +56,11 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
     @Override
     public LocalStackActionBuilder localstack() {
         return new LocalStackActionBuilder();
+    }
+
+    @Override
+    public FlociActionBuilder floci() {
+        return new FlociActionBuilder();
     }
 
     @Override
@@ -145,6 +152,23 @@ public class TestcontainersActionBuilder implements TestActionBuilder.Delegating
         @Override
         public StartLocalStackAction.Builder start() {
             StartLocalStackAction.Builder builder = new StartLocalStackAction.Builder();
+            delegate = builder;
+            return builder;
+        }
+
+        @Override
+        public StopTestcontainersAction.Builder stop() {
+            StopTestcontainersAction.Builder builder = new StopTestcontainersAction.Builder();
+            delegate = builder;
+            return builder;
+        }
+    }
+
+    public class FlociActionBuilder implements TestcontainersFlociActionBuilder {
+
+        @Override
+        public StartFlociAction.Builder start() {
+            StartFlociAction.Builder builder = new StartFlociAction.Builder();
             delegate = builder;
             return builder;
         }
