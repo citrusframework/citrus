@@ -64,6 +64,9 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
     public void doExecute(TestContext context) {
         logger.info("Starting Testcontainers container '{}'", containerName);
 
+        // Give subclasses a chance to configure the container with the test context.
+        configure(container, context);
+
         container.start();
 
         if (containerName != null && !context.getReferenceResolver().isResolvable(containerName)) {
@@ -87,9 +90,13 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
     }
 
     /**
+     * Subclasses may add custom configuration with the current test context.
+     */
+    protected void configure(C container, TestContext context) {
+    }
+
+    /**
      * Sets the connection settings in current test context in the form of test variables.
-     * @param container
-     * @param context
      */
     protected void exposeConnectionSettings(C container, TestContext context) {
         if (container.getContainerId() != null) {

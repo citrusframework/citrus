@@ -27,6 +27,14 @@ public interface TestcontainersLocalStackStartActionBuilder<C extends AutoClosea
 
     B version(String localStackVersion);
 
+    B authToken(String authToken);
+
+    B secretKey(String secretKey);
+
+    B accessKey(String accessKey);
+
+    B region(String region);
+
     B withService(AwsService service);
 
     B withServices(AwsService[] services);

@@ -3789,6 +3789,10 @@
                   <xs:attribute name="name" type="xs:string"/>
                   <xs:attribute name="service-name" type="xs:string"/>
                   <xs:attribute name="version" type="xs:string"/>
+                  <xs:attribute name="auth-token" type="xs:string"/>
+                  <xs:attribute name="secret-key" type="xs:string"/>
+                  <xs:attribute name="access-key" type="xs:string"/>
+                  <xs:attribute name="region" type="xs:string"/>
                   <xs:attribute name="auto-remove" type="xs:boolean"/>
                   <xs:attribute name="auto-create-clients" type="xs:boolean"/>
                   <xs:attribute name="services" type="xs:string"/>
