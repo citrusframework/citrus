@@ -32,19 +32,20 @@ import java.util.stream.Collectors;
 
 import org.citrusframework.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.StringUtils;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
 
 public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
 
     private static final int PORT = 4566;
 
     private static final String HOSTNAME_EXTERNAL_ENV = "HOSTNAME_EXTERNAL";
+    private static final String AUTH_TOKEN_ENV = "LOCALSTACK_AUTH_TOKEN";
 
     private static final String DOCKER_IMAGE_NAME = LocalStackSettings.getImageName();
     private static final String DOCKER_IMAGE_TAG = LocalStackSettings.getVersion();
@@ -52,9 +53,11 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
     private final Set<AwsService> services = new HashSet<>();
     private final Map<AwsService, Object> clients = new HashMap<>();
 
-    private String secretKey = "secretkey";
-    private String accessKey = "accesskey";
-    private String region = Region.US_EAST_1.id();
+    private String authToken = LocalStackSettings.getAuthToken();
+
+    private String secretKey = LocalStackSettings.getSecretKey();
+    private String accessKey = LocalStackSettings.getAccessKey();
+    private String region = LocalStackSettings.getRegion();
 
     public LocalStackContainer() {
         this(DOCKER_IMAGE_TAG);
@@ -91,6 +94,11 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
             throw new CitrusRuntimeException("Must provide at least one service");
         }
 
+        if (StringUtils.hasText(authToken)) {
+            // newer versions of Localstack container require auth token
+            withEnv(AUTH_TOKEN_ENV, authToken);
+        }
+
         withEnv("SERVICE", services.stream().map(AwsService::serviceName).collect(Collectors.joining(",")));
 
         String hostnameExternalReason;
@@ -111,6 +119,11 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
             getEnvMap().get(HOSTNAME_EXTERNAL_ENV),
             hostnameExternalReason
         );
+    }
+
+    public LocalStackContainer withAuthToken(String authToken) {
+        this.authToken = authToken;
+        return self();
     }
 
     public LocalStackContainer withSecretKey(String secretKey) {
@@ -166,11 +179,11 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
 
         AwsCredentials credentials = getCredentialsProvider().resolveCredentials();
 
-        properties.put(LocalStackSettings.ACCESS_KEY_PROPERTY, credentials.accessKeyId());
-        properties.put(LocalStackSettings.SECRET_KEY_PROPERTY, credentials.secretAccessKey());
-        properties.put(LocalStackSettings.REGION_PROPERTY, Region.US_EAST_1.toString());
-        properties.put(LocalStackSettings.HOST_PROPERTY, getHost() + ":" + getMappedPort(PORT));
-        properties.put(LocalStackSettings.PROTOCOL_PROPERTY, "http");
+        properties.put(LocalStackSettings.AWS_ACCESS_KEY_PROPERTY, credentials.accessKeyId());
+        properties.put(LocalStackSettings.AWS_SECRET_KEY_PROPERTY, credentials.secretAccessKey());
+        properties.put(LocalStackSettings.AWS_REGION_PROPERTY, LocalStackSettings.getRegion());
+        properties.put(LocalStackSettings.AWS_HOST_PROPERTY, getHost() + ":" + getMappedPort(PORT));
+        properties.put(LocalStackSettings.AWS_PROTOCOL_PROPERTY, "http");
 
         return properties;
     }

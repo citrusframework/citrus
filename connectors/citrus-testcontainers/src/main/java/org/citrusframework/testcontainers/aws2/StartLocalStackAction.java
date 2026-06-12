@@ -29,6 +29,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
 import org.citrusframework.util.PropertyUtils;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -41,11 +42,38 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
     private final boolean autoCreateClients;
 
     private final Map<String, String> options;
+    private final String authToken;
+    private final String secretKey;
+    private final String accessKey;
+    private final String region;
 
     public StartLocalStackAction(Builder builder) {
         super(builder);
         this.autoCreateClients = builder.autoCreateClients;
         this.options = builder.options;
+        this.authToken = builder.authToken;
+        this.secretKey = builder.secretKey;
+        this.accessKey = builder.accessKey;
+        this.region = builder.region;
+    }
+
+    @Override
+    protected void configure(LocalStackContainer container, TestContext context) {
+        if (StringUtils.hasText(authToken)) {
+            container.withAuthToken(context.replaceDynamicContentInString(authToken));
+        }
+
+        if (StringUtils.hasText(secretKey)) {
+            container.withSecretKey(context.replaceDynamicContentInString(secretKey));
+        }
+
+        if (StringUtils.hasText(accessKey)) {
+            container.withAccessKey(context.replaceDynamicContentInString(accessKey));
+        }
+
+        if (StringUtils.hasText(region)) {
+            container.withRegion(context.replaceDynamicContentInString(region));
+        }
     }
 
     @Override
@@ -91,6 +119,12 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
 
         private final Map<String, String> options = new HashMap<>();
 
+        private String authToken = LocalStackSettings.getAuthToken();
+
+        private String secretKey = LocalStackSettings.getSecretKey();
+        private String accessKey = LocalStackSettings.getAccessKey();
+        private String region = LocalStackSettings.getRegion();
+
         public Builder() {
             withStartupTimeout(LocalStackSettings.getStartupTimeout());
         }
@@ -99,6 +133,30 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
         public Builder version(String localStackVersion) {
            this.localStackVersion = localStackVersion;
            return this;
+        }
+
+        @Override
+        public Builder authToken(String authToken) {
+            this.authToken = authToken;
+            return this;
+        }
+
+        @Override
+        public Builder secretKey(String secretKey) {
+            this.secretKey = secretKey;
+            return this;
+        }
+
+        @Override
+        public Builder accessKey(String accessKey) {
+            this.accessKey = accessKey;
+            return this;
+        }
+
+        @Override
+        public Builder region(String region) {
+            this.region = region;
+            return this;
         }
 
         @Override

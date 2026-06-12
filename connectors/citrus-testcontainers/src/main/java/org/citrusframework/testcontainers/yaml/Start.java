@@ -63,6 +63,22 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         builder.autoCreateClients(container.isAutoCreateClients());
 
+        if (StringUtils.hasText(container.getAuthToken())) {
+            builder.authToken(container.getAuthToken());
+        }
+
+        if (StringUtils.hasText(container.getSecretKey())) {
+            builder.secretKey(container.getSecretKey());
+        }
+
+        if (StringUtils.hasText(container.getAccessKey())) {
+            builder.accessKey(container.getAccessKey());
+        }
+
+        if (StringUtils.hasText(container.getRegion())) {
+            builder.region(container.getRegion());
+        }
+
         if (container.getOptions() != null) {
             builder.withOptions(container.getOptions());
         }
@@ -386,6 +402,11 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         protected String version;
 
+        protected String authToken;
+        protected String secretKey;
+        protected String accessKey;
+        protected String region;
+
         protected List<String> services;
 
         protected Map<String, String> options;
@@ -415,6 +436,53 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         @SchemaProperty
         public void setVersion(String version) {
             this.version = version;
+        }
+
+        public String getAuthToken() {
+            return authToken;
+        }
+
+        @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Newer versions of Localstack container require an auth token.")
+        public void setAuthToken(String authToken) {
+            this.authToken = authToken;
+        }
+
+        public String getSecretKey() {
+            return secretKey;
+        }
+
+        @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "AWS secret key"
+        )
+        public void setSecretKey(String secretKey) {
+            this.secretKey = secretKey;
+        }
+
+        public String getAccessKey() {
+            return accessKey;
+        }
+
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+                description = "AWS access key"
+        )
+        public void setAccessKey(String accessKey) {
+            this.accessKey = accessKey;
+        }
+
+        public String getRegion() {
+            return region;
+        }
+
+        @SchemaProperty(
+                metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+                description = "AWS region"
+        )
+        public void setRegion(String region) {
+            this.region = region;
         }
 
         public List<String> getServices() {

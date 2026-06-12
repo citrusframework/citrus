@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
+import software.amazon.awssdk.regions.Region;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
@@ -53,16 +54,31 @@ public class LocalStackSettings {
     private static final String AUTO_CREATE_CLIENTS_ENV = LOCALSTACK_ENV_PREFIX + "AUTO_CREATE_CLIENTS";
     public static final String AUTO_CREATE_CLIENTS_DEFAULT = "true";
 
+    private static final String AUTH_TOKEN_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "auth.token";
+    private static final String AUTH_TOKEN_ENV = LOCALSTACK_ENV_PREFIX + "AUTH_TOKEN";
+
+    private static final String SECRET_KEY_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "secret.key";
+    private static final String SECRET_KEY_ENV = LOCALSTACK_ENV_PREFIX + "SECRET_KEY";
+    public static final String SECRET_KEY_DEFAULT = "secretkey";
+
+    private static final String ACCESS_KEY_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "access.key";
+    private static final String ACCESS_KEY_ENV = LOCALSTACK_ENV_PREFIX + "ACCESS_KEY";
+    public static final String ACCESS_KEY_DEFAULT = "accesskey";
+
+    private static final String REGION_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "region";
+    private static final String REGION_ENV = LOCALSTACK_ENV_PREFIX + "REGION";
+    public static final String REGION_DEFAULT = Region.US_EAST_1.id();
+
     private static final String STARTUP_TIMEOUT_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = LOCALSTACK_ENV_PREFIX + "STARTUP_TIMEOUT";
 
     private static final String AWS_PROPERTY_PREFIX = "aws.";
 
-    public static final String ACCESS_KEY_PROPERTY = AWS_PROPERTY_PREFIX + "access.key";
-    public static final String SECRET_KEY_PROPERTY = AWS_PROPERTY_PREFIX + "secret.key";
-    public static final String REGION_PROPERTY = AWS_PROPERTY_PREFIX + "region";
-    public static final String HOST_PROPERTY = AWS_PROPERTY_PREFIX + "host";
-    public static final String PROTOCOL_PROPERTY = AWS_PROPERTY_PREFIX + "protocol";
+    public static final String AWS_ACCESS_KEY_PROPERTY = AWS_PROPERTY_PREFIX + "access.key";
+    public static final String AWS_SECRET_KEY_PROPERTY = AWS_PROPERTY_PREFIX + "secret.key";
+    public static final String AWS_REGION_PROPERTY = AWS_PROPERTY_PREFIX + "region";
+    public static final String AWS_HOST_PROPERTY = AWS_PROPERTY_PREFIX + "host";
+    public static final String AWS_PROTOCOL_PROPERTY = AWS_PROPERTY_PREFIX + "protocol";
 
     private LocalStackSettings() {
         // prevent instantiation of utility class
@@ -121,6 +137,25 @@ public class LocalStackSettings {
         return Optional.ofNullable(System.getProperty(STARTUP_TIMEOUT_PROPERTY, System.getenv(STARTUP_TIMEOUT_ENV)))
                 .map(Integer::parseInt)
                 .orElseGet(TestContainersSettings::getStartupTimeout);
+    }
+
+    public static String getAuthToken() {
+        return System.getProperty(AUTH_TOKEN_PROPERTY, System.getenv(AUTH_TOKEN_ENV));
+    }
+
+    public static String getSecretKey() {
+        return System.getProperty(SECRET_KEY_PROPERTY,
+                System.getenv(SECRET_KEY_ENV) != null ? System.getenv(SECRET_KEY_ENV) : SECRET_KEY_DEFAULT);
+    }
+
+    public static String getAccessKey() {
+        return System.getProperty(ACCESS_KEY_PROPERTY,
+                System.getenv(ACCESS_KEY_ENV) != null ? System.getenv(ACCESS_KEY_ENV) : ACCESS_KEY_DEFAULT);
+    }
+
+    public static String getRegion() {
+        return System.getProperty(REGION_PROPERTY,
+                System.getenv(REGION_ENV) != null ? System.getenv(REGION_ENV) : REGION_DEFAULT);
     }
 
     /**
