@@ -18,6 +18,7 @@ package org.citrusframework.kafka.embedded;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -39,7 +40,6 @@ import kafka.server.KafkaRaftServer;
 import kafka.server.Server;
 import kafka.server.SharedServer;
 import kafka.server.StandardFaultHandlerFactory;
-import kafka.utils.CoreUtils;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
@@ -54,9 +54,9 @@ import org.apache.kafka.metadata.properties.MetaPropertiesEnsemble;
 import org.apache.kafka.metadata.properties.MetaPropertiesVersion;
 import org.apache.kafka.metadata.properties.PropertiesUtils;
 import org.apache.kafka.network.SocketServerConfigs;
+import org.apache.kafka.raft.KRaftConfigs;
 import org.apache.kafka.raft.QuorumConfig;
 import org.apache.kafka.server.ServerSocketFactory;
-import org.apache.kafka.server.config.KRaftConfigs;
 import org.apache.kafka.server.config.ReplicationConfigs;
 import org.apache.kafka.server.config.ServerConfigs;
 import org.apache.kafka.server.config.ServerLogConfigs;
@@ -200,7 +200,13 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
                 }
             } finally {
                 try {
-                    CoreUtils.delete(kafkaServer.config().logDirs());
+                    kafkaServer.config().logDirs().forEach(logDir -> {
+                        try {
+                            Files.delete(Paths.get(logDir));
+                        } catch (IOException e) {
+                            logger.warn("Failed to delete log directory {}", logDir, e);
+                        }
+                    });
                 } catch (Exception e) {
                     logger.warn("Failed to remove logs on Kafka embedded server", e);
                 }
