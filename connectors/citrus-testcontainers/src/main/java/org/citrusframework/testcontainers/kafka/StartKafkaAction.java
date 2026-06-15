@@ -102,7 +102,7 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
             Class<?> kafkaContainerType = switch (implementation) {
                 case DEFAULT, CONFLUENT -> ConfluentKafkaContainer.class;
                 case STRIMZI -> StrimziContainer.class;
-                case APACHE -> KafkaContainer.class;
+                case APACHE, APACHE_NATIVE -> KafkaContainer.class;
             };
             GenericContainer<?> kafkaContainer;
             if (referenceResolver != null && referenceResolver.isResolvable(containerName, kafkaContainerType)) {
@@ -126,7 +126,7 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
                                 super.start();
                             }
                         };
-                        case APACHE -> new KafkaContainer(imageName) {
+                        case APACHE, APACHE_NATIVE -> new KafkaContainer(imageName) {
                             @Override
                             public void start() {
                                 addFixedExposedPort(port, KafkaSettings.KAFKA_PORT);
@@ -140,7 +140,7 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
                 } else {
                     kafkaContainer = switch(implementation) {
                         case DEFAULT, CONFLUENT -> new ConfluentKafkaContainer(imageName);
-                        case APACHE ->  new KafkaContainer(imageName);
+                        case APACHE, APACHE_NATIVE ->  new KafkaContainer(imageName);
                         case STRIMZI ->  new StrimziContainer(imageName)
                                 .withServiceName(serviceName);
                     };

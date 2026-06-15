@@ -41,6 +41,11 @@ public @interface KafkaContainerSupport {
     String version() default "";
 
     /**
+     * Enable native Apache Kafka mode (uses apache/kafka-native image).
+     */
+    boolean nativeMode() default false;
+
+    /**
      * Container lifecycle listeners
      */
     Class<? extends ContainerLifecycleListener<KafkaContainer>>[] containerLifecycleListener() default {};
