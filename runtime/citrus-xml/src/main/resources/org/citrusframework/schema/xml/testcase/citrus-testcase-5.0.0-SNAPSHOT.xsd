@@ -3928,6 +3928,8 @@
                     </xs:element>
                   </xs:sequence>
                   <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="implementation" type="xs:string" default="CONFLUENT"/>
+                  <xs:attribute name="port" type="xs:int"/>
                   <xs:attribute name="service-name" type="xs:string"/>
                   <xs:attribute name="version" type="xs:string"/>
                   <xs:attribute name="auto-remove" type="xs:boolean"/>

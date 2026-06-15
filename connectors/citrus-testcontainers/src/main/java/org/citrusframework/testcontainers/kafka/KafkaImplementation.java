@@ -20,4 +20,5 @@ public enum KafkaImplementation {
     DEFAULT,
     CONFLUENT,
     APACHE,
+    STRIMZI,
 }

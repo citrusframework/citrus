@@ -16,6 +16,8 @@
 
 package org.citrusframework.testcontainers.kafka;
 
+import java.util.Locale;
+
 import org.citrusframework.actions.testcontainers.TestcontainersKafkaStartActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
@@ -52,7 +54,7 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
 
         @Override
         public Builder<T> implementation(String implementation) {
-           this.implementation = KafkaImplementation.valueOf(implementation);
+           this.implementation = KafkaImplementation.valueOf(implementation.toUpperCase(Locale.US));
            return this;
         }
 
@@ -99,6 +101,7 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
 
             Class<?> kafkaContainerType = switch (implementation) {
                 case DEFAULT, CONFLUENT -> ConfluentKafkaContainer.class;
+                case STRIMZI -> StrimziContainer.class;
                 case APACHE -> KafkaContainer.class;
             };
             GenericContainer<?> kafkaContainer;
@@ -130,11 +133,16 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
                                 super.start();
                             }
                         };
+                        case STRIMZI -> new StrimziContainer(imageName)
+                                .withServiceName(serviceName)
+                                .withPort(port);
                     };
                 } else {
                     kafkaContainer = switch(implementation) {
                         case DEFAULT, CONFLUENT -> new ConfluentKafkaContainer(imageName);
                         case APACHE ->  new KafkaContainer(imageName);
+                        case STRIMZI ->  new StrimziContainer(imageName)
+                                .withServiceName(serviceName);
                     };
                 }
 
