@@ -740,6 +740,7 @@ Citrus provides support for different Kafka container implementations to give yo
 
 * **Confluent Platform** (default) - The Confluent Community Edition Kafka distribution
 * **Apache Kafka** - The official Apache Kafka distribution
+* **Apache Kafka Native** - The Apache Kafka distribution with native GraalVM compilation for faster startup
 * **Strimzi** - A Kubernetes-native Kafka distribution based on Apache Kafka
 
 By default, Citrus uses the Confluent Platform implementation. You can specify a different implementation using the `implementation()` method:
@@ -785,8 +786,27 @@ Available implementation values are:
 
 * `CONFLUENT` - Uses the `confluentinc/cp-kafka` image (default)
 * `APACHE` - Uses the `apache/kafka` image
+* `APACHE_NATIVE` - Uses the `apache/kafka-native` image (GraalVM native compilation for faster startup)
 * `STRIMZI` - Uses the `quay.io/strimzi/kafka` image
 * `DEFAULT` - Same as `CONFLUENT`
+
+==== Choosing between APACHE and APACHE_NATIVE
+
+Both `APACHE` and `APACHE_NATIVE` implementations use the official Apache Kafka distribution, but there are important differences:
+
+* **APACHE** uses the standard JVM-based `apache/kafka` container image
+* **APACHE_NATIVE** uses the `apache/kafka-native` container image, which is compiled ahead-of-time using GraalVM native image technology
+
+The main advantage of `APACHE_NATIVE` is significantly faster container startup time, which can reduce test execution time, especially when running multiple tests that start Kafka containers. However, it has the same runtime behavior and compatibility as the standard `APACHE` implementation.
+
+Use `APACHE_NATIVE` when:
+* You want faster test execution with reduced container startup times
+* Your test suite frequently starts and stops Kafka containers
+* You are comfortable using GraalVM-compiled binaries
+
+Use `APACHE` when:
+* You need the standard JVM-based Kafka distribution
+* You want to ensure full compatibility with the traditional Kafka deployment model
 
 [[testcontainers-kafka-configuration]]
 === Configuration options
@@ -858,6 +878,14 @@ You may also use system properties or environment variables to configure the def
 |Apache version
 |citrus.testcontainers.kafka.apache.version
 |CITRUS_TESTCONTAINERS_KAFKA_APACHE_VERSION
+
+|Apache Native image name
+|citrus.testcontainers.kafka.apache.native.image.name
+|CITRUS_TESTCONTAINERS_KAFKA_APACHE_NATIVE_IMAGE_NAME
+
+|Apache Native version
+|citrus.testcontainers.kafka.apache.native.version
+|CITRUS_TESTCONTAINERS_KAFKA_APACHE_NATIVE_VERSION
 
 |Strimzi image name
 |citrus.testcontainers.kafka.strimzi.image.name
