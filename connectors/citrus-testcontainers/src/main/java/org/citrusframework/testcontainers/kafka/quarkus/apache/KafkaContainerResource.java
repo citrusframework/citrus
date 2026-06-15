@@ -55,13 +55,22 @@ public class KafkaContainerResource extends TestcontainersResource<KafkaContaine
         if (config.port() > 0) {
             initArgs.put("port",  String.valueOf(config.port()));
         }
+
+        if (config.nativeMode()) {
+            initArgs.put("nativeMode", "true");
+        }
+
         doInit(initArgs);
     }
 
     @Override
     protected void doInit(Map<String, String> initArgs) {
+        KafkaImplementation implementation = Boolean.parseBoolean(initArgs.getOrDefault("nativeMode", "false"))
+                ? KafkaImplementation.APACHE_NATIVE
+                : KafkaImplementation.APACHE;
+
         StartKafkaAction.Builder<KafkaContainer> builder = new StartKafkaAction.Builder<KafkaContainer>()
-                .implementation(KafkaImplementation.APACHE);
+                .implementation(implementation);
 
         if (initArgs.containsKey("version")) {
             builder.version(initArgs.get("version"));
