@@ -731,7 +731,159 @@ actions:
 </spring:beans>
 ----
 
-In the test example the Kafka Testcontainers module is started.
+The example above uses a special test actions to start the Kafka container.
+
+[[testcontainers-kafka-implementations]]
+=== Kafka container implementations
+
+Citrus provides support for different Kafka container implementations to give you flexibility in choosing the most suitable option for your testing needs:
+
+* **Confluent Platform** (default) - The Confluent Community Edition Kafka distribution
+* **Apache Kafka** - The official Apache Kafka distribution
+* **Strimzi** - A Kubernetes-native Kafka distribution based on Apache Kafka
+
+By default, Citrus uses the Confluent Platform implementation. You can specify a different implementation using the `implementation()` method:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .kafka()
+            .start()
+            .implementation(KafkaImplementation.STRIMZI));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <start>
+            <kafka implementation="STRIMZI"/>
+          </start>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        kafka:
+          implementation: "STRIMZI"
+----
+
+Available implementation values are:
+
+* `CONFLUENT` - Uses the `confluentinc/cp-kafka` image (default)
+* `APACHE` - Uses the `apache/kafka` image
+* `STRIMZI` - Uses the `quay.io/strimzi/kafka` image
+* `DEFAULT` - Same as `CONFLUENT`
+
+[[testcontainers-kafka-configuration]]
+=== Configuration options
+
+You can customize the Kafka container with additional settings:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .kafka()
+            .start()
+            .implementation(KafkaImplementation.APACHE)
+            .version("4.2.1")
+            .port(9092));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <testcontainers>
+          <start>
+            <kafka implementation="APACHE" version="4.2.1" port="9092"/>
+          </start>
+        </testcontainers>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        kafka:
+          implementation: "APACHE"
+          version: "4.2.1"
+          port: 9092
+----
+
+You may also use system properties or environment variables to configure the default Kafka container settings:
+
+|===
+|Setting |System Property |Environment Variable
+
+|Implementation
+|citrus.testcontainers.kafka.implementation
+|CITRUS_TESTCONTAINERS_KAFKA_IMPLEMENTATION
+
+|Confluent image name
+|citrus.testcontainers.kafka.confluent.image.name
+|CITRUS_TESTCONTAINERS_KAFKA_CONFLUENT_IMAGE_NAME
+
+|Confluent version
+|citrus.testcontainers.kafka.confluent.version
+|CITRUS_TESTCONTAINERS_KAFKA_CONFLUENT_VERSION
+
+|Apache image name
+|citrus.testcontainers.kafka.apache.image.name
+|CITRUS_TESTCONTAINERS_KAFKA_APACHE_IMAGE_NAME
+
+|Apache version
+|citrus.testcontainers.kafka.apache.version
+|CITRUS_TESTCONTAINERS_KAFKA_APACHE_VERSION
+
+|Strimzi image name
+|citrus.testcontainers.kafka.strimzi.image.name
+|CITRUS_TESTCONTAINERS_KAFKA_STRIMZI_IMAGE_NAME
+
+|Strimzi version
+|citrus.testcontainers.kafka.strimzi.version
+|CITRUS_TESTCONTAINERS_KAFKA_STRIMZI_VERSION
+
+|Service name
+|citrus.testcontainers.kafka.service.name
+|CITRUS_TESTCONTAINERS_KAFKA_SERVICE_NAME
+
+|Container name
+|citrus.testcontainers.kafka.container.name
+|CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_NAME
+
+|Startup timeout (seconds)
+|citrus.testcontainers.kafka.startup.timeout
+|CITRUS_TESTCONTAINERS_KAFKA_STARTUP_TIMEOUT
+
+|===
+
+[[testcontainers-kafka-variables]]
+=== Exposed connection settings
+
 Citrus exposes special test variables that represent connection settings for the Kafka container:
 
 |===

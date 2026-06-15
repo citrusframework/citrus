@@ -79,7 +79,7 @@ public class KafkaSteps {
         this.port = port;
     }
 
-    @Given("^Kafka container implementation (DEFAULT|CONFLUENT|APACHE)$")
+    @Given("^Kafka container implementation (DEFAULT|CONFLUENT|APACHE|STRIMZI)$")
     public void setImplementation(String implementation) {
         this.implementation = KafkaImplementation.valueOf(implementation);
     }

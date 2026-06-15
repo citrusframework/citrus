@@ -30,7 +30,9 @@ public class KafkaSettings {
     private static final String KAFKA_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "kafka.";
     private static final String KAFKA_ENV_PREFIX = TestContainersSettings.TESTCONTAINERS_ENV_PREFIX + "KAFKA_";
 
+    public static final String NODE_ID = "1";
     public static final int KAFKA_PORT = 9092;
+    public static final int CONTROLLER_PORT = 9093;
 
     private static final String SERVICE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = KAFKA_ENV_PREFIX + "SERVICE_NAME";
@@ -55,6 +57,14 @@ public class KafkaSettings {
     private static final String APACHE_VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "apache.version";
     private static final String APACHE_VERSION_ENV = KAFKA_ENV_PREFIX + "APACHE_VERSION";
     private static final String APACHE_VERSION_DEFAULT = "4.2.1";
+
+    private static final String STRIMZI_IMAGE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "strimzi.image.name";
+    private static final String STRIMZI_IMAGE_NAME_ENV = KAFKA_ENV_PREFIX + "STRIMZI_IMAGE_NAME";
+    protected static final String STRIMZI_IMAGE_NAME_DEFAULT = "quay.io/strimzi/kafka";
+
+    private static final String STRIMZI_VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "strimzi.version";
+    private static final String STRIMZI_VERSION_ENV = KAFKA_ENV_PREFIX + "STRIMZI_VERSION";
+    private static final String STRIMZI_VERSION_DEFAULT = "0.51.0-kafka-4.2.0";
 
     private static final String CONFLUENT_IMAGE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "confluent.image.name";
     private static final String CONFLUENT_IMAGE_NAME_ENV = KAFKA_ENV_PREFIX + "CONFLUENT_IMAGE_NAME";
@@ -85,6 +95,8 @@ public class KafkaSettings {
                     System.getenv(CONFLUENT_IMAGE_NAME_ENV) != null ? System.getenv(CONFLUENT_IMAGE_NAME_ENV) : CONFLUENT_IMAGE_NAME_DEFAULT);
             case APACHE -> TestContainersSettings.getDockerRegistry() + System.getProperty(APACHE_IMAGE_NAME_PROPERTY,
                     System.getenv(APACHE_IMAGE_NAME_ENV) != null ? System.getenv(APACHE_IMAGE_NAME_ENV) : APACHE_IMAGE_NAME_DEFAULT);
+            case STRIMZI -> TestContainersSettings.getDockerRegistry() + System.getProperty(STRIMZI_IMAGE_NAME_PROPERTY,
+                    System.getenv(STRIMZI_IMAGE_NAME_ENV) != null ? System.getenv(STRIMZI_IMAGE_NAME_ENV) : STRIMZI_IMAGE_NAME_DEFAULT);
             case DEFAULT -> TestContainersSettings.getDockerRegistry() + System.getProperty(IMAGE_NAME_PROPERTY,
                     System.getenv(IMAGE_NAME_ENV) != null ? System.getenv(IMAGE_NAME_ENV) : IMAGE_NAME_DEFAULT);
         };
@@ -99,6 +111,8 @@ public class KafkaSettings {
                     System.getenv(CONFLUENT_VERSION_ENV) != null ? System.getenv(CONFLUENT_VERSION_ENV) : CONFLUENT_VERSION_DEFAULT);
             case APACHE -> System.getProperty(APACHE_VERSION_PROPERTY,
                     System.getenv(APACHE_VERSION_ENV) != null ? System.getenv(APACHE_VERSION_ENV) : APACHE_VERSION_DEFAULT);
+            case STRIMZI -> System.getProperty(STRIMZI_VERSION_PROPERTY,
+                    System.getenv(STRIMZI_VERSION_ENV) != null ? System.getenv(STRIMZI_VERSION_ENV) : STRIMZI_VERSION_DEFAULT);
             case DEFAULT -> System.getProperty(VERSION_PROPERTY,
                     System.getenv(VERSION_ENV) != null ? System.getenv(VERSION_ENV) : VERSION_DEFAULT);
         };
