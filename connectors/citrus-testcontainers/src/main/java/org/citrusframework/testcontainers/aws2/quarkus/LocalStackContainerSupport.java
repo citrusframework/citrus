@@ -33,7 +33,6 @@ public @interface LocalStackContainerSupport {
 
     /**
      * Enabled services.
-     * @return
      */
     AwsService[] services() default {};
 

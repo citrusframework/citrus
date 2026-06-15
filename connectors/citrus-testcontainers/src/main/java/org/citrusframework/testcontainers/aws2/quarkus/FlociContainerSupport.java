@@ -33,7 +33,6 @@ public @interface FlociContainerSupport {
 
     /**
      * Enabled services.
-     * @return
      */
     AwsService[] services() default {};
 

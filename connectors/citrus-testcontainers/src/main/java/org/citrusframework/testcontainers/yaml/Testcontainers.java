@@ -69,19 +69,17 @@ public class Testcontainers implements TestActionBuilder<TestcontainersAction>, 
             throw new CitrusRuntimeException("Missing Testcontainers action - please provide proper action details");
         }
 
-        if (builder instanceof TestActionContainerBuilder<?,?>) {
-            ((TestActionContainerBuilder<?,?>) builder).getActions().stream()
-                    .filter(action -> action instanceof ReferenceResolverAware)
-                    .forEach(action -> ((ReferenceResolverAware) action).setReferenceResolver(referenceResolver));
-        }
-
-        if (builder instanceof ReferenceResolverAware) {
-            ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver);
-        }
-
         builder.description(description);
 
         if (referenceResolver != null) {
+            if (builder instanceof TestActionContainerBuilder<?,?>) {
+                ((TestActionContainerBuilder<?,?>) builder).getActions().stream()
+                        .filter(action -> action instanceof ReferenceResolverAware)
+                        .forEach(action -> ((ReferenceResolverAware) action).setReferenceResolver(referenceResolver));
+            }
+
+            builder.setReferenceResolver(referenceResolver);
+
             if (actor != null) {
                 builder.actor(referenceResolver.resolve(actor, TestActor.class));
             }
