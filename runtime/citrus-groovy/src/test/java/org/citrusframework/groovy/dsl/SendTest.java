@@ -131,7 +131,7 @@ public class SendTest extends AbstractGroovyActionDslTest {
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()),
-                FileUtils.readToString(FileUtils.getFileResource("classpath:org/citrusframework/groovy/test-request-payload.xml")).trim());
+                FileUtils.readToString(FileUtils.getFileResource("classpath:org/citrusframework/groovy/test-request-payload.xml")));
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0);
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");

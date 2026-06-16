@@ -243,7 +243,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		when(mocked.readAllBytes()).thenThrow(new IOException("Something went wrong"));
 
         //WHEN
-        final Assert.ThrowingRunnable setPayload = () -> builder.message().body(this.resource, Charset.defaultCharset());
+        final Assert.ThrowingRunnable setPayload = () -> builder.message().body(this.resource, Charset.defaultCharset()).getMessageBuilder().build(context, MessageType.PLAINTEXT.name());
 
         //THEN
         Assert.assertThrows("Missing exception due to payload resource IOException", CitrusRuntimeException.class, setPayload);

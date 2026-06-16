@@ -16,6 +16,8 @@
 
 package org.citrusframework.message.builder;
 
+import java.util.Optional;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.Resource;
@@ -58,7 +60,13 @@ public class BinaryFileResourcePayloadBuilder extends FileResourcePayloadBuilder
 
     @Override
     public Object buildPayload(TestContext context) {
-        setMessageType(MessageType.BINARY.name());
+        if (Optional.ofNullable(getMessageType())
+                .filter(MessageType::isBinary)
+                .isEmpty()) {
+            // Set or overwrite message type to binary
+            setMessageType(MessageType.BINARY.name());
+        }
+
         return super.buildPayload(context);
     }
 }
