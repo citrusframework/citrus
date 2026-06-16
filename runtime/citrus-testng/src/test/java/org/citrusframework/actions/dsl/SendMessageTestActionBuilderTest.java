@@ -17,7 +17,6 @@
 package org.citrusframework.actions.dsl;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -221,7 +220,7 @@ public class SendMessageTestActionBuilderTest extends UnitTestSupport {
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
         when(resource.exists()).thenReturn(true);
-        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
+        when(resource.getInputStream()).thenAnswer((invocation) -> new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(send().endpoint(messageEndpoint)
                 .message()

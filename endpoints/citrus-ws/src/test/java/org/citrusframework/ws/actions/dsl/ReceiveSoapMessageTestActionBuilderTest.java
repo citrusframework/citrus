@@ -17,7 +17,6 @@
 package org.citrusframework.ws.actions.dsl;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
@@ -211,7 +210,8 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
                 .addAttachment(testAttachment));
 
         when(resource.exists()).thenReturn(true);
-        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
+        when(resource.location()).thenReturn("message.xml");
+        when(resource.getInputStream()).thenAnswer((invocation) -> new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         when(attachmentResource.exists()).thenReturn(true);
         when(attachmentResource.getInputStream()).thenReturn(new ByteArrayInputStream("This is an attachment".getBytes()));
 

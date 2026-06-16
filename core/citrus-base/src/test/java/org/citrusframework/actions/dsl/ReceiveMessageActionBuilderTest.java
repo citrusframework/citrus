@@ -227,7 +227,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .setHeader("operation", "foo"));
 
         when(resource.exists()).thenReturn(true);
-        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
+        when(resource.location()).thenReturn("message.xml");
+        when(resource.getInputStream()).thenAnswer((invocation) -> new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                 .message()
