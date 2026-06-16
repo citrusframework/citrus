@@ -788,6 +788,22 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
                 }
             }
 
+            if (validationContext == null) {
+                Optional<String> resource = getMessageResource();
+                if (resource.isPresent()) {
+                    String fileExt = FileUtils.getFileExtension(resource.get());
+                    if ("xml".equalsIgnoreCase(fileExt)) {
+                        validationContext = new XmlMessageValidationContext();
+                    } else if ("json".equalsIgnoreCase(fileExt)) {
+                        validationContext = new JsonMessageValidationContext();
+                    } else if ("yaml".equals(fileExt) || "yml".equalsIgnoreCase(fileExt)) {
+                        validationContext = new YamlMessageValidationContext();
+                    } else {
+                        validationContext = new DefaultMessageValidationContext();
+                    }
+                }
+            }
+
             // If we have not yet added a context, we might have a typed builder capable to create a
             // message. In that case add a context for the respective type.
             if (validationContext == null && messageBuilderSupport != null) {
@@ -800,20 +816,6 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
                     validationContext = new YamlMessageValidationContext();
                 } else if (type == MessageType.PLAINTEXT) {
                     validationContext = new DefaultMessageValidationContext();
-                }
-            }
-
-            if (validationContext == null) {
-                Optional<String> resource = getMessageResource();
-                if (resource.isPresent()) {
-                    String fileExt = FileUtils.getFileExtension(resource.get());
-                    if ("xml".equalsIgnoreCase(fileExt)) {
-                        validationContext = new XmlMessageValidationContext();
-                    } else if ("json".equalsIgnoreCase(fileExt)) {
-                        validationContext = new JsonMessageValidationContext();
-                    } else {
-                        validationContext = new DefaultMessageValidationContext();
-                    }
                 }
             }
 

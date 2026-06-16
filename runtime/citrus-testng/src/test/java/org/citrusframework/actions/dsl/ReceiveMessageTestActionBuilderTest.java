@@ -17,7 +17,6 @@
 package org.citrusframework.actions.dsl;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -160,7 +159,8 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "foo"));
 
         when(resource.exists()).thenReturn(true);
-        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
+        when(resource.location()).thenReturn("message.xml");
+        when(resource.getInputStream()).thenAnswer((invocation) -> new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(receive().endpoint(messageEndpoint)
                         .message()

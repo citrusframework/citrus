@@ -131,12 +131,11 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
     @Override
     public S body(final Resource payloadResource, final Charset charset) {
-        try {
-            body(readToString(payloadResource, charset));
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read payload resource", e);
+        if (MessageType.isBinary(messageType)) {
+            return body(new BinaryFileResourcePayloadBuilder(payloadResource));
         }
-        return self;
+
+        return body(new FileResourcePayloadBuilder(payloadResource, charset.name()));
     }
 
     @Override
