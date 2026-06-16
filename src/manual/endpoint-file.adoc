@@ -112,10 +112,11 @@ public MessageChannel fileChannel() {
 }
 
 @BindToRegistry
-public FileWritingMessageHandler fileOutboundAdapter() {
-    FileWritingMessageHandler messageHandler = new FileWritingMessageHandler(new File("some/directory"));
-    messageHandler.setOutboundChannel(fileChannel());
-    return messageHandler;
+public FileReadingMessageSource fileInboundAdapter() {
+    FileReadingMessageSource messageSource = new FileReadingMessageSource();
+    messageSource.setDirectory(new File("some/directory"));
+    messageSource.setInboundChannel(fileChannel());
+    return messageSource;
 }
 ----
 
