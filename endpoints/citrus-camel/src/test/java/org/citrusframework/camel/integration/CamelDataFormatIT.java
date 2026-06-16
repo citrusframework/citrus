@@ -16,11 +16,15 @@
 
 package org.citrusframework.camel.integration;
 
+import java.nio.charset.StandardCharsets;
+
 import org.apache.camel.CamelContext;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.camel.dsl.CamelSupport;
+import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
@@ -54,5 +58,20 @@ public class CamelDataFormatIT extends TestNGCitrusSpringSupport implements Test
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus rocks!"));
+    }
+
+    @Test
+    @CitrusTest
+    public void shouldApplyDataFormatForFileResources() {
+        when(send(camel.endpoint(seda("data")::getRawUri))
+                .message(new DefaultMessage(Resources.create("Citrus rocks your socks off!".getBytes(StandardCharsets.UTF_8))))
+        );
+
+        then(receive("camel:" + camel.endpoints().seda("data").getRawUri())
+                .transform(camel.camelContext(camelContext)
+                        .convertBodyTo(String.class))
+                .message()
+                .type(MessageType.PLAINTEXT)
+                .body("Citrus rocks your socks off!"));
     }
 }

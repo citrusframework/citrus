@@ -27,6 +27,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.message.MessageHeaderUtils;
+import org.citrusframework.spi.Resource;
 
 /**
  * Message converter able to read Camel exchange and create proper Spring Integration message
@@ -52,7 +53,13 @@ public class CamelMessageConverter implements MessageConverter<Exchange, Exchang
                 in.setHeader(header.getKey(), header.getValue());
             }
         }
-        in.setBody(message.getPayload());
+
+        if (message.getPayload() instanceof Resource payloadResource) {
+            // Camel does not know how to handle Citrus file resources, so convert to InputStream
+            in.setBody(payloadResource.getInputStream());
+        } else {
+            in.setBody(message.getPayload());
+        }
     }
 
     @Override
