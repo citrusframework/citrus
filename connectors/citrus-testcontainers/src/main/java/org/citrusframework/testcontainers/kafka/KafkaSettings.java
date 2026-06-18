@@ -191,6 +191,8 @@ public class KafkaSettings {
                 bootstrapServers = kafkaContainer.getBootstrapServers();
             } else if (container instanceof ConfluentKafkaContainer confluentContainer) {
                 bootstrapServers = confluentContainer.getBootstrapServers();
+            } else if (container instanceof StrimziContainer strimziContainer) {
+                bootstrapServers = strimziContainer.getBootstrapServers();
             } else {
                 bootstrapServers = "localhost:%d".formatted(container.getMappedPort(KafkaSettings.KAFKA_PORT));
             }

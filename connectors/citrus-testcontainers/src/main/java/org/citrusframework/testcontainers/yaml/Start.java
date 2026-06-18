@@ -155,6 +155,10 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             builder.implementation(container.getImplementation());
         }
 
+        if (container.getTopics() != null && !container.getTopics().isEmpty()) {
+            builder.topics(container.getTopics().toArray(String[]::new));
+        }
+
         configureStartActionBuilder(builder, container);
 
         delegate = builder;
@@ -645,6 +649,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         protected String version;
         protected String implementation;
         protected int port;
+        protected List<String> topics;
 
         public String getVersion() {
             return version;
@@ -671,6 +676,15 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         @SchemaProperty
         public void setPort(int port) {
             this.port = port;
+        }
+
+        public List<String> getTopics() {
+            return topics;
+        }
+
+        @SchemaProperty
+        public void setTopics(List<String> topics) {
+            this.topics = topics;
         }
     }
 

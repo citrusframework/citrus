@@ -17,14 +17,20 @@
 package org.citrusframework.testcontainers.integration.kafka;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
+import org.apache.kafka.clients.admin.Admin;
+import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testcontainers.integration.AbstractTestcontainersIT;
+import org.citrusframework.testcontainers.kafka.KafkaImplementation;
 import org.citrusframework.testcontainers.kafka.KafkaSettings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -44,6 +50,20 @@ public class StartKafkaContainerIT extends AbstractTestcontainersIT implements T
         then(this::verifyContainer);
     }
 
+    @CitrusTest
+    public void shouldAutoCreateTopics() {
+        given(doFinally().actions(testcontainers().stop()
+                .containerName(KafkaSettings.CONTAINER_NAME_DEFAULT)));
+
+        when(testcontainers()
+                .kafka()
+                .start()
+                .implementation(KafkaImplementation.APACHE_NATIVE.name())
+                .topics("test-topic-1", "test-topic-2"));
+
+        then(this::verifyTopics);
+    }
+
     private void verifyContainer(TestContext context) {
         try (DockerClient dockerClient = createDockerClient()) {
             InspectContainerResponse response = dockerClient.inspectContainerCmd(context.getVariable("${CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_ID}"))
@@ -53,6 +73,18 @@ public class StartKafkaContainerIT extends AbstractTestcontainersIT implements T
             Assert.assertTrue(response.getState().getRunning());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to verify Docker container", e);
+        }
+    }
+
+    private void verifyTopics(TestContext context) {
+        String bootstrapServers = context.getVariable("${CITRUS_TESTCONTAINERS_KAFKA_BOOTSTRAP_SERVERS}");
+
+        try (Admin adminClient = Admin.create(Collections.singletonMap(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers))) {
+            Set<String> topics = adminClient.listTopics().names().get();
+            Assert.assertTrue(topics.contains("test-topic-1"), "Topic 'test-topic-1' should exist");
+            Assert.assertTrue(topics.contains("test-topic-2"), "Topic 'test-topic-2' should exist");
+        } catch (ExecutionException | InterruptedException e) {
+            throw new CitrusRuntimeException("Failed to verify Kafka topics", e);
         }
     }
 }

@@ -16,12 +16,24 @@
 
 package org.citrusframework.testcontainers.kafka;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
+import org.apache.kafka.clients.admin.Admin;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.CreateTopicsResult;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.citrusframework.actions.testcontainers.TestcontainersKafkaStartActionBuilder;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.kafka.KafkaContainer;
@@ -29,13 +41,51 @@ import org.testcontainers.utility.DockerImageName;
 
 public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestcontainersAction<T> {
 
+    private static final Logger logger = LoggerFactory.getLogger(StartKafkaAction.class);
+
+    private final Set<String> topics;
+
     public StartKafkaAction(Builder<T> builder) {
         super(builder);
+        this.topics = builder.topics;
     }
 
     @Override
     protected void exposeConnectionSettings(T container, TestContext context) {
         KafkaSettings.exposeConnectionSettings(container, serviceName, context);
+
+        if (!topics.isEmpty()) {
+            createTopics(container, context);
+        }
+    }
+
+    private void createTopics(T container, TestContext context) {
+        String bootstrapServers;
+        if (container instanceof KafkaContainer kafkaContainer) {
+            bootstrapServers = kafkaContainer.getBootstrapServers();
+        } else if (container instanceof ConfluentKafkaContainer confluentContainer) {
+            bootstrapServers = confluentContainer.getBootstrapServers();
+        } else if (container instanceof StrimziContainer strimziContainer) {
+            bootstrapServers = strimziContainer.getBootstrapServers();
+        } else {
+            bootstrapServers = "localhost:%d".formatted(container.getMappedPort(KafkaSettings.KAFKA_PORT));
+        }
+
+        try (Admin adminClient = Admin.create(Collections.singletonMap(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers))) {
+            Set<NewTopic> newTopics = new HashSet<>();
+            for (String topic : topics) {
+                newTopics.add(new NewTopic(context.replaceDynamicContentInString(topic), 1, (short) 1));
+            }
+
+            CreateTopicsResult result = adminClient.createTopics(newTopics);
+            result.all().get();
+
+            for (String topic : topics) {
+                logger.info("Successfully created Kafka topic: {}", context.replaceDynamicContentInString(topic));
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            throw new CitrusRuntimeException("Failed to create Kafka topics", e);
+        }
     }
 
     /**
@@ -47,6 +97,7 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
         private KafkaImplementation implementation = KafkaSettings.getImplementation();
         private String kafkaVersion;
         private int port = -1;
+        private final Set<String> topics = new HashSet<>();
 
         public Builder() {
             withStartupTimeout(KafkaSettings.getStartupTimeout());
@@ -73,6 +124,12 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
         public Builder<T> version(String kafkaVersion) {
            this.kafkaVersion = kafkaVersion;
            return this;
+        }
+
+        @Override
+        public Builder<T> topics(String... topics) {
+            this.topics.addAll(Arrays.asList(topics));
+            return this;
         }
 
         @Override

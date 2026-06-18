@@ -885,6 +885,11 @@
         <artifactId>kafka-storage</artifactId>
         <version>${kafka.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-clients</artifactId>
+        <version>${kafka.version}</version>
+      </dependency>
 
       <!-- Citrus mail dependencies -->
       <dependency>

@@ -60,6 +60,10 @@ public class KafkaContainerResource extends TestcontainersResource<KafkaContaine
             initArgs.put("nativeMode", "true");
         }
 
+        if (config.topics().length > 0) {
+            initArgs.put("topics", String.join(",", config.topics()));
+        }
+
         doInit(initArgs);
     }
 
@@ -78,6 +82,10 @@ public class KafkaContainerResource extends TestcontainersResource<KafkaContaine
 
         if (initArgs.containsKey("port")) {
             builder.port(Integer.parseInt(initArgs.get("port")));
+        }
+
+        if (initArgs.containsKey("topics")) {
+            builder.topics(initArgs.get("topics").split(","));
         }
 
         container = builder.build().getContainer();

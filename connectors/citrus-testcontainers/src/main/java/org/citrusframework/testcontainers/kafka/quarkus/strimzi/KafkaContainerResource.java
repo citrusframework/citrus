@@ -55,6 +55,11 @@ public class KafkaContainerResource extends TestcontainersResource<StrimziContai
         if (config.port() > 0) {
             initArgs.put("port",  String.valueOf(config.port()));
         }
+
+        if (config.topics().length > 0) {
+            initArgs.put("topics", String.join(",", config.topics()));
+        }
+
         doInit(initArgs);
     }
 
@@ -69,6 +74,10 @@ public class KafkaContainerResource extends TestcontainersResource<StrimziContai
 
         if (initArgs.containsKey("port")) {
             builder.port(Integer.parseInt(initArgs.get("port")));
+        }
+
+        if (initArgs.containsKey("topics")) {
+            builder.topics(initArgs.get("topics").split(","));
         }
 
         container = builder.build().getContainer();

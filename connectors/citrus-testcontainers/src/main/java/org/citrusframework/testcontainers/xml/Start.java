@@ -168,6 +168,14 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             builder.implementation(container.getImplementation());
         }
 
+        if (container.getTopics() != null) {
+            container.getTopics().getTopics().forEach(topic -> builder.topics(topic));
+        }
+
+        if (container.getTopicList() != null) {
+            builder.topics(container.getTopicList().split(","));
+        }
+
         configureStartActionBuilder(builder, container);
 
         delegate = builder;
@@ -925,6 +933,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
+            "topics"
     })
     public static class Kafka extends Container {
 
@@ -936,6 +945,12 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         @XmlAttribute
         protected int port;
+
+        @XmlAttribute(name = "topics")
+        protected String topicList;
+
+        @XmlElement
+        protected Topics topics;
 
         public String getVersion() {
             return version;
@@ -959,6 +974,43 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
         public void setPort(int port) {
             this.port = port;
+        }
+
+        public String getTopicList() {
+            return topicList;
+        }
+
+        public void setTopicList(String topicList) {
+            this.topicList = topicList;
+        }
+
+        public Topics getTopics() {
+            return topics;
+        }
+
+        public void setTopics(Topics topics) {
+            this.topics = topics;
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "topics"
+    })
+    public static class Topics {
+
+        @XmlElement(name = "topic")
+        private List<String> topics;
+
+        public List<String> getTopics() {
+            if (topics == null) {
+                topics = new ArrayList<>();
+            }
+            return topics;
+        }
+
+        public void setTopics(List<String> topics) {
+            this.topics = topics;
         }
     }
 
