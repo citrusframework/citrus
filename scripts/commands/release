@@ -214,7 +214,7 @@ extract_maven_opts() {
 
     if [ $(hasflag --skip-tests) ]; then
         # Do not run any tests but compile test sources
-        maven_opts="$maven_opts -Dtest -Dit.test -DfailIfNoTests=false -Dsurefire.failIfNoSpecifiedTests=false -Dfailsafe.failIfNoSpecifiedTests=false"
+        maven_opts="$maven_opts -Dtest -Dit.test -Dsurefire.failIfNoSpecifiedTests=false -Dfailsafe.failIfNoSpecifiedTests=false"
     fi
 
     if [ ! $(hasflag --no-strict-checksums) ]; then
