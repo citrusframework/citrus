@@ -288,8 +288,9 @@
     <xstream.version>1.4.21</xstream.version>
     <zookeeper.version>3.9.5</zookeeper.version>
 
-    <skip.integration.tests>false</skip.integration.tests>
-    <skip.unit.tests>false</skip.unit.tests>
+    <skipTests>false</skipTests>
+    <skip.integration.tests>${skipTests}</skip.integration.tests>
+    <skip.unit.tests>${skipTests}</skip.unit.tests>
     <skip.gpg>false</skip.gpg>
   </properties>
 
