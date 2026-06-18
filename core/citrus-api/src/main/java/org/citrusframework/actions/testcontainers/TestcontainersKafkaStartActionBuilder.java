@@ -32,4 +32,6 @@ public interface TestcontainersKafkaStartActionBuilder<C extends AutoCloseable, 
     B port(int port);
 
     B version(String kafkaVersion);
+
+    B topics(String... topics);
 }

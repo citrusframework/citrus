@@ -41,6 +41,11 @@ public @interface KafkaContainerSupport {
     String version() default "";
 
     /**
+     * Kafka topics to auto-create on container start.
+     */
+    String[] topics() default {};
+
+    /**
      * Container lifecycle listeners
      */
     Class<? extends ContainerLifecycleListener<ConfluentKafkaContainer>>[] containerLifecycleListener() default {};

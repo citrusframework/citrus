@@ -124,4 +124,8 @@ public class StrimziContainer extends GenericContainer<StrimziContainer> {
         addFixedExposedPort(hostPort, KafkaSettings.KAFKA_PORT);
         return hostPort;
     }
+
+    public String getBootstrapServers() {
+        return getHost() + ":" + getMappedPort(KafkaSettings.KAFKA_PORT);
+    }
 }

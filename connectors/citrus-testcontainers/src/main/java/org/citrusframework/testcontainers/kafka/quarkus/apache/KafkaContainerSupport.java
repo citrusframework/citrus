@@ -46,6 +46,11 @@ public @interface KafkaContainerSupport {
     boolean nativeMode() default false;
 
     /**
+     * Kafka topics to auto-create on container start.
+     */
+    String[] topics() default {};
+
+    /**
      * Container lifecycle listeners
      */
     Class<? extends ContainerLifecycleListener<KafkaContainer>>[] containerLifecycleListener() default {};
