@@ -61,7 +61,7 @@ receive("someEndpoint")
     .validators(myXmlMessageValidator, defaultXpathMessageValidator)
     .message()
     .body("...")
-    .validate(validate().xpath().expression("//some/xpath/expression", "someControlValue"));
+    .validate(validation().xpath().expression("//some/xpath/expression", "someControlValue"));
 ----
 
 .XML

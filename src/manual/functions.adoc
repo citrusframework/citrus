@@ -173,7 +173,7 @@ The function can be used wherever variables can be used. For instance when valid
 public void functionsTest() {
     when(receive()
         .endpoint(someEndpoint)
-        .validate(validate().xpath()
+        .validate(validation().xpath()
                     .expression("//element/element", "citrus:concat('Cx1x', ${generatedId})"))
     );
 }
