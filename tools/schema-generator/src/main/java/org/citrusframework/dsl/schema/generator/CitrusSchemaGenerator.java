@@ -50,7 +50,7 @@ public class CitrusSchemaGenerator {
                 throw new RuntimeException("Failed to create output directory: " + outputDir);
             }
 
-            String version = args.length > 1 ? args[1] : "5.0.0-SNAPSHOT";
+            String version = args.length > 1 ? args[1] : "5.0.0-M2";
             String catalogIndex = FileUtils.readToString(Resources.fromClasspath("templates/catalog-index.json")).replaceAll("@version@", version);
             writeFile(outputDir, "index.json", catalogIndex);
 
