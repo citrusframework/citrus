@@ -57,6 +57,7 @@ http\://www.citrusframework.org/schema/jmx/config/citrus-jmx-config-4.9.3.xsd=or
 http\://www.citrusframework.org/schema/jmx/config/citrus-jmx-config-4.9.4.xsd=org/citrusframework/schema/citrus-jmx-config-4.9.4.xsd
 http\://www.citrusframework.org/schema/jmx/config/citrus-jmx-config-5.0.0-M1.xsd=org/citrusframework/schema/citrus-jmx-config-5.0.0-M1.xsd
 http\://www.citrusframework.org/schema/jmx/config/citrus-jmx-config-5.0.0-M2.xsd=org/citrusframework/schema/citrus-jmx-config-5.0.0-M2.xsd
+http\://www.citrusframework.org/schema/jmx/config/citrus-jmx-config-5.0.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-jmx-config-5.0.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd=org/citrusframework/schema/citrus-jmx-config.xsd
 http\://www.citrusframework.org/schema/jmx/testcase/citrus-jmx-testcase-2.5.1.xsd=com/consol/citrus/schema/citrus-jmx-testcase-2.5.1.xsd
 http\://www.citrusframework.org/schema/jmx/testcase/citrus-jmx-testcase-2.5.2.xsd=com/consol/citrus/schema/citrus-jmx-testcase-2.5.2.xsd
@@ -117,4 +118,5 @@ http\://www.citrusframework.org/schema/jmx/testcase/citrus-jmx-testcase-4.9.3.xs
 http\://www.citrusframework.org/schema/jmx/testcase/citrus-jmx-testcase-4.9.4.xsd=org/citrusframework/schema/citrus-jmx-testcase-4.9.4.xsd
 http\://www.citrusframework.org/schema/jmx/testcase/citrus-jmx-testcase-5.0.0-M1.xsd=org/citrusframework/schema/citrus-jmx-testcase-5.0.0-M1.xsd
 http\://www.citrusframework.org/schema/jmx/testcase/citrus-jmx-testcase-5.0.0-M2.xsd=org/citrusframework/schema/citrus-jmx-testcase-5.0.0-M2.xsd
+http\://www.citrusframework.org/schema/jmx/testcase/citrus-jmx-testcase-5.0.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-jmx-testcase-5.0.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/jmx/testcase/citrus-jmx-testcase.xsd=org/citrusframework/schema/citrus-jmx-testcase.xsd
