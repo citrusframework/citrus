@@ -101,7 +101,7 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
         StringBuilder queryParamBuilder = new StringBuilder();
         String queryParams = headers.get(QUERY_PARAM_HEADER_NAME).toString();
 
-        StringTokenizer tok = new StringTokenizer(queryParams, ",");
+        StringTokenizer tok = new StringTokenizer(queryParams, "&");
         if (tok.hasMoreTokens()) {
             while (requestUri.endsWith("/")) {
                 requestUri = requestUri.substring(0, requestUri.length() - 1);
