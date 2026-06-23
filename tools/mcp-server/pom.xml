@@ -60,6 +60,13 @@
       <artifactId>jackson-databind</artifactId>
     </dependency>
 
+    <!-- Quarkus uses Jackson 2.x, need to pin schema generator to matching version -->
+    <dependency>
+      <groupId>com.github.victools</groupId>
+      <artifactId>jsonschema-generator</artifactId>
+      <version>4.38.0</version>
+    </dependency>
+
     <!-- Citrus dependencies -->
     <dependency>
       <groupId>org.citrusframework</groupId>
