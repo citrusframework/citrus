@@ -224,7 +224,7 @@ public class HttpMessage extends DefaultMessage {
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
         header(EndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
 
-        Stream.of(queryParamString.split(","))
+        Stream.of(queryParamString.split("&"))
                 .map(keyValue -> keyValue.split("="))
                 .filter(keyValue -> StringUtils.hasText(keyValue[0]))
                 .map(keyValue -> {
@@ -265,7 +265,7 @@ public class HttpMessage extends DefaultMessage {
         final String queryParamString = queryParams.entrySet()
                 .stream()
                 .map(this::outputQueryParam)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining("&"));
 
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
         header(EndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
@@ -583,7 +583,7 @@ public class HttpMessage extends DefaultMessage {
     private String outputQueryParam(final Map.Entry<String, Collection<String>> entry) {
         return entry.getValue().stream()
                 .map(entryValue -> entry.getKey() + (entryValue != null ? "=" + entryValue : ""))
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining("&"));
     }
 
     private static HttpMessage parseHttpMessage(final BufferedReader reader, final HttpMessage message) throws IOException {

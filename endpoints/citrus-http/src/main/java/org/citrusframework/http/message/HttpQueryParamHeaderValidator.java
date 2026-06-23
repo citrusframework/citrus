@@ -73,7 +73,7 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
         return Stream.of(Optional.ofNullable(expression)
                 .map(Object::toString)
                 .orElse("")
-                .split(","))
+                .split("&"))
             .map(keyValue -> keyValue.split("="))
             .filter(keyValue -> hasText(keyValue[0]))
             .collect(toMap(

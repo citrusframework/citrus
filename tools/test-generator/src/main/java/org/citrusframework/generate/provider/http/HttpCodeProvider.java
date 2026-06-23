@@ -74,7 +74,7 @@ class HttpCodeProvider {
                     );
         } else if (StringUtils.hasText(message.getQueryParamString())) {
             Stream.of(message.getQueryParamString()
-                    .split(","))
+                    .split("&"))
                     .map(nameValuePair -> nameValuePair.split("="))
                     .forEach(param ->
                             code.add(".queryParam($S, $S)\n", param[0], param[1])
