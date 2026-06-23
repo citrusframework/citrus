@@ -19,6 +19,7 @@ package org.citrusframework;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.citrusframework.json.JsonStringBuilder;
@@ -101,7 +102,9 @@ public class TestActionResult {
                                 .map(String::getBytes)
                                 .map(Base64.getEncoder()::encodeToString)
                                 .toList())
-                        .withProperty("payload", Base64.getEncoder().encodeToString(message.getPayload(byte[].class)))
+                        .withProperty("payload", Optional.ofNullable(message.getPayload(byte[].class))
+                                .map(Base64.getEncoder()::encodeToString)
+                                .orElse(""))
                     .closeObject();
         }
 
