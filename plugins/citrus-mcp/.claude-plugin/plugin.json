@@ -1,6 +1,6 @@
 {
   "name": "citrus-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Citrus MCP server for AI coding assistants. Launches the Citrus JBang MCP server (org.citrusframework:citrus-mcp-server) over STDIO, exposing the Citrus component catalog and tools for catalog exploration, component schemas, DSL schemas for YAML and XML, detailed documentation material, and collected best practices. Requires JBang on the PATH.",
   "author": {
     "name": "Citrus Integration Test",
