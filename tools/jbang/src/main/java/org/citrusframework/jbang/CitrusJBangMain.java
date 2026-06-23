@@ -40,21 +40,36 @@ public class CitrusJBangMain implements Callable<Integer> {
     private Printer out = new Printer.SystemOutPrinter();
 
     public static void run(String... args) {
-        CitrusJBangMain main = new CitrusJBangMain();
-        commandLine = new CommandLine(main)
-                .addSubcommand("init", new CommandLine(new Init(main)))
-                .addSubcommand("inspect", new CommandLine(new Inspect(main)))
-                .addSubcommand("run", new CommandLine(new Run(main)))
-                .addSubcommand("ls", new CommandLine(new ListTests(main)))
-                .addSubcommand("agent", new CommandLine(new Agent(main))
-                        .addSubcommand("start", new CommandLine(new AgentStart(main)))
-                        .addSubcommand("run", new CommandLine(new AgentRun(main)))
-                        .addSubcommand("stop", new CommandLine(new AgentStop(main))))
-                .addSubcommand("completion", new CommandLine(new Complete(main)));
+        run(new CitrusJBangMain(), args);
+    }
+
+    public static void run(CitrusJBangMain main, String... args) {
+        int exitCode = main.execute(args);
+        main.quit(exitCode);
+    }
+
+    public int execute(String... args) {
+        commandLine = new CommandLine(this)
+                .addSubcommand("init", new CommandLine(new Init(this)))
+                .addSubcommand("inspect", new CommandLine(new Inspect(this)))
+                .addSubcommand("run", new CommandLine(new Run(this)))
+                .addSubcommand("ls", new CommandLine(new ListTests(this)))
+                .addSubcommand("agent", new CommandLine(new Agent(this))
+                        .addSubcommand("start", new CommandLine(new AgentStart(this)))
+                        .addSubcommand("run", new CommandLine(new AgentRun(this)))
+                        .addSubcommand("stop", new CommandLine(new AgentStop(this))))
+                .addSubcommand("completion", new CommandLine(new Complete(this)));
 
         commandLine.getCommandSpec().versionProvider(() -> new String[] { "5.0.0-SNAPSHOT" });
 
-        int exitCode = commandLine.execute(args);
+        return commandLine.execute(args);
+    }
+
+    /**
+     * Finish this main with given exit code. By default, uses system exit to terminate. Subclasses may want to
+     * overwrite this exit behavior e.g. during unit tests.
+     */
+    protected void quit(int exitCode) {
         System.exit(exitCode);
     }
 
@@ -66,7 +81,6 @@ public class CitrusJBangMain implements Callable<Integer> {
 
     /**
      * Uses this printer for writing command output.
-     *
      * @param out to use with this main.
      */
     public CitrusJBangMain withPrinter(Printer out) {

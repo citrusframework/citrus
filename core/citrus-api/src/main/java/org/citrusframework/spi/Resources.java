@@ -214,46 +214,46 @@ public class Resources {
     }
 
     /**
-         * Resource on the file system.
-         */
-        public record FileSystemResource(File file) implements Resource {
+     * Resource on the file system.
+     */
+    public record FileSystemResource(File file) implements Resource {
 
-            public FileSystemResource(String path) {
-                this(new File(getRawPath(path)));
-            }
+        public FileSystemResource(String path) {
+            this(new File(getRawPath(path)));
+        }
 
         @Override
-            public String location() {
-                return file.getPath();
+        public String location() {
+            return file.getPath();
+        }
+
+        @Override
+        public URI getURI() {
+            return file.toURI();
+        }
+
+        @Override
+        public boolean exists() {
+            return file.exists();
+        }
+
+        @Override
+        public InputStream getInputStream() {
+            if (!exists()) {
+                throw new CitrusRuntimeException(file + " does not exists");
             }
 
-            @Override
-            public URI getURI() {
-                return file.toURI();
+            if (file.isDirectory()) {
+                throw new UnsupportedOperationException(file + " is a directory");
             }
 
-            @Override
-            public boolean exists() {
-                return file.exists();
-            }
-
-            @Override
-            public InputStream getInputStream() {
-                if (!exists()) {
-                    throw new CitrusRuntimeException(file + " does not exists");
-                }
-
-                if (file.isDirectory()) {
-                    throw new UnsupportedOperationException(file + " is a directory");
-                }
-
-                try {
-                    return new FileInputStream(file);
-                } catch (FileNotFoundException e) {
-                    throw new CitrusRuntimeException(file + " does not exists", e);
-                }
+            try {
+                return new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                throw new CitrusRuntimeException(file + " does not exists", e);
             }
         }
+    }
 
     public static class UrlResource implements Resource {
 
