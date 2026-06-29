@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,7 @@ import org.apache.camel.tooling.maven.MavenArtifact;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.agent.CitrusAgentConfiguration;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;
@@ -170,27 +172,37 @@ public class Run extends CitrusCommand {
             workDir = basePath;
         }
 
-        final TestRunConfiguration configuration = getRunConfiguration(tests);
-
-        // Set properties as System properties
-        configuration.setDefaultProperties();
-
-        final TestEngine engine = TestEngine.lookup(configuration);
         final ExitStatusTestReporter exitStatus = new ExitStatusTestReporter();
         CitrusInstanceManager.addInstanceProcessor(instance -> instance.addTestReporter(exitStatus));
-
-        if (logging) {
-            LoggingSupport.configureLog(loggingLevel, loggingColor, configuration.getEngine());
-        } else {
-            LoggingSupport.configureLog("off", false, configuration.getEngine());
-        }
 
         if (!offline) {
             resolveArtifacts(tests);
         }
 
-        engine.run();
-        return exitStatus.exitStatus();
+        final List<TestRunConfiguration> configurations = getRunConfigurations(tests);
+
+        int exitCode = 0;
+        for (TestRunConfiguration configuration : configurations) {
+            // Set properties as System properties
+            configuration.setDefaultProperties();
+
+            final TestEngine engine = TestEngine.lookup(configuration);
+
+            if (logging) {
+                LoggingSupport.configureLog(loggingLevel, loggingColor, configuration.getEngine());
+            } else {
+                LoggingSupport.configureLog("off", false, configuration.getEngine());
+            }
+
+            engine.run();
+
+            if (exitStatus.exitStatus() != 0) {
+                // make sure to save failed state in exit status
+                exitCode = exitStatus.exitStatus();
+            }
+        }
+
+        return exitCode;
     }
 
     private void resolveArtifacts(List<String> tests) {
@@ -199,6 +211,24 @@ public class Run extends CitrusCommand {
         Set<String> allDependencies = new HashSet<>();
 
         List<MavenArtifact> additionalArtifacts = new ArrayList<>();
+
+        // Handle DSL test loaders according to file extensions
+        tests.stream().map(FileUtils::getFileExtension).distinct().forEach(ext -> {
+            if (StringUtils.hasText(ext)) {
+
+
+                Optional<TestLoader> existing = TestLoader.lookup(ext, true);
+                if (existing.isEmpty()) {
+                    if ("feature".equals(ext)) {
+                        // Add Cucumber DSL support modules and a set of default Citrus steps
+                        allModules.add("citrus-cucumber");
+                        allModules.add("citrus-cucumber-core");
+                    } else {
+                        allModules.add("citrus-" + ext);
+                    }
+                }
+            }
+        });
 
         // Handle Citrus modules from envVar settings
         Arrays.stream(CitrusJBangMain.Settings.getModules())
@@ -325,6 +355,35 @@ public class Run extends CitrusCommand {
         }
     }
 
+    /**
+     * Construct run configurations for given list of tests.
+     * Makes sure to choose the right test engine for respective test types (e.g. Cucumber BDD tests).
+     * If applicable uses multiple test runt configurations for different test types.
+     */
+    protected List<TestRunConfiguration> getRunConfigurations(List<String> files) {
+        Set<String> extensions = files.stream().map(FileUtils::getFileExtension).collect(Collectors.toSet());
+        if (extensions.stream().noneMatch(this::isCucumberFeature) || extensions.stream().allMatch(this::isCucumberFeature)) {
+            // Homogeneous test sources - All files are either feature files or arbitrary test DSL files
+            return Collections.singletonList(getRunConfiguration(files));
+        } else {
+            List<TestRunConfiguration> runConfigurations = new ArrayList<>();
+            // Add arbitrary test DSL files first
+            runConfigurations.add(getRunConfiguration(files.stream()
+                    .filter(file -> !isCucumberFeature(FileUtils.getFileExtension(file)))
+                    .collect(Collectors.toList())));
+
+            // Add Cucumber BDD feature files in a separate run configuration
+            runConfigurations.add(getRunConfiguration(files.stream()
+                    .filter(file -> isCucumberFeature(FileUtils.getFileExtension(file)))
+                    .collect(Collectors.toList())));
+            return runConfigurations;
+        }
+    }
+
+    /**
+     * Gets the run configuration for given list of tests.
+     * The list of test sources should be homogeneous in terms of its type (e.g. Cucumber BDD feature files only, arbitrary test DSL files only).
+     */
     protected TestRunConfiguration getRunConfiguration(List<String> files) {
         CitrusAgentConfiguration configuration = fromCliOptions(CitrusAgentConfiguration.fromEnvVars(TestSourceHelper::create));
 
@@ -362,6 +421,10 @@ public class Run extends CitrusCommand {
             }
         }
         return configuration;
+    }
+
+    private boolean isCucumberFeature(String extension) {
+        return "feature".equals(extension);
     }
 
     private CitrusAgentConfiguration fromCliOptions(CitrusAgentConfiguration configuration) {
