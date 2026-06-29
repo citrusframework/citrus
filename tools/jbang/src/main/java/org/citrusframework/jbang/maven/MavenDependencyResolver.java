@@ -16,19 +16,20 @@
 
 package org.citrusframework.jbang.maven;
 
-import org.apache.camel.tooling.maven.MavenArtifact;
-import org.apache.camel.tooling.maven.MavenDownloader;
-import org.apache.camel.tooling.maven.MavenDownloaderImpl;
-import org.citrusframework.CitrusVersion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.camel.tooling.maven.MavenArtifact;
+import org.apache.camel.tooling.maven.MavenDownloader;
+import org.apache.camel.tooling.maven.MavenDownloaderImpl;
+import org.citrusframework.CitrusVersion;
+import org.citrusframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Dependency resolver is able to load Maven dependencies as artifacts and add it to the given classloader.
@@ -89,7 +90,12 @@ public class MavenDependencyResolver {
             moduleName = "citrus-" + module;
         }
 
-        return resolve("org.citrusframework:%s:%s".formatted(moduleName, CitrusVersion.version()),
+        String version = CitrusVersion.version();
+        if (StringUtils.isEmpty(version)) {
+            version = "5.0.0-SNAPSHOT";
+        }
+
+        return resolve("org.citrusframework:%s:%s".formatted(moduleName, version),
                 CitrusVersion.version().contains("-SNAPSHOT"), true);
     }
 
