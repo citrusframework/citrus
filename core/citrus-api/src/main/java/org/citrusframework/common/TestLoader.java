@@ -96,14 +96,24 @@ public interface TestLoader {
      * Resolves test loader from resource path lookup with given resource name. Scans classpath for test loader meta information
      * with given name and returns instance of the loader. Returns optional instead of throwing exception when no test loader
      * could be found.
-     * @param loader
-     * @return
      */
     static Optional<TestLoader> lookup(String loader) {
+        return lookup(loader, false);
+    }
+
+    /**
+     * Resolves test loader from resource path lookup with given resource name. Scans classpath for test loader meta information
+     * with given name and returns instance of the loader. Returns optional instead of throwing exception when no test loader
+     * could be found. The silent option may be useful when probing the existence of a loader in classpath,
+     * so no warning messages will be printed.
+     */
+    static Optional<TestLoader> lookup(String loader, boolean silent) {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(loader));
         } catch (CitrusRuntimeException e) {
-            logger.warn("Failed to resolve test loader from resource '{}/{}' - caused by: {}", RESOURCE_PATH, loader, e.getMessage());
+            if (!silent) {
+                logger.warn("Failed to resolve test loader from resource '{}/{}' - caused by: {}", RESOURCE_PATH, loader, e.getMessage());
+            }
         }
 
         return Optional.empty();

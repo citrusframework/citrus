@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Stack;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -41,9 +42,7 @@ public class Init extends CitrusCommand {
 
     private String file;
 
-    @Option(names = {
-            "-dir",
-            "--directory" }, description = "Directory where the files will be created", defaultValue = ".")
+    @Option(names = {"--directory" }, description = "Directory where the files will be created", defaultValue = ".")
     private String directory;
 
     public Init(CitrusJBangMain main) {
@@ -57,25 +56,68 @@ public class Init extends CitrusCommand {
         String content;
         try (InputStream is = ClassLoaderHelper.getClassLoader().getResourceAsStream("templates/" + ext + ".tmpl")) {
             if (is == null) {
-                printer().println("Error: Unsupported file type: " + ext);
+                printer().println("Error: Unsupported file type '%s' (supported types are: feature, java, yaml, xml, groovy)".formatted(ext));
                 return 1;
             }
             content = FileUtils.readToString(is, StandardCharsets.UTF_8);
-        }
 
-        if (!directory.equals(".")) {
-            File dir = new File(directory);
-            // ensure target dir is created
-            if (!dir.mkdirs()) {
-                throw new CitrusRuntimeException("Failed creating target directory");
+            String targetDir = resolveTargetDirectory(directory);
+            Path currentDir = Paths.get(".");
+            Path workingDir = getWorkingDir(targetDir, currentDir);
+
+            if (!workingDir.toFile().exists() && !workingDir.toFile().mkdirs()) {
+                printer().println("Failed to create working directory in: " + workingDir);
+                return 1;
             }
+
+            File target = workingDir.resolve(file).toFile();
+            content = content.replaceFirst("\\{\\{ \\.Name }}", name);
+
+            writeString(target.toPath(), content);
+
+            // allow subclasses to add custom files or perform some validation tasks with the working directory
+            initAdditionalFiles(workingDir);
+        } catch (Exception e) {
+            printer().println("Error: Failed to initialize test: %s %s".formatted(e.getClass().getName(), e.getMessage()));
+            return 1;
         }
 
-        File target = new File(directory, file);
-        content = content.replaceFirst("\\{\\{ \\.Name }}", name);
-
-        writeString(target.toPath(), content);
         return 0;
+    }
+
+    private static Path getWorkingDir(String targetDir, Path currentDir) {
+        Path targetDirPath = Paths.get(targetDir);
+        Path workingDir;
+
+        if (targetDir.equals(".") || targetDir.equals(currentDir.getFileName().toString())) {
+            // current directory is already the target subfolder
+            workingDir = currentDir;
+        } else if (targetDirPath.isAbsolute()) {
+            workingDir = targetDirPath;
+        } else if (currentDir.resolve(targetDir).toFile().exists()) {
+            // navigate to existing target subfolder
+            workingDir = currentDir.resolve(targetDir);
+        } else if (currentDir.resolve(targetDir).toFile().mkdirs()) {
+            // create target subfolder and navigate to it
+            workingDir = currentDir.resolve(targetDir);
+        } else {
+            throw new CitrusRuntimeException("Failed to create working directory in: " + currentDir);
+        }
+
+        return workingDir;
+    }
+
+    /**
+     * Allows subclasses to adjust the default target directory.
+     */
+    protected String resolveTargetDirectory(String directory) {
+        return directory;
+    }
+
+    /**
+     * Subclasses may add additional files in working dir.
+     */
+    protected void initAdditionalFiles(Path workingDir) {
     }
 
     static class FileConsumer extends ParameterConsumer<Init> {
