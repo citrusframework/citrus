@@ -16,6 +16,18 @@
 
 package org.citrusframework.cucumber;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.eventbus.RandomUuidGenerator;
 import io.cucumber.core.eventbus.UuidGenerator;
@@ -42,18 +54,6 @@ import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 public class CucumberTestEngine extends AbstractTestEngine {
 
     private static final Logger logger = LoggerFactory.getLogger(CucumberTestEngine.class);
@@ -70,11 +70,22 @@ public class CucumberTestEngine extends AbstractTestEngine {
         Optional<TestSource> javaClass = getConfiguration().getTestSources()
                 .stream()
                 .filter(source -> "java".equals(source.getType()))
+                .filter(source -> {
+                    try {
+                        Class<?> type = Class.forName(source.getName(), false, ClassLoaderHelper.getClassLoader());
+                        return Arrays.stream(type.getAnnotations())
+                                .anyMatch(annotation -> annotation.annotationType().getSimpleName().equals("CucumberOptions"));
+                    } catch (Exception e) {
+                        try {
+                            return FileUtils.readToString(source.getSourceFile()).contains("@CucumberOptions");
+                        } catch (Exception ex) {
+                            return false;
+                        }
+                    }
+                })
                 .findFirst();
 
-        if (javaClass.isEmpty()) {
-            annotationOptions = propertiesFileOptions;
-        } else {
+        if (javaClass.isPresent()) {
             try {
                 annotationOptions = new CucumberOptionsAnnotationParser()
                         .withOptionsProvider(GenericCucumberOptions::new)
@@ -85,6 +96,8 @@ public class CucumberTestEngine extends AbstractTestEngine {
             } catch (ClassNotFoundException e) {
                 throw new CitrusRuntimeException("Unable to find test class in classpath: " + javaClass.get().getName());
             }
+        } else {
+            annotationOptions = propertiesFileOptions;
         }
 
         List<String> features = new ArrayList<>();
