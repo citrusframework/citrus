@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.functions;
+package org.citrusframework.validation.matcher;
 
 import org.citrusframework.CitrusSettings;
 import org.springframework.beans.BeansException;
@@ -24,15 +24,15 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 
-public class DefaultFunctionLibraryFactory implements FactoryBean<DefaultFunctionLibrary>, ApplicationContextAware, EnvironmentAware {
+public class DefaultValidationMatcherLibraryFactory implements FactoryBean<DefaultValidationMatcherLibrary>, ApplicationContextAware, EnvironmentAware {
 
     private ApplicationContext applicationContext;
     private Environment environment;
 
-    private final DefaultFunctionLibrary library = new DefaultFunctionLibrary();
+    private final DefaultValidationMatcherLibrary library = new DefaultValidationMatcherLibrary();
 
     @Override
-    public DefaultFunctionLibrary getObject() {
+    public DefaultValidationMatcherLibrary getObject() {
         library.getMembers().forEach((key, member) -> {
             if (member instanceof ApplicationContextAware applicationContextAware) {
                 applicationContextAware.setApplicationContext(applicationContext);
@@ -43,8 +43,8 @@ public class DefaultFunctionLibraryFactory implements FactoryBean<DefaultFunctio
             }
         });
 
-        boolean allowOverride = CitrusSettings.isAllowFunctionOverride();
-        applicationContext.getBeansOfType(Function.class)
+        boolean allowOverride = CitrusSettings.isAllowValidationMatcherOverride();
+        applicationContext.getBeansOfType(ValidationMatcher.class)
                 .forEach((key, value) -> {
                     if (allowOverride) {
                         library.getMembers().put(key, value);
@@ -58,7 +58,7 @@ public class DefaultFunctionLibraryFactory implements FactoryBean<DefaultFunctio
 
     @Override
     public Class<?> getObjectType() {
-        return DefaultFunctionLibrary.class;
+        return DefaultValidationMatcherLibrary.class;
     }
 
     @Override

@@ -19,6 +19,7 @@ package org.citrusframework.validation.matcher;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.NoSuchValidationMatcherException;
 
 /**
@@ -70,6 +71,17 @@ public class ValidationMatcherLibrary {
             // standard citrus-library without prefix:
             return members.containsKey(validationMatcherName.substring(0, validationMatcherName.indexOf('(')));
         }
+    }
+
+    /**
+     * Adds new member in this library.
+     */
+    public void addMember(String name, ValidationMatcher validationMatcher) {
+        if (members.containsKey(name)) {
+            throw new CitrusRuntimeException(String.format("Failed to add validation matcher. " +
+                    "Duplicate validation matcher with name '%s' in library '%s'", name, getName()));
+        }
+        members.put(name, validationMatcher);
     }
 
     /**

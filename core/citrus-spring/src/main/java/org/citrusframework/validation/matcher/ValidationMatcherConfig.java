@@ -25,15 +25,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ValidationMatcherConfig {
 
-    private ValidationMatcherLibrary validationMatcherLibrary = new DefaultValidationMatcherLibrary();
-
     @Bean(name = "citrusValidationMatcherRegistry")
     public ValidationMatcherRegistryFactory validationMatcherRegistry() {
         return new ValidationMatcherRegistryFactory();
     }
 
     @Bean(name = "citrusValidationMatcherLibrary")
-    public ValidationMatcherLibrary validationMatcherLibrary() {
-        return validationMatcherLibrary;
+    public DefaultValidationMatcherLibraryFactory validationMatcherLibrary() {
+        return new DefaultValidationMatcherLibraryFactory();
     }
 }

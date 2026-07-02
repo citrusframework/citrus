@@ -17,6 +17,7 @@
 package org.citrusframework.functions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -67,6 +68,23 @@ public class FunctionRegistry {
     }
 
     /**
+     * Get the library that is using the default prefix so it is operating as the default library in this registry.
+     * If this is not present fallback to the only exclusive library known to this registry.
+     */
+    public FunctionLibrary getDefaultLibrary() {
+        try {
+            return getLibraryForPrefix(FunctionLibrary.DEFAULT_PREFIX);
+        } catch (NoSuchFunctionLibraryException e) {
+            // fallback to the only available library in this registry
+            if (functionLibraries.size() == 1) {
+                return functionLibraries.get(0);
+            }
+
+            throw e;
+        }
+    }
+
+    /**
      * Adds given function library to this registry.
      */
     public void addFunctionLibrary(FunctionLibrary functionLibrary) {
@@ -81,17 +99,11 @@ public class FunctionRegistry {
         this.functionLibraries.add(functionLibrary);
     }
 
-    /**
-     * @param functionLibraries
-     */
     public void setFunctionLibraries(List<FunctionLibrary> functionLibraries) {
         this.functionLibraries = functionLibraries;
     }
 
-    /**
-     * @return the functionLibraries
-     */
     public List<FunctionLibrary> getFunctionLibraries() {
-        return functionLibraries;
+        return Collections.unmodifiableList(functionLibraries);
     }
 }
