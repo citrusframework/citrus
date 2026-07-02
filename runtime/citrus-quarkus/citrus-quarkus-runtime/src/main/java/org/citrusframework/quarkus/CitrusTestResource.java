@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.quarkus.test.common.DevServicesContext;
 import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
@@ -53,7 +53,8 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
 
     private final Set<ApplicationPropertiesSupplier> applicationPropertiesSupplier = new HashSet<>();
 
-    private final Map<String, String> devServicesProperties = new HashMap<>();
+    private final Map<String, String> devServicesProperties = new ConcurrentHashMap<>();
+    private final Set<String> configuredProperties = new HashSet<>();
 
     @Override
     public void init(CitrusSupport config) {
@@ -66,12 +67,8 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
             }
         }
 
-        Set<String> configuredProperties = Arrays.stream(config.devServicesProperties()).collect(Collectors.toSet());
-        // filter dev services properties based on annotation configuration, preserves a set of default properties
-        devServicesProperties.keySet()
-                .stream()
-                .filter(key -> shouldExcludeProperty(key, configuredProperties))
-                .forEach(devServicesProperties::remove);
+        // save configured dev services properties so matching properties can be exposed as test variables later in the chain
+        configuredProperties.addAll(Arrays.asList(config.devServicesProperties()));
     }
 
     @Override
@@ -130,7 +127,12 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
 
         context = citrus.getCitrusContext().createTestContext();
 
-        devServicesProperties.forEach((key, value) -> context.setVariable(key, value));
+        // filter available dev services properties based on annotation configured properties
+        // matching properties will be exposed as test variables
+        devServicesProperties.entrySet()
+                .stream()
+                .filter(entry -> shouldExposeProperty(entry.getKey(), configuredProperties))
+                .forEach(entry -> context.setVariable(entry.getKey(), entry.getValue()));
 
         runner = TestCaseRunnerFactory.createRunner(context);
         runner.testClass(testInstance.getClass());
@@ -159,25 +161,25 @@ public class CitrusTestResource implements QuarkusTestResourceConfigurableLifecy
     }
 
     /**
-     * Determine whether given dev service property should be excluded from set of exposed properties.
-     * If this evaluates to true the property will not be set as a test variable.
+     * Determine whether given dev service property should be included into set of exposed properties.
+     * If this evaluates to true the property will be set as a test variable.
      */
-    private static boolean shouldExcludeProperty(String propertyName, Set<String> configuredProperties) {
+    private static boolean shouldExposeProperty(String propertyName, Set<String> configuredProperties) {
         if (configuredProperties.contains("*")) {
-            // all properties wildcard found - nothing is excluded
-            return false;
+            // all properties wildcard found - everything is included
+            return true;
         }
 
         if (configuredProperties.contains(propertyName)) {
-            // configured properties has property name - not excluded
-            return false;
+            // configured properties has exact property name - included
+            return true;
         }
 
-        // finally search for property wildcards matching the property name - exclude property if no match found
+        // finally search for property wildcards matching the property name - include property if any wildcard matches
         return configuredProperties.stream()
                 .filter(configured -> configured.endsWith("*"))
                 .map(configured -> configured.substring(0, configured.length() - 1))
-                .noneMatch(propertyName::startsWith);
+                .anyMatch(propertyName::startsWith);
 
     }
 }
