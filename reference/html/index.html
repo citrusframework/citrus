@@ -573,8 +573,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 5.0.0-M1,</span>
-<span id="revdate">2026-05-15</span>
+<span id="revnumber">version 5.0.0-M2,</span>
+<span id="revdate">2026-07-02</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -1135,7 +1135,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 5.0.0-M1</strong></p>
+<p><strong>Version: 5.0.0-M2</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -9206,7 +9206,7 @@ You can use a JsonPath expression for ignoring a very specific entry in the Json
                 "\"lastLogin\": 0" +
             "}]" +
         "}")
-        .validate(validate().json()
+        .validate(validation().json()
                 .ignore("$.users[*].token")
                 .ignore("$..lastLogin"));</code></pre>
 </div>
@@ -9264,7 +9264,7 @@ This is how we can ignore several elements with one single JsonPath expression w
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive(someEndpoint)
     .message()
     .type(MessageType.JSON)
-    .validate(validate().jsonPath()
+    .validate(validation().jsonPath()
         .expression("$.user.name", "Penny")
         .expression("$['user']['name']", "${userName}")
         .expression("$.user.aliases", "[\"penny\",\"jenny\",\"nanny\"]")
@@ -9302,7 +9302,7 @@ validationMap.put("$.user.address[?(@.type='office')]", "{\"city\":\"Munich\",\"
 receive(someEndpoint)
     .message()
     .type(MessageType.JSON)
-    .validate(validate().jsonPath().expressions(validationMap));</code></pre>
+    .validate(validation().jsonPath().expressions(validationMap));</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -9345,7 +9345,7 @@ See the following example on how to use it:</p>
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive(someEndpoint)
     .message()
     .type(MessageType.JSON)
-    .validate(validate().jsonPath()
+    .validate(validation().jsonPath()
         .expression("$.user.keySet()", "[id,name,admin,projects]")
         .expression("$.user.aliases.size()", "3"));</code></pre>
 </div>
@@ -9377,7 +9377,7 @@ See the following examples that demonstrate how this works:</p>
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive(someEndpoint)
     .message()
     .type(MessageType.JSON)
-    .validate(validate().jsonPath()
+    .validate(validation().jsonPath()
                 .expression("$.user.keySet()", contains("id","name","admin","projects"))
                 .expression("$.user.aliases.size()", allOf(greaterThan(0), lessThan(5))));</code></pre>
 </div>
@@ -9429,7 +9429,7 @@ You have to activate it within every receive-message action by setting <code>sch
     .message()
     .type(MessageType.JSON)
     .body()
-    .validate(validate().json()
+    .validate(validation().json()
         .schemaValidation(true)
         .schema("bookStore"));</code></pre>
 </div>
@@ -9758,7 +9758,7 @@ safely ignore elements and attributes in the XML message validation.</p>
                 "&lt;Timestamp&gt;?&lt;/Timestamp&gt;" +
                 "&lt;MessageId&gt;?&lt;/MessageId&gt;" +
             "&lt;/TestMessage&gt;")
-    .validate(validate().xpath()
+    .validate(validation().xpath()
             .ignore("/TestMessage/Timestamp")
             .ignore("/TestMessage/MessageId"));</code></pre>
 </div>
@@ -9842,7 +9842,7 @@ You would rather want to use explicit element validation with XPath.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive("someEndpoint")
     .message()
-    .validate(validate().xpath()
+    .validate(validation().xpath()
         .expression("/TestRequest/MessageId", "${messageId}")
         .expression("//VersionId", "2"));
 }</code></pre>
@@ -9873,7 +9873,7 @@ expressions.put("//VersionId", "2");
 
 receive("someEndpoint")
     .message()
-    .validate(validate().xpath()
+    .validate(validation().xpath()
         .expressions(expressions));
 }</code></pre>
 </div>
@@ -9930,7 +9930,7 @@ types so that you can validate some element value. But you can also use differen
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive("someEndpoint")
-    .validate(validate().xpath()
+    .validate(validation().xpath()
         .expression("boolean:/TestRequest/Error", false)
         .expression("number:/TestRequest/Status[.='success']", 3)
         .expression("node-set:/TestRequest/OrderType", "[single, multi, multi]");</code></pre>
@@ -9965,7 +9965,7 @@ use validations such as <strong>greaterThan</strong>, <strong>lessThan</strong>,
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive("someEndpoint")
-    .validate(validate().xpath()
+    .validate(validation().xpath()
         .expression("/TestRequest/Error", anyOf(empty(), nullValue()))
         .expression("number:/TestRequest/Status[.='success']", greaterThan(0.0))
         .expression("integer:/TestRequest/Status[.='failed']", lowerThan(1))
@@ -10054,7 +10054,7 @@ have to specify namespaces also when using XPath expressions. Let&#8217;s have a
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive("someEndpoint")
-    .validate(validate().xpath()
+    .validate(validation().xpath()
         .expression("//TestMessage/TestHeader/VersionId", 2L)
         .expression("//TestMessage/TestHeader/CorrelationId", "${correlationId}");</code></pre>
 </div>
@@ -10081,7 +10081,7 @@ namespace declaration in the expression. The correct XPath expression uses the n
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive("someEndpoint")
-    .validate(validate().xpath()
+    .validate(validation().xpath()
         .expression("//ns1:TestMessage/ns1:TestHeader/ns1:VersionId", 2L)
         .expression("//ns1:TestMessage/ns1:TestHeader/ns1:CorrelationId", "${correlationId}");</code></pre>
 </div>
@@ -10111,7 +10111,7 @@ namespace prefix (e.g. ns2) the validation will fail again.</p>
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive("someEndpoint")
-    .validate(validate().xpath()
+    .validate(validation().xpath()
         .expression("//pfx:TestMessage/pfx:TestHeader/pfx:VersionId", 2L)
         .expression("//pfx:TestMessage/pfx:TestHeader/pfx:CorrelationId", "${correlationId}")
         .namespaceContext("pfx", "http://citrus.com/namespace"));</code></pre>
@@ -10201,7 +10201,7 @@ even more! So let&#8217;s look at the example with default namespaces:</p>
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive("someEndpoint")
-    .validate(validate().xpath()
+    .validate(validation().xpath()
         .expression("//TestMessage/TestHeader/VersionId", 2L)
         .expression("//TestMessage/TestHeader/CorrelationId", "${correlationId}"));</code></pre>
 </div>
@@ -10227,7 +10227,7 @@ with default namespaces:</p>
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive("someEndpoint")
-    .validate(validate().xpath()
+    .validate(validation().xpath()
         .expression("//:TestMessage/:TestHeader/:VersionId", 2L)
         .expression("//:TestMessage/:TestHeader/:CorrelationId", "${correlationId}"));</code></pre>
 </div>
@@ -10633,7 +10633,7 @@ the XML schema for some reason you have to disable the validation explicitly in 
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive("someEndpoint")
-    .validate(validate().xpath()
+    .validate(validation().xpath()
             .expression("//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId", "${messageId}")
             .expression("//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId", "${correlationId}")
             .schemaValidation(false)
@@ -12042,7 +12042,7 @@ to your project as a Maven dependency.</p>
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">receive("someEndpoint")
-    .validate(validate().xpath()
+    .validate(validation().xpath()
         .expression("/TestRequest/Error", anyOf(empty(), nullValue()))
         .expression("number:/TestRequest/Status[.='success']", greaterThan(0.0))
         .expression("integer:/TestRequest/Status[.='failed']", lowerThan(1))
@@ -12163,7 +12163,7 @@ Fortunately you can set multiple validators on a receive action that will all pe
     .validators(myXmlMessageValidator, defaultXpathMessageValidator)
     .message()
     .body("...")
-    .validate(validate().xpath().expression("//some/xpath/expression", "someControlValue"));</code></pre>
+    .validate(validation().xpath().expression("//some/xpath/expression", "someControlValue"));</code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
@@ -13671,7 +13671,7 @@ public void jsonPathTest() {
         .message()
         .type(MessageType.JSON)
         .body(new ClassPathResource("path/to/request.xml"))
-        .validate(validate().jsonPath()
+        .validate(validation().jsonPath()
             .expression("$.user.name", "Penny")
             .expression("$['user']['name']", "${userName}"))
     );
@@ -13878,7 +13878,7 @@ public void ignorePathTest() {
               }]
             }
         """)
-        .validate(validate().json()
+        .validate(validation().json()
                     .ignore("$.users[*].token")
                     .ignore("$..lastLogin"))
     );
@@ -39284,10 +39284,11 @@ public MessageChannel fileChannel() {
 }
 
 @BindToRegistry
-public FileWritingMessageHandler fileOutboundAdapter() {
-    FileWritingMessageHandler messageHandler = new FileWritingMessageHandler(new File("some/directory"));
-    messageHandler.setOutboundChannel(fileChannel());
-    return messageHandler;
+public FileReadingMessageSource fileInboundAdapter() {
+    FileReadingMessageSource messageSource = new FileReadingMessageSource();
+    messageSource.setDirectory(new File("some/directory"));
+    messageSource.setInboundChannel(fileChannel());
+    return messageSource;
 }</code></pre>
 </div>
 </div>
@@ -49709,7 +49710,7 @@ public void kubernetesSendReceiveTest() {
           }
         }
         """)
-        .validate(validate().json().expression("$.result.items.size()", 0));
+        .validate(validation().json().expression("$.result.items.size()", 0));
 }</code></pre>
 </div>
 </div>
@@ -50980,7 +50981,7 @@ Citrus exposes special test variables that represent connection settings for the
 <h3 id="testcontainers-localstack"><a class="anchor" href="#testcontainers-localstack"></a><a class="link" href="#testcontainers-localstack">38.4. LocalStack</a></h3>
 <div class="paragraph">
 <p>The LocalStack Testcontainers module allows you to start lightweight Amazon WebServices such as AWS S3, AWS SQS, AWS SNS or AWS Kinesis.
-You can start a LocslStack instance with the following test action.</p>
+You can start a LocalStack instance with the following test action.</p>
 </div>
 <div class="listingblock primary">
 <div class="title">Java</div>
@@ -51034,7 +51035,126 @@ actions:
 In the example above the AWS S3 service is enabled.</p>
 </div>
 <div class="sect3">
-<h4 id="testcontainers-localstack-settings"><a class="anchor" href="#testcontainers-localstack-settings"></a><a class="link" href="#testcontainers-localstack-settings">38.4.1. Exposed connection settings</a></h4>
+<h4 id="testcontainers-localstack-security"><a class="anchor" href="#testcontainers-localstack-security"></a><a class="link" href="#testcontainers-localstack-security">38.4.1. Container security settings</a></h4>
+<div class="paragraph">
+<p>The LocalStack container uses some default dummy values for <code>secretKey</code> and <code>accessKey</code>. You may set these properties explicitly as well as the region when starting the container.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .localstack()
+            .start()
+            .secretKey("${secretKey}")
+            .accessKey("${accessKey}")
+            .region("us-east-1")
+            .withService(LocalStackContainer.Service.S3));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase"&gt;
+    &lt;actions&gt;
+        &lt;testcontainers&gt;
+          &lt;start&gt;
+            &lt;localstack
+              secret-key="${secretKey}"
+              access-key="${accessKey}"
+              region="us-east-1"
+              services="S3"/&gt;
+          &lt;/start&gt;
+        &lt;/testcontainers&gt;
+    &lt;/actions&gt;
+&lt;/test&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        localstack:
+          secretKey: '${secretKey}'
+          accessKey: '${accessKey}'
+          region: us-east-1
+          services:
+            - "S3"</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"&gt;
+    &lt;!-- NOT SUPPORTED --&gt;
+&lt;/spring:beans&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see the settings support test variables so you may load these values from a local file or as a global variable via env setting.</p>
+</div>
+<div class="paragraph">
+<p>You may also use one of these envVars for a global and secure way of setting these values:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>CITRUS_TESTCONTAINERS_LOCALSTACK_SECRET_KEY</p>
+</li>
+<li>
+<p>CITRUS_TESTCONTAINERS_LOCALSTACK_ACCESS_KEY</p>
+</li>
+<li>
+<p>CITRUS_TESTCONTAINERS_LOCALSTACK_REGION</p>
+</li>
+<li>
+<p>CITRUS_TESTCONTAINERS_LOCALSTACK_AUTH_TOKEN</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In the <code>citrus-application.properties</code> you can set these keys:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>citrus.testcontainers.localstack.secret.key</p>
+</li>
+<li>
+<p>citrus.testcontainers.localstack.access.key</p>
+</li>
+<li>
+<p>citrus.testcontainers.localstack.region</p>
+</li>
+<li>
+<p>citrus.testcontainers.localstack.auth.token</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Since mid 2026 newer versions of the LocalStack container require an auth token. You may obtain your personal token from the official LocalStack website.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can use the <code>authToken()</code> setting when starting the container with the respective test action.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="testcontainers-localstack-settings"><a class="anchor" href="#testcontainers-localstack-settings"></a><a class="link" href="#testcontainers-localstack-settings">38.4.2. Exposed connection settings</a></h4>
 <div class="paragraph">
 <p>Citrus exposes special test variables that represent connection settings for the LocalStack container:</p>
 </div>
@@ -51109,7 +51229,7 @@ In the example above the AWS S3 service is enabled.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="testcontainers-localstack-auto-clients"><a class="anchor" href="#testcontainers-localstack-auto-clients"></a><a class="link" href="#testcontainers-localstack-auto-clients">38.4.2. Service client auto creation</a></h4>
+<h4 id="testcontainers-localstack-auto-clients"><a class="anchor" href="#testcontainers-localstack-auto-clients"></a><a class="link" href="#testcontainers-localstack-auto-clients">38.4.3. Service client auto creation</a></h4>
 <div class="paragraph">
 <p>The Citrus LocalStack container action is able to automatically create clients for the enabled services.</p>
 </div>
@@ -51277,7 +51397,7 @@ actions:
 </table>
 </div>
 <div class="sect3">
-<h4 id="testcontainers-localstack-clients"><a class="anchor" href="#testcontainers-localstack-clients"></a><a class="link" href="#testcontainers-localstack-clients">38.4.3. Custom service clients</a></h4>
+<h4 id="testcontainers-localstack-clients"><a class="anchor" href="#testcontainers-localstack-clients"></a><a class="link" href="#testcontainers-localstack-clients">38.4.4. Custom service clients</a></h4>
 <div class="paragraph">
 <p>You can use the exposed connections settings in the test variables to connect to the LocalStack Testcontainers instance.</p>
 </div>
@@ -51370,8 +51490,252 @@ actions:
 </div>
 </div>
 <div class="paragraph">
-<p>In the test example the Kafka Testcontainers module is started.
-Citrus exposes special test variables that represent connection settings for the Kafka container:</p>
+<p>The example above uses a special test actions to start the Kafka container.</p>
+</div>
+<div class="sect3">
+<h4 id="testcontainers-kafka-implementations"><a class="anchor" href="#testcontainers-kafka-implementations"></a><a class="link" href="#testcontainers-kafka-implementations">38.5.1. Kafka container implementations</a></h4>
+<div class="paragraph">
+<p>Citrus provides support for different Kafka container implementations to give you flexibility in choosing the most suitable option for your testing needs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Confluent Platform</strong> (default) - The Confluent Community Edition Kafka distribution</p>
+</li>
+<li>
+<p><strong>Apache Kafka</strong> - The official Apache Kafka distribution</p>
+</li>
+<li>
+<p><strong>Apache Kafka Native</strong> - The Apache Kafka distribution with native GraalVM compilation for faster startup</p>
+</li>
+<li>
+<p><strong>Strimzi</strong> - A Kubernetes-native Kafka distribution based on Apache Kafka</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>By default, Citrus uses the Confluent Platform implementation. You can specify a different implementation using the <code>implementation()</code> method:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .kafka()
+            .start()
+            .implementation(KafkaImplementation.STRIMZI));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase"&gt;
+    &lt;actions&gt;
+        &lt;testcontainers&gt;
+          &lt;start&gt;
+            &lt;kafka implementation="STRIMZI"/&gt;
+          &lt;/start&gt;
+        &lt;/testcontainers&gt;
+    &lt;/actions&gt;
+&lt;/test&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        kafka:
+          implementation: "STRIMZI"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Available implementation values are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CONFLUENT</code> - Uses the <code>confluentinc/cp-kafka</code> image (default)</p>
+</li>
+<li>
+<p><code>APACHE</code> - Uses the <code>apache/kafka</code> image</p>
+</li>
+<li>
+<p><code>APACHE_NATIVE</code> - Uses the <code>apache/kafka-native</code> image (GraalVM native compilation for faster startup)</p>
+</li>
+<li>
+<p><code>STRIMZI</code> - Uses the <code>quay.io/strimzi/kafka</code> image</p>
+</li>
+<li>
+<p><code>DEFAULT</code> - Same as <code>CONFLUENT</code></p>
+</li>
+</ul>
+</div>
+<div class="sect4">
+<h5 id="choosing-between-apache-and-apache_native"><a class="anchor" href="#choosing-between-apache-and-apache_native"></a><a class="link" href="#choosing-between-apache-and-apache_native">Choosing between APACHE and APACHE_NATIVE</a></h5>
+<div class="paragraph">
+<p>Both <code>APACHE</code> and <code>APACHE_NATIVE</code> implementations use the official Apache Kafka distribution, but there are important differences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>APACHE</strong> uses the standard JVM-based <code>apache/kafka</code> container image</p>
+</li>
+<li>
+<p><strong>APACHE_NATIVE</strong> uses the <code>apache/kafka-native</code> container image, which is compiled ahead-of-time using GraalVM native image technology</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The main advantage of <code>APACHE_NATIVE</code> is significantly faster container startup time, which can reduce test execution time, especially when running multiple tests that start Kafka containers. However, it has the same runtime behavior and compatibility as the standard <code>APACHE</code> implementation.</p>
+</div>
+<div class="paragraph">
+<p>Use <code>APACHE_NATIVE</code> when:
+* You want faster test execution with reduced container startup times
+* Your test suite frequently starts and stops Kafka containers
+* You are comfortable using GraalVM-compiled binaries</p>
+</div>
+<div class="paragraph">
+<p>Use <code>APACHE</code> when:
+* You need the standard JVM-based Kafka distribution
+* You want to ensure full compatibility with the traditional Kafka deployment model</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="testcontainers-kafka-configuration"><a class="anchor" href="#testcontainers-kafka-configuration"></a><a class="link" href="#testcontainers-kafka-configuration">38.5.2. Configuration options</a></h4>
+<div class="paragraph">
+<p>You can customize the Kafka container with additional settings:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@CitrusTest
+public void testcontainersTest() {
+    given(testcontainers()
+            .kafka()
+            .start()
+            .implementation(KafkaImplementation.APACHE)
+            .version("4.2.1")
+            .port(9092));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase"&gt;
+    &lt;actions&gt;
+        &lt;testcontainers&gt;
+          &lt;start&gt;
+            &lt;kafka implementation="APACHE" version="4.2.1" port="9092"/&gt;
+          &lt;/start&gt;
+        &lt;/testcontainers&gt;
+    &lt;/actions&gt;
+&lt;/test&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: TestcontainersTest
+actions:
+  - testcontainers:
+      start:
+        kafka:
+          implementation: "APACHE"
+          version: "4.2.1"
+          port: 9092</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may also use system properties or environment variables to configure the default Kafka container settings:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Setting</th>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implementation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.implementation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_IMPLEMENTATION</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Confluent image name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.confluent.image.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_CONFLUENT_IMAGE_NAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Confluent version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.confluent.version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_CONFLUENT_VERSION</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache image name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.apache.image.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_APACHE_IMAGE_NAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.apache.version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_APACHE_VERSION</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache Native image name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.apache.native.image.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_APACHE_NATIVE_IMAGE_NAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache Native version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.apache.native.version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_APACHE_NATIVE_VERSION</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strimzi image name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.strimzi.image.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_STRIMZI_IMAGE_NAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strimzi version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.strimzi.version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_STRIMZI_VERSION</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.service.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_SERVICE_NAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.container.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_NAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Startup timeout (seconds)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.startup.timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_STARTUP_TIMEOUT</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="testcontainers-kafka-variables"><a class="anchor" href="#testcontainers-kafka-variables"></a><a class="link" href="#testcontainers-kafka-variables">38.5.3. Exposed connection settings</a></h4>
+<div class="paragraph">
+<p>Citrus exposes special test variables that represent connection settings for the Kafka container:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -51420,6 +51784,7 @@ Citrus exposes special test variables that represent connection settings for the
 </table>
 <div class="paragraph">
 <p>You can use these test variables to connect to the Kafka Testcontainers instance.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -51885,7 +52250,7 @@ actions:
 public void functionsTest() {
     when(receive()
         .endpoint(someEndpoint)
-        .validate(validate().xpath()
+        .validate(validation().xpath()
                     .expression("//element/element", "citrus:concat('Cx1x', ${generatedId})"))
     );
 }</code></pre>
@@ -62759,8 +63124,28 @@ Citrus is able to run these database containers as part of the test.</p>
 </div>
 <div class="sect3">
 <h4 id="integrate-with-ai-assistance-tools"><a class="anchor" href="#integrate-with-ai-assistance-tools"></a><a class="link" href="#integrate-with-ai-assistance-tools">51.3.2. Integrate with AI assistance tools</a></h4>
+<div class="sect4">
+<h5 id="install-as-a-plugin"><a class="anchor" href="#install-as-a-plugin"></a><a class="link" href="#install-as-a-plugin">Install as a plugin</a></h5>
 <div class="paragraph">
-<p>You can integrate the Citrus MCP server into AI code assistance tools using a local <code>.mcp.json</code> configuration file in your project folder.</p>
+<p>Claude Code can install the Citrus MCP server from the marketplace defined in the <code>citrusframework/citrus</code>
+repository, so you do not have to edit any configuration file by hand. JBang must still be installed
+and available on your PATH.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">claude plugin marketplace add citrusframework/citrus
+claude plugin install citrus-mcp@citrus-marketplace</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first command registers the marketplace; the second installs the <code>citrus-mcp</code> plugin, which ships
+the MCP server configuration. The server is launched on demand over STDIO via JBang.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="manual-configuration"><a class="anchor" href="#manual-configuration"></a><a class="link" href="#manual-configuration">Manual configuration</a></h5>
+<div class="paragraph">
+<p>Alternatively, add you can integrate the Citrus MCP server into AI code assistance tools using a local <code>.mcp.json</code> configuration file in your project folder.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -62818,6 +63203,7 @@ You can also run the server directly without using JBang - then it would be some
     }
   }
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -64377,8 +64763,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 5.0.0-M1<br>
-Last updated 2026-05-15 13:07:26 +0200
+Version 5.0.0-M2<br>
+Last updated 2026-06-19 15:30:57 +0200
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
