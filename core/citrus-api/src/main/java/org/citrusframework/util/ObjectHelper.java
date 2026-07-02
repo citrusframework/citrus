@@ -38,4 +38,29 @@ public class ObjectHelper {
 
         return object;
     }
+
+    /**
+     * Check if given Object is either a primitive number or an instance of java.lang.Number.
+     * For String values check if given String can be parsed as a number.
+     */
+    public static boolean isNumeric(Object value) {
+        if (value == null) {
+            return false;
+        }
+
+        if (value instanceof Number) {
+            return true;
+        }
+
+        if (value instanceof String stringValue) {
+            try {
+                Double.parseDouble(stringValue);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+
+        return false;
+    }
 }

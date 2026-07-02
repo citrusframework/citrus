@@ -16,22 +16,21 @@
 
 package org.citrusframework.camel.endpoint;
 
-import org.citrusframework.camel.message.CamelMessageHeaders;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.message.Message;
-import org.citrusframework.report.MessageListeners;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.apache.camel.CamelExchangeException;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
-import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.apache.camel.impl.engine.DefaultHeadersMapFactory;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.support.DefaultMessage;
 import org.apache.camel.support.SimpleUuidGenerator;
+import org.citrusframework.camel.message.CamelMessageHeaders;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.message.Message;
+import org.citrusframework.report.MessageListeners;
+import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -67,7 +66,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
         when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(producerTemplate.send(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
+        when(producerTemplate.send(eq(endpointUri), any(Exchange.class))).thenReturn(exchange);
         when(exchange.getException()).thenReturn(null);
 
         camelEndpoint.createProducer().send(requestMessage, context);
@@ -91,7 +90,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
         when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(producerTemplate.send(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
+        when(producerTemplate.send(eq(endpointUri), any(Exchange.class))).thenReturn(exchange);
         when(exchange.getException()).thenReturn(exchangeException);
 
         camelEndpoint.createProducer().send(requestMessage, context);
@@ -152,7 +151,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
         when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(producerTemplate.send(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
+        when(producerTemplate.send(eq(endpointUri), any(Exchange.class))).thenReturn(exchange);
 
         when(camelContext.createConsumerTemplate()).thenReturn(consumerTemplate);
         when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());

@@ -16,7 +16,11 @@
 
 package org.citrusframework.util;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Utility helper class for Strings.
@@ -182,5 +186,72 @@ public class StringUtils {
         }
 
         return text;
+    }
+
+    /**
+     * Converts given map to a Json style String representation.
+     * Handles null values and numeric values with Json style value representation.
+     * Handles keys and String values with quotes.
+     */
+    public static String convertToString(Map<String, Object> map) {
+        return map.entrySet()
+                .stream()
+                .map(entry -> {
+                    if (entry.getValue() == null) {
+                        return "\"%s\": null".formatted(entry.getKey());
+                    } else if (ObjectHelper.isNumeric(entry.getValue())) {
+                        return "\"%s\": %s".formatted(entry.getKey(), entry.getValue());
+                    }
+
+                    return "\"%s\": \"%s\"".formatted(entry.getKey(), entry.getValue());
+                })
+                .collect(Collectors.joining(", ", "{", "}"));
+    }
+
+    /**
+     * Extract map from given String key value pairs.
+     * Supports Json style object with single level properties.
+     * Supports comma-delimited list of key value pairs with format "key=value".
+     */
+    public static Map<String, Object> extractMap(String value) {
+        if (value == null || value.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        if (value.trim().startsWith("{") && value.trim().endsWith("}")) {
+            // Parse Json style value
+            String json = value.trim().substring(1, value.trim().length() - 1);
+            String[] properties = json.split(",");
+            for (String property : properties) {
+                String[] tokens = property.trim().split(":", 2);
+                if (tokens.length == 2) {
+                    result.put(stripQuotes(tokens[0].trim()), stripQuotes(tokens[1].trim()));
+                }
+            }
+            return result;
+        } else {
+            // assume comma-delimited key value paris
+            String[] keyValuePairs = value.trim().split(",");
+            for (String pair : keyValuePairs) {
+                String[] tokens = pair.trim().split("=", 2);
+                if (tokens.length == 2) {
+                    result.put(stripQuotes(tokens[0].trim()), stripQuotes(tokens[1].trim()));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Remove quotes from given value if any.
+     */
+    public static String stripQuotes(String value) {
+        if (value != null && value.trim().startsWith("\"") && value.trim().endsWith("\"")) {
+            return value.trim().substring(1, value.trim().length() - 1);
+        }
+
+        return value;
     }
 }
