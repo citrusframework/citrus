@@ -16,6 +16,7 @@
 
 package org.citrusframework.functions;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.functions.core.AbsoluteFunction;
 import org.citrusframework.functions.core.AdvancedRandomNumberFunction;
 import org.citrusframework.functions.core.AvgFunction;
@@ -65,41 +66,41 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
     public DefaultFunctionLibrary() {
         setName("citrusFunctionLibrary");
 
-        getMembers().put("randomNumber", new RandomNumberFunction());
-        getMembers().put("randomNumberGenerator", new AdvancedRandomNumberFunction());
-        getMembers().put("randomString", new RandomStringFunction());
-        getMembers().put("randomPattern", new RandomPatternFunction());
-        getMembers().put("concat", new ConcatFunction());
-        getMembers().put("currentDate", new CurrentDateFunction());
-        getMembers().put("substring", new SubstringFunction());
-        getMembers().put("stringLength", new StringLengthFunction());
-        getMembers().put("translate", new TranslateFunction());
-        getMembers().put("substringBefore", new SubstringBeforeFunction());
-        getMembers().put("substringAfter", new SubstringAfterFunction());
-        getMembers().put("round", new RoundFunction());
-        getMembers().put("floor", new FloorFunction());
-        getMembers().put("ceiling", new CeilingFunction());
-        getMembers().put("upperCase", new UpperCaseFunction());
-        getMembers().put("lowerCase", new LowerCaseFunction());
-        getMembers().put("average", new AvgFunction());
-        getMembers().put("minimum", new MinFunction());
-        getMembers().put("maximum", new MaxFunction());
-        getMembers().put("sum", new SumFunction());
-        getMembers().put("absolute", new AbsoluteFunction());
-        getMembers().put("randomEnumValue", new RandomEnumValueFunction());
-        getMembers().put("randomUUID", new RandomUUIDFunction());
-        getMembers().put("encodeBase64", new EncodeBase64Function());
-        getMembers().put("decodeBase64", new DecodeBase64Function());
-        getMembers().put("urlEncode", new UrlEncodeFunction());
-        getMembers().put("urlDecode", new UrlDecodeFunction());
-        getMembers().put("digestAuthHeader", new DigestAuthHeaderFunction());
-        getMembers().put("localHostAddress", new LocalHostAddressFunction());
-        getMembers().put("changeDate", new ChangeDateFunction());
-        getMembers().put("readFile", new ReadFileResourceFunction());
-        getMembers().put("message", new LoadMessageFunction());
-        getMembers().put("systemProperty", new SystemPropertyFunction());
-        getMembers().put("unixTimestamp", new UnixTimestampFunction());
-        getMembers().put("escapeJson", new EscapeJsonFunction());
+        addMember("randomNumber", new RandomNumberFunction());
+        addMember("randomNumberGenerator", new AdvancedRandomNumberFunction());
+        addMember("randomString", new RandomStringFunction());
+        addMember("randomPattern", new RandomPatternFunction());
+        addMember("concat", new ConcatFunction());
+        addMember("currentDate", new CurrentDateFunction());
+        addMember("substring", new SubstringFunction());
+        addMember("stringLength", new StringLengthFunction());
+        addMember("translate", new TranslateFunction());
+        addMember("substringBefore", new SubstringBeforeFunction());
+        addMember("substringAfter", new SubstringAfterFunction());
+        addMember("round", new RoundFunction());
+        addMember("floor", new FloorFunction());
+        addMember("ceiling", new CeilingFunction());
+        addMember("upperCase", new UpperCaseFunction());
+        addMember("lowerCase", new LowerCaseFunction());
+        addMember("average", new AvgFunction());
+        addMember("minimum", new MinFunction());
+        addMember("maximum", new MaxFunction());
+        addMember("sum", new SumFunction());
+        addMember("absolute", new AbsoluteFunction());
+        addMember("randomEnumValue", new RandomEnumValueFunction());
+        addMember("randomUUID", new RandomUUIDFunction());
+        addMember("encodeBase64", new EncodeBase64Function());
+        addMember("decodeBase64", new DecodeBase64Function());
+        addMember("urlEncode", new UrlEncodeFunction());
+        addMember("urlDecode", new UrlDecodeFunction());
+        addMember("digestAuthHeader", new DigestAuthHeaderFunction());
+        addMember("localHostAddress", new LocalHostAddressFunction());
+        addMember("changeDate", new ChangeDateFunction());
+        addMember("readFile", new ReadFileResourceFunction());
+        addMember("message", new LoadMessageFunction());
+        addMember("systemProperty", new SystemPropertyFunction());
+        addMember("unixTimestamp", new UnixTimestampFunction());
+        addMember("escapeJson", new EscapeJsonFunction());
 
         lookupFunctions();
     }
@@ -108,8 +109,14 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
      * Add custom function implementations loaded from resource path lookup.
      */
     private void lookupFunctions() {
+        boolean allowOverride = CitrusSettings.isAllowFunctionOverride();
+
         Function.lookup().forEach((k, m) -> {
-            getMembers().put(k, m);
+            if (allowOverride) {
+                getMembers().put(k, m);
+            } else {
+                addMember(k, m);
+            }
             logger.debug("Register function '{}' as {}", k, m.getClass());
         });
     }
