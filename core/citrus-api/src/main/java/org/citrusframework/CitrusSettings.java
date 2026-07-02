@@ -338,6 +338,20 @@ public final class CitrusSettings {
     public static final String PRINT_BANNER_DEFAULT = TRUE.toString();
 
     /**
+     * Flag to allow override of default functions in library.
+     */
+    public static final String ALLOW_FUNCTION_OVERRIDE_PROPERTY = "citrus.allow.function.override";
+    public static final String ALLOW_FUNCTION_OVERRIDE_ENV = "CITRUS_ALLOW_FUNCTION_OVERRIDE";
+    public static final String ALLOW_FUNCTION_OVERRIDE_DEFAULT = TRUE.toString();
+
+    /**
+     * Flag to allow override of default validation matcher in library.
+     */
+    public static final String ALLOW_VALIDATION_MATCHER_OVERRIDE_PROPERTY = "citrus.allow.validation.matcher.override";
+    public static final String ALLOW_VALIDATION_MATCHER_OVERRIDE_ENV = "CITRUS_ALLOW_VALIDATION_MATCHER_OVERRIDE";
+    public static final String ALLOW_VALIDATION_MATCHER_OVERRIDE_DEFAULT = TRUE.toString();
+
+    /**
      * Gets set of file name patterns for Groovy test files.
      */
     public static Set<String> getGroovyTestFileNamePattern() {
@@ -595,5 +609,31 @@ public final class CitrusSettings {
      */
     public static String getApplicationPropertiesFile() {
         return APPLICATION_PROPERTY_FILE;
+    }
+
+    /**
+     * Should user be able to override default functions in library with custom instances using the same name.
+     */
+    public static boolean isAllowFunctionOverride() {
+        return parseBoolean(
+                getPropertyEnvOrDefault(
+                        ALLOW_FUNCTION_OVERRIDE_PROPERTY,
+                        ALLOW_FUNCTION_OVERRIDE_ENV,
+                        ALLOW_FUNCTION_OVERRIDE_DEFAULT
+                )
+        );
+    }
+
+    /**
+     * Should user be able to override default validation matchers in library with custom instances using the same name.
+     */
+    public static boolean isAllowValidationMatcherOverride() {
+        return parseBoolean(
+                getPropertyEnvOrDefault(
+                        ALLOW_VALIDATION_MATCHER_OVERRIDE_PROPERTY,
+                        ALLOW_VALIDATION_MATCHER_OVERRIDE_ENV,
+                        ALLOW_VALIDATION_MATCHER_OVERRIDE_DEFAULT
+                )
+        );
     }
 }
