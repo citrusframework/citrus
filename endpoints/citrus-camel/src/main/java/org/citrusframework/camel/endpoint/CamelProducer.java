@@ -64,22 +64,20 @@ public class CamelProducer implements Producer {
             logger.debug("Sending message to camel endpoint: '{}'", endpointUri);
         }
 
+        context.onOutboundMessage(message);
+
         Exchange camelExchange;
         if (endpointConfiguration.getEndpoint() != null) {
             camelExchange = getProducerTemplate(context)
-                    .send(endpointConfiguration.getEndpoint(), exchange ->
-                            endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context));
+                    .send(endpointConfiguration.getEndpoint(), endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context));
         } else {
             camelExchange = getProducerTemplate(context)
-                    .send(endpointUri, exchange ->
-                            endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context));
+                    .send(endpointUri, endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context));
         }
 
         if (camelExchange.getException() != null) {
             throw new CitrusRuntimeException("Sending message to camel endpoint resulted in exception", camelExchange.getException());
         }
-
-        context.onOutboundMessage(message);
 
         logger.info("Message was sent to camel endpoint '{}'", endpointUri);
     }

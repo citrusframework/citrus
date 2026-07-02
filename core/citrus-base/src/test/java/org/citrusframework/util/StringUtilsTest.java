@@ -3,10 +3,17 @@ package org.citrusframework.util;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static org.citrusframework.util.StringUtils.appendSegmentToUrlPath;
+import static org.citrusframework.util.StringUtils.convertToString;
+import static org.citrusframework.util.StringUtils.extractMap;
 import static org.citrusframework.util.StringUtils.hasText;
 import static org.citrusframework.util.StringUtils.isEmpty;
 import static org.citrusframework.util.StringUtils.quote;
+import static org.citrusframework.util.StringUtils.stripQuotes;
 import static org.citrusframework.util.StringUtils.trimTrailingComma;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -228,5 +235,128 @@ public class StringUtilsTest {
     @Test(dataProvider = "normalizeWhitespaceProvider")
     public void normalizeWhitespace(String text, boolean normalizeWhitespace, boolean normalizeLineEndingsToUnix, String expected) {
         assertEquals(StringUtils.normalizeWhitespace(text, normalizeWhitespace, normalizeLineEndingsToUnix), expected);
+    }
+
+    @Test
+    public void testConvertToStringEmpty() {
+        assertEquals(convertToString(Collections.emptyMap()), "{}");
+    }
+
+    @Test
+    public void testConvertToStringWithStringValues() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("name", "citrus");
+        map.put("type", "framework");
+        assertEquals(convertToString(map), "{\"name\": \"citrus\", \"type\": \"framework\"}");
+    }
+
+    @Test
+    public void testConvertToStringWithNullValue() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("body", null);
+        assertEquals(convertToString(map), "{\"body\": null}");
+    }
+
+    @Test
+    public void testConvertToStringWithNumericValue() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("count", 42);
+        map.put("rate", 3.14);
+        assertEquals(convertToString(map), "{\"count\": 42, \"rate\": 3.14}");
+    }
+
+    @Test
+    public void testConvertToStringWithMixedValues() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("name", "test");
+        map.put("count", 5);
+        map.put("data", null);
+        assertEquals(convertToString(map), "{\"name\": \"test\", \"count\": 5, \"data\": null}");
+    }
+
+    @Test
+    public void testExtractMapFromNull() {
+        assertTrue(extractMap(null).isEmpty());
+    }
+
+    @Test
+    public void testExtractMapFromEmpty() {
+        assertTrue(extractMap("").isEmpty());
+    }
+
+    @Test
+    public void testExtractMapFromJson() {
+        Map<String, Object> result = extractMap("{\"name\": \"citrus\", \"type\": \"framework\"}");
+        assertEquals(result.size(), 2);
+        assertEquals(result.get("name"), "citrus");
+        assertEquals(result.get("type"), "framework");
+    }
+
+    @Test
+    public void testExtractMapFromJsonWithNullValue() {
+        Map<String, Object> result = extractMap("{\"body\": null}");
+        assertEquals(result.size(), 1);
+        assertEquals(result.get("body"), "null");
+    }
+
+    @Test
+    public void testExtractMapFromJsonWithNumericValue() {
+        Map<String, Object> result = extractMap("{\"count\": 42}");
+        assertEquals(result.size(), 1);
+        assertEquals(result.get("count"), "42");
+    }
+
+    @Test
+    public void testExtractMapFromKeyValuePairs() {
+        Map<String, Object> result = extractMap("name=citrus,type=framework");
+        assertEquals(result.size(), 2);
+        assertEquals(result.get("name"), "citrus");
+        assertEquals(result.get("type"), "framework");
+    }
+
+    @Test
+    public void testExtractMapFromKeyValuePairsWithSpaces() {
+        Map<String, Object> result = extractMap(" name = citrus , type = framework ");
+        assertEquals(result.size(), 2);
+        assertEquals(result.get("name"), "citrus");
+        assertEquals(result.get("type"), "framework");
+    }
+
+    @Test
+    public void testExtractMapFromKeyValuePairsWithQuotes() {
+        Map<String, Object> result = extractMap("\"name\"=\"citrus\",\"type\"=\"framework\"");
+        assertEquals(result.size(), 2);
+        assertEquals(result.get("name"), "citrus");
+        assertEquals(result.get("type"), "framework");
+    }
+
+    @Test
+    public void testStripQuotesWithQuotes() {
+        assertEquals(stripQuotes("\"hello\""), "hello");
+    }
+
+    @Test
+    public void testStripQuotesWithoutQuotes() {
+        assertEquals(stripQuotes("hello"), "hello");
+    }
+
+    @Test
+    public void testStripQuotesWithNull() {
+        assertNull(stripQuotes(null));
+    }
+
+    @Test
+    public void testStripQuotesEmptyQuoted() {
+        assertEquals(stripQuotes("\"\""), "");
+    }
+
+    @Test
+    public void testStripQuotesWithSurroundingSpaces() {
+        assertEquals(stripQuotes("  \"hello\"  "), "hello");
+    }
+
+    @Test
+    public void testStripQuotesSingleQuoteOnly() {
+        assertEquals(stripQuotes("\"hello"), "\"hello");
     }
 }
