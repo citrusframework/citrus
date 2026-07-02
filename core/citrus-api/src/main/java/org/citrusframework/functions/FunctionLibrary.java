@@ -16,10 +16,11 @@
 
 package org.citrusframework.functions;
 
-import org.citrusframework.exceptions.NoSuchFunctionException;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.NoSuchFunctionException;
 
 /**
  * Library holding a set of functions. Each library defines a function prefix as namespace, so
@@ -27,14 +28,14 @@ import java.util.Map;
  *
  */
 public class FunctionLibrary {
+    /** Default function prefix */
+    static final String DEFAULT_PREFIX = "citrus:";
+
     /** Map of functions in this library */
     private Map<String, Function> members = new HashMap<>();
 
-    /** Default function prefix */
-    private static final String DEFAULT_PREFIX = "citrus:";
-
     /** Name of function library */
-    private String name = DEFAULT_PREFIX;
+    private String name = "standard";
 
     /** Function library prefix */
     private String prefix = DEFAULT_PREFIX;
@@ -71,8 +72,18 @@ public class FunctionLibrary {
     }
 
     /**
+     * Adds new member in this library.
+     */
+    public void addMember(String name, Function function) {
+        if (members.containsKey(name)) {
+            throw new CitrusRuntimeException(String.format("Failed to add function. " +
+                    "Duplicate function with name '%s' in library '%s'", name, getName()));
+        }
+        members.put(name, function);
+    }
+
+    /**
      * Set the function library content.
-     * @param members
      */
     public void setMembers(Map<String, Function> members) {
         this.members = members;
@@ -80,7 +91,6 @@ public class FunctionLibrary {
 
     /**
      * Gets the function library members.
-     * @return
      */
     public Map<String, Function> getMembers() {
         return members;
@@ -88,7 +98,6 @@ public class FunctionLibrary {
 
     /**
      * Get the library prefix.
-     * @return
      */
     public String getPrefix() {
         return prefix;
@@ -96,7 +105,6 @@ public class FunctionLibrary {
 
     /**
      * Set the library prefix.
-     * @param prefix
      */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
@@ -104,7 +112,6 @@ public class FunctionLibrary {
 
     /**
      * Get the function library name.
-     * @return
      */
     public String getName() {
         return name;
@@ -112,7 +119,6 @@ public class FunctionLibrary {
 
     /**
      * Get the name of the function library.
-     * @param name
      */
     public void setName(String name) {
         this.name = name;

@@ -17,6 +17,7 @@
 package org.citrusframework.validation.matcher;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -24,7 +25,6 @@ import org.citrusframework.exceptions.NoSuchValidationMatcherLibraryException;
 
 /**
  * ValidationMatcher registry holding all available validation matcher libraries.
- *
  */
 public class ValidationMatcherRegistry {
     /** list of libraries providing custom validation matchers */
@@ -48,6 +48,23 @@ public class ValidationMatcherRegistry {
     }
 
     /**
+     * Get the library that is not having a prefix so it is operating as the default library in this registry.
+     * If this is not present fallback to the only exclusive library known to this registry.
+     */
+    public ValidationMatcherLibrary getDefaultLibrary() {
+        try {
+            return getLibraryForPrefix("");
+        } catch (NoSuchValidationMatcherLibraryException e) {
+            // fallback to the only available library in this registry
+            if (validationMatcherLibraries.size() == 1) {
+                return validationMatcherLibraries.get(0);
+            }
+
+            throw e;
+        }
+    }
+
+    /**
      * Adds given validation matcher library to this registry.
      */
     public void addValidationMatcherLibrary(ValidationMatcherLibrary validationMatcherLibrary) {
@@ -62,17 +79,11 @@ public class ValidationMatcherRegistry {
         this.validationMatcherLibraries.add(validationMatcherLibrary);
     }
 
-    /**
-     * @param validationMatcherLibraries
-     */
     public void setValidationMatcherLibraries(List<ValidationMatcherLibrary> validationMatcherLibraries) {
         this.validationMatcherLibraries = validationMatcherLibraries;
     }
 
-    /**
-     * @return the validationMatcherLibraries
-     */
     public List<ValidationMatcherLibrary> getValidationMatcherLibraries() {
-        return validationMatcherLibraries;
+        return Collections.unmodifiableList(validationMatcherLibraries);
     }
 }

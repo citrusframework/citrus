@@ -35,6 +35,7 @@ import org.citrusframework.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.DefaultFunctionRegistry;
+import org.citrusframework.functions.Function;
 import org.citrusframework.functions.FunctionLibrary;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.log.DefaultLogModifier;
@@ -55,6 +56,7 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.DefaultValidationMatcherRegistry;
+import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
 import org.citrusframework.variable.GlobalVariables;
@@ -390,12 +392,16 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         synchronized (this) {
             if (component instanceof MessageValidator<?> messageValidator) {
                 messageValidatorRegistry.addMessageValidator(name, messageValidator);
-                testContextFactory.getMessageValidatorRegistry().addMessageValidator(name, messageValidator);
+                if (!messageValidatorRegistry.equals(testContextFactory.getMessageValidatorRegistry())) {
+                    testContextFactory.getMessageValidatorRegistry().addMessageValidator(name, messageValidator);
+                }
             }
 
             if (component instanceof MessageProcessor messageProcessor) {
                 messageProcessors.addMessageProcessor(messageProcessor);
-                testContextFactory.getMessageProcessors().addMessageProcessor(messageProcessor);
+                if (!messageProcessors.equals(testContextFactory.getMessageProcessors())) {
+                    testContextFactory.getMessageProcessors().addMessageProcessor(messageProcessor);
+                }
             }
 
             if (component instanceof TestSuiteListener suiteListener) {
@@ -404,7 +410,9 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
 
             if (component instanceof TestListener testListener) {
                 testListeners.addTestListener(testListener);
-                testContextFactory.getTestListeners().addTestListener(testListener);
+                if (!testListeners.equals(testContextFactory.getTestListeners())) {
+                    testContextFactory.getTestListeners().addTestListener(testListener);
+                }
             }
 
             if (component instanceof TestReporter testReporter) {
@@ -413,12 +421,16 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
 
             if (component instanceof TestActionListener testActionListener) {
                 testActionListeners.addTestActionListener(testActionListener);
-                testContextFactory.getTestActionListeners().addTestActionListener(testActionListener);
+                if (!testActionListeners.equals(testContextFactory.getTestActionListeners())) {
+                    testContextFactory.getTestActionListeners().addTestActionListener(testActionListener);
+                }
             }
 
             if (component instanceof MessageListener messageListener) {
                 messageListeners.addMessageListener(messageListener);
-                testContextFactory.getMessageListeners().addMessageListener(messageListener);
+                if (!messageListeners.equals(testContextFactory.getMessageListeners())) {
+                    testContextFactory.getMessageListeners().addMessageListener(messageListener);
+                }
             }
 
             if (component instanceof BeforeTest beforeTest) {
@@ -439,17 +451,37 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
 
             if (component instanceof FunctionLibrary library) {
                 functionRegistry.addFunctionLibrary(library);
-                testContextFactory.getFunctionRegistry().addFunctionLibrary(library);
+                if (!functionRegistry.equals(testContextFactory.getFunctionRegistry())) {
+                    testContextFactory.getFunctionRegistry().addFunctionLibrary(library);
+                }
+            }
+
+            if (component instanceof Function function) {
+                functionRegistry.getDefaultLibrary().addMember(name, function);
+                if (!functionRegistry.equals(testContextFactory.getFunctionRegistry())) {
+                    testContextFactory.getFunctionRegistry().getDefaultLibrary().addMember(name, function);
+                }
             }
 
             if (component instanceof ValidationMatcherLibrary library) {
                 validationMatcherRegistry.addValidationMatcherLibrary(library);
-                testContextFactory.getValidationMatcherRegistry().addValidationMatcherLibrary(library);
+                if (!validationMatcherRegistry.equals(testContextFactory.getValidationMatcherRegistry())) {
+                    testContextFactory.getValidationMatcherRegistry().addValidationMatcherLibrary(library);
+                }
+            }
+
+            if (component instanceof ValidationMatcher validationMatcher) {
+                validationMatcherRegistry.getDefaultLibrary().addMember(name, validationMatcher);
+                if (!validationMatcherRegistry.equals(testContextFactory.getValidationMatcherRegistry())) {
+                    testContextFactory.getValidationMatcherRegistry().getDefaultLibrary().addMember(name, validationMatcher);
+                }
             }
 
             if (component instanceof GlobalVariables vars) {
                 globalVariables.getVariables().putAll(vars.getVariables());
-                testContextFactory.getGlobalVariables().getVariables().putAll(vars.getVariables());
+                if (!globalVariables.equals(testContextFactory.getGlobalVariables())) {
+                    testContextFactory.getGlobalVariables().getVariables().putAll(vars.getVariables());
+                }
             }
         }
     }

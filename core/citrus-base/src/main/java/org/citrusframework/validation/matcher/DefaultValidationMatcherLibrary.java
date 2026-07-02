@@ -16,6 +16,7 @@
 
 package org.citrusframework.validation.matcher;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.validation.matcher.core.ContainsIgnoreCaseValidationMatcher;
 import org.citrusframework.validation.matcher.core.ContainsValidationMatcher;
 import org.citrusframework.validation.matcher.core.CreateVariableValidationMatcher;
@@ -55,29 +56,29 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
     public DefaultValidationMatcherLibrary() {
         setName("citrusValidationMatcherLibrary");
 
-        getMembers().put("equalsIgnoreCase", new EqualsIgnoreCaseValidationMatcher());
-        getMembers().put("ignoreNewLine", new IgnoreNewLineValidationMatcher());
-        getMembers().put("trim", new TrimValidationMatcher());
-        getMembers().put("trimAllWhitespaces", new TrimAllWhitespacesValidationMatcher());
-        getMembers().put("contains", new ContainsValidationMatcher());
-        getMembers().put("containsIgnoreCase", new ContainsIgnoreCaseValidationMatcher());
-        getMembers().put("greaterThan", new GreaterThanValidationMatcher());
-        getMembers().put("lowerThan", new LowerThanValidationMatcher());
-        getMembers().put("startsWith", new StartsWithValidationMatcher());
-        getMembers().put("endsWith", new EndsWithValidationMatcher());
-        getMembers().put("isNumber", new IsNumberValidationMatcher());
-        getMembers().put("matches", new MatchesValidationMatcher());
-        getMembers().put("matchesDatePattern", new DatePatternValidationMatcher());
-        getMembers().put("isWeekday", new WeekdayValidationMatcher());
-        getMembers().put("variable", new CreateVariableValidationMatcher());
-        getMembers().put("dateRange", new DateRangeValidationMatcher());
-        getMembers().put("empty", new EmptyValidationMatcher());
-        getMembers().put("notEmpty", new NotEmptyValidationMatcher());
-        getMembers().put("null", new NullValidationMatcher());
-        getMembers().put("notNull", new NotNullValidationMatcher());
-        getMembers().put("ignore", new IgnoreValidationMatcher());
-        getMembers().put("hasLength", new StringLengthValidationMatcher());
-        getMembers().put("isUUIDv4", new UuidV4ValidationMatcher());
+        addMember("equalsIgnoreCase", new EqualsIgnoreCaseValidationMatcher());
+        addMember("ignoreNewLine", new IgnoreNewLineValidationMatcher());
+        addMember("trim", new TrimValidationMatcher());
+        addMember("trimAllWhitespaces", new TrimAllWhitespacesValidationMatcher());
+        addMember("contains", new ContainsValidationMatcher());
+        addMember("containsIgnoreCase", new ContainsIgnoreCaseValidationMatcher());
+        addMember("greaterThan", new GreaterThanValidationMatcher());
+        addMember("lowerThan", new LowerThanValidationMatcher());
+        addMember("startsWith", new StartsWithValidationMatcher());
+        addMember("endsWith", new EndsWithValidationMatcher());
+        addMember("isNumber", new IsNumberValidationMatcher());
+        addMember("matches", new MatchesValidationMatcher());
+        addMember("matchesDatePattern", new DatePatternValidationMatcher());
+        addMember("isWeekday", new WeekdayValidationMatcher());
+        addMember("variable", new CreateVariableValidationMatcher());
+        addMember("dateRange", new DateRangeValidationMatcher());
+        addMember("empty", new EmptyValidationMatcher());
+        addMember("notEmpty", new NotEmptyValidationMatcher());
+        addMember("null", new NullValidationMatcher());
+        addMember("notNull", new NotNullValidationMatcher());
+        addMember("ignore", new IgnoreValidationMatcher());
+        addMember("hasLength", new StringLengthValidationMatcher());
+        addMember("isUUIDv4", new UuidV4ValidationMatcher());
 
         lookupValidationMatchers();
     }
@@ -86,9 +87,16 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
      * Add custom matcher implementations loaded from resource path lookup.
      */
     private void lookupValidationMatchers() {
+        boolean allowOverride = CitrusSettings.isAllowValidationMatcherOverride();
+
         ValidationMatcher.lookup().forEach((k, m) -> {
-            getMembers().put(k, m);
-            logger.debug("Register message matcher '{}' as {}", k, m.getClass());
+            if (allowOverride) {
+                getMembers().put(k, m);
+            } else {
+                addMember(k, m);
+            }
+
+            logger.debug("Register validation matcher '{}' as {}", k, m.getClass());
         });
     }
 }
