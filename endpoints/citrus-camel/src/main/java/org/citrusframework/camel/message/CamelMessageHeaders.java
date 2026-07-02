@@ -37,6 +37,9 @@ public abstract class CamelMessageHeaders {
     public static final String EXCHANGE_FAILED = CAMEL_PREFIX + "exchange_failed";
     public static final String EXCHANGE_EXCEPTION = CAMEL_PREFIX + "exchange_exception";
     public static final String EXCHANGE_EXCEPTION_MESSAGE = CAMEL_PREFIX + "exchange_exception_message";
+    public static final String EXCHANGE_PROPERTIES = CAMEL_PREFIX + "exchange_properties";
+    public static final String EXCHANGE_VARIABLES = CAMEL_PREFIX + "exchange_variables";
+    public static final String MESSAGE_ID = CAMEL_PREFIX + "message_id";
     public static final String ROUTE_ID = CAMEL_PREFIX + "route_id";
 
 }
