@@ -246,7 +246,8 @@ public class JBangSupport {
     private List<String> constructAllArgs(String command, List<String> args) {
         List<String> allArgs = new ArrayList<>();
 
-        // JBang app name
+        allArgs.addAll(JBangSettings.getArgs());
+
         if (app != null) {
             allArgs.add(app);
         }
