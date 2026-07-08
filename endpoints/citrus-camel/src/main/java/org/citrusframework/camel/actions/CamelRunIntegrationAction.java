@@ -145,14 +145,15 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
                         .integration(name));
             }
 
-            logger.info("Waiting for the Camel integration '%s' (%s) to be running ...".formatted(name, pid));
-
             if (waitForRunningState) {
+                logger.info("Waiting for the Camel integration '%s' (%s) to be running ...".formatted(name, pid));
                 new CamelVerifyIntegrationAction.Builder()
                         .integrationName(name)
                         .isRunning()
                         .build()
                         .execute(context);
+            } else {
+                logger.info("Started Camel integration '%s' (%s) — not waiting for running state".formatted(name, pid));
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create temporary file from Camel integration source", e);
