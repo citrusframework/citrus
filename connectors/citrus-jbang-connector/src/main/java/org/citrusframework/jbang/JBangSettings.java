@@ -20,7 +20,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public final class JBangSettings {
@@ -58,6 +61,9 @@ public final class JBangSettings {
     private static final String APP_PROPERTY = JBANG_PROPERTY_PREFIX + "app";
     private static final String APP_ENV = JBANG_ENV_PREFIX + "APP";
     private static final String APP_DEFAULT = "citrus@citrusframework/citrus";
+
+    private static final String ARGS_PROPERTY = JBANG_PROPERTY_PREFIX + "args";
+    private static final String ARGS_ENV = JBANG_ENV_PREFIX + "ARGS";
 
     private static final String JBANG_EXECUTABLE_PROPERTY = JBANG_PROPERTY_PREFIX + "executable";
     private static final String JBANG_EXECUTABLE_ENV = JBANG_ENV_PREFIX + "EXECUTABLE";
@@ -157,5 +163,65 @@ public final class JBangSettings {
         return Optional.ofNullable(System.getenv(JBANG_LAUNCH_CMD))
                 .or(() -> Optional.ofNullable(System.getProperty(JBANG_EXECUTABLE_PROPERTY, System.getenv(JBANG_EXECUTABLE_ENV))))
                 .orElse(JBANG_EXECUTABLE_DEFAULT);
+    }
+
+    /**
+     * JBang command arguments resolved from system property or environment variable.
+     * Arguments are specified as comma-delimited key=value pairs. Repeated argument names
+     * are merged into a single argument with comma-separated values.
+     */
+    public static List<String> getArgs() {
+        return parseArgs(System.getProperty(ARGS_PROPERTY, System.getenv(ARGS_ENV)));
+    }
+
+    /**
+     * Parses comma-delimited key=value argument pairs into a list of JBang command arguments.
+     * Adds the "--" prefix to argument names when not already present.
+     * Merges repeated argument names into a single "--arg=value1,value2" argument.
+     * Empty values produce flag-only arguments (e.g., "fresh=" becomes "--fresh").
+     */
+    static List<String> parseArgs(String argsValue) {
+        if (argsValue == null || argsValue.isBlank()) {
+            return Collections.emptyList();
+        }
+
+        LinkedHashMap<String, List<String>> argMap = new LinkedHashMap<>();
+        for (String part : argsValue.split(",")) {
+            String trimmed = part.trim();
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+
+            int eqIndex = trimmed.indexOf('=');
+            String name;
+            String value;
+            if (eqIndex >= 0) {
+                name = trimmed.substring(0, eqIndex).trim();
+                value = trimmed.substring(eqIndex + 1).trim();
+            } else {
+                name = trimmed;
+                value = "";
+            }
+
+            if (!name.startsWith("--")) {
+                name = "--" + name;
+            }
+
+            argMap.computeIfAbsent(name, k -> new ArrayList<>());
+            if (!value.isEmpty()) {
+                argMap.get(name).add(value);
+            }
+        }
+
+        List<String> result = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : argMap.entrySet()) {
+            if (entry.getValue().isEmpty()) {
+                result.add(entry.getKey());
+            } else {
+                result.add(entry.getKey() + "=" + String.join(",", entry.getValue()));
+            }
+        }
+
+        return result;
     }
 }
