@@ -74,7 +74,7 @@ public class VertxProducer implements Producer {
 
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to Vert.x event bus address: '{}'", endpointConfiguration.getAddress());
+        logger.debug("Message was sent to Vert.x event bus address: '{}'", endpointConfiguration.getAddress());
     }
 
     /**

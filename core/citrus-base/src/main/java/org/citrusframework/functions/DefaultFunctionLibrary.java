@@ -117,7 +117,7 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
             } else {
                 addMember(k, m);
             }
-            logger.debug("Register function '{}' as {}", k, m.getClass());
+            logger.trace("Register function '{}' as {}", k, m.getClass());
         });
     }
 }

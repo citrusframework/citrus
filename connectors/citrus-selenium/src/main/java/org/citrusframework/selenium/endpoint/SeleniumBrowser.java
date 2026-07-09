@@ -100,7 +100,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
         SeleniumAction action = message.getPayload(SeleniumAction.class);
         action.execute(context);
 
-        logger.info("Selenium action successfully executed");
+        logger.debug("Selenium action successfully executed");
     }
 
     /**
@@ -118,7 +118,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
 
             if (getEndpointConfiguration().getEventListeners() != null &&
                     !getEndpointConfiguration().getEventListeners().isEmpty()) {
-                logger.info("Add event listeners to web driver: {}", getEndpointConfiguration().getEventListeners().size());
+                logger.debug("Add event listeners to web driver: {}", getEndpointConfiguration().getEventListeners().size());
                 webDriver = new EventFiringDecorator(getEndpointConfiguration().getEventListeners().toArray(new WebDriverListener[0])).decorate(webDriver);
             }
         } else {
@@ -134,7 +134,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
             logger.info("Stopping browser {}", webDriver.getCurrentUrl());
 
             try {
-                logger.info("Trying to close the browser {} ...", webDriver);
+                logger.debug("Trying to close the browser {} ...", webDriver);
                 webDriver.quit();
             } catch (UnreachableBrowserException e) {
                 // It happens for Firefox. It's ok: browser is already closed.
@@ -176,7 +176,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
         try {
             File newFile = new File(temporaryStorage.toFile(), FileUtils.getFileName(file.location()));
 
-            logger.info("Store file {} to {}", file, newFile);
+            logger.debug("Store file {} to {}", file, newFile);
 
             org.apache.commons.io.FileUtils.copyFile(file.file(), newFile);
 
@@ -296,7 +296,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
             Path tempDir = Files.createTempDirectory("selenium");
             tempDir.toFile().deleteOnExit();
 
-            logger.info("Download storage location is: {}", tempDir);
+            logger.debug("Download storage location is: {}", tempDir);
             return tempDir;
         } catch (IOException e) {
             throw new CitrusRuntimeException("Could not create temporary storage", e);

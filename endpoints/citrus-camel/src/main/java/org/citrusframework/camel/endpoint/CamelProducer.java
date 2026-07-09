@@ -79,7 +79,7 @@ public class CamelProducer implements Producer {
             throw new CitrusRuntimeException("Sending message to camel endpoint resulted in exception", camelExchange.getException());
         }
 
-        logger.info("Message was sent to camel endpoint '{}'", endpointUri);
+        logger.debug("Message was sent to camel endpoint '{}'", endpointUri);
     }
 
     /**

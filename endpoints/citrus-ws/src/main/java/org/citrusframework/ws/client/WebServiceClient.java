@@ -134,13 +134,13 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
             result = getEndpointConfiguration().getWebServiceTemplate().sendAndReceive(requestCallback, responseCallback);
         }
 
-        logger.info("SOAP message was sent to endpoint: '{}'", endpointUri);
+        logger.debug("SOAP message was sent to endpoint: '{}'", endpointUri);
 
         if (result) {
-            logger.info("Received SOAP response on endpoint: '{}'", endpointUri);
+            logger.debug("Received SOAP response on endpoint: '{}'", endpointUri);
             correlationManager.store(correlationKey, responseCallback.getResponse());
         } else {
-            logger.info("Received no SOAP response from endpoint: '{}'", endpointUri);
+            logger.debug("Received no SOAP response from endpoint: '{}'", endpointUri);
         }
     }
 
@@ -246,7 +246,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
                         responseMessage.setPayload(faultPayload.toString());
                     }
 
-                    logger.info("Received SOAP fault response on endpoint: '{}'", endpointUri);
+                    logger.debug("Received SOAP fault response on endpoint: '{}'", endpointUri);
                     correlationManager.store(correlationKey, responseMessage);
                 } catch (TransformerException e) {
                     throw new CitrusRuntimeException("Failed to handle fault response message", e);

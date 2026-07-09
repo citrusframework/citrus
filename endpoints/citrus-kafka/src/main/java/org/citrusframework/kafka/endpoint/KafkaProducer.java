@@ -104,7 +104,7 @@ public class KafkaProducer implements Producer {
         try {
             ProducerRecord<Object, Object> producerRecord = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context);
             producer.send(producerRecord).get(endpointConfiguration.getTimeout(), MILLISECONDS);
-            logger.info("Message was sent to Kafka stream topic: '{}'", topic);
+            logger.debug("Message was sent to Kafka stream topic: '{}'", topic);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new CitrusRuntimeException("Thread was interrupted while publishing Kafka message", e);

@@ -42,7 +42,7 @@ public class AgentConnectAction extends AbstractAgentAction {
     @Override
     public void doExecute(TestContext context) {
         String agent = context.replaceDynamicContentInString(agentName);
-        logger.info("Connecting to Citrus agent '%s'".formatted(agent));
+        logger.debug("Connecting to Citrus agent '%s'".formatted(agent));
 
         String clientName = agent + ".client";
         HttpClient httpClient = resolveHttpClient(clientName, context);

@@ -51,12 +51,12 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        logger.info("Waiting {} ms for Web Socket message ...", timeout);
+        logger.debug("Waiting {} ms for Web Socket message ...", timeout);
 
         WebSocketMessage<?> message = receive(endpointConfiguration, timeout);
         Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(message, endpointConfiguration, context);
 
-        logger.info("Received Web Socket message");
+        logger.debug("Received Web Socket message");
         context.onInboundMessage(receivedMessage);
 
         return receivedMessage;

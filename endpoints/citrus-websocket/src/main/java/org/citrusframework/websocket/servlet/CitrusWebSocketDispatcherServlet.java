@@ -42,7 +42,7 @@ import org.springframework.web.socket.server.support.WebSocketHttpRequestHandler
 public class CitrusWebSocketDispatcherServlet extends CitrusDispatcherServlet {
 
     /** Http server hosting the servlet */
-    private WebSocketServer webSocketServer;
+    private final WebSocketServer webSocketServer;
 
     /** Default bean names used in default configuration for supporting WebSocket endpoints */
     protected static final String URL_HANDLER_MAPPING_BEAN_NAME = "citrusUrlHandlerMapping";

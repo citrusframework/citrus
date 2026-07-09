@@ -69,7 +69,7 @@ public class OpenWindowAction extends AbstractSeleniumAction {
 
         if (!StringUtils.isEmpty(newWindow)) {
             browser.getWebDriver().switchTo().window(newWindow);
-            logger.info("Open window: {}", newWindow);
+            logger.debug("Open window: {}", newWindow);
             context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, newWindow);
             context.setVariable(windowName, newWindow);
         } else {

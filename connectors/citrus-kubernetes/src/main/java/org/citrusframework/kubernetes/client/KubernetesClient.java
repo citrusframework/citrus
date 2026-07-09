@@ -76,7 +76,7 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
         KubernetesCommand<?, ?> command = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
         command.execute(this, context);
 
-        logger.info("Kubernetes request was sent to endpoint: '{}'", getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
+        logger.debug("Kubernetes request was sent to endpoint: '{}'", getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
 
         correlationManager.store(correlationKey, command);
     }

@@ -76,10 +76,10 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         Exchange response = getProducerTemplate(context)
                 .request(endpointUri, exchange -> {
                     endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context);
-                    logger.info("Message was sent to camel endpoint: '{}'", endpointUri);
+                    logger.debug("Message was sent to camel endpoint: '{}'", endpointUri);
                 });
 
-        logger.info("Received synchronous reply message on camel endpoint: '{}'", endpointUri);
+        logger.debug("Received synchronous reply message on camel endpoint: '{}'", endpointUri);
         Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration, context);
         context.onInboundMessage(replyMessage);
         correlationManager.store(correlationKey, replyMessage);

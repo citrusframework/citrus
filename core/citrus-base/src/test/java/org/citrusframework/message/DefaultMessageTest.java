@@ -16,15 +16,28 @@
 
 package org.citrusframework.message;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
 import java.util.Map;
 
 import org.citrusframework.UnitTestSupport;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+
 public class DefaultMessageTest extends UnitTestSupport {
+
+    @BeforeClass
+    public void setup() {
+        DefaultMessagePrinter.setDefaultLayout(MessagePrinterLayout.COMPACT);
+    }
+
+    @AfterClass
+    public void teardown() {
+        DefaultMessagePrinter.resetDefaultLayout();
+    }
 
     @Test
     public void testPrint() {
@@ -34,11 +47,11 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("password", "foo");
 
         String output = message.print();
-        assertThat(output).isEqualToIgnoringNewLines(String.format("DEFAULTMESSAGE " +
-                    "[id: %s]%n" +
+        assertThat(output).isEqualToIgnoringNewLines(String.format(
+                    "[id: %s]" +
                     "[headers: {" +
                         "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=foo" +
-                    "}]%n" +
+                    "}]" +
                     "[payload: <credentials>%n  <password>foo</password>%n</credentials>%n]", message.getId(), message.getId(), message.getTimestamp()));
     }
 
@@ -51,11 +64,11 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("secret", "bar");
 
         String output = message.print(context);
-        assertThat(output).isEqualToIgnoringNewLines(String.format("DEFAULTMESSAGE " +
-                    "[id: %s]%n" +
+        assertThat(output).isEqualToIgnoringNewLines(String.format(
+                    "[id: %s]" +
                     "[headers: {" +
                         "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secret=****" +
-                    "}]%n" +
+                    "}]" +
                     "[payload: password=****,secret=****]", message.getId(), message.getId(), message.getTimestamp()));
     }
 
@@ -68,11 +81,11 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("secret", "bar");
 
         String output = message.print(context);
-        assertThat(output).isEqualToIgnoringNewLines(String.format("DEFAULTMESSAGE " +
-                    "[id: %s]%n" +
+        assertThat(output).isEqualToIgnoringNewLines(String.format(
+                    "[id: %s]" +
                     "[headers: {" +
                         "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secret=****" +
-                    "}]%n" +
+                    "}]" +
                     "[payload: password=****&secret=****]", message.getId(), message.getId(), message.getTimestamp()));
     }
 
@@ -84,11 +97,11 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("password", "foo");
 
         String output = message.print(context);
-        assertThat(output).isEqualToIgnoringNewLines(String.format("DEFAULTMESSAGE " +
-                    "[id: %s]%n" +
+        assertThat(output).isEqualToIgnoringNewLines(String.format(
+                    "[id: %s]" +
                     "[headers: {" +
                         "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****" +
-                    "}]%n" +
+                    "}]" +
                     "[payload: <credentials>%n  <password>****</password>%n</credentials>%n]", message.getId(), message.getId(), message.getTimestamp()));
     }
 
@@ -101,11 +114,11 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("secretKey", "bar");
 
         String output = message.print(context);
-        assertThat(output).isEqualToIgnoringNewLines(String.format("DEFAULTMESSAGE " +
-                    "[id: %s]%n" +
+        assertThat(output).isEqualToIgnoringNewLines(String.format(
+                    "[id: %s]" +
                     "[headers: {" +
                         "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secretKey=****" +
-                    "}]%n" +
+                    "}]" +
                     "[payload: {%n  \"credentials\": {%n    \"password\": \"****\",%n    \"secretKey\": \"****\"%n  }%n}]", message.getId(), message.getId(), message.getTimestamp()));
     }
 

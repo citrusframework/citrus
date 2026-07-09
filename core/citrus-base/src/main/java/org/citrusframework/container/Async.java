@@ -62,7 +62,7 @@ public class Async extends AbstractActionContainer {
 
             @Override
             public void onError(TestContext context, Throwable error) {
-                logger.info("Apply error actions after async container ...");
+                logger.debug("Apply error actions after async container ...");
                 for (TestActionBuilder<?> actionBuilder : errorActions) {
                     TestAction action = actionBuilder.build();
                     action.execute(context);
@@ -71,7 +71,7 @@ public class Async extends AbstractActionContainer {
 
             @Override
             public void onSuccess(TestContext context) {
-                logger.info("Apply success actions after async container ...");
+                logger.debug("Apply success actions after async container ...");
                 for (TestActionBuilder<?> actionBuilder : successActions) {
                     TestAction action = actionBuilder.build();
                     action.execute(context);

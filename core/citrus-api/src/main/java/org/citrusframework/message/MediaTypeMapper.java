@@ -25,6 +25,7 @@ final class MediaTypeMapper {
         m.put("application/yaml",         MessageType.YAML);
         // Plain text
         m.put("text/plain",               MessageType.PLAINTEXT);
+        m.put("text/html",                MessageType.PLAINTEXT);
         // Binary
         m.put("application/octet-stream", MessageType.BINARY);
         // GZIP

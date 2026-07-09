@@ -85,6 +85,46 @@ public final class CitrusLogSettings {
     public static final String LOG_MASK_FORM_URL_ENCODED_ENV = CITRUS_LOGGER_ENV_PREFIX + "MASK_FORM_URL_ENCODED";
     public static final String LOG_MASK_FORM_URL_ENCODED_DEFAULT = Boolean.TRUE.toString();
 
+    /**
+     * Flag to enable/disable message content (headers + body) in log output
+     */
+    public static final String LOG_PRINT_MESSAGE_CONTENT_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "print.message.content";
+    public static final String LOG_PRINT_MESSAGE_CONTENT_ENV = CITRUS_LOGGER_ENV_PREFIX + "PRINT_MESSAGE_CONTENT";
+    public static final String LOG_PRINT_MESSAGE_CONTENT_DEFAULT = Boolean.FALSE.toString();
+
+    /**
+     * Flag to enable/disable inbound message content (headers + body) in log output
+     */
+    public static final String LOG_PRINT_INBOUND_MESSAGE_CONTENT_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "print.inbound.message.content";
+    public static final String LOG_PRINT_INBOUND_MESSAGE_CONTENT_ENV = CITRUS_LOGGER_ENV_PREFIX + "PRINT_INBOUND_MESSAGE_CONTENT";
+
+    /**
+     * Flag to enable/disable outbound message content (headers + body) in log output
+     */
+    public static final String LOG_PRINT_OUTBOUND_MESSAGE_CONTENT_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "print.outbound.message.content";
+    public static final String LOG_PRINT_OUTBOUND_MESSAGE_CONTENT_ENV = CITRUS_LOGGER_ENV_PREFIX + "PRINT_OUTBOUND_MESSAGE_CONTENT";
+
+    /**
+     * Layout mode defines how message content gets printed to the log output (summary, verbose, compact, body)
+     */
+    public static final String LOG_PRINT_MESSAGE_LAYOUT_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "print.message.layout";
+    public static final String LOG_PRINT_MESSAGE_LAYOUT_ENV = CITRUS_LOGGER_ENV_PREFIX + "PRINT_MESSAGE_LAYOUT";
+    public static final String LOG_PRINT_MESSAGE_LAYOUT_DEFAULT = "verbose";
+
+    /**
+     * Maximum length of message body in log output before truncation
+     */
+    public static final String LOG_MESSAGE_PAYLOAD_MAX_LENGTH_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "message.payload.max.length";
+    public static final String LOG_MESSAGE_PAYLOAD_MAX_LENGTH_ENV = CITRUS_LOGGER_ENV_PREFIX + "MESSAGE_PAYLOAD_MAX_LENGTH";
+    public static final String LOG_MESSAGE_PAYLOAD_MAX_LENGTH_DEFAULT = "2048";
+
+    /**
+     * ANSI color mode for log output: auto, always, never
+     */
+    public static final String LOG_COLOR_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "color";
+    public static final String LOG_COLOR_ENV = CITRUS_LOGGER_ENV_PREFIX + "COLOR";
+    public static final String LOG_COLOR_DEFAULT = "auto";
+
     private CitrusLogSettings() {
         //prevent instantiation of utility class
     }
@@ -170,5 +210,65 @@ public final class CitrusLogSettings {
                 LOG_MASK_FORM_URL_ENCODED_PROPERTY,
                 LOG_MASK_FORM_URL_ENCODED_ENV,
                 LOG_MASK_FORM_URL_ENCODED_DEFAULT));
+    }
+
+    /**
+     * Gets the print message content enabled/disabled setting.
+     */
+    public static boolean isPrintMessageContentEnabled() {
+        return parseBoolean(CitrusSettings.getPropertyEnvOrDefault(
+                LOG_PRINT_MESSAGE_CONTENT_PROPERTY,
+                LOG_PRINT_MESSAGE_CONTENT_ENV,
+                LOG_PRINT_MESSAGE_CONTENT_DEFAULT));
+    }
+
+    /**
+     * Gets the print inbound message content enabled/disabled setting.
+     */
+    public static boolean isPrintInboundMessageContentEnabled() {
+        return parseBoolean(CitrusSettings.getPropertyEnvOrDefault(
+                LOG_PRINT_INBOUND_MESSAGE_CONTENT_PROPERTY,
+                LOG_PRINT_INBOUND_MESSAGE_CONTENT_ENV,
+                String.valueOf(isPrintMessageContentEnabled())));
+    }
+
+    /**
+     * Gets the print inbound message content enabled/disabled setting.
+     */
+    public static boolean isPrintOutboundMessageContentEnabled() {
+        return parseBoolean(CitrusSettings.getPropertyEnvOrDefault(
+                LOG_PRINT_OUTBOUND_MESSAGE_CONTENT_PROPERTY,
+                LOG_PRINT_OUTBOUND_MESSAGE_CONTENT_ENV,
+                String.valueOf(isPrintMessageContentEnabled())));
+    }
+
+    /**
+     * Gets the maximum message body length for log output.
+     */
+    public static int getMessagePayloadMaxLength() {
+        return Integer.parseInt(CitrusSettings.getPropertyEnvOrDefault(
+                LOG_MESSAGE_PAYLOAD_MAX_LENGTH_PROPERTY,
+                LOG_MESSAGE_PAYLOAD_MAX_LENGTH_ENV,
+                LOG_MESSAGE_PAYLOAD_MAX_LENGTH_DEFAULT));
+    }
+
+    /**
+     * Gets layout mode (full, body, compact) for the message printer.
+     */
+    public static String getPrintMessageLayout() {
+        return CitrusSettings.getPropertyEnvOrDefault(
+                LOG_PRINT_MESSAGE_LAYOUT_PROPERTY,
+                LOG_PRINT_MESSAGE_LAYOUT_ENV,
+                LOG_PRINT_MESSAGE_LAYOUT_DEFAULT);
+    }
+
+    /**
+     * Gets the ANSI color mode (auto, always, never).
+     */
+    public static String getColorMode() {
+        return CitrusSettings.getPropertyEnvOrDefault(
+                LOG_COLOR_PROPERTY,
+                LOG_COLOR_ENV,
+                LOG_COLOR_DEFAULT);
     }
 }

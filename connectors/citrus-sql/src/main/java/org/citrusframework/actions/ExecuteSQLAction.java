@@ -100,7 +100,7 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
 
                 getJdbcTemplate().execute(toExecute);
 
-                logger.info("SQL statement execution successful");
+                logger.debug("SQL statement execution successful");
             } catch (Exception e) {
                 if (ignoreErrors) {
                     logger.error("Ignoring error while executing SQL statement: " + e.getLocalizedMessage());

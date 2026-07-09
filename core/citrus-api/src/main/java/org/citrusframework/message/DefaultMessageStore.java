@@ -48,7 +48,7 @@ public class DefaultMessageStore extends ConcurrentHashMap<String, Message> impl
     @Override
     public void storeMessage(String name, Message message) {
         if (registeredNames.containsKey(name)) {
-            logger.warn("Message with name '{}' already exists in message store - will overwrite the name mapping", name);
+            logger.debug("Message with name '{}' already exists in message store - will overwrite the name mapping", name);
         }
 
         registeredNames.put(name, message.getId());

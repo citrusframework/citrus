@@ -16,6 +16,10 @@
 
 package org.citrusframework.cucumber.backend.spring;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+
 import io.cucumber.core.backend.Container;
 import io.cucumber.core.backend.Glue;
 import io.cucumber.core.backend.Lookup;
@@ -31,10 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
 
 public class CitrusSpringBackend extends CitrusBackend {
 
@@ -69,7 +69,7 @@ public class CitrusSpringBackend extends CitrusBackend {
         public void process(Citrus instance) {
             for (URI gluePath : gluePaths) {
                 String xmlStepConfigLocation = "classpath*:" + ClasspathSupport.resourceNameOfPackageName(ClasspathSupport.packageName(gluePath)) + "/**/*Steps.xml";
-                logger.info("Loading XML step definitions {}", xmlStepConfigLocation);
+                logger.debug("Loading XML step definitions {}", xmlStepConfigLocation);
 
                 ApplicationContext ctx;
                 if (instance.getCitrusContext() instanceof CitrusSpringContext) {
@@ -81,9 +81,7 @@ public class CitrusSpringBackend extends CitrusBackend {
                 Map<String, StepTemplate> xmlSteps = ctx.getBeansOfType(StepTemplate.class);
 
                 for (StepTemplate stepTemplate : xmlSteps.values()) {
-                    if (logger.isDebugEnabled()) {
-                        logger.info("Loading XML step definitions {}", xmlStepConfigLocation);
-                    }
+                    logger.debug("Loading XML step definition: {}", stepTemplate.getName());
                     glue.addStepDefinition(new XmlStepDefinition(stepTemplate, lookup));
                 }
             }

@@ -113,7 +113,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             JmsUtils.closeConnection(connection, true);
         }
 
-        logger.info("Purged JMS queues");
+        logger.debug("Purged JMS queues");
     }
 
     /**

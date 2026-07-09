@@ -32,11 +32,11 @@
       <AppenderRef ref="STDOUT"/>
     </Logger>
 
-    <Logger name="Logger.Message_IN" additivity="false" level="DEBUG">
+    <Logger name="org.citrusframework.report.LoggingReporter.Message_IN" additivity="false" level="DEBUG">
       <AppenderRef ref="STDOUT"/>
     </Logger>
 
-    <Logger name="Logger.Message_OUT" additivity="false" level="DEBUG">
+    <Logger name="org.citrusframework.report.LoggingReporter.Message_OUT" additivity="false" level="DEBUG">
       <AppenderRef ref="STDOUT"/>
     </Logger>
 

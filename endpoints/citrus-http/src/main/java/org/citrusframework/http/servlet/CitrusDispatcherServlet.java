@@ -55,7 +55,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
     /**
      * Http server hosting the servlet
      */
-    private HttpServer httpServer;
+    private final HttpServer httpServer;
 
     /**
      * Default bean names used in default configuration

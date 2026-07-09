@@ -63,11 +63,11 @@ public class SwitchWindowAction extends AbstractSeleniumAction implements Seleni
             context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, lastWindow);
 
             browser.getWebDriver().switchTo().window(targetWindow);
-            logger.info("Switch window focus to {}", windowName);
+            logger.debug("Switch window focus to {}", windowName);
 
             context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, targetWindow);
         } else {
-            logger.info("Skip switch window action as window is already focused");
+            logger.debug("Skip switch window action as window is already focused");
         }
     }
 

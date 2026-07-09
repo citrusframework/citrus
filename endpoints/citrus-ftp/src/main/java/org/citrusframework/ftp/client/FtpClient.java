@@ -150,7 +150,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 }
             }
 
-            logger.info("FTP message was sent to: '{}:{}'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
+            logger.debug("FTP message was sent to: '{}:{}'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
 
             correlationManager.store(correlationKey, response);
         } catch (IOException e) {
@@ -423,7 +423,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 throw new CitrusRuntimeException("FTP server refused connection.");
             }
 
-            logger.info("Opened connection to FTP server");
+            logger.debug("Opened connection to FTP server");
 
             if (getEndpointConfiguration().getUser() != null) {
                 if (logger.isDebugEnabled()) {
@@ -509,7 +509,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                     logger.warn("Failed to disconnect from FTP server", e);
                 }
 
-                logger.info("Closed connection to FTP server");
+                logger.debug("Closed connection to FTP server");
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to logout from FTP server", e);

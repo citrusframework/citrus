@@ -63,7 +63,7 @@ public class AlertAction extends AbstractSeleniumAction {
         }
 
         if (StringUtils.hasText(text)) {
-            logger.info("Validating alert text");
+            logger.debug("Validating alert text");
 
             String alertText = context.replaceDynamicContentInString(text);
 

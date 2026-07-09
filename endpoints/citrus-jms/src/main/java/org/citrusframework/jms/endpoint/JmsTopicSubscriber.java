@@ -175,7 +175,7 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
 
         try {
             if (started.get()) {
-                logger.info("Started JMS topic subscription");
+                logger.debug("Started JMS topic subscription");
             }
         } catch (InterruptedException | ExecutionException e) {
             logger.warn("Failed to wait for topic subscriber to start subscription", e);

@@ -95,7 +95,7 @@ public class PurgeEndpointAction extends AbstractTestAction {
             purgeEndpoint(resolveEndpointName(endpointName), context);
         }
 
-        logger.info("Purged message endpoints");
+        logger.debug("Purged message endpoints");
     }
 
     /**

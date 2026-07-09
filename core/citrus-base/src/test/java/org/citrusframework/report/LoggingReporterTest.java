@@ -16,18 +16,19 @@
 
 package org.citrusframework.report;
 
+import java.time.Duration;
+import java.util.Locale;
+import java.util.function.Consumer;
+
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.log.LogColors;
 import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.time.Duration;
-import java.util.Locale;
-import java.util.function.Consumer;
 
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
@@ -60,6 +61,8 @@ public class LoggingReporterTest {
     @BeforeMethod
     public void beforeMethod() {
         mocks = openMocks(this);
+
+        LogColors.setColorEnabled(false);
 
         test = new DefaultTestCase();
         test.setName("SampleIT");
@@ -101,7 +104,7 @@ public class LoggingReporterTest {
         fixture.onFinish();
         fixture.onFinishSuccess();
 
-        verify(logger).info("TEST SUCCESS SampleIT (org.citrusframework.sample)");
+        verify(logger).info("✔ TEST SUCCESS: SampleIT");
 
         TestResults testResults = new TestResults();
         testResults.addResult(success("testLoggingReporterSuccess-1", getClass().getSimpleName()).withDuration(Duration.ofMillis(111)));
@@ -109,17 +112,18 @@ public class LoggingReporterTest {
 
         fixture.generate(testResults);
 
-        verify(logger).info("SUCCESS (   111 ms) testLoggingReporterSuccess-1");
-        verify(logger).info("SUCCESS (   222 ms) testLoggingReporterSuccess-2");
+        verify(logger).info("  ✔ SUCCESS ( 111ms) testLoggingReporterSuccess-1");
+        verify(logger).info("  ✔ SUCCESS ( 222ms) testLoggingReporterSuccess-2");
 
-        verifyResultSummaryLog(2, 2, 0, 333);
+        verifyResultSummaryLog(2, 2, 0, 0, 333);
 
         verify(logger, never()).debug(anyString());
     }
 
     @Test
     public void testLoggingReporterFailed() {
-        testLoggingReporterFailed((cause) -> verify(logger).error("TEST FAILED SampleIT <org.citrusframework.sample> Nested exception is: Failed!"));
+        testLoggingReporterFailed(
+                (cause) -> verify(logger).info("    CitrusRuntimeException: Failed!"));
     }
 
     @Test
@@ -127,12 +131,16 @@ public class LoggingReporterTest {
         // Override fixture, enable stacktrace output
         fixture = new LoggingReporter(true);
 
-        testLoggingReporterFailed((cause) -> verify(logger).error("TEST FAILED SampleIT <org.citrusframework.sample> Nested exception is: ", cause));
+        testLoggingReporterFailed(
+                (cause) -> verify(logger).error("    CitrusRuntimeException: Failed!", cause));
     }
 
     public void testLoggingReporterFailed(Consumer<Throwable> verifyErrorLogInvocation) {
         var nestedException = new CitrusRuntimeException("I am the final boss.");
         var cause = new CitrusRuntimeException("Failed!", nestedException);
+
+        // Re-inject mock logger in case fixture was replaced
+        setField(requireNonNull(findField(LoggingReporter.class, "logger")), null, logger);
 
         fixture.onStart();
         fixture.onStartSuccess();
@@ -143,6 +151,7 @@ public class LoggingReporterTest {
         fixture.onFinish();
         fixture.onFinishSuccess();
 
+        verify(logger).info("✘ TEST FAILED: SampleIT");
         verifyErrorLogInvocation.accept(cause);
 
         TestResults testResults = new TestResults();
@@ -153,13 +162,13 @@ public class LoggingReporterTest {
 
         fixture.generate(testResults);
 
-        verify(logger).info("FAILURE (  1234 ms) testLoggingReporterFailed-1");
-        verify(logger).info("FAILURE (  2345 ms) testLoggingReporterFailed-2");
-        verify(logger, times(2)).info("\tCaused by: %s: %s".formatted(nestedException.getClass().getSimpleName(), nestedException.getMessage()));
-        verify(logger).info("FAILURE (  3456 ms) testLoggingReporterFailed-3");
-        verify(logger).info("\tCaused by: %s".formatted(customErrorMessage));
+        verify(logger).info("  ✘ FAILED  (1234ms) testLoggingReporterFailed-1");
+        verify(logger).info("  ✘ FAILED  (2345ms) testLoggingReporterFailed-2");
+        verify(logger, times(2)).info("    Caused by: CitrusRuntimeException: I am the final boss.");
+        verify(logger).info("  ✘ FAILED  (3456ms) testLoggingReporterFailed-3");
+        verify(logger).info("    Caused by: custom error message");
 
-        verifyResultSummaryLog(3, 0, 3, 7035);
+        verifyResultSummaryLog(3, 0, 3, 0, 7035);
 
         verify(logger, never()).debug(anyString());
     }
@@ -172,11 +181,11 @@ public class LoggingReporterTest {
 
         fixture.generate(testResults);
 
-        verify(logger).info("SUCCESS (  1000 ms) testLoggingReporterMiscellaneous-1");
-        verify(logger).info("FAILURE (    22 ms) testLoggingReporterMiscellaneous-2");
-        verify(logger).info("\tCaused by: Unknown error");
+        verify(logger).info("  ✔ SUCCESS (1000ms) testLoggingReporterMiscellaneous-1");
+        verify(logger).info("  ✘ FAILED  (  22ms) testLoggingReporterMiscellaneous-2");
+        verify(logger).info("    Caused by: Unknown error");
 
-        verifyResultSummaryLog(2, 1, 1, 1022);
+        verifyResultSummaryLog(2, 1, 1, 0, 1022);
 
         verify(logger, never()).debug(anyString());
     }
@@ -197,9 +206,9 @@ public class LoggingReporterTest {
 
         fixture.generate(testResults);
 
-        verify(logger).info("SKIP (     0 ms) testLoggingReporterSkipped");
+        verify(logger).info("  ⊘ SKIPPED (   0ms) testLoggingReporterSkipped");
 
-        verifyResultSummaryLog(1, 0, 0, 0);
+        verifyResultSummaryLog(1, 0, 0, 1, 0);
 
         verify(logger, never()).debug(anyString());
     }
@@ -233,22 +242,26 @@ public class LoggingReporterTest {
 
     @AfterMethod
     void afterMethodTeardown() throws Exception {
+        LogColors.resetColorsEnabled();
         mocks.close();
     }
 
-    private void verifyResultSummaryLog(int total, int success, int failed, long performance) {
-        verify(logger).info("TOTAL:\t\t" + total);
-        verify(logger).info("PASSED:\t\t" + success + " (" + calculatePercentage(total, success) + "%)");
-        verify(logger).info("FAILED:\t\t" + failed + " (" + calculatePercentage(total, failed) + "%)");
-        verify(logger).info("TIME:\t\t" + performance + " ms");
+    private void verifyResultSummaryLog(int total, int success, int failed, int skipped, long performance) {
+        verify(logger).info("  TOTAL:    " + total);
+        verify(logger).info("  PASSED:   " + success + " (" + calculatePercentage(total, success) + "%)");
+        verify(logger).info("  FAILED:   " + failed + " (" + calculatePercentage(total, failed) + "%)");
+        if (skipped > 0) {
+            verify(logger).info("  SKIPPED:  " + skipped + " (" + calculatePercentage(total, skipped) + "%)");
+        }
+        verify(logger).info("  TIME:     " + performance + " ms");
     }
 
-    private String calculatePercentage(int total, int success) {
-        if (total == 0) {
+    private String calculatePercentage(int total, int count) {
+        if (total == 0 || count == 0) {
             return "0.0";
         }
 
-        double percentage = (double) success / total * 100;
-        return format(Locale.US, "%3.1f", percentage);
+        double percentage = (double) count / total * 100;
+        return format(Locale.US, "%.1f", percentage);
     }
 }

@@ -56,8 +56,8 @@ public interface MessageValidator<T extends ValidationContext> {
     static Map<String, MessageValidator<? extends ValidationContext>> lookup() {
         Map<String, MessageValidator<?>> validators = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
 
-        if (logger.isDebugEnabled()) {
-            validators.forEach((k, v) -> logger.debug("Found message validator '{}' as {}", k, v.getClass()));
+        if (logger.isTraceEnabled()) {
+            validators.forEach((k, v) -> logger.trace("Found message validator '{}' as {}", k, v.getClass()));
         }
 
         return validators;

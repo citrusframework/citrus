@@ -90,7 +90,7 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
         try (Writer fileWriter = new FileWriter(new File(targetDirectory, fileName))) {
             fileWriter.append(content);
             fileWriter.flush();
-            logger.info("Generated test report: {}{}{}", targetDirectory, File.separator, fileName);
+            logger.debug("Generated test report: {}{}{}", targetDirectory, File.separator, fileName);
         } catch (IOException e) {
             logger.error("Failed to create test report", e);
         }

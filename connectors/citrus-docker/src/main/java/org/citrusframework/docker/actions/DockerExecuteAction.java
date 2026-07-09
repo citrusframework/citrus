@@ -109,7 +109,7 @@ public class DockerExecuteAction extends AbstractTestAction {
 
             validateCommandResult(command, context);
 
-            logger.info("Docker command execution successful: '{}'", command.getName());
+            logger.debug("Docker command execution successful: '{}'", command.getName());
         } catch (CitrusRuntimeException e) {
             throw e;
         } catch (Exception e) {

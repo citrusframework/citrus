@@ -50,8 +50,8 @@ public interface ValidationMatcher {
         if (matcher.isEmpty()) {
             matcher.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
-            if (logger.isDebugEnabled()) {
-                matcher.forEach((k, v) -> logger.debug("Found validation matcher '{}' as {}", k, v.getClass()));
+            if (logger.isTraceEnabled()) {
+                matcher.forEach((k, v) -> logger.trace("Found validation matcher '{}' as {}", k, v.getClass()));
             }
         }
         return matcher;

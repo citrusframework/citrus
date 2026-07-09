@@ -53,8 +53,8 @@ public interface HeaderValidator {
         if (validators.isEmpty()) {
             validators.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
 
-            if (logger.isDebugEnabled()) {
-                validators.forEach((k, v) -> logger.debug("Found header validator '{}' as {}", k, v.getClass()));
+            if (logger.isTraceEnabled()) {
+                validators.forEach((k, v) -> logger.trace("Found header validator '{}' as {}", k, v.getClass()));
             }
         }
         return validators;

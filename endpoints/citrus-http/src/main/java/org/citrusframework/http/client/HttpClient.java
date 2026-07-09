@@ -101,7 +101,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         final String endpointUri = getEndpointUri(httpMessage);
         context.setVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + correlationKeyName, endpointUri);
 
-        logger.info("Sending HTTP message to: '{}'", endpointUri);
+        logger.debug("Sending HTTP message to: '{}'", endpointUri);
         if (logger.isDebugEnabled()) {
             logger.debug("Message to send:\n{}", httpMessage.getPayload(String.class));
         }

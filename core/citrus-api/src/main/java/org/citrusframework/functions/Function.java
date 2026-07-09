@@ -47,8 +47,8 @@ public interface Function {
         if (functions.isEmpty()) {
             functions.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
-            if (logger.isDebugEnabled()) {
-                functions.forEach((k, v) -> logger.debug("Found function '{}' as {}", k, v.getClass()));
+            if (logger.isTraceEnabled()) {
+                functions.forEach((k, v) -> logger.trace("Found function '{}' as {}", k, v.getClass()));
             }
         }
 

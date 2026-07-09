@@ -92,7 +92,7 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
             }
         } catch (ActionTimeoutException e) {
             logger.info("No messages received on destination. Message timeout validation OK!");
-            logger.info(e.getMessage());
+            logger.debug(e.getMessage());
         }
     }
 

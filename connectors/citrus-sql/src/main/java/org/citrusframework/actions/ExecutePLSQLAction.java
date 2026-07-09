@@ -117,7 +117,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
 
                 getJdbcTemplate().execute(toExecute);
 
-                logger.info("PLSQL statement execution successful");
+                logger.debug("PLSQL statement execution successful");
             } catch (DataAccessException e) {
                 if (ignoreErrors) {
                     logger.warn("Ignoring error while executing PLSQL statement: " + e.getMessage());

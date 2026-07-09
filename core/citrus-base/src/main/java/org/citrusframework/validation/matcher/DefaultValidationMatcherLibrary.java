@@ -96,7 +96,7 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
                 addMember(k, m);
             }
 
-            logger.debug("Register validation matcher '{}' as {}", k, m.getClass());
+            logger.trace("Register validation matcher '{}' as {}", k, m.getClass());
         });
     }
 }

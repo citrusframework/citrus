@@ -147,6 +147,11 @@ public class MessagePayloadUtils {
             return payload.trim();
         }
 
+        if (payload.trim().startsWith("[") && payload.trim().endsWith("]") && !payload.contains("\"")) {
+            // Array of numbers e.g. bytes array - do not pretty print
+            return payload.trim();
+        }
+
         int indentNum = 2;
         int indent = 0;
         boolean inQuote = false;
@@ -227,5 +232,23 @@ public class MessagePayloadUtils {
             }
         }
         return sb.toString();
+    }
+
+    public static String sizeInfo(Message message) {
+        String sizeInfo;
+        if (message.getHeader("Content-Length") != null) {
+            sizeInfo = message.getHeader("Content-Length") + " bytes";
+        } else if (message.getPayload() != null) {
+            try {
+                byte[] bytes = message.getPayload(byte[].class);
+                sizeInfo = bytes.length + " bytes";
+            } catch (Exception e) {
+                sizeInfo = "-1 bytes";
+            }
+        } else {
+            sizeInfo = "empty";
+        }
+
+        return sizeInfo;
     }
 }

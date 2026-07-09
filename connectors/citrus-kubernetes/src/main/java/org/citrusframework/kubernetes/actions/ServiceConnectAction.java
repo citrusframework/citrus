@@ -69,13 +69,13 @@ public class ServiceConnectAction extends AbstractKubernetesAction {
 
         LocalPortForward portForward;
         if (StringUtils.hasText(localPort)) {
-            logger.info("Using local port {} for Kubernetes service {}", localPort, serviceName);
+            logger.debug("Using local port {} for Kubernetes service {}", localPort, serviceName);
             portForward = getKubernetesClient().services()
                     .inNamespace(namespace(context))
                     .withName(serviceName)
                     .portForward(Integer.parseInt(context.replaceDynamicContentInString(port)), Integer.parseInt(context.replaceDynamicContentInString(localPort)));
         } else {
-            logger.info("Using random local port for Kubernetes service {}", serviceName);
+            logger.debug("Using random local port for Kubernetes service {}", serviceName);
             portForward = getKubernetesClient().services()
                     .inNamespace(namespace(context))
                     .withName(serviceName)

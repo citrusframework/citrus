@@ -48,7 +48,7 @@ public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer impl
             return;
         }
 
-        logger.info("Entering before test block");
+        logger.debug("Entering before test block");
 
         if (logger.isDebugEnabled()) {
             logger.debug("Executing {} actions before test", actions.size());

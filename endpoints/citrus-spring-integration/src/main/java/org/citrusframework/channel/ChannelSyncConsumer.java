@@ -83,7 +83,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
             throw new CitrusRuntimeException("Failed to send message to channel: '" + replyChannel + "'", e);
         }
 
-        logger.info("Message was sent to reply channel: '{}'", replyChannel);
+        logger.debug("Message was sent to reply channel: '{}'", replyChannel);
     }
 
     /**

@@ -35,11 +35,11 @@ public class KubernetesDisconnectAction extends AbstractKubernetesAction impleme
             return;
         }
 
-        logger.info("Disconnect from Kubernetes cluster");
+        logger.debug("Disconnect from Kubernetes cluster");
         context.setVariable(KubernetesVariableNames.CONNECTED.value(), false);
 
         if (isAutoRemoveResources()) {
-            logger.info("Remove resources from Kubernetes cluster");
+            logger.debug("Remove resources from Kubernetes cluster");
         }
     }
 

@@ -87,7 +87,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
                 Thread.currentThread().interrupt();
             }
 
-            logger.info("Returning after {}", autoSleep);
+            logger.debug("Returning after {}", autoSleep);
         }
     }
 

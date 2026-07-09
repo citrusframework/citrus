@@ -52,13 +52,13 @@ public class WebSocketProducer implements Producer {
     public void send(Message message, TestContext context) {
         ObjectHelper.assertNotNull(message, "Message is empty - unable to send empty message");
 
-        logger.info("Sending WebSocket message ...");
+        logger.debug("Sending WebSocket message ...");
 
         context.onOutboundMessage(message);
 
         WebSocketMessage wsMessage = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context);
         if (endpointConfiguration.getHandler().sendMessage(wsMessage)) {
-            logger.info("WebSocket Message was successfully sent");
+            logger.debug("WebSocket Message was successfully sent");
         }
     }
 

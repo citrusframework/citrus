@@ -67,11 +67,11 @@ public class SleepAction extends AbstractTestAction {
                 parsedDuration = Duration.ofMillis(TimeUnit.MILLISECONDS.convert(Long.parseLong(duration), timeUnit));
             }
 
-            logger.info("Sleeping {} {}", duration, timeUnit);
+            logger.debug("Sleeping {} {}", duration, timeUnit);
 
             TimeUnit.MILLISECONDS.sleep(parsedDuration.toMillis());
 
-            logger.info("Returning after {} {}", duration, timeUnit);
+            logger.debug("Returning after {} {}", duration, timeUnit);
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException(e);
         }

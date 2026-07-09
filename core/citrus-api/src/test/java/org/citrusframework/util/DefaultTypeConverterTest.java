@@ -17,12 +17,16 @@
 package org.citrusframework.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import javax.xml.transform.Source;
 
 import org.citrusframework.xml.StringSource;
@@ -37,7 +41,7 @@ public class DefaultTypeConverterTest {
     private final DefaultTypeConverter converter = DefaultTypeConverter.INSTANCE;
 
     @Test
-    public void testConvertIfNecessary() {
+    public void testConvertIfNecessary() throws IOException {
         String payload = "Hello Citrus!";
 
         Assert.assertEquals(converter.convertIfNecessary("1", Byte.class), Byte.valueOf((byte) 1));
@@ -75,5 +79,17 @@ public class DefaultTypeConverterTest {
         Assert.assertEquals(converter.convertIfNecessary(payload, byte[].class), payload.getBytes());
         Assert.assertEquals(converter.convertIfNecessary(payload.getBytes(), String.class), Arrays.toString(payload.getBytes()));
         Assert.assertEquals(converter.convertIfNecessary(ByteBuffer.wrap(payload.getBytes()), String.class), payload);
+        Assert.assertEquals(converter.convertIfNecessary(new ByteArrayInputStream(payload.getBytes()), String.class), Arrays.toString(payload.getBytes()));
+        Assert.assertEquals(converter.convertIfNecessary(new GZIPInputStream(new ByteArrayInputStream(getZipped(payload.getBytes()))), String.class), Arrays.toString(payload.getBytes()));
+    }
+
+    private byte[] getZipped(byte[] in) throws IOException {
+        try (ByteArrayOutputStream zipped = new ByteArrayOutputStream()) {
+            try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
+                gzipOutputStream.write(in);
+                gzipOutputStream.flush();
+            }
+            return zipped.toByteArray();
+        }
     }
 }
