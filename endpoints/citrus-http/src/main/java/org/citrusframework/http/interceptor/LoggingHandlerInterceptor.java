@@ -17,6 +17,7 @@
 package org.citrusframework.http.interceptor;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Enumeration;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,8 @@ import org.citrusframework.report.MessageListeners;
 import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -121,14 +124,14 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
         builder.append(request.getRequestURI());
         builder.append(NEWLINE);
 
-        Enumeration<?> headerNames = request.getHeaderNames();
+        Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement().toString();
+            String headerName = headerNames.nextElement();
 
             builder.append(headerName);
             builder.append(":");
 
-            Enumeration<?> headerValues = request.getHeaders(headerName);
+            Enumeration<String> headerValues = request.getHeaders(headerName);
             if (headerValues.hasMoreElements()) {
                 builder.append(headerValues.nextElement());
             }
@@ -142,7 +145,10 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
         }
 
         builder.append(NEWLINE);
-        builder.append(FileUtils.readToString(request.getInputStream()));
+
+        String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
+        String contentEncoding = request.getHeader(HttpHeaders.CONTENT_ENCODING);
+        builder.append(LoggingInterceptorUtils.getBodyContent(FileUtils.copyToByteArray(request.getInputStream()), contentType, contentEncoding));
 
         return builder.toString();
     }
@@ -161,14 +167,42 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
     private String getResponseContent(HttpServletRequest request, HttpServletResponse response, Object handler) {
         var builder = new StringBuilder();
 
-        builder.append(response);
+        builder.append(request.getProtocol());
+        builder.append(" ");
+        builder.append(HttpStatus.valueOf(response.getStatus()));
+        builder.append(NEWLINE);
+
+        Collection<String> headerNames = response.getHeaderNames();
+        for (String headerName : headerNames) {
+            builder.append(headerName);
+            builder.append(":");
+
+            Collection<String> headerValues = response.getHeaders(headerName);
+            builder.append(String.join(",", headerValues));
+
+            builder.append(NEWLINE);
+        }
+
+        builder.append(NEWLINE);
 
         if (handler instanceof HandlerMethod handlerMethod) {
             if (handlerMethod.getBean() instanceof HttpMessageController httpMessageController) {
                 ResponseEntity<?> responseEntity = httpMessageController.getResponseCache(request);
                 if (responseEntity != null) {
+                    String contentType = responseEntity.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
+                    String contentEncoding = responseEntity.getHeaders().getFirst(HttpHeaders.CONTENT_ENCODING);
+
                     builder.append(NEWLINE);
-                    builder.append(responseEntity.getBody());
+                    byte[] body;
+                    if (responseEntity.getBody() == null) {
+                        body = new byte[0];
+                    } else if (responseEntity.getBody() instanceof byte[] bytes) {
+                        body = bytes;
+                    } else {
+                        body = contextFactory.getObject().getTypeConverter().convertIfNecessary(responseEntity.getBody(), byte[].class);
+                    }
+
+                    builder.append(LoggingInterceptorUtils.getBodyContent(body, contentType, contentEncoding));
                 }
             }
         }

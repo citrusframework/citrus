@@ -35,8 +35,7 @@ public class MessagePayloadUtilsTest {
                 String.format("{%n  \"user\": \"citrus\"%n}"));
         assertEquals(MessagePayloadUtils.prettyPrint("{\"user\":\"citrus\",\"age\": 32}"),
                 String.format("{%n  \"user\": \"citrus\",%n  \"age\": 32%n}"));
-        assertEquals(MessagePayloadUtils.prettyPrint("[22, 32]"),
-                String.format("[%n22,%n32%n]"));
+        assertEquals(MessagePayloadUtils.prettyPrint("[22, 32]"), "[22, 32]");
         assertEquals(MessagePayloadUtils.prettyPrint("[{\"user\":\"citrus\",\"age\": 32}]"),
                 String.format("[%n  {%n    \"user\": \"citrus\",%n    \"age\": 32%n  }%n]"));
         assertEquals(MessagePayloadUtils.prettyPrint("[{\"user\":\"citrus\",\"age\": 32}, {\"user\":\"foo\",\"age\": 99}]"),

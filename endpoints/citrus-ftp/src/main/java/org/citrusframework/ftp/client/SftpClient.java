@@ -277,7 +277,7 @@ public class SftpClient extends FtpClient {
 
                 getEndpointConfiguration().getSessionConfigs().entrySet()
                         .stream()
-                        .peek(entry -> logger.info("Setting session configuration: {}='{}'", entry.getKey(), entry.getValue()))
+                        .peek(entry -> logger.debug("Setting session configuration: {}='{}'", entry.getKey(), entry.getValue()))
                         .forEach(entry -> session.setConfig(entry.getKey(), entry.getValue()));
 
                 session.connect((int) getEndpointConfiguration().getTimeout());
@@ -286,7 +286,7 @@ public class SftpClient extends FtpClient {
                 channel.connect((int) getEndpointConfiguration().getTimeout());
                 sftp = (ChannelSftp) channel;
 
-                logger.info("Opened secure connection to FTP server");
+                logger.debug("Opened secure connection to FTP server");
             } catch (JSchException e) {
                 throw new CitrusRuntimeException(String.format("Failed to login to FTP server using credentials: %s:%s", getEndpointConfiguration().getUser(), getEndpointConfiguration().getPassword()), e);
             }
@@ -366,7 +366,7 @@ public class SftpClient extends FtpClient {
     public void destroy() {
         if (session != null && session.isConnected()) {
             session.disconnect();
-            logger.info("Closed connection to FTP server");
+            logger.debug("Closed connection to FTP server");
         }
 
         sftp.disconnect();

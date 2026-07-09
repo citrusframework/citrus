@@ -46,7 +46,7 @@ public class AgentDisconnectAction extends ServiceDisconnectAction {
 
     @Override
     public void doExecute(TestContext context) {
-        logger.info("Disconnect from Kubernetes agent '{}'", agentName);
+        logger.debug("Disconnect from Kubernetes agent '{}'", agentName);
 
         if (KubernetesSupport.isConnected(context)) {
             getKubernetesClient().resourceList(getAgentManifest())

@@ -112,7 +112,7 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter {
      */
     public TestContextFactory getTestContextFactory() {
         if (testContextFactory == null) {
-            logger.warn("Could not identify proper test context factory from Spring bean application context - constructing own test context factory. " +
+            logger.debug("Could not identify proper test context factory from Spring bean application context - constructing own test context factory. " +
                     "This restricts test context capabilities to an absolute minimum! You could do better when enabling the root application context for this server instance.");
 
             testContextFactory = TestContextFactory.newInstance();

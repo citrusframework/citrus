@@ -71,7 +71,7 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
-        logger.info("Start " + MessageType.FORM_URL_ENCODED + " message validation");
+        logger.debug("Start " + MessageType.FORM_URL_ENCODED + " message validation");
 
         try {
             Message formMessage = new DefaultMessage(receivedMessage);
@@ -85,7 +85,7 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
             throw new ValidationException("Failed to validate " + MessageType.FORM_URL_ENCODED + " message", e);
         }
 
-        logger.info("Validation of " + MessageType.FORM_URL_ENCODED + " message finished successfully: All values OK");
+        logger.debug("Validation of " + MessageType.FORM_URL_ENCODED + " message finished successfully: All values OK");
     }
 
     /**

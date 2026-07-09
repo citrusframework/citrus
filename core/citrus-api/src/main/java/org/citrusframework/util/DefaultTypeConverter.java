@@ -16,15 +16,6 @@
 
 package org.citrusframework.util;
 
-import org.citrusframework.CitrusSettings;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.xml.StringSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Node;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +28,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.xml.StringSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Node;
 
 public class DefaultTypeConverter implements TypeConverter {
 
@@ -100,9 +100,8 @@ public class DefaultTypeConverter implements TypeConverter {
                 }
             } else if (target instanceof ByteBuffer) {
                 return (T) ((ByteBuffer) target).array();
-            } else if (target instanceof ByteArrayInputStream) {
+            } else if (target instanceof InputStream is) {
                 try {
-                    InputStream is = ((ByteArrayInputStream) target);
                     ByteBuffer byteBuffer = ByteBuffer.allocate(is.available());
                     while (is.available() > 0) {
                         byteBuffer.put((byte) is.read());
@@ -134,7 +133,7 @@ public class DefaultTypeConverter implements TypeConverter {
             }
         }
 
-        if (type.equals(String.class)) {
+        if (String.class.equals(type)) {
             if (target == null) {
                 return (T) "null";
             } else if (ByteBuffer.class.isAssignableFrom(target.getClass())) {
@@ -192,7 +191,7 @@ public class DefaultTypeConverter implements TypeConverter {
             return convertAfter(target, type);
         } catch (Exception e) {
             if (String.class.equals(type)) {
-                logger.warn("Using default toString representation because object type conversion failed with: {}", e.getMessage());
+                logger.debug("Using default toString representation because object type conversion failed with: {}", e.getMessage());
                 return (T) target.toString();
             }
 
@@ -245,7 +244,7 @@ public class DefaultTypeConverter implements TypeConverter {
                 }
             }
 
-            logger.warn("Using default toString representation for object type {}", target.getClass());
+            logger.debug("Using default toString representation for object type {}", target.getClass());
             return (T) target.toString();
         }
 

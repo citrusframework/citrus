@@ -141,11 +141,7 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
                 getEndpointConfiguration(),
                 testContext);
 
-        if (logger.isDebugEnabled()) {
-            logger.info("Received Kafka message on topic '{}': {}", topic, received);
-        } else {
-            logger.info("Received Kafka message on topic '{}'", topic);
-        }
+        logger.debug("Received Kafka message on topic '{}'", topic);
 
         return received;
     }

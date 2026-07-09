@@ -86,7 +86,7 @@ public class BinaryMessageValidator extends DefaultMessageValidator {
                     controlResult.write((char)control);
 
                     if (received != control) {
-                        logger.info("Received input stream is not equal - expected '%s', but was '%s'".formatted(controlResult.toString(), receivedResult.toString()));
+                        logger.debug("Received input stream is not equal - expected '%s', but was '%s'".formatted(controlResult.toString(), receivedResult.toString()));
                         throw new ValidationException(("Received input stream is not equal to given control, " +
                                 "expected '%s', but was '%s'").formatted(
                                         controlResult.toString().substring(controlResult.toString().length() - Math.min(25, controlResult.size())),

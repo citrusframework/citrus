@@ -48,8 +48,8 @@ public interface SchemaValidator<T extends SchemaValidationContext> {
     static Map<String, SchemaValidator<? extends SchemaValidationContext>> lookup() {
         Map<String, SchemaValidator<?>> validators = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
 
-        if (logger.isDebugEnabled()) {
-            validators.forEach((k, v) -> logger.debug("Found message validator '{}' as {}", k, v.getClass()));
+        if (logger.isTraceEnabled()) {
+            validators.forEach((k, v) -> logger.trace("Found message validator '{}' as {}", k, v.getClass()));
         }
 
         return validators;

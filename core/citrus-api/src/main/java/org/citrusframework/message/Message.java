@@ -17,12 +17,10 @@
 package org.citrusframework.message;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.log.LogMessageModifier;
 
 /**
  * @since 2.0
@@ -33,18 +31,14 @@ public interface Message extends Serializable {
      * Prints message content to String representation.
      */
     default String print() {
-        return print(getPayload(String.class).trim(), getHeaders(), getHeaderData());
+        return new DefaultMessagePrinter().print(this);
     }
 
     /**
-     * Prints given message content (body, headers, headerData) to String representation.
+     * Prints message content to String representation.
      */
-    default String print(String body, Map<String, Object> headers, List<String> headerData) {
-        if (headerData == null || headerData.isEmpty()) {
-            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + "]\n[headers: " + Collections.unmodifiableMap(headers) + "]\n[payload: " + MessagePayloadUtils.prettyPrint(body) + "]";
-        } else {
-            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + "]\n[headers: " + Collections.unmodifiableMap(headers) + "]\n[header-data: " + Collections.unmodifiableList(headerData) + "]\n[payload: " + MessagePayloadUtils.prettyPrint(body) + "]";
-        }
+    default String print(MessagePrinterLayout layout) {
+        return new DefaultMessagePrinter(layout).print(this);
     }
 
     /**
@@ -55,12 +49,7 @@ public interface Message extends Serializable {
             return print();
         }
 
-        String payload = getPayload(String.class).trim();
-        if (context.getLogModifier() instanceof LogMessageModifier modifier) {
-            return print(modifier.mask(payload), modifier.maskHeaders(this), modifier.maskHeaderData(this));
-        }
-
-        return print(context.getLogModifier().mask(payload), getHeaders(), getHeaderData());
+        return new DefaultMessagePrinter(context.getLogModifier()).print(this);
     }
 
     /**

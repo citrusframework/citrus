@@ -20,10 +20,8 @@ import java.io.StringWriter;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.message.Message;
-import org.citrusframework.report.TestFlowReporter;
 import org.citrusframework.report.OutputStreamReporter;
+import org.citrusframework.report.TestFlowReporter;
 import org.citrusframework.report.TestResults;
 
 public class AgentTestListener extends OutputStreamReporter {
@@ -129,22 +127,6 @@ public class AgentTestListener extends OutputStreamReporter {
         pending.addResult(test.getTestResult());
         testFlowReporter.onTestSkipped(test);
         super.onTestSkipped(test);
-    }
-
-    @Override
-    public void onInboundMessage(Message message, TestContext context) {
-        info("INBOUND_MESSAGE");
-        separator();
-        info(message.print(context));
-        separator();
-    }
-
-    @Override
-    public void onOutboundMessage(Message message, TestContext context) {
-        info("OUTBOUND_MESSAGE");
-        separator();
-        info(message.print(context));
-        separator();
     }
 
     public void reset() {

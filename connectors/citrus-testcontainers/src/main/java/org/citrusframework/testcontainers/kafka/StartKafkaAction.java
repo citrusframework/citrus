@@ -81,7 +81,7 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
             result.all().get();
 
             for (String topic : topics) {
-                logger.info("Successfully created Kafka topic: {}", context.replaceDynamicContentInString(topic));
+                logger.debug("Successfully created Kafka topic: {}", context.replaceDynamicContentInString(topic));
             }
         } catch (ExecutionException | InterruptedException e) {
             throw new CitrusRuntimeException("Failed to create Kafka topics", e);

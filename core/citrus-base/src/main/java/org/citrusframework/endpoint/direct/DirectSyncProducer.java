@@ -66,7 +66,7 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
             logger.debug("Message to send is:\n{}", message.toString());
         }
 
-        logger.info("Message was sent to queue: '{}'", destinationQueueName);
+        logger.debug("Message was sent to queue: '{}'", destinationQueueName);
 
         MessageQueue replyQueue = getReplyQueue(message, context);
         getDestinationQueue(context).send(message);
@@ -75,7 +75,7 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
         if (replyMessage == null) {
             throw new ReplyMessageTimeoutException(endpointConfiguration.getTimeout(), destinationQueueName);
         } else {
-            logger.info("Received synchronous response from reply queue");
+            logger.debug("Received synchronous response from reply queue");
         }
 
         correlationManager.store(correlationKey, replyMessage);

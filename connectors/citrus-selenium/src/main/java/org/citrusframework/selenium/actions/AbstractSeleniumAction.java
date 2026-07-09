@@ -64,7 +64,7 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
 
         execute(browserToUse, context);
 
-        logger.info("Selenium browser command execution successful: '{}'", getName());
+        logger.debug("Selenium browser command execution successful: '{}'", getName());
     }
 
     protected abstract void execute(SeleniumBrowser browser, TestContext context);

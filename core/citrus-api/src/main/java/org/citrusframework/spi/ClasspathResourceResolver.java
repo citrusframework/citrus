@@ -145,7 +145,7 @@ public class ClasspathResourceResolver {
                     continue;
                 }
 
-                logger.debug("Scanning for resources in: {}", urlPath);
+                logger.trace("Scanning for resources in: {}", urlPath);
 
                 File file = new File(urlPath);
                 if (file.isDirectory()) {

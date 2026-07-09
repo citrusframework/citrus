@@ -50,7 +50,7 @@ public class TraceVariablesAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        logger.info("Trace variables");
+        logger.debug("Trace variables");
 
         Iterator<String> it;
         if (variableNames != null && !variableNames.isEmpty()) {

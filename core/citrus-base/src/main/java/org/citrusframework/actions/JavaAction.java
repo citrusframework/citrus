@@ -126,7 +126,7 @@ public class JavaAction extends AbstractTestAction {
                     Arrays.stream(methodTypes).map(Class::getSimpleName).collect(Collectors.joining(",")) + ")' for class '" + instance.getClass() + "'");
         }
 
-        logger.info("Invoking method '{}' on instance '{}'", methodToRun, instance.getClass());
+        logger.debug("Invoking method '{}' on instance '{}'", methodToRun, instance.getClass());
 
         methodToRun.invoke(instance, methodObjects);
     }
@@ -153,7 +153,7 @@ public class JavaAction extends AbstractTestAction {
                 "is set for Java reflection call");
         }
 
-        logger.info("Instantiating class for name '{}'", className);
+        logger.debug("Instantiating class for name '{}'", className);
 
         Class<?> classToRun = Class.forName(className, true, ClassLoaderHelper.getClassLoader());
 

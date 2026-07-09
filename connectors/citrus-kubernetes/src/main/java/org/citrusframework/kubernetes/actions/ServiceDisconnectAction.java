@@ -48,7 +48,7 @@ public class ServiceDisconnectAction extends AbstractKubernetesAction {
             return;
         }
 
-        logger.info("Disconnect from Kubernetes service '{}'", serviceName);
+        logger.debug("Disconnect from Kubernetes service '{}'", serviceName);
 
         if (context.getReferenceResolver().isResolvable(serviceName + ":port-forward", LocalPortForward.class)) {
             LocalPortForward portForward = context.getReferenceResolver().resolve(serviceName + ":port-forward", LocalPortForward.class);

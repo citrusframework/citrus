@@ -47,7 +47,7 @@ public class SequenceAfterSuite extends AbstractSuiteActionContainer implements 
     public void doExecute(TestContext context) {
         boolean success = true;
 
-        logger.info("Entering after suite block");
+        logger.debug("Entering after suite block");
 
         if (logger.isDebugEnabled()) {
             logger.debug("Executing {} actions after suite", actions.size());

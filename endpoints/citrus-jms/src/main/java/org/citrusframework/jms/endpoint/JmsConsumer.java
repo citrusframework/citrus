@@ -88,7 +88,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
             throw new MessageTimeoutException(endpointConfiguration.getTimeout(), getDestinationNameWithSelector(destinationName, selector));
         }
 
-        logger.info("Received JMS message on destination: '{}'", getDestinationNameWithSelector(destinationName, selector));
+        logger.debug("Received JMS message on destination: '{}'", getDestinationNameWithSelector(destinationName, selector));
 
         return receivedJmsMessage;
     }
@@ -113,7 +113,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
             throw new MessageTimeoutException(endpointConfiguration.getTimeout(), getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector));
         }
 
-        logger.info("Received JMS message on destination: '{}'", getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector));
+        logger.debug("Received JMS message on destination: '{}'", getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector));
 
         return receivedJmsMessage;
     }

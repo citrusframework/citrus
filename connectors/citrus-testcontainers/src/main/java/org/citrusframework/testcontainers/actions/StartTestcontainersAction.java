@@ -62,7 +62,7 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
 
     @Override
     public void doExecute(TestContext context) {
-        logger.info("Starting Testcontainers container '{}'", containerName);
+        logger.debug("Starting Testcontainers container '{}'", containerName);
 
         // Give subclasses a chance to configure the container with the test context.
         configure(container, context);

@@ -88,7 +88,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
 
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(replyDestination));
+        logger.debug("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(replyDestination));
     }
 
     /**

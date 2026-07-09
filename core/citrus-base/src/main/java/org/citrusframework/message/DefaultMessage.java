@@ -146,7 +146,7 @@ public class DefaultMessage implements Message {
 
     @Override
     public String toString() {
-        return print();
+        return print(MessagePrinterLayout.COMPACT);
     }
 
     @Override

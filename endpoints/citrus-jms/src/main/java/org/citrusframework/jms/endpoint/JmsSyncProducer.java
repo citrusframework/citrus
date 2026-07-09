@@ -142,7 +142,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
                 messageConsumer = createMessageConsumer(replyToDestination, jmsRequest.getJMSMessageID());
             }
 
-            logger.info("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(destination));
+            logger.debug("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(destination));
             logger.debug("Receiving reply message on destination: '{}'", replyToDestination);
 
             jakarta.jms.Message jmsReplyMessage = (endpointConfiguration.getTimeout() >= 0) ? messageConsumer.receive(endpointConfiguration.getTimeout()) : messageConsumer.receive();
@@ -153,7 +153,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
             Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(jmsReplyMessage, endpointConfiguration, context);
 
-            logger.info("Received reply message on JMS destination: '{}'", replyToDestination);
+            logger.debug("Received reply message on JMS destination: '{}'", replyToDestination);
 
             context.onInboundMessage(responseMessage);
 

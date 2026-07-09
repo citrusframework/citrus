@@ -76,7 +76,7 @@ public class JBangAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         String scriptName = FileUtils.getFileName(context.replaceDynamicContentInString(scriptOrFile));
-        logger.info("Running JBang script '%s'".formatted(scriptName));
+        logger.debug("Running JBang script '%s'".formatted(scriptName));
 
         ProcessAndOutput result = JBangSupport.jbang()
                 .app(app)

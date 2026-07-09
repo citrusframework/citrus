@@ -91,7 +91,7 @@ public class AgentConnectAction extends ServiceConnectAction {
     @Override
     public void doExecute(TestContext context) {
         String agent = context.replaceDynamicContentInString(agentName);
-        logger.info("Creating Kubernetes agent '{}'", agent);
+        logger.debug("Creating Kubernetes agent '{}'", agent);
 
         Path testJarPath = null;
         if (testJar != null) {
@@ -111,7 +111,7 @@ public class AgentConnectAction extends ServiceConnectAction {
                         .inNamespace(namespace(context))
                         .create();
             } else {
-                logger.info("Connecting to Kubernetes agent '{}' in namespace {}", agent, namespace(context));
+                logger.debug("Connecting to Kubernetes agent '{}' in namespace {}", agent, namespace(context));
             }
 
             if (autoCreate && isAutoRemoveResources()) {
@@ -135,7 +135,7 @@ public class AgentConnectAction extends ServiceConnectAction {
             jbang.agent().start();
         }
 
-        logger.info("Citrus agent service '{}' created successfully", agent);
+        logger.debug("Citrus agent service '{}' created successfully", agent);
         super.doExecute(context);
 
         if (waitForRunningState) {

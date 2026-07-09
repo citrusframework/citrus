@@ -72,7 +72,7 @@ public class DirectSyncConsumer extends DirectConsumer implements ReplyProducer 
         }
 
         replyQueue.send(message);
-        logger.info("Message was sent to reply channel: '{}'", replyQueue);
+        logger.debug("Message was sent to reply channel: '{}'", replyQueue);
     }
 
     /**

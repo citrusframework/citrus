@@ -67,7 +67,7 @@ public class CreateEndpointsAction extends AbstractTestAction {
             new EndpointConfigurationScript(resolvedScript, context.getReferenceResolver()) {
                 @Override
                 protected void onCreate(Endpoint endpoint) {
-                    logger.info("Creating endpoint from script configuration: %s".formatted(endpoint.getName()));
+                    logger.debug("Creating endpoint from script configuration: %s".formatted(endpoint.getName()));
                 }
             }.execute(context);
         } catch (IOException e) {

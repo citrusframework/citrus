@@ -87,7 +87,7 @@ public class CreateEndpointAction extends AbstractTestAction {
             if (context.getReferenceResolver().isResolvable(resolvedEndpointName)) {
                 logger.warn("Skip binding endpoint to bean registry, because endpoint already exists: {}", resolvedEndpointName);
             } else {
-                logger.info("Binding endpoint {} to bean registry", resolvedEndpointName);
+                logger.debug("Binding endpoint {} to bean registry", resolvedEndpointName);
                 context.getReferenceResolver().bind(resolvedEndpointName, endpoint);
 
                 if (endpoint instanceof InitializingPhase initializingPhase) {

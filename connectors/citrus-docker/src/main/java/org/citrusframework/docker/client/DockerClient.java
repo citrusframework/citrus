@@ -80,7 +80,7 @@ public class DockerClient extends AbstractEndpoint implements Producer, ReplyCon
         DockerCommand command = message.getPayload(DockerCommand.class);
         command.execute(this, context);
 
-        logger.info("Docker request was sent to endpoint: '{}'", getEndpointConfiguration().getDockerClientConfig().getDockerHost());
+        logger.debug("Docker request was sent to endpoint: '{}'", getEndpointConfiguration().getDockerClientConfig().getDockerHost());
 
         correlationManager.store(correlationKey, command);
 

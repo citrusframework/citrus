@@ -45,7 +45,7 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements
 
     @Override
     public void doExecute(TestContext context) {
-        logger.info("Entering before suite block");
+        logger.debug("Entering before suite block");
 
         if (logger.isDebugEnabled()) {
             logger.debug("Executing {} actions before suite", actions.size());

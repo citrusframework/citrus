@@ -52,8 +52,8 @@ public interface TypeConverter {
                 converters.put(DEFAULT, DefaultTypeConverter.INSTANCE);
             }
 
-            if (logger.isDebugEnabled()) {
-                converters.forEach((k, v) -> logger.debug("Found type converter '{}' as {}", k, v.getClass()));
+            if (logger.isTraceEnabled()) {
+                converters.forEach((k, v) -> logger.trace("Found type converter '{}' as {}", k, v.getClass()));
             }
         }
 

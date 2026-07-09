@@ -85,7 +85,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
             throw new MessageTimeoutException(timeout, endpointUri);
         }
 
-        logger.info("Received message from camel endpoint: '{}'", endpointUri);
+        logger.debug("Received message from camel endpoint: '{}'", endpointUri);
 
         Message message = endpointConfiguration.getMessageConverter().convertInbound(exchange, endpointConfiguration, context);
         context.onInboundMessage(message);
@@ -117,7 +117,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to camel endpoint: '{}'", exchange.getFromEndpoint());
+        logger.debug("Message was sent to camel endpoint: '{}'", exchange.getFromEndpoint());
     }
 
     /**

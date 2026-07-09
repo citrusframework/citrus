@@ -59,13 +59,13 @@ public class CloseWindowAction extends AbstractSeleniumAction implements Seleniu
             throw new CitrusRuntimeException("Failed to find window for handle " + context.getVariable(windowName));
         }
 
-        logger.info("Current window: {}", browser.getWebDriver().getWindowHandle());
-        logger.info("Window to close: {}", context.getVariable(windowName));
+        logger.debug("Current window: {}", browser.getWebDriver().getWindowHandle());
+        logger.debug("Window to close: {}", context.getVariable(windowName));
 
         if (browser.getWebDriver().getWindowHandle().equals((context.getVariable(windowName)))) {
             browser.getWebDriver().close();
 
-            logger.info("Switch back to main window!");
+            logger.debug("Switch back to main window!");
             if (context.getVariables().containsKey(SeleniumHeaders.SELENIUM_LAST_WINDOW)) {
                 browser.getWebDriver().switchTo().window(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW));
                 context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW));

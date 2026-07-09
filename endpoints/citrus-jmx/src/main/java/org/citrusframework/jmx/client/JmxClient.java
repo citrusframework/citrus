@@ -257,7 +257,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
                 scheduleReconnect();
             }
         };
-        logger.info("Reconnecting to MBean server {} in {} milliseconds.", getEndpointConfiguration().getServerUrl(), getEndpointConfiguration().getDelayOnReconnect());
+        logger.debug("Reconnecting to MBean server {} in {} milliseconds.", getEndpointConfiguration().getServerUrl(), getEndpointConfiguration().getDelayOnReconnect());
         scheduledExecutor.schedule(startRunnable, getEndpointConfiguration().getDelayOnReconnect(), TimeUnit.MILLISECONDS);
     }
 

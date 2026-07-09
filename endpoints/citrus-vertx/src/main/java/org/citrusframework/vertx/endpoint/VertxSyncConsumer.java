@@ -83,7 +83,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
 
         context.onOutboundMessage(message);
 
-        logger.info("Message was sent to Vert.x event bus address: '{}'", replyAddress);
+        logger.debug("Message was sent to Vert.x event bus address: '{}'", replyAddress);
     }
 
     /**

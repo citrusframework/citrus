@@ -29,7 +29,11 @@ import org.citrusframework.common.Described;
 import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.log.CitrusLogSettings;
+import org.citrusframework.log.LogColors;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageDirection;
+import org.citrusframework.message.MessagePayloadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
@@ -53,52 +57,41 @@ import static org.citrusframework.util.StringUtils.hasText;
 public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener,
         TestListener, TestActionListener, ShutdownPhase {
 
-    /**
-     * Logger
-     */
     private static Logger logger = LoggerFactory.getLogger(LoggingReporter.class);
 
-    /**
-     * Inbound message logger
-     */
-    private static Logger inboundMessageLogger = LoggerFactory.getLogger("Logger.Message_IN");
+    private static Logger inboundMessageLogger = LoggerFactory.getLogger(LoggingReporter.class.getName() + ".Message_IN");
+    private static Logger outboundMessageLogger = LoggerFactory.getLogger(LoggingReporter.class.getName() + ".Message_OUT");
 
-    /**
-     * The inbound message logger used when the reporter is enabled
-     */
-    private static final Logger enabledInboundMessageLogger = inboundMessageLogger;
-
-    /**
-     * Outbound message logger
-     */
-    private static Logger outboundMessageLogger = LoggerFactory.getLogger("Logger.Message_OUT");
-
-    /**
-     * The inbound message logger used when the reporter is enabled
-     */
-    private static final Logger enabledOutboundMessageLogger = outboundMessageLogger;
-
-    /**
-     * The standard logger used when the reporter is enabled
-     */
-    private static final Logger enabledLog = logger;
-
-    /**
-     * A {@link org.slf4j.helpers.NOPLogger} used in case the reporter is not enabled.
-     */
     private static final Logger noOpLogger = new NOPLoggerFactory().getLogger(LoggingReporter.class.getName());
 
     private static final AtomicBoolean initialized = new AtomicBoolean(false);
+
+    private static final String DOUBLE_SEPARATOR = "═".repeat(68);
+    private static final String SINGLE_SEPARATOR = "─".repeat(68);
+
+    private static final String INDICATOR_START = "➤";
+    private static final String INDICATOR_SUCCESS = "✔";
+    private static final String INDICATOR_FAILED = "✘";
+    private static final String INDICATOR_SKIPPED = "⊘";
+    private static final String ARROW_OUTBOUND = "→";
+    private static final String ARROW_INBOUND = "←";
+
+    private final boolean stackTraceOutputEnabled;
 
     protected static void initialized(boolean value) {
         LoggingReporter.initialized.set(value);
     }
 
-    private static String formatDurationString(TestCase test) {
-        return nonNull(test.getTestResult()) && nonNull(test.getTestResult().getDuration()) ? " (" + test.getTestResult().getDuration().toString() + ") " : "";
+    private static String resolveActionName(TestAction testAction) {
+        return hasText(testAction.getName()) ? testAction.getName() : testAction.getClass().getSimpleName();
     }
 
-    private final boolean stackTraceOutputEnabled;
+    private static String formatDuration(TestCase test) {
+        if (nonNull(test.getTestResult()) && nonNull(test.getTestResult().getDuration())) {
+            return test.getTestResult().getDuration().toMillis() + "ms";
+        }
+        return "";
+    }
 
     public LoggingReporter() {
         this(CitrusSettings.isStackTraceOutputEnabled());
@@ -115,42 +108,53 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     @Override
     public void generate(TestResults testResults) {
         newLine();
-        info("CITRUS TEST RESULTS");
+        info(LogColors.bold((testResults.getFailed() > 0 ? LogColors.failed(INDICATOR_FAILED) : LogColors.success(INDICATOR_SUCCESS)) + " CITRUS TEST RESULTS"));
         newLine();
 
         testResults.doWithResults(testResult -> {
             info(toFormattedTestResult(testResult));
 
             if (testResult.isFailed()) {
-                info(
+                info(LogColors.failed(
                         Optional.ofNullable(testResult.getCause())
                                 .filter(cause -> hasText(cause.getMessage()))
                                 .map(ExceptionUtils::getRootCause)
-                                .map(cause -> "\tCaused by: " + cause.getClass().getSimpleName() + ": " + cause.getMessage())
-                                .orElse("\tCaused by: " + Optional.ofNullable(testResult.getErrorMessage()).orElse("Unknown error")));
+                                .map(cause -> "    Caused by: " + cause.getClass().getSimpleName() + ": " + cause.getMessage())
+                                .orElse("    Caused by: " + Optional.ofNullable(testResult.getErrorMessage()).orElse("Unknown error")))
+                );
             }
         });
 
         newLine();
 
-        info(format("TOTAL:\t\t%s", testResults.getSize()));
-        info(format("PASSED:\t\t%s (%s%%)", testResults.getSuccess(), testResults.getSuccessPercentageFormatted()));
-        info(format("FAILED:\t\t%s (%s%%)", testResults.getFailed(), testResults.getFailedPercentageFormatted()));
-
+        info(format("  TOTAL:    %s", testResults.getSize()));
+        info(format("  PASSED:   %s (%s%%)", testResults.getSuccess(), testResults.getSuccessPercentageFormatted()));
+        if (testResults.getFailed() > 0) {
+            info(LogColors.failed(format("  FAILED:   %s (%s%%)", testResults.getFailed(), testResults.getFailedPercentageFormatted())));
+        } else {
+            info(format("  FAILED:   %s (%s%%)", testResults.getFailed(), testResults.getFailedPercentageFormatted()));
+        }
         if (testResults.getSkipped() > 0) {
-            info(format("SKIP:\t\t%s (%s%%)", testResults.getSkipped(), testResults.getSkippedPercentageFormatted()));
+            info(LogColors.skipped(format("  SKIPPED:  %s (%s%%)", testResults.getSkipped(), testResults.getSkippedPercentageFormatted())));
         }
 
-        info(format("TIME:\t\t%s ms", testResults.getTotalDuration().toMillis()));
+        info(format("  TIME:     %s ms", testResults.getTotalDuration().toMillis()));
 
         newLine();
-
-        separator();
+        info(LogColors.bold(DOUBLE_SEPARATOR));
     }
 
     private String toFormattedTestResult(TestResult testResult) {
-        return format("%s (%6d ms) %s",
-                testResult.getResult(),
+        String resultText;
+        if (testResult.isSuccess()) {
+            resultText = LogColors.success(INDICATOR_SUCCESS) + " SUCCESS";
+        } else if (testResult.isFailed()) {
+            resultText = LogColors.failed(INDICATOR_FAILED + " FAILED ");
+        } else {
+            resultText = LogColors.skipped(INDICATOR_SKIPPED + " SKIPPED");
+        }
+        return format("  %s (%4dms) %s",
+                resultText,
                 Optional.ofNullable(testResult.getDuration()).orElse(ZERO).toMillis(),
                 testResult.getTestName());
     }
@@ -159,36 +163,40 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     public void onTestFailure(TestCase testCase, Throwable cause) {
         newLine();
 
-        var duration = formatDurationString(testCase);
+        info(SINGLE_SEPARATOR);
+        var duration = formatDuration(testCase);
+        String line = LogColors.failed(INDICATOR_FAILED) + " TEST FAILED: " + testCase.getName();
+        if (hasText(duration)) {
+            line += LogColors.dim("  " + duration);
+        }
+        info(line);
 
         if (stackTraceOutputEnabled) {
-            error("TEST FAILED " + testCase.getName() + " <" + testCase.getPackageName() + ">" + duration + " Nested exception is: ", cause);
+            error("    " + LogColors.failed(cause.getClass().getSimpleName() + ": " + cause.getMessage()), cause);
         } else {
-            error("TEST FAILED " + testCase.getName() + " <" + testCase.getPackageName() + ">" + duration + " Nested exception is: " + cause.getMessage());
+            info(LogColors.failed("    " + cause.getClass().getSimpleName() + ": " + cause.getMessage()));
         }
 
-        separator();
+        info(SINGLE_SEPARATOR);
         newLine();
     }
 
     @Override
     public void onTestSkipped(TestCase test) {
-        if (isDebugEnabled()) {
-            newLine();
-            separator();
-            debug("SKIPPING TEST: " + test.getName());
-            newLine();
-        }
+        newLine();
+        info(SINGLE_SEPARATOR);
+        info(LogColors.skipped(INDICATOR_SKIPPED) + " TEST SKIPPED: " + test.getName());
+        info(SINGLE_SEPARATOR);
+        newLine();
     }
 
     @Override
     public void onTestStart(TestCase test) {
-        if (isDebugEnabled()) {
-            newLine();
-            separator();
-            debug("STARTING TEST " + test.getName() + " <" + test.getPackageName() + ">");
-            newLine();
-        }
+        newLine();
+        info(SINGLE_SEPARATOR);
+        info(LogColors.start(INDICATOR_START) + " TEST START: " + test.getName() + " (" + test.getPackageName() + ")");
+        info(SINGLE_SEPARATOR);
+        newLine();
     }
 
     @Override
@@ -199,20 +207,25 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     @Override
     public void onTestSuccess(TestCase test) {
         newLine();
+        info(SINGLE_SEPARATOR);
 
-        var duration = formatDurationString(test);
-        info("TEST SUCCESS " + test.getName() + " (" + test.getPackageName() + ")" + duration);
+        var duration = formatDuration(test);
+        String line = LogColors.success(INDICATOR_SUCCESS) + " TEST SUCCESS: " + test.getName();
+        if (hasText(duration)) {
+            line += LogColors.dim("  " + duration);
+        }
+        info(line);
 
-        separator();
+        info(SINGLE_SEPARATOR);
         newLine();
     }
 
     @Override
     public void onFinish() {
         if (isDebugEnabled()) {
-            newLine();
-            separator();
-            debug("AFTER TEST SUITE");
+            debug(SINGLE_SEPARATOR);
+            debug(LogColors.start(INDICATOR_START) + " TEST SUITE FINISH");
+            debug(SINGLE_SEPARATOR);
             newLine();
         }
     }
@@ -226,8 +239,10 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         separator();
 
         if (isDebugEnabled()) {
-            debug("BEFORE TEST SUITE");
             newLine();
+            debug(SINGLE_SEPARATOR);
+            debug(LogColors.start(INDICATOR_START) + " TEST SUITE START");
+            debug(SINGLE_SEPARATOR);
         }
     }
 
@@ -250,178 +265,174 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onFinishFailure(Throwable cause) {
-        newLine();
-        error("AFTER TEST SUITE: FAILED");
-        separator();
+        info(SINGLE_SEPARATOR);
+        info(LogColors.failed(INDICATOR_FAILED) + " TEST SUITE FINISH: FAILED");
+
+        if (stackTraceOutputEnabled) {
+            error("    " + LogColors.failed(cause.getClass().getSimpleName() + ": " + cause.getMessage()), cause);
+        } else {
+            info(LogColors.failed("    " + cause.getClass().getSimpleName() + ": " + cause.getMessage()));
+        }
+
+        info(SINGLE_SEPARATOR);
         newLine();
     }
 
     @Override
     public void onFinishSuccess() {
-        if (isDebugEnabled()) {
-            newLine();
-            debug("AFTER TEST SUITE: SUCCESS");
-            separator();
-            newLine();
-        }
+        debug(SINGLE_SEPARATOR);
+        debug(LogColors.success(INDICATOR_SUCCESS) + " TEST SUITE FINISHED");
+        debug(SINGLE_SEPARATOR);
+        newLine();
     }
 
     @Override
     public void onStartFailure(Throwable cause) {
         newLine();
-        error("BEFORE TEST SUITE: FAILED");
-        separator();
-        newLine();
+        info(SINGLE_SEPARATOR);
+        info(LogColors.failed(INDICATOR_FAILED) + " TEST SUITE START: FAILED");
+
+        if (stackTraceOutputEnabled) {
+            error("    " + LogColors.failed(cause.getClass().getSimpleName() + ": " + cause.getMessage()), cause);
+        } else {
+            info(LogColors.failed("    " + cause.getClass().getSimpleName() + ": " + cause.getMessage()));
+        }
+
+        info(SINGLE_SEPARATOR);
     }
 
     @Override
     public void onStartSuccess() {
-        if (isDebugEnabled()) {
-            newLine();
-            debug("BEFORE TEST SUITE: SUCCESS");
-            separator();
-            newLine();
-        }
+        newLine();
+        debug(SINGLE_SEPARATOR);
+        debug(LogColors.success(INDICATOR_SUCCESS) + " TEST SUITE STARTED");
+        debug(SINGLE_SEPARATOR);
     }
 
     @Override
     public void onTestActionStart(TestCase testCase, TestAction testAction) {
-        if (isDebugEnabled()) {
-            newLine();
-            if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getNumberOfExecutedActions() + 1) + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
-            } else {
-                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
-            }
+        String actionName = resolveActionName(testAction);
 
-            if (testAction instanceof TestActionContainer container) {
-                debug("TEST ACTION CONTAINER with " + container.getActionCount() + " embedded actions");
-            }
+        if (testAction instanceof TestActionContainer container) {
+            info(LogColors.start(INDICATOR_START) + " " + actionName + " - container with (" + container.getActionCount() + ") embedded actions");
+        } else {
+            debug(LogColors.start(INDICATOR_START) + " " + actionName);
+        }
 
-            if (testAction instanceof Described described && hasText(described.getDescription())) {
-                debug("");
-                debug(described.getDescription());
-                debug("");
-            }
+        if (testAction instanceof Described described && hasText(described.getDescription())) {
+            debug("    " + LogColors.dim(described.getDescription()));
         }
     }
 
     @Override
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
-        if (isDebugEnabled()) {
-            newLine();
+        String actionName = resolveActionName(testAction);
 
-            var duration = formatDurationString(testCase);
-            if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getNumberOfExecutedActions() + 1) + " SUCCESS" + duration);
-            } else {
-                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS" + duration);
-            }
+        var duration = formatDuration(testCase);
+        String line = LogColors.success(INDICATOR_SUCCESS) + " " + actionName;
+        if (hasText(duration)) {
+            line += LogColors.dim("  " + duration);
         }
+        info(line);
     }
 
     @Override
     public void onTestActionFailed(TestCase testCase, TestAction testAction, Throwable cause) {
-        if (isDebugEnabled()) {
-            newLine();
+        String actionName = resolveActionName(testAction);
 
-            var duration = formatDurationString(testCase);
-            if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getNumberOfExecutedActions() + 1) + " FAILED" + duration + " Nested exception is: " + cause.getMessage());
-            } else {
-                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " FAILED" + duration + " Nested exception is: " + cause.getMessage());
-            }
+        var duration = formatDuration(testCase);
+        String line = LogColors.failed(INDICATOR_FAILED) + " " + actionName;
+        if (hasText(duration)) {
+            line += LogColors.dim("  " + duration);
         }
+        info(line);
+        info("    " + LogColors.failed(cause.getClass().getSimpleName() + ": " + cause.getMessage()));
     }
 
     @Override
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
-        if (isDebugEnabled()) {
-            newLine();
-
-            if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getNumberOfExecutedActions() + 1) + " SKIPPED");
-            } else {
-                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SKIPPED");
-            }
-
-            debug("TEST ACTION " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + " SKIPPED");
-        }
+        String actionName = resolveActionName(testAction);
+        debug(LogColors.skipped(INDICATOR_SKIPPED) + " " + actionName);
     }
 
     @Override
     public void onInboundMessage(Message message, TestContext context) {
-        if (outboundMessageLogger.isDebugEnabled()) {
-            inboundMessageLogger.debug(message.print(context));
+        if (inboundMessageLogger.isDebugEnabled() || CitrusLogSettings.isPrintInboundMessageContentEnabled()) {
+            logMessage(message, context, MessageDirection.INBOUND);
+        } else {
+            logMessageSummary(message, MessageDirection.INBOUND);
         }
     }
 
     @Override
     public void onOutboundMessage(Message message, TestContext context) {
-        if (outboundMessageLogger.isDebugEnabled()) {
-            outboundMessageLogger.debug(message.print(context));
+        if (outboundMessageLogger.isDebugEnabled() || CitrusLogSettings.isPrintOutboundMessageContentEnabled()) {
+            logMessage(message, context, MessageDirection.OUTBOUND);
+        } else {
+            logMessageSummary(message, MessageDirection.OUTBOUND);
         }
     }
 
-    /**
-     * Helper method to build consistent separators
-     */
-    protected void separator() {
-        info("------------------------------------------------------------------------");
+    private void logMessage(Message message, TestContext context, MessageDirection direction) {
+        String messageContent = message.print(context);
+        String directionArrow = direction == MessageDirection.OUTBOUND
+                ? LogColors.arrow(ARROW_OUTBOUND)
+                : LogColors.arrow(ARROW_INBOUND);
+
+        messageLogger(direction).info("{} {} MESSAGE {}", directionArrow, direction.name(), messageContent);
     }
 
-    /**
-     * Adds new line to console logging output.
-     */
+    private void logMessageSummary(Message message, MessageDirection direction) {
+        String directionArrow = direction == MessageDirection.OUTBOUND
+                ? LogColors.arrow(ARROW_OUTBOUND)
+                : LogColors.arrow(ARROW_INBOUND);
+
+        messageLogger(direction).info("{} {} MESSAGE {}", directionArrow, direction.name(), LogColors.dim("(" + MessagePayloadUtils.sizeInfo(message) + ")"));
+    }
+
+    protected Logger messageLogger(MessageDirection direction) {
+        return switch (direction) {
+            case INBOUND -> inboundMessageLogger;
+            case OUTBOUND -> outboundMessageLogger;
+            case UNBOUND -> logger;
+        };
+    }
+
+    protected void separator() {
+        info(DOUBLE_SEPARATOR);
+    }
+
     protected void newLine() {
         info("");
     }
 
-    /**
-     * Write info level output.
-     */
     protected void info(String line) {
         logger.info(line);
     }
 
-    /**
-     * Write error level output.
-     */
     protected void error(String line) {
         logger.error(line);
     }
 
-    /**
-     * Write error level output.
-     */
     protected void error(String line, Throwable cause) {
         logger.error(line, cause);
     }
 
-    /**
-     * Write debug level output.
-     */
     protected void debug(String line) {
         if (isDebugEnabled()) {
             logger.debug(line);
         }
     }
 
-    /**
-     * Is debug level enabled.
-     */
     protected boolean isDebugEnabled() {
         return logger.isDebugEnabled();
     }
 
-    /**
-     * Sets the enablement state of the reporter.
-     */
     public void setEnabled(boolean enabled) {
         if (enabled) {
-            logger = enabledLog;
-            inboundMessageLogger = enabledInboundMessageLogger;
-            outboundMessageLogger = enabledOutboundMessageLogger;
+            logger = LoggerFactory.getLogger(LoggingReporter.class);
+            inboundMessageLogger = LoggerFactory.getLogger(LoggingReporter.class.getName() + ".Message_IN");
+            outboundMessageLogger = LoggerFactory.getLogger(LoggingReporter.class.getName() + ".Message_OUT");
         } else {
             logger = noOpLogger;
             inboundMessageLogger = noOpLogger;
@@ -437,4 +448,5 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     public void destroy() {
         initialized(false);
     }
+
 }

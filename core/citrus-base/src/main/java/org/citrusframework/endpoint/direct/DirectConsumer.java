@@ -80,7 +80,7 @@ public class DirectConsumer extends AbstractSelectiveMessageConsumer {
             throw new MessageTimeoutException(timeout, destinationQueueName);
         }
 
-        logger.info("Received message from queue: '{}'", destinationQueueName);
+        logger.debug("Received message from queue: '{}'", destinationQueueName);
         return message;
     }
 

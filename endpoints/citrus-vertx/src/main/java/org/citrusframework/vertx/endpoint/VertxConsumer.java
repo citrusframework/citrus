@@ -88,7 +88,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
                 throw new MessageTimeoutException(timeout, endpointConfiguration.getAddress());
             }
 
-            logger.info("Received message on Vert.x event bus address: '{}'", endpointConfiguration.getAddress());
+            logger.debug("Received message on Vert.x event bus address: '{}'", endpointConfiguration.getAddress());
 
             context.onInboundMessage(message);
 

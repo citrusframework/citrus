@@ -120,7 +120,7 @@ public class TransformAction extends AbstractTestAction {
             transformer.transform(xmlSource, result);
 
             context.setVariable(targetVariable, result.toString());
-            logger.info("Finished XSLT transformation");
+            logger.debug("Finished XSLT transformation");
         } catch (IOException | TransformerException e) {
             throw new CitrusRuntimeException(e);
         }

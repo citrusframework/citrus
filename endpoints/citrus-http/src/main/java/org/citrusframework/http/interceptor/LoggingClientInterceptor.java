@@ -19,7 +19,6 @@ package org.citrusframework.http.interceptor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -38,7 +37,6 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import static java.lang.String.join;
 import static java.lang.System.lineSeparator;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Simple logging interceptor writes Http request and response messages to the console.
@@ -114,25 +112,8 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      */
     private String getRequestContent(HttpRequest request, byte[] body) {
         String contentType = request.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
-        String requestBody = null;
-        if (contentType != null) {
-            String[] contentTypeParts = contentType.split(";");
-            for (String contentTypePart : contentTypeParts) {
-                if (contentTypePart.startsWith("charset=") && !contentTypePart.endsWith("charset=")) {
-                    String charset = contentTypePart.split("=")[1];
-                    try {
-                        requestBody = new String(body, charset);
-                    } catch (UnsupportedEncodingException e) {
-                        requestBody = new String(body, UTF_8);
-                    }
-                }
-                break;
-            }
-        }
-
-        if (requestBody == null) {
-            requestBody = new String(body, UTF_8);
-        }
+        String contentEncoding = request.getHeaders().getFirst(HttpHeaders.CONTENT_ENCODING);
+        String requestBody = LoggingInterceptorUtils.getBodyContent(body, contentType, contentEncoding);
 
         StringBuilder builder = new StringBuilder();
 
@@ -169,7 +150,10 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
             appendHeaders(response.getHeaders(), builder);
 
             builder.append(NEWLINE);
-            builder.append(response.getBodyContent());
+
+            String contentType = response.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
+            String contentEncoding = response.getHeaders().getFirst(HttpHeaders.CONTENT_ENCODING);
+            builder.append(LoggingInterceptorUtils.getBodyContent(response.getBodyContent(), contentType, contentEncoding));
 
             return builder.toString();
         } else {
@@ -229,12 +213,12 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
             return new ByteArrayInputStream(this.body);
         }
 
-        public String getBodyContent() throws IOException {
+        public byte[] getBodyContent() throws IOException {
             if (this.body == null) {
                 getBody();
             }
 
-            return new String(body, UTF_8);
+            return body;
         }
 
         @Override

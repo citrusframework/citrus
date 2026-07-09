@@ -59,7 +59,7 @@ public class DirectProducer implements Producer {
             throw new CitrusRuntimeException(String.format("Failed to send message to queue: '%s'", destinationQueueName), e);
         }
 
-        logger.info("Message was sent to queue: '{}'", destinationQueueName);
+        logger.debug("Message was sent to queue: '{}'", destinationQueueName);
     }
 
     /**

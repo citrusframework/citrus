@@ -19,9 +19,9 @@
     <description>Test send messages to some Http server instance that automatically responds with static message data.</description>
 
     <variables>
-      <variable name="correlationId" value="1000000001"></variable>
-      <variable name="messageId" value="1234567890"></variable>
-      <variable name="user" value="User"></variable>
+      <variable name="correlationId" value="1000000001"/>
+      <variable name="messageId" value="1234567890"/>
+      <variable name="user" value="User"/>
     </variables>
 
     <actions>

@@ -60,7 +60,7 @@ public class StopTestcontainersAction extends AbstractTestcontainersAction {
             container.stop();
             logger.info("Successfully stopped Testcontainers container '{}' with id {}", containerName, containerId);
         } else {
-            logger.info("Testcontainers container '{}' is stopped", containerName);
+            logger.debug("Testcontainers container '{}' is stopped", containerName);
         }
     }
 

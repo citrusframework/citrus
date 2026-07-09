@@ -72,7 +72,7 @@ public class ChannelProducer implements Producer {
             throw new CitrusRuntimeException("Failed to send message to channel: '" + destinationChannelName + "'", e);
         }
 
-        logger.info("Message was sent to channel: '{}'", destinationChannelName);
+        logger.debug("Message was sent to channel: '{}'", destinationChannelName);
     }
 
     /**

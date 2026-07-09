@@ -109,20 +109,20 @@ public class AntRunAction extends AbstractTestAction {
 
             project.addBuildListener(consoleLogger);
 
-            logger.info("Executing ANT build: {}", buildFileResource);
+            logger.debug("Executing ANT build: {}", buildFileResource);
 
             if (StringUtils.hasText(targets)) {
-                logger.info("Executing ANT targets: {}", targets);
+                logger.debug("Executing ANT targets: {}", targets);
                 project.executeTargets(parseTargets());
             } else {
-                logger.info("Executing ANT target: {}", target);
+                logger.debug("Executing ANT target: {}", target);
                 project.executeTarget(target);
             }
         } catch (BuildException e) {
             throw new CitrusRuntimeException("Failed to run ANT build file", e);
         }
 
-        logger.info("Executed ANT build: {}", buildFileResource);
+        logger.debug("Executed ANT build: {}", buildFileResource);
     }
 
     private static DefaultLogger getDefaultConsoleLogger() {
@@ -132,7 +132,7 @@ public class AntRunAction extends AbstractTestAction {
                 if (stream.equals(System.err)) {
                     logger.error(message);
                 } else {
-                    logger.info(message);
+                    logger.debug(message);
                 }
             }
         };
@@ -166,7 +166,7 @@ public class AntRunAction extends AbstractTestAction {
     private void loadBuildPropertyFile(Project project, TestContext context) {
         if (StringUtils.hasText(propertyFilePath)) {
             String propertyFileResource = context.replaceDynamicContentInString(propertyFilePath);
-            logger.info("Reading build property file: {}", propertyFileResource);
+            logger.debug("Reading build property file: {}", propertyFileResource);
             Properties fileProperties = new Properties();
             try {
                 Resource propertyResource = Resources.fromClasspath(propertyFileResource);
