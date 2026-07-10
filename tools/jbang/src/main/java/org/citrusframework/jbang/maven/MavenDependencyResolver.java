@@ -96,7 +96,7 @@ public class MavenDependencyResolver {
         }
 
         return resolve("org.citrusframework:%s:%s".formatted(moduleName, version),
-                CitrusVersion.version().contains("-SNAPSHOT"), true);
+                version.contains("-SNAPSHOT"), true);
     }
 
     public MavenDependencyResolver withRepository(String key, String value) {
