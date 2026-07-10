@@ -51,6 +51,7 @@ import org.citrusframework.jbang.LoggingSupport;
 import org.citrusframework.jbang.maven.MavenDependencyResolver;
 import org.citrusframework.jbang.util.CodeAnalyzer;
 import org.citrusframework.jbang.util.DelegatingCodeAnalyzer;
+import org.citrusframework.log.CitrusLogSettings;
 import org.citrusframework.main.TestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.report.TestReporter;
@@ -75,20 +76,20 @@ public class Run extends CitrusCommand {
     @Option(names = { "--reset" }, defaultValue = "true", description = "Should the test engine reset the suite state for this run.")
     private String reset;
 
-    @Option(names = { "--includes" }, arity = "0..*", description = "Includes test name pattern.")
-    private String[] includes;
+    @Option(names = { "--includes" }, split = ",", description = "Includes test name pattern.")
+    private List<String> includes;
 
     @Option(names = { "--work-directory" }, description = "The working directory used by the file based test engines to load file resources from.")
     private String workDir;
 
-    @Option(names = { "--repository" }, arity = "0..*", description = "Set of Maven repositories that should be used to resolve dependencies.")
-    private String[] repositories;
+    @Option(names = { "--repository", "--repositories" }, split = ",", description = "Set of Maven repositories that should be used to resolve dependencies.")
+    private List<String> repositories;
 
     @Option(names = { "--modules" }, description = "Comma delimited list of additional Citrus modules that must be loaded to run the test.")
     private String modules;
 
-    @Option(names = { "--dep" }, arity = "0..*", description = "Set of additional Maven dependencies that must be loaded to run the test.")
-    private String[] dependencies;
+    @Option(names = { "--dep", "--dependency" }, split = ",", description = "Comma delimited list of additional Maven GAV dependencies that must be loaded to run the test.")
+    private List<String> dependencies;
 
     @Option(names = { "--offline" }, defaultValue = "false", description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
     private boolean offline;
@@ -96,8 +97,8 @@ public class Run extends CitrusCommand {
     @Option(names = { "--inspect-code" }, defaultValue = "true", description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
     private boolean inspectCode = true;
 
-    @Option(names = { "--property" }, arity = "0..*", description = "Default System property to set before the test run.")
-    private String[] properties;
+    @Option(names = { "--property", "--properties" }, split = ",", description = "Default System property to set before the test run.")
+    private List<String> properties;
 
     @Option(names = { "--logging" }, defaultValue = "true", description = "Can be used to turn off logging")
     private boolean logging = true;
@@ -172,9 +173,24 @@ public class Run extends CitrusCommand {
         }
 
         final List<TestRunConfiguration> configurations = getRunConfigurations(tests);
+        if (configurations.isEmpty()) {
+            printer().printErr("Failed to construct run configurations");
+            return 1;
+        }
 
         final ExitStatusTestReporter exitStatus = new ExitStatusTestReporter();
         CitrusInstanceManager.addInstanceProcessor(instance -> instance.addTestReporter(exitStatus));
+
+        String testEngine = configurations.get(0).getEngine();
+        if (logging) {
+            LoggingSupport.configureLog(loggingLevel, loggingColor, testEngine);
+        } else {
+            LoggingSupport.configureLog("off", false, testEngine);
+        }
+
+        if (!loggingColor) {
+            System.setProperty(CitrusLogSettings.LOG_COLOR_PROPERTY, "never");
+        }
 
         if (!offline) {
             resolveArtifacts(tests);
@@ -186,11 +202,13 @@ public class Run extends CitrusCommand {
             configuration.setDefaultProperties();
 
             final TestEngine engine = TestEngine.lookup(configuration);
-
-            if (logging) {
-                LoggingSupport.configureLog(loggingLevel, loggingColor, configuration.getEngine());
-            } else {
-                LoggingSupport.configureLog("off", false, configuration.getEngine());
+            if (!testEngine.equals(configuration.getEngine())) {
+                testEngine = configuration.getEngine();
+                if (logging) {
+                    LoggingSupport.configureLog(loggingLevel, loggingColor, testEngine);
+                } else {
+                    LoggingSupport.configureLog("off", false, testEngine);
+                }
             }
 
             engine.run();
@@ -246,7 +264,7 @@ public class Run extends CitrusCommand {
 
         // Handle Citrus dependencies from command line options
         if (dependencies != null) {
-            Arrays.stream(dependencies)
+            dependencies.stream()
                     .map(String::trim)
                     .filter(StringUtils::hasText)
                     .forEach(allDependencies::add);
@@ -399,7 +417,9 @@ public class Run extends CitrusCommand {
 
         // Read default Citrus application properties file if present
         if (workingDir.resolve(CitrusSettings.getApplicationPropertiesFile()).toFile().exists()) {
-            printer().println("Reading Citrus application properties file: " + workingDir.resolve(CitrusSettings.getApplicationPropertiesFile()));
+            if (logging) {
+                printer().println("Reading Citrus application properties file: " + workingDir.resolve(CitrusSettings.getApplicationPropertiesFile()));
+            }
 
             Path citrusApplicationProperties = workingDir.resolve(CitrusSettings.getApplicationPropertiesFile());
             try (InputStream is = new ByteArrayInputStream(Files.readAllBytes(citrusApplicationProperties))) {
@@ -411,7 +431,7 @@ public class Run extends CitrusCommand {
                         .filter(entry -> entry.getValue() != null)
                         .collect(Collectors.toMap(entry -> entry.getKey().toString(), entry -> entry.getValue().toString())));
             } catch (Exception e) {
-                printer().println("Failed to read Citrus application properties file '%s'".formatted(citrusApplicationProperties));
+                printer().printErr("Failed to read Citrus application properties file '%s'".formatted(citrusApplicationProperties));
             }
         }
         return configuration;
@@ -435,7 +455,7 @@ public class Run extends CitrusCommand {
         }
 
         if (includes != null) {
-            configuration.setIncludes(includes);
+            configuration.setIncludes(includes.toArray(new String[0]));
         }
 
         if (workDir != null) {
@@ -443,7 +463,7 @@ public class Run extends CitrusCommand {
         }
 
         if (properties != null) {
-            configuration.addDefaultProperties(Arrays.stream(properties)
+            configuration.addDefaultProperties(properties.stream()
                     .filter(p -> p.contains("="))
                     .map(p -> p.split("=", 2))
                     .collect(Collectors.toMap(p -> p[0], p -> p[1])));
