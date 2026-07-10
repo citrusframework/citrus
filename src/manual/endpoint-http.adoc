@@ -431,6 +431,30 @@ Receiving Http requests requires an Http server listening on a port on your loca
 server which is capable of handling incoming Http requests. The server accepts client connections and must provide a proper
 Http response. In the next section you will see how to simulate server side Http REST service with Citrus.
 
+The Http server provides the following global settings configurable via system properties or environment variables:
+
+.System properties
+|===
+|System property |Description
+
+| citrus.http.server.response.cache.size
+| Number of response messages the server keeps in its in-memory cache for message tracing (default="100")
+
+| citrus.http.server.use.default.filters
+| Enable/disable default servlet filters (e.g. request caching filter) on the server's servlet context (default="true")
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_HTTP_SERVER_RESPONSE_CACHE_SIZE
+| Number of response messages the server keeps in its in-memory cache for message tracing (default="100")
+
+| CITRUS_HTTP_SERVER_USE_DEFAULT_FILTERS
+| Enable/disable default servlet filters (e.g. request caching filter) on the server's servlet context (default="true")
+|===
+
 .Java
 [source,java,indent=0,role="primary"]
 ----

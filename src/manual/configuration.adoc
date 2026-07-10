@@ -45,6 +45,69 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 
 | citrus.java.file.name.pattern
 | File name patterns used for Java test sources package scan (default="/\\**/*Test.java,/**/*IT.java")
+
+| citrus.groovy.file.name.pattern
+| File name patterns used for Groovy test file package scan (default="*.citrus.groovy,*.citrus.test.groovy,...")
+
+| citrus.yaml.file.name.pattern
+| File name patterns used for YAML test file package scan (default="*.citrus.yaml,*.citrus.test.yaml,...")
+
+| citrus.message.trace.directory
+| Directory path for message trace output files (default="target/citrus-logs/trace/messages")
+
+| citrus.type.converter
+| Default type converter to use (default="default")
+
+| citrus.perform.default.validation
+| Enable/disable fallback to default text equals validation when no other validator matches (default="false")
+
+| citrus.custom.validator.strategy
+| Strategy for custom validators: EXCLUSIVE or COMPLEMENTARY (default="EXCLUSIVE")
+
+| citrus.message.cache.input.stream
+| Enable/disable caching of message input streams (default="true")
+
+| citrus.message.pretty.print
+| Enable/disable pretty print formatting for message payloads in logs (default="true")
+
+| citrus.file.path.charset.parameter
+| Separator used for charset parameter in file paths (default="; charset=")
+
+| citrus.resources.workdir
+| Working directory for loading file resources (default="")
+
+| citrus.groovy.static.imports
+| Comma-separated list of static imports for Groovy test action scripts (default="print,sleep")
+
+| citrus.default.logging.reporter.print-stack-traces
+| Enable/disable stack trace output in the default logging reporter (default="false")
+
+| citrus.dynamic.endpoints.auto.close
+| Enable/disable automatic closing of dynamic endpoints after the test (default="false")
+
+| citrus.dynamic.endpoints.auto.remove
+| Enable/disable automatic closing and removal of dynamic endpoints after the test (default="false")
+
+| citrus.print.banner
+| Enable/disable the Citrus banner output at the beginning of the test suite (default="true")
+
+| citrus.allow.function.override
+| Allow overriding of default functions with custom implementations using the same name (default="true")
+
+| citrus.allow.validation.matcher.override
+| Allow overriding of default validation matchers with custom implementations using the same name (default="true")
+
+| citrus.validation.outbound.schema.enabled
+| Enable/disable outbound schema validation (default="true")
+
+| citrus.validation.outbound.json.schema.enabled
+| Enable/disable outbound JSON schema validation (default="true")
+
+| citrus.validation.outbound.xml.schema.enabled
+| Enable/disable outbound XML schema validation (default="true")
+
+| citrus.http.message.builder.force.citrus.header.update.enabled
+| Enable/disable forced creation of unique Citrus message IDs in the HTTP message builder (default="true")
 |===
 
 Same properties are settable via environment variables.
@@ -79,6 +142,170 @@ Same properties are settable via environment variables.
 
 | CITRUS_JAVA_FILE_NAME_PATTERN
 | File name patterns used for Java test sources package scan (default="/\\**/*Test.java,/**/*IT.java")
+
+| CITRUS_GROOVY_FILE_NAME_PATTERN
+| File name patterns used for Groovy test file package scan (default="*.citrus.groovy,*.citrus.test.groovy,...")
+
+| CITRUS_YAML_FILE_NAME_PATTERN
+| File name patterns used for YAML test file package scan (default="*.citrus.yaml,*.citrus.test.yaml,...")
+
+| CITRUS_MESSAGE_TRACE_DIRECTORY
+| Directory path for message trace output files (default="target/citrus-logs/trace/messages")
+
+| CITRUS_TYPE_CONVERTER
+| Default type converter to use (default="default")
+
+| CITRUS_PERFORM_DEFAULT_VALIDATION
+| Enable/disable fallback to default text equals validation when no other validator matches (default="false")
+
+| CITRUS_CUSTOM_VALIDATOR_STRATEGY
+| Strategy for custom validators: EXCLUSIVE or COMPLEMENTARY (default="EXCLUSIVE")
+
+| CITRUS_MESSAGE_CACHE_INPUT_STREAM
+| Enable/disable caching of message input streams (default="true")
+
+| CITRUS_MESSAGE_PRETTY_PRINT
+| Enable/disable pretty print formatting for message payloads in logs (default="true")
+
+| CITRUS_FILE_PATH_CHARSET_PARAMETER
+| Separator used for charset parameter in file paths (default="; charset=")
+
+| CITRUS_RESOURCES_WORKDIR
+| Working directory for loading file resources (default="")
+
+| CITRUS_GROOVY_STATIC_IMPORTS
+| Comma-separated list of static imports for Groovy test action scripts (default="print,sleep")
+
+| CITRUS_DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES
+| Enable/disable stack trace output in the default logging reporter (default="false")
+
+| CITRUS_DYNAMIC_ENDPOINTS_AUTO_CLOSE
+| Enable/disable automatic closing of dynamic endpoints after the test (default="false")
+
+| CITRUS_DYNAMIC_ENDPOINTS_AUTO_REMOVE
+| Enable/disable automatic closing and removal of dynamic endpoints after the test (default="false")
+
+| CITRUS_PRINT_BANNER
+| Enable/disable the Citrus banner output at the beginning of the test suite (default="true")
+
+| CITRUS_ALLOW_FUNCTION_OVERRIDE
+| Allow overriding of default functions with custom implementations using the same name (default="true")
+
+| CITRUS_ALLOW_VALIDATION_MATCHER_OVERRIDE
+| Allow overriding of default validation matchers with custom implementations using the same name (default="true")
+
+| CITRUS_VALIDATION_OUTBOUND_SCHEMA_ENABLED
+| Enable/disable outbound schema validation (default="true")
+
+| CITRUS_VALIDATION_OUTBOUND_JSON_SCHEMA_ENABLED
+| Enable/disable outbound JSON schema validation (default="true")
+
+| CITRUS_VALIDATION_OUTBOUND_XML_SCHEMA_ENABLED
+| Enable/disable outbound XML schema validation (default="true")
+
+| CITRUS_HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED
+| Enable/disable forced creation of unique Citrus message IDs in the HTTP message builder (default="true")
+|===
+
+[[configuration-log-settings]]
+== Log settings
+
+Citrus provides settings to control message content logging and sensitive data masking. The log modifier automatically masks
+sensitive values (such as passwords and secrets) in message payloads before they are written to the log output. These settings
+can be configured via system properties or environment variables.
+
+.System properties
+|===
+|System property |Description
+
+| citrus.logger.modifier
+| Enable/disable the log modifier that masks sensitive data in message payloads (default="true")
+
+| citrus.logger.mask.keywords
+| Comma-separated list of keywords that identify sensitive fields to mask (default="password,secret,secretKey")
+
+| citrus.logger.mask.value
+| The mask replacement value used when sensitive data is detected (default="\\****")
+
+| citrus.logger.mask.xml
+| Enable/disable log masking for XML message payloads (default="true")
+
+| citrus.logger.mask.json
+| Enable/disable log masking for JSON message payloads (default="true")
+
+| citrus.logger.mask.yaml
+| Enable/disable log masking for YAML message payloads (default="true")
+
+| citrus.logger.mask.key.value
+| Enable/disable log masking for key-value pair payloads (default="true")
+
+| citrus.logger.mask.form.url.encoded
+| Enable/disable log masking for form URL-encoded payloads (default="true")
+
+| citrus.logger.print.message.content
+| Enable/disable printing of message content (headers and body) in log output (default="false")
+
+| citrus.logger.print.inbound.message.content
+| Enable/disable printing of inbound message content in log output. Inherits from `citrus.logger.print.message.content` when not set.
+
+| citrus.logger.print.outbound.message.content
+| Enable/disable printing of outbound message content in log output. Inherits from `citrus.logger.print.message.content` when not set.
+
+| citrus.logger.print.message.layout
+| Layout mode for message content in log output: `verbose`, `summary`, `compact`, `body` (default="verbose")
+
+| citrus.logger.message.payload.max.length
+| Maximum length of message body in log output before truncation (default="2048")
+
+| citrus.logger.color
+| ANSI color mode for log output: `auto`, `always`, `never` (default="auto")
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_LOG_MODIFIER
+| Enable/disable the log modifier that masks sensitive data in message payloads (default="true")
+
+| CITRUS_LOG_MASK_KEYWORDS
+| Comma-separated list of keywords that identify sensitive fields to mask (default="password,secret,secretKey")
+
+| CITRUS_LOG_MASK_VALUE
+| The mask replacement value used when sensitive data is detected (default="\\****")
+
+| CITRUS_LOG_MASK_XML
+| Enable/disable log masking for XML message payloads (default="true")
+
+| CITRUS_LOG_MASK_JSON
+| Enable/disable log masking for JSON message payloads (default="true")
+
+| CITRUS_LOG_MASK_YAML
+| Enable/disable log masking for YAML message payloads (default="true")
+
+| CITRUS_LOG_MASK_KEY_VALUE
+| Enable/disable log masking for key-value pair payloads (default="true")
+
+| CITRUS_LOG_MASK_FORM_URL_ENCODED
+| Enable/disable log masking for form URL-encoded payloads (default="true")
+
+| CITRUS_LOG_PRINT_MESSAGE_CONTENT
+| Enable/disable printing of message content (headers and body) in log output (default="false")
+
+| CITRUS_LOG_PRINT_INBOUND_MESSAGE_CONTENT
+| Enable/disable printing of inbound message content in log output. Inherits from `CITRUS_LOG_PRINT_MESSAGE_CONTENT` when not set.
+
+| CITRUS_LOG_PRINT_OUTBOUND_MESSAGE_CONTENT
+| Enable/disable printing of outbound message content in log output. Inherits from `CITRUS_LOG_PRINT_MESSAGE_CONTENT` when not set.
+
+| CITRUS_LOG_PRINT_MESSAGE_LAYOUT
+| Layout mode for message content in log output: `verbose`, `summary`, `compact`, `body` (default="verbose")
+
+| CITRUS_LOG_MESSAGE_PAYLOAD_MAX_LENGTH
+| Maximum length of message body in log output before truncation (default="2048")
+
+| CITRUS_LOG_COLOR
+| ANSI color mode for log output: `auto`, `always`, `never` (default="auto")
 |===
 
 [[configuration-property-binding]]

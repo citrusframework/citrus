@@ -41,6 +41,10 @@ Additional entries in the received Json data structure are ignored.
 TIP: The Json validation mode (strict or soft) is settable via environment variable `CITRUS_JSON_MESSAGE_VALIDATION_STRICT` or system property `citrus.json.message.validation.strict=false`.
 This will set soft mode to all Json text message validators.
 
+The Json parser mode is also configurable via system property `citrus.json.permissive.mode` or environment variable `CITRUS_JSON_PERMISSIVE_MODE`.
+Accepted values are: `SIMPLE` (default), `RFC4627`, `STRICTEST`, `PERMISSIVE`, or a numeric parser mode value.
+This controls how strictly the underlying JSON parser handles the input format.
+
 You can also overwrite these default message validators for Json by placing a bean into the Spring Application context.
 The bean uses a default name as identifier.
 Then your custom bean will overwrite the default validator:

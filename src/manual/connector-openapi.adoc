@@ -18,6 +18,64 @@ NOTE: The OpenAPI support in Citrus get enabled by adding a separate Maven modul
 </dependency>
 ----
 
+[[openapi-settings]]
+== OpenAPI settings
+
+The OpenAPI support in Citrus provides several settings that control validation, data generation, and specification handling.
+These settings can be configured via system properties or environment variables.
+
+.System properties
+|===
+|System property |Description
+
+| citrus.openapi.generate.optional.fields
+| Enable/disable generation of optional fields in request/response data (default="true")
+
+| citrus.openapi.validation.enabled.request
+| Enable/disable OpenAPI validation for outgoing request messages (default="true")
+
+| citrus.openapi.validation.enabled.response
+| Enable/disable OpenAPI validation for incoming response messages (default="true")
+
+| citrus.openapi.neglect.base.path
+| When enabled, the base path defined in the OpenAPI specification is ignored when matching request paths (default="false")
+
+| citrus.openapi.request.fill.random.values
+| Controls auto-fill of random values in request data: `REQUIRED`, `ALL`, `NONE` (default="REQUIRED")
+
+| citrus.openapi.response.fill.random.values
+| Controls auto-fill of random values in response data: `REQUIRED`, `ALL`, `NONE` (default="REQUIRED")
+
+| citrus.openapi.validation.policy
+| Validation policy when parsing OpenAPI specifications: `REPORT`, `STRICT`, `IGNORE` (default="REPORT")
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_OPENAPI_GENERATE_OPTIONAL_FIELDS
+| Enable/disable generation of optional fields in request/response data (default="true")
+
+| CITRUS_OPENAPI_VALIDATION_ENABLED_REQUEST
+| Enable/disable OpenAPI validation for outgoing request messages (default="true")
+
+| CITRUS_OPENAPI_VALIDATION_ENABLED_RESPONSE
+| Enable/disable OpenAPI validation for incoming response messages (default="true")
+
+| CITRUS_OPENAPI_NEGLECT_BASE_PATH
+| When enabled, the base path defined in the OpenAPI specification is ignored when matching request paths (default="false")
+
+| CITRUS_OPENAPI_REQUEST_FILL_RANDOM_VALUES
+| Controls auto-fill of random values in request data: `REQUIRED`, `ALL`, `NONE` (default="REQUIRED")
+
+| CITRUS_OPENAPI_RESPONSE_FILL_RANDOM_VALUES
+| Controls auto-fill of random values in response data: `REQUIRED`, `ALL`, `NONE` (default="REQUIRED")
+
+| CITRUS_OPENAPI_VALIDATION_POLICY
+| Validation policy when parsing OpenAPI specifications: `REPORT`, `STRICT`, `IGNORE` (default="REPORT")
+|===
+
 [[openapi-specification]]
 == OpenAPI specification
 
