@@ -44,7 +44,6 @@ import org.apache.camel.tooling.maven.MavenArtifact;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.agent.CitrusAgentConfiguration;
-import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;
@@ -172,14 +171,14 @@ public class Run extends CitrusCommand {
             workDir = basePath;
         }
 
+        final List<TestRunConfiguration> configurations = getRunConfigurations(tests);
+
         final ExitStatusTestReporter exitStatus = new ExitStatusTestReporter();
         CitrusInstanceManager.addInstanceProcessor(instance -> instance.addTestReporter(exitStatus));
 
         if (!offline) {
             resolveArtifacts(tests);
         }
-
-        final List<TestRunConfiguration> configurations = getRunConfigurations(tests);
 
         int exitCode = 0;
         for (TestRunConfiguration configuration : configurations) {
@@ -215,17 +214,12 @@ public class Run extends CitrusCommand {
         // Handle DSL test loaders according to file extensions
         tests.stream().map(FileUtils::getFileExtension).distinct().forEach(ext -> {
             if (StringUtils.hasText(ext)) {
-
-
-                Optional<TestLoader> existing = TestLoader.lookup(ext, true);
-                if (existing.isEmpty()) {
-                    if ("feature".equals(ext)) {
-                        // Add Cucumber DSL support modules and a set of default Citrus steps
-                        allModules.add("citrus-cucumber");
-                        allModules.add("citrus-cucumber-core");
-                    } else {
-                        allModules.add("citrus-" + ext);
-                    }
+                if ("feature".equals(ext)) {
+                    // Add Cucumber DSL support modules and a set of default Citrus steps
+                    allModules.add("citrus-cucumber");
+                    allModules.add("citrus-cucumber-core");
+                } else {
+                    allModules.add("citrus-" + ext);
                 }
             }
         });
@@ -297,7 +291,7 @@ public class Run extends CitrusCommand {
             });
 
             // Adapt and set class loader in main thread
-            ClassLoaderHelper.updateContextClassloader();
+            ClassLoaderHelper.updateContextClassloader(true);
         }
     }
 
