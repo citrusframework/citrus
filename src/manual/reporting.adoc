@@ -6,6 +6,39 @@ These report and result pages will help you to get an overview of the test cases
 They're being generated into `target/citrus-reports` by default, but that can be changed by setting the `citrus.report.directory` property to the desired location.
 E.g. it could be set to `citrus.report.directory=build/citrus-reports` for <<setup-gradle,Gradle>> builds.
 
+[[reporting-general-settings]]
+== General report settings
+
+The following settings apply to all reporters and control general reporting behavior.
+
+.System properties
+|===
+|System property |Description
+
+| citrus.report.directory
+| Target directory for report files (default="target/citrus-reports")
+
+| citrus.report.auto.clear
+| Automatically clear all test results after finishing the test suite (default="true")
+
+| citrus.report.ignore.errors
+| Ignore errors during report generation (default="true")
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_REPORT_DIRECTORY
+| Target directory for report files (default="target/citrus-reports")
+
+| CITRUS_REPORT_AUTO_CLEAR
+| Automatically clear all test results after finishing the test suite (default="true")
+
+| CITRUS_REPORT_IGNORE_ERRORS
+| Ignore errors during report generation (default="true")
+|===
+
 In the following chapters, we'll provide an overview of the three standard loggers available in Citrus. It's important to note that in Spring, you have the flexibility to replace these standard loggers with your own implementations. This can be achieved by registering custom implementations, as demonstrated in the following code snippet:
 
 [source,java]
@@ -95,14 +128,169 @@ The failed tests give detailed error information with error messages and Java St
 
 NOTE: JavaScript should be active in your web browser. This is to enable the detailed information which comes to you in form of tooltips like test author or description. If you want to access the tooltips JavaScript should be enabled in your browser.
 
-The HTML reports are customizable by system properties. Use following properties e.g. in your *citrus.properties* file:
+The HTML reports are customizable by system properties and environment variables:
 
-[horizontal]
-citrus.html.report.enabled:: Enables/disables HTML report generation (default= *_true_*).
-citrus.html.report.directory:: Output directory path (default= *_${project.build.directory}/citrus-reports_*).
-citrus.html.report.file:: File name for the report file (default= *_citrus-test-results.html_*).
-citrus.html.report.template:: Template HTML file with placeholders for report results.
-citrus.html.report.detail.template:: Template file for detailed test results.
-citrus.html.report.logo:: File resource path pointing to an image that is added to top of HTML report.
+.System properties
+|===
+|System property |Description
 
-The HTML report is based on a template file that is customizable to your special needs. The default templates can be found in https://github.com/citrusframework/citrus/tree/master/modules/citrus-core/src/main/resources/org/citrusframework/report[report-templates sources].
+| citrus.html.report.enabled
+| Enables/disables HTML report generation (default="true")
+
+| citrus.html.report.directory
+| Output directory path (default=uses `citrus.report.directory`)
+
+| citrus.html.report.file
+| File name for the report file (default="citrus-test-results.html")
+
+| citrus.html.report.template
+| Template HTML file with placeholders for report results
+
+| citrus.html.report.detail.template
+| Template file for detailed test results
+
+| citrus.html.report.logo
+| File resource path pointing to an image that is added to top of HTML report
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_HTML_REPORT_ENABLED
+| Enables/disables HTML report generation (default="true")
+
+| CITRUS_HTML_REPORT_DIRECTORY
+| Output directory path (default=uses `CITRUS_REPORT_DIRECTORY`)
+
+| CITRUS_HTML_REPORT_FILE
+| File name for the report file (default="citrus-test-results.html")
+
+| CITRUS_HTML_REPORT_TEMPLATE
+| Template HTML file with placeholders for report results
+
+| CITRUS_HTML_REPORT_DETAIL_TEMPLATE
+| Template file for detailed test results
+
+| CITRUS_HTML_REPORT_LOGO
+| File resource path pointing to an image that is added to top of HTML report
+|===
+
+The HTML report is based on a template file that is customizable to your special needs.
+
+[[junit-report-settings]]
+=== JUnit report settings
+
+The JUnit XML report settings control the output of JUnit-compatible test result files.
+
+.System properties
+|===
+|System property |Description
+
+| citrus.junit.report.enabled
+| Enables/disables JUnit report generation (default="true")
+
+| citrus.junit.report.directory
+| Output directory for JUnit report files, relative to the general report directory (default="junitreports")
+
+| citrus.junit.report.file.pattern
+| File name pattern for JUnit report files, using `%s` as test name placeholder (default="TEST-%s.xml")
+
+| citrus.junit.report.suite.name
+| Test suite name used in the JUnit report (default="TestSuite")
+
+| citrus.junit.report.template
+| Template file for the JUnit report
+
+| citrus.junit.report.success.template
+| Template file for successful test results
+
+| citrus.junit.report.failed.template
+| Template file for failed test results
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_JUNIT_REPORT_ENABLED
+| Enables/disables JUnit report generation (default="true")
+
+| CITRUS_JUNIT_REPORT_DIRECTORY
+| Output directory for JUnit report files (default="junitreports")
+
+| CITRUS_JUNIT_REPORT_FILE_PATTERN
+| File name pattern for JUnit report files (default="TEST-%s.xml")
+
+| CITRUS_JUNIT_REPORT_SUITE_NAME
+| Test suite name used in the JUnit report (default="TestSuite")
+
+| CITRUS_JUNIT_REPORT_TEMPLATE
+| Template file for the JUnit report
+
+| CITRUS_JUNIT_REPORT_SUCCESS_TEMPLATE
+| Template file for successful test results
+
+| CITRUS_JUNIT_REPORT_FAILED_TEMPLATE
+| Template file for failed test results
+|===
+
+[[summary-report-settings]]
+=== Summary report settings
+
+The summary report provides a condensed overview of all test results.
+
+.System properties
+|===
+|System property |Description
+
+| citrus.summary.report.enabled
+| Enables/disables summary report generation (default="true")
+
+| citrus.summary.report.file
+| Output file name for the summary report (default="citrus-summary.xml")
+
+| citrus.summary.report.template
+| Template file for the summary report
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_SUMMARY_REPORT_ENABLED
+| Enables/disables summary report generation (default="true")
+
+| CITRUS_SUMMARY_REPORT_FILE
+| Output file name for the summary report (default="citrus-summary.xml")
+
+| CITRUS_SUMMARY_REPORT_TEMPLATE
+| Template file for the summary report
+|===
+
+[[test-flow-report-settings]]
+=== Test flow report settings
+
+The test flow reporter outputs a detailed trace of the test execution flow including all test actions and their results.
+
+.System properties
+|===
+|System property |Description
+
+| citrus.test.flow.report.enabled
+| Enables/disables test flow report generation (default="true")
+
+| citrus.test.flow.report.output
+| Output format for the test flow report: `json`, `yaml`, or comma-separated combination (default="json")
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_TEST_FLOW_REPORT_ENABLED
+| Enables/disables test flow report generation (default="true")
+
+| CITRUS_TEST_FLOW_REPORT_OUTPUT
+| Output format for the test flow report: `json`, `yaml`, or comma-separated combination (default="json")
+|===
