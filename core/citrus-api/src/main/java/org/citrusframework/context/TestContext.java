@@ -255,8 +255,8 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
             throw new VariableNullValueException("Trying to set variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + ", but variable value is null");
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Setting variable: {} with value: '{}'", VariableUtils.cutOffVariablesPrefix(variableName), value);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Setting variable: {} with value: '{}'", VariableUtils.cutOffVariablesPrefix(variableName), value);
         }
 
         variables.put(VariableUtils.cutOffVariablesPrefix(variableName), value);

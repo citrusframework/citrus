@@ -75,8 +75,8 @@ public class DefaultMessageQueue implements MessageQueue {
         while (message == null && timeLeft > 0) {
             timeLeft -= pollingInterval;
 
-            if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("No message received with message selector - retrying in {}ms", timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
+            if (RETRY_LOG.isTraceEnabled()) {
+                RETRY_LOG.trace("No message received with message selector - retrying in {}ms", timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             }
 
             try {

@@ -122,7 +122,7 @@ public abstract class FileUtils {
             throw new CitrusRuntimeException("Failed to read resource %s - does not exist".formatted(resource.location()));
         }
 
-        logger.debug("Reading file resource: '{}' (encoding is '{}')", resource.location(), charset.displayName());
+        logger.trace("Reading file resource: '{}' (encoding is '{}')", resource.location(), charset.displayName());
 
         try (InputStream inputStream = resource.getInputStream()) {
             return readToString(inputStream, charset);
@@ -151,7 +151,7 @@ public abstract class FileUtils {
      * @param file
      */
     public static void writeToFile(InputStream inputStream, File file) {
-        logger.debug("Writing file resource: '{}'", file.getName());
+        logger.trace("Writing file resource: '{}'", file.getName());
 
         if (!file.getParentFile().exists()) {
             if (!file.getParentFile().mkdirs()) {
@@ -181,7 +181,7 @@ public abstract class FileUtils {
      * @param file
      */
     public static void writeToFile(String content, File file, Charset charset) {
-        logger.debug("Writing file resource: '{}' (encoding is '{}')", file.getName(), charset.displayName());
+        logger.trace("Writing file resource: '{}' (encoding is '{}')", file.getName(), charset.displayName());
 
         if (!file.getParentFile().exists()) {
             if (!file.getParentFile().mkdirs()) {

@@ -161,10 +161,10 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         try {
             logger.debug("Initializing test case");
 
-            debugVariables("Global", context);
+            traceVariables("Global", context);
             initializeTestParameters(parameters, context);
             initializeTestVariables(variableDefinitions, context);
-            debugVariables("Test", context);
+            traceVariables("Test", context);
             initializeEndpoints(endpoints, endpointDefinitions, context);
 
             beforeTest(context);
@@ -403,12 +403,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     /**
      * Print variables in given test context.
      */
-    private void debugVariables(String scope, TestContext context) {
-        /* Debug print global variables */
-        if (context.hasVariables() && logger.isDebugEnabled()) {
-            logger.debug("{} variables:", scope);
+    private void traceVariables(String scope, TestContext context) {
+        if (context.hasVariables() && logger.isTraceEnabled()) {
+            logger.trace("{} variables:", scope);
             for (final Map.Entry<String, Object> entry : context.getVariables().entrySet()) {
-                logger.debug("{} = {}", entry.getKey(), entry.getValue());
+                logger.trace("{} = {}", entry.getKey(), entry.getValue());
             }
         }
     }

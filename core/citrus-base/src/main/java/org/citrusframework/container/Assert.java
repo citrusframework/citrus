@@ -78,7 +78,7 @@ public class Assert extends AbstractActionContainer {
         try {
             executeAction(this.action.build(), context);
         } catch (Exception e) {
-            logger.debug("Validating caught exception: {}", e.getMessage());
+            logger.trace("Validating caught exception: {}", e.getMessage());
 
             if (!exception.isAssignableFrom(e.getClass())) {
                 throw new ValidationException("Validation failed for asserted exception type - expected: '" +
@@ -94,7 +94,7 @@ public class Assert extends AbstractActionContainer {
                 }
             }
 
-            logger.debug("Asserted exception is as expected ({}): {}", e.getClass(), e.getLocalizedMessage());
+            logger.trace("Asserted exception is as expected ({}): {}", e.getClass(), e.getLocalizedMessage());
 
             logger.debug("Assert exception validation successful: All values OK");
 

@@ -74,8 +74,8 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
         while (correlationKey == null && timeLeft > 0) {
             timeLeft -= pollingInterval;
 
-            if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Correlation key not available yet - retrying in {}ms", timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
+            if (RETRY_LOG.isTraceEnabled()) {
+                RETRY_LOG.trace("Correlation key not available yet - retrying in {}ms", timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             }
 
             try {
@@ -106,8 +106,8 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
         while (stored == null && timeLeft > 0) {
             timeLeft -= pollingInterval;
 
-            if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("{} - retrying in {}ms", retryLogMessage, timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
+            if (RETRY_LOG.isTraceEnabled()) {
+                RETRY_LOG.trace("{} - retrying in {}ms", retryLogMessage, timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             }
 
             try {
