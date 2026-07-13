@@ -17,10 +17,14 @@
 package org.citrusframework.dsl.schema.generator;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -46,6 +50,7 @@ import com.github.victools.jsonschema.generator.naming.DefaultSchemaDefinitionNa
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.dsl.schema.Catalog;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.yaml.ExamplesProvider;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;
 import tools.jackson.databind.JsonNode;
@@ -232,6 +237,28 @@ public class CitrusModule implements Module {
             if (!comments.isEmpty()) {
                 jsonSchemaAttributesNode.put("$comment", String.join(",", comments));
             }
+        }
+
+        Set<String> examples = new HashSet<>();
+        this.getSchemaPropertyAnnotation(member)
+                .map(SchemaProperty::examples)
+                .map(Arrays::asList)
+                .ifPresent(examples::addAll);
+
+        this.getSchemaPropertyAnnotation(member)
+                .map(SchemaProperty::examplesProvider)
+                .ifPresent(providerType -> {
+                    try {
+                        ExamplesProvider provider = providerType.getDeclaredConstructor().newInstance();
+                        examples.addAll(provider.get());
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                             NoSuchMethodException ignored) {
+                    }
+                });
+
+        if (!examples.isEmpty()) {
+            ArrayNode examplesNode = jsonSchemaAttributesNode.putArray("examples");
+            examples.stream().sorted().forEach(examplesNode::add);
         }
     }
 

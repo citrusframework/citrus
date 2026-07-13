@@ -16,10 +16,14 @@
 
 package org.citrusframework.camel.yaml;
 
+import java.util.Set;
+
 import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.camel.actions.infra.CamelRunInfraAction;
 import org.citrusframework.camel.actions.infra.CamelStopInfraAction;
+import org.citrusframework.camel.actions.infra.InfraServiceUtils;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.yaml.ExamplesProvider;
 import org.citrusframework.yaml.SchemaProperty;
 
 import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
@@ -53,12 +57,19 @@ public class Infra implements CamelActionBuilderWrapper<AbstractCamelAction.Buil
 
         private final CamelRunInfraAction.Builder builder = new CamelRunInfraAction.Builder();
 
+        public static class InfraServiceNamesProvider implements ExamplesProvider {
+            @Override
+            public Set<String> get() {
+                return InfraServiceUtils.getInfraServiceNames();
+            }
+        }
+
         @SchemaProperty(advanced = true, description = "The Camel catalog that holds the infra service definitions.")
         public void setCatalog(String camelCatalog) {
             builder.catalog(camelCatalog);
         }
 
-        @SchemaProperty(description = "The Camel infra service name.")
+        @SchemaProperty(description = "The Camel infra service name.", examplesProvider = InfraServiceNamesProvider.class)
         public void setService(String serviceName) {
             builder.service(serviceName);
         }

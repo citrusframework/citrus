@@ -109,6 +109,16 @@ public @interface SchemaProperty {
     String pattern() default "";
 
     /**
+     * List of examples for String properties
+     */
+    String[] examples() default {};
+
+    /**
+     * Provider generating examples for String properties
+     */
+    Class<? extends ExamplesProvider> examplesProvider() default ExamplesProvider.EmptyExamplesProvider.class;
+
+    /**
      * Required properties
      */
     boolean required() default false;
