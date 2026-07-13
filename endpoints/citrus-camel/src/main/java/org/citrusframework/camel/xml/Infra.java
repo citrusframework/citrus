@@ -63,6 +63,10 @@ public class Infra {
         private String implementation;
         @XmlAttribute(name = "auto-remove")
         private boolean autoRemove = CamelInfraSettings.isAutoRemoveServices();
+        @XmlAttribute(name = "port")
+        private int port = CamelInfraSettings.port();
+        @XmlAttribute(name = "fixed-port")
+        private boolean fixedPort = CamelInfraSettings.isFixedPort();
 
         @XmlAttribute(name = "dump-service-output")
         private boolean dumpServiceOutput = CamelInfraSettings.isDumpServiceOutput();
@@ -105,6 +109,22 @@ public class Infra {
 
         public void setDumpServiceOutput(boolean dumpServiceOutput) {
             this.dumpServiceOutput = dumpServiceOutput;
+        }
+
+        public int getPort() {
+            return port;
+        }
+
+        public void setPort(int port) {
+            this.port = port;
+        }
+
+        public boolean isFixedPort() {
+            return fixedPort;
+        }
+
+        public void setFixedPort(boolean fixedPort) {
+            this.fixedPort = fixedPort;
         }
     }
 

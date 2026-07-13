@@ -70,6 +70,9 @@ public class CamelStopInfraAction extends AbstractCamelAction {
             logger.info("Stopped Camel infra service '{}'", fullServiceName);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new CitrusRuntimeException("Failed to stop Camel infra service '%s'".formatted(fullServiceName), e);
+        } finally {
+            System.clearProperty(CamelInfraSettings.CAMEL_INFRA_FIXED_PORT_PROPERTY);
+            System.clearProperty(CamelInfraSettings.CAMEL_INFRA_PORT_PROPERTY);
         }
     }
 

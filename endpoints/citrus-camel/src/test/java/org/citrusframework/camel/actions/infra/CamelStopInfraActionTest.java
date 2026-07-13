@@ -36,6 +36,7 @@ public class CamelStopInfraActionTest extends AbstractTestNGUnitTest {
                 Collections.emptyList(),
                 "org.citrusframework",
                 "camel-infra-service",
+                "1.0",
                 "1.0");
         context.setVariable("citrus.camel.infra.my-service:meta", meta);
 
@@ -62,6 +63,7 @@ public class CamelStopInfraActionTest extends AbstractTestNGUnitTest {
                 Arrays.asList("one", "two", "three"),
                 "org.citrusframework",
                 "camel-infra-service",
+                "1.0",
                 "1.0");
         context.setVariable("citrus.camel.infra.my-service.one:meta", meta);
 

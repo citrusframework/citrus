@@ -60,6 +60,9 @@ public class CamelRunInfraAction extends AbstractCamelAction {
     private final String serviceName;
     private final String implementation;
 
+    private final int port;
+    private final boolean fixedPort;
+
     private final boolean autoRemove;
     private final boolean dumpServiceOutput;
 
@@ -69,6 +72,8 @@ public class CamelRunInfraAction extends AbstractCamelAction {
         this.catalog = builder.catalog;
         this.serviceName = builder.serviceName;
         this.implementation = builder.implementation;
+        this.fixedPort = builder.fixedPort;
+        this.port = builder.port;
         this.autoRemove = builder.autoRemove;
         this.dumpServiceOutput = builder.dumpServiceOutput;
     }
@@ -83,10 +88,23 @@ public class CamelRunInfraAction extends AbstractCamelAction {
             Optional<InfraService> infraService = resolveInfraService(catalog, resolvedServiceName, resolvedImplementation);
 
             if (infraService.isEmpty()) {
-                throw new CitrusRuntimeException("No Camel infra service found for '%s'".formatted(fullServiceName));
+                throw new CitrusRuntimeException("Failed to resolve Camel infra service for '%s'".formatted(fullServiceName));
             }
 
             logger.info("Starting Camel infra service '{}' ...", fullServiceName);
+
+            int servicePort = port;
+            if (servicePort < 0) {
+                servicePort = CamelInfraSettings.getServicePort(fullServiceName);
+            }
+
+            // Set the fixed port property BEFORE instantiating the service so it uses fixed ports
+            boolean useFixedPort = fixedPort || servicePort > 0;
+            System.setProperty(CamelInfraSettings.CAMEL_INFRA_FIXED_PORT_PROPERTY, String.valueOf(useFixedPort));
+            // Set the port property if a specific port was requested
+            if (servicePort > 0) {
+                System.setProperty(CamelInfraSettings.CAMEL_INFRA_PORT_PROPERTY, String.valueOf(servicePort));
+            }
 
             ClassLoader classLoader = ClassLoaderHelper.getClassLoader();
             Class<?> serviceType = Class.forName(infraService.get().service(), true, classLoader);
@@ -222,6 +240,9 @@ public class CamelRunInfraAction extends AbstractCamelAction {
         private String serviceName;
         private String implementation;
 
+        private int port = CamelInfraSettings.port();
+        private boolean fixedPort = CamelInfraSettings.isFixedPort();
+
         private String catalogName;
         private CamelCatalog catalog;
 
@@ -249,6 +270,18 @@ public class CamelRunInfraAction extends AbstractCamelAction {
         @Override
         public Builder implementation(String implementation) {
             this.implementation = implementation;
+            return this;
+        }
+
+        @Override
+        public Builder port(int port) {
+            this.port = port;
+            return this;
+        }
+
+        @Override
+        public Builder fixedPort(boolean fixedPort) {
+            this.fixedPort = fixedPort;
             return this;
         }
 

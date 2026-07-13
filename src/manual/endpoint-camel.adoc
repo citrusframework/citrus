@@ -1785,7 +1785,6 @@ The Camel infra services usually start Docker/Podman containers and/or use Testc
 
 See this list of supported infrastructure services in Apache Camel:
 
-
 |===
 |Service |Service |Service
 
@@ -1810,7 +1809,7 @@ See this list of supported infrastructure services in Apache Camel:
 | hazelcast
 
 | hive-mq (sparkplug)
-| kafka (redpanda, strimzi)
+| kafka (confluent, redpanda, strimzi)
 | microprofile (lra)
 
 | milvus
@@ -1844,6 +1843,9 @@ See this list of supported infrastructure services in Apache Camel:
 |===
 
 You can start/stop such an infra service via test actions in Citrus.
+
+[[camel-infra-run]]
+=== Run Camel infra services
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -1979,6 +1981,72 @@ actions:
 
 By default, the infrastructure services get automatically removed after the test. You can disable the auto removal when running the service (`auto-remove` setting).
 
+=== Fixed port configuration
+
+By default, Camel infra services use random ports for better test isolation.
+In some cases you may want to use a fixed port instead (e.g. when an external tool expects a service on a well-known port, or when debugging locally).
+
+You can configure a fixed port directly on the run action:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+public class CamelInfraIT extends TestNGCitrusSpringSupport {
+
+    @Test
+    @CitrusTest
+    public void createInfraService() {
+        $(camel()
+            .infra()
+            .run()
+            .service("postgres")
+            .port(5432));
+    }
+}
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: "CamelInfraTest"
+actions:
+  - camel:
+      infra:
+        run:
+          service: postgres
+          port: 5432
+----
+
+Setting a specific port automatically enables fixed port mode.
+You can also enable fixed port mode without specifying a concrete port number — this tells the service to use its own default port rather than a random one:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+$(camel()
+    .infra()
+    .run()
+    .service("postgres")
+    .fixedPort(true));
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: "CamelInfraTest"
+actions:
+  - camel:
+      infra:
+        run:
+          service: postgres
+          fixedPort: true
+----
+
+The fixed port settings can also be configured globally via system properties or environment variables (see <<camel-infra-settings>>).
+
+[[camel-infra-stop]]
+=== Stop Camel infra services
+
 To explicitly stop a running infrastructure service use the following test action.
 
 .Java
@@ -2033,6 +2101,53 @@ actions:
     <!-- NOT SUPPORTED -->
 </spring:beans>
 ----
+
+[[camel-infra-settings]]
+=== Camel infra settings
+
+The Camel infrastructure services support the following environment settings.
+
+.System properties
+|===
+|System property |Description
+
+| citrus.camel.infra.auto.remove.services
+| When set to true the test will automatically stop and remove Camel infra services that have been started. (default="true")
+
+| citrus.camel.infra.dump.service.output
+| When set to true infra service output will be redirected to a file in the current working directory. (default="false")
+
+| citrus.camel.infra.port
+| When set infra services use this port as a fixed port. (default="-1", meaning random port)
+
+| citrus.camel.infra.fixedPort
+| When set to true infra services use fixed ports. Otherwise, services use random ports for better isolation. (default="false")
+
+| citrus.camel.infra.<service>.port
+| Sets a fixed port for a specific service. The service name is the full service name (e.g. `citrus.camel.infra.postgres.port=5432`).
+
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_CAMEL_INFRA_AUTO_REMOVE_SERVICES
+| When set to true the test will automatically stop and remove Camel infra services that have been started. (default="true")
+
+| CITRUS_CAMEL_INFRA_DUMP_SERVICE_OUTPUT
+| When set to true infra service output will be redirected to a file in the current working directory. (default="false")
+
+| CITRUS_CAMEL_INFRA_PORT
+| When set infra services use this port as a fixed port. (default="-1", meaning random port)
+
+| CITRUS_CAMEL_INFRA_FIXED_PORT
+| When set to true infra services use fixed ports. Otherwise, services use random ports for better isolation. (default="false")
+
+| CITRUS_CAMEL_INFRA_<SERVICE>_PORT
+| Sets a fixed port for a specific service. The service name uses upper case and non-alphanumeric characters are replaced with underscores (e.g. `CITRUS_CAMEL_INFRA_POSTGRES_PORT=5432`).
+
+|===
 
 [[camel-endpoint-dsl]]
 == Camel endpoint DSL

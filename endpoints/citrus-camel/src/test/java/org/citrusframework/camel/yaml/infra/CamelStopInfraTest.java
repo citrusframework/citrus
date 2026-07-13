@@ -50,6 +50,7 @@ public class CamelStopInfraTest extends AbstractYamlActionTest {
                 Collections.emptyList(),
                 "org.citrusframework",
                 "camel-infra-service",
+                "1.0",
                 "1.0");
         context.setVariable("citrus.camel.infra.my-service:meta", meta);
 

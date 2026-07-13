@@ -73,6 +73,16 @@ public class Infra implements CamelActionBuilderWrapper<AbstractCamelAction.Buil
             builder.autoRemove(autoRemove);
         }
 
+        @SchemaProperty(description = "When set the infra service uses this port as a fixed port.")
+        public void setPort(int port) {
+            builder.port(port);
+        }
+
+        @SchemaProperty(description = "When enabled the infra service uses fixed ports.")
+        public void setFixedPort(boolean fixedPort) {
+            builder.fixedPort(fixedPort);
+        }
+
         @SchemaProperty(advanced = true, description = "When enabled the service output is saved into a log file.")
         public void setDumpServiceOutput(boolean enabled) {
             builder.dumpServiceOutput(enabled);
