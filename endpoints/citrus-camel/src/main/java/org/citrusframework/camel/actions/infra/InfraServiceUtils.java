@@ -19,14 +19,18 @@ package org.citrusframework.camel.actions.infra;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.apache.camel.catalog.CamelCatalog;
+import org.apache.camel.catalog.DefaultCamelCatalog;
 
 /**
  * Utility class provides access to Camel infra services metadata.
@@ -38,6 +42,7 @@ public final class InfraServiceUtils {
             .enable(SerializationFeature.INDENT_OUTPUT)
             .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
             .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .build();
 
     private InfraServiceUtils() {
@@ -54,8 +59,7 @@ public final class InfraServiceUtils {
                      = catalog.loadResource("test-infra", "metadata.json")) {
             String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 
-            metadata = jsonMapper.readValue(json, new TypeReference<List<InfraService>>() {
-            });
+            metadata = jsonMapper.readValue(json, new TypeReference<>() {});
         }
 
         return metadata;

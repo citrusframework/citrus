@@ -47,7 +47,8 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
         "aliasImplementation": [ "bar" ],
         "groupId": "org.citrusframework",
         "artifactId": "camel-infra-foo",
-        "version": "1.0"
+        "version": "1.0",
+        "serviceVersion": "1.0"
       },
       {
         "service": "%s",
@@ -57,7 +58,8 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
         "aliasImplementation": [],
         "groupId": "org.citrusframework",
         "artifactId": "camel-infra-service",
-        "version": "1.0"
+        "version": "1.0",
+        "serviceVersion": "1.0"
       },
       {
         "service": "%s",
@@ -157,7 +159,7 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
         verify(modifier).mask("CITRUS_CAMEL_INFRA_MY_SERVICE_PASSWORD='secret'");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "No Camel infra service found for 'unknown'")
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to resolve Camel infra service for 'unknown'")
     public void testRunInfraNotFound() {
         CamelRunInfraAction action = new CamelRunInfraAction.Builder()
                 .service("unknown")
@@ -167,7 +169,7 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "No Camel infra service found for 'service.unknown'")
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to resolve Camel infra service for 'service.unknown'")
     public void testRunInfraImplementationNotFound() {
         CamelRunInfraAction action = new CamelRunInfraAction.Builder()
                 .service("service", "unknown")
