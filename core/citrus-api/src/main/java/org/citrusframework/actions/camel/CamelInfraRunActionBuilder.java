@@ -27,6 +27,10 @@ public interface CamelInfraRunActionBuilder<T extends TestAction, B extends Came
 
     B implementation(String implementation);
 
+    B port(int port);
+
+    B fixedPort(boolean fixedPort);
+
     B autoRemove(boolean autoRemove);
 
     B dumpServiceOutput(boolean dumpServiceOutput);

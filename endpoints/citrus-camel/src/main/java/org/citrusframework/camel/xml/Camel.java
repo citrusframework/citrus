@@ -161,7 +161,9 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         if (infra.getRun() != null) {
             CamelRunInfraAction.Builder builder = new CamelRunInfraAction.Builder()
                     .service(infra.getRun().getService())
-                    .implementation(infra.getRun().getImplementation());
+                    .implementation(infra.getRun().getImplementation())
+                    .port(infra.getRun().getPort())
+                    .fixedPort(infra.getRun().isFixedPort());
 
             builder.autoRemove(infra.getRun().isAutoRemove());
             builder.dumpServiceOutput(infra.getRun().isDumpServiceOutput());

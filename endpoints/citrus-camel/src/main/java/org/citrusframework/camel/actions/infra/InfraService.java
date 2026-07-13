@@ -17,7 +17,6 @@
 package org.citrusframework.camel.actions.infra;
 
 import java.util.List;
-
 /**
  * Camel infra service metadata as stored in the Camel catalog.
  */
@@ -29,5 +28,6 @@ public record InfraService(
             List<String> aliasImplementation,
             String groupId,
             String artifactId,
-            String version) {
+            String version,
+            String serviceVersion) {
 }
