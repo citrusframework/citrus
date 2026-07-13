@@ -43,16 +43,18 @@ public class YamlCodeAnalyzerTest {
         Assert.assertEquals(foundModules[4], "citrus-kafka");
         Assert.assertEquals(foundModules[5], "citrus-testcontainers");
 
-        Assert.assertEquals(scanResult.dependencies().length, 2L);
+        Assert.assertEquals(scanResult.dependencies().length, 3L);
         String[] foundDeps = Arrays.stream(scanResult.dependencies()).sorted().toArray(String[]::new);
         Assert.assertEquals(foundDeps[0], "org.apache.camel:camel-aws2-s3:" + CAMEL_VERSION_DEFAULT);
         Assert.assertEquals(foundDeps[1], "org.apache.camel:camel-paho-mqtt5:" + CAMEL_VERSION_DEFAULT);
+        Assert.assertEquals(foundDeps[2], "org.apache.camel:camel-test-infra-kafka:" + CAMEL_VERSION_DEFAULT);
 
-        Assert.assertEquals(scanResult.actions().length, 3L);
+        Assert.assertEquals(scanResult.actions().length, 4L);
         String[] foundActions = Arrays.stream(scanResult.actions()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundActions[0], "print");
-        Assert.assertEquals(foundActions[1], "receive");
-        Assert.assertEquals(foundActions[2], "send");
+        Assert.assertEquals(foundActions[0], "camel-infra-run");
+        Assert.assertEquals(foundActions[1], "print");
+        Assert.assertEquals(foundActions[2], "receive");
+        Assert.assertEquals(foundActions[3], "send");
 
         Assert.assertEquals(scanResult.containers().length, 1L);
         Assert.assertEquals(scanResult.containers()[0], "iterate");
