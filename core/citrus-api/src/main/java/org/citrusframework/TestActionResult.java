@@ -16,12 +16,14 @@
 
 package org.citrusframework;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.JsonStringBuilder;
 import org.citrusframework.message.Message;
 import org.citrusframework.yaml.YamlStringBuilder;
@@ -102,9 +104,7 @@ public class TestActionResult {
                                 .map(String::getBytes)
                                 .map(Base64.getEncoder()::encodeToString)
                                 .toList())
-                        .withProperty("payload", Optional.ofNullable(message.getPayload(byte[].class))
-                                .map(Base64.getEncoder()::encodeToString)
-                                .orElse(""))
+                        .withProperty("payload", getPayloadBase64(message))
                     .closeObject();
         }
 
@@ -171,6 +171,19 @@ public class TestActionResult {
         }
 
         return builder.toString();
+    }
+
+    private static String getPayloadBase64(Message message) {
+        try {
+            return Optional.ofNullable(message.getPayload(byte[].class))
+                    .map(Base64.getEncoder()::encodeToString)
+                    .orElse("");
+        } catch (CitrusRuntimeException e) {
+            return Optional.ofNullable(message.getPayload(String.class))
+                    .map(s -> s.getBytes(StandardCharsets.UTF_8))
+                    .map(Base64.getEncoder()::encodeToString)
+                    .orElse("");
+        }
     }
 
     public void addIteration(TestActionResult iteration) {

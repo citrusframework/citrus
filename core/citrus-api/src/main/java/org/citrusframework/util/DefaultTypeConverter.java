@@ -110,6 +110,9 @@ public class DefaultTypeConverter implements TypeConverter {
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to convert input stream to byte[]");
                 }
+            } else {
+                String targetAsString = convertIfNecessary(target, String.class);
+                return (T) convertIfNecessary(targetAsString, byte[].class);
             }
         }
 

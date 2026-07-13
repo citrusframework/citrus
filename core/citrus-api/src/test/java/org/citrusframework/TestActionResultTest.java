@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -193,6 +194,26 @@ public class TestActionResultTest {
 
         Assert.assertTrue(json.contains("{ \"name\": \"key1\", \"value\": \"value1\" }"));
         Assert.assertTrue(json.contains("{ \"name\": \"key2\", \"value\": \"value2\" }"));
+    }
+
+    @Test
+    public void toJsonShouldFallbackWhenPayloadNotConvertibleToBytes() {
+        var message = mock(Message.class);
+        Map<String, Object> headers = new LinkedHashMap<>();
+        headers.put("Content-Type", "application/x-www-form-urlencoded");
+        when(message.getHeaders()).thenReturn(headers);
+        when(message.getHeaderData()).thenReturn(Collections.emptyList());
+        when(message.getPayload(byte[].class)).thenThrow(
+                new CitrusRuntimeException("Unable to convert object 'org.springframework.util.LinkedMultiValueMap' to target type 'class [B'"));
+        when(message.getPayload(String.class)).thenReturn("{foo=[bar]}");
+
+        var fixture = new TestActionResult("send", "actions.0.send");
+        fixture.setMessage(message);
+
+        String json = fixture.toJson();
+        String payloadBase64 = Base64.getEncoder().encodeToString("{foo=[bar]}".getBytes(StandardCharsets.UTF_8));
+
+        Assert.assertTrue(json.contains("\"payload\": \"%s\"".formatted(payloadBase64)));
     }
 
     @Test
