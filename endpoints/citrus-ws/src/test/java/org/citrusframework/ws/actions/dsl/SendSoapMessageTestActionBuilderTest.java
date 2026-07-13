@@ -45,19 +45,19 @@ import org.citrusframework.ws.message.SoapMessageHeaders;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
-    private final WebServiceClient soapClient = Mockito.mock(WebServiceClient.class);
-    private final Producer messageProducer = Mockito.mock(Producer.class);
-    private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
-    private final Resource resource = Mockito.mock(Resource.class);
+    private WebServiceClient soapClient;
+    private Producer messageProducer;
+    private ReferenceResolver referenceResolver;
+    private Resource resource;
 
     private final SoapAttachment testAttachment = new SoapAttachment();
 
@@ -72,9 +72,18 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
         testAttachment.setCharsetName("UTF-8");
     }
 
+    @Override
+    @BeforeMethod
+    public void prepareTest() {
+        super.prepareTest();
+        soapClient = Mockito.mock(WebServiceClient.class);
+        messageProducer = Mockito.mock(Producer.class);
+        referenceResolver = Mockito.mock(ReferenceResolver.class);
+        resource = Mockito.mock(Resource.class);
+    }
+
     @Test
     public void testFork() {
-        reset(soapClient, messageProducer);
         when(soapClient.createProducer()).thenReturn(messageProducer);
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -125,7 +134,6 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
     @Test
     public void testSoapAction() {
-        reset(soapClient, messageProducer);
         when(soapClient.createProducer()).thenReturn(messageProducer);
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -159,7 +167,6 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
     @Test
     public void testSoapAttachment() {
-        reset(soapClient, messageProducer);
         when(soapClient.createProducer()).thenReturn(messageProducer);
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -201,7 +208,6 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
     @Test
     public void testSoapAttachmentData() {
-        reset(soapClient, messageProducer);
         when(soapClient.createProducer()).thenReturn(messageProducer);
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -242,7 +248,6 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
     @Test
     public void testMtomSoapAttachmentData() {
-        reset(soapClient, messageProducer);
         when(soapClient.createProducer()).thenReturn(messageProducer);
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -286,7 +291,6 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
     @Test
     public void testMultipleSoapAttachmentData() {
-        reset(soapClient, messageProducer);
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapMessage message = (SoapMessage) invocation.getArguments()[0];
@@ -334,7 +338,6 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
     @Test
     public void testSoapAttachmentResource() {
-        reset(resource, soapClient, messageProducer);
         when(soapClient.createProducer()).thenReturn(messageProducer);
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -376,7 +379,6 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
 
     @Test
     public void testSendBuilderWithEndpointName() {
-        reset(referenceResolver, soapClient, messageProducer);
         when(soapClient.createProducer()).thenReturn(messageProducer);
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
