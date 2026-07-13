@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.xml.transform.Source;
 
 import org.citrusframework.xml.StringSource;
+import org.springframework.util.MultiValueMap;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -66,6 +67,10 @@ public class DefaultTypeConverterTest {
         Assert.assertEquals(converter.convertIfNecessary(new String[] {"foo", "bar"}, String.class), "[foo, bar]");
         Assert.assertEquals(converter.convertIfNecessary(new Object[] {"foo", "bar"}, String.class), "[foo, bar]");
         Assert.assertEquals(converter.convertIfNecessary(Collections.singletonMap("foo", "bar"), String.class), "{foo=bar}");
+        Assert.assertEquals(converter.convertIfNecessary(MultiValueMap.fromSingleValue(Collections.singletonMap("foo", "bar")), String.class), "{foo=bar}");
+        Assert.assertEquals(converter.convertIfNecessary(MultiValueMap.fromMultiValue(Collections.singletonMap("foo", List.of("bar", "foobar"))), String.class), "{foo=[bar, foobar]}");
+        Assert.assertEquals(converter.convertIfNecessary(MultiValueMap.fromSingleValue(Collections.singletonMap("foo", "bar")), byte[].class), "{foo=bar}".getBytes());
+        Assert.assertEquals(converter.convertIfNecessary(MultiValueMap.fromMultiValue(Collections.singletonMap("foo", List.of("bar", "foobar"))), byte[].class), "{foo=[bar, foobar]}".getBytes());
         Assert.assertEquals(converter.convertIfNecessary(Arrays.asList(1, 2), String.class), "[1, 2]");
         Assert.assertEquals(converter.convertIfNecessary(new int[] {1, 2}, String.class), "[1, 2]");
         Assert.assertEquals(converter.convertIfNecessary(null, String.class), "null");
