@@ -933,6 +933,81 @@
     <xs:attribute name="actor" type="xs:string"/>
   </xs:complexType>
 
+  <xs:simpleType name="CamelInfraServiceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="arangodb"/>
+      <xs:enumeration value="artemis"/>
+      <xs:enumeration value="artemis.amqp"/>
+      <xs:enumeration value="aws.cloud-watch"/>
+      <xs:enumeration value="aws.config"/>
+      <xs:enumeration value="aws.dynamo-db"/>
+      <xs:enumeration value="aws.dynamodb"/>
+      <xs:enumeration value="aws.ec2"/>
+      <xs:enumeration value="aws.event-bridge"/>
+      <xs:enumeration value="aws.iam"/>
+      <xs:enumeration value="aws.kinesis"/>
+      <xs:enumeration value="aws.kms"/>
+      <xs:enumeration value="aws.lambda"/>
+      <xs:enumeration value="aws.s3"/>
+      <xs:enumeration value="aws.secrets-manager"/>
+      <xs:enumeration value="aws.sns"/>
+      <xs:enumeration value="aws.sqs"/>
+      <xs:enumeration value="aws.ssm"/>
+      <xs:enumeration value="aws.sts"/>
+      <xs:enumeration value="aws.transcribe"/>
+      <xs:enumeration value="azure.storage-blob"/>
+      <xs:enumeration value="azure.storage-queue"/>
+      <xs:enumeration value="cassandra"/>
+      <xs:enumeration value="chat-script"/>
+      <xs:enumeration value="consul"/>
+      <xs:enumeration value="couchbase"/>
+      <xs:enumeration value="couchdb"/>
+      <xs:enumeration value="docling"/>
+      <xs:enumeration value="elasticsearch"/>
+      <xs:enumeration value="fhir"/>
+      <xs:enumeration value="ftp"/>
+      <xs:enumeration value="ftps"/>
+      <xs:enumeration value="google.pub-sub"/>
+      <xs:enumeration value="hashicorp.vault"/>
+      <xs:enumeration value="hazelcast"/>
+      <xs:enumeration value="hive-mq"/>
+      <xs:enumeration value="hive-mq.sparkplug"/>
+      <xs:enumeration value="ibmmq"/>
+      <xs:enumeration value="iggy"/>
+      <xs:enumeration value="ignite"/>
+      <xs:enumeration value="infinispan"/>
+      <xs:enumeration value="kafka"/>
+      <xs:enumeration value="kafka.confluent"/>
+      <xs:enumeration value="kafka.redpanda"/>
+      <xs:enumeration value="kafka.strimzi"/>
+      <xs:enumeration value="keycloak"/>
+      <xs:enumeration value="microprofile.lra"/>
+      <xs:enumeration value="milvus"/>
+      <xs:enumeration value="minio"/>
+      <xs:enumeration value="mongodb"/>
+      <xs:enumeration value="mosquitto"/>
+      <xs:enumeration value="nats"/>
+      <xs:enumeration value="neo4j"/>
+      <xs:enumeration value="ollama"/>
+      <xs:enumeration value="openldap"/>
+      <xs:enumeration value="pgvector"/>
+      <xs:enumeration value="pinecone"/>
+      <xs:enumeration value="postgres"/>
+      <xs:enumeration value="postgres-vector"/>
+      <xs:enumeration value="pulsar"/>
+      <xs:enumeration value="qdrant"/>
+      <xs:enumeration value="rabbitmq"/>
+      <xs:enumeration value="redis"/>
+      <xs:enumeration value="rocketmq"/>
+      <xs:enumeration value="sftp"/>
+      <xs:enumeration value="smb"/>
+      <xs:enumeration value="solr"/>
+      <xs:enumeration value="weaviate"/>
+      <xs:enumeration value="xmpp"/>
+      <xs:enumeration value="zookeeper"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:complexType name="Camel">
     <xs:sequence>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -1085,7 +1160,11 @@
             <xs:choice>
               <xs:element name="run">
                 <xs:complexType>
-                  <xs:attribute name="service" use="required" type="xs:string"/>
+                  <xs:attribute name="service" use="required">
+                    <xs:simpleType>
+                      <xs:union memberTypes="xs:string tns:CamelInfraServiceType"/>
+                    </xs:simpleType>
+                  </xs:attribute>
                   <xs:attribute name="implementation" type="xs:string"/>
                   <xs:attribute name="catalog" type="xs:string"/>
                   <xs:attribute name="port" type="xs:int"/>
@@ -1095,7 +1174,11 @@
               </xs:element>
               <xs:element name="stop">
                 <xs:complexType>
-                  <xs:attribute name="service" use="required" type="xs:string"/>
+                  <xs:attribute name="service" use="required">
+                    <xs:simpleType>
+                      <xs:union memberTypes="xs:string tns:CamelInfraServiceType"/>
+                    </xs:simpleType>
+                  </xs:attribute>
                   <xs:attribute name="implementation" type="xs:string"/>
                 </xs:complexType>
               </xs:element>
