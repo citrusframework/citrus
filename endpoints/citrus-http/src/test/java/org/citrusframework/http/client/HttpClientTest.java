@@ -18,10 +18,17 @@ package org.citrusframework.http.client;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.http.message.HttpMessage;
+import org.citrusframework.http.interceptor.LoggingClientInterceptor;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.ErrorHandlingStrategy;
@@ -516,6 +523,35 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
 
         verify(restTemplate).setInterceptors(anyList());
+    }
+
+    @Test
+    public void testConcurrentGetRestTemplate() throws Exception {
+        HttpEndpointConfiguration endpointConfiguration = new HttpEndpointConfiguration();
+
+        int threadCount = 10;
+        CyclicBarrier barrier = new CyclicBarrier(threadCount);
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        try {
+            List<Future<RestTemplate>> futures = new ArrayList<>();
+            for (int i = 0; i < threadCount; i++) {
+                futures.add(executor.submit(() -> {
+                    barrier.await();
+                    return endpointConfiguration.getRestTemplate();
+                }));
+            }
+
+            for (Future<RestTemplate> future : futures) {
+                RestTemplate template = future.get();
+                Assert.assertNotNull(template);
+                Assert.assertFalse(template.getInterceptors().isEmpty());
+                Assert.assertTrue(template.getInterceptors().stream()
+                        .anyMatch(LoggingClientInterceptor.class::isInstance));
+            }
+        } finally {
+            executor.shutdown();
+        }
+
     }
 
     @Test
