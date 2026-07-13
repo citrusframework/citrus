@@ -68,6 +68,14 @@
         </body>
       </message>
     </receive>
+    <camel>
+      <infra>
+        <run>
+          <service>kafka</service>
+          <autoRemove>true</autoRemove>
+        </run>
+      </infra>
+    </camel>
     <iterate condition="i &lt; 10">
       <actions>
         <print>

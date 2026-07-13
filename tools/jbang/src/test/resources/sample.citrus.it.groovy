@@ -58,6 +58,10 @@ actions {
       .message()
         .body("@ignore@ @isNumber()@"))
 
+    $(camel().infra().run()
+      .service("kafka")
+      .autoRemove(true))
+
     $(iterate()
       .condition("i < 10")
       .actions(
