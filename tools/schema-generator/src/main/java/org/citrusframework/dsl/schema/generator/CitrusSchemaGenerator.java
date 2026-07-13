@@ -99,6 +99,10 @@ public class CitrusSchemaGenerator {
             String validationMatcherCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getValidationMatcherCatalog()));
             writeFile(workingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog + "\n");
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog + "\n");
+
+            String infraServiceCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getInfraServiceCatalog()));
+            writeFile(workingDir, "citrus-catalog-aggregate-infra-services.json", infraServiceCatalog + "\n");
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-infra-services.json", infraServiceCatalog + "\n");
         } catch (IOException e) {
             throw new RuntimeException("Failed to generate Citrus DSL schema", e);
         }

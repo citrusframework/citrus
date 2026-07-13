@@ -17,8 +17,10 @@
 package org.citrusframework.jbang.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,6 +28,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.jbang.JsonSupport;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.ClassLoaderHelper;
@@ -163,6 +166,65 @@ public interface CodeAnalyzer {
             return components;
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read component aggregate schema definitions of kind '%s'".formatted(kind), e);
+        }
+    }
+
+    /**
+     * Specialized implementations add logic to extract Camel endpoint component names used in the code.
+     */
+    default Set<String> extractCamelEndpointComponents(String code) {
+        return Collections.emptySet();
+    }
+
+    default Set<String> resolveCamelEndpointDependencies(String code) {
+        Set<String> dependencies = new HashSet<>();
+        String camelVersion = CitrusJBangMain.Settings.getCamelVersion();
+        Set<String> components = extractCamelEndpointComponents(code);
+        for (String componentName : components) {
+            dependencies.add("org.apache.camel:camel-%s:%s".formatted(componentName, camelVersion));
+        }
+        return dependencies;
+    }
+
+    /**
+     * Specialized implementations add logic to extract Camel infra service names used in the code.
+     */
+    default Set<String> extractCamelInfraServiceNames(String code) {
+        return Collections.emptySet();
+    }
+
+    default Set<String> resolveCamelInfraServiceDependencies(String code) {
+        Set<String> dependencies = new HashSet<>();
+        Set<String> serviceNames = extractCamelInfraServiceNames(code);
+        Map<String, String> catalog = getKnownInfraServices();
+        String camelVersion = CitrusJBangMain.Settings.getCamelVersion();
+
+        for (String serviceName : serviceNames) {
+            String baseName = serviceName.contains(".") ? serviceName.substring(0, serviceName.indexOf(".")) : serviceName;
+            if (catalog.containsKey(serviceName)) {
+                dependencies.add("%s:%s".formatted(catalog.get(serviceName), camelVersion));
+            } else if (catalog.containsKey(baseName)) {
+                dependencies.add("%s:%s".formatted(catalog.get(baseName), camelVersion));
+            } else {
+                dependencies.add("org.apache.camel:camel-test-infra-%s:%s".formatted(baseName, camelVersion));
+            }
+        }
+
+        return dependencies;
+    }
+
+    default Map<String, String> getKnownInfraServices() {
+        try {
+            InputStream is = ClassLoaderHelper.getClassLoader().getResourceAsStream("citrus-catalog/citrus/citrus-catalog-aggregate-infra-services.json");
+            if (is == null) {
+                return Collections.emptyMap();
+            }
+            JsonNode raw = JsonSupport.json().readTree(is);
+            Map<String, String> services = new HashMap<>();
+            raw.propertyNames().forEach(name -> services.put(name, raw.get(name).asString()));
+            return services;
+        } catch (JacksonException e) {
+            return Collections.emptyMap();
         }
     }
 

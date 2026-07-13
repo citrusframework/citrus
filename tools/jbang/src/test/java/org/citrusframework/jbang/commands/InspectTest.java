@@ -43,12 +43,9 @@ public class InspectTest extends CommandTest {
                 "citrus-jms"
               ],
             """));
-        Assertions.assertTrue(printer.getOutput().contains("""
-           "actions": [
-               "receive",
-               "print",
-               "send"
-             ],
-           """));
+        Assertions.assertTrue(printer.getOutput().contains("\"receive\""));
+        Assertions.assertTrue(printer.getOutput().contains("\"print\""));
+        Assertions.assertTrue(printer.getOutput().contains("\"send\""));
+        Assertions.assertTrue(printer.getOutput().contains("\"camel-infra-run\""));
     }
 }

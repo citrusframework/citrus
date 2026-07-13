@@ -24,7 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.util.StringUtils;
 
 public class XmlCodeAnalyzer implements CodeAnalyzer {
@@ -33,6 +32,8 @@ public class XmlCodeAnalyzer implements CodeAnalyzer {
     private static final Pattern MODULES_MODELINE_PATTERN = Pattern.compile("^<!--\\s*modules:\\s+(.+)\\s*-->$", Pattern.MULTILINE);
 
     private static final Pattern CAMEL_ENDPOINT_PATTERN = Pattern.compile("^\\s*<(send|receive) endpoint=\"camel:([^\\s:?]+).*$", Pattern.MULTILINE);
+
+    private static final Pattern CAMEL_INFRA_SERVICE_PATTERN = Pattern.compile("<service>([a-zA-Z][a-zA-Z0-9._-]*)</service>", Pattern.MULTILINE);
 
     @Override
     public Set<String> scanModules(String code) {
@@ -70,11 +71,10 @@ public class XmlCodeAnalyzer implements CodeAnalyzer {
         }
 
         // Special handling of Camel endpoint URIs
-        matcher = CAMEL_ENDPOINT_PATTERN.matcher(code);
-        while (matcher.find()) {
-            String componentName = matcher.group(2);
-            items.add("org.apache.camel:camel-%s:%s".formatted(componentName, CitrusJBangMain.Settings.getCamelVersion()));
-        }
+        items.addAll(resolveCamelEndpointDependencies(code));
+
+        // Special handling of Camel infra services
+        items.addAll(resolveCamelInfraServiceDependencies(code));
 
         return items;
     }
@@ -137,6 +137,26 @@ public class XmlCodeAnalyzer implements CodeAnalyzer {
         }
 
         return items;
+    }
+
+    @Override
+    public Set<String> extractCamelEndpointComponents(String code) {
+        Set<String> names = new HashSet<>();
+        Matcher matcher = CAMEL_ENDPOINT_PATTERN.matcher(code);
+        while (matcher.find()) {
+            names.add(matcher.group(2));
+        }
+        return names;
+    }
+
+    @Override
+    public Set<String> extractCamelInfraServiceNames(String code) {
+        Set<String> names = new HashSet<>();
+        Matcher matcher = CAMEL_INFRA_SERVICE_PATTERN.matcher(code);
+        while (matcher.find()) {
+            names.add(matcher.group(1));
+        }
+        return names;
     }
 
     @Override

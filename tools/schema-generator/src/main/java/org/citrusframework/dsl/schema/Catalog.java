@@ -16,14 +16,19 @@
 
 package org.citrusframework.dsl.schema;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.Option;
+import org.apache.camel.catalog.DefaultCamelCatalog;
 import org.citrusframework.CitrusVersion;
+import org.citrusframework.camel.actions.infra.InfraService;
+import org.citrusframework.camel.actions.infra.InfraServiceUtils;
 import org.citrusframework.dsl.schema.generator.CitrusModule;
 import org.citrusframework.dsl.schema.generator.CitrusSchemaGenerator;
 import org.citrusframework.endpoint.EndpointBuilder;
@@ -198,6 +203,28 @@ public class Catalog {
                             jsonSchema));
         }
 
+        return catalog;
+    }
+
+    public Map<String, String> getInfraServiceCatalog() {
+        Map<String, String> catalog = new LinkedHashMap<>();
+        try {
+            List<InfraService> services = InfraServiceUtils.getInfraServiceMetadata(new DefaultCamelCatalog());
+            for (InfraService service : services) {
+                String artifact = "%s:%s".formatted(service.groupId(), service.artifactId());
+                for (String alias : service.alias()) {
+                    if (service.aliasImplementation() != null && !service.aliasImplementation().isEmpty()) {
+                        for (String impl : service.aliasImplementation()) {
+                            catalog.put("%s.%s".formatted(alias, impl), artifact);
+                        }
+                    } else {
+                        catalog.put(alias, artifact);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to load infra service metadata: " + e.getMessage());
+        }
         return catalog;
     }
 
