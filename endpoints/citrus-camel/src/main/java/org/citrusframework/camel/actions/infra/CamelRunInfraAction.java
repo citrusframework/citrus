@@ -21,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -85,7 +84,7 @@ public class CamelRunInfraAction extends AbstractCamelAction {
         String fullServiceName = StringUtils.hasText(resolvedImplementation) ? resolvedServiceName + "." + resolvedImplementation : resolvedServiceName;
 
         try {
-            Optional<InfraService> infraService = resolveInfraService(catalog, resolvedServiceName, resolvedImplementation);
+            Optional<InfraService> infraService = InfraServiceUtils.resolveInfraService(catalog, resolvedServiceName, resolvedImplementation);
 
             if (infraService.isEmpty()) {
                 throw new CitrusRuntimeException("Failed to resolve Camel infra service for '%s'".formatted(fullServiceName));
@@ -187,25 +186,6 @@ public class CamelRunInfraAction extends AbstractCamelAction {
         });
     }
 
-    private static Optional<InfraService> resolveInfraService(CamelCatalog catalog, String serviceName, String implementation) throws IOException {
-        List<InfraService> services = InfraServiceUtils.getInfraServiceMetadata(catalog);
-        return services
-                .stream()
-                .filter(service -> {
-                    if (implementation != null && !implementation.isEmpty()
-                            && service.aliasImplementation() != null) {
-                        return service.alias().contains(serviceName)
-                                && service.aliasImplementation().contains(implementation);
-                    } else if (implementation == null) {
-                        return service.alias().contains(serviceName)
-                                && (service.aliasImplementation() == null || service.aliasImplementation().isEmpty());
-                    }
-
-                    return false;
-                })
-                .findFirst();
-    }
-
     private static String normalizeKey(String key) {
         String result =  key.replaceAll("([A-Z])", "_$1");
 
@@ -263,7 +243,14 @@ public class CamelRunInfraAction extends AbstractCamelAction {
 
         @Override
         public Builder service(String serviceName) {
-            this.serviceName = serviceName;
+            if (serviceName.contains(".")) {
+                String[] tokens = serviceName.split(".", 2);
+                this.serviceName = tokens[0];
+                this.implementation = tokens[1];
+            } else {
+                this.serviceName = serviceName;
+            }
+
             return this;
         }
 
