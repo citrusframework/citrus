@@ -1,0 +1,573 @@
+{
+  "assert": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "assert",
+    "title": "Assert",
+    "description": "Assert exception test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "exception": {
+          "type": "string",
+          "title": "Exception",
+          "description": "The type of the Java exception."
+        },
+        "message": {
+          "type": "string",
+          "title": "Message",
+          "description": "The expected exception message."
+        },
+        "when": {
+          "title": "When",
+          "description": "Nested test actions that raise the exception.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "When",
+            "description": "Nested test actions that raise the exception."
+          }
+        }
+      },
+      "required": [
+        "when"
+      ],
+      "additionalProperties": false    }
+  },
+  "async": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "async",
+    "title": "Async",
+    "description": "Async test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "title": "Actions",
+          "description": "Sequence of test actions to execute.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Actions",
+            "description": "Sequence of test actions to execute."
+          }
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "error": {
+          "title": "Error",
+          "description": "Test actions executed when async container has failed.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Error",
+            "description": "Test actions executed when async container has failed.",
+            "$comment": "group:advanced"
+          }
+        },
+        "success": {
+          "title": "Success",
+          "description": "Test actions executed when async container is successful.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Success",
+            "description": "Test actions executed when async container is successful.",
+            "$comment": "group:advanced"
+          }
+        }
+      },
+      "required": [
+        "actions"
+      ],
+      "additionalProperties": false    }
+  },
+  "catch": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "catch",
+    "title": "Catch",
+    "description": "Catch exception test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "exception": {
+          "type": "string",
+          "title": "Exception",
+          "description": "The exception type to catch."
+        },
+        "when": {
+          "title": "When",
+          "description": "Nested test actions that may raise an exception.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "When",
+            "description": "Nested test actions that may raise an exception."
+          }
+        }
+      },
+      "required": [
+        "when"
+      ],
+      "additionalProperties": false    }
+  },
+  "conditional": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "conditional",
+    "title": "Conditional",
+    "description": "Conditional test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "title": "Actions",
+          "description": "Test actions that get executed when the condition matches.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Actions",
+            "description": "Test actions that get executed when the condition matches."
+          }
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "when": {
+          "type": "string",
+          "title": "When",
+          "description": "The condition to evaluate."
+        }
+      },
+      "required": [
+        "actions",
+        "when"
+      ],
+      "additionalProperties": false    }
+  },
+  "doFinally": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "doFinally",
+    "title": "DoFinally",
+    "description": "Runs test actions after the test.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "title": "Actions",
+          "description": "Test actions to execute after the test.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Actions",
+            "description": "Test actions to execute after the test."
+          }
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        }
+      },
+      "required": [
+        "actions"
+      ],
+      "additionalProperties": false    }
+  },
+  "iterate": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "iterate",
+    "title": "Iterate",
+    "description": "Iterate test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "title": "Actions",
+          "description": "Sequence of test actions to execute.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Actions",
+            "description": "Sequence of test actions to execute."
+          }
+        },
+        "condition": {
+          "type": "string",
+          "title": "Condition",
+          "description": "Condition that keeps the iteration running."
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "index": {
+          "type": "string",
+          "title": "Index",
+          "description": "Test variable holding the current iteration index.",
+          "$comment": "group:advanced"
+        },
+        "startsWith": {
+          "type": "integer",
+          "title": "StartsWith",
+          "description": "Index starts with this value.",
+          "default": "1",
+          "$comment": "group:advanced"
+        },
+        "step": {
+          "type": "integer",
+          "title": "Step",
+          "description": "The step added to the index for each iteration.",
+          "default": "1",
+          "$comment": "group:advanced"
+        }
+      },
+      "required": [
+        "actions",
+        "condition"
+      ],
+      "additionalProperties": false    }
+  },
+  "parallel": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "parallel",
+    "title": "Parallel",
+    "description": "Parallel test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "title": "Actions",
+          "description": "Test actions to execute.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Actions",
+            "description": "Test actions to execute."
+          }
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        }
+      },
+      "required": [
+        "actions"
+      ],
+      "additionalProperties": false    }
+  },
+  "repeat": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "repeat",
+    "title": "Repeat",
+    "description": "Repeat test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "title": "Actions",
+          "description": "Sequence of test actions to execute.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Actions",
+            "description": "Sequence of test actions to execute."
+          }
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "index": {
+          "type": "string",
+          "title": "Index",
+          "description": "Test variable holding the current iteration index.",
+          "$comment": "group:advanced"
+        },
+        "startsWith": {
+          "type": "integer",
+          "title": "StartsWith",
+          "description": "Index starts with this value.",
+          "default": "1",
+          "$comment": "group:advanced"
+        },
+        "until": {
+          "type": "string",
+          "title": "Until",
+          "description": "Condition that ends the iteration."
+        }
+      },
+      "required": [
+        "actions"
+      ],
+      "additionalProperties": false    }
+  },
+  "repeatOnError": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "repeatOnError",
+    "title": "RepeatOnError",
+    "description": "Repeat on error test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "title": "Actions",
+          "description": "Sequence of test actions to execute.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Actions",
+            "description": "Sequence of test actions to execute."
+          }
+        },
+        "autoSleep": {
+          "type": "integer",
+          "title": "AutoSleep",
+          "description": "Automatically sleep the time in milliseconds with each attempt."
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "index": {
+          "type": "string",
+          "title": "Index",
+          "description": "Test variable holding the current iteration index.",
+          "$comment": "group:advanced"
+        },
+        "startsWith": {
+          "type": "integer",
+          "title": "StartsWith",
+          "description": "Index starts with this value.",
+          "default": "1",
+          "$comment": "group:advanced"
+        },
+        "until": {
+          "type": "string",
+          "title": "Until",
+          "description": "Condition that ends the iteration."
+        }
+      },
+      "required": [
+        "actions"
+      ],
+      "additionalProperties": false    }
+  },
+  "sequential": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "sequential",
+    "title": "Sequential",
+    "description": "Sequential test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "title": "Actions",
+          "description": "Sequence of test actions to execute.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Actions",
+            "description": "Sequence of test actions to execute."
+          }
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        }
+      },
+      "required": [
+        "actions"
+      ],
+      "additionalProperties": false    }
+  },
+  "soap-assertFault": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "soap-assertFault",
+    "group": "soap",
+    "module": "citrus-ws",
+    "title": "AssertFault",
+    "description": "Expects a SOAP fault response as a client.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "faultActor": {
+          "type": "string",
+          "title": "FaultActor",
+          "description": "The SOAP fault actor.",
+          "$comment": "group:advanced"
+        },
+        "faultCode": {
+          "type": "string",
+          "title": "FaultCode",
+          "description": "The SOAP fault code."
+        },
+        "faultDetails": {
+          "title": "FaultDetails",
+          "description": "The SOAP fault details.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "content": {
+                "type": "string",
+                "title": "Content",
+                "description": "The SOAP fault detail content."
+              },
+              "resource": {
+                "type": "string",
+                "title": "Resource",
+                "description": "The SOAP fault detail loaded from a file resource."
+              }
+            },
+            "additionalProperties": false,
+            "title": "FaultDetails",
+            "description": "The SOAP fault details.",
+            "$comment": "group:advanced"
+          }
+        },
+        "faultString": {
+          "type": "string",
+          "title": "FaultString",
+          "description": "The SOAP fault string."
+        },
+        "validator": {
+          "type": "string",
+          "title": "Validator",
+          "description": "Explicit message validator.",
+          "$comment": "group:advanced"
+        },
+        "when": {
+          "type": "object",
+          "title": "When",
+          "description": "The test action raising the SOAP fault response message."
+        }
+      },
+      "required": [
+        "when"
+      ],
+      "additionalProperties": false    }
+  },
+  "timer": {
+    "kind": "testContainer",
+    "version": "${citrus.version}",
+    "name": "timer",
+    "title": "Timer",
+    "description": "Timer test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "title": "Actions",
+          "description": "Sequence of test actions to execute.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "Actions",
+            "description": "Sequence of test actions to execute."
+          }
+        },
+        "autoStop": {
+          "type": "boolean",
+          "title": "AutoStop",
+          "description": "Automatically stop the timer when the test is finished.",
+          "default": "true",
+          "$comment": "group:advanced"
+        },
+        "delay": {
+          "type": "integer",
+          "title": "Delay",
+          "description": "Initial delay to wait before starting the timer.",
+          "$comment": "group:advanced"
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "fork": {
+          "type": "boolean",
+          "title": "Fork",
+          "description": "Do not block the test while the timer is running.",
+          "default": "false",
+          "$comment": "group:advanced"
+        },
+        "id": {
+          "type": "string",
+          "title": "Id",
+          "description": "The id of the timer."
+        },
+        "interval": {
+          "type": "integer",
+          "title": "Interval",
+          "description": "Timer interval in milliseconds.",
+          "default": "1000"
+        },
+        "repeatCount": {
+          "type": "integer",
+          "title": "RepeatCount",
+          "description": "Number of timer executions.",
+          "$comment": "group:advanced"
+        }
+      },
+      "required": [
+        "actions"
+      ],
+      "additionalProperties": false    }
+  }
+}
