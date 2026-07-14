@@ -24,6 +24,7 @@ import java.util.Map;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.AbstractCamelJBangAction;
 import org.citrusframework.camel.actions.AddCamelPluginAction;
+import org.citrusframework.camel.actions.DeleteCamelPluginAction;
 import org.citrusframework.camel.actions.CamelCmdReceiveAction;
 import org.citrusframework.camel.actions.CamelCmdSendAction;
 import org.citrusframework.camel.actions.CamelCustomizedRunIntegrationAction;
@@ -659,6 +660,13 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             this.builder = builder;
         }
 
+        @SchemaProperty(kind = ACTION, group = CAMEL_JBANG_PLUGIN_GROUP, description = "Deletes a plugin from the Camel Jbang installation.")
+        public void setDelete(Delete delete) {
+            DeleteCamelPluginAction.Builder builder = new DeleteCamelPluginAction.Builder();
+            builder.pluginName(delete.getName());
+            this.builder = builder;
+        }
+
         @Override
         public AbstractCamelJBangAction.Builder<?, ?> getBuilder() {
             return builder;
@@ -688,6 +696,19 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             @SchemaProperty(advanced = true, description = "Plugin arguments.")
             public void setArgs(List<String> args) {
                 this.args = args;
+            }
+        }
+
+        public static class Delete {
+            protected String name;
+
+            public String getName() {
+                return name;
+            }
+
+            @SchemaProperty(required = true, description = "The plugin name.")
+            public void setName(String name) {
+                this.name = name;
             }
         }
     }

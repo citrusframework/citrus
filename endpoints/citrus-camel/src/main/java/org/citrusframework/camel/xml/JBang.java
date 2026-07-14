@@ -929,12 +929,16 @@ public class JBang {
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-            "add"
+            "add",
+            "delete"
     })
     public static class Plugin {
 
         @XmlElement
         protected Add add;
+
+        @XmlElement
+        protected Delete delete;
 
         public void setAdd(Add add) {
             this.add = add;
@@ -942,6 +946,14 @@ public class JBang {
 
         public Add getAdd() {
             return this.add;
+        }
+
+        public void setDelete(Delete delete) {
+            this.delete = delete;
+        }
+
+        public Delete getDelete() {
+            return this.delete;
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)
@@ -967,6 +979,22 @@ public class JBang {
 
             public void setArgLine(String argLine) {
                 this.argLine = argLine;
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "")
+        public static class Delete {
+
+            @XmlAttribute(name = "name", required = true)
+            protected String name;
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String value) {
+                this.name = value;
             }
         }
     }
