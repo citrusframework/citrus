@@ -1,0 +1,16 @@
+name: BeansTest
+author: Christoph
+status: FINAL
+description: "Bean definition test in YAML"
+configuration:
+  beans:
+    - name: myValidator
+      type: org.citrusframework.validation.DefaultTextEqualsMessageValidator
+    - name: myBean
+      type: org.citrusframework.yaml.actions.FooBean
+      properties:
+        message: "Hello Citrus!"
+        count: "42"
+actions:
+  - echo:
+      message: "Bean test"

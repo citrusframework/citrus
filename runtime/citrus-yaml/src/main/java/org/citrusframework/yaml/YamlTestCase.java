@@ -29,6 +29,7 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.bean.BeanDefinition;
 import org.citrusframework.common.Named;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.endpoint.EndpointComponent;
@@ -124,6 +125,21 @@ public class YamlTestCase {
                 }
             }
         });
+    }
+
+    @SchemaProperty(advanced = true, description = "Test configuration section for beans and other resources.")
+    public void setConfiguration(Configuration configuration) {
+        if (configuration.getBeans() != null) {
+            configuration.getBeans().forEach(bean -> {
+                BeanDefinition beanDef = new BeanDefinition();
+                beanDef.setName(bean.getName());
+                beanDef.setType(bean.getType());
+                if (bean.getProperties() != null) {
+                    beanDef.getProperties().putAll(bean.getProperties());
+                }
+                delegate.getBeanDefinitions().add(beanDef);
+            });
+        }
     }
 
     @SchemaProperty(description = "The test actions.")
@@ -256,6 +272,54 @@ public class YamlTestCase {
                 description = "The endpoint properties.")
         public void setProperties(Map<String, String> properties) {
             this.properties.putAll(properties);
+        }
+    }
+
+    public static class Configuration {
+
+        protected List<Bean> beans;
+
+        public List<Bean> getBeans() {
+            return beans;
+        }
+
+        @SchemaProperty(description = "List of beans to register in the test context.")
+        public void setBeans(List<Bean> beans) {
+            this.beans = beans;
+        }
+    }
+
+    public static class Bean {
+
+        protected String name;
+        protected String type;
+        protected Map<String, String> properties;
+
+        public String getName() {
+            return name;
+        }
+
+        @SchemaProperty(required = true, description = "The bean name used for registration in the bean registry.")
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        @SchemaProperty(required = true, description = "The fully qualified bean class type.")
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public Map<String, String> getProperties() {
+            return properties;
+        }
+
+        @SchemaProperty(description = "The bean properties set via setter methods.")
+        public void setProperties(Map<String, String> properties) {
+            this.properties = properties;
         }
     }
 }

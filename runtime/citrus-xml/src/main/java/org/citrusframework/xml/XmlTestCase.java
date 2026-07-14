@@ -40,6 +40,7 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.bean.BeanDefinition;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -136,6 +137,20 @@ public class XmlTestCase {
 
         for (EndpointBuilder<?> endpointBuilder : endpoints.getEndpointBuilders()) {
             delegate.getEndpoints().add(endpointBuilder);
+        }
+    }
+
+    @XmlElement
+    public void setConfiguration(Configuration configuration) {
+        if (configuration.getBeans() != null) {
+            configuration.getBeans().getBeans().forEach(bean -> {
+                BeanDefinition beanDef = new BeanDefinition();
+                beanDef.setName(bean.getName());
+                beanDef.setType(bean.getType());
+                bean.getProperties().forEach(prop ->
+                        beanDef.getProperties().put(prop.getName(), prop.getValue()));
+                delegate.getBeanDefinitions().add(beanDef);
+            });
         }
     }
 
@@ -401,6 +416,113 @@ public class XmlTestCase {
 
                 public void setValue(String value) {
                     this.value = value;
+                }
+            }
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "beans"
+    })
+    public static class Configuration {
+
+        @XmlElement(name = "beans")
+        protected Beans beans;
+
+        public Beans getBeans() {
+            return beans;
+        }
+
+        public void setBeans(Beans beans) {
+            this.beans = beans;
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+                "beans"
+        })
+        public static class Beans {
+
+            @XmlElement(name = "bean", required = true)
+            protected List<Bean> beans;
+
+            public List<Bean> getBeans() {
+                if (beans == null) {
+                    beans = new ArrayList<>();
+                }
+                return this.beans;
+            }
+
+            public void setBeans(List<Bean> beans) {
+                this.beans = beans;
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+                    "properties"
+            })
+            public static class Bean {
+
+                @XmlAttribute(name = "name", required = true)
+                protected String name;
+                @XmlAttribute(name = "type", required = true)
+                protected String type;
+                @XmlElement(name = "property")
+                protected List<Property> properties;
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+
+                public String getType() {
+                    return type;
+                }
+
+                public void setType(String type) {
+                    this.type = type;
+                }
+
+                public List<Property> getProperties() {
+                    if (properties == null) {
+                        properties = new ArrayList<>();
+                    }
+                    return properties;
+                }
+
+                public void setProperties(List<Property> properties) {
+                    this.properties = properties;
+                }
+
+                @XmlAccessorType(XmlAccessType.FIELD)
+                @XmlType(name = "", propOrder = {
+                })
+                public static class Property {
+
+                    @XmlAttribute(required = true)
+                    protected String name;
+                    @XmlAttribute(required = true)
+                    protected String value;
+
+                    public String getName() {
+                        return name;
+                    }
+
+                    public void setName(String name) {
+                        this.name = name;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
                 }
             }
         }
