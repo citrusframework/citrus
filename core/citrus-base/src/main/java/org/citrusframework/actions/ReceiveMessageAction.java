@@ -209,8 +209,17 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
      */
     private Message receive(TestContext context) {
         Endpoint messageEndpoint = getOrCreateEndpoint(context);
-        return receiveTimeout > 0 ? messageEndpoint.createConsumer().receive(context, receiveTimeout) :
-                messageEndpoint.createConsumer().receive(context, messageEndpoint.getEndpointConfiguration().getTimeout());
+        long timeout = getReceiveTimeout(messageEndpoint);
+        logWaiting(messageEndpoint, timeout);
+        return messageEndpoint.createConsumer().receive(context, timeout);
+    }
+
+    private long getReceiveTimeout(Endpoint messageEndpoint) {
+        return receiveTimeout > 0 ? receiveTimeout : messageEndpoint.getEndpointConfiguration().getTimeout();
+    }
+
+    private void logWaiting(Endpoint messageEndpoint, long timeout) {
+        logger.info("Waiting to receive message on endpoint: '{}' (timeout: {}ms)", messageEndpoint.getName(), timeout);
     }
 
     /**
@@ -226,15 +235,10 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
         Endpoint messageEndpoint = getOrCreateEndpoint(context);
         Consumer consumer = messageEndpoint.createConsumer();
         if (consumer instanceof SelectiveConsumer) {
-            if (receiveTimeout > 0) {
-                return ((SelectiveConsumer) messageEndpoint.createConsumer()).receive(
-                        context.replaceDynamicContentInString(selectorString),
-                        context, receiveTimeout);
-            } else {
-                return ((SelectiveConsumer) messageEndpoint.createConsumer()).receive(
-                        context.replaceDynamicContentInString(selectorString),
-                        context, messageEndpoint.getEndpointConfiguration().getTimeout());
-            }
+            long timeout = getReceiveTimeout(messageEndpoint);
+            logWaiting(messageEndpoint, timeout);
+            return ((SelectiveConsumer) consumer).receive(
+                    context.replaceDynamicContentInString(selectorString), context, timeout);
         } else {
             logger.warn("Unable to receive selective with consumer implementation: '{}'", consumer.getClass());
             return receive(context);
