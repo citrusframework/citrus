@@ -17,19 +17,12 @@
 package org.citrusframework.actions.camel;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
 
-public interface CamelJBangPluginActionBuilder<T extends TestAction, B extends CamelJBangPluginActionBuilder<T, B>>
-        extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {
+public interface CamelJBangPluginDeleteActionBuilder<T extends TestAction, B extends CamelJBangPluginDeleteActionBuilder<T, B>>
+        extends CamelJBangActionBuilderBase<T, B> {
 
     /**
-     * Adds a plugin to the Camel JBang installation.
+     * Sets the plugin name.
      */
-    CamelJBangPluginAddActionBuilder<?, ?> add();
-
-    /**
-     * Deletes a plugin from the Camel JBang installation.
-     */
-    CamelJBangPluginDeleteActionBuilder<?, ?> delete();
+    B pluginName(String name);
 }

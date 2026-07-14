@@ -32,6 +32,13 @@ public class CamelPluginActionBuilder extends AbstractReferenceResolverAwareTest
     }
 
     @Override
+    public DeleteCamelPluginAction.Builder delete() {
+        DeleteCamelPluginAction.Builder builder = new DeleteCamelPluginAction.Builder();
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public CamelPluginActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;
