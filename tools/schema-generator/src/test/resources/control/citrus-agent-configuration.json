@@ -1,0 +1,151 @@
+{
+  "$schema" : "http://json-schema.org/draft-07/schema#",
+  "type" : "object",
+  "properties" : {
+    "configClass" : {
+      "type" : "string",
+      "title" : "ConfigClass",
+      "description" : "Fully qualified configuration class name loaded as a Java bean configuration."
+    },
+    "defaultProperties" : {
+      "type" : "object",
+      "title" : "DefaultProperties",
+      "description" : "Sets default properties",
+      "additionalProperties" : {
+        "type" : "string",
+        "title" : "DefaultProperties",
+        "description" : "Sets default properties"
+      }
+    },
+    "dependencies" : {
+      "title" : "Dependencies",
+      "description" : "Set of additional Maven dependencies that should be loaded with the agent.",
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "title" : "Dependencies",
+        "description" : "Set of additional Maven dependencies that should be loaded with the agent."
+      }
+    },
+    "engine" : {
+      "type" : "string",
+      "title" : "Engine",
+      "description" : "The test engine to use when running tests",
+      "default" : "junit-jupiter"
+    },
+    "includes" : {
+      "title" : "Includes",
+      "description" : "Test name patterns that specify which tests to include in the test run. Used when scanning packages for tests.",
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "title" : "Includes",
+        "description" : "Test name patterns that specify which tests to include in the test run. Used when scanning packages for tests."
+      }
+    },
+    "inspectCode" : {
+      "type" : "boolean",
+      "title" : "InspectCode",
+      "description" : "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath."
+    },
+    "modules" : {
+      "title" : "Modules",
+      "description" : "Set of additional Citrus modules that should be loaded with the agent.",
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "title" : "Modules",
+        "description" : "Set of additional Citrus modules that should be loaded with the agent."
+      }
+    },
+    "offline" : {
+      "type" : "boolean",
+      "title" : "Offline",
+      "description" : "When enabled there will be no attempts to resolve Maven artifacts via internet connection.",
+      "default" : "true"
+    },
+    "packages" : {
+      "title" : "Packages",
+      "description" : "List of package names to search for tests. All tests found in these packages are executed.",
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "title" : "Packages",
+        "description" : "List of package names to search for tests. All tests found in these packages are executed."
+      }
+    },
+    "port" : {
+      "type" : "integer",
+      "title" : "Port",
+      "description" : "The Http port the agent service is listening on.",
+      "default" : "4567"
+    },
+    "reset" : {
+      "type" : "boolean",
+      "title" : "Reset",
+      "description" : "When enabled the Citrus context instance is reset after the test.",
+      "default" : "true"
+    },
+    "skipTests" : {
+      "type" : "boolean",
+      "title" : "SkipTests",
+      "description" : "When enabled no tests are run on application startup."
+    },
+    "systemExit" : {
+      "type" : "boolean",
+      "title" : "SystemExit",
+      "description" : "When enabled the application exits with an exit code after tests are run."
+    },
+    "testJar" : {
+      "type" : "string",
+      "title" : "TestJar",
+      "description" : "Set the test jar holding tests to execute. Jar file is used to perform package scans for test cases to run."
+    },
+    "testSources" : {
+      "title" : "TestSources",
+      "description" : "List of test sources to run. A test source represents a source code file in one of the supported languages (.java, .xml, .groovy, .yaml, .feature)",
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "filePath" : {
+            "type" : "string",
+            "title" : "FilePath",
+            "description" : "The source file path."
+          },
+          "name" : {
+            "type" : "string",
+            "title" : "Name",
+            "description" : "The source file name."
+          },
+          "type" : {
+            "type" : "string",
+            "title" : "Type",
+            "description" : "The test source type."
+          }
+        },
+        "additionalProperties" : false,
+        "title" : "TestSources",
+        "description" : "List of test sources to run. A test source represents a source code file in one of the supported languages (.java, .xml, .groovy, .yaml, .feature)"
+      }
+    },
+    "timeToLive" : {
+      "type" : "integer",
+      "title" : "TimeToLive",
+      "description" : "Set time to live for the Citrus application. When set the application terminates automatically when time is over."
+    },
+    "verbose" : {
+      "type" : "boolean",
+      "title" : "Verbose",
+      "description" : "When enabled the test run prints verbose messages.",
+      "default" : "true"
+    },
+    "workDir" : {
+      "type" : "string",
+      "title" : "WorkDir",
+      "description" : "Set custom working directory. File system based test engines may use this directory to read files from."
+    }
+  },
+  "required" : [ "engine", "port" ],
+  "additionalProperties" : false
+}

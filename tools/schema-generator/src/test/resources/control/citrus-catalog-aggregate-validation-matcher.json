@@ -1,0 +1,514 @@
+{
+  "isUUIDv4": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "isUUIDv4",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "IsUUIDv4",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "dateRange": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "dateRange",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "DateRange",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "dateFormat": {
+          "type": "string",
+          "title": "DateFormat",
+          "description": "The date format string.",
+          "default": "yyyy-MM-dd"
+        },
+        "dateFrom": {
+          "type": "string",
+          "title": "DateFrom",
+          "description": "The expected data range start value."
+        },
+        "dateTo": {
+          "type": "string",
+          "title": "DateTo",
+          "description": "The expected data range end value."
+        }
+      },
+      "required": [
+        "dateFrom",
+        "dateTo"
+      ],
+      "additionalProperties": false    }
+  },
+  "lowerThan": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "lowerThan",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "LowerThan",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "title": "Value",
+          "description": "The numeric value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "matchesDatePattern": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "matchesDatePattern",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "MatchesDatePattern",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "isWeekday": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "isWeekday",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "IsWeekday",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "dateFormat": {
+          "type": "string",
+          "title": "DateFormat",
+          "description": "The date format string.",
+          "default": "dd.MM.yyyy"
+        },
+        "weekday": {
+          "type": "string",
+          "enum": [
+            "MONDAY",
+            "TUESDAY",
+            "WEDNESDAY",
+            "THURSDAY",
+            "FRIDAY",
+            "SATURDAY",
+            "SUNDAY"
+          ],
+          "title": "Weekday",
+          "description": "The expected weekday."
+        }
+      },
+      "required": [
+        "weekday"
+      ],
+      "additionalProperties": false    }
+  },
+  "empty": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "empty",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Empty",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "trim": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "trim",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Trim",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "ignoreNewLine": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "ignoreNewLine",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "IgnoreNewLine",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "isNumber": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "isNumber",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "IsNumber",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "ignore": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "ignore",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Ignore",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "equalsIgnoreCase": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "equalsIgnoreCase",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "EqualsIgnoreCase",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "hasLength": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "hasLength",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "HasLength",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "greaterThan": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "greaterThan",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "GreaterThan",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "title": "Value",
+          "description": "The numeric value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "notNull": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "notNull",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "NotNull",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "matchesXml": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "matchesXml",
+    "group": "citrus",
+    "module": "citrus-validation-xml",
+    "title": "MatchesXml",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "containsIgnoreCase": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "containsIgnoreCase",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "ContainsIgnoreCase",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "trimAllWhitespaces": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "trimAllWhitespaces",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "TrimAllWhitespaces",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "assertThat": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "assertThat",
+    "group": "citrus",
+    "module": "citrus-validation-hamcrest",
+    "title": "AssertThat",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "expression": {
+          "type": "string",
+          "title": "Expression",
+          "description": "The Hamcrest expression to evaluate."
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to verify."
+        }
+      },
+      "required": [
+        "expression"
+      ],
+      "additionalProperties": false    }
+  },
+  "matches": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "matches",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Matches",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "contains": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "contains",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Contains",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "null": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "null",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Null",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "endsWith": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "endsWith",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "EndsWith",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "variable": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "variable",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Variable",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "notEmpty": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "notEmpty",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "NotEmpty",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "startsWith": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "startsWith",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "StartsWith",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The expected control value."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  }
+}

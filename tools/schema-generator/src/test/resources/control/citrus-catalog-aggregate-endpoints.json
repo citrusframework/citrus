@@ -1,0 +1,3768 @@
+{
+  "kubernetes-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "kubernetes-client",
+    "group": "kubernetes",
+    "module": "citrus-kubernetes",
+    "title": "KubernetesClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "certFile": {
+          "type": "string",
+          "title": "CertFile",
+          "description": "Sets the client certificate.",
+          "$comment": "group:security"
+        },
+        "client": {
+          "type": "string",
+          "title": "Client",
+          "description": "Sets the reference to the Kubernetes client implementation.",
+          "$comment": "group:advanced"
+        },
+        "jsonMapper": {
+          "type": "string",
+          "title": "JsonMapper",
+          "description": "Sets the JSON mapper.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "namespace": {
+          "type": "string",
+          "title": "Namespace",
+          "description": "Sets the namespace on the cluster."
+        },
+        "oAuthToken": {
+          "type": "string",
+          "title": "OAuthToken",
+          "description": "Sets the OAuth token used to connect to the Kubernetes cluster.",
+          "$comment": "group:security"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the user password used to connect to the Kubernetes cluster.",
+          "$comment": "group:security"
+        },
+        "url": {
+          "type": "string",
+          "title": "Url",
+          "description": "Sets the master URL in the client configuration.",
+          "$comment": "group:advanced"
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "description": "Sets the user name used to connect to the Kubernetes cluster.",
+          "$comment": "group:security"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version",
+          "description": "Sets the Kubernetes client version.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "context-messageStore": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "context-messageStore",
+    "group": "context",
+    "module": "citrus-base",
+    "title": "ContextMessageStore",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "messageName": {
+          "type": "string",
+          "title": "MessageName",
+          "description": "The message name in the context."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The timeout when receiving messages from the message store."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "kafka-synchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "kafka-synchronous",
+    "group": "kafka",
+    "module": "citrus-kafka",
+    "title": "KafkaSynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoCommit": {
+          "type": "boolean",
+          "title": "AutoCommit",
+          "description": "Sets auto commit handling for this endpoint.",
+          "$comment": "group:consume"
+        },
+        "autoCommitInterval": {
+          "type": "integer",
+          "title": "AutoCommitInterval",
+          "description": "Sets the auto commit interval.",
+          "$comment": "group:consume"
+        },
+        "clientId": {
+          "type": "string",
+          "title": "ClientId",
+          "description": "Sets the client id used to connect to the Kafka server.",
+          "$comment": "group:advanced"
+        },
+        "consumerGroup": {
+          "type": "string",
+          "title": "ConsumerGroup",
+          "description": "Sets the consumer group used by the endpoint.",
+          "$comment": "group:consume"
+        },
+        "consumerProperties": {
+          "type": "object",
+          "title": "ConsumerProperties",
+          "description": "Sets the Kafka consumer properties.",
+          "$comment": "group:consume"
+        },
+        "headerMapper": {
+          "type": "string",
+          "title": "HeaderMapper",
+          "description": "Sets the Kafka header mapper.",
+          "$comment": "group:advanced"
+        },
+        "keyDeserializer": {
+          "type": "string",
+          "title": "KeyDeserializer",
+          "description": "Sets the fully qualified key deserializer type class name.",
+          "$comment": "group:deserialize"
+        },
+        "keySerializer": {
+          "type": "string",
+          "title": "KeySerializer",
+          "description": "Sets the fully qualified key serializer type class name.",
+          "$comment": "group:serialize"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "offsetReset": {
+          "type": "string",
+          "title": "OffsetReset",
+          "description": "Sets the offset reset.",
+          "$comment": "group:consume"
+        },
+        "partition": {
+          "type": "integer",
+          "title": "Partition",
+          "description": "Sets the Kafka topic partition."
+        },
+        "producerProperties": {
+          "type": "object",
+          "title": "ProducerProperties",
+          "description": "Sets the Kafka producer properties.",
+          "$comment": "group:produce"
+        },
+        "server": {
+          "type": "string",
+          "title": "Server",
+          "description": "Sets the Kafka bootstrap server."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the Kafka consumer timeout.",
+          "$comment": "group:consume"
+        },
+        "topic": {
+          "type": "string",
+          "title": "Topic",
+          "description": "Sets the Kafka topic."
+        },
+        "useThreadSafeConsumer": {
+          "type": "boolean",
+          "title": "UseThreadSafeConsumer",
+          "description": "Sets thread safe consumer option for this endpoint.",
+          "$comment": "group:consume"
+        },
+        "valueDeserializer": {
+          "type": "string",
+          "title": "ValueDeserializer",
+          "description": "Sets the fully qualified value deserializer type class name.",
+          "$comment": "group:deserialize"
+        },
+        "valueSerializer": {
+          "type": "string",
+          "title": "ValueSerializer",
+          "description": "Sets the fully qualified value serializer type class name.",
+          "$comment": "group:serialize"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "jmx-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "jmx-server",
+    "group": "jmx",
+    "module": "citrus-jmx",
+    "title": "JmxServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoReconnect": {
+          "type": "boolean",
+          "title": "AutoReconnect",
+          "description": "Sets the auto reconnect property."
+        },
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "binding": {
+          "type": "string",
+          "title": "Binding",
+          "description": "Sets the binding property."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator."
+        },
+        "createRegistry": {
+          "type": "boolean",
+          "title": "CreateRegistry",
+          "description": "Sets the create registry property."
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "delayOnReconnect": {
+          "type": "integer",
+          "title": "DelayOnReconnect",
+          "description": "Sets the delay on reconnect property."
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "environmentProperties": {
+          "type": "object",
+          "title": "EnvironmentProperties",
+          "description": "Sets the environment properties."
+        },
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "Sets the host property.",
+          "default": "localhost"
+        },
+        "marshaller": {
+          "type": "string",
+          "title": "Marshaller"
+        },
+        "mbeans": {
+          "type": "string",
+          "title": "Mbeans",
+          "description": "Sets the Mbean definitions as bean references"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "notificationFilter": {
+          "type": "string",
+          "title": "NotificationFilter",
+          "description": "Sets the notification filter as a bean reference."
+        },
+        "notificationHandback": {
+          "type": "string",
+          "title": "NotificationHandback",
+          "description": "Sets the notification handback."
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the user password property."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "Sets the port property."
+        },
+        "protocol": {
+          "type": "string",
+          "title": "Protocol",
+          "description": "Sets the protocol.",
+          "default": "rmi"
+        },
+        "serverUrl": {
+          "type": "string",
+          "title": "ServerUrl",
+          "description": "Sets the serverUrl property."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The server timeout.",
+          "default": "5000"
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "description": "Sets the username property."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "scp-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "scp-server",
+    "group": "scp",
+    "module": "citrus-ftp",
+    "title": "ScpServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "allowedKeyPath": {
+          "type": "string",
+          "title": "AllowedKeyPath",
+          "description": "Sets the allowed key certificate path.",
+          "$comment": "group:security"
+        },
+        "autoConnect": {
+          "type": "boolean",
+          "title": "AutoConnect",
+          "description": "When enabled the server uses automatic connect mode."
+        },
+        "autoLogin": {
+          "type": "boolean",
+          "title": "AutoLogin",
+          "description": "When enabled the server uses automatic login mode."
+        },
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "hostKeyPath": {
+          "type": "string",
+          "title": "HostKeyPath",
+          "description": "Sets the host key certificate path.",
+          "$comment": "group:security"
+        },
+        "knownHosts": {
+          "type": "string",
+          "title": "KnownHosts",
+          "description": "List of known hosts.",
+          "$comment": "group:security"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the allowed user password.",
+          "$comment": "group:security"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Ftp server port."
+        },
+        "preferredAuthentications": {
+          "type": "string",
+          "title": "PreferredAuthentications",
+          "description": "Sets the preferred authentication mechanism.",
+          "$comment": "group:security"
+        },
+        "privateKeyPassword": {
+          "type": "string",
+          "title": "PrivateKeyPassword",
+          "description": "Sets the private key password.",
+          "$comment": "group:security"
+        },
+        "privateKeyPath": {
+          "type": "string",
+          "title": "PrivateKeyPath",
+          "description": "Sets the private key certificate path.",
+          "$comment": "group:security"
+        },
+        "sessionConfigs": {
+          "type": "object",
+          "title": "SessionConfigs",
+          "description": "The session configuration.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "SessionConfigs",
+            "description": "The session configuration."
+          }
+        },
+        "strictHostChecking": {
+          "type": "boolean",
+          "title": "StrictHostChecking",
+          "description": "Enable strict host checking.",
+          "$comment": "group:security"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The server timeout.",
+          "default": "5000"
+        },
+        "user": {
+          "type": "string",
+          "title": "User",
+          "description": "Sets the allowed user name.",
+          "$comment": "group:security"
+        },
+        "userHomePath": {
+          "type": "string",
+          "title": "UserHomePath",
+          "description": "Sets the user home path directory."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "direct-synchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "direct-synchronous",
+    "group": "direct",
+    "module": "citrus-base",
+    "title": "DirectSynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoCreateQueue": {
+          "type": "boolean",
+          "title": "AutoCreateQueue",
+          "description": "When set the queue is automatically created when it does not exist in bean registry."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "queue": {
+          "type": "string",
+          "title": "Queue",
+          "description": "The queue name."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The timeout when receiving messages from the queue."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "docker-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "docker-client",
+    "group": "docker",
+    "module": "citrus-docker",
+    "title": "DockerClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "certPath": {
+          "type": "string",
+          "title": "CertPath",
+          "description": "Sets the path to the client certificate.",
+          "$comment": "group:security"
+        },
+        "configPath": {
+          "type": "string",
+          "title": "ConfigPath",
+          "description": "Sets the path to the client configuration file.",
+          "$comment": "group:advanced"
+        },
+        "email": {
+          "type": "string",
+          "title": "Email",
+          "description": "The Docker client email.",
+          "$comment": "group:security"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "The Docker client password.",
+          "$comment": "group:security"
+        },
+        "registry": {
+          "type": "string",
+          "title": "Registry",
+          "description": "The Docker registry URL."
+        },
+        "url": {
+          "type": "string",
+          "title": "Url",
+          "description": "The Docker host engine URL."
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "description": "The Docker client username.",
+          "$comment": "group:security"
+        },
+        "verifyTls": {
+          "type": "boolean",
+          "title": "VerifyTls",
+          "description": "When enabled the client verifies the Docker host TLS.",
+          "$comment": "group:security"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version",
+          "description": "The Docker client version."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "kafka-asynchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "kafka-asynchronous",
+    "group": "kafka",
+    "module": "citrus-kafka",
+    "title": "KafkaAsynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoCommit": {
+          "type": "boolean",
+          "title": "AutoCommit",
+          "description": "Sets auto commit handling for this endpoint.",
+          "$comment": "group:consume"
+        },
+        "autoCommitInterval": {
+          "type": "integer",
+          "title": "AutoCommitInterval",
+          "description": "Sets the auto commit interval.",
+          "$comment": "group:consume"
+        },
+        "clientId": {
+          "type": "string",
+          "title": "ClientId",
+          "description": "Sets the client id used to connect to the Kafka server.",
+          "$comment": "group:advanced"
+        },
+        "consumerGroup": {
+          "type": "string",
+          "title": "ConsumerGroup",
+          "description": "Sets the consumer group used by the endpoint.",
+          "$comment": "group:consume"
+        },
+        "consumerProperties": {
+          "type": "object",
+          "title": "ConsumerProperties",
+          "description": "Sets the Kafka consumer properties.",
+          "$comment": "group:consume"
+        },
+        "headerMapper": {
+          "type": "string",
+          "title": "HeaderMapper",
+          "description": "Sets the Kafka header mapper.",
+          "$comment": "group:advanced"
+        },
+        "keyDeserializer": {
+          "type": "string",
+          "title": "KeyDeserializer",
+          "description": "Sets the fully qualified key deserializer type class name.",
+          "$comment": "group:deserialize"
+        },
+        "keySerializer": {
+          "type": "string",
+          "title": "KeySerializer",
+          "description": "Sets the fully qualified key serializer type class name.",
+          "$comment": "group:serialize"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "offsetReset": {
+          "type": "string",
+          "title": "OffsetReset",
+          "description": "Sets the offset reset.",
+          "$comment": "group:consume"
+        },
+        "partition": {
+          "type": "integer",
+          "title": "Partition",
+          "description": "Sets the Kafka topic partition."
+        },
+        "producerProperties": {
+          "type": "object",
+          "title": "ProducerProperties",
+          "description": "Sets the Kafka producer properties.",
+          "$comment": "group:produce"
+        },
+        "server": {
+          "type": "string",
+          "title": "Server",
+          "description": "Sets the Kafka bootstrap server."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the Kafka consumer timeout.",
+          "$comment": "group:consume"
+        },
+        "topic": {
+          "type": "string",
+          "title": "Topic",
+          "description": "Sets the Kafka topic."
+        },
+        "useThreadSafeConsumer": {
+          "type": "boolean",
+          "title": "UseThreadSafeConsumer",
+          "description": "Sets thread safe consumer option for this endpoint.",
+          "$comment": "group:consume"
+        },
+        "valueDeserializer": {
+          "type": "string",
+          "title": "ValueDeserializer",
+          "description": "Sets the fully qualified value deserializer type class name.",
+          "$comment": "group:deserialize"
+        },
+        "valueSerializer": {
+          "type": "string",
+          "title": "ValueSerializer",
+          "description": "Sets the fully qualified value serializer type class name.",
+          "$comment": "group:serialize"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "jmx-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "jmx-client",
+    "group": "jmx",
+    "module": "citrus-jmx",
+    "title": "JmxClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoReconnect": {
+          "type": "boolean",
+          "title": "AutoReconnect",
+          "description": "Sets the autoReconnect property."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "notificationFilter": {
+          "type": "string",
+          "title": "NotificationFilter",
+          "description": "Sets the notification filter."
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the password property."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval."
+        },
+        "reconnectDelay": {
+          "type": "integer",
+          "title": "ReconnectDelay",
+          "description": "Sets the reconnectDelay property."
+        },
+        "serverUrl": {
+          "type": "string",
+          "title": "ServerUrl",
+          "description": "Sets the serverUrl property."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the default timeout."
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "description": "Sets the username property."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "rmi-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "rmi-client",
+    "group": "rmi",
+    "module": "citrus-rmi",
+    "title": "RmiClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "binding": {
+          "type": "string",
+          "title": "Binding",
+          "description": "Sets the binding."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator."
+        },
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "Sets the server host."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter."
+        },
+        "method": {
+          "type": "string",
+          "title": "Method",
+          "description": "Sets the method."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "Sets the server port."
+        },
+        "serverUrl": {
+          "type": "string",
+          "title": "ServerUrl",
+          "description": "Sets the server url."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the default timeout."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "k8s-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "k8s-client",
+    "group": "k8s",
+    "module": "citrus-kubernetes",
+    "title": "K8sClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "certFile": {
+          "type": "string",
+          "title": "CertFile",
+          "description": "Sets the client certificate.",
+          "$comment": "group:security"
+        },
+        "client": {
+          "type": "string",
+          "title": "Client",
+          "description": "Sets the reference to the Kubernetes client implementation.",
+          "$comment": "group:advanced"
+        },
+        "jsonMapper": {
+          "type": "string",
+          "title": "JsonMapper",
+          "description": "Sets the JSON mapper.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "namespace": {
+          "type": "string",
+          "title": "Namespace",
+          "description": "Sets the namespace on the cluster."
+        },
+        "oAuthToken": {
+          "type": "string",
+          "title": "OAuthToken",
+          "description": "Sets the OAuth token used to connect to the Kubernetes cluster.",
+          "$comment": "group:security"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the user password used to connect to the Kubernetes cluster.",
+          "$comment": "group:security"
+        },
+        "url": {
+          "type": "string",
+          "title": "Url",
+          "description": "Sets the master URL in the client configuration.",
+          "$comment": "group:advanced"
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "description": "Sets the user name used to connect to the Kubernetes cluster.",
+          "$comment": "group:security"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version",
+          "description": "Sets the Kubernetes client version.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "mail-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "mail-client",
+    "group": "mail",
+    "module": "citrus-mail",
+    "title": "MailClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "The mail server host to connect to."
+        },
+        "javaMailProperties": {
+          "type": "object",
+          "title": "JavaMailProperties",
+          "description": "Custom properties passed to the java mail implementation.",
+          "$comment": "group:advanced"
+        },
+        "marshaller": {
+          "type": "string",
+          "title": "Marshaller",
+          "description": "Sets a custom mail message marshaller.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets custom message converter.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "The client user password.",
+          "$comment": "group:security"
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The mail server port."
+        },
+        "protocol": {
+          "type": "string",
+          "title": "Protocol",
+          "description": "The mail protocol."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Mail client timeout when waiting for a response."
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "description": "The client user name.",
+          "$comment": "group:security"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "http-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "http-client",
+    "group": "http",
+    "module": "citrus-http",
+    "title": "HttpClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "authentication": {
+          "type": "string",
+          "title": "Authentication",
+          "description": "Use given authentication mechanism.",
+          "$comment": "group:security"
+        },
+        "binaryMediaTypes": {
+          "title": "BinaryMediaTypes",
+          "description": "Sets the list of binary media types.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "BinaryMediaTypes",
+            "description": "Sets the list of binary media types.",
+            "$comment": "group:advanced"
+          }
+        },
+        "charset": {
+          "type": "string",
+          "title": "Charset",
+          "description": "The default charset.",
+          "$comment": "group:advanced"
+        },
+        "contentType": {
+          "type": "string",
+          "title": "ContentType",
+          "description": "Sets the default content type header set for each request.",
+          "$comment": "group:advanced"
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "defaultAcceptHeader": {
+          "type": "boolean",
+          "title": "DefaultAcceptHeader",
+          "description": "When enabled the client adds the default accept header to requests.",
+          "$comment": "group:advanced"
+        },
+        "disableRedirectHandling": {
+          "type": "boolean",
+          "title": "DisableRedirectHandling",
+          "description": "Disables the redirect handling for this client.",
+          "$comment": "group:advanced"
+        },
+        "endpointResolver": {
+          "type": "string",
+          "title": "EndpointResolver",
+          "description": "Sets the endpoint URI resolver.",
+          "$comment": "group:advanced"
+        },
+        "errorHandler": {
+          "type": "string",
+          "title": "ErrorHandler",
+          "description": "Sets a custom error handler.",
+          "$comment": "group:errorHandling"
+        },
+        "errorHandlingStrategy": {
+          "type": "string",
+          "title": "ErrorHandlingStrategy",
+          "description": "Sets the error handling strategy.",
+          "$comment": "group:errorHandling"
+        },
+        "handleCookies": {
+          "type": "boolean",
+          "title": "HandleCookies",
+          "description": "When enabled the client handles cookies.",
+          "$comment": "group:advanced"
+        },
+        "headerMapper": {
+          "type": "string",
+          "title": "HeaderMapper",
+          "description": "Sets a custom header mapper bean reference.",
+          "$comment": "group:advanced"
+        },
+        "interceptor": {
+          "type": "string",
+          "title": "Interceptor",
+          "description": "Sets a client interceptor.",
+          "$comment": "group:intercept"
+        },
+        "interceptors": {
+          "title": "Interceptors",
+          "description": "Sets the list of client interceptor bean references.",
+          "$comment": "group:intercept",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Interceptors",
+            "description": "Sets the list of client interceptor bean references.",
+            "$comment": "group:intercept"
+          }
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Bean reference to a message converter.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages.",
+          "$comment": "group:advanced"
+        },
+        "requestFactory": {
+          "type": "string",
+          "title": "RequestFactory",
+          "description": "Reference to a request factory.",
+          "$comment": "group:advanced"
+        },
+        "requestMethod": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "HEAD",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS",
+            "TRACE"
+          ],
+          "title": "RequestMethod",
+          "description": "The default request method to use"
+        },
+        "requestUrl": {
+          "type": "string",
+          "title": "RequestUrl",
+          "description": "Sets the Http client request URL."
+        },
+        "restTemplate": {
+          "type": "string",
+          "title": "RestTemplate",
+          "description": "The reference to a REST template bean.",
+          "$comment": "group:advanced"
+        },
+        "securedConnection": {
+          "type": "string",
+          "title": "SecuredConnection",
+          "description": "Secure the connection with given security mechanism.",
+          "$comment": "group:security"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The Http request timeout while waiting for a response",
+          "default": "5000"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "ssh-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "ssh-client",
+    "group": "ssh",
+    "module": "citrus-ssh",
+    "title": "SshClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "commandTimeout": {
+          "type": "integer",
+          "title": "CommandTimeout",
+          "description": "Sets the command timeout."
+        },
+        "connectionTimeout": {
+          "type": "integer",
+          "title": "ConnectionTimeout",
+          "description": "Sets the connection timeout."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator."
+        },
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "Sets the host."
+        },
+        "knownHosts": {
+          "type": "string",
+          "title": "KnownHosts",
+          "description": "Sets the known hosts."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the password."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "Sets the port."
+        },
+        "privateKeyPassword": {
+          "type": "string",
+          "title": "PrivateKeyPassword",
+          "description": "Sets the private key password."
+        },
+        "privateKeyPath": {
+          "type": "string",
+          "title": "PrivateKeyPath",
+          "description": "Sets the private key path."
+        },
+        "strictHostChecking": {
+          "type": "boolean",
+          "title": "StrictHostChecking",
+          "description": "Sets the strict host checking."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the default timeout."
+        },
+        "user": {
+          "type": "string",
+          "title": "User",
+          "description": "Sets the username."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "websocket-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "websocket-client",
+    "group": "websocket",
+    "module": "citrus-websocket",
+    "title": "WebsocketClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "endpointResolver": {
+          "type": "string",
+          "title": "EndpointResolver",
+          "description": "Sets the endpoint URI resolver.",
+          "$comment": "group:advanced"
+        },
+        "httpHeaders": {
+          "type": "string",
+          "title": "HttpHeaders",
+          "description": "Sets the Websocket Http headers.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Bean reference to a message converter.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages.",
+          "$comment": "group:advanced"
+        },
+        "requestUrl": {
+          "type": "string",
+          "title": "RequestUrl",
+          "description": "Sets the client request URL."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The Http request timeout while waiting for a response",
+          "default": "5000"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "channel-asynchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "channel-asynchronous",
+    "group": "channel",
+    "module": "citrus-spring-integration",
+    "title": "ChannelAsynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "title": "Channel",
+          "description": "The Spring message channel name."
+        },
+        "channelResolver": {
+          "type": "string",
+          "title": "ChannelResolver",
+          "description": "The channel destination resolver.",
+          "$comment": "group:advanced"
+        },
+        "filterInternalHeaders": {
+          "type": "boolean",
+          "title": "FilterInternalHeaders",
+          "description": "When enabled the endpoint removes all internal headers before sending a message.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "messagingTemplate": {
+          "type": "string",
+          "title": "MessagingTemplate",
+          "description": "Sets a custom messaging template.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the receive timeout when waiting for messages.",
+          "default": "5000"
+        },
+        "useObjectMessages": {
+          "type": "boolean",
+          "title": "UseObjectMessages",
+          "description": "When enabled the endpoint uses object messages.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "soap-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "soap-server",
+    "group": "soap",
+    "module": "citrus-ws",
+    "title": "SoapServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "connector": {
+          "type": "string",
+          "title": "Connector",
+          "description": "Add a connector to this server.",
+          "$comment": "group:servlet"
+        },
+        "connectors": {
+          "title": "Connectors",
+          "description": "Sets a list of connectors for this server.",
+          "$comment": "group:servlet",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Connectors",
+            "description": "Sets a list of connectors for this server.",
+            "$comment": "group:servlet"
+          }
+        },
+        "contextConfigLocation": {
+          "type": "string",
+          "title": "ContextConfigLocation",
+          "description": "Sets the path to the Spring context configuration for this server.",
+          "$comment": "group:advanced"
+        },
+        "contextPath": {
+          "type": "string",
+          "title": "ContextPath",
+          "description": "Sets the context path on this server.",
+          "$comment": "group:servlet"
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "handleAttributeHeaders": {
+          "type": "boolean",
+          "title": "HandleAttributeHeaders",
+          "description": "When enabled the server handles attribute headers.",
+          "$comment": "group:advanced"
+        },
+        "handleMimeHeaders": {
+          "type": "boolean",
+          "title": "HandleMimeHeaders",
+          "description": "When enabled the server handles mime headers.",
+          "$comment": "group:advanced"
+        },
+        "interceptor": {
+          "type": "string",
+          "title": "Interceptor",
+          "description": "Sets a endpoint interceptor.",
+          "$comment": "group:intercept"
+        },
+        "interceptors": {
+          "title": "Interceptors",
+          "description": "Sets the list of endpoint interceptor bean references.",
+          "$comment": "group:intercept",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Interceptors",
+            "description": "Sets the list of endpoint interceptor bean references.",
+            "$comment": "group:intercept"
+          }
+        },
+        "keepSoapEnvelope": {
+          "type": "boolean",
+          "title": "KeepSoapEnvelope",
+          "description": "When enabled the server does not remove the SOAP envelope before processing messages.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the Http message converter bean reference.",
+          "$comment": "group:advanced"
+        },
+        "messageFactory": {
+          "type": "string",
+          "title": "MessageFactory",
+          "description": "Sets a custom message factory.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The SOAP WebService server port."
+        },
+        "resourceBase": {
+          "type": "string",
+          "title": "ResourceBase",
+          "description": "Sets the resource base path where the server reads resources from.",
+          "$comment": "group:advanced"
+        },
+        "rootParentContext": {
+          "type": "boolean",
+          "title": "RootParentContext",
+          "description": "When enabled the server uses the root Spring application context.",
+          "$comment": "group:advanced"
+        },
+        "securityHandler": {
+          "type": "string",
+          "title": "SecurityHandler",
+          "description": "Sets the security handler as a bean reference.",
+          "$comment": "group:security"
+        },
+        "serServletHandler": {
+          "type": "string",
+          "title": "SerServletHandler",
+          "description": "Sets a custom servlet handler as a bean reference.",
+          "$comment": "group:servlet"
+        },
+        "servletMappingPath": {
+          "type": "string",
+          "title": "ServletMappingPath",
+          "description": "Sets the servlet mapping path.",
+          "$comment": "group:servlet"
+        },
+        "servletName": {
+          "type": "string",
+          "title": "ServletName",
+          "description": "Sets the servlet name.",
+          "$comment": "group:servlet"
+        },
+        "soapHeaderNamespace": {
+          "type": "string",
+          "title": "SoapHeaderNamespace",
+          "description": "Sets the SOAP header namespace.",
+          "$comment": "group:advanced"
+        },
+        "soapHeaderPrefix": {
+          "type": "string",
+          "title": "SoapHeaderPrefix",
+          "description": "Sets the SOAP header namespace prefix.",
+          "$comment": "group:advanced"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the server timeout while waiting for incoming requests.",
+          "default": "5000"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "channel-synchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "channel-synchronous",
+    "group": "channel",
+    "module": "citrus-spring-integration",
+    "title": "ChannelSynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "title": "Channel",
+          "description": "The Spring message channel name."
+        },
+        "channelResolver": {
+          "type": "string",
+          "title": "ChannelResolver",
+          "description": "The channel destination resolver.",
+          "$comment": "group:advanced"
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "filterInternalHeaders": {
+          "type": "boolean",
+          "title": "FilterInternalHeaders",
+          "description": "When enabled the endpoint removes all internal headers before sending a message.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "messagingTemplate": {
+          "type": "string",
+          "title": "MessagingTemplate",
+          "description": "Sets a custom messaging template.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval.",
+          "$comment": "group:advanced"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the receive timeout when waiting for messages.",
+          "default": "5000"
+        },
+        "useObjectMessages": {
+          "type": "boolean",
+          "title": "UseObjectMessages",
+          "description": "When enabled the endpoint uses object messages.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "sftp-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "sftp-server",
+    "group": "sftp",
+    "module": "citrus-ftp",
+    "title": "SftpServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "allowedKeyPath": {
+          "type": "string",
+          "title": "AllowedKeyPath",
+          "description": "Sets the allowed key certificate path.",
+          "$comment": "group:security"
+        },
+        "autoConnect": {
+          "type": "boolean",
+          "title": "AutoConnect",
+          "description": "When enabled the server uses automatic connect mode."
+        },
+        "autoLogin": {
+          "type": "boolean",
+          "title": "AutoLogin",
+          "description": "When enabled the server uses automatic login mode."
+        },
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "hostKeyPath": {
+          "type": "string",
+          "title": "HostKeyPath",
+          "description": "Sets the host key certificate path.",
+          "$comment": "group:security"
+        },
+        "knownHosts": {
+          "type": "string",
+          "title": "KnownHosts",
+          "description": "List of known hosts.",
+          "$comment": "group:security"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the allowed user password.",
+          "$comment": "group:security"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Ftp server port."
+        },
+        "preferredAuthentications": {
+          "type": "string",
+          "title": "PreferredAuthentications",
+          "description": "Sets the preferred authentication mechanism.",
+          "$comment": "group:security"
+        },
+        "privateKeyPassword": {
+          "type": "string",
+          "title": "PrivateKeyPassword",
+          "description": "Sets the private key password.",
+          "$comment": "group:security"
+        },
+        "privateKeyPath": {
+          "type": "string",
+          "title": "PrivateKeyPath",
+          "description": "Sets the private key certificate path.",
+          "$comment": "group:security"
+        },
+        "sessionConfigs": {
+          "type": "object",
+          "title": "SessionConfigs",
+          "description": "The session configuration.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "SessionConfigs",
+            "description": "The session configuration."
+          }
+        },
+        "strictHostChecking": {
+          "type": "boolean",
+          "title": "StrictHostChecking",
+          "description": "Enable strict host checking.",
+          "$comment": "group:security"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The server timeout.",
+          "default": "5000"
+        },
+        "user": {
+          "type": "string",
+          "title": "User",
+          "description": "Sets the allowed user name.",
+          "$comment": "group:security"
+        },
+        "userHomePath": {
+          "type": "string",
+          "title": "UserHomePath",
+          "description": "Sets the user home path directory."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "ftp-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "ftp-server",
+    "group": "ftp",
+    "module": "citrus-ftp",
+    "title": "FtpServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoConnect": {
+          "type": "boolean",
+          "title": "AutoConnect",
+          "description": "When enabled the server uses automatic connect mode."
+        },
+        "autoHandleCommands": {
+          "type": "string",
+          "title": "AutoHandleCommands",
+          "description": "Enables the auto handle commands mode."
+        },
+        "autoLogin": {
+          "type": "boolean",
+          "title": "AutoLogin",
+          "description": "When enabled the server uses automatic login mode."
+        },
+        "autoReadFiles": {
+          "type": "boolean",
+          "title": "AutoReadFiles",
+          "description": "When enabled the client automatically reads new files."
+        },
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "errorHandlingStrategy": {
+          "type": "string",
+          "title": "ErrorHandlingStrategy",
+          "description": "Sets the error handling strategy.",
+          "$comment": "group:errorHandler"
+        },
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "The Ftp server host."
+        },
+        "listenerFactory": {
+          "type": "string",
+          "title": "ListenerFactory",
+          "description": "Sets a custom listener factory implementation.",
+          "$comment": "group:advanced"
+        },
+        "localPassiveMode": {
+          "type": "boolean",
+          "title": "LocalPassiveMode",
+          "description": "Enables the local passive mode."
+        },
+        "marshaller": {
+          "type": "string",
+          "title": "Marshaller",
+          "description": "Sets a custom Ftp message marshaller.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the allowed user password.",
+          "$comment": "group:security"
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Ftp server port."
+        },
+        "server": {
+          "type": "string",
+          "title": "Server",
+          "description": "Sets the Ftp server implementation.",
+          "$comment": "group:advanced"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The server timeout.",
+          "default": "5000"
+        },
+        "user": {
+          "type": "string",
+          "title": "User",
+          "description": "Sets the allowed user name."
+        },
+        "userManager": {
+          "type": "string",
+          "title": "UserManager",
+          "description": "Sets a custom user manager implementation.",
+          "$comment": "group:advanced"
+        },
+        "userManagerProperties": {
+          "type": "string",
+          "title": "UserManagerProperties",
+          "description": "Loads user manage properties from a file resource.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-inOut": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "camel-inOut",
+    "group": "camel",
+    "module": "citrus-camel",
+    "title": "CamelInOut",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "camelContext": {
+          "type": "string",
+          "title": "CamelContext",
+          "description": "The Camel context to use."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "endpointUri": {
+          "type": "string",
+          "title": "EndpointUri",
+          "description": "The Camel endpoint uri."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The endpoint timeout when waiting for messages."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "vertx-asynchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "vertx-asynchronous",
+    "group": "vertx",
+    "module": "citrus-vertx",
+    "title": "VertxAsynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "title": "Address",
+          "description": "The event bus address."
+        },
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "The Vert.x event bus host."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Vert.x event bus port."
+        },
+        "pubSubDomain": {
+          "type": "boolean",
+          "title": "PubSubDomain",
+          "description": "When enabled the endpoint uses publish/subscribe mode.",
+          "$comment": "group:advanced"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The endpoint timeout when waiting for messages."
+        },
+        "vertxFactory": {
+          "type": "string",
+          "title": "VertxFactory",
+          "description": "Sets a custom Vert.x factory.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "ftp-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "ftp-client",
+    "group": "ftp",
+    "module": "citrus-ftp",
+    "title": "FtpClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoReadFiles": {
+          "type": "boolean",
+          "title": "AutoReadFiles",
+          "description": "When enabled the client automatically reads new files."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "errorHandlingStrategy": {
+          "type": "string",
+          "title": "ErrorHandlingStrategy",
+          "description": "Sets the error handling strategy.",
+          "$comment": "group:errorHandler"
+        },
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "The Ftp server host."
+        },
+        "localPassiveMode": {
+          "type": "boolean",
+          "title": "LocalPassiveMode",
+          "description": "SEnables the local passive mode."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the user password.",
+          "$comment": "group:security"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Ftp server port."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The endpoint timeout when waiting for messages."
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "description": "Sets the user name.",
+          "$comment": "group:security"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-asynchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "camel-asynchronous",
+    "group": "camel",
+    "module": "citrus-camel",
+    "title": "CamelAsynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "camelContext": {
+          "type": "string",
+          "title": "CamelContext",
+          "description": "The Camel context to use."
+        },
+        "endpointUri": {
+          "type": "string",
+          "title": "EndpointUri",
+          "description": "The Camel endpoint uri."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The endpoint timeout when waiting for messages."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "scp-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "scp-client",
+    "group": "scp",
+    "module": "citrus-ftp",
+    "title": "ScpClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoReadFiles": {
+          "type": "boolean",
+          "title": "AutoReadFiles",
+          "description": "When enabled the client automatically reads new files."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "errorHandlingStrategy": {
+          "type": "string",
+          "title": "ErrorHandlingStrategy",
+          "description": "Sets the error handling strategy.",
+          "$comment": "group:errorHandler"
+        },
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "The Ftp server host."
+        },
+        "knownHosts": {
+          "type": "string",
+          "title": "KnownHosts",
+          "description": "List of known hosts.",
+          "$comment": "group:security"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the user password.",
+          "$comment": "group:security"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Ftp server port."
+        },
+        "portOption": {
+          "type": "string",
+          "title": "PortOption",
+          "description": "Sets the port option.",
+          "$comment": "group:advanced"
+        },
+        "privateKeyPassword": {
+          "type": "string",
+          "title": "PrivateKeyPassword",
+          "description": "Sets the private key password.",
+          "$comment": "group:security"
+        },
+        "privateKeyPath": {
+          "type": "string",
+          "title": "PrivateKeyPath",
+          "description": "Sets the private key path.",
+          "$comment": "group:security"
+        },
+        "strictHostChecking": {
+          "type": "boolean",
+          "title": "StrictHostChecking",
+          "description": "Enable strict host checking.",
+          "$comment": "group:security"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The endpoint timeout when waiting for messages."
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "description": "Sets the user name.",
+          "$comment": "group:security"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "rmi-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "rmi-server",
+    "group": "rmi",
+    "module": "citrus-rmi",
+    "title": "RmiServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "binding": {
+          "type": "string",
+          "title": "Binding"
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator."
+        },
+        "createRegistry": {
+          "type": "boolean",
+          "title": "CreateRegistry"
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "host": {
+          "type": "string",
+          "title": "Host"
+        },
+        "marshaller": {
+          "type": "string",
+          "title": "Marshaller"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter."
+        },
+        "method": {
+          "type": "string",
+          "title": "Method"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port"
+        },
+        "registry": {
+          "type": "string",
+          "title": "Registry"
+        },
+        "remoteInterfaces": {
+          "title": "RemoteInterfaces",
+          "description": "List of remote interfaces as fully qualified class name.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "RemoteInterfaces",
+            "description": "List of remote interfaces as fully qualified class name."
+          }
+        },
+        "serverUrl": {
+          "type": "string",
+          "title": "ServerUrl"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The server timeout.",
+          "default": "5000"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "vertx-synchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "vertx-synchronous",
+    "group": "vertx",
+    "module": "citrus-vertx",
+    "title": "VertxSynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "title": "Address",
+          "description": "The event bus address."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "The Vert.x event bus host."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Vert.x event bus port."
+        },
+        "pubSubDomain": {
+          "type": "boolean",
+          "title": "PubSubDomain",
+          "description": "When enabled the endpoint uses publish/subscribe mode.",
+          "$comment": "group:advanced"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The endpoint timeout when waiting for messages."
+        },
+        "vertxFactory": {
+          "type": "string",
+          "title": "VertxFactory",
+          "description": "Sets a custom Vert.x factory.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "jms-synchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "jms-synchronous",
+    "group": "jms",
+    "module": "citrus-jms",
+    "title": "JmsSynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "connectionFactory": {
+          "type": "string",
+          "title": "ConnectionFactory",
+          "description": "The JMS connection factory."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "destination": {
+          "type": "string",
+          "title": "Destination",
+          "description": "The JMS destination name."
+        },
+        "destinationNameResolver": {
+          "type": "string",
+          "title": "DestinationNameResolver",
+          "description": "Sets the destination name resolver.",
+          "$comment": "group:advanced"
+        },
+        "destinationResolver": {
+          "type": "string",
+          "title": "DestinationResolver",
+          "description": "Sets the destination resolver.",
+          "$comment": "group:advanced"
+        },
+        "filterInternalHeaders": {
+          "type": "boolean",
+          "title": "FilterInternalHeaders",
+          "description": "When enabled the endpoint removes all internal headers before sending a message.",
+          "$comment": "group:advanced"
+        },
+        "jmsTemplate": {
+          "type": "string",
+          "title": "JmsTemplate",
+          "description": "Sets the JMS template.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval.",
+          "$comment": "group:advanced"
+        },
+        "pubSubDomain": {
+          "type": "boolean",
+          "title": "PubSubDomain",
+          "description": "When enabled the endpoint uses publish/subscribe mode.",
+          "$comment": "group:advanced"
+        },
+        "replyDestination": {
+          "type": "string",
+          "title": "ReplyDestination",
+          "description": "Sets the reply destination name."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the receive timeout when the consumer waits for messages to arrive."
+        },
+        "useObjectMessages": {
+          "type": "boolean",
+          "title": "UseObjectMessages",
+          "description": "When enabled the endpoint uses object messages.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-inOnly": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "camel-inOnly",
+    "group": "camel",
+    "module": "citrus-camel",
+    "title": "CamelInOnly",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "camelContext": {
+          "type": "string",
+          "title": "CamelContext",
+          "description": "The Camel context to use."
+        },
+        "endpointUri": {
+          "type": "string",
+          "title": "EndpointUri",
+          "description": "The Camel endpoint uri."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The endpoint timeout when waiting for messages."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "direct-asynchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "direct-asynchronous",
+    "group": "direct",
+    "module": "citrus-base",
+    "title": "DirectAsynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoCreateQueue": {
+          "type": "boolean",
+          "title": "AutoCreateQueue",
+          "description": "When set the queue is automatically created when it does not exist in bean registry."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "queue": {
+          "type": "string",
+          "title": "Queue",
+          "description": "The queue name."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The timeout when receiving messages from the queue."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-synchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "camel-synchronous",
+    "group": "camel",
+    "module": "citrus-camel",
+    "title": "CamelSynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "camelContext": {
+          "type": "string",
+          "title": "CamelContext",
+          "description": "The Camel context to use."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "endpointUri": {
+          "type": "string",
+          "title": "EndpointUri",
+          "description": "The Camel endpoint uri."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter as a bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The endpoint timeout when waiting for messages."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "soap-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "soap-client",
+    "group": "soap",
+    "module": "citrus-ws",
+    "title": "SoapClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "defaultUri": {
+          "type": "string",
+          "title": "DefaultUri",
+          "description": "Sets the SOAP Web Service server url."
+        },
+        "endpointResolver": {
+          "type": "string",
+          "title": "EndpointResolver",
+          "description": "Sets the endpoint resolver.",
+          "$comment": "group:advanced"
+        },
+        "faultStrategy": {
+          "type": "string",
+          "title": "FaultStrategy",
+          "description": "Sets the error handling strategy.",
+          "$comment": "group:errorHandler"
+        },
+        "interceptor": {
+          "type": "string",
+          "title": "Interceptor",
+          "description": "Sets a custom client interceptor.",
+          "$comment": "group:intercept"
+        },
+        "interceptors": {
+          "title": "Interceptors",
+          "description": "Sets client interceptors.",
+          "$comment": "group:intercept",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Interceptors",
+            "description": "Sets client interceptors.",
+            "$comment": "group:intercept"
+          }
+        },
+        "keepSoapEnvelope": {
+          "type": "boolean",
+          "title": "KeepSoapEnvelope",
+          "description": "When enabled the client does not remove the SOAP envelope before processing the message.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets a custom message converter implementation.",
+          "$comment": "group:advanced"
+        },
+        "messageFactory": {
+          "type": "string",
+          "title": "MessageFactory",
+          "description": "Sets a custom message factory.",
+          "$comment": "group:advanced"
+        },
+        "messageSender": {
+          "type": "string",
+          "title": "MessageSender",
+          "description": "Sets a custom message sender implementation.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the receive timeout when the client waits for response messages.",
+          "default": "5000"
+        },
+        "webServiceTemplate": {
+          "type": "string",
+          "title": "WebServiceTemplate",
+          "description": "Sets custom web service template reference.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "jms-asynchronous": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "jms-asynchronous",
+    "group": "jms",
+    "module": "citrus-jms",
+    "title": "JmsAsynchronous",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the JMS consumer is started right after the endpoint is created.",
+          "$comment": "group:publishSubscribe"
+        },
+        "connectionFactory": {
+          "type": "string",
+          "title": "ConnectionFactory",
+          "description": "The JMS connection factory."
+        },
+        "destination": {
+          "type": "string",
+          "title": "Destination",
+          "description": "The JMS destination name."
+        },
+        "destinationNameResolver": {
+          "type": "string",
+          "title": "DestinationNameResolver",
+          "description": "Sets the destination name resolver.",
+          "$comment": "group:advanced"
+        },
+        "destinationResolver": {
+          "type": "string",
+          "title": "DestinationResolver",
+          "description": "Sets the destination resolver.",
+          "$comment": "group:advanced"
+        },
+        "durableSubscriberName": {
+          "type": "string",
+          "title": "DurableSubscriberName",
+          "description": "Sets the durable subscriber name.",
+          "$comment": "group:publishSubscribe"
+        },
+        "durableSubscription": {
+          "type": "boolean",
+          "title": "DurableSubscription",
+          "description": "Enables/disables durable subscription mode.",
+          "$comment": "group:publishSubscribe"
+        },
+        "filterInternalHeaders": {
+          "type": "boolean",
+          "title": "FilterInternalHeaders",
+          "description": "Filter internal headers.",
+          "$comment": "group:advanced"
+        },
+        "jmsTemplate": {
+          "type": "string",
+          "title": "JmsTemplate",
+          "description": "Sets the JMS template.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "pubSubDomain": {
+          "type": "boolean",
+          "title": "PubSubDomain",
+          "description": "When enabled the endpoint uses publish/subscribe mode.",
+          "$comment": "group:publishSubscribe"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the receive timeout when the consumer waits for messages to arrive.",
+          "default": "5000"
+        },
+        "useObjectMessages": {
+          "type": "boolean",
+          "title": "UseObjectMessages",
+          "description": "When enabled the endpoint uses object messages.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "sftp-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "sftp-client",
+    "group": "sftp",
+    "module": "citrus-ftp",
+    "title": "SftpClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoReadFiles": {
+          "type": "boolean",
+          "title": "AutoReadFiles",
+          "description": "When enabled the client automatically reads new files."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "errorHandlingStrategy": {
+          "type": "string",
+          "title": "ErrorHandlingStrategy",
+          "description": "Sets the error handling strategy.",
+          "$comment": "group:errorHandler"
+        },
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "The Ftp server host."
+        },
+        "knownHosts": {
+          "type": "string",
+          "title": "KnownHosts",
+          "description": "List of known hosts.",
+          "$comment": "group:security"
+        },
+        "localPassiveMode": {
+          "type": "boolean",
+          "title": "LocalPassiveMode",
+          "description": "SEnables the local passive mode."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the user password.",
+          "$comment": "group:security"
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Ftp server port."
+        },
+        "preferredAuthentications": {
+          "type": "string",
+          "title": "PreferredAuthentications",
+          "description": "Sets the preferred authentication mechanism.",
+          "$comment": "group:security"
+        },
+        "privateKeyPassword": {
+          "type": "string",
+          "title": "PrivateKeyPassword",
+          "description": "Sets the private key password.",
+          "$comment": "group:security"
+        },
+        "privateKeyPath": {
+          "type": "string",
+          "title": "PrivateKeyPath",
+          "description": "Sets the private key path.",
+          "$comment": "group:security"
+        },
+        "sessionConfigs": {
+          "type": "object",
+          "title": "SessionConfigs",
+          "description": "The session configuration.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "SessionConfigs",
+            "description": "The session configuration."
+          }
+        },
+        "strictHostChecking": {
+          "type": "boolean",
+          "title": "StrictHostChecking",
+          "description": "Enable strict host checking.",
+          "$comment": "group:security"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The endpoint timeout when waiting for messages."
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "description": "Sets the user name.",
+          "$comment": "group:security"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "selenium-browser": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "selenium-browser",
+    "group": "selenium",
+    "module": "citrus-selenium",
+    "title": "SeleniumBrowser",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "eventListeners": {
+          "title": "EventListeners",
+          "description": "Sets the list of event listeners.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "EventListeners",
+            "description": "Sets the list of event listeners.",
+            "$comment": "group:advanced"
+          }
+        },
+        "javaScript": {
+          "type": "boolean",
+          "title": "JavaScript",
+          "description": "When enabled the browser supports JavaScript."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "profile": {
+          "type": "string",
+          "title": "Profile",
+          "description": "The Firefox profile.",
+          "$comment": "group:firefox"
+        },
+        "remoteServerUrl": {
+          "type": "string",
+          "title": "RemoteServerUrl",
+          "description": "The remote server URL."
+        },
+        "startPage": {
+          "type": "string",
+          "title": "StartPage",
+          "description": "The URL to the start page."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The browser timeout."
+        },
+        "type": {
+          "type": "string",
+          "title": "Type",
+          "description": "The Selenium browser type.",
+          "default": "htmlunit"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version",
+          "description": "The browser version.",
+          "$comment": "group:advanced"
+        },
+        "webDriver": {
+          "type": "string",
+          "title": "WebDriver",
+          "description": "Sets a custom web driver as a bean reference.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "http-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "http-server",
+    "group": "http",
+    "module": "citrus-http",
+    "title": "HttpServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "authentication": {
+          "type": "string",
+          "title": "Authentication",
+          "description": "Use given authentication mechanism for all request paths.",
+          "$comment": "group:security"
+        },
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "binaryMediaTypes": {
+          "title": "BinaryMediaTypes",
+          "description": "List of supported media types on this server.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "BinaryMediaTypes",
+            "description": "List of supported media types on this server.",
+            "$comment": "group:advanced"
+          }
+        },
+        "connector": {
+          "type": "string",
+          "title": "Connector",
+          "description": "Add a connector to this server.",
+          "$comment": "group:servlet"
+        },
+        "connectors": {
+          "title": "Connectors",
+          "description": "Sets a list of connectors for this server.",
+          "$comment": "group:servlet",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Connectors",
+            "description": "Sets a list of connectors for this server.",
+            "$comment": "group:servlet"
+          }
+        },
+        "contextConfigLocation": {
+          "type": "string",
+          "title": "ContextConfigLocation",
+          "description": "Sets the Spring context configuration loaded for this Http server.",
+          "$comment": "group:advanced"
+        },
+        "contextPath": {
+          "type": "string",
+          "title": "ContextPath",
+          "description": "Sets the context path on this server.",
+          "$comment": "group:servlet"
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "defaultStatus": {
+          "type": "string",
+          "enum": [
+            "CONTINUE",
+            "SWITCHING_PROTOCOLS",
+            "PROCESSING",
+            "EARLY_HINTS",
+            "OK",
+            "CREATED",
+            "ACCEPTED",
+            "NON_AUTHORITATIVE_INFORMATION",
+            "NO_CONTENT",
+            "RESET_CONTENT",
+            "PARTIAL_CONTENT",
+            "MULTI_STATUS",
+            "ALREADY_REPORTED",
+            "IM_USED",
+            "MULTIPLE_CHOICES",
+            "MOVED_PERMANENTLY",
+            "FOUND",
+            "SEE_OTHER",
+            "NOT_MODIFIED",
+            "TEMPORARY_REDIRECT",
+            "PERMANENT_REDIRECT",
+            "BAD_REQUEST",
+            "UNAUTHORIZED",
+            "PAYMENT_REQUIRED",
+            "FORBIDDEN",
+            "NOT_FOUND",
+            "METHOD_NOT_ALLOWED",
+            "NOT_ACCEPTABLE",
+            "PROXY_AUTHENTICATION_REQUIRED",
+            "REQUEST_TIMEOUT",
+            "CONFLICT",
+            "GONE",
+            "LENGTH_REQUIRED",
+            "PRECONDITION_FAILED",
+            "CONTENT_TOO_LARGE",
+            "PAYLOAD_TOO_LARGE",
+            "URI_TOO_LONG",
+            "UNSUPPORTED_MEDIA_TYPE",
+            "REQUESTED_RANGE_NOT_SATISFIABLE",
+            "EXPECTATION_FAILED",
+            "I_AM_A_TEAPOT",
+            "MISDIRECTED_REQUEST",
+            "UNPROCESSABLE_CONTENT",
+            "UNPROCESSABLE_ENTITY",
+            "LOCKED",
+            "FAILED_DEPENDENCY",
+            "TOO_EARLY",
+            "UPGRADE_REQUIRED",
+            "PRECONDITION_REQUIRED",
+            "TOO_MANY_REQUESTS",
+            "REQUEST_HEADER_FIELDS_TOO_LARGE",
+            "UNAVAILABLE_FOR_LEGAL_REASONS",
+            "INTERNAL_SERVER_ERROR",
+            "NOT_IMPLEMENTED",
+            "BAD_GATEWAY",
+            "SERVICE_UNAVAILABLE",
+            "GATEWAY_TIMEOUT",
+            "HTTP_VERSION_NOT_SUPPORTED",
+            "VARIANT_ALSO_NEGOTIATES",
+            "INSUFFICIENT_STORAGE",
+            "LOOP_DETECTED",
+            "BANDWIDTH_LIMIT_EXCEEDED",
+            "NOT_EXTENDED",
+            "NETWORK_AUTHENTICATION_REQUIRED"
+          ],
+          "title": "DefaultStatus",
+          "description": "Sets the default status returned by the server.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "filterMappings": {
+          "type": "object",
+          "title": "FilterMappings",
+          "description": "Filter mapping used on this server.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "FilterMappings",
+            "description": "Filter mapping used on this server.",
+            "$comment": "group:filter"
+          },
+          "$comment": "group:filter"
+        },
+        "filters": {
+          "type": "object",
+          "title": "Filters",
+          "description": "Map of Http filters used on this server.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "Filters",
+            "description": "Map of Http filters used on this server.",
+            "$comment": "group:filter"
+          },
+          "$comment": "group:filter"
+        },
+        "handleAttributeHeaders": {
+          "type": "boolean",
+          "title": "HandleAttributeHeaders",
+          "description": "When enabled the server handles attribute headers.",
+          "$comment": "group:advanced"
+        },
+        "handleCookies": {
+          "type": "boolean",
+          "title": "HandleCookies",
+          "description": "When enabled the server handles cookies.",
+          "$comment": "group:advanced"
+        },
+        "interceptor": {
+          "type": "string",
+          "title": "Interceptor",
+          "description": "Sets a handler interceptor.",
+          "$comment": "group:intercept"
+        },
+        "interceptors": {
+          "title": "Interceptors",
+          "description": "Sets the list of handler interceptor bean references.",
+          "$comment": "group:intercept",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Interceptors",
+            "description": "Sets the list of handler interceptor bean references.",
+            "$comment": "group:intercept"
+          }
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the Http message converter bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Http server port."
+        },
+        "removeSemicolonPathContent": {
+          "type": "boolean",
+          "title": "RemoveSemicolonPathContent",
+          "description": "When enabled the server removes semicolon path content from headers.",
+          "$comment": "group:advanced"
+        },
+        "resourceBase": {
+          "type": "string",
+          "title": "ResourceBase",
+          "description": "The server resource base path where resources get loaded from.",
+          "$comment": "group:advanced"
+        },
+        "responseCacheSize": {
+          "type": "integer",
+          "title": "ResponseCacheSize",
+          "description": "Sets the response cache size.",
+          "$comment": "group:advanced"
+        },
+        "rootParentContext": {
+          "type": "boolean",
+          "title": "RootParentContext",
+          "description": "When enabled the server uses the root Spring application context.",
+          "$comment": "group:advanced"
+        },
+        "securePort": {
+          "type": "integer",
+          "title": "SecurePort",
+          "description": "The secured port.",
+          "$comment": "group:security"
+        },
+        "securedConnection": {
+          "type": "string",
+          "title": "SecuredConnection",
+          "description": "Secure the connections on given secured port with given security mechanism.",
+          "$comment": "group:security"
+        },
+        "securityHandler": {
+          "type": "string",
+          "title": "SecurityHandler",
+          "description": "Sets the security handler as a bean reference.",
+          "$comment": "group:security"
+        },
+        "servletHandler": {
+          "type": "string",
+          "title": "ServletHandler",
+          "description": "Sets a custom servlet handler as a bean reference.",
+          "$comment": "group:servlet"
+        },
+        "servletMappingPath": {
+          "type": "string",
+          "title": "ServletMappingPath",
+          "description": "Sets the servlet mapping path.",
+          "$comment": "group:servlet"
+        },
+        "servletName": {
+          "type": "string",
+          "title": "ServletName",
+          "description": "Sets the servlet name.",
+          "$comment": "group:servlet"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the server timeout while waiting for incoming requests.",
+          "default": "5000"
+        },
+        "useDefaultFilters": {
+          "type": "boolean",
+          "title": "UseDefaultFilters",
+          "description": "When enabled the server uses the default set of Http servlet filters.",
+          "$comment": "group:filter"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "websocket-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "websocket-server",
+    "group": "websocket",
+    "module": "citrus-websocket",
+    "title": "WebsocketServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "authentication": {
+          "type": "string",
+          "title": "Authentication",
+          "description": "Use given authentication mechanism for all request paths.",
+          "$comment": "group:security"
+        },
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "binaryMediaTypes": {
+          "title": "BinaryMediaTypes",
+          "description": "List of supported media types on this server.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "BinaryMediaTypes",
+            "description": "List of supported media types on this server.",
+            "$comment": "group:advanced"
+          }
+        },
+        "connector": {
+          "type": "string",
+          "title": "Connector",
+          "description": "Add a connector to this server.",
+          "$comment": "group:servlet"
+        },
+        "connectors": {
+          "title": "Connectors",
+          "description": "Sets a list of connectors for this server.",
+          "$comment": "group:servlet",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Connectors",
+            "description": "Sets a list of connectors for this server.",
+            "$comment": "group:servlet"
+          }
+        },
+        "contextConfigLocation": {
+          "type": "string",
+          "title": "ContextConfigLocation",
+          "description": "Sets the Spring context configuration loaded for this Http server.",
+          "$comment": "group:advanced"
+        },
+        "contextPath": {
+          "type": "string",
+          "title": "ContextPath",
+          "description": "Sets the context path on this server.",
+          "$comment": "group:servlet"
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "defaultStatus": {
+          "type": "string",
+          "enum": [
+            "CONTINUE",
+            "SWITCHING_PROTOCOLS",
+            "PROCESSING",
+            "EARLY_HINTS",
+            "OK",
+            "CREATED",
+            "ACCEPTED",
+            "NON_AUTHORITATIVE_INFORMATION",
+            "NO_CONTENT",
+            "RESET_CONTENT",
+            "PARTIAL_CONTENT",
+            "MULTI_STATUS",
+            "ALREADY_REPORTED",
+            "IM_USED",
+            "MULTIPLE_CHOICES",
+            "MOVED_PERMANENTLY",
+            "FOUND",
+            "SEE_OTHER",
+            "NOT_MODIFIED",
+            "TEMPORARY_REDIRECT",
+            "PERMANENT_REDIRECT",
+            "BAD_REQUEST",
+            "UNAUTHORIZED",
+            "PAYMENT_REQUIRED",
+            "FORBIDDEN",
+            "NOT_FOUND",
+            "METHOD_NOT_ALLOWED",
+            "NOT_ACCEPTABLE",
+            "PROXY_AUTHENTICATION_REQUIRED",
+            "REQUEST_TIMEOUT",
+            "CONFLICT",
+            "GONE",
+            "LENGTH_REQUIRED",
+            "PRECONDITION_FAILED",
+            "CONTENT_TOO_LARGE",
+            "PAYLOAD_TOO_LARGE",
+            "URI_TOO_LONG",
+            "UNSUPPORTED_MEDIA_TYPE",
+            "REQUESTED_RANGE_NOT_SATISFIABLE",
+            "EXPECTATION_FAILED",
+            "I_AM_A_TEAPOT",
+            "MISDIRECTED_REQUEST",
+            "UNPROCESSABLE_CONTENT",
+            "UNPROCESSABLE_ENTITY",
+            "LOCKED",
+            "FAILED_DEPENDENCY",
+            "TOO_EARLY",
+            "UPGRADE_REQUIRED",
+            "PRECONDITION_REQUIRED",
+            "TOO_MANY_REQUESTS",
+            "REQUEST_HEADER_FIELDS_TOO_LARGE",
+            "UNAVAILABLE_FOR_LEGAL_REASONS",
+            "INTERNAL_SERVER_ERROR",
+            "NOT_IMPLEMENTED",
+            "BAD_GATEWAY",
+            "SERVICE_UNAVAILABLE",
+            "GATEWAY_TIMEOUT",
+            "HTTP_VERSION_NOT_SUPPORTED",
+            "VARIANT_ALSO_NEGOTIATES",
+            "INSUFFICIENT_STORAGE",
+            "LOOP_DETECTED",
+            "BANDWIDTH_LIMIT_EXCEEDED",
+            "NOT_EXTENDED",
+            "NETWORK_AUTHENTICATION_REQUIRED"
+          ],
+          "title": "DefaultStatus",
+          "description": "Sets the default status returned by the server.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "filterMappings": {
+          "type": "object",
+          "title": "FilterMappings",
+          "description": "Filter mapping used on this server.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "FilterMappings",
+            "description": "Filter mapping used on this server.",
+            "$comment": "group:filter"
+          },
+          "$comment": "group:filter"
+        },
+        "filters": {
+          "type": "object",
+          "title": "Filters",
+          "description": "Map of Http filters used on this server.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "Filters",
+            "description": "Map of Http filters used on this server.",
+            "$comment": "group:filter"
+          },
+          "$comment": "group:filter"
+        },
+        "handleAttributeHeaders": {
+          "type": "boolean",
+          "title": "HandleAttributeHeaders",
+          "description": "When enabled the server handles attribute headers.",
+          "$comment": "group:advanced"
+        },
+        "handleCookies": {
+          "type": "boolean",
+          "title": "HandleCookies",
+          "description": "When enabled the server handles cookies.",
+          "$comment": "group:advanced"
+        },
+        "interceptor": {
+          "type": "string",
+          "title": "Interceptor",
+          "description": "Sets a handler interceptor.",
+          "$comment": "group:intercept"
+        },
+        "interceptors": {
+          "title": "Interceptors",
+          "description": "Sets the list of handler interceptor bean references.",
+          "$comment": "group:intercept",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Interceptors",
+            "description": "Sets the list of handler interceptor bean references.",
+            "$comment": "group:intercept"
+          }
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the Http message converter bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Http server port."
+        },
+        "removeSemicolonPathContent": {
+          "type": "boolean",
+          "title": "RemoveSemicolonPathContent",
+          "description": "When enabled the server removes semicolon path content from headers.",
+          "$comment": "group:advanced"
+        },
+        "resourceBase": {
+          "type": "string",
+          "title": "ResourceBase",
+          "description": "The server resource base path where resources get loaded from.",
+          "$comment": "group:advanced"
+        },
+        "responseCacheSize": {
+          "type": "integer",
+          "title": "ResponseCacheSize",
+          "description": "Sets the response cache size.",
+          "$comment": "group:advanced"
+        },
+        "rootParentContext": {
+          "type": "boolean",
+          "title": "RootParentContext",
+          "description": "When enabled the server uses the root Spring application context.",
+          "$comment": "group:advanced"
+        },
+        "securePort": {
+          "type": "integer",
+          "title": "SecurePort",
+          "description": "The secured port.",
+          "$comment": "group:security"
+        },
+        "securedConnection": {
+          "type": "string",
+          "title": "SecuredConnection",
+          "description": "Secure the connections on given secured port with given security mechanism.",
+          "$comment": "group:security"
+        },
+        "securityHandler": {
+          "type": "string",
+          "title": "SecurityHandler",
+          "description": "Sets the security handler as a bean reference.",
+          "$comment": "group:security"
+        },
+        "servletHandler": {
+          "type": "string",
+          "title": "ServletHandler",
+          "description": "Sets a custom servlet handler as a bean reference.",
+          "$comment": "group:servlet"
+        },
+        "servletMappingPath": {
+          "type": "string",
+          "title": "ServletMappingPath",
+          "description": "Sets the servlet mapping path.",
+          "$comment": "group:servlet"
+        },
+        "servletName": {
+          "type": "string",
+          "title": "ServletName",
+          "description": "Sets the servlet name.",
+          "$comment": "group:servlet"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the server timeout while waiting for incoming requests.",
+          "default": "5000"
+        },
+        "useDefaultFilters": {
+          "type": "boolean",
+          "title": "UseDefaultFilters",
+          "description": "When enabled the server uses the default set of Http servlet filters.",
+          "$comment": "group:filter"
+        },
+        "webSockets": {
+          "title": "WebSockets",
+          "description": "Sets the list of web sockets for this server.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "WebSockets",
+            "description": "Sets the list of web sockets for this server."
+          }
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "mail-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "mail-server",
+    "group": "mail",
+    "module": "citrus-mail",
+    "title": "MailServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "authRequired": {
+          "type": "boolean",
+          "title": "AuthRequired",
+          "description": "When enabled users must authenticate with the server.",
+          "$comment": "group:security"
+        },
+        "autoAccept": {
+          "type": "boolean",
+          "title": "AutoAccept",
+          "description": "When enabled server will auto accept client connections.",
+          "$comment": "group:security"
+        },
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "javaMailProperties": {
+          "type": "object",
+          "title": "JavaMailProperties",
+          "description": "Custom properties passed to the java mail implementation.",
+          "$comment": "group:advanced"
+        },
+        "knownUsers": {
+          "title": "KnownUsers",
+          "description": "Sets a list of known users that will be accepted when establishing a connection.",
+          "$comment": "group:security",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "KnownUsers",
+            "description": "Sets a list of known users that will be accepted when establishing a connection.",
+            "$comment": "group:security"
+          }
+        },
+        "marshaller": {
+          "type": "string",
+          "title": "Marshaller",
+          "description": "Sets a custom mail message marshaller.",
+          "$comment": "group:advanced"
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets custom message converter.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The mail server port."
+        },
+        "smtp": {
+          "type": "string",
+          "title": "Smtp",
+          "description": "Sets the SMTP implementation.",
+          "$comment": "group:advanced"
+        },
+        "splitMultipart": {
+          "type": "boolean",
+          "title": "SplitMultipart",
+          "description": "When enabled the server splits multipart messages into individual parts.",
+          "$comment": "group:advanced"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The server timeout.",
+          "default": "5000"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "ssh-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "ssh-server",
+    "group": "ssh",
+    "module": "citrus-ssh",
+    "title": "SshServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "allowedKeyPath": {
+          "type": "string",
+          "title": "AllowedKeyPath",
+          "description": "Sets the allowed key path."
+        },
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "hostKeyPath": {
+          "type": "string",
+          "title": "HostKeyPath",
+          "description": "Sets the host key path"
+        },
+        "marshaller": {
+          "type": "string",
+          "title": "Marshaller",
+          "description": "Sets the marshaller as a bean reference."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the password."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "Sets the port."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The server timeout.",
+          "default": "5000"
+        },
+        "user": {
+          "type": "string",
+          "title": "User",
+          "description": "Sets the username."
+        },
+        "userHomePath": {
+          "type": "string",
+          "title": "UserHomePath",
+          "description": "Sets the user home path"
+        }
+      },
+      "additionalProperties": false    }
+  }
+}

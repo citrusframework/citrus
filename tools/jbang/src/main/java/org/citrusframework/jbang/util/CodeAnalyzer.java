@@ -17,7 +17,6 @@
 package org.citrusframework.jbang.util;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -155,6 +154,10 @@ public interface CodeAnalyzer {
         return getComponentDefinitions("validation-matcher");
     }
 
+    default Map<String, ComponentDefinition> getKnownInfraServices() {
+        return getComponentDefinitions("infra-services");
+    }
+
     default Map<String, ComponentDefinition> getComponentDefinitions(String kind) {
         try {
             Map<String, ComponentDefinition> components = new HashMap<>();
@@ -196,36 +199,21 @@ public interface CodeAnalyzer {
     default Set<String> resolveCamelInfraServiceDependencies(String code) {
         Set<String> dependencies = new HashSet<>();
         Set<String> serviceNames = extractCamelInfraServiceNames(code);
-        Map<String, String> catalog = getKnownInfraServices();
+        Map<String, ComponentDefinition> catalog = getKnownInfraServices();
         String camelVersion = CitrusJBangMain.Settings.getCamelVersion();
 
         for (String serviceName : serviceNames) {
             String baseName = serviceName.contains(".") ? serviceName.substring(0, serviceName.indexOf(".")) : serviceName;
             if (catalog.containsKey(serviceName)) {
-                dependencies.add("%s:%s".formatted(catalog.get(serviceName), camelVersion));
+                dependencies.add("%s:%s".formatted(catalog.get(serviceName).module, camelVersion));
             } else if (catalog.containsKey(baseName)) {
-                dependencies.add("%s:%s".formatted(catalog.get(baseName), camelVersion));
+                dependencies.add("%s:%s".formatted(catalog.get(baseName).module, camelVersion));
             } else {
                 dependencies.add("org.apache.camel:camel-test-infra-%s:%s".formatted(baseName, camelVersion));
             }
         }
 
         return dependencies;
-    }
-
-    default Map<String, String> getKnownInfraServices() {
-        try {
-            InputStream is = ClassLoaderHelper.getClassLoader().getResourceAsStream("citrus-catalog/citrus/citrus-catalog-aggregate-infra-services.json");
-            if (is == null) {
-                return Collections.emptyMap();
-            }
-            JsonNode raw = JsonSupport.json().readTree(is);
-            Map<String, String> services = new HashMap<>();
-            raw.propertyNames().forEach(name -> services.put(name, raw.get(name).asString()));
-            return services;
-        } catch (JacksonException e) {
-            return Collections.emptyMap();
-        }
     }
 
     default String resolveName(String name, String group, Map<String, ComponentDefinition> components) {

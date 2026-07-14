@@ -1,42 +1,42 @@
 {
-  "name" : "Citrus @version@",
-  "version" : "@version@",
+  "name" : "Citrus ${citrus.version}",
+  "version" : "${citrus.version}",
   "runtime" : "Citrus",
   "catalogs" : {
     "actions" : {
       "name" : "actions",
       "description" : "Aggregated Citrus catalog for test actions",
-      "version" : "@version@",
+      "version" : "${citrus.version}",
       "file" : "citrus-catalog-aggregate-test-actions.json"
     },
     "containers" : {
       "name" : "containers",
       "description" : "Aggregated Citrus catalog for test action containers",
-      "version" : "@version@",
+      "version" : "${citrus.version}",
       "file" : "citrus-catalog-aggregate-test-containers.json"
     },
     "endpoints" : {
       "name" : "endpoints",
       "description" : "Aggregated Citrus catalog for endpoints",
-      "version" : "@version@",
+      "version" : "${citrus.version}",
       "file" : "citrus-catalog-aggregate-endpoints.json"
     },
     "functions" : {
       "name" : "functions",
       "description" : "Aggregated Citrus catalog for functions",
-      "version" : "@version@",
+      "version" : "${citrus.version}",
       "file" : "citrus-catalog-aggregate-functions.json"
     },
     "validationMatcher" : {
       "name" : "validationMatcher",
       "description" : "Aggregated Citrus catalog for validation matcher",
-      "version" : "@version@",
+      "version" : "${citrus.version}",
       "file" : "citrus-catalog-aggregate-validation-matcher.json"
     },
     "infraServices" : {
       "name" : "infraServices",
       "description" : "Aggregated Citrus catalog for infra services",
-      "version" : "@version@",
+      "version" : "${citrus.version}",
       "file" : "citrus-catalog-aggregate-infra-services.json"
     }
   },
@@ -44,13 +44,13 @@
     "citrus-yaml" : {
       "name" : "citrus-yaml",
       "description" : "Citrus Json schema for tests",
-      "version" : "@version@",
+      "version" : "${citrus.version}",
       "file" : "citrus-testcase.json"
     },
     "citrus-xml-io" : {
       "name" : "citrus-xml",
       "description" : "Citrus XSD schema for tests",
-      "version" : "@version@",
+      "version" : "${citrus.version}",
       "file" : "citrus-testcase.xsd"
     }
   }
