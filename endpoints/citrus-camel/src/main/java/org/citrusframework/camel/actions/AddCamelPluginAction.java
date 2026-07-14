@@ -50,16 +50,26 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
     @Override
     public void doExecute(TestContext context) {
         String pluginName = context.replaceDynamicContentInString(name);
+        List<String> resolvedArgs = context.resolveDynamicValuesInList(args);
         List<String> installedPlugins = camelJBang().getPlugins();
 
-        if (!installedPlugins.contains(pluginName)) {
-            logger.info("Adding Camel plugin '%s' ...".formatted(pluginName));
-            camelJBang().addPlugin(pluginName, context.resolveDynamicValuesInList(args).toArray(String[]::new));
-            logger.info("Camel plugin '%s' successfully installed".formatted(pluginName));
-        } else {
-            logger.info("Camel plugin '%s' already installed".formatted(pluginName));
+        if (installedPlugins.contains(pluginName)) {
+            if (hasVersionArgs(resolvedArgs)) {
+                logger.info("Reinstalling Camel plugin '{}' with updated version ...", pluginName);
+                camelJBang().deletePlugin(pluginName);
+            } else {
+                logger.info("Camel plugin '{}' already installed", pluginName);
+                return;
+            }
         }
 
+        logger.info("Adding Camel plugin '{}' ...", pluginName);
+        camelJBang().addPlugin(pluginName, resolvedArgs.toArray(String[]::new));
+        logger.info("Camel plugin '{}' successfully installed", pluginName);
+    }
+
+    private boolean hasVersionArgs(List<String> args) {
+        return args.stream().anyMatch(arg -> arg.equals("--version") || arg.equals("--gav"));
     }
 
     /**
