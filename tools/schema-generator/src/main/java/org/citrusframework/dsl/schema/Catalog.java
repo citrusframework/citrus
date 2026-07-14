@@ -17,6 +17,7 @@
 package org.citrusframework.dsl.schema;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -206,19 +207,41 @@ public class Catalog {
         return catalog;
     }
 
-    public Map<String, String> getInfraServiceCatalog() {
-        Map<String, String> catalog = new LinkedHashMap<>();
+    public Map<String, CatalogEntry> getInfraServiceCatalog() {
+        Map<String, CatalogEntry> catalog = new LinkedHashMap<>();
         try {
-            List<InfraService> services = InfraServiceUtils.getInfraServiceMetadata(new DefaultCamelCatalog());
+            List<InfraService> services = InfraServiceUtils.getInfraServiceMetadata(new DefaultCamelCatalog())
+                    .stream()
+                    .sorted(Comparator.comparing(InfraService::artifactId))
+                    .toList();
             for (InfraService service : services) {
-                String artifact = "%s:%s".formatted(service.groupId(), service.artifactId());
+                String module = "%s:%s".formatted(service.groupId(), service.artifactId());
                 for (String alias : service.alias()) {
                     if (service.aliasImplementation() != null && !service.aliasImplementation().isEmpty()) {
                         for (String impl : service.aliasImplementation()) {
-                            catalog.put("%s.%s".formatted(alias, impl), artifact);
+                            CatalogEntry entry = new CatalogEntry(SchemaProperty.Kind.INFRA_SERVICE.getCatalogKind(),
+                                    service.version(),
+                                    "%s.%s".formatted(alias, impl),
+                                    "camel-test-infra",
+                                    module,
+                                    "%s %s".formatted(StringUtils.convertFirstCharToUpperCase(alias),
+                                                      StringUtils.convertFirstCharToUpperCase(impl)),
+                                    service.description(),
+                                    null);
+
+                            catalog.put("%s.%s".formatted(alias, impl), entry);
                         }
                     } else {
-                        catalog.put(alias, artifact);
+                        CatalogEntry entry = new CatalogEntry(SchemaProperty.Kind.INFRA_SERVICE.getCatalogKind(),
+                                service.version(),
+                                alias,
+                                "camel-test-infra",
+                                module,
+                                StringUtils.convertFirstCharToUpperCase(alias),
+                                service.description(),
+                                null);
+
+                        catalog.put(alias, entry);
                     }
                 }
             }

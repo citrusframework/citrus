@@ -1,0 +1,1156 @@
+{
+  "average": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "average",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Average",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "values": {
+          "title": "Values",
+          "description": "The list of values to evaluate. Must be numeric values or test variables that evaluate to numeric values.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values",
+            "description": "The list of values to evaluate. Must be numeric values or test variables that evaluate to numeric values."
+          }
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "additionalProperties": false    }
+  },
+  "cdataSection": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "cdataSection",
+    "group": "citrus",
+    "module": "citrus-validation-xml",
+    "title": "CdataSection",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "unixTimestamp": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "unixTimestamp",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "UnixTimestamp",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "randomString": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "randomString",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "RandomString",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "length": {
+          "type": "integer",
+          "title": "Length",
+          "description": "Defines the length of the generated string."
+        },
+        "minNumberOfLetters": {
+          "type": "integer",
+          "title": "MinNumberOfLetters",
+          "description": "Number of letters that must be part of the generated string."
+        },
+        "notationMethod": {
+          "type": "string",
+          "enum": [
+            "MIXED",
+            "UPPERCASE",
+            "LOWERCASE"
+          ],
+          "title": "NotationMethod",
+          "description": "The notation method to use."
+        }
+      },
+      "required": [
+        "length"
+      ],
+      "additionalProperties": false    }
+  },
+  "resolveExternalServiceUrl": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "resolveExternalServiceUrl",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "ResolveExternalServiceUrl",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "title": "Namespace",
+          "description": "The Kubernetes namespace."
+        },
+        "serviceName": {
+          "type": "string",
+          "title": "ServiceName",
+          "description": "The Kubernetes service name."
+        }
+      },
+      "required": [
+        "serviceName"
+      ],
+      "additionalProperties": false    }
+  },
+  "urlDecode": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "urlDecode",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "UrlDecode",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "charset": {
+          "type": "string",
+          "title": "Charset",
+          "description": "Optional charset used to decode.",
+          "default": "UTF-8"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to perform substring."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "localHostAddress": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "localHostAddress",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "LocalHostAddress",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "currentDate": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "currentDate",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "CurrentDate",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "dateFormat": {
+          "type": "string",
+          "title": "DateFormat",
+          "description": "The date format string."
+        },
+        "offset": {
+          "type": "string",
+          "title": "Offset",
+          "description": "The date offset."
+        },
+        "timeZone": {
+          "type": "string",
+          "title": "TimeZone",
+          "description": "The time zone."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "sum": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "sum",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Sum",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "values": {
+          "title": "Values",
+          "description": "The list of values to evaluate. Must be numeric values or test variables that evaluate to numeric values.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values",
+            "description": "The list of values to evaluate. Must be numeric values or test variables that evaluate to numeric values."
+          }
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "additionalProperties": false    }
+  },
+  "urlEncode": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "urlEncode",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "UrlEncode",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "charset": {
+          "type": "string",
+          "title": "Charset",
+          "description": "Optional charset used to decode.",
+          "default": "UTF-8"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to perform substring."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "substring": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "substring",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Substring",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "beginIndex": {
+          "type": "integer",
+          "title": "BeginIndex",
+          "description": "The substring begin index."
+        },
+        "endIndex": {
+          "type": "integer",
+          "title": "EndIndex",
+          "description": "Optional substring end index."
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to perform substring."
+        }
+      },
+      "required": [
+        "beginIndex",
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "translate": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "translate",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Translate",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "regex": {
+          "type": "string",
+          "title": "Regex",
+          "description": "The regular expression to evaluate."
+        },
+        "replacement": {
+          "type": "string",
+          "title": "Replacement",
+          "description": "The transform replacement."
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to evaluate."
+        }
+      },
+      "required": [
+        "regex",
+        "replacement",
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "escapeJson": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "escapeJson",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "EscapeJson",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "digestAuthHeader": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "digestAuthHeader",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "DigestAuthHeader",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "title": "Algorithm",
+          "description": "The algorithm."
+        },
+        "method": {
+          "type": "string",
+          "title": "Method",
+          "description": "The method."
+        },
+        "noncekey": {
+          "type": "string",
+          "title": "Noncekey",
+          "description": "The noncekey."
+        },
+        "opaque": {
+          "type": "string",
+          "title": "Opaque",
+          "description": "The opaque."
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "The password."
+        },
+        "realm": {
+          "type": "string",
+          "title": "Realm",
+          "description": "The realm."
+        },
+        "uri": {
+          "type": "string",
+          "title": "Uri",
+          "description": "The uri."
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "description": "The username."
+        }
+      },
+      "required": [
+        "algorithm",
+        "method",
+        "noncekey",
+        "opaque",
+        "password",
+        "realm",
+        "uri",
+        "username"
+      ],
+      "additionalProperties": false    }
+  },
+  "xpath": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "xpath",
+    "group": "citrus",
+    "module": "citrus-validation-xml",
+    "title": "Xpath",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "expression": {
+          "type": "string",
+          "title": "Expression",
+          "description": "The XPath expression to evaluate."
+        },
+        "source": {
+          "type": "string",
+          "title": "Source",
+          "description": "The XML source as inline data."
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "additionalProperties": false    }
+  },
+  "resolveServiceUrl": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "resolveServiceUrl",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "ResolveServiceUrl",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "secure": {
+          "type": "boolean",
+          "title": "Secure",
+          "description": "When enabled use secure Http connection."
+        },
+        "serviceName": {
+          "type": "string",
+          "title": "ServiceName",
+          "description": "The service name."
+        },
+        "servicePort": {
+          "type": "integer",
+          "title": "ServicePort",
+          "description": "The service port."
+        }
+      },
+      "required": [
+        "serviceName",
+        "servicePort"
+      ],
+      "additionalProperties": false    }
+  },
+  "lowerCase": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "lowerCase",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "LowerCase",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "randomNumber": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "randomNumber",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "RandomNumber",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "length": {
+          "type": "integer",
+          "title": "Length",
+          "description": "Defines the length of the generated number."
+        },
+        "paddingOn": {
+          "type": "boolean",
+          "title": "PaddingOn",
+          "description": "When enabled the generated number is filled with zero numbers to always get the given length."
+        }
+      },
+      "required": [
+        "length"
+      ],
+      "additionalProperties": false    }
+  },
+  "changeDate": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "changeDate",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "ChangeDate",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "dateFormat": {
+          "type": "string",
+          "title": "DateFormat",
+          "description": "The date format string."
+        },
+        "offset": {
+          "type": "string",
+          "title": "Offset",
+          "description": "The date offset."
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "randomEnumValue": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "randomEnumValue",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "RandomEnumValue",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "values": {
+          "title": "Values",
+          "description": "The list of values to evaluate.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values",
+            "description": "The list of values to evaluate."
+          }
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "additionalProperties": false    }
+  },
+  "escapeXml": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "escapeXml",
+    "group": "citrus",
+    "module": "citrus-validation-xml",
+    "title": "EscapeXml",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "substringAfter": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "substringAfter",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "SubstringAfter",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "searchString": {
+          "type": "string",
+          "title": "SearchString",
+          "description": "Search string used to substring after the occurrence."
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to perform substring."
+        }
+      },
+      "required": [
+        "searchString",
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "randomUUID": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "randomUUID",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "RandomUUID",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "jsonPatch": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "jsonPatch",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "JsonPatch",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "operations": {
+          "title": "Operations",
+          "description": "List of JSON Patch operations (add, remove, replace, move, copy) applied to the source JSON.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "title": "Operation",
+                "description": "JSON Patch operation type. One of: add, remove, replace, move, copy."
+              },
+              "path": {
+                "type": "string",
+                "title": "Path",
+                "description": "JSONPath expression to the target element (e.g. '$.items[0].name')."
+              },
+              "value": {
+                "type": "string",
+                "title": "Value",
+                "description": "Value for add/replace operations, or source path for move/copy operations."
+              }
+            },
+            "required": [
+              "operation",
+              "path"
+            ],
+            "additionalProperties": false,
+            "title": "Operations",
+            "description": "List of JSON Patch operations (add, remove, replace, move, copy) applied to the source JSON."
+          }
+        },
+        "source": {
+          "type": "string",
+          "title": "Source",
+          "description": "The JSON source content to be patched as inline data."
+        }
+      },
+      "required": [
+        "operations",
+        "source"
+      ],
+      "additionalProperties": false    }
+  },
+  "floor": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "floor",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Floor",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "title": "Value",
+          "description": "The numeric value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "stringLength": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "stringLength",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "StringLength",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "encodeBase64": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "encodeBase64",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "EncodeBase64",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "charset": {
+          "type": "string",
+          "title": "Charset",
+          "description": "Optional charset used to decode.",
+          "default": "UTF-8"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to perform substring."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "ceiling": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "ceiling",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Ceiling",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "title": "Value",
+          "description": "The numeric value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "randomNumberGenerator": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "randomNumberGenerator",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "RandomNumberGenerator",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "systemProperty": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "systemProperty",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "SystemProperty",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "defaultValue": {
+          "type": "string",
+          "title": "DefaultValue",
+          "description": "The default value when system property is not set."
+        },
+        "propertyName": {
+          "type": "string",
+          "title": "PropertyName",
+          "description": "The system property name."
+        }
+      },
+      "required": [
+        "propertyName"
+      ],
+      "additionalProperties": false    }
+  },
+  "jsonPath": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "jsonPath",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "JsonPath",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "expression": {
+          "type": "string",
+          "title": "Expression",
+          "description": "The JsonPath expression to evaluate."
+        },
+        "source": {
+          "type": "string",
+          "title": "Source",
+          "description": "The Json source as inline data."
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "additionalProperties": false    }
+  },
+  "concat": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "concat",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Concat",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "values": {
+          "title": "Values",
+          "description": "The list of values to evaluate.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values",
+            "description": "The list of values to evaluate."
+          }
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "additionalProperties": false    }
+  },
+  "message": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "message",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Message",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "round": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "round",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Round",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "title": "Value",
+          "description": "The numeric value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "decodeBase64": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "decodeBase64",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "DecodeBase64",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "charset": {
+          "type": "string",
+          "title": "Charset",
+          "description": "Optional charset used to decode.",
+          "default": "UTF-8"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to perform substring."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "serviceClusterIp": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "serviceClusterIp",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "ServiceClusterIp",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "title": "Namespace",
+          "description": "The Kubernetes namespace."
+        },
+        "serviceName": {
+          "type": "string",
+          "title": "ServiceName",
+          "description": "The Kubernetes service name."
+        }
+      },
+      "required": [
+        "serviceName"
+      ],
+      "additionalProperties": false    }
+  },
+  "randomPattern": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "randomPattern",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "RandomPattern",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "upperCase": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "upperCase",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "UpperCase",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "absolute": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "absolute",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Absolute",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "title": "Value",
+          "description": "The numeric value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "readFile": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "readFile",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "ReadFile",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "base64": {
+          "type": "boolean",
+          "title": "Base64",
+          "description": "When enabled the read file content is converted into bas64."
+        },
+        "filePath": {
+          "type": "string",
+          "title": "FilePath",
+          "description": "The file path to read."
+        },
+        "useCharset": {
+          "type": "boolean",
+          "title": "UseCharset",
+          "description": "When enabled the charset to use is derived from the file path before converting into bas64.",
+          "$comment": "group:advanced"
+        }
+      },
+      "required": [
+        "filePath"
+      ],
+      "additionalProperties": false    }
+  },
+  "maximum": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "maximum",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Maximum",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "values": {
+          "title": "Values",
+          "description": "The list of values to evaluate. Must be numeric values or test variables that evaluate to numeric values.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values",
+            "description": "The list of values to evaluate. Must be numeric values or test variables that evaluate to numeric values."
+          }
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "additionalProperties": false    }
+  },
+  "substringBefore": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "substringBefore",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "SubstringBefore",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "searchString": {
+          "type": "string",
+          "title": "SearchString",
+          "description": "Search string used to substring before the occurrence."
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to perform substring."
+        }
+      },
+      "required": [
+        "searchString",
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "minimum": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "minimum",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Minimum",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "values": {
+          "title": "Values",
+          "description": "The list of values to evaluate. Must be numeric values or test variables that evaluate to numeric values.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values",
+            "description": "The list of values to evaluate. Must be numeric values or test variables that evaluate to numeric values."
+          }
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "additionalProperties": false    }
+  }
+}
