@@ -388,6 +388,18 @@ public class CamelJBang {
         }
     }
 
+    public void deletePlugin(String pluginName) {
+        List<String> fullArgs = new ArrayList<>();
+        fullArgs.add("delete");
+        fullArgs.add(pluginName);
+
+        ProcessAndOutput pao = app.run("plugin", fullArgs);
+        int exitValue = pao.getProcess().exitValue();
+        if (exitValue != OK_EXIT_CODE && exitValue != 1) {
+            throw new CitrusRuntimeException("Error while deleting Camel JBang plugin. Exit code: " + exitValue);
+        }
+    }
+
     public ProcessAndOutput send(String ... args) {
         List<String> fullArgs = new ArrayList<>();
         fullArgs.add("send");
