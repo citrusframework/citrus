@@ -154,12 +154,33 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="endpoints" type="tns:TestEndpoints" minOccurs="0"/>
+      <xs:element name="configuration" type="tns:TestConfiguration" minOccurs="0"/>
       <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
       <xs:element name="finally" type="tns:TestActions" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="author" type="xs:string"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="status" type="tns:StatusType"/>
+  </xs:complexType>
+
+  <xs:complexType name="TestConfiguration">
+    <xs:sequence>
+      <xs:element name="beans" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="bean" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="property" type="tns:PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="type" type="xs:string" use="required"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="TestEndpoints">

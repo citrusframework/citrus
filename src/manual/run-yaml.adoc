@@ -42,6 +42,47 @@ actions:
       message: "${message}"
 ----
 
+[[run-yaml-bean-definitions]]
+=== Bean definitions
+
+The YAML test is able to define custom beans as part of the test configuration.
+Beans are registered in the Citrus bean registry and can be referenced by test actions and other components.
+
+This does not require the `citrus-groovy` dependency.
+
+.my.citrus.it.yaml
+[source,yaml]
+----
+name: BeanTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+configuration:
+  beans:
+    - name: myValidator
+      type: org.citrusframework.validation.DefaultTextEqualsMessageValidator
+    - name: connectionFactory
+      type: org.example.jms.ActiveMQConnectionFactory
+      properties:
+        brokerUrl: "tcp://localhost:61616"
+        userName: "admin"
+actions:
+  - echo:
+      message: "Bean test"
+----
+
+The `configuration` section holds a `beans` list where each entry specifies:
+
+* `name` - the bean identifier used to register the instance in the Citrus bean registry
+* `type` - the fully qualified Java class name (must have a default constructor)
+* `properties` - optional map of property name-value pairs set via setter methods on the bean instance
+
+The bean type must have a default constructor.
+Property values are automatically converted to the target setter parameter type (e.g. String to int).
+
+Beans that implement `InitializingPhase` will have their `initialize()` method called after all properties are set.
+Beans that implement `ReferenceResolverAware` will receive the current reference resolver.
+
 [[run-yaml-groovy-configuration]]
 === Configuration scripts
 

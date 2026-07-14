@@ -47,6 +47,52 @@ The test logic itself is defined in the XML file like this:
 </test>
 ----
 
+[[run-xml-bean-definitions]]
+=== Bean definitions
+
+The XML test is able to define custom beans as part of the test configuration.
+Beans are registered in the Citrus bean registry and can be referenced by test actions and other components.
+
+This does not require the `citrus-groovy` dependency.
+
+.my.citrus.it.xml
+[source,xml]
+----
+<test name="BeanTest" author="Christoph" status="FINAL"
+      xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
+            http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Sample test in XML</description>
+
+  <configuration>
+    <beans>
+      <bean name="myValidator" type="org.citrusframework.validation.DefaultTextEqualsMessageValidator"/>
+      <bean name="connectionFactory" type="org.example.jms.ActiveMQConnectionFactory">
+        <property name="brokerUrl" value="tcp://localhost:61616"/>
+        <property name="userName" value="admin"/>
+      </bean>
+    </beans>
+  </configuration>
+
+  <actions>
+    <echo message="Bean test"/>
+  </actions>
+</test>
+----
+
+The `<configuration>` element holds a `<beans>` section where each `<bean>` specifies:
+
+* `name` - the bean identifier used to register the instance in the Citrus bean registry
+* `type` - the fully qualified Java class name (must have a default constructor)
+* `<property>` - optional child elements with `name` and `value` attributes set via setter methods on the bean instance
+
+The bean type must have a default constructor.
+Property values are automatically converted to the target setter parameter type (e.g. String to int).
+
+Beans that implement `InitializingPhase` will have their `initialize()` method called after all properties are set.
+Beans that implement `ReferenceResolverAware` will receive the current reference resolver.
+
 [[run-xml-groovy-configuration]]
 === Configuration scripts
 

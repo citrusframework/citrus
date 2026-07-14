@@ -1,0 +1,16 @@
+<test xmlns="http://citrusframework.org/schema/xml/testcase"
+      name="BeansTest" author="Christoph" status="FINAL">
+  <description>Bean definition test in XML</description>
+  <configuration>
+    <beans>
+      <bean name="myValidator" type="org.citrusframework.validation.DefaultTextEqualsMessageValidator"/>
+      <bean name="myBean" type="org.citrusframework.xml.actions.FooBean">
+        <property name="message" value="Hello Citrus!"/>
+        <property name="count" value="42"/>
+      </bean>
+    </beans>
+  </configuration>
+  <actions>
+    <echo message="Bean test"/>
+  </actions>
+</test>

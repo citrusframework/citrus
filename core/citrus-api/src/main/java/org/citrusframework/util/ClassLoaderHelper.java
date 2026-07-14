@@ -98,6 +98,13 @@ public final class ClassLoaderHelper {
     }
 
     /**
+     * Instantiate given type. Uses the current thread context class loader to instantiate.
+     */
+    public static <T> T instantiateType(Class<T> clazz, Object... initargs) {
+        return instantiateType(clazz, getContextClassLoader(), initargs);
+    }
+
+    /**
      * Instantiate a type by its name. Use the given caller to resolve the class loader.
      */
     public static <T> T instantiateType(String type, Class<?> caller, Object... initargs) {
@@ -105,40 +112,59 @@ public final class ClassLoaderHelper {
     }
 
     /**
+     * Instantiate given type. Use the given caller to resolve the class loader.
+     */
+    public static <T> T instantiateType(Class<T> clazz, Class<?> caller, Object... initargs) {
+        return instantiateType(clazz, getClassLoader(caller), initargs);
+    }
+
+    /**
      * Instantiate a type by its name. Uses given class loader to instantiate.
      */
     public static <T> T instantiateType(String type, ClassLoader cl, Object... initargs) {
         try {
+            return (T) instantiateType(Class.forName(type, true, cl), cl, initargs);
+        } catch (ClassNotFoundException e) {
+            throw new CitrusRuntimeException(
+                    format("Failed to resolve classpath resource of type '%s' - caused by: %s",
+                            type, Optional.ofNullable(e.getMessage()).orElse(e.getClass().getName())), e);
+        }
+    }
+
+    /**
+     * Instantiate given type. Uses given class loader to instantiate.
+     */
+    public static <T> T instantiateType(Class<T> clazz, ClassLoader cl, Object... initargs) {
+        try {
             if (initargs.length == 0) {
-                return (T) Class.forName(type, true, cl).getDeclaredConstructor().newInstance();
+                return clazz.getDeclaredConstructor().newInstance();
             } else {
-                return (T) getConstructor(Class.forName(type, true, cl), initargs).newInstance(initargs);
+                return (T) getConstructor(clazz, initargs).newInstance(initargs);
             }
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
-                 NoSuchMethodException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             try {
                 if (
-                    Arrays.stream(Class.forName(type, true, cl).getFields())
+                    Arrays.stream(clazz.getFields())
                             .anyMatch(field -> field.getName().equals(INSTANCE)
                                     && Modifier.isStatic(field.getModifiers()))
                 ) {
-                    return (T) Class.forName(type, true, cl).getField(INSTANCE).get(null);
+                    return (T) clazz.getField(INSTANCE).get(null);
                 }
-            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException e1) {
+            } catch (IllegalAccessException | NoSuchFieldException e1) {
                 throw new CitrusRuntimeException(
                         format("Failed to resolve classpath resource of type '%s' - caused by: %s",
-                                type, Optional.ofNullable(e1.getMessage()).orElse(e1.getClass().getName())), e1);
+                                clazz.getName(), Optional.ofNullable(e1.getMessage()).orElse(e1.getClass().getName())), e1);
             }
 
             logger.warn(
                     "Neither static instance nor accessible default constructor ({}) is given on type '{}'",
                     Arrays.toString(getParameterTypes(initargs)),
-                    type
+                    clazz.getName()
             );
 
             throw new CitrusRuntimeException(
                     format("Failed to resolve classpath resource of type '%s' - caused by: %s",
-                            type, Optional.ofNullable(e.getMessage()).orElse(e.getClass().getName())), e);
+                            clazz.getName(), Optional.ofNullable(e.getMessage()).orElse(e.getClass().getName())), e);
         }
     }
 
@@ -196,12 +222,11 @@ public final class ClassLoaderHelper {
     /**
      * Gets the constructor best matching the given parameter types.
      */
-    private static Constructor<?> getConstructor(Class<?> type, Object[] initargs) {
+    private static <T> Constructor<?> getConstructor(Class<T> type, Object[] initargs) {
         final Class<?>[] parameterTypes = getParameterTypes(initargs);
 
         Optional<Constructor<?>> exactMatch = Arrays.stream(type.getDeclaredConstructors())
-                .filter(
-                        constructor -> Arrays.equals(replacePrimitiveTypes(constructor), parameterTypes))
+                .filter(constructor -> Arrays.equals(replacePrimitiveTypes(constructor), parameterTypes))
                 .findFirst();
 
         if (exactMatch.isPresent()) {

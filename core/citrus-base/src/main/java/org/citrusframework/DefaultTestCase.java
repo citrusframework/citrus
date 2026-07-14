@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.citrusframework.bean.BeanDefinition;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.container.AfterTest;
@@ -36,6 +37,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.ClassLoaderHelper;
+import org.citrusframework.util.PropertyUtils;
+import org.citrusframework.util.ReflectionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +82,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      * Adhoc endpoints that are port of the test.
      */
     private final List<EndpointBuilder<?>> endpoints = new ArrayList<>();
+
+    /**
+     * Adhoc bean definitions that are part of the test configuration.
+     */
+    private final List<BeanDefinition> beanDefinitions = new ArrayList<>();
 
     /**
      * Meta-Info
@@ -166,6 +175,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             initializeTestVariables(variableDefinitions, context);
             traceVariables("Test", context);
             initializeEndpoints(endpoints, endpointDefinitions, context);
+            initializeBeans(beanDefinitions, context);
 
             beforeTest(context);
         } catch (final Exception | Error e) {
@@ -490,6 +500,53 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     }
 
     /**
+     * Initialize beans with given definitions in the test context.
+     */
+    private void initializeBeans(List<BeanDefinition> beanDefinitions, TestContext context) {
+        for (final BeanDefinition beanDef : beanDefinitions) {
+            logger.debug("Initializing bean '{}' of type '{}'", beanDef.getName(), beanDef.getType());
+            try {
+                Class<?> clazz = Class.forName(beanDef.getType(), true, ClassLoaderHelper.getContextClassLoader());
+                Object bean = ClassLoaderHelper.instantiateType(clazz);
+
+                for (Map.Entry<String, String> property : beanDef.getProperties().entrySet()) {
+                    String setterName = "set" + property.getKey().substring(0, 1).toUpperCase() + property.getKey().substring(1);
+                    ReflectionHelper.doWithMethods(clazz, method -> {
+                        if (method.getName().equals(setterName) && method.getParameterTypes().length == 1) {
+                            Object convertedValue = context.getTypeConverter()
+                                    .convertIfNecessary(property.getValue(), method.getParameterTypes()[0]);
+                            ReflectionHelper.invokeMethod(method, bean, convertedValue);
+                        }
+                    });
+                }
+
+                if (bean instanceof ReferenceResolverAware resolverAware) {
+                    resolverAware.setReferenceResolver(context.getReferenceResolver());
+                }
+
+                PropertyUtils.configure(beanDef.getName(), bean, context.getReferenceResolver());
+
+                if (bean instanceof InitializingPhase initializingBean) {
+                    initializingBean.initialize();
+                }
+
+                if (context.getReferenceResolver().isResolvable(beanDef.getName())) {
+                    logger.warn("Skip binding bean to registry, because bean already exists: {}", beanDef.getName());
+                } else {
+                    logger.info("Binding bean {} to bean registry", beanDef.getName());
+                    context.getReferenceResolver().bind(beanDef.getName(), bean);
+                }
+            } catch (ClassNotFoundException e) {
+                throw new CitrusRuntimeException(
+                        "Failed to instantiate bean '%s' - class '%s' not found".formatted(beanDef.getName(), beanDef.getType()), e);
+            } catch (Exception e) {
+                throw new CitrusRuntimeException(
+                        "Failed to instantiate bean '%s' of type '%s'".formatted(beanDef.getName(), beanDef.getType()), e);
+            }
+        }
+    }
+
+    /**
      * Setter for variables.
      */
     public void setVariableDefinitions(final Map<String, Object> variableDefinitions) {
@@ -509,6 +566,10 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     @Override
     public List<EndpointBuilder<?>> getEndpoints() {
         return endpoints;
+    }
+
+    public List<BeanDefinition> getBeanDefinitions() {
+        return beanDefinitions;
     }
 
     /**
