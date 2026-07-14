@@ -40,4 +40,9 @@ public interface CamelJBangPluginAddActionBuilder<T extends TestAction, B extend
      * Adds command arguments.
      */
     B withArgs(String... args);
+
+    /**
+     * Automatically removes the plugin after the test.
+     */
+    B autoRemove(boolean enabled);
 }

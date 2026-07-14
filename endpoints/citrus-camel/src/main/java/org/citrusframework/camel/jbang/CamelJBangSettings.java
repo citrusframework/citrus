@@ -62,6 +62,10 @@ public final class CamelJBangSettings {
     private static final String AUTO_REMOVE_RESOURCES_ENV = JBANG_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
     private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "true";
 
+    private static final String AUTO_REMOVE_PLUGINS_PROPERTY = JBANG_PROPERTY_PREFIX + "auto.remove.plugins";
+    private static final String AUTO_REMOVE_PLUGINS_ENV = JBANG_ENV_PREFIX + "AUTO_REMOVE_PLUGINS";
+    private static final String AUTO_REMOVE_PLUGINS_DEFAULT = "false";
+
     private static final String WAIT_FOR_RUNNING_STATE_PROPERTY = JBANG_PROPERTY_PREFIX + "wait.for.running.state";
     private static final String WAIT_FOR_RUNNING_STATE_ENV = JBANG_ENV_PREFIX + "WAIT_FOR_RUNNING_STATE";
     private static final String WAIT_FOR_RUNNING_STATE_DEFAULT = "true";
@@ -168,6 +172,16 @@ public final class CamelJBangSettings {
     public static boolean isAutoRemoveResources() {
         return Boolean.parseBoolean(System.getProperty(AUTO_REMOVE_RESOURCES_PROPERTY,
                 System.getenv(AUTO_REMOVE_RESOURCES_ENV) != null ? System.getenv(AUTO_REMOVE_RESOURCES_ENV) : AUTO_REMOVE_RESOURCES_DEFAULT));
+    }
+
+    /**
+     * When set to true Camel JBang plugins added during the test are
+     * automatically removed after the test.
+     * @return
+     */
+    public static boolean isAutoRemovePlugins() {
+        return Boolean.parseBoolean(System.getProperty(AUTO_REMOVE_PLUGINS_PROPERTY,
+                System.getenv(AUTO_REMOVE_PLUGINS_ENV) != null ? System.getenv(AUTO_REMOVE_PLUGINS_ENV) : AUTO_REMOVE_PLUGINS_DEFAULT));
     }
 
     /**

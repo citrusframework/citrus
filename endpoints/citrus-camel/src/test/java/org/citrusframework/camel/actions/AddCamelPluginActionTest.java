@@ -19,11 +19,13 @@ package org.citrusframework.camel.actions;
 import java.util.Collections;
 import java.util.List;
 
+import org.citrusframework.TestActionBuilder;
 import org.citrusframework.camel.UnitTestSupport;
 import org.citrusframework.camel.jbang.CamelJBang;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -123,5 +125,40 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
 
         verify(camelJBang).addPlugin("my-plugin", "--version", "1.5.0-SNAPSHOT");
         verify(camelJBang, never()).deletePlugin("my-plugin");
+    }
+
+    @Test
+    public void shouldRegisterFinallyActionWhenAutoRemoveEnabled() {
+        when(camelJBang.getPlugins()).thenReturn(Collections.emptyList());
+
+        AddCamelPluginAction action = new AddCamelPluginAction.Builder()
+                .pluginName("my-plugin")
+                .autoRemove(true)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        action.execute(context);
+
+        verify(camelJBang).addPlugin("my-plugin");
+
+        List<TestActionBuilder<?>> finalActions = context.getFinalActions();
+        Assert.assertEquals(finalActions.size(), 1);
+        Assert.assertEquals(finalActions.get(0).build().getClass(), DeleteCamelPluginAction.class);
+    }
+
+    @Test
+    public void shouldNotRegisterFinallyActionWhenAutoRemoveDisabled() {
+        when(camelJBang.getPlugins()).thenReturn(Collections.emptyList());
+
+        AddCamelPluginAction action = new AddCamelPluginAction.Builder()
+                .pluginName("my-plugin")
+                .autoRemove(false)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        action.execute(context);
+
+        verify(camelJBang).addPlugin("my-plugin");
+        Assert.assertTrue(context.getFinalActions().isEmpty());
     }
 }
