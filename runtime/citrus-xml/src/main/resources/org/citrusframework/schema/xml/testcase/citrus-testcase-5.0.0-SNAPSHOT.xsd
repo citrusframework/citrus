@@ -2545,7 +2545,16 @@
                           <xs:documentation>Add a Camel JBang plugin.</xs:documentation>
                         </xs:annotation>
                         <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="auto-remove" type="xs:boolean"/>
                         <xs:attribute name="args" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="delete">
+                      <xs:complexType>
+                        <xs:annotation>
+                          <xs:documentation>Delete a Camel JBang plugin.</xs:documentation>
+                        </xs:annotation>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:choice>

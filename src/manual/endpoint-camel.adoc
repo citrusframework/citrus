@@ -1541,6 +1541,91 @@ Please see the Camel JBang receive command help for more configuration options.
 camel cmd receive --help
 ----
 
+[[camel-jbang-plugins]]
+=== Manage Camel plugins
+
+Camel JBang supports plugins that extend the CLI with additional commands and capabilities.
+Citrus provides test actions to add and delete plugins as part of a test.
+
+==== Add a plugin
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(camel().jbang()
+    .plugin()
+    .add()
+    .pluginName("my-plugin")
+    .withArg("--version", "1.0.0"));
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+- camel:
+    jbang:
+      plugin:
+        add:
+          name: "my-plugin"
+          args:
+            - "--version"
+            - "1.0.0"
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<camel>
+  <jbang>
+    <plugin>
+      <add name="my-plugin" args="--version 1.0.0"/>
+    </plugin>
+  </jbang>
+</camel>
+----
+
+The action checks if the plugin is already installed by name.
+When the plugin is already installed and no `--version` or `--gav` arguments are provided, the action skips the installation.
+When `--version` or `--gav` arguments are present, the action removes the existing plugin and reinstalls it with the new arguments.
+
+TIP: The test action has an `autoRemove` option that is disabled by default. When enabled, the test will automatically delete the plugin after the test using the `context.doFinally()` mechanism. You can enable it globally via the `citrus.camel.jbang.auto.remove.plugins` system property or `CITRUS_CAMEL_JBANG_AUTO_REMOVE_PLUGINS` environment variable.
+
+==== Delete a plugin
+
+You can explicitly delete a plugin in your test.
+This is useful in `finally` blocks to clean up plugins that were installed during the test.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(camel().jbang()
+    .plugin()
+    .delete()
+    .pluginName("my-plugin"));
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+- camel:
+    jbang:
+      plugin:
+        delete:
+          name: "my-plugin"
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<camel>
+  <jbang>
+    <plugin>
+      <delete name="my-plugin"/>
+    </plugin>
+  </jbang>
+</camel>
+----
+
 [[camel-jbang-kubernetes]]
 == Camel JBang Kubernetes support
 

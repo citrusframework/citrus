@@ -657,6 +657,7 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             if (add.getArgs() != null) {
                 add.getArgs().forEach(builder::withArg);
             }
+            builder.autoRemove(add.isAutoRemove());
             this.builder = builder;
         }
 
@@ -677,6 +678,8 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
 
             protected List<String> args;
 
+            protected boolean autoRemove = CamelJBangSettings.isAutoRemovePlugins();
+
             public String getName() {
                 return name;
             }
@@ -696,6 +699,15 @@ public class JBang implements CamelActionBuilderWrapper<AbstractCamelJBangAction
             @SchemaProperty(advanced = true, description = "Plugin arguments.")
             public void setArgs(List<String> args) {
                 this.args = args;
+            }
+
+            public boolean isAutoRemove() {
+                return autoRemove;
+            }
+
+            @SchemaProperty(advanced = true, description = "When enabled the Camel plugin is automatically removed after the test.", defaultValue = "false")
+            public void setAutoRemove(boolean autoRemove) {
+                this.autoRemove = autoRemove;
             }
         }
 

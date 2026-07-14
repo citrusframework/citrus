@@ -16,11 +16,14 @@
 
 package org.citrusframework.camel.actions;
 
+import static org.citrusframework.camel.dsl.CamelSupport.camel;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.citrusframework.actions.camel.CamelJBangPluginAddActionBuilder;
+import org.citrusframework.camel.jbang.CamelJBangSettings;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,18 +36,15 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(AddCamelPluginAction.class);
 
-    /** Camel Jbang plugin name */
     private final String name;
-    /** Camel Jbang command arguments */
     private final List<String> args;
+    private final boolean autoRemove;
 
-    /**
-     * Default constructor.
-     */
     public AddCamelPluginAction(AddCamelPluginAction.Builder builder) {
         super("plugin-add", builder);
         this.name = builder.name;
         this.args = builder.args;
+        this.autoRemove = builder.autoRemove;
     }
 
     @Override
@@ -66,6 +66,14 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
         logger.info("Adding Camel plugin '{}' ...", pluginName);
         camelJBang().addPlugin(pluginName, resolvedArgs.toArray(String[]::new));
         logger.info("Camel plugin '{}' successfully installed", pluginName);
+
+        if (autoRemove) {
+            context.doFinally(camel()
+                    .jbang()
+                    .plugin()
+                    .delete()
+                    .pluginName(pluginName));
+        }
     }
 
     private boolean hasVersionArgs(List<String> args) {
@@ -80,6 +88,7 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
 
         private String name;
         private final List<String> args = new ArrayList<>();
+        private boolean autoRemove = CamelJBangSettings.isAutoRemovePlugins();
 
         @Override
         public Builder pluginName(String name) {
@@ -103,6 +112,12 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
         @Override
         public Builder withArgs(String... args) {
             this.args.addAll(Arrays.asList(args));
+            return this;
+        }
+
+        @Override
+        public Builder autoRemove(boolean enabled) {
+            this.autoRemove = enabled;
             return this;
         }
 

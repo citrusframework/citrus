@@ -1272,6 +1272,35 @@
             "$comment": "group:advanced"
           }
         },
+        "autoRemove": {
+          "type": "boolean",
+          "title": "AutoRemove",
+          "description": "When enabled the Camel plugin is automatically removed after the test.",
+          "default": "false",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The plugin name."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false    }
+  },
+  "camel-jbang-plugin-delete": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-jbang-plugin-delete",
+    "group": "camel-jbang-plugin",
+    "title": "Delete",
+    "description": "Deletes a plugin from the Camel Jbang installation.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
         "name": {
           "type": "string",
           "title": "Name",
