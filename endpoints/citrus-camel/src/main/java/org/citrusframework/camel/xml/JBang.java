@@ -964,6 +964,8 @@ public class JBang {
             protected String name;
             @XmlAttribute(name = "args")
             protected String argLine;
+            @XmlAttribute(name = "auto-remove")
+            protected boolean autoRemove;
 
             public String getName() {
                 return name;
@@ -979,6 +981,14 @@ public class JBang {
 
             public void setArgLine(String argLine) {
                 this.argLine = argLine;
+            }
+
+            public boolean isAutoRemove() {
+                return autoRemove;
+            }
+
+            public void setAutoRemove(boolean autoRemove) {
+                this.autoRemove = autoRemove;
             }
         }
 
