@@ -210,7 +210,7 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
                 .addAttachment(testAttachment));
 
         when(resource.exists()).thenReturn(true);
-        when(resource.location()).thenReturn("message.xml");
+        when(resource.getLocation()).thenReturn("message.xml");
         when(resource.getInputStream()).thenAnswer((invocation) -> new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         when(attachmentResource.exists()).thenReturn(true);
         when(attachmentResource.getInputStream()).thenReturn(new ByteArrayInputStream("This is an attachment".getBytes()));

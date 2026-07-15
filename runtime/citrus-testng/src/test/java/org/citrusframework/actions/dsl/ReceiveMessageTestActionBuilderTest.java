@@ -159,7 +159,7 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "foo"));
 
         when(resource.exists()).thenReturn(true);
-        when(resource.location()).thenReturn("message.xml");
+        when(resource.getLocation()).thenReturn("message.xml");
         when(resource.getInputStream()).thenAnswer((invocation) -> new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(receive().endpoint(messageEndpoint)
