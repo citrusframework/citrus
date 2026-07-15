@@ -36,6 +36,7 @@ http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.1.0.xs
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.1.1.xsd=org/citrusframework/schema/citrus-kafka-config-4.1.1.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.10.0.xsd=org/citrusframework/schema/citrus-kafka-config-4.10.0.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.10.1.xsd=org/citrusframework/schema/citrus-kafka-config-4.10.1.xsd
+http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.10.2.xsd=org/citrusframework/schema/citrus-kafka-config-4.10.2.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.2.0.xsd=org/citrusframework/schema/citrus-kafka-config-4.2.0.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.2.1.xsd=org/citrusframework/schema/citrus-kafka-config-4.2.1.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.3.0.xsd=org/citrusframework/schema/citrus-kafka-config-4.3.0.xsd
@@ -82,6 +83,7 @@ http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.1.
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.1.1.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.1.1.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.10.0.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.10.0.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.10.1.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.10.1.xsd
+http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.10.2.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.10.2.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.2.0.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.2.0.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.2.1.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.2.1.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.3.0.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.3.0.xsd

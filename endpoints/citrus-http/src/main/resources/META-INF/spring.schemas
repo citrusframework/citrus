@@ -47,6 +47,7 @@ http\://www.citrusframework.org/schema/http/config/citrus-http-config-4.1.0.xsd=
 http\://www.citrusframework.org/schema/http/config/citrus-http-config-4.1.1.xsd=org/citrusframework/schema/citrus-http-config-4.1.1.xsd
 http\://www.citrusframework.org/schema/http/config/citrus-http-config-4.10.0.xsd=org/citrusframework/schema/citrus-http-config-4.10.0.xsd
 http\://www.citrusframework.org/schema/http/config/citrus-http-config-4.10.1.xsd=org/citrusframework/schema/citrus-http-config-4.10.1.xsd
+http\://www.citrusframework.org/schema/http/config/citrus-http-config-4.10.2.xsd=org/citrusframework/schema/citrus-http-config-4.10.2.xsd
 http\://www.citrusframework.org/schema/http/config/citrus-http-config-4.2.0.xsd=org/citrusframework/schema/citrus-http-config-4.2.0.xsd
 http\://www.citrusframework.org/schema/http/config/citrus-http-config-4.2.1.xsd=org/citrusframework/schema/citrus-http-config-4.2.1.xsd
 http\://www.citrusframework.org/schema/http/config/citrus-http-config-4.3.0.xsd=org/citrusframework/schema/citrus-http-config-4.3.0.xsd
@@ -110,6 +111,7 @@ http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-4.1.0.
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-4.1.1.xsd=org/citrusframework/schema/citrus-http-testcase-4.1.1.xsd
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-4.10.0.xsd=org/citrusframework/schema/citrus-http-testcase-4.10.0.xsd
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-4.10.1.xsd=org/citrusframework/schema/citrus-http-testcase-4.10.1.xsd
+http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-4.10.2.xsd=org/citrusframework/schema/citrus-http-testcase-4.10.2.xsd
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-4.2.0.xsd=org/citrusframework/schema/citrus-http-testcase-4.2.0.xsd
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-4.2.1.xsd=org/citrusframework/schema/citrus-http-testcase-4.2.1.xsd
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-4.3.0.xsd=org/citrusframework/schema/citrus-http-testcase-4.3.0.xsd
