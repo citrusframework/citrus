@@ -194,7 +194,7 @@
     <angus-activation.version>2.0.3</angus-activation.version>
     <angus-mail.version>2.0.5</angus-mail.version>
     <apache.ant.version>1.10.17</apache.ant.version>
-    <apache.camel.version>4.18.2</apache.camel.version>
+    <apache.camel.version>4.18.3</apache.camel.version>
     <apicurio.data-models.version>1.1.33</apicurio.data-models.version>
     <ascii-table-version>1.9.0</ascii-table-version>
     <assertj.version>3.27.7</assertj.version>
@@ -219,7 +219,7 @@
     <htmlunit.version>4.13.0</htmlunit.version>
     <httpclient.version>5.5.1</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
-    <jackson.version>2.21.2</jackson.version>
+    <jackson.version>2.21.4</jackson.version>
     <jackson.version.short>2.21</jackson.version.short>
     <jackson-databind-nullable.version>0.2.9</jackson-databind-nullable.version>
     <jakarta-activation.version>2.1.4</jakarta-activation.version>
@@ -266,9 +266,9 @@
     <slf4j.version>2.0.17</slf4j.version>
     <snappy.version>1.1.10.8</snappy.version>
     <snakeyaml.version>2.6</snakeyaml.version>
-    <spring.version>6.2.17</spring.version>
-    <spring.boot.version>3.5.11</spring.boot.version>
-    <spring.ws.version>4.1.2</spring.ws.version>
+    <spring.version>6.2.19</spring.version>
+    <spring.boot.version>3.5.16</spring.boot.version>
+    <spring.ws.version>4.1.4</spring.ws.version>
     <spring.integration.version>6.5.4</spring.integration.version>
     <spring.restdocs.version>3.0.5</spring.restdocs.version>
     <sshd.version>2.16.0</sshd.version>
