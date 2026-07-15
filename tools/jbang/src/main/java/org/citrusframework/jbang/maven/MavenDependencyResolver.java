@@ -92,7 +92,7 @@ public class MavenDependencyResolver {
 
         String version = CitrusVersion.version();
         if (StringUtils.isEmpty(version)) {
-            version = "4.11.0-SNAPSHOT";
+            version = "4.10.2";
         }
 
         return resolve("org.citrusframework:%s:%s".formatted(moduleName, version),
