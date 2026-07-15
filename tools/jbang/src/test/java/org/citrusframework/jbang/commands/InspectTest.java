@@ -27,7 +27,7 @@ public class InspectTest extends CommandTest {
 
     @Test
     public void shouldInspectTest() {
-        Path source = Resources.fromClasspath("sample.citrus.it.yaml").file().toPath();
+        Path source = Resources.fromClasspath("sample.citrus.it.yaml").getFile().toPath();
 
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("inspect", source.toString());

@@ -26,7 +26,7 @@ public class RunTest extends CommandTest {
 
     @Test
     public void shouldRunJavaTest() {
-        Path source = Resources.fromClasspath("runnable/SampleIT.java").file().toPath();
+        Path source = Resources.fromClasspath("runnable/SampleIT.java").getFile().toPath();
 
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("run", source.toString());
@@ -34,7 +34,7 @@ public class RunTest extends CommandTest {
 
     @Test
     public void shouldRunYamlTest() {
-        Path source = Resources.fromClasspath("runnable/yaml-sample.citrus.it.yaml").file().toPath();
+        Path source = Resources.fromClasspath("runnable/yaml-sample.citrus.it.yaml").getFile().toPath();
 
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("run", source.toString());
@@ -42,7 +42,7 @@ public class RunTest extends CommandTest {
 
     @Test
     public void shouldRunXmlTest() {
-        Path source = Resources.fromClasspath("runnable/xml-sample.citrus.it.xml").file().toPath();
+        Path source = Resources.fromClasspath("runnable/xml-sample.citrus.it.xml").getFile().toPath();
 
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("run", source.toString());
@@ -50,7 +50,7 @@ public class RunTest extends CommandTest {
 
     @Test
     public void shouldRunGroovyTest() {
-        Path source = Resources.fromClasspath("runnable/groovy-sample.citrus.it.groovy").file().toPath();
+        Path source = Resources.fromClasspath("runnable/groovy-sample.citrus.it.groovy").getFile().toPath();
 
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("run", source.toString());
@@ -58,7 +58,7 @@ public class RunTest extends CommandTest {
 
     @Test
     public void shouldRunCucumberTest() {
-        Path source = Resources.fromClasspath("runnable/cucumber-sample.citrus.it.feature").file().toPath();
+        Path source = Resources.fromClasspath("runnable/cucumber-sample.citrus.it.feature").getFile().toPath();
 
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("run", source.toString());
@@ -66,7 +66,7 @@ public class RunTest extends CommandTest {
 
     @Test
     public void shouldRunAllTest() {
-        Path source = Resources.fromClasspath("runnable").file().toPath();
+        Path source = Resources.fromClasspath("runnable").getFile().toPath();
 
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("run", source.toString());
