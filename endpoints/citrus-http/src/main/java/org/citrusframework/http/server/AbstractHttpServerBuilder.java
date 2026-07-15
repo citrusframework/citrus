@@ -323,7 +323,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets a custom servlet handler as a bean reference.")
-    public void serServletHandler(String servletHandler) {
+    public void setServletHandler(String servletHandler) {
         this.servletHandler = servletHandler;
     }
 

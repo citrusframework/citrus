@@ -1170,9 +1170,9 @@
           "description": "Sets the security handler as a bean reference.",
           "$comment": "group:security"
         },
-        "serServletHandler": {
+        "servletHandler": {
           "type": "string",
-          "title": "SerServletHandler",
+          "title": "ServletHandler",
           "description": "Sets a custom servlet handler as a bean reference.",
           "$comment": "group:servlet"
         },
@@ -2820,9 +2820,9 @@
           "description": "Sets the security handler as a bean reference.",
           "$comment": "group:security"
         },
-        "serServletHandler": {
+        "servletHandler": {
           "type": "string",
-          "title": "SerServletHandler",
+          "title": "ServletHandler",
           "description": "Sets a custom servlet handler as a bean reference.",
           "$comment": "group:servlet"
         },
@@ -3118,9 +3118,9 @@
           "description": "Sets the security handler as a bean reference.",
           "$comment": "group:security"
         },
-        "serServletHandler": {
+        "servletHandler": {
           "type": "string",
-          "title": "SerServletHandler",
+          "title": "ServletHandler",
           "description": "Sets a custom servlet handler as a bean reference.",
           "$comment": "group:servlet"
         },
