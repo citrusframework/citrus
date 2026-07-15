@@ -28,7 +28,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import org.citrusframework.actions.camel.CamelIntegrationRunCustomizedActionBuilder;
-import org.citrusframework.camel.jbang.CamelJBangSettings;
+import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory;
 import static org.citrusframework.camel.dsl.CamelSupport.camel;
 
 /**
- * Runs given Camel (custom - parametrized) integration with Camel JBang tooling.
+ * Runs given Camel (custom - parametrized) integration with Camel CLI tooling.
  */
-public class CamelCustomizedRunIntegrationAction extends AbstractCamelJBangAction {
+public class CamelCustomizedRunIntegrationAction extends AbstractCamelCliAction {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CamelCustomizedRunIntegrationAction.class);
@@ -58,13 +58,13 @@ public class CamelCustomizedRunIntegrationAction extends AbstractCamelJBangActio
     /** Optional list of resource files to include */
     private final List<String> resourceFiles;
 
-    /** Camel Jbang command arguments */
+    /** Camel CLI command arguments */
     private final List<String> args;
 
-    /** Environment variables set on the Camel JBang process */
+    /** Environment variables set on the Camel CLI process */
     private final Map<String, String> envVars;
 
-    /** System properties set on the Camel JBang process */
+    /** System properties set on the Camel CLI process */
     private final Map<String, String> systemProperties;
 
     private final boolean autoRemoveResources;
@@ -113,12 +113,12 @@ public class CamelCustomizedRunIntegrationAction extends AbstractCamelJBangActio
 
         logger.info("Starting Camel integration '%s' ...".formatted(names.get(0)));
 
-        camelJBang().dumpIntegrationOutput(dumpIntegrationOutput);
-        camelJBang().withEnvs(context.resolveDynamicValuesInMap(envVars));
-        camelJBang().withSystemProperties(context.resolveDynamicValuesInMap(systemProperties));
-        camelJBang().workingDir(Path.of(_workDir));
+        camelCli().dumpIntegrationOutput(dumpIntegrationOutput);
+        camelCli().withEnvs(context.resolveDynamicValuesInMap(envVars));
+        camelCli().withSystemProperties(context.resolveDynamicValuesInMap(systemProperties));
+        camelCli().workingDir(Path.of(_workDir));
 
-        ProcessAndOutput pao = camelJBang().custom(command,
+        ProcessAndOutput pao = camelCli().custom(command,
                 _workDir,
                 subNames,
                 resourceFiles,
@@ -164,7 +164,7 @@ public class CamelCustomizedRunIntegrationAction extends AbstractCamelJBangActio
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelCustomizedRunIntegrationAction, Builder>
+    public static final class Builder extends AbstractCamelCliAction.Builder<CamelCustomizedRunIntegrationAction, Builder>
             implements CamelIntegrationRunCustomizedActionBuilder<CamelCustomizedRunIntegrationAction, Builder> {
 
         private String processName;
@@ -178,9 +178,9 @@ public class CamelCustomizedRunIntegrationAction extends AbstractCamelJBangActio
         private final Map<String, String> systemProperties = new HashMap<>();
         private Resource systemPropertiesFile;
 
-        private boolean autoRemoveResources = CamelJBangSettings.isAutoRemoveResources();
-        private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
-        private boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
+        private boolean autoRemoveResources = CamelCliSettings.isAutoRemoveResources();
+        private boolean waitForRunningState = CamelCliSettings.isWaitForRunningState();
+        private boolean dumpIntegrationOutput = CamelCliSettings.isDumpIntegrationOutput();
 
         @Override
         public Builder commands(String... commands) {

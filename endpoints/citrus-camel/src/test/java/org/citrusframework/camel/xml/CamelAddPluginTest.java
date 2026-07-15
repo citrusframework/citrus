@@ -22,7 +22,7 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.AddCamelPluginAction;
-import org.citrusframework.camel.jbang.CamelJBang;
+import org.citrusframework.camel.cli.CamelCli;
 import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verify;
 public class CamelAddPluginTest extends AbstractXmlActionTest {
 
     @Mock
-    private CamelJBang camelJBang;
+    private CamelCli camelCli;
 
     @BeforeClass
     public void setup() {
@@ -44,7 +44,7 @@ public class CamelAddPluginTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadCamelActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-jbang-add-plugin.citrus.it.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-cli-add-plugin.citrus.it.xml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();
@@ -52,7 +52,7 @@ public class CamelAddPluginTest extends AbstractXmlActionTest {
         context.getReferenceResolver().bind(CamelSettings.getContextName(), citrusCamelContext);
         context.getReferenceResolver().bind("camelContext", citrusCamelContext);
 
-        context.getReferenceResolver().bind("camel-jbang", camelJBang);
+        context.getReferenceResolver().bind("camel-cli", camelCli);
 
         testLoader.load();
 
@@ -62,9 +62,9 @@ public class CamelAddPluginTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), AddCamelPluginAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:jbang:plugin-add");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:cli:plugin-add");
 
-        verify(camelJBang).addPlugin("my-plugin");
-        verify(camelJBang).addPlugin("my-plugin", "--description", "\"MyCamelPlugin\"");
+        verify(camelCli).addPlugin("my-plugin");
+        verify(camelCli).addPlugin("my-plugin", "--description", "\"MyCamelPlugin\"");
     }
 }

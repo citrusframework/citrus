@@ -19,10 +19,10 @@ package org.citrusframework.actions.camel;
 import org.citrusframework.TestAction;
 
 public interface CamelIntegrationStopActionBuilder<T extends TestAction, B extends CamelIntegrationStopActionBuilder<T, B>>
-        extends CamelJBangActionBuilderBase<T, B> {
+        extends CamelCliActionBuilderBase<T, B> {
 
     /**
-     * Stop Camel JBang process for this integration.
+     * Stop Camel CLI process for this integration.
      */
     B integration(String name);
 

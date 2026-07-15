@@ -882,22 +882,22 @@ public class CamelControlBusIT extends TestNGCitrusSpringSupport {
 </testcase>
 ----
 
-[[camel-jbang]]
-== Camel JBang support
+[[camel-cli]]
+== Camel CLI support
 
 The Apache Camel project offers a great CLI tooling based on https://www.jbang.dev/[JBang].
-You can install the Camel JBang tooling on your local machine as a JBang application.
+You can install the Camel CLI tooling on your local machine as a JBang application.
 
 [source,bash]
 ----
 jbang app install camel@apache/camel
 ----
 
-The `--help` option will show you all available commands that you can run with Camel JBang.
+The `--help` option will show you all available commands that you can run with Camel CLI.
 
 === Run Camel integrations
 
-One of the available commands in Camel JBang is the `run` command that takes a Camel route as an input and runs the route locally without any prior project setup.
+One of the available commands in Camel CLI is the `run` command that takes a Camel route as an input and runs the route locally without any prior project setup.
 
 Citrus is able to use this capability in a test to run a Camel integration in a separate JBang process.
 
@@ -927,19 +927,19 @@ The message is given as a property placeholder `greeting` and may be set in the 
 greeting=Hello from Apache Camel!
 ----
 
-The Citrus test is able to run this route with Camel JBang in a separate process:
+The Citrus test is able to run this route with Camel CLI in a separate process:
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldRunCamelJBang() {
-        when(camel().jbang()
+    public void shouldRunCamelCli() {
+        when(camel().cli()
                 .run()
-                .integration(Resources.fromClasspath("route.yaml", CamelJBangTest.class))
+                .integration(Resources.fromClasspath("route.yaml", CamelCliTest.class))
                 .withSystemProperty("greeting", "Hello from Apache Camel!"));
     }
 }
@@ -948,10 +948,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-      jbang:
+      cli:
         run:
           integration:
             file: "classpath:route.yaml"
@@ -964,12 +964,12 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <run>
           <integration file="classpath:route.yaml">
             <system-properties>
@@ -977,7 +977,7 @@ actions:
             </system-properties>
           </integration>
         </run>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>
@@ -992,13 +992,13 @@ actions:
 </spring:beans>
 ----
 
-This starts the Camel integration with Camel JBang.
+This starts the Camel integration with Camel CLI.
 The test waits for the integration to report running status.
 You can skip the waiting state with the `waitForRunningState=false` option.
 
 TIP: The test action has an `autoRemove` option that is enabled by default. This means that the test will automatically stop and remove the Camel integration after the test.
 
-TIP: You may choose to add the `--stub` option to the Camel JBang run command. This allows you to stub endpoints in the Camel integration route. The stubbed endpoint uses a local internal message queue instead of connecting to the real endpoint. This is very useful when an endpoint raises quite complex connection efforts. For instance, you may stub an SQL endpoint or a message broker connection endpoint such as Kafka or JMS when running the Camel integration. You may access the messages processed by the stubbed endpoint in the test with a `cmd receive` test action that is described later in this guide.
+TIP: You may choose to add the `--stub` option to the Camel CLI run command. This allows you to stub endpoints in the Camel integration route. The stubbed endpoint uses a local internal message queue instead of connecting to the real endpoint. This is very useful when an endpoint raises quite complex connection efforts. For instance, you may stub an SQL endpoint or a message broker connection endpoint such as Kafka or JMS when running the Camel integration. You may access the messages processed by the stubbed endpoint in the test with a `cmd receive` test action that is described later in this guide.
 
 === Stop Camel integrations
 
@@ -1008,12 +1008,12 @@ You can do this with the following action:
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldRunCamelJBang() {
-        when(camel().jbang()
+    public void shouldRunCamelCli() {
+        when(camel().cli()
                 .stop()
                 .integration("route")
         );
@@ -1024,10 +1024,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-      jbang:
+      cli:
         stop:
           integration: "route"
 ----
@@ -1035,14 +1035,14 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <stop integration="route"/>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>
@@ -1068,12 +1068,12 @@ You can do all of this in the `verify` action.
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldRunCamelJBang() {
-        when(camel().jbang()
+    public void shouldRunCamelCli() {
+        when(camel().cli()
                 .verify("route")
                 .waitForLogMessage("Hello from Apache Camel! #10"));
     }
@@ -1083,10 +1083,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-      jbang:
+      cli:
         verify:
           integration: "route"
           logMessage: "Hello from Apache Camel! #10"
@@ -1095,14 +1095,14 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <verify integration="route" log-message="Hello from Apache Camel! #10"/>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>
@@ -1124,10 +1124,10 @@ The action provides options such as `maxAttempts` and `pollingInterval` to stop 
 
 === Send messages
 
-The Camel JBang tooling allows you to send messages to running Camel integrations.
+The Camel CLI tooling allows you to send messages to running Camel integrations.
 You can use the `send` command to send messages to any running route.
 
-Give the following Camel integration that is running in Camel JBang:
+Give the following Camel integration that is running in Camel CLI:
 
 .echo.yaml
 [source,yaml,indent=0]
@@ -1141,17 +1141,17 @@ Give the following Camel integration that is running in Camel JBang:
 ----
 
 The Camel route listens for messages on the `direct:echo` endpoint.
-With Camel JBang you can send messages to this route using the following command:
+With Camel CLI you can send messages to this route using the following command:
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
     public void shouldSendMessage() {
-        when(camel().jbang().cmd()
+        when(camel().cli().cmd()
                     .send()
                     .integration("echo")
                     .body("Hello Camel"));
@@ -1162,10 +1162,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-    jbang:
+    cli:
       cmd:
         send:
           integration: "echo"
@@ -1176,12 +1176,12 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <cmd>
           <send integration="echo">
             <body>
@@ -1189,7 +1189,7 @@ actions:
             </body>
           </send>
         </cmd>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>
@@ -1214,12 +1214,12 @@ Also, you may set some additional message headers.
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
     public void shouldSendMessage() {
-        when(camel().jbang().cmd()
+        when(camel().cli().cmd()
                     .send()
                     .integration("echo")
                     .endpoint("direct:echo")
@@ -1232,10 +1232,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-    jbang:
+    cli:
       cmd:
         send:
           integration: "echo"
@@ -1249,12 +1249,12 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <cmd>
           <send integration="echo" endpoint="direct:echo">
             <headers>
@@ -1265,7 +1265,7 @@ actions:
             </body>
           </send>
         </cmd>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>
@@ -1285,19 +1285,19 @@ You can specify a send timeout with the `timeout` attribute (by default this is 
 The `reply=true/false` option makes the send operation wait for a response message from the Camel integration.
 The response data is logged to the output.
 
-You can also use the Camel JBang send command without a running Camel integration.
+You can also use the Camel CLI send command without a running Camel integration.
 This can be used to send messages to any support Camel endpoint.
 Just use the endpoint uri setting on the send operation like this:
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
     public void shouldSendMessage() {
-        when(camel().jbang().cmd()
+        when(camel().cli().cmd()
                     .send()
                     .uri("kafka:echo?server=localhost:9092")
                     .header("user", "christoph")
@@ -1309,10 +1309,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-    jbang:
+    cli:
       cmd:
         send:
           uri: "kafka:echo?server=localhost:9092"
@@ -1325,12 +1325,12 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <cmd>
           <send uri="kafka:echo?server=localhost:9092">
             <headers>
@@ -1341,7 +1341,7 @@ actions:
             </body>
           </send>
         </cmd>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>
@@ -1356,11 +1356,11 @@ actions:
 </spring:beans>
 ----
 
-TIP: You can also use the Kamelets sources to send messages with Camel JBang. The Kamelets provide easy to use properties for comfortable connection options.
+TIP: You can also use the Kamelets sources to send messages with Camel CLI. The Kamelets provide easy to use properties for comfortable connection options.
 
-Please see the Camel JBang send command help for more configuration options.
+Please see the Camel CLI send command help for more configuration options.
 
-.Camel JBang cmd send options
+.Camel CLI cmd send options
 [source,shell]
 ----
 camel cmd send --help
@@ -1368,10 +1368,10 @@ camel cmd send --help
 
 === Receive messages
 
-The Camel JBang tooling allows you to access stubbed messages in a running Camel integration.
+The Camel CLI tooling allows you to access stubbed messages in a running Camel integration.
 You can use the `receive` command to list messages that an endpoint in Camel has been processing.
 
-Give the following Camel integration that is running in Camel JBang:
+Give the following Camel integration that is running in Camel CLI:
 
 .echo.yaml
 [source,yaml,indent=0]
@@ -1385,7 +1385,7 @@ Give the following Camel integration that is running in Camel JBang:
 ----
 
 The Camel route listens for messages on the `direct:echo` endpoint and connects with a Kafka message broker.
-With Camel JBang you can start the route with a stubbed Kafka endpoint like this:
+With Camel CLI you can start the route with a stubbed Kafka endpoint like this:
 
 .Run Camel integration with --stub option
 [source,shell]
@@ -1399,12 +1399,12 @@ The messages received by the stubbed Kafka component in Camel can be accessed wi
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
     public void shouldSendMessage() {
-        then(camel().jbang().cmd()
+        then(camel().cli().cmd()
                     .receive()
                     .integration("my-route")
                     .tail(1)
@@ -1416,10 +1416,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-      jbang:
+      cli:
         cmd:
           receive:
             integration: "my-route"
@@ -1430,16 +1430,16 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <cmd>
           <receive integration="my-route" tail="1" endpoint="kafka:inbox"/>
         </cmd>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>
@@ -1466,12 +1466,12 @@ Also, you can specify the `since` option that allows you to include messages tha
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
     public void shouldSendMessage() {
-        then(camel().jbang().cmd()
+        then(camel().cli().cmd()
                     .receive()
                     .integration("my-route")
                     .tail(1)
@@ -1485,10 +1485,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-      jbang:
+      cli:
         cmd:
           receive:
             integration: "my-route"
@@ -1501,12 +1501,12 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <cmd>
           <receive integration="my-route"
                     tail="1"
@@ -1514,7 +1514,7 @@ actions:
                     grep="HELLO CAMEL"
                     endpoint="kafka:inbox"/>
         </cmd>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>
@@ -1533,18 +1533,18 @@ The `grep`, `tail` and `since` options help you to verify that a specific messag
 The test action polls the command output for the message and throws a timeout error in case the message does not arrive in time.
 You can use the `maxAttempts` and `delayBetweeAttempts` settings to specify the waiting and polling configuration.
 
-Please see the Camel JBang receive command help for more configuration options.
+Please see the Camel CLI receive command help for more configuration options.
 
-.Camel JBang cmd receive options
+.Camel CLI cmd receive options
 [source,shell]
 ----
 camel cmd receive --help
 ----
 
-[[camel-jbang-plugins]]
+[[camel-cli-plugins]]
 === Manage Camel plugins
 
-Camel JBang supports plugins that extend the CLI with additional commands and capabilities.
+Camel CLI supports plugins that extend the CLI with additional commands and capabilities.
 Citrus provides test actions to add and delete plugins as part of a test.
 
 ==== Add a plugin
@@ -1552,7 +1552,7 @@ Citrus provides test actions to add and delete plugins as part of a test.
 .Java
 [source,java,indent=0,role="primary"]
 ----
-when(camel().jbang()
+when(camel().cli()
     .plugin()
     .add()
     .pluginName("my-plugin")
@@ -1563,7 +1563,7 @@ when(camel().jbang()
 [source,yaml,indent=0,role="secondary"]
 ----
 - camel:
-    jbang:
+    cli:
       plugin:
         add:
           name: "my-plugin"
@@ -1576,11 +1576,11 @@ when(camel().jbang()
 [source,xml,indent=0,role="secondary"]
 ----
 <camel>
-  <jbang>
+  <cli>
     <plugin>
       <add name="my-plugin" args="--version 1.0.0"/>
     </plugin>
-  </jbang>
+  </cli>
 </camel>
 ----
 
@@ -1588,7 +1588,7 @@ The action checks if the plugin is already installed by name.
 When the plugin is already installed and no `--version` or `--gav` arguments are provided, the action skips the installation.
 When `--version` or `--gav` arguments are present, the action removes the existing plugin and reinstalls it with the new arguments.
 
-TIP: The test action has an `autoRemove` option that is disabled by default. When enabled, the test will automatically delete the plugin after the test using the `context.doFinally()` mechanism. You can enable it globally via the `citrus.camel.jbang.auto.remove.plugins` system property or `CITRUS_CAMEL_JBANG_AUTO_REMOVE_PLUGINS` environment variable.
+TIP: The test action has an `autoRemove` option that is disabled by default. When enabled, the test will automatically delete the plugin after the test using the `context.doFinally()` mechanism. You can enable it globally via the `citrus.camel.cli.auto.remove.plugins` system property or `CITRUS_CAMEL_CLI_AUTO_REMOVE_PLUGINS` environment variable.
 
 ==== Delete a plugin
 
@@ -1598,7 +1598,7 @@ This is useful in `finally` blocks to clean up plugins that were installed durin
 .Java
 [source,java,indent=0,role="primary"]
 ----
-when(camel().jbang()
+when(camel().cli()
     .plugin()
     .delete()
     .pluginName("my-plugin"));
@@ -1608,7 +1608,7 @@ when(camel().jbang()
 [source,yaml,indent=0,role="secondary"]
 ----
 - camel:
-    jbang:
+    cli:
       plugin:
         delete:
           name: "my-plugin"
@@ -1618,41 +1618,41 @@ when(camel().jbang()
 [source,xml,indent=0,role="secondary"]
 ----
 <camel>
-  <jbang>
+  <cli>
     <plugin>
       <delete name="my-plugin"/>
     </plugin>
-  </jbang>
+  </cli>
 </camel>
 ----
 
-[[camel-jbang-kubernetes]]
-== Camel JBang Kubernetes support
+[[camel-cli-kubernetes]]
+== Camel CLI Kubernetes support
 
-The Camel JBang integrations are run locally by default as a separate JBang process. In addition to that you may also run the integration in a Kubernetes namespace.
+The Camel CLI integrations are run locally by default as a separate JBang process. In addition to that you may also run the integration in a Kubernetes namespace.
 
-This uses the Camel JBang Kubernetes plugin that is able to build a container image and deploy it to a connected Kubernetes namespace.
+This uses the Camel CLI Kubernetes plugin that is able to build a container image and deploy it to a connected Kubernetes namespace.
 
 === Deploy the Camel integration
 
-The Camel JBang Kubernetes plugin is able to build a container image from an integration and deploy the integration with a generated Kubernetes manifest.
+The Camel CLI Kubernetes plugin is able to build a container image from an integration and deploy the integration with a generated Kubernetes manifest.
 
 NOTE: The following test actions call the Camel Kubernetes plugin. A prerequisite to this is that you are connected to a Kubernetes cluster and a namespace. It is essential to have a Kubernetes command line tooling installed and ready for usage on your local machine.
 
-Citrus provides a test action to call the Camel JBang Kubernetes plugin:
+Citrus provides a test action to call the Camel CLI Kubernetes plugin:
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldRunCamelJBang() {
-        when(camel().jbang()
+    public void shouldRunCamelCli() {
+        when(camel().cli()
                 .kubernetes()
                 .run()
-                .integration(Resources.fromClasspath("route.yaml", CamelJBangTest.class))
+                .integration(Resources.fromClasspath("route.yaml", CamelCliTest.class))
                 .runtime("quarkus")
                 .clusterType("kind")
                 .imageBuilder("docker")
@@ -1666,10 +1666,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-      jbang:
+      cli:
        kubernetes:
           run:
             integration:
@@ -1686,12 +1686,12 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <kubernetes>
           <run runtime="quarkus"
                cluster-type="kind"
@@ -1703,7 +1703,7 @@ actions:
             </properties>
           </run>
         </kubernetes>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>
@@ -1721,7 +1721,7 @@ actions:
 The Kubernetes `run` action receives detailed configuration on how to build the container image and where to push the resulting image.
 You may choose the target cluster type and use an external or internal image registry (e.g. quay.io or localhost:5000).
 
-The Camel JBang Kubernetes plugin will perform several steps to create the deployment. First of all the plugin creates a project export for the given Camel integration and builds the container image.
+The Camel CLI Kubernetes plugin will perform several steps to create the deployment. First of all the plugin creates a project export for the given Camel integration and builds the container image.
 
 Also, the plugin generates a Kubernetes manifest that holds all required resources to deploy the integration to a Kubernetes cluster.
 The Kubernetes deployment is automatically performed as a last step in this action.
@@ -1739,12 +1739,12 @@ You can explicitly remove the Camel integration from Kubernetes.
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldRunCamelJBang() {
-        when(camel().jbang()
+    public void shouldRunCamelCli() {
+        when(camel().cli()
                 .kubernetes()
                 .delete()
                 .integration("route")
@@ -1756,10 +1756,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-      jbang:
+      cli:
         kubernetes:
           delete:
             integration: "route"
@@ -1768,18 +1768,18 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <kubernetes>
           <delete>
             <integration name="route"/>
           </delete>
         </kubernetes>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>
@@ -1805,12 +1805,12 @@ Also, Citrus is able to scan the log output of a Camel integration that is runni
 .Java
 [source,java,indent=0,role="primary"]
 ----
-public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSupport {
+public class CamelCliTest extends TestNGCitrusSupport implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldRunCamelJBang() {
-        when(camel().jbang()
+    public void shouldRunCamelCli() {
+        when(camel().cli()
                 .kubernetes()
                 .verify("route")
                 .waitForLogMessage("Hello from Apache Camel! #10"));
@@ -1821,10 +1821,10 @@ public class CamelJBangTest extends TestNGCitrusSupport implements TestActionSup
 .YAML
 [source,yaml,indent=0,role="secondary"]
 ----
-name: "CamelJBangTest"
+name: "CamelCliTest"
 actions:
   - camel:
-      jbang:
+      cli:
         kubernetes:
           verify:
             integration: "route"
@@ -1834,16 +1834,16 @@ actions:
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<test name="CamelJBangTest" xmlns="http://citrusframework.org/schema/xml/testcase"
+<test name="CamelCliTest" xmlns="http://citrusframework.org/schema/xml/testcase"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <camel>
-      <jbang>
+      <cli>
         <kubernetes>
           <verify integration="route" log-message="Hello from Apache Camel! #10"/>
         </kubernetes>
-      </jbang>
+      </cli>
     </camel>
   </actions>
 </test>

@@ -22,16 +22,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.citrusframework.actions.camel.CamelJBangPluginAddActionBuilder;
-import org.citrusframework.camel.jbang.CamelJBangSettings;
+import org.citrusframework.actions.camel.CamelCliPluginAddActionBuilder;
+import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Install a specific plugin to a Camel JBang tooling.
+ * Install a specific plugin to a Camel CLI tooling.
  */
-public class AddCamelPluginAction extends AbstractCamelJBangAction {
+public class AddCamelPluginAction extends AbstractCamelCliAction {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(AddCamelPluginAction.class);
@@ -51,12 +51,12 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
     public void doExecute(TestContext context) {
         String pluginName = context.replaceDynamicContentInString(name);
         List<String> resolvedArgs = context.resolveDynamicValuesInList(args);
-        List<String> installedPlugins = camelJBang().getPlugins();
+        List<String> installedPlugins = camelCli().getPlugins();
 
         if (installedPlugins.contains(pluginName)) {
             if (hasVersionArgs(resolvedArgs)) {
                 logger.info("Reinstalling Camel plugin '{}' with updated version ...", pluginName);
-                camelJBang().deletePlugin(pluginName);
+                camelCli().deletePlugin(pluginName);
             } else {
                 logger.info("Camel plugin '{}' already installed", pluginName);
                 return;
@@ -64,7 +64,7 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
         }
 
         logger.info("Adding Camel plugin '{}' ...", pluginName);
-        camelJBang().addPlugin(pluginName, resolvedArgs.toArray(String[]::new));
+        camelCli().addPlugin(pluginName, resolvedArgs.toArray(String[]::new));
         logger.info("Camel plugin '{}' successfully installed", pluginName);
 
         if (autoRemove) {
@@ -83,12 +83,12 @@ public class AddCamelPluginAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<AddCamelPluginAction, AddCamelPluginAction.Builder>
-            implements CamelJBangPluginAddActionBuilder<AddCamelPluginAction, Builder> {
+    public static final class Builder extends AbstractCamelCliAction.Builder<AddCamelPluginAction, AddCamelPluginAction.Builder>
+            implements CamelCliPluginAddActionBuilder<AddCamelPluginAction, Builder> {
 
         private String name;
         private final List<String> args = new ArrayList<>();
-        private boolean autoRemove = CamelJBangSettings.isAutoRemovePlugins();
+        private boolean autoRemove = CamelCliSettings.isAutoRemovePlugins();
 
         @Override
         public Builder pluginName(String name) {

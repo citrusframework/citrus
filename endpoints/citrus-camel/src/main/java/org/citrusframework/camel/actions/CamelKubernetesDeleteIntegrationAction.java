@@ -32,9 +32,9 @@ import org.slf4j.LoggerFactory;
 import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
 
 /**
- * Delete kubernetes resources deployed from a Camel project or Camel integration with Camel JBang tooling.
+ * Delete kubernetes resources deployed from a Camel project or Camel integration with Camel CLI tooling.
  */
-public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelJBangAction {
+public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelCliAction {
 
     /**
      * Logger
@@ -52,7 +52,7 @@ public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelJBangAc
     private final String integrationName;
 
     /**
-     * Camel Jbang cluster type target
+     * Camel CLI cluster type target
      */
     private final String clusterType;
 
@@ -106,10 +106,10 @@ public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelJBangAc
         }
 
         if (integrationResource != null) {
-            camelJBang().workingDir(integrationResource.file().toPath().toAbsolutePath().getParent());
+            camelCli().workingDir(integrationResource.file().toPath().toAbsolutePath().getParent());
         }
 
-        ProcessAndOutput pao = camelJBang().kubernetes().delete(name, commandArgs.toArray(String[]::new));
+        ProcessAndOutput pao = camelCli().kubernetes().delete(name, commandArgs.toArray(String[]::new));
         logger.info(pao.getOutput());
         int exitValue = pao.getProcess().exitValue();
         if (exitValue != OK_EXIT_CODE) {
@@ -140,7 +140,7 @@ public class CamelKubernetesDeleteIntegrationAction extends AbstractCamelJBangAc
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesDeleteIntegrationAction, CamelKubernetesDeleteIntegrationAction.Builder>
+    public static final class Builder extends AbstractCamelCliAction.Builder<CamelKubernetesDeleteIntegrationAction, CamelKubernetesDeleteIntegrationAction.Builder>
             implements CamelKubernetesIntegrationDeleteActionBuilder<CamelKubernetesDeleteIntegrationAction, Builder> {
 
         private Resource integrationResource;

@@ -117,8 +117,8 @@ public class CamelActionBuilder implements
     }
 
     @Override
-    public CamelJBangActionBuilder jbang() {
-        CamelJBangActionBuilder builder = new CamelJBangActionBuilder();
+    public CamelCliActionBuilder cli() {
+        CamelCliActionBuilder builder = new CamelCliActionBuilder();
         this.delegate = builder;
         return builder;
     }

@@ -1,0 +1,10 @@
+name: "CamelCliKubernetesDeleteTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      cli:
+        kubernetes:
+          delete:
+            integration:
+              file: "classpath:org/citrusframework/camel/integration/route.yaml"

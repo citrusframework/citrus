@@ -119,9 +119,16 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
     }
 
     @SchemaProperty(kind = GROUP, group = CAMEL_GROUP, module=CAMEL_MODULE,
-            description = "Connect with Camel JBang to run commands.")
-    public void setJbang(JBang builder) {
+            description = "Connect with Camel CLI to run commands.")
+    public void setCli(Cli builder) {
         this.delegate = builder;
+    }
+
+    @Deprecated
+    @SchemaProperty(kind = GROUP, group = CAMEL_GROUP, module=CAMEL_MODULE,
+            description = "Connect with Camel JBang to run commands. Deprecated, please use Camel CLI instead.")
+    public void setJbang(Cli builder) {
+        setCli(builder);
     }
 
     @Override

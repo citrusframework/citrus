@@ -1,0 +1,9 @@
+name: "CamelDeletePluginTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      cli:
+        plugin:
+          delete:
+            name: "my-plugin"

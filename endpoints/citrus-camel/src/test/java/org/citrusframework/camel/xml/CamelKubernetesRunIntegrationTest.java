@@ -24,8 +24,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelKubernetesRunIntegrationAction;
-import org.citrusframework.camel.jbang.CamelJBang;
-import org.citrusframework.camel.jbang.KubernetesPlugin;
+import org.citrusframework.camel.cli.CamelCli;
+import org.citrusframework.camel.cli.KubernetesPlugin;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.xml.XmlTestLoader;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 public class CamelKubernetesRunIntegrationTest extends AbstractXmlActionTest {
 
     @Mock
-    private CamelJBang camelJBang;
+    private CamelCli camelCli;
 
     @Mock
     private KubernetesPlugin k8sPlugin;
@@ -59,13 +59,13 @@ public class CamelKubernetesRunIntegrationTest extends AbstractXmlActionTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        when(camelJBang.kubernetes()).thenReturn(k8sPlugin);
+        when(camelCli.kubernetes()).thenReturn(k8sPlugin);
         when(pao.getProcess()).thenReturn(process);
     }
 
     @Test
     public void shouldLoadCamelActions() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-jbang-kubernetes-run.citrus.it.xml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/xml/camel-cli-kubernetes-run.citrus.it.xml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();
@@ -73,7 +73,7 @@ public class CamelKubernetesRunIntegrationTest extends AbstractXmlActionTest {
         context.getReferenceResolver().bind(CamelSettings.getContextName(), citrusCamelContext);
         context.getReferenceResolver().bind("camelContext", citrusCamelContext);
 
-        context.getReferenceResolver().bind("camel-jbang", camelJBang);
+        context.getReferenceResolver().bind("camel-cli", camelCli);
 
         when(k8sPlugin.run(eq("route.yaml"), any(String[].class))).thenReturn(pao);
         when(k8sPlugin.logs("--name", "route")).thenReturn(pao);
@@ -84,12 +84,12 @@ public class CamelKubernetesRunIntegrationTest extends AbstractXmlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelJBangKubernetesRunTest");
+        Assert.assertEquals(result.getName(), "CamelCliKubernetesRunTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 2L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesRunIntegrationAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:jbang:kubernetes:run");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:cli:kubernetes:run");
 
         int actionIndex = 0;
 
@@ -99,7 +99,7 @@ public class CamelKubernetesRunIntegrationTest extends AbstractXmlActionTest {
         action = (CamelKubernetesRunIntegrationAction) result.getTestAction(actionIndex);
         Assert.assertEquals(action.getRuntime(), "quarkus");
 
-        verify(camelJBang, times(3)).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
+        verify(camelCli, times(3)).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
                 .file().getParentFile().toPath().toAbsolutePath().toString()));
         verify(k8sPlugin).run(eq("route.yaml"), eq(new String[] {}));
         verify(k8sPlugin).run("route.yaml", "--runtime", "quarkus",

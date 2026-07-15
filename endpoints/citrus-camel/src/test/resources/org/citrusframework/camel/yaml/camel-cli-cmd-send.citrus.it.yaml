@@ -1,0 +1,60 @@
+name: "CamelCliCmdSendTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      cli:
+        run:
+          integration:
+            name: "echo-yaml"
+            file: "classpath:org/citrusframework/camel/integration/echo.yaml"
+
+  - camel:
+      cli:
+        cmd:
+          send:
+            integration: "echo-yaml"
+            body:
+              data: "Hello Camel"
+  - camel:
+      cli:
+        verify:
+          integration: "echo-yaml"
+          logMessage: "HELLO CAMEL"
+
+  - camel:
+      cli:
+        cmd:
+          send:
+            integration: "echo-yaml"
+            endpoint: "direct:echo"
+            body:
+              data: "Camel rocks!"
+  - camel:
+      cli:
+        verify:
+          integration: "echo-yaml"
+          logMessage: "CAMEL ROCKS!"
+
+  - camel:
+      cli:
+        cmd:
+          send:
+            integration: "echo-yaml"
+            uri: "direct:echo"
+            timeout: 5000
+            reply: true
+            headers:
+              foo: bar
+            body:
+              data: "Good Bye Camel!"
+  - camel:
+      cli:
+        verify:
+          integration: "echo-yaml"
+          logMessage: "GOOD BYE CAMEL!"
+finally:
+  - camel:
+      cli:
+        stop:
+          integration: "echo-yaml"

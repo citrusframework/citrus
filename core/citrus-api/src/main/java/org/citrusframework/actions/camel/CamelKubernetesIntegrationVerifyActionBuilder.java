@@ -20,7 +20,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.spi.Resource;
 
 public interface CamelKubernetesIntegrationVerifyActionBuilder<T extends TestAction, B extends CamelKubernetesIntegrationVerifyActionBuilder<T, B>>
-        extends CamelJBangActionBuilderBase<T, B> {
+        extends CamelCliActionBuilderBase<T, B> {
 
     /**
      * Export given Camel integration resource.
@@ -28,7 +28,7 @@ public interface CamelKubernetesIntegrationVerifyActionBuilder<T extends TestAct
     B integration(Resource resource);
 
     /**
-     * Identify Camel JBang process for this route.
+     * Identify Camel CLI process for this route.
      */
     B integration(String name);
 

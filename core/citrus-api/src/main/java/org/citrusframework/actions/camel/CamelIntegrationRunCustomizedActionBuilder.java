@@ -22,7 +22,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.spi.Resource;
 
 public interface CamelIntegrationRunCustomizedActionBuilder<T extends TestAction, B extends CamelIntegrationRunCustomizedActionBuilder<T, B>>
-        extends CamelJBangActionBuilderBase<T, B> {
+        extends CamelCliActionBuilderBase<T, B> {
 
     /**
      * Runs Camel integration from given source code. More values are used in case more commands have to be used before resources.

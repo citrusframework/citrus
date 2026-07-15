@@ -16,7 +16,12 @@
 
 package org.citrusframework.camel.actions;
 
-import org.citrusframework.actions.camel.CamelJBangCmdReceiveActionBuilder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.citrusframework.actions.camel.CamelCliCmdReceiveActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;
@@ -28,17 +33,12 @@ import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
 
 /**
- * Camel JBang receive command.
+ * Camel CLI receive command.
  */
-public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
+public class CamelCmdReceiveAction extends AbstractCamelCliAction {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CamelCmdReceiveAction.class);
@@ -66,7 +66,7 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
     /** Should use Json output and verify */
     private final boolean jsonOutput;
 
-    /** Camel JBang command arguments */
+    /** Camel CLI command arguments */
     private final List<String> args;
 
     /** Polling configuration */
@@ -100,10 +100,10 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
         List<String> commandArgs = new ArrayList<>();
 
         if (StringUtils.hasText(integrationName)) {
-            logger.info("Camel JBang cmd receiving message from integration '%s'".formatted(integrationName));
+            logger.info("Camel CLI cmd receiving message from integration '%s'".formatted(integrationName));
             commandArgs.add(context.replaceDynamicContentInString(integrationName));
         } else {
-            logger.info("Camel JBang cmd receiving message from current Camel integration");
+            logger.info("Camel CLI cmd receiving message from current Camel integration");
         }
 
         if (StringUtils.hasText(endpoint)) {
@@ -148,16 +148,16 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
 
         ProcessAndOutput pao = null;
         try {
-            pao = camelJBang().receive(commandArgs.toArray(new String[0]));
-            logger.info("Receive messages from Camel JBang receive command ...");
+            pao = camelCli().receive(commandArgs.toArray(new String[0]));
+            logger.info("Receive messages from Camel CLI receive command ...");
 
             String log;
             for (int i = 0; i < maxAttempts; i++) {
                 if (!pao.getProcess().isAlive()) {
                     int exitValue = pao.getProcess().exitValue();
                     if (exitValue != OK_EXIT_CODE) {
-                        logger.warn("Failed to receive message via Camel JBang command:%n\t camel cmd receive %s".formatted(String.join(" ", commandArgs)));
-                        throw new CitrusRuntimeException("Error while receiving messages via Camel JBang: '%s' Exit code: %d"
+                        logger.warn("Failed to receive message via Camel CLI command:%n\t camel cmd receive %s".formatted(String.join(" ", commandArgs)));
+                        throw new CitrusRuntimeException("Error while receiving messages via Camel CLI: '%s' Exit code: %d"
                                 .formatted(pao.getOutput(), exitValue));
                     }
                 }
@@ -184,7 +184,7 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
                 }
 
                 if (log.contains("STACK-TRACE") && stopOnErrorStatus) {
-                    throw new CitrusRuntimeException("Error while receiving messages via Camel JBang - detected error state in Camel receive operation");
+                    throw new CitrusRuntimeException("Error while receiving messages via Camel CLI - detected error state in Camel receive operation");
                 }
 
                 logger.warn("Waiting for Camel message '{}' - retry in {} ms", integrationName, delayBetweenAttempts);
@@ -230,8 +230,8 @@ public class CamelCmdReceiveAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelCmdReceiveAction, Builder>
-            implements CamelJBangCmdReceiveActionBuilder<CamelCmdReceiveAction, Builder> {
+    public static final class Builder extends AbstractCamelCliAction.Builder<CamelCmdReceiveAction, Builder>
+            implements CamelCliCmdReceiveActionBuilder<CamelCmdReceiveAction, Builder> {
 
         private String integrationName;
         private String endpoint;

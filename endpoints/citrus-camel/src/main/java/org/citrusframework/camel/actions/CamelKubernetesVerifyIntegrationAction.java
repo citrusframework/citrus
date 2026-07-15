@@ -1,5 +1,9 @@
 package org.citrusframework.camel.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.citrusframework.actions.camel.CamelKubernetesIntegrationVerifyActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
@@ -10,16 +14,12 @@ import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * Verifies Camel integration in kubernetes via Camel JBang. Waits for a log message to be present.
+ * Verifies Camel integration in kubernetes via Camel CLI. Waits for a log message to be present.
  * Raises errors when the Camel integration log message is not available.
  * Check operation is automatically retried for a given amount of attempts.
  */
-public class CamelKubernetesVerifyIntegrationAction extends AbstractCamelJBangAction {
+public class CamelKubernetesVerifyIntegrationAction extends AbstractCamelCliAction {
 
     private static final Logger INTEGRATION_LOG = LoggerFactory.getLogger("INTEGRATION_LOGS");
 
@@ -40,7 +40,7 @@ public class CamelKubernetesVerifyIntegrationAction extends AbstractCamelJBangAc
     private final boolean printLogs;
 
     /**
-     * Camel Jbang command arguments
+     * Camel CLI command arguments
      */
     private final List<String> args;
 
@@ -90,7 +90,7 @@ public class CamelKubernetesVerifyIntegrationAction extends AbstractCamelJBangAc
         String log;
         int offset = 0;
 
-        ProcessAndOutput pao = camelJBang().kubernetes().logs(commandArgs.toArray(String[]::new));
+        ProcessAndOutput pao = camelCli().kubernetes().logs(commandArgs.toArray(String[]::new));
         for (int i = 0; i < maxAttempts; i++) {
 
             log = pao.getOutput();
@@ -131,7 +131,7 @@ public class CamelKubernetesVerifyIntegrationAction extends AbstractCamelJBangAc
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesVerifyIntegrationAction, CamelKubernetesVerifyIntegrationAction.Builder>
+    public static final class Builder extends AbstractCamelCliAction.Builder<CamelKubernetesVerifyIntegrationAction, CamelKubernetesVerifyIntegrationAction.Builder>
             implements CamelKubernetesIntegrationVerifyActionBuilder<CamelKubernetesVerifyIntegrationAction, Builder> {
 
         private String integrationName;

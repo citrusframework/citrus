@@ -73,9 +73,17 @@ public interface CamelActionBuilder<T extends TestAction, B extends TestActionBu
     CamelInfraActionBuilder<?, ?> infra();
 
     /**
-     * Perform actions with Camel JBang.
+     * Perform actions with Camel CLI.
      */
-    CamelJBangActionBuilder<?, ?> jbang();
+    CamelCliActionBuilder<?, ?> cli();
+
+    /**
+     * @deprecated Use {@link #cli()} instead. Camel has renamed JBang to CLI.
+     */
+    @Deprecated
+    default CamelCliActionBuilder<?, ?> jbang() {
+        return cli();
+    }
 
     interface BuilderFactory {
 

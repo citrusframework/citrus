@@ -16,15 +16,15 @@
 
 package org.citrusframework.camel.actions;
 
-import org.citrusframework.actions.camel.CamelJBangPluginDeleteActionBuilder;
+import org.citrusframework.actions.camel.CamelCliPluginDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Delete a specific plugin from a Camel JBang tooling.
+ * Delete a specific plugin from a Camel CLI tooling.
  */
-public class DeleteCamelPluginAction extends AbstractCamelJBangAction {
+public class DeleteCamelPluginAction extends AbstractCamelCliAction {
 
     private static final Logger logger = LoggerFactory.getLogger(DeleteCamelPluginAction.class);
 
@@ -39,15 +39,15 @@ public class DeleteCamelPluginAction extends AbstractCamelJBangAction {
     public void doExecute(TestContext context) {
         String pluginName = context.replaceDynamicContentInString(name);
         logger.info("Deleting Camel plugin '{}' ...", pluginName);
-        camelJBang().deletePlugin(pluginName);
+        camelCli().deletePlugin(pluginName);
         logger.info("Camel plugin '{}' successfully deleted", pluginName);
     }
 
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<DeleteCamelPluginAction, Builder>
-            implements CamelJBangPluginDeleteActionBuilder<DeleteCamelPluginAction, Builder> {
+    public static final class Builder extends AbstractCamelCliAction.Builder<DeleteCamelPluginAction, Builder>
+            implements CamelCliPluginDeleteActionBuilder<DeleteCamelPluginAction, Builder> {
 
         private String name;
 

@@ -22,7 +22,7 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.DeleteCamelPluginAction;
-import org.citrusframework.camel.jbang.CamelJBang;
+import org.citrusframework.camel.cli.CamelCli;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verify;
 public class CamelDeletePluginTest extends AbstractYamlActionTest {
 
     @Mock
-    private CamelJBang camelJBang;
+    private CamelCli camelCli;
 
     @BeforeClass
     public void setup() {
@@ -44,7 +44,7 @@ public class CamelDeletePluginTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadCamelActions() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-jbang-delete-plugin.citrus.it.yaml");
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/camel/yaml/camel-cli-delete-plugin.citrus.it.yaml");
 
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();
@@ -52,7 +52,7 @@ public class CamelDeletePluginTest extends AbstractYamlActionTest {
         context.getReferenceResolver().bind(CamelSettings.getContextName(), citrusCamelContext);
         context.getReferenceResolver().bind("camelContext", citrusCamelContext);
 
-        context.getReferenceResolver().bind("camel-jbang", camelJBang);
+        context.getReferenceResolver().bind("camel-cli", camelCli);
 
         testLoader.load();
 
@@ -62,8 +62,8 @@ public class CamelDeletePluginTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
         Assert.assertEquals(result.getActionCount(), 1L);
         Assert.assertEquals(result.getTestAction(0).getClass(), DeleteCamelPluginAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:jbang:plugin-delete");
+        Assert.assertEquals(result.getTestAction(0).getName(), "camel:cli:plugin-delete");
 
-        verify(camelJBang).deletePlugin("my-plugin");
+        verify(camelCli).deletePlugin("my-plugin");
     }
 }

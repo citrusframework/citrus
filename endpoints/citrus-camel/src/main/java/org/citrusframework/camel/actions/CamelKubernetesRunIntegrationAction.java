@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.citrusframework.actions.camel.CamelKubernetesIntegrationRunActionBuilder;
-import org.citrusframework.camel.jbang.CamelJBangSettings;
+import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
@@ -40,9 +40,9 @@ import static org.citrusframework.camel.dsl.CamelSupport.camel;
 import static org.citrusframework.jbang.JBangSupport.OK_EXIT_CODE;
 
 /**
- * Run a Camel integration in kubernetes with Camel JBang tooling.
+ * Run a Camel integration in kubernetes with Camel CLI tooling.
  */
-public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangAction {
+public class CamelKubernetesRunIntegrationAction extends AbstractCamelCliAction {
 
     /**
      * Logger
@@ -66,37 +66,37 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
     private final String runtime;
 
     /**
-     * Camel Jbang image builder
+     * Camel CLI image builder
      */
     private final String imageBuilder;
 
     /**
-     * Camel Jbang image registry
+     * Camel CLI image registry
      */
     private final String imageRegistry;
 
     /**
-     * Camel Jbang cluster type target
+     * Camel CLI cluster type target
      */
     private final String clusterType;
 
     /**
-     * Camel Jbang command build properties
+     * Camel CLI command build properties
      */
     private final List<String> buildProperties;
 
     /**
-     * Camel Jbang command properties
+     * Camel CLI command properties
      */
     private final List<String> properties;
 
     /**
-     * Camel Jbang command traits
+     * Camel CLI command traits
      */
     private final List<String> traits;
 
     /**
-     * Camel Jbang command arguments
+     * Camel CLI command arguments
      */
     private final List<String> args;
 
@@ -144,7 +144,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
 
             Path integrationToRun;
             if (StringUtils.hasText(sourceCode)) {
-                Path workDir = CamelJBangSettings.getWorkDir();
+                Path workDir = CamelCliSettings.getWorkDir();
                 Files.createDirectories(workDir);
                 integrationToRun = workDir.resolve(String.format("%s.%s", name, getFileExt(sourceCode)));
                 Files.writeString(integrationToRun, sourceCode,
@@ -206,9 +206,9 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
                 commandArgs.add("--verbose=true");
             }
 
-            camelJBang().workingDir(integrationToRun.toAbsolutePath().getParent());
+            camelCli().workingDir(integrationToRun.toAbsolutePath().getParent());
 
-            ProcessAndOutput pao = camelJBang().kubernetes().run(integrationToRun.getFileName().toString(), commandArgs.toArray(String[]::new));
+            ProcessAndOutput pao = camelCli().kubernetes().run(integrationToRun.getFileName().toString(), commandArgs.toArray(String[]::new));
             logger.info(pao.getOutput());
             int exitValue = pao.getProcess().exitValue();
             if (exitValue != OK_EXIT_CODE) {
@@ -276,7 +276,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelKubernetesRunIntegrationAction, Builder>
+    public static final class Builder extends AbstractCamelCliAction.Builder<CamelKubernetesRunIntegrationAction, Builder>
             implements CamelKubernetesIntegrationRunActionBuilder<CamelKubernetesRunIntegrationAction, Builder> {
 
         private String sourceCode;
@@ -293,9 +293,9 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelJBangActio
         private final List<String> traits = new ArrayList<>();
         private final List<String> args = new ArrayList<>();
 
-        private boolean verbose = CamelJBangSettings.isVerbose();
-        private boolean autoRemoveResources = CamelJBangSettings.isAutoRemoveResources();
-        private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
+        private boolean verbose = CamelCliSettings.isVerbose();
+        private boolean autoRemoveResources = CamelCliSettings.isAutoRemoveResources();
+        private boolean waitForRunningState = CamelCliSettings.isWaitForRunningState();
 
         @Override
         public Builder integrationName(String name) {
