@@ -573,8 +573,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 5.0.0-M2,</span>
-<span id="revdate">2026-07-02</span>
+<span id="revnumber">version 4.10.2,</span>
+<span id="revdate">2026-07-15</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -595,7 +595,7 @@ $(addBlockSwitches);
 <li><a href="#runtimes">4. Runtimes</a>
 <ul class="sectlevel2">
 <li><a href="#runtime-testng">4.1. TestNG</a></li>
-<li><a href="#runtime-junit-jupiter">4.2. JUnit Jupiter</a></li>
+<li><a href="#runtime-junit5">4.2. JUnit5</a></li>
 <li><a href="#runtime-junit4">4.3. JUnit4</a></li>
 <li><a href="#runtime-quarkus">4.4. QuarkusTest</a></li>
 <li><a href="#runtimes-cucumber">4.5. Cucumber</a></li>
@@ -906,9 +906,10 @@ $(addBlockSwitches);
 <li><a href="#connectors">33. Connectors</a></li>
 <li><a href="#openapi">34. OpenAPI support</a>
 <ul class="sectlevel2">
-<li><a href="#openapi-specification">34.1. OpenAPI specification</a></li>
-<li><a href="#openapi-client">34.2. OpenAPI client</a></li>
-<li><a href="#openapi-server">34.3. OpenAPI server</a></li>
+<li><a href="#openapi-settings">34.1. OpenAPI settings</a></li>
+<li><a href="#openapi-specification">34.2. OpenAPI specification</a></li>
+<li><a href="#openapi-client">34.3. OpenAPI client</a></li>
+<li><a href="#openapi-server">34.4. OpenAPI server</a></li>
 </ul>
 </li>
 <li><a href="#jbang">35. JBang support</a>
@@ -1067,17 +1068,19 @@ $(addBlockSwitches);
 <li><a href="#customize-meta-information">45. Customize meta information</a></li>
 <li><a href="#reporting-and-test-results">46. Reporting and Test Results</a>
 <ul class="sectlevel2">
-<li><a href="#console-logging">46.1. Console logging</a></li>
-<li><a href="#junit-reports">46.2. JUnit reports</a></li>
-<li><a href="#html-reports">46.3. HTML reports</a></li>
+<li><a href="#reporting-general-settings">46.1. General report settings</a></li>
+<li><a href="#console-logging">46.2. Console logging</a></li>
+<li><a href="#junit-reports">46.3. JUnit reports</a></li>
+<li><a href="#html-reports">46.4. HTML reports</a></li>
 </ul>
 </li>
 <li><a href="#configuration">47. Configuration options</a>
 <ul class="sectlevel2">
 <li><a href="#configuration-environment-settings">47.1. Environment settings</a></li>
-<li><a href="#configuration-property-binding">47.2. Property binding support</a></li>
-<li><a href="#configuration-spring">47.3. Spring configuration settings</a></li>
-<li><a href="#configuration-property-file">47.4. Property file settings</a></li>
+<li><a href="#configuration-log-settings">47.2. Log settings</a></li>
+<li><a href="#configuration-property-binding">47.3. Property binding support</a></li>
+<li><a href="#configuration-spring">47.4. Spring configuration settings</a></li>
+<li><a href="#configuration-property-file">47.5. Property file settings</a></li>
 </ul>
 </li>
 <li><a href="#spring-support">48. Spring support</a>
@@ -1135,7 +1138,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 5.0.0-M2</strong></p>
+<p><strong>Version: 4.10.2</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1993,13 +1996,13 @@ exchange in your tests is ready to be performed in parallel (e.g. use message se
 </div>
 </div>
 <div class="sect2">
-<h3 id="runtime-junit-jupiter"><a class="anchor" href="#runtime-junit-jupiter"></a><a class="link" href="#runtime-junit-jupiter">4.2. JUnit Jupiter</a></h3>
+<h3 id="runtime-junit5"><a class="anchor" href="#runtime-junit5"></a><a class="link" href="#runtime-junit5">4.2. JUnit5</a></h3>
 <div class="paragraph">
 <p>With JUnit version 5 the famous unit test framework offers a new major version. The JUnit platform provides awesome extension
 points for other frameworks like Citrus to integrate with the unit testing execution.</p>
 </div>
 <div class="paragraph">
-<p>Citrus provides extensions in order to enable Citrus related dependency injection and parameter resolving in your JUnit test.</p>
+<p>Citrus provides extensions in order to enable Citrus related dependency injection and parameter resolving in your JUnit5 test.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2008,29 +2011,29 @@ points for other frameworks like Citrus to integrate with the unit testing execu
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The JUnit support is shipped in a separate Maven module. You need to include the module as a dependency in your
+The JUnit5 support is shipped in a separate Maven module. You need to include the module as a dependency in your
 project.
 </td>
 </tr>
 </table>
 </div>
 <div class="listingblock">
-<div class="title">JUnit module dependency</div>
+<div class="title">JUnit5 module dependency</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.citrusframework&lt;/groupId&gt;
-  &lt;artifactId&gt;citrus-junit-jupiter&lt;/artifactId&gt;
+  &lt;artifactId&gt;citrus-junit5&lt;/artifactId&gt;
   &lt;version&gt;${citrus.version}&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="junit-jupiter-citrus-support"><a class="anchor" href="#junit-jupiter-citrus-support"></a><a class="link" href="#junit-jupiter-citrus-support">4.2.1. Citrus extension</a></h4>
+<h4 id="junit5-citrus-support"><a class="anchor" href="#junit5-citrus-support"></a><a class="link" href="#junit5-citrus-support">4.2.1. Citrus extension</a></h4>
 <div class="paragraph">
-<p>You can use the Citrus JUnit extension on your test as follows:</p>
+<p>You can use the Citrus JUnit5 extension on your test as follows:</p>
 </div>
 <div class="listingblock">
-<div class="title">JUnit Citrus test</div>
+<div class="title">JUnit5 Citrus test</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.citrusframework.samples;
 
@@ -2060,8 +2063,8 @@ public class Simple_IT implements TestActionSupport {
 </div>
 </div>
 <div class="paragraph">
-<p>The class above is using the JUnit <code>@Test</code> annotation as a normal unit test would do. The <code>@CitrusSupport</code> annotation marks
-the test to use the Citrus JUnit extension. This enables us to use the <code>@CitrusTest</code> annotation on the test and adds
+<p>The class above is using the JUnit5 <code>@Test</code> annotation as a normal unit test would do. The <code>@CitrusSupport</code> annotation marks
+the test to use the Citrus JUnit5 extension. This enables us to use the <code>@CitrusTest</code> annotation on the test and adds
 support for the parameter injection for the <code>TestActionRunner</code>.</p>
 </div>
 <div class="admonitionblock tip">
@@ -2072,7 +2075,7 @@ support for the parameter injection for the <code>TestActionRunner</code>.</p>
 </td>
 <td class="content">
 You can use the <code>@CitrusSupport</code> annotation, or you can use the classic <code>@ExtendWith(CitrusExtension.class)</code> annotation
-to enable the Citrus support for JUnit.
+to enable the Citrus support for JUnit5.
 </td>
 </tr>
 </table>
@@ -2111,7 +2114,7 @@ For those of you who are not able to use the <code>TestActionSupport</code> or o
 </table>
 </div>
 <div class="listingblock">
-<div class="title">JUnit Citrus test</div>
+<div class="title">JUnit5 Citrus test</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.citrusframework.samples;
 
@@ -2161,13 +2164,13 @@ annotation. With the Spring support in Citrus the test is able to load component
 </div>
 </div>
 <div class="sect3">
-<h4 id="junit-jupiter-endpoint-injection"><a class="anchor" href="#junit-jupiter-endpoint-injection"></a><a class="link" href="#junit-jupiter-endpoint-injection">4.2.2. Endpoint injection</a></h4>
+<h4 id="junit5-endpoint-injection"><a class="anchor" href="#junit5-endpoint-injection"></a><a class="link" href="#junit5-endpoint-injection">4.2.2. Endpoint injection</a></h4>
 <div class="paragraph">
 <p>In addition to injecting test resources you can also inject endpoints via <code>@CitrusEndpoint</code> annotated field injection in
 your test class. This enables you to inject endpoint components that are defined in the Citrus context configuration.</p>
 </div>
 <div class="listingblock">
-<div class="title">JUnit Citrus endpoint injection</div>
+<div class="title">JUnit5 Citrus endpoint injection</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.citrusframework.samples;
 
@@ -2200,16 +2203,16 @@ public class Simple_IT implements TestActionSupport {
 </div>
 </div>
 <div class="sect3">
-<h4 id="junit-jupiter-citrus-spring-support"><a class="anchor" href="#junit-jupiter-citrus-spring-support"></a><a class="link" href="#junit-jupiter-citrus-spring-support">4.2.3. Citrus Spring extension</a></h4>
+<h4 id="junit5-citrus-spring-support"><a class="anchor" href="#junit5-citrus-spring-support"></a><a class="link" href="#junit5-citrus-spring-support">4.2.3. Citrus Spring extension</a></h4>
 <div class="paragraph">
-<p>Spring is a famous dependency injection framework that also provides support for JUnit. Citrus is able to load its
-components as Spring beans in an application context. The Citrus JUnit extension works great with the Spring extension.</p>
+<p>Spring is a famous dependency injection framework that also provides support for JUnit5. Citrus is able to load its
+components as Spring beans in an application context. The Citrus JUnit5 extension works great with the Spring extension.</p>
 </div>
 <div class="paragraph">
 <p>The Spring extension loads the application context and Citrus adds all components to the Spring bean configuration.</p>
 </div>
 <div class="listingblock">
-<div class="title">JUnit Citrus Spring test</div>
+<div class="title">JUnit5 Citrus Spring test</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
@@ -2256,14 +2259,14 @@ You can customize the Spring application context by adding more configuration cl
 </div>
 </div>
 <div class="sect3">
-<h4 id="junit-jupiter-test-sharding"><a class="anchor" href="#junit-jupiter-test-sharding"></a><a class="link" href="#junit-jupiter-test-sharding">4.2.4. Test Sharding</a></h4>
+<h4 id="junit5-test-sharding"><a class="anchor" href="#junit5-test-sharding"></a><a class="link" href="#junit5-test-sharding">4.2.4. Test Sharding</a></h4>
 <div class="paragraph">
-<p>You can run your JUnit test cases in order in a distributed manner, facilitating test sharding.
+<p>You can run your JUnit5 test cases in order in a distributed manner, facilitating test sharding.
 The following snipped showcases you how to get started within a Spring/XML test case environment.
 Note that sharding is available with all kind of <code>Stream</code>-sources.</p>
 </div>
 <div class="listingblock">
-<div class="title">Sharded JUnit Spring/XML test</div>
+<div class="title">Sharded JUnit5 Spring/XML test</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static org.citrusframework.junit.jupiter.CitrusTestFactorySupport.springXml;
 import static org.citrusframework.sharding.Shard.createShard;
@@ -2294,8 +2297,8 @@ class SpringBeanXml_IT {
 <div class="sect2">
 <h3 id="runtime-junit4"><a class="anchor" href="#runtime-junit4"></a><a class="link" href="#runtime-junit4">4.3. JUnit4</a></h3>
 <div class="paragraph">
-<p>JUnit4 is still very popular and widely supported by many tools even though there is a new major version with JUnit Jupiter already
-available. In general Citrus supports both JUnit4 and JUnit Jupiter as test execution framework.</p>
+<p>JUnit4 is still very popular and widely supported by many tools even though there is a new major version with JUnit5 already
+available. In general Citrus supports both JUnit4 and JUnit5 as test execution framework.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3617,7 +3620,7 @@ Citrus supports these test engines as an argument value:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>JUnit Jupiter (<code>junit</code> or <code>junit-jupiter</code>)</p>
+<p>JUnit Jupiter (<code>junit5</code> or <code>junit-jupiter</code>)</p>
 </li>
 <li>
 <p>Cucumber (<code>cucumber</code>)</p>
@@ -3626,7 +3629,7 @@ Citrus supports these test engines as an argument value:</p>
 <p>TestNG (<code>testng</code>)</p>
 </li>
 <li>
-<p>JUnit 4 (<code>junit4</code>)</p>
+<p>JUnit 4 (<code>junit</code>)</p>
 </li>
 </ul>
 </div>
@@ -3912,7 +3915,7 @@ actions {
 <div class="listingblock">
 <div class="title">Run my.citrus.it.feature</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang --deps org.citrusframework:citrus-cucumber-all:5.0.0-SNAPSHOT citrus run my.citrus.it.feature</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang --deps org.citrusframework:citrus-cucumber-all:4.11.0-SNAPSHOT citrus run my.citrus.it.feature</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -4000,7 +4003,7 @@ org.citrusframework:citrus-kafka:${citrus.version}</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-In case you want to run Cucumber BDD Gherkin feature files and use the predefined Citrus steps, you need to add this dependency accordingly: <code>org.citrusframework:citrus-cucumber-all:5.0.0-SNAPSHOT</code>
+In case you want to run Cucumber BDD Gherkin feature files and use the predefined Citrus steps, you need to add this dependency accordingly: <code>org.citrusframework:citrus-cucumber-all:4.11.0-SNAPSHOT</code>
 </td>
 </tr>
 </table>
@@ -4132,7 +4135,7 @@ We do our best to make all features equal in all supported languages. Some featu
 <div class="sect2">
 <h3 id="run-java"><a class="anchor" href="#run-java"></a><a class="link" href="#run-java">5.1. Java</a></h3>
 <div class="paragraph">
-<p>You can code the Citrus test as you would do with any other unit test framework (e.g. <a href="#runtime-junit-jupiter">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
+<p>You can code the Citrus test as you would do with any other unit test framework (e.g. <a href="#runtime-junit5">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
 In fact Citrus builds on top of those famous unit testing frameworks because the tooling and adoption throughout the industry is very high for these libraries.</p>
 </div>
 <div class="paragraph">
@@ -4184,7 +4187,7 @@ public class HelloServiceIT extends TestNGCitrusSupport implements TestActionSup
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -4296,7 +4299,7 @@ public class HelloServiceIT extends TestNGCitrusSupport {
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -4400,7 +4403,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -4755,7 +4758,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -4840,7 +4843,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -4963,7 +4966,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -5062,7 +5065,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -5196,7 +5199,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -5299,7 +5302,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestActionSupport;
@@ -5396,7 +5399,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
@@ -5509,7 +5512,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
@@ -5607,7 +5610,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
@@ -5909,7 +5912,7 @@ The best thing about using the <strong>@CitrusTestSource</strong> annotation is 
 The XML language gives you some XSD schema and a set of elements that you can choose from to specify test actions.</p>
 </div>
 <div class="paragraph">
-<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit-jupiter">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
+<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit5">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
 You can then use the <code>@CitrusTestSource</code> annotation to load the XML file that represents the test case.</p>
 </div>
 <div class="listingblock">
@@ -6334,7 +6337,7 @@ But notice that variable changes inside the template then do not affect the test
 The YAML language gives you some XSD schema and a set of elements that you can choose from to specify test actions.</p>
 </div>
 <div class="paragraph">
-<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit-jupiter">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
+<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit5">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
 You can then use the <code>@CitrusTestSource</code> annotation to load the YAML file that represents the test case.</p>
 </div>
 <div class="listingblock">
@@ -6777,7 +6780,7 @@ But notice that variable changes inside the template then do not affect the test
 The Groovy language gives you some syntax sugar and optimized statements that you can use to write your tests.</p>
 </div>
 <div class="paragraph">
-<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit-jupiter">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
+<p>As usual, you need to choose one of the supported test engines in Citrus to actually run the test (e.g. <a href="#runtime-junit5">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>).
 You can then use the <code>@CitrusTestSource</code> annotation to load the Groovy code that represents the test case.</p>
 </div>
 <div class="listingblock">
@@ -7384,7 +7387,7 @@ You need to have the runtime module <code>citrus-spring</code> enabled in your p
 <div class="paragraph">
 <p>Citrus uses Spring bean definition parsers to load the XML test actions.
 The Spring application context loads the Spring XML test case file as a set of Spring bean configurations.
-Citrus runs the resulting test Spring bean as a normal unit test using one of the provided runtimes like <a href="#runtime-junit-jupiter">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>.</p>
+Citrus runs the resulting test Spring bean as a normal unit test using one of the provided runtimes like <a href="#runtime-junit5">JUnit Jupiter</a> or <a href="#runtime-testng">TestNG</a>.</p>
 </div>
 <div class="paragraph">
 <p>You define the complete test logic in the Spring bean XML file:</p>
@@ -7472,7 +7475,7 @@ In fact, you can generate the Java file from Citrus (e.g. Maven plugin).</p>
 Enter test author: Unknown::
 Enter test description:: Sample XML test
 Enter test package: org.citrusframework::
-Choose unit test framework: (testng/junit/junit-jupiter/junit4) testng::
+Choose unit test framework: (testng/junit4/junit5) testng::
 Choose target code base type: (java/xml) java:: xml
 Create test with XML schema? (y/n) n::
 Create test with WSDL? (y/n) n::
@@ -8904,6 +8907,11 @@ This will set soft mode to all Json text message validators.
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>The Json parser mode is also configurable via system property <code>citrus.json.permissive.mode</code> or environment variable <code>CITRUS_JSON_PERMISSIVE_MODE</code>.
+Accepted values are: <code>SIMPLE</code> (default), <code>RFC4627</code>, <code>STRICTEST</code>, <code>PERMISSIVE</code>, or a numeric parser mode value.
+This controls how strictly the underlying JSON parser handles the input format.</p>
 </div>
 <div class="paragraph">
 <p>You can also overwrite these default message validators for Json by placing a bean into the Spring Application context.
@@ -21317,7 +21325,7 @@ public class SendMessageIT extends TestNGCitrusSupport implements TestActionSupp
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActionSupport;
@@ -21548,7 +21556,7 @@ public class ReceiveMessageIT extends TestNGCitrusSupport implements TestActionS
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">JUnit</div>
+<div class="title">JUnit5</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActionSupport;
@@ -24237,13 +24245,14 @@ about dynamic endpoints in chapter <a href="#dynamic-endpoint-components">dynami
 <div class="sect2">
 <h3 id="embedded-kafka-server"><a class="anchor" href="#embedded-kafka-server"></a><a class="link" href="#embedded-kafka-server">13.7. Embedded Kafka Server</a></h3>
 <div class="paragraph">
-<p>The Kafka message broker is composed of a Kafka server that uses some default configuration options. Citrus provides an embedded server (<strong>for testing purpose only!</strong>)
-that is able to start within your integration test environment. The server cluster is configured with one single Kafka node. You can define server ports and broker properties such as topics, number of partitions and
+<p>The Kafka message broker is composed of a Zookeeper server and a Kafka server. Citrus provides an embedded server (<strong>for testing purpose only!</strong>)
+that is able to start within your integration test environment. The server cluster is configured with one single Zookeeper
+server and a single Kafka server. You can define server ports and broker properties such as topics, number of partitions and
 broker ids. Given topics are automatically added via admin client on the Kafka server with given amount of partitions.</p>
 </div>
 <div class="paragraph">
 <p>You can add the embedded server component to the Spring application context as normal Spring bean. The server will automatically
-start and stop within the application context lifecycle. The server log directory is located in the Java temp directory
+start and stop within the application context lifecycle. The Zookeeper log directory is located in the Java temp directory
 and is automatically deleted on JVM exit.</p>
 </div>
 <div class="paragraph">
@@ -24301,6 +24310,13 @@ public EmbeddedKafkaServer kafkaServer() {
 </div></div></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">zookeeper-port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Zookeeper server port. By default, a random port is used.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">broker-properties</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.util.Map</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -24319,7 +24335,7 @@ public EmbeddedKafkaServer kafkaServer() {
 <td class="tableblock halign-left valign-top"><p class="tableblock">log-dir-path</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path to server log directory. The server will create its data directory in this directory. By default, the
+<p>Path to Zookeeper log directory. The Zookeeper server will create its data directory in this directory. By default, the
   Java temp directory is used.</p>
 </div></div></td>
 </tr>
@@ -24327,7 +24343,7 @@ public EmbeddedKafkaServer kafkaServer() {
 <td class="tableblock halign-left valign-top"><p class="tableblock">auto-delete-logs</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Auto delete server log directories on exit. Default is true.</p>
+<p>Auto delete Zookeeper log directories on exit. Default is true.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -24837,6 +24853,55 @@ component. You can add custom interceptor implementations here in order to parti
 server which is capable of handling incoming Http requests. The server accepts client connections and must provide a proper
 Http response. In the next section you will see how to simulate server side Http REST service with Citrus.</p>
 </div>
+<div class="paragraph">
+<p>The Http server provides the following global settings configurable via system properties or environment variables:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.http.server.response.cache.size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of response messages the server keeps in its in-memory cache for message tracing (default="100")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.http.server.use.default.filters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable default servlet filters (e.g. request caching filter) on the server&#8217;s servlet context (default="true")</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_HTTP_SERVER_RESPONSE_CACHE_SIZE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of response messages the server keeps in its in-memory cache for message tracing (default="100")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_HTTP_SERVER_USE_DEFAULT_FILTERS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable default servlet filters (e.g. request caching filter) on the server&#8217;s servlet context (default="true")</p></td>
+</tr>
+</tbody>
+</table>
 <div class="listingblock primary">
 <div class="title">Java</div>
 <div class="content">
@@ -33284,6 +33349,106 @@ You can use the <code>maxAttempts</code> and <code>delayBetweeAttempts</code> se
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="camel-jbang-plugins"><a class="anchor" href="#camel-jbang-plugins"></a><a class="link" href="#camel-jbang-plugins">16.8.6. Manage Camel plugins</a></h4>
+<div class="paragraph">
+<p>Camel JBang supports plugins that extend the CLI with additional commands and capabilities.
+Citrus provides test actions to add and delete plugins as part of a test.</p>
+</div>
+<div class="sect4">
+<h5 id="add-a-plugin"><a class="anchor" href="#add-a-plugin"></a><a class="link" href="#add-a-plugin">Add a plugin</a></h5>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">when(camel().jbang()
+    .plugin()
+    .add()
+    .pluginName("my-plugin")
+    .withArg("--version", "1.0.0"));</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- camel:
+    jbang:
+      plugin:
+        add:
+          name: "my-plugin"
+          args:
+            - "--version"
+            - "1.0.0"</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;camel&gt;
+  &lt;jbang&gt;
+    &lt;plugin&gt;
+      &lt;add name="my-plugin" args="--version 1.0.0"/&gt;
+    &lt;/plugin&gt;
+  &lt;/jbang&gt;
+&lt;/camel&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The action checks if the plugin is already installed by name.
+When the plugin is already installed and no <code>--version</code> or <code>--gav</code> arguments are provided, the action skips the installation.
+When <code>--version</code> or <code>--gav</code> arguments are present, the action removes the existing plugin and reinstalls it with the new arguments.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The test action has an <code>autoRemove</code> option that is disabled by default. When enabled, the test will automatically delete the plugin after the test using the <code>context.doFinally()</code> mechanism. You can enable it globally via the <code>citrus.camel.jbang.auto.remove.plugins</code> system property or <code>CITRUS_CAMEL_JBANG_AUTO_REMOVE_PLUGINS</code> environment variable.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="delete-a-plugin"><a class="anchor" href="#delete-a-plugin"></a><a class="link" href="#delete-a-plugin">Delete a plugin</a></h5>
+<div class="paragraph">
+<p>You can explicitly delete a plugin in your test.
+This is useful in <code>finally</code> blocks to clean up plugins that were installed during the test.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">when(camel().jbang()
+    .plugin()
+    .delete()
+    .pluginName("my-plugin"));</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- camel:
+    jbang:
+      plugin:
+        delete:
+          name: "my-plugin"</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;camel&gt;
+  &lt;jbang&gt;
+    &lt;plugin&gt;
+      &lt;delete name="my-plugin"/&gt;
+    &lt;/plugin&gt;
+  &lt;/jbang&gt;
+&lt;/camel&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="camel-jbang-kubernetes"><a class="anchor" href="#camel-jbang-kubernetes"></a><a class="link" href="#camel-jbang-kubernetes">16.9. Camel JBang Kubernetes support</a></h3>
@@ -33617,7 +33782,7 @@ The action waits for the expected log message and fails when the message is not 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">hive-mq (sparkplug)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">kafka (redpanda, strimzi)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kafka (confluent, redpanda, strimzi)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">microprofile (lra)</p></td>
 </tr>
 <tr>
@@ -33660,6 +33825,8 @@ The action waits for the expected log message and fails when the message is not 
 <div class="paragraph">
 <p>You can start/stop such an infra service via test actions in Citrus.</p>
 </div>
+<div class="sect3">
+<h4 id="camel-infra-run"><a class="anchor" href="#camel-infra-run"></a><a class="link" href="#camel-infra-run">16.10.1. Run Camel infra services</a></h4>
 <div class="listingblock primary">
 <div class="title">Java</div>
 <div class="content">
@@ -33818,6 +33985,77 @@ actions:
 <div class="paragraph">
 <p>By default, the infrastructure services get automatically removed after the test. You can disable the auto removal when running the service (<code>auto-remove</code> setting).</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="fixed-port-configuration"><a class="anchor" href="#fixed-port-configuration"></a><a class="link" href="#fixed-port-configuration">16.10.2. Fixed port configuration</a></h4>
+<div class="paragraph">
+<p>By default, Camel infra services use random ports for better test isolation.
+In some cases you may want to use a fixed port instead (e.g. when an external tool expects a service on a well-known port, or when debugging locally).</p>
+</div>
+<div class="paragraph">
+<p>You can configure a fixed port directly on the run action:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class CamelInfraIT extends TestNGCitrusSpringSupport {
+
+    @Test
+    @CitrusTest
+    public void createInfraService() {
+        $(camel()
+            .infra()
+            .run()
+            .service("postgres")
+            .port(5432));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: "CamelInfraTest"
+actions:
+  - camel:
+      infra:
+        run:
+          service: postgres
+          port: 5432</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Setting a specific port automatically enables fixed port mode.
+You can also enable fixed port mode without specifying a concrete port number — this tells the service to use its own default port rather than a random one:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">$(camel()
+    .infra()
+    .run()
+    .service("postgres")
+    .fixedPort(true));</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: "CamelInfraTest"
+actions:
+  - camel:
+      infra:
+        run:
+          service: postgres
+          fixedPort: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The fixed port settings can also be configured globally via system properties or environment variables (see <a href="#camel-infra-settings">Camel infra settings</a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="camel-infra-stop"><a class="anchor" href="#camel-infra-stop"></a><a class="link" href="#camel-infra-stop">16.10.3. Stop Camel infra services</a></h4>
 <div class="paragraph">
 <p>To explicitly stop a running infrastructure service use the following test action.</p>
 </div>
@@ -33873,6 +34111,83 @@ actions:
     &lt;!-- NOT SUPPORTED --&gt;
 &lt;/spring:beans&gt;</code></pre>
 </div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="camel-infra-settings"><a class="anchor" href="#camel-infra-settings"></a><a class="link" href="#camel-infra-settings">16.10.4. Camel infra settings</a></h4>
+<div class="paragraph">
+<p>The Camel infrastructure services support the following environment settings.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.camel.infra.auto.remove.services</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to true the test will automatically stop and remove Camel infra services that have been started. (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.camel.infra.dump.service.output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to true infra service output will be redirected to a file in the current working directory. (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.camel.infra.port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set infra services use this port as a fixed port. (default="-1", meaning random port)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.camel.infra.fixedPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to true infra services use fixed ports. Otherwise, services use random ports for better isolation. (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.camel.infra.&lt;service&gt;.port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets a fixed port for a specific service. The service name is the full service name (e.g. <code>citrus.camel.infra.postgres.port=5432</code>).</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CAMEL_INFRA_AUTO_REMOVE_SERVICES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to true the test will automatically stop and remove Camel infra services that have been started. (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CAMEL_INFRA_DUMP_SERVICE_OUTPUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to true infra service output will be redirected to a file in the current working directory. (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CAMEL_INFRA_PORT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set infra services use this port as a fixed port. (default="-1", meaning random port)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CAMEL_INFRA_FIXED_PORT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to true infra services use fixed ports. Otherwise, services use random ports for better isolation. (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CAMEL_INFRA_&lt;SERVICE&gt;_PORT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets a fixed port for a specific service. The service name uses upper case and non-alphanumeric characters are replaced with underscores (e.g. <code>CITRUS_CAMEL_INFRA_POSTGRES_PORT=5432</code>).</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -46820,7 +47135,100 @@ The OpenAPI support in Citrus get enabled by adding a separate Maven module as d
 </div>
 </div>
 <div class="sect2">
-<h3 id="openapi-specification"><a class="anchor" href="#openapi-specification"></a><a class="link" href="#openapi-specification">34.1. OpenAPI specification</a></h3>
+<h3 id="openapi-settings"><a class="anchor" href="#openapi-settings"></a><a class="link" href="#openapi-settings">34.1. OpenAPI settings</a></h3>
+<div class="paragraph">
+<p>The OpenAPI support in Citrus provides several settings that control validation, data generation, and specification handling.
+These settings can be configured via system properties or environment variables.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.openapi.generate.optional.fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable generation of optional fields in request/response data (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.openapi.validation.enabled.request</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable OpenAPI validation for outgoing request messages (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.openapi.validation.enabled.response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable OpenAPI validation for incoming response messages (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.openapi.neglect.base.path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the base path defined in the OpenAPI specification is ignored when matching request paths (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.openapi.request.fill.random.values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls auto-fill of random values in request data: <code>REQUIRED</code>, <code>ALL</code>, <code>NONE</code> (default="REQUIRED")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.openapi.response.fill.random.values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls auto-fill of random values in response data: <code>REQUIRED</code>, <code>ALL</code>, <code>NONE</code> (default="REQUIRED")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.openapi.validation.policy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validation policy when parsing OpenAPI specifications: <code>REPORT</code>, <code>STRICT</code>, <code>IGNORE</code> (default="REPORT")</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_OPENAPI_GENERATE_OPTIONAL_FIELDS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable generation of optional fields in request/response data (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_OPENAPI_VALIDATION_ENABLED_REQUEST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable OpenAPI validation for outgoing request messages (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_OPENAPI_VALIDATION_ENABLED_RESPONSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable OpenAPI validation for incoming response messages (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_OPENAPI_NEGLECT_BASE_PATH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, the base path defined in the OpenAPI specification is ignored when matching request paths (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_OPENAPI_REQUEST_FILL_RANDOM_VALUES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls auto-fill of random values in request data: <code>REQUIRED</code>, <code>ALL</code>, <code>NONE</code> (default="REQUIRED")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_OPENAPI_RESPONSE_FILL_RANDOM_VALUES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls auto-fill of random values in response data: <code>REQUIRED</code>, <code>ALL</code>, <code>NONE</code> (default="REQUIRED")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_OPENAPI_VALIDATION_POLICY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validation policy when parsing OpenAPI specifications: <code>REPORT</code>, <code>STRICT</code>, <code>IGNORE</code> (default="REPORT")</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="openapi-specification"><a class="anchor" href="#openapi-specification"></a><a class="link" href="#openapi-specification">34.2. OpenAPI specification</a></h3>
 <div class="paragraph">
 <p>The OpenAPI test actions in Citrus uses a specification which usually is a json or yaml document shared between the components.</p>
 </div>
@@ -46834,7 +47242,7 @@ Or you may just point the OpenAPI components to a local specification file.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="openapi-client"><a class="anchor" href="#openapi-client"></a><a class="link" href="#openapi-client">34.2. OpenAPI client</a></h3>
+<h3 id="openapi-client"><a class="anchor" href="#openapi-client"></a><a class="link" href="#openapi-client">34.3. OpenAPI client</a></h3>
 <div class="paragraph">
 <p>On the client side Citrus uses the OpenAPI specification to generate a proper HTTP request that is sent to the server.
 The user just gives a valid operationId from the specification every thing else is automatically generated.
@@ -47036,7 +47444,7 @@ Now let&#8217;s have a closer look at the server side OpenAPI support in the nex
 </div>
 </div>
 <div class="sect2">
-<h3 id="openapi-server"><a class="anchor" href="#openapi-server"></a><a class="link" href="#openapi-server">34.3. OpenAPI server</a></h3>
+<h3 id="openapi-server"><a class="anchor" href="#openapi-server"></a><a class="link" href="#openapi-server">34.4. OpenAPI server</a></h3>
 <div class="paragraph">
 <p>On the server side Citrus is able to verify incoming requests based on the OpenAPI specification.
 The expected request message content as well as the expected resource URL path and the Content-Type are automatically validated.</p>
@@ -47350,7 +47758,7 @@ public KubernetesClient k8sClient() {
                 .password("s!cr!t")
                 .namespace("user_namespace")
                 .messageConverter(messageConverter)
-                .jsonMapper("jsonMapper")
+                .objectMapper("objectMapper")
                 .build();
 }</code></pre>
 </div>
@@ -47368,7 +47776,7 @@ public KubernetesClient k8sClient() {
                 .password("s!cr!t")
                 .namespace("user_namespace")
                 .messageConverter(messageConverter)
-                .jsonMapper("jsonMapper")
+                .objectMapper("objectMapper")
                 .build();
 }</code></pre>
 </div>
@@ -47384,7 +47792,7 @@ public KubernetesClient k8sClient() {
               password="s!cr!t"
               namespace="user_namespace"
               message-converter="messageConverter"
-              json-mapper="jsonMapper"/&gt;</code></pre>
+              object-mapper="objectMapper"/&gt;</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -50981,7 +51389,7 @@ Citrus exposes special test variables that represent connection settings for the
 <h3 id="testcontainers-localstack"><a class="anchor" href="#testcontainers-localstack"></a><a class="link" href="#testcontainers-localstack">38.4. LocalStack</a></h3>
 <div class="paragraph">
 <p>The LocalStack Testcontainers module allows you to start lightweight Amazon WebServices such as AWS S3, AWS SQS, AWS SNS or AWS Kinesis.
-You can start a LocalStack instance with the following test action.</p>
+You can start a LocslStack instance with the following test action.</p>
 </div>
 <div class="listingblock primary">
 <div class="title">Java</div>
@@ -51035,126 +51443,7 @@ actions:
 In the example above the AWS S3 service is enabled.</p>
 </div>
 <div class="sect3">
-<h4 id="testcontainers-localstack-security"><a class="anchor" href="#testcontainers-localstack-security"></a><a class="link" href="#testcontainers-localstack-security">38.4.1. Container security settings</a></h4>
-<div class="paragraph">
-<p>The LocalStack container uses some default dummy values for <code>secretKey</code> and <code>accessKey</code>. You may set these properties explicitly as well as the region when starting the container.</p>
-</div>
-<div class="listingblock primary">
-<div class="title">Java</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@CitrusTest
-public void testcontainersTest() {
-    given(testcontainers()
-            .localstack()
-            .start()
-            .secretKey("${secretKey}")
-            .accessKey("${accessKey}")
-            .region("us-east-1")
-            .withService(LocalStackContainer.Service.S3));
-}</code></pre>
-</div>
-</div>
-<div class="listingblock secondary">
-<div class="title">XML</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase"&gt;
-    &lt;actions&gt;
-        &lt;testcontainers&gt;
-          &lt;start&gt;
-            &lt;localstack
-              secret-key="${secretKey}"
-              access-key="${accessKey}"
-              region="us-east-1"
-              services="S3"/&gt;
-          &lt;/start&gt;
-        &lt;/testcontainers&gt;
-    &lt;/actions&gt;
-&lt;/test&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock secondary">
-<div class="title">YAML</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: TestcontainersTest
-actions:
-  - testcontainers:
-      start:
-        localstack:
-          secretKey: '${secretKey}'
-          accessKey: '${accessKey}'
-          region: us-east-1
-          services:
-            - "S3"</code></pre>
-</div>
-</div>
-<div class="listingblock secondary">
-<div class="title">Spring XML</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans"&gt;
-    &lt;!-- NOT SUPPORTED --&gt;
-&lt;/spring:beans&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>As you can see the settings support test variables so you may load these values from a local file or as a global variable via env setting.</p>
-</div>
-<div class="paragraph">
-<p>You may also use one of these envVars for a global and secure way of setting these values:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>CITRUS_TESTCONTAINERS_LOCALSTACK_SECRET_KEY</p>
-</li>
-<li>
-<p>CITRUS_TESTCONTAINERS_LOCALSTACK_ACCESS_KEY</p>
-</li>
-<li>
-<p>CITRUS_TESTCONTAINERS_LOCALSTACK_REGION</p>
-</li>
-<li>
-<p>CITRUS_TESTCONTAINERS_LOCALSTACK_AUTH_TOKEN</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>In the <code>citrus-application.properties</code> you can set these keys:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>citrus.testcontainers.localstack.secret.key</p>
-</li>
-<li>
-<p>citrus.testcontainers.localstack.access.key</p>
-</li>
-<li>
-<p>citrus.testcontainers.localstack.region</p>
-</li>
-<li>
-<p>citrus.testcontainers.localstack.auth.token</p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Since mid 2026 newer versions of the LocalStack container require an auth token. You may obtain your personal token from the official LocalStack website.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>You can use the <code>authToken()</code> setting when starting the container with the respective test action.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="testcontainers-localstack-settings"><a class="anchor" href="#testcontainers-localstack-settings"></a><a class="link" href="#testcontainers-localstack-settings">38.4.2. Exposed connection settings</a></h4>
+<h4 id="testcontainers-localstack-settings"><a class="anchor" href="#testcontainers-localstack-settings"></a><a class="link" href="#testcontainers-localstack-settings">38.4.1. Exposed connection settings</a></h4>
 <div class="paragraph">
 <p>Citrus exposes special test variables that represent connection settings for the LocalStack container:</p>
 </div>
@@ -51229,7 +51518,7 @@ Since mid 2026 newer versions of the LocalStack container require an auth token.
 </table>
 </div>
 <div class="sect3">
-<h4 id="testcontainers-localstack-auto-clients"><a class="anchor" href="#testcontainers-localstack-auto-clients"></a><a class="link" href="#testcontainers-localstack-auto-clients">38.4.3. Service client auto creation</a></h4>
+<h4 id="testcontainers-localstack-auto-clients"><a class="anchor" href="#testcontainers-localstack-auto-clients"></a><a class="link" href="#testcontainers-localstack-auto-clients">38.4.2. Service client auto creation</a></h4>
 <div class="paragraph">
 <p>The Citrus LocalStack container action is able to automatically create clients for the enabled services.</p>
 </div>
@@ -51397,7 +51686,7 @@ actions:
 </table>
 </div>
 <div class="sect3">
-<h4 id="testcontainers-localstack-clients"><a class="anchor" href="#testcontainers-localstack-clients"></a><a class="link" href="#testcontainers-localstack-clients">38.4.4. Custom service clients</a></h4>
+<h4 id="testcontainers-localstack-clients"><a class="anchor" href="#testcontainers-localstack-clients"></a><a class="link" href="#testcontainers-localstack-clients">38.4.3. Custom service clients</a></h4>
 <div class="paragraph">
 <p>You can use the exposed connections settings in the test variables to connect to the LocalStack Testcontainers instance.</p>
 </div>
@@ -51490,252 +51779,8 @@ actions:
 </div>
 </div>
 <div class="paragraph">
-<p>The example above uses a special test actions to start the Kafka container.</p>
-</div>
-<div class="sect3">
-<h4 id="testcontainers-kafka-implementations"><a class="anchor" href="#testcontainers-kafka-implementations"></a><a class="link" href="#testcontainers-kafka-implementations">38.5.1. Kafka container implementations</a></h4>
-<div class="paragraph">
-<p>Citrus provides support for different Kafka container implementations to give you flexibility in choosing the most suitable option for your testing needs:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Confluent Platform</strong> (default) - The Confluent Community Edition Kafka distribution</p>
-</li>
-<li>
-<p><strong>Apache Kafka</strong> - The official Apache Kafka distribution</p>
-</li>
-<li>
-<p><strong>Apache Kafka Native</strong> - The Apache Kafka distribution with native GraalVM compilation for faster startup</p>
-</li>
-<li>
-<p><strong>Strimzi</strong> - A Kubernetes-native Kafka distribution based on Apache Kafka</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>By default, Citrus uses the Confluent Platform implementation. You can specify a different implementation using the <code>implementation()</code> method:</p>
-</div>
-<div class="listingblock primary">
-<div class="title">Java</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@CitrusTest
-public void testcontainersTest() {
-    given(testcontainers()
-            .kafka()
-            .start()
-            .implementation(KafkaImplementation.STRIMZI));
-}</code></pre>
-</div>
-</div>
-<div class="listingblock secondary">
-<div class="title">XML</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase"&gt;
-    &lt;actions&gt;
-        &lt;testcontainers&gt;
-          &lt;start&gt;
-            &lt;kafka implementation="STRIMZI"/&gt;
-          &lt;/start&gt;
-        &lt;/testcontainers&gt;
-    &lt;/actions&gt;
-&lt;/test&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock secondary">
-<div class="title">YAML</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: TestcontainersTest
-actions:
-  - testcontainers:
-      start:
-        kafka:
-          implementation: "STRIMZI"</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Available implementation values are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>CONFLUENT</code> - Uses the <code>confluentinc/cp-kafka</code> image (default)</p>
-</li>
-<li>
-<p><code>APACHE</code> - Uses the <code>apache/kafka</code> image</p>
-</li>
-<li>
-<p><code>APACHE_NATIVE</code> - Uses the <code>apache/kafka-native</code> image (GraalVM native compilation for faster startup)</p>
-</li>
-<li>
-<p><code>STRIMZI</code> - Uses the <code>quay.io/strimzi/kafka</code> image</p>
-</li>
-<li>
-<p><code>DEFAULT</code> - Same as <code>CONFLUENT</code></p>
-</li>
-</ul>
-</div>
-<div class="sect4">
-<h5 id="choosing-between-apache-and-apache_native"><a class="anchor" href="#choosing-between-apache-and-apache_native"></a><a class="link" href="#choosing-between-apache-and-apache_native">Choosing between APACHE and APACHE_NATIVE</a></h5>
-<div class="paragraph">
-<p>Both <code>APACHE</code> and <code>APACHE_NATIVE</code> implementations use the official Apache Kafka distribution, but there are important differences:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>APACHE</strong> uses the standard JVM-based <code>apache/kafka</code> container image</p>
-</li>
-<li>
-<p><strong>APACHE_NATIVE</strong> uses the <code>apache/kafka-native</code> container image, which is compiled ahead-of-time using GraalVM native image technology</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The main advantage of <code>APACHE_NATIVE</code> is significantly faster container startup time, which can reduce test execution time, especially when running multiple tests that start Kafka containers. However, it has the same runtime behavior and compatibility as the standard <code>APACHE</code> implementation.</p>
-</div>
-<div class="paragraph">
-<p>Use <code>APACHE_NATIVE</code> when:
-* You want faster test execution with reduced container startup times
-* Your test suite frequently starts and stops Kafka containers
-* You are comfortable using GraalVM-compiled binaries</p>
-</div>
-<div class="paragraph">
-<p>Use <code>APACHE</code> when:
-* You need the standard JVM-based Kafka distribution
-* You want to ensure full compatibility with the traditional Kafka deployment model</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="testcontainers-kafka-configuration"><a class="anchor" href="#testcontainers-kafka-configuration"></a><a class="link" href="#testcontainers-kafka-configuration">38.5.2. Configuration options</a></h4>
-<div class="paragraph">
-<p>You can customize the Kafka container with additional settings:</p>
-</div>
-<div class="listingblock primary">
-<div class="title">Java</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@CitrusTest
-public void testcontainersTest() {
-    given(testcontainers()
-            .kafka()
-            .start()
-            .implementation(KafkaImplementation.APACHE)
-            .version("4.2.1")
-            .port(9092));
-}</code></pre>
-</div>
-</div>
-<div class="listingblock secondary">
-<div class="title">XML</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="TestcontainersTest" xmlns="http://citrusframework.org/schema/xml/testcase"&gt;
-    &lt;actions&gt;
-        &lt;testcontainers&gt;
-          &lt;start&gt;
-            &lt;kafka implementation="APACHE" version="4.2.1" port="9092"/&gt;
-          &lt;/start&gt;
-        &lt;/testcontainers&gt;
-    &lt;/actions&gt;
-&lt;/test&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock secondary">
-<div class="title">YAML</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: TestcontainersTest
-actions:
-  - testcontainers:
-      start:
-        kafka:
-          implementation: "APACHE"
-          version: "4.2.1"
-          port: 9092</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You may also use system properties or environment variables to configure the default Kafka container settings:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Setting</th>
-<th class="tableblock halign-left valign-top">System Property</th>
-<th class="tableblock halign-left valign-top">Environment Variable</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implementation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.implementation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_IMPLEMENTATION</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Confluent image name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.confluent.image.name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_CONFLUENT_IMAGE_NAME</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Confluent version</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.confluent.version</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_CONFLUENT_VERSION</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apache image name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.apache.image.name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_APACHE_IMAGE_NAME</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apache version</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.apache.version</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_APACHE_VERSION</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apache Native image name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.apache.native.image.name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_APACHE_NATIVE_IMAGE_NAME</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apache Native version</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.apache.native.version</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_APACHE_NATIVE_VERSION</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Strimzi image name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.strimzi.image.name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_STRIMZI_IMAGE_NAME</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Strimzi version</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.strimzi.version</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_STRIMZI_VERSION</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Service name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.service.name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_SERVICE_NAME</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.container.name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_NAME</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Startup timeout (seconds)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.testcontainers.kafka.startup.timeout</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TESTCONTAINERS_KAFKA_STARTUP_TIMEOUT</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="testcontainers-kafka-variables"><a class="anchor" href="#testcontainers-kafka-variables"></a><a class="link" href="#testcontainers-kafka-variables">38.5.3. Exposed connection settings</a></h4>
-<div class="paragraph">
-<p>Citrus exposes special test variables that represent connection settings for the Kafka container:</p>
+<p>In the test example the Kafka Testcontainers module is started.
+Citrus exposes special test variables that represent connection settings for the Kafka container:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -51784,7 +51829,6 @@ actions:
 </table>
 <div class="paragraph">
 <p>You can use these test variables to connect to the Kafka Testcontainers instance.</p>
-</div>
 </div>
 </div>
 <div class="sect2">
@@ -54536,7 +54580,7 @@ Each call to the service API may use different settings and test run criteria (e
 <p>The agent REST API provides these operations:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. REST service operations</caption>
+<caption class="title">Table 8. REST service operations</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -54603,7 +54647,7 @@ The environment settings are well suited for both usual Java runtime environment
 <p>The Citrus agent application supports the following settings.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. System properties</caption>
+<caption class="title">Table 9. System properties</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -54625,7 +54669,7 @@ The environment settings are well suited for both usual Java runtime environment
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.test.engine</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The default engine used to run tests on this agent. One of junit, junit-jupiter, junit4, testng, cucumber. Default is <code>junit-jupiter</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default engine used to run tests on this agent. One of junit, junit5, testng, cucumber. Default is <code>junit5</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">citrus.agent.time.to.live</p></td>
@@ -54669,7 +54713,7 @@ The environment settings are well suited for both usual Java runtime environment
 <p>Same properties are settable via environment variables.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Environment variables</caption>
+<caption class="title">Table 10. Environment variables</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -54691,7 +54735,7 @@ The environment settings are well suited for both usual Java runtime environment
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_TEST_ENGINE</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The default engine used to run tests on this agent. One of junit, junit-jupiter, junit4, testng, cucumber. Default is <code>junit-jupiter</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default engine used to run tests on this agent. One of junit, junit5, testng, cucumber. Default is <code>junit5</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_AGENT_TIME_TO_LIVE</p></td>
@@ -54874,7 +54918,7 @@ spec:
 <p>The Citrus JBang command line tooling supports several agent related commands:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. JBang agent commands</caption>
+<caption class="title">Table 11. JBang agent commands</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -54909,7 +54953,7 @@ The plugin waits for the remote test execution to finish and provides the test r
 <p>The Citrus agent Maven plugin provides these goals to execute:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Goals</caption>
+<caption class="title">Table 12. Goals</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -56829,6 +56873,65 @@ These report and result pages will help you to get an overview of the test cases
 They&#8217;re being generated into <code>target/citrus-reports</code> by default, but that can be changed by setting the <code>citrus.report.directory</code> property to the desired location.
 E.g. it could be set to <code>citrus.report.directory=build/citrus-reports</code> for <a href="#setup-gradle">Gradle</a> builds.</p>
 </div>
+<div class="sect2">
+<h3 id="reporting-general-settings"><a class="anchor" href="#reporting-general-settings"></a><a class="link" href="#reporting-general-settings">46.1. General report settings</a></h3>
+<div class="paragraph">
+<p>The following settings apply to all reporters and control general reporting behavior.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 13. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.report.directory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target directory for report files (default="target/citrus-reports")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.report.auto.clear</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Automatically clear all test results after finishing the test suite (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.report.ignore.errors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignore errors during report generation (default="true")</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 14. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_REPORT_DIRECTORY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target directory for report files (default="target/citrus-reports")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_REPORT_AUTO_CLEAR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Automatically clear all test results after finishing the test suite (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_REPORT_IGNORE_ERRORS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignore errors during report generation (default="true")</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>In the following chapters, we&#8217;ll provide an overview of the three standard loggers available in Citrus. It&#8217;s important to note that in Spring, you have the flexibility to replace these standard loggers with your own implementations. This can be achieved by registering custom implementations, as demonstrated in the following code snippet:</p>
 </div>
@@ -56865,8 +56968,9 @@ citrus.default.junit.reporter.enabled=false
 citrus.default.html.reporter.enabled=false</code></pre>
 </div>
 </div>
+</div>
 <div class="sect2">
-<h3 id="console-logging"><a class="anchor" href="#console-logging"></a><a class="link" href="#console-logging">46.1. Console logging</a></h3>
+<h3 id="console-logging"><a class="anchor" href="#console-logging"></a><a class="link" href="#console-logging">46.2. Console logging</a></h3>
 <div class="paragraph">
 <p>During the test run the framework will provide a huge amount of information that is printed out to the console. This includes current test progress, validation results and error information. This enables the user to quickly supervise the test run progress. Failures in tests will be printed to the console just the time the error occurred. The detailed stack trace information and the detailed error messages are helpful to get the idea what went wrong.</p>
 </div>
@@ -56906,7 +57010,7 @@ citrus.default.html.reporter.enabled=false</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="junit-reports"><a class="anchor" href="#junit-reports"></a><a class="link" href="#junit-reports">46.2. JUnit reports</a></h3>
+<h3 id="junit-reports"><a class="anchor" href="#junit-reports"></a><a class="link" href="#junit-reports">46.3. JUnit reports</a></h3>
 <div class="paragraph">
 <p>As tests are executed as TestNG test cases, the framework will also generate JUnit compliant XML and HTML reports. JUnit test reports are very popular and find support in many build management and development tools. In general the Citrus test reports give you an overall picture of all tests and tell you which of them were failing.</p>
 </div>
@@ -56915,7 +57019,7 @@ citrus.default.html.reporter.enabled=false</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="html-reports"><a class="anchor" href="#html-reports"></a><a class="link" href="#html-reports">46.3. HTML reports</a></h3>
+<h3 id="html-reports"><a class="anchor" href="#html-reports"></a><a class="link" href="#html-reports">46.4. HTML reports</a></h3>
 <div class="paragraph">
 <p>Citrus creates HTML reports after each test run. The report provides detailed information on the test run with a summary of all test results. You can find the report after a test run in the directory <strong><em>${project.build.directory}/citrus-reports</em></strong> .</p>
 </div>
@@ -56938,62 +57042,292 @@ JavaScript should be active in your web browser. This is to enable the detailed 
 </table>
 </div>
 <div class="paragraph">
-<p>The HTML reports are customizable by system properties. Use following properties e.g. in your <strong>citrus.properties</strong> file:</p>
+<p>The HTML reports are customizable by system properties and environment variables:</p>
 </div>
-<div class="hdlist">
-<table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 15. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
 <tr>
-<td class="hdlist1">
-citrus.html.report.enabled
-</td>
-<td class="hdlist2">
-<p>Enables/disables HTML report generation (default= <strong><em>true</em></strong>).</p>
-</td>
+<th class="tableblock halign-left valign-top">System property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.html.report.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables/disables HTML report generation (default="true")</p></td>
 </tr>
 <tr>
-<td class="hdlist1">
-citrus.html.report.directory
-</td>
-<td class="hdlist2">
-<p>Output directory path (default= <strong><em>${project.build.directory}/citrus-reports</em></strong>).</p>
-</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.html.report.directory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output directory path (default=uses <code>citrus.report.directory</code>)</p></td>
 </tr>
 <tr>
-<td class="hdlist1">
-citrus.html.report.file
-</td>
-<td class="hdlist2">
-<p>File name for the report file (default= <strong><em>citrus-test-results.html</em></strong>).</p>
-</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.html.report.file</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File name for the report file (default="citrus-test-results.html")</p></td>
 </tr>
 <tr>
-<td class="hdlist1">
-citrus.html.report.template
-</td>
-<td class="hdlist2">
-<p>Template HTML file with placeholders for report results.</p>
-</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.html.report.template</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template HTML file with placeholders for report results</p></td>
 </tr>
 <tr>
-<td class="hdlist1">
-citrus.html.report.detail.template
-</td>
-<td class="hdlist2">
-<p>Template file for detailed test results.</p>
-</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.html.report.detail.template</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template file for detailed test results</p></td>
 </tr>
 <tr>
-<td class="hdlist1">
-citrus.html.report.logo
-</td>
-<td class="hdlist2">
-<p>File resource path pointing to an image that is added to top of HTML report.</p>
-</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.html.report.logo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File resource path pointing to an image that is added to top of HTML report</p></td>
 </tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 16. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_HTML_REPORT_ENABLED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables/disables HTML report generation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_HTML_REPORT_DIRECTORY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output directory path (default=uses <code>CITRUS_REPORT_DIRECTORY</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_HTML_REPORT_FILE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File name for the report file (default="citrus-test-results.html")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_HTML_REPORT_TEMPLATE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template HTML file with placeholders for report results</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_HTML_REPORT_DETAIL_TEMPLATE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template file for detailed test results</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_HTML_REPORT_LOGO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File resource path pointing to an image that is added to top of HTML report</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The HTML report is based on a template file that is customizable to your special needs.</p>
+</div>
+<div class="sect3">
+<h4 id="junit-report-settings"><a class="anchor" href="#junit-report-settings"></a><a class="link" href="#junit-report-settings">46.4.1. JUnit report settings</a></h4>
+<div class="paragraph">
+<p>The JUnit XML report settings control the output of JUnit-compatible test result files.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 17. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.junit.report.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables/disables JUnit report generation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.junit.report.directory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output directory for JUnit report files, relative to the general report directory (default="junitreports")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.junit.report.file.pattern</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File name pattern for JUnit report files, using <code>%s</code> as test name placeholder (default="TEST-%s.xml")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.junit.report.suite.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test suite name used in the JUnit report (default="TestSuite")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.junit.report.template</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template file for the JUnit report</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.junit.report.success.template</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template file for successful test results</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.junit.report.failed.template</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template file for failed test results</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 18. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_JUNIT_REPORT_ENABLED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables/disables JUnit report generation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_JUNIT_REPORT_DIRECTORY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output directory for JUnit report files (default="junitreports")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_JUNIT_REPORT_FILE_PATTERN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File name pattern for JUnit report files (default="TEST-%s.xml")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_JUNIT_REPORT_SUITE_NAME</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test suite name used in the JUnit report (default="TestSuite")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_JUNIT_REPORT_TEMPLATE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template file for the JUnit report</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_JUNIT_REPORT_SUCCESS_TEMPLATE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template file for successful test results</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_JUNIT_REPORT_FAILED_TEMPLATE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template file for failed test results</p></td>
+</tr>
+</tbody>
 </table>
 </div>
+<div class="sect3">
+<h4 id="summary-report-settings"><a class="anchor" href="#summary-report-settings"></a><a class="link" href="#summary-report-settings">46.4.2. Summary report settings</a></h4>
 <div class="paragraph">
-<p>The HTML report is based on a template file that is customizable to your special needs. The default templates can be found in <a href="https://github.com/citrusframework/citrus/tree/master/modules/citrus-core/src/main/resources/org/citrusframework/report">report-templates sources</a>.</p>
+<p>The summary report provides a condensed overview of all test results.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 19. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.summary.report.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables/disables summary report generation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.summary.report.file</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output file name for the summary report (default="citrus-summary.xml")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.summary.report.template</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template file for the summary report</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 20. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_SUMMARY_REPORT_ENABLED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables/disables summary report generation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_SUMMARY_REPORT_FILE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output file name for the summary report (default="citrus-summary.xml")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_SUMMARY_REPORT_TEMPLATE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Template file for the summary report</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="test-flow-report-settings"><a class="anchor" href="#test-flow-report-settings"></a><a class="link" href="#test-flow-report-settings">46.4.3. Test flow report settings</a></h4>
+<div class="paragraph">
+<p>The test flow reporter outputs a detailed trace of the test execution flow including all test actions and their results.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 21. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.test.flow.report.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables/disables test flow report generation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.test.flow.report.output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output format for the test flow report: <code>json</code>, <code>yaml</code>, or comma-separated combination (default="json")</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 22. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TEST_FLOW_REPORT_ENABLED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables/disables test flow report generation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TEST_FLOW_REPORT_OUTPUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output format for the test flow report: <code>json</code>, <code>yaml</code>, or comma-separated combination (default="json")</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -57018,7 +57352,7 @@ settings initialize on the startup and evaluate environment settings in favor of
 such as Docker or Kubernetes. The following settings do support this kind of environment configuration.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. System properties</caption>
+<caption class="title">Table 23. System properties</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -57066,13 +57400,97 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 <td class="tableblock halign-left valign-top"><p class="tableblock">citrus.java.file.name.pattern</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">File name patterns used for Java test sources package scan (default="/**/*Test.java,/**/*IT.java")</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.groovy.file.name.pattern</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File name patterns used for Groovy test file package scan (default="<strong>.citrus.groovy,</strong>.citrus.test.groovy,&#8230;&#8203;")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.yaml.file.name.pattern</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File name patterns used for YAML test file package scan (default="<strong>.citrus.yaml,</strong>.citrus.test.yaml,&#8230;&#8203;")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.message.trace.directory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Directory path for message trace output files (default="target/citrus-logs/trace/messages")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.type.converter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default type converter to use (default="default")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.perform.default.validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable fallback to default text equals validation when no other validator matches (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.custom.validator.strategy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strategy for custom validators: EXCLUSIVE or COMPLEMENTARY (default="EXCLUSIVE")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.message.cache.input.stream</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable caching of message input streams (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.message.pretty.print</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable pretty print formatting for message payloads in logs (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.file.path.charset.parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Separator used for charset parameter in file paths (default="; charset=")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.resources.workdir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Working directory for loading file resources (default="")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.groovy.static.imports</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of static imports for Groovy test action scripts (default="print,sleep")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.default.logging.reporter.print-stack-traces</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable stack trace output in the default logging reporter (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.dynamic.endpoints.auto.close</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable automatic closing of dynamic endpoints after the test (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.dynamic.endpoints.auto.remove</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable automatic closing and removal of dynamic endpoints after the test (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.print.banner</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable the Citrus banner output at the beginning of the test suite (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.allow.function.override</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow overriding of default functions with custom implementations using the same name (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.allow.validation.matcher.override</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow overriding of default validation matchers with custom implementations using the same name (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.validation.outbound.schema.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable outbound schema validation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.validation.outbound.json.schema.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable outbound JSON schema validation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.validation.outbound.xml.schema.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable outbound XML schema validation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.http.message.builder.force.citrus.header.update.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable forced creation of unique Citrus message IDs in the HTTP message builder (default="true")</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
 <p>Same properties are settable via environment variables.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Environment variables</caption>
+<caption class="title">Table 24. Environment variables</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -57120,11 +57538,245 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 <td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_JAVA_FILE_NAME_PATTERN</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">File name patterns used for Java test sources package scan (default="/**/*Test.java,/**/*IT.java")</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_GROOVY_FILE_NAME_PATTERN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File name patterns used for Groovy test file package scan (default="<strong>.citrus.groovy,</strong>.citrus.test.groovy,&#8230;&#8203;")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_YAML_FILE_NAME_PATTERN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File name patterns used for YAML test file package scan (default="<strong>.citrus.yaml,</strong>.citrus.test.yaml,&#8230;&#8203;")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_MESSAGE_TRACE_DIRECTORY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Directory path for message trace output files (default="target/citrus-logs/trace/messages")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TYPE_CONVERTER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default type converter to use (default="default")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_PERFORM_DEFAULT_VALIDATION</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable fallback to default text equals validation when no other validator matches (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CUSTOM_VALIDATOR_STRATEGY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strategy for custom validators: EXCLUSIVE or COMPLEMENTARY (default="EXCLUSIVE")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_MESSAGE_CACHE_INPUT_STREAM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable caching of message input streams (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_MESSAGE_PRETTY_PRINT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable pretty print formatting for message payloads in logs (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_FILE_PATH_CHARSET_PARAMETER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Separator used for charset parameter in file paths (default="; charset=")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_RESOURCES_WORKDIR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Working directory for loading file resources (default="")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_GROOVY_STATIC_IMPORTS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of static imports for Groovy test action scripts (default="print,sleep")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable stack trace output in the default logging reporter (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_DYNAMIC_ENDPOINTS_AUTO_CLOSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable automatic closing of dynamic endpoints after the test (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_DYNAMIC_ENDPOINTS_AUTO_REMOVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable automatic closing and removal of dynamic endpoints after the test (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_PRINT_BANNER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable the Citrus banner output at the beginning of the test suite (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_ALLOW_FUNCTION_OVERRIDE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow overriding of default functions with custom implementations using the same name (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_ALLOW_VALIDATION_MATCHER_OVERRIDE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow overriding of default validation matchers with custom implementations using the same name (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_VALIDATION_OUTBOUND_SCHEMA_ENABLED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable outbound schema validation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_VALIDATION_OUTBOUND_JSON_SCHEMA_ENABLED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable outbound JSON schema validation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_VALIDATION_OUTBOUND_XML_SCHEMA_ENABLED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable outbound XML schema validation (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable forced creation of unique Citrus message IDs in the HTTP message builder (default="true")</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="configuration-property-binding"><a class="anchor" href="#configuration-property-binding"></a><a class="link" href="#configuration-property-binding">47.2. Property binding support</a></h3>
+<h3 id="configuration-log-settings"><a class="anchor" href="#configuration-log-settings"></a><a class="link" href="#configuration-log-settings">47.2. Log settings</a></h3>
+<div class="paragraph">
+<p>Citrus provides settings to control message content logging and sensitive data masking. The log modifier automatically masks
+sensitive values (such as passwords and secrets) in message payloads before they are written to the log output. These settings
+can be configured via system properties or environment variables.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 25. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.modifier</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable the log modifier that masks sensitive data in message payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.mask.keywords</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of keywords that identify sensitive fields to mask (default="password,secret,secretKey")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.mask.value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The mask replacement value used when sensitive data is detected (default="\****")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.mask.xml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable log masking for XML message payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.mask.json</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable log masking for JSON message payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.mask.yaml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable log masking for YAML message payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.mask.key.value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable log masking for key-value pair payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.mask.form.url.encoded</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable log masking for form URL-encoded payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.print.message.content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable printing of message content (headers and body) in log output (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.print.inbound.message.content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable printing of inbound message content in log output. Inherits from <code>citrus.logger.print.message.content</code> when not set.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.print.outbound.message.content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable printing of outbound message content in log output. Inherits from <code>citrus.logger.print.message.content</code> when not set.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.print.message.layout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Layout mode for message content in log output: <code>verbose</code>, <code>summary</code>, <code>compact</code>, <code>body</code> (default="verbose")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.message.payload.max.length</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum length of message body in log output before truncation (default="2048")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.logger.color</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ANSI color mode for log output: <code>auto</code>, <code>always</code>, <code>never</code> (default="auto")</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 26. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_MODIFIER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable the log modifier that masks sensitive data in message payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_MASK_KEYWORDS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of keywords that identify sensitive fields to mask (default="password,secret,secretKey")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_MASK_VALUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The mask replacement value used when sensitive data is detected (default="\****")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_MASK_XML</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable log masking for XML message payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_MASK_JSON</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable log masking for JSON message payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_MASK_YAML</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable log masking for YAML message payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_MASK_KEY_VALUE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable log masking for key-value pair payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_MASK_FORM_URL_ENCODED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable log masking for form URL-encoded payloads (default="true")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_PRINT_MESSAGE_CONTENT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable printing of message content (headers and body) in log output (default="false")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_PRINT_INBOUND_MESSAGE_CONTENT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable printing of inbound message content in log output. Inherits from <code>CITRUS_LOG_PRINT_MESSAGE_CONTENT</code> when not set.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_PRINT_OUTBOUND_MESSAGE_CONTENT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable printing of outbound message content in log output. Inherits from <code>CITRUS_LOG_PRINT_MESSAGE_CONTENT</code> when not set.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_PRINT_MESSAGE_LAYOUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Layout mode for message content in log output: <code>verbose</code>, <code>summary</code>, <code>compact</code>, <code>body</code> (default="verbose")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_MESSAGE_PAYLOAD_MAX_LENGTH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum length of message body in log output before truncation (default="2048")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_LOG_COLOR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ANSI color mode for log output: <code>auto</code>, <code>always</code>, <code>never</code> (default="auto")</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="configuration-property-binding"><a class="anchor" href="#configuration-property-binding"></a><a class="link" href="#configuration-property-binding">47.3. Property binding support</a></h3>
 <div class="paragraph">
 <p>The Citrus project defines components and endpoints in the form of beans in the Citrus registry, which is either the Java configuration or a Spring bean configuration. The beans in the registry provide properties that you can overwrite with environment variables and system properties.</p>
 </div>
@@ -57224,7 +57876,7 @@ Given a bean named <code>myLog</code> of type <code>org.citrusframework.LogModif
 You can disable the bindings with the environment setting:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. System properties</caption>
+<caption class="title">Table 27. System properties</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -57251,7 +57903,7 @@ You can disable the bindings with the environment setting:</p>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Environment variables</caption>
+<caption class="title">Table 28. Environment variables</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -57279,13 +57931,13 @@ You can disable the bindings with the environment setting:</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="configuration-spring"><a class="anchor" href="#configuration-spring"></a><a class="link" href="#configuration-spring">47.3. Spring configuration settings</a></h3>
+<h3 id="configuration-spring"><a class="anchor" href="#configuration-spring"></a><a class="link" href="#configuration-spring">47.4. Spring configuration settings</a></h3>
 <div class="paragraph">
 <p>When spring framework is enabled in Citrus you can set specific settings regarding the Spring
 application context.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. System properties</caption>
+<caption class="title">Table 29. System properties</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -57308,7 +57960,7 @@ application context.</p>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. Environment variables</caption>
+<caption class="title">Table 30. Environment variables</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -57332,7 +57984,7 @@ application context.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="configuration-property-file"><a class="anchor" href="#configuration-property-file"></a><a class="link" href="#configuration-property-file">47.4. Property file settings</a></h3>
+<h3 id="configuration-property-file"><a class="anchor" href="#configuration-property-file"></a><a class="link" href="#configuration-property-file">47.5. Property file settings</a></h3>
 <div class="paragraph">
 <p>As mentioned in the previous section Citrus as a framework references some basic settings from system environment properties
 or variables. You can overwrite these settings in a central property file which is loaded at the very beginning of the
@@ -63124,28 +63776,8 @@ Citrus is able to run these database containers as part of the test.</p>
 </div>
 <div class="sect3">
 <h4 id="integrate-with-ai-assistance-tools"><a class="anchor" href="#integrate-with-ai-assistance-tools"></a><a class="link" href="#integrate-with-ai-assistance-tools">51.3.2. Integrate with AI assistance tools</a></h4>
-<div class="sect4">
-<h5 id="install-as-a-plugin"><a class="anchor" href="#install-as-a-plugin"></a><a class="link" href="#install-as-a-plugin">Install as a plugin</a></h5>
 <div class="paragraph">
-<p>Claude Code can install the Citrus MCP server from the marketplace defined in the <code>citrusframework/citrus</code>
-repository, so you do not have to edit any configuration file by hand. JBang must still be installed
-and available on your PATH.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">claude plugin marketplace add citrusframework/citrus
-claude plugin install citrus-mcp@citrus-marketplace</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The first command registers the marketplace; the second installs the <code>citrus-mcp</code> plugin, which ships
-the MCP server configuration. The server is launched on demand over STDIO via JBang.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="manual-configuration"><a class="anchor" href="#manual-configuration"></a><a class="link" href="#manual-configuration">Manual configuration</a></h5>
-<div class="paragraph">
-<p>Alternatively, add you can integrate the Citrus MCP server into AI code assistance tools using a local <code>.mcp.json</code> configuration file in your project folder.</p>
+<p>You can integrate the Citrus MCP server into AI code assistance tools using a local <code>.mcp.json</code> configuration file in your project folder.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -63203,7 +63835,6 @@ You can also run the server directly without using JBang - then it would be some
     }
   }
 }</code></pre>
-</div>
 </div>
 </div>
 </div>
@@ -63312,13 +63943,13 @@ You can also run the server directly without using JBang - then it would be some
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "version": "5.0.0-SNAPSHOT",
+  "version": "4.11.0-SNAPSHOT",
   "count": 3,
   "components": [
     {
       "name": "print",
       "fullName": "print",
-      "version": "5.0.0-SNAPSHOT",
+      "version": "4.11.0-SNAPSHOT",
       "group": "core",
       "module": "citrus-base",
       "title": "Print",
@@ -63463,7 +64094,7 @@ List of documentation file names</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "fileName": "actions-send.adoc",
-  "version": "5.0.0-SNAPSHOT",
+  "version": "4.11.0-SNAPSHOT",
   "adoc": "[[actions-send]]\n= Send Action\n\nThe send action..."
 }</code></pre>
 </div>
@@ -64763,8 +65394,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 5.0.0-M2<br>
-Last updated 2026-06-19 15:30:57 +0200
+Version 4.10.2<br>
+Last updated 2026-07-15 16:09:16 +0200
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
