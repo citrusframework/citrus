@@ -51,7 +51,6 @@ import org.citrusframework.jbang.LoggingSupport;
 import org.citrusframework.jbang.maven.MavenDependencyResolver;
 import org.citrusframework.jbang.util.CodeAnalyzer;
 import org.citrusframework.jbang.util.DelegatingCodeAnalyzer;
-import org.citrusframework.log.CitrusLogSettings;
 import org.citrusframework.main.TestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.report.TestReporter;
@@ -186,10 +185,6 @@ public class Run extends CitrusCommand {
             LoggingSupport.configureLog(loggingLevel, loggingColor, testEngine);
         } else {
             LoggingSupport.configureLog("off", false, testEngine);
-        }
-
-        if (!loggingColor) {
-            System.setProperty(CitrusLogSettings.LOG_COLOR_PROPERTY, "never");
         }
 
         if (!offline) {
