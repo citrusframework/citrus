@@ -17,7 +17,7 @@
 package org.citrusframework.camel.actions;
 
 import org.citrusframework.camel.UnitTestSupport;
-import org.citrusframework.camel.jbang.CamelJBang;
+import org.citrusframework.camel.cli.CamelCli;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -28,14 +28,14 @@ import static org.mockito.Mockito.verify;
 public class DeleteCamelPluginActionTest extends UnitTestSupport {
 
     @Mock
-    private CamelJBang camelJBang;
+    private CamelCli camelCli;
 
     @BeforeMethod
     @Override
     public void prepareTest() {
         super.prepareTest();
         MockitoAnnotations.openMocks(this);
-        context.getReferenceResolver().bind("camelJBang", camelJBang);
+        context.getReferenceResolver().bind("camelCli", camelCli);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class DeleteCamelPluginActionTest extends UnitTestSupport {
 
         action.execute(context);
 
-        verify(camelJBang).deletePlugin("my-plugin");
+        verify(camelCli).deletePlugin("my-plugin");
     }
 
     @Test
@@ -61,6 +61,6 @@ public class DeleteCamelPluginActionTest extends UnitTestSupport {
 
         action.execute(context);
 
-        verify(camelJBang).deletePlugin("my-plugin");
+        verify(camelCli).deletePlugin("my-plugin");
     }
 }

@@ -86,7 +86,7 @@ public final class CamelSettings {
     }
 
     /**
-     * When set to true test will print Camel JBang route logs e.g. while waiting for a log message.
+     * When set to true test will print Camel CLI route logs e.g. while waiting for a log message.
      */
     public static boolean isPrintLogs() {
         return Boolean.parseBoolean(System.getProperty(PRINT_LOGS_PROPERTY,

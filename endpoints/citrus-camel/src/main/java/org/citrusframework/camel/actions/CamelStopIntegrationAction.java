@@ -26,9 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Stops given Camel integration with Camel JBang tooling.
+ * Stops given Camel integration with Camel CLI tooling.
  */
-public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
+public class CamelStopIntegrationAction extends AbstractCamelCliAction {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CamelStopIntegrationAction.class);
@@ -52,7 +52,7 @@ public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
         if (name.equals("*")) {
             logger.info("Stopping all Camel integrations ...");
 
-            camelJBang().stop();
+            camelCli().stop();
 
             logger.info("Stopped all Camel integrations");
         } else {
@@ -62,13 +62,13 @@ public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
             if (context.getVariables().containsKey(name + ":pid")) {
                 pid = context.getVariable(name + ":pid", Long.class);
             } else {
-                pid = camelJBang().getAll().stream()
+                pid = camelCli().getAll().stream()
                         .filter(props -> name.equals(props.get("name")) && !props.getOrDefault("pid", "").isBlank())
                         .map(props -> Long.valueOf(props.get("pid"))).findFirst()
                         .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing process id for Camel integration %s:pid", name)));
             }
 
-            camelJBang().stop(pid);
+            camelCli().stop(pid);
 
             if (context.getVariables().containsKey("%s:process:%d".formatted(name, pid))) {
                 // check if process is still alive
@@ -77,7 +77,7 @@ public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
                     // Check if there is a descendant process to be stopped
                     List<Long> descendants = pao.getDescendants();
                     for (Long descendantPid : descendants) {
-                        camelJBang().stop(descendantPid);
+                        camelCli().stop(descendantPid);
                         logger.info("Stopped Camel integration '%s' (%s - %s)".formatted(name, pid, descendantPid));
                     }
                 }
@@ -94,7 +94,7 @@ public class CamelStopIntegrationAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelStopIntegrationAction, Builder>
+    public static final class Builder extends AbstractCamelCliAction.Builder<CamelStopIntegrationAction, Builder>
             implements CamelIntegrationStopActionBuilder<CamelStopIntegrationAction, Builder> {
 
         private String integrationName = "*";

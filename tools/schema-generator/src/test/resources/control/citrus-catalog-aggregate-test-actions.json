@@ -256,6 +256,1003 @@
       },
       "additionalProperties": false    }
   },
+  "camel-cli": {
+    "kind": "testActionGroup",
+    "version": "${citrus.version}",
+    "name": "camel-cli",
+    "group": "camel",
+    "module": "citrus-camel",
+    "title": "Cli",
+    "description": "Connect with Camel CLI to run commands.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "camelVersion": {
+          "type": "string",
+          "title": "CamelVersion",
+          "description": "The Apache Camel version."
+        },
+        "kameletsVersion": {
+          "type": "string",
+          "title": "KameletsVersion",
+          "description": "The Kamelets version."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-cli-cmd": {
+    "kind": "testActionGroup",
+    "version": "${citrus.version}",
+    "name": "camel-cli-cmd",
+    "group": "camel-cli",
+    "title": "Cmd",
+    "description": "Camel CLI cmd operations.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "camel-cli-cmd-receive": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-cmd-receive",
+    "group": "camel-cli-cmd",
+    "title": "Receive",
+    "description": "Receives a message from a Camel CLI integration.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "args": {
+          "title": "Args",
+          "description": "Command arguments.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Args",
+            "description": "Command arguments.",
+            "$comment": "group:advanced"
+          }
+        },
+        "delayBetweenAttempts": {
+          "type": "integer",
+          "title": "DelayBetweenAttempts",
+          "description": "The delay in milliseconds to wait between validation attempts.",
+          "default": "1000",
+          "$comment": "group:advanced"
+        },
+        "endpoint": {
+          "type": "string",
+          "title": "Endpoint",
+          "description": "Optional endpoint in the Camel integration.",
+          "$comment": "group:advanced"
+        },
+        "grep": {
+          "type": "string",
+          "title": "Grep",
+          "description": "Filter messages based on this expression."
+        },
+        "integration": {
+          "type": "string",
+          "title": "Integration",
+          "description": "The Camel integration to send the message to."
+        },
+        "jsonOutput": {
+          "type": "boolean",
+          "title": "JsonOutput",
+          "description": "When enabled action stores messages from json output.",
+          "default": "false",
+          "$comment": "group:advanced"
+        },
+        "loggingColor": {
+          "type": "boolean",
+          "title": "LoggingColor",
+          "description": "When enabled the output uses logging color.",
+          "default": "false",
+          "$comment": "group:advanced"
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "title": "MaxAttempts",
+          "description": "Maximum number of validation attempts.",
+          "default": "60",
+          "$comment": "group:advanced"
+        },
+        "printLogs": {
+          "type": "boolean",
+          "title": "PrintLogs",
+          "description": "When enabled the Camel integration log output is added to the test log output.",
+          "$comment": "group:advanced"
+        },
+        "since": {
+          "type": "string",
+          "title": "Since",
+          "description": "Return messages newer than a relative duration.",
+          "$comment": "group:advanced"
+        },
+        "stopOnErrorStatus": {
+          "type": "boolean",
+          "title": "StopOnErrorStatus",
+          "description": "When enabled the validation attempts stop when error state is reported.",
+          "default": "true",
+          "$comment": "group:advanced"
+        },
+        "tail": {
+          "type": "string",
+          "title": "Tail",
+          "description": "The number of messages from the end to show.",
+          "default": "0",
+          "$comment": "group:advanced"
+        },
+        "uri": {
+          "type": "string",
+          "title": "Uri",
+          "description": "Camel endpoint URI to send message to.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-cli-cmd-send": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-cmd-send",
+    "group": "camel-cli-cmd",
+    "title": "Send",
+    "description": "Sends a message to Camel CLI integration.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "args": {
+          "title": "Args",
+          "description": "Command arguments.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Args",
+            "description": "Command arguments.",
+            "$comment": "group:advanced"
+          }
+        },
+        "body": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "string",
+              "title": "Data",
+              "description": "The message body as inline data."
+            },
+            "file": {
+              "type": "string",
+              "title": "File",
+              "description": "The message body content loaded from a file resource."
+            }
+          },
+          "additionalProperties": false,
+          "title": "Body",
+          "description": "The message body."
+        },
+        "endpoint": {
+          "type": "string",
+          "title": "Endpoint",
+          "description": "Optional endpoint in the Camel integration.",
+          "$comment": "group:advanced"
+        },
+        "headers": {
+          "type": "object",
+          "title": "Headers",
+          "description": "The message headers.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "Headers",
+            "description": "The message headers."
+          }
+        },
+        "infra": {
+          "type": "string",
+          "title": "Infra",
+          "description": "Optional Camel infrastructure service to connect to.",
+          "$comment": "group:advanced"
+        },
+        "integration": {
+          "type": "string",
+          "title": "Integration",
+          "description": "The Camel integration to send the message to."
+        },
+        "reply": {
+          "type": "boolean",
+          "title": "Reply",
+          "description": "When enabled the operation waits for a reply message from the integration.",
+          "$comment": "group:advanced"
+        },
+        "timeout": {
+          "type": "string",
+          "title": "Timeout",
+          "description": "The send timeout."
+        },
+        "uri": {
+          "type": "string",
+          "title": "Uri",
+          "description": "Camel endpoint URI to send message to.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-cli-custom": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-custom",
+    "group": "camel-cli",
+    "title": "Custom",
+    "description": "Runs a Camel integration with customized parameters.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "args": {
+          "title": "Args",
+          "description": "Optional command arguments.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Args",
+            "description": "Optional command arguments.",
+            "$comment": "group:advanced"
+          }
+        },
+        "autoRemove": {
+          "type": "boolean",
+          "title": "AutoRemove",
+          "description": "When enabled the Camel integration is automatically stopped after the test.",
+          "default": "true",
+          "$comment": "group:advanced"
+        },
+        "commands": {
+          "title": "Commands",
+          "description": "Customized Camel CLI commands.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Commands",
+            "description": "Customized Camel CLI commands."
+          }
+        },
+        "dumpIntegrationOutput": {
+          "type": "boolean",
+          "title": "DumpIntegrationOutput",
+          "description": "When enabled the integration output is saved to a log file.",
+          "default": "false",
+          "$comment": "group:advanced"
+        },
+        "integration": {
+          "type": "object",
+          "properties": {
+            "environment": {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "string",
+                  "title": "File",
+                  "description": "Environment variables loaded from a file resource."
+                },
+                "variables": {
+                  "title": "Variables",
+                  "description": "List of environment variables.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "description": "The environment variable name."
+                      },
+                      "value": {
+                        "type": "string",
+                        "title": "Value",
+                        "description": "The environment variable value."
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "value"
+                    ],
+                    "additionalProperties": false,
+                    "title": "Variables",
+                    "description": "List of environment variables."
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "title": "Environment",
+              "description": "Environment variables set for the Camel CLI process.",
+              "$comment": "group:advanced"
+            },
+            "file": {
+              "type": "string",
+              "title": "File",
+              "description": "Camel integration source code loaded from a file resource."
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The Camel integration name."
+            },
+            "systemProperties": {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "string",
+                  "title": "File",
+                  "description": "System properties loaded from a file resource."
+                },
+                "properties": {
+                  "title": "Properties",
+                  "description": "List of system properties.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "description": "The system property name."
+                      },
+                      "value": {
+                        "type": "string",
+                        "title": "Value",
+                        "description": "The system property value."
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "value"
+                    ],
+                    "additionalProperties": false,
+                    "title": "Properties",
+                    "description": "List of system properties."
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "title": "SystemProperties",
+              "description": "System properties set for the Camel CLI process.",
+              "$comment": "group:advanced"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Integration",
+          "description": "The Camel integration."
+        },
+        "processName": {
+          "type": "string",
+          "title": "ProcessName",
+          "description": "Custom Camel CLI process name.",
+          "$comment": "group:advanced"
+        },
+        "resources": {
+          "title": "Resources",
+          "description": "Optional list of resources added to the Camel CLI process.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Resources",
+            "description": "Optional list of resources added to the Camel CLI process.",
+            "$comment": "group:advanced"
+          }
+        },
+        "waitForRunningState": {
+          "type": "boolean",
+          "title": "WaitForRunningState",
+          "description": "Wait for the integration to report running state.",
+          "default": "true",
+          "$comment": "group:advanced"
+        },
+        "workDir": {
+          "type": "string",
+          "title": "WorkDir",
+          "description": "Custom working directory for the Camel CLI process.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-cli-kubernetes": {
+    "kind": "testActionGroup",
+    "version": "${citrus.version}",
+    "name": "camel-cli-kubernetes",
+    "group": "camel-cli",
+    "title": "Kubernetes",
+    "description": "Camel Kubernetes plugin related operations.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "camel-cli-kubernetes-delete": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-kubernetes-delete",
+    "group": "camel-cli-kubernetes",
+    "title": "Delete",
+    "description": "Deletes a Camel integration from Kubernetes.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "clusterType": {
+          "type": "string",
+          "title": "ClusterType",
+          "description": "The Kubernetes cluster type.",
+          "$comment": "group:advanced"
+        },
+        "integration": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "title": "File",
+              "description": "The Camel integration source code loaded from a file resource."
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The Camel integration name."
+            }
+          },
+          "additionalProperties": false,
+          "title": "Integration",
+          "description": "The Camel integration to delete."
+        },
+        "namespace": {
+          "type": "string",
+          "title": "Namespace",
+          "description": "The Kubernetes namespace.",
+          "$comment": "group:advanced"
+        },
+        "workingDir": {
+          "type": "string",
+          "title": "WorkingDir",
+          "description": "The working directory that contains the Kubernetes manifest.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-cli-kubernetes-run": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-kubernetes-run",
+    "group": "camel-cli-kubernetes",
+    "title": "Run",
+    "description": "Runs a Camel integration on Kubernetes.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "argLine": {
+          "type": "string",
+          "title": "ArgLine",
+          "description": "Camel CLI command arguments.",
+          "$comment": "group:advanced"
+        },
+        "args": {
+          "title": "Args",
+          "description": "Camel CLI command arguments.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Args",
+            "description": "Camel CLI command arguments.",
+            "$comment": "group:advanced"
+          }
+        },
+        "autoRemove": {
+          "type": "boolean",
+          "title": "AutoRemove",
+          "description": "When enabled the Camel integration is automatically removed from Kubernetes after the test.",
+          "default": "true"
+        },
+        "buildProperties": {
+          "title": "BuildProperties",
+          "description": "List of build properties passed to the Camel CLI project build.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "BuildProperties",
+            "description": "List of build properties passed to the Camel CLI project build.",
+            "$comment": "group:advanced"
+          }
+        },
+        "clusterType": {
+          "type": "string",
+          "title": "ClusterType",
+          "description": "The Kubernetes cluster type.",
+          "$comment": "group:advanced"
+        },
+        "imageBuilder": {
+          "type": "string",
+          "title": "ImageBuilder",
+          "description": "The Docker image builder.",
+          "$comment": "group:advanced"
+        },
+        "imageRegistry": {
+          "type": "string",
+          "title": "ImageRegistry",
+          "description": "The Docker image registry.",
+          "$comment": "group:advanced"
+        },
+        "integration": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "title": "File",
+              "description": "The integration source code loaded as a file resource."
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The Camel integration name."
+            },
+            "source": {
+              "type": "string",
+              "title": "Source",
+              "description": "The integration source code as inline data."
+            }
+          },
+          "additionalProperties": false,
+          "title": "Integration",
+          "description": "The Camel integration name."
+        },
+        "properties": {
+          "title": "Properties",
+          "description": "Properties set on the Camel CLI project export.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Properties",
+            "description": "Properties set on the Camel CLI project export."
+          }
+        },
+        "runtime": {
+          "type": "string",
+          "title": "Runtime",
+          "description": "The runtime to use.",
+          "default": "quarkus",
+          "$comment": "group:advanced"
+        },
+        "traits": {
+          "title": "Traits",
+          "description": "List of traits to set for the project export.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Traits",
+            "description": "List of traits to set for the project export."
+          }
+        },
+        "verbose": {
+          "type": "boolean",
+          "title": "Verbose",
+          "description": "When enabled the Camel CLI command print verbose log messages.",
+          "default": "false",
+          "$comment": "group:advanced"
+        },
+        "waitForRunningState": {
+          "type": "boolean",
+          "title": "WaitForRunningState",
+          "description": "When enabled the test waits for the Camel integration Kubernetes deployment to report proper running state.",
+          "default": "true",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-cli-kubernetes-verify": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-kubernetes-verify",
+    "group": "camel-cli-kubernetes",
+    "title": "Verify",
+    "description": "Verify the status and log messages for a Camel integration run on Kubernetes.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "args": {
+          "title": "Args",
+          "description": "Camel CLI command arguments.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Args",
+            "description": "Camel CLI command arguments.",
+            "$comment": "group:advanced"
+          }
+        },
+        "delayBetweenAttempts": {
+          "type": "integer",
+          "title": "DelayBetweenAttempts",
+          "description": "The delay in milliseconds to wait between validation attempts.",
+          "default": "1000",
+          "$comment": "group:advanced"
+        },
+        "integration": {
+          "type": "string",
+          "title": "Integration",
+          "description": "The Camel integration name."
+        },
+        "label": {
+          "type": "string",
+          "title": "Label",
+          "description": "Identify the Camel integration via a Kubernetes label."
+        },
+        "logMessage": {
+          "type": "string",
+          "title": "LogMessage",
+          "description": "The expected log message to verify."
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "title": "MaxAttempts",
+          "description": "Maximum number of validation attempts.",
+          "default": "60",
+          "$comment": "group:advanced"
+        },
+        "namespace": {
+          "type": "string",
+          "title": "Namespace",
+          "description": "The Kubernetes namespace.",
+          "$comment": "group:advanced"
+        },
+        "printLogs": {
+          "type": "boolean",
+          "title": "PrintLogs",
+          "description": "When enabled the Camel integration log output is added to the test log output.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-cli-plugin": {
+    "kind": "testActionGroup",
+    "version": "${citrus.version}",
+    "name": "camel-cli-plugin",
+    "group": "camel-cli",
+    "title": "Plugin",
+    "description": "Manage Camel CLI plugins.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "camel-cli-plugin-add": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-plugin-add",
+    "group": "camel-cli-plugin",
+    "title": "Add",
+    "description": "Adds a plugin to the Camel CLI installation.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "args": {
+          "title": "Args",
+          "description": "Plugin arguments.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Args",
+            "description": "Plugin arguments.",
+            "$comment": "group:advanced"
+          }
+        },
+        "autoRemove": {
+          "type": "boolean",
+          "title": "AutoRemove",
+          "description": "When enabled the Camel plugin is automatically removed after the test.",
+          "default": "false",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The plugin name."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false    }
+  },
+  "camel-cli-plugin-delete": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-plugin-delete",
+    "group": "camel-cli-plugin",
+    "title": "Delete",
+    "description": "Deletes a plugin from the Camel CLI installation.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The plugin name."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false    }
+  },
+  "camel-cli-run": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-run",
+    "group": "camel-cli",
+    "title": "Run",
+    "description": "Runs a Camel integration.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "args": {
+          "title": "Args",
+          "description": "Optional command arguments.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Args",
+            "description": "Optional command arguments.",
+            "$comment": "group:advanced"
+          }
+        },
+        "autoRemove": {
+          "type": "boolean",
+          "title": "AutoRemove",
+          "description": "When enabled the Camel integration is automatically stopped after the test.",
+          "default": "true",
+          "$comment": "group:advanced"
+        },
+        "dumpIntegrationOutput": {
+          "type": "boolean",
+          "title": "DumpIntegrationOutput",
+          "description": "When enabled the integration output is saved to a log file.",
+          "default": "false",
+          "$comment": "group:advanced"
+        },
+        "integration": {
+          "type": "object",
+          "properties": {
+            "environment": {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "string",
+                  "title": "File",
+                  "description": "Environment variables loaded from a file resource."
+                },
+                "variables": {
+                  "title": "Variables",
+                  "description": "List of environment variables.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "description": "The environment variable name."
+                      },
+                      "value": {
+                        "type": "string",
+                        "title": "Value",
+                        "description": "The environment variable value."
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "value"
+                    ],
+                    "additionalProperties": false,
+                    "title": "Variables",
+                    "description": "List of environment variables."
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "title": "Environment",
+              "description": "Environment variables set for the Camel CLI process.",
+              "$comment": "group:advanced"
+            },
+            "file": {
+              "type": "string",
+              "title": "File",
+              "description": "Camel integration source code loaded from a file resource."
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The Camel integration name."
+            },
+            "source": {
+              "type": "string",
+              "title": "Source",
+              "description": "Camel integration source code as inline data."
+            },
+            "systemProperties": {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "string",
+                  "title": "File",
+                  "description": "System properties loaded from a file resource."
+                },
+                "properties": {
+                  "title": "Properties",
+                  "description": "List of system properties.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "description": "The system property name."
+                      },
+                      "value": {
+                        "type": "string",
+                        "title": "Value",
+                        "description": "The system property value."
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "value"
+                    ],
+                    "additionalProperties": false,
+                    "title": "Properties",
+                    "description": "List of system properties."
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "title": "SystemProperties",
+              "description": "System properties set for the Camel CLI process.",
+              "$comment": "group:advanced"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Integration",
+          "description": "The Camel integration."
+        },
+        "resources": {
+          "title": "Resources",
+          "description": "Optional list of resources added to the Camel CLI process.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Resources",
+            "description": "Optional list of resources added to the Camel CLI process.",
+            "$comment": "group:advanced"
+          }
+        },
+        "stub": {
+          "title": "Stub",
+          "description": "Optional stubbed components.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Stub",
+            "description": "Optional stubbed components.",
+            "$comment": "group:advanced"
+          }
+        },
+        "waitForRunningState": {
+          "type": "boolean",
+          "title": "WaitForRunningState",
+          "description": "Wait for the integration to report running state.",
+          "default": "true",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-cli-stop": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-stop",
+    "group": "camel-cli",
+    "title": "Stop",
+    "description": "Stops a Camel integration.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "integration": {
+          "type": "string",
+          "title": "Integration",
+          "description": "Camel integration name"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "camel-cli-verify": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-cli-verify",
+    "group": "camel-cli",
+    "title": "Verify",
+    "description": "Verify the Camel integration status and log messages.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "delayBetweenAttempts": {
+          "type": "integer",
+          "title": "DelayBetweenAttempts",
+          "description": "The delay in milliseconds to wait between validation attempts.",
+          "default": "1000",
+          "$comment": "group:advanced"
+        },
+        "integration": {
+          "type": "string",
+          "title": "Integration",
+          "description": "The Camel integration name."
+        },
+        "logMessage": {
+          "type": "string",
+          "title": "LogMessage",
+          "description": "The expected log message to verify."
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "title": "MaxAttempts",
+          "description": "Maximum attempts to validate the integration.",
+          "default": "60",
+          "$comment": "group:advanced"
+        },
+        "phase": {
+          "type": "string",
+          "title": "Phase",
+          "description": "The expected integration status",
+          "default": "Running",
+          "$comment": "group:advanced"
+        },
+        "printLogs": {
+          "type": "boolean",
+          "title": "PrintLogs",
+          "description": "When enabled the Camel integration log output is added to the test log output.",
+          "$comment": "group:advanced"
+        },
+        "stopOnErrorStatus": {
+          "type": "boolean",
+          "title": "StopOnErrorStatus",
+          "description": "When enabled the validation attempts stop when error state is reported.",
+          "default": "true",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
   "camel-controlBus": {
     "kind": "testAction",
     "version": "${citrus.version}",
@@ -575,7 +1572,7 @@
     "group": "camel",
     "module": "citrus-camel",
     "title": "Jbang",
-    "description": "Connect with Camel JBang to run commands.",
+    "description": "Connect with Camel JBang to run commands. Deprecated, please use Camel CLI instead.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -589,978 +1586,6 @@
           "type": "string",
           "title": "KameletsVersion",
           "description": "The Kamelets version."
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "camel-jbang-cmd": {
-    "kind": "testActionGroup",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-cmd",
-    "group": "camel-jbang",
-    "title": "Cmd",
-    "description": "Camel JBang cmd operations.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "additionalProperties": false    }
-  },
-  "camel-jbang-cmd-receive": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-cmd-receive",
-    "group": "camel-jbang-cmd",
-    "title": "Receive",
-    "description": "Receives a message from a Camel JBang integration.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "args": {
-          "title": "Args",
-          "description": "Command arguments.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Args",
-            "description": "Command arguments.",
-            "$comment": "group:advanced"
-          }
-        },
-        "delayBetweenAttempts": {
-          "type": "integer",
-          "title": "DelayBetweenAttempts",
-          "description": "The delay in milliseconds to wait between validation attempts.",
-          "default": "1000",
-          "$comment": "group:advanced"
-        },
-        "endpoint": {
-          "type": "string",
-          "title": "Endpoint",
-          "description": "Optional endpoint in the Camel integration.",
-          "$comment": "group:advanced"
-        },
-        "grep": {
-          "type": "string",
-          "title": "Grep",
-          "description": "Filter messages based on this expression."
-        },
-        "integration": {
-          "type": "string",
-          "title": "Integration",
-          "description": "The Camel integration to send the message to."
-        },
-        "jsonOutput": {
-          "type": "boolean",
-          "title": "JsonOutput",
-          "description": "When enabled action stores messages from json output.",
-          "default": "false",
-          "$comment": "group:advanced"
-        },
-        "loggingColor": {
-          "type": "boolean",
-          "title": "LoggingColor",
-          "description": "When enabled the output uses logging color.",
-          "default": "false",
-          "$comment": "group:advanced"
-        },
-        "maxAttempts": {
-          "type": "integer",
-          "title": "MaxAttempts",
-          "description": "Maximum number of validation attempts.",
-          "default": "60",
-          "$comment": "group:advanced"
-        },
-        "printLogs": {
-          "type": "boolean",
-          "title": "PrintLogs",
-          "description": "When enabled the Camel integration log output is added to the test log output.",
-          "$comment": "group:advanced"
-        },
-        "since": {
-          "type": "string",
-          "title": "Since",
-          "description": "Return messages newer than a relative duration.",
-          "$comment": "group:advanced"
-        },
-        "stopOnErrorStatus": {
-          "type": "boolean",
-          "title": "StopOnErrorStatus",
-          "description": "When enabled the validation attempts stop when error state is reported.",
-          "default": "true",
-          "$comment": "group:advanced"
-        },
-        "tail": {
-          "type": "string",
-          "title": "Tail",
-          "description": "The number of messages from the end to show.",
-          "default": "0",
-          "$comment": "group:advanced"
-        },
-        "uri": {
-          "type": "string",
-          "title": "Uri",
-          "description": "Camel endpoint URI to send message to.",
-          "$comment": "group:advanced"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "camel-jbang-cmd-send": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-cmd-send",
-    "group": "camel-jbang-cmd",
-    "title": "Send",
-    "description": "Sends a message to Camel JBang integration.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "args": {
-          "title": "Args",
-          "description": "Command arguments.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Args",
-            "description": "Command arguments.",
-            "$comment": "group:advanced"
-          }
-        },
-        "body": {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "string",
-              "title": "Data",
-              "description": "The message body as inline data."
-            },
-            "file": {
-              "type": "string",
-              "title": "File",
-              "description": "The message body content loaded from a file resource."
-            }
-          },
-          "additionalProperties": false,
-          "title": "Body",
-          "description": "The message body."
-        },
-        "endpoint": {
-          "type": "string",
-          "title": "Endpoint",
-          "description": "Optional endpoint in the Camel integration.",
-          "$comment": "group:advanced"
-        },
-        "headers": {
-          "type": "object",
-          "title": "Headers",
-          "description": "The message headers.",
-          "additionalProperties": {
-            "type": "string",
-            "title": "Headers",
-            "description": "The message headers."
-          }
-        },
-        "infra": {
-          "type": "string",
-          "title": "Infra",
-          "description": "Optional Camel infrastructure service to connect to.",
-          "$comment": "group:advanced"
-        },
-        "integration": {
-          "type": "string",
-          "title": "Integration",
-          "description": "The Camel integration to send the message to."
-        },
-        "reply": {
-          "type": "boolean",
-          "title": "Reply",
-          "description": "When enabled the operation waits for a reply message from the integration.",
-          "$comment": "group:advanced"
-        },
-        "timeout": {
-          "type": "string",
-          "title": "Timeout",
-          "description": "The send timeout."
-        },
-        "uri": {
-          "type": "string",
-          "title": "Uri",
-          "description": "Camel endpoint URI to send message to.",
-          "$comment": "group:advanced"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "camel-jbang-custom": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-custom",
-    "group": "camel-jbang",
-    "title": "Custom",
-    "description": "Runs a Camel integration with customized parameters.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "args": {
-          "title": "Args",
-          "description": "Optional command arguments.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Args",
-            "description": "Optional command arguments.",
-            "$comment": "group:advanced"
-          }
-        },
-        "autoRemove": {
-          "type": "boolean",
-          "title": "AutoRemove",
-          "description": "When enabled the Camel integration is automatically stopped after the test.",
-          "default": "true",
-          "$comment": "group:advanced"
-        },
-        "commands": {
-          "title": "Commands",
-          "description": "Customized Camel JBang commands.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Commands",
-            "description": "Customized Camel JBang commands."
-          }
-        },
-        "dumpIntegrationOutput": {
-          "type": "boolean",
-          "title": "DumpIntegrationOutput",
-          "description": "When enabled the integration output is saved to a log file.",
-          "default": "false",
-          "$comment": "group:advanced"
-        },
-        "integration": {
-          "type": "object",
-          "properties": {
-            "environment": {
-              "type": "object",
-              "properties": {
-                "file": {
-                  "type": "string",
-                  "title": "File",
-                  "description": "Environment variables loaded from a file resource."
-                },
-                "variables": {
-                  "title": "Variables",
-                  "description": "List of environment variables.",
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "title": "Name",
-                        "description": "The environment variable name."
-                      },
-                      "value": {
-                        "type": "string",
-                        "title": "Value",
-                        "description": "The environment variable value."
-                      }
-                    },
-                    "required": [
-                      "name",
-                      "value"
-                    ],
-                    "additionalProperties": false,
-                    "title": "Variables",
-                    "description": "List of environment variables."
-                  }
-                }
-              },
-              "additionalProperties": false,
-              "title": "Environment",
-              "description": "Environment variables set for the Camel JBang process.",
-              "$comment": "group:advanced"
-            },
-            "file": {
-              "type": "string",
-              "title": "File",
-              "description": "Camel integration source code loaded from a file resource."
-            },
-            "name": {
-              "type": "string",
-              "title": "Name",
-              "description": "The Camel integration name."
-            },
-            "systemProperties": {
-              "type": "object",
-              "properties": {
-                "file": {
-                  "type": "string",
-                  "title": "File",
-                  "description": "System properties loaded from a file resource."
-                },
-                "properties": {
-                  "title": "Properties",
-                  "description": "List of system properties.",
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "title": "Name",
-                        "description": "The system property name."
-                      },
-                      "value": {
-                        "type": "string",
-                        "title": "Value",
-                        "description": "The system property value."
-                      }
-                    },
-                    "required": [
-                      "name",
-                      "value"
-                    ],
-                    "additionalProperties": false,
-                    "title": "Properties",
-                    "description": "List of system properties."
-                  }
-                }
-              },
-              "additionalProperties": false,
-              "title": "SystemProperties",
-              "description": "System properties set for the Camel JBang process.",
-              "$comment": "group:advanced"
-            }
-          },
-          "additionalProperties": false,
-          "title": "Integration",
-          "description": "The Camel integration."
-        },
-        "processName": {
-          "type": "string",
-          "title": "ProcessName",
-          "description": "Custom Camel JBang process name.",
-          "$comment": "group:advanced"
-        },
-        "resources": {
-          "title": "Resources",
-          "description": "Optional list of resources added to the Camel JBang process.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Resources",
-            "description": "Optional list of resources added to the Camel JBang process.",
-            "$comment": "group:advanced"
-          }
-        },
-        "waitForRunningState": {
-          "type": "boolean",
-          "title": "WaitForRunningState",
-          "description": "Wait for the integration to report running state.",
-          "default": "true",
-          "$comment": "group:advanced"
-        },
-        "workDir": {
-          "type": "string",
-          "title": "WorkDir",
-          "description": "Custom working directory for the Camel JBang process.",
-          "$comment": "group:advanced"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "camel-jbang-kubernetes": {
-    "kind": "testActionGroup",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-kubernetes",
-    "group": "camel-jbang",
-    "title": "Kubernetes",
-    "description": "Camel Kubernetes plugin related operations.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "additionalProperties": false    }
-  },
-  "camel-jbang-kubernetes-delete": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-kubernetes-delete",
-    "group": "camel-jbang-kubernetes",
-    "title": "Delete",
-    "description": "Deletes a Camel integration from Kubernetes.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "clusterType": {
-          "type": "string",
-          "title": "ClusterType",
-          "description": "The Kubernetes cluster type.",
-          "$comment": "group:advanced"
-        },
-        "integration": {
-          "type": "object",
-          "properties": {
-            "file": {
-              "type": "string",
-              "title": "File",
-              "description": "The Camel integration source code loaded from a file resource."
-            },
-            "name": {
-              "type": "string",
-              "title": "Name",
-              "description": "The Camel integration name."
-            }
-          },
-          "additionalProperties": false,
-          "title": "Integration",
-          "description": "The Camel integration to delete."
-        },
-        "namespace": {
-          "type": "string",
-          "title": "Namespace",
-          "description": "The Kubernetes namespace.",
-          "$comment": "group:advanced"
-        },
-        "workingDir": {
-          "type": "string",
-          "title": "WorkingDir",
-          "description": "The working directory that contains the Kubernetes manifest.",
-          "$comment": "group:advanced"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "camel-jbang-kubernetes-run": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-kubernetes-run",
-    "group": "camel-jbang-kubernetes",
-    "title": "Run",
-    "description": "Runs a Camel integration on Kubernetes.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "argLine": {
-          "type": "string",
-          "title": "ArgLine",
-          "description": "Camel JBang command arguments.",
-          "$comment": "group:advanced"
-        },
-        "args": {
-          "title": "Args",
-          "description": "Camel JBang command arguments.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Args",
-            "description": "Camel JBang command arguments.",
-            "$comment": "group:advanced"
-          }
-        },
-        "autoRemove": {
-          "type": "boolean",
-          "title": "AutoRemove",
-          "description": "When enabled the Camel integration is automatically removed from Kubernetes after the test.",
-          "default": "true"
-        },
-        "buildProperties": {
-          "title": "BuildProperties",
-          "description": "List of build properties passed to the Camel JBang project build.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "BuildProperties",
-            "description": "List of build properties passed to the Camel JBang project build.",
-            "$comment": "group:advanced"
-          }
-        },
-        "clusterType": {
-          "type": "string",
-          "title": "ClusterType",
-          "description": "The Kubernetes cluster type.",
-          "$comment": "group:advanced"
-        },
-        "imageBuilder": {
-          "type": "string",
-          "title": "ImageBuilder",
-          "description": "The Docker image builder.",
-          "$comment": "group:advanced"
-        },
-        "imageRegistry": {
-          "type": "string",
-          "title": "ImageRegistry",
-          "description": "The Docker image registry.",
-          "$comment": "group:advanced"
-        },
-        "integration": {
-          "type": "object",
-          "properties": {
-            "file": {
-              "type": "string",
-              "title": "File",
-              "description": "The integration source code loaded as a file resource."
-            },
-            "name": {
-              "type": "string",
-              "title": "Name",
-              "description": "The Camel integration name."
-            },
-            "source": {
-              "type": "string",
-              "title": "Source",
-              "description": "The integration source code as inline data."
-            }
-          },
-          "additionalProperties": false,
-          "title": "Integration",
-          "description": "The Camel integration name."
-        },
-        "properties": {
-          "title": "Properties",
-          "description": "Properties set on the Camel JBang project export.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Properties",
-            "description": "Properties set on the Camel JBang project export."
-          }
-        },
-        "runtime": {
-          "type": "string",
-          "title": "Runtime",
-          "description": "The runtime to use.",
-          "default": "quarkus",
-          "$comment": "group:advanced"
-        },
-        "traits": {
-          "title": "Traits",
-          "description": "List of traits to set for the project export.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Traits",
-            "description": "List of traits to set for the project export."
-          }
-        },
-        "verbose": {
-          "type": "boolean",
-          "title": "Verbose",
-          "description": "When enabled the Camel JBang command print verbose log messages.",
-          "default": "false",
-          "$comment": "group:advanced"
-        },
-        "waitForRunningState": {
-          "type": "boolean",
-          "title": "WaitForRunningState",
-          "description": "When enabled the test waits for the Camel integration Kubernetes deployment to report proper running state.",
-          "default": "true",
-          "$comment": "group:advanced"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "camel-jbang-kubernetes-verify": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-kubernetes-verify",
-    "group": "camel-jbang-kubernetes",
-    "title": "Verify",
-    "description": "Verify the status and log messages for a Camel integration run on Kubernetes.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "args": {
-          "title": "Args",
-          "description": "Camel JBang command arguments.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Args",
-            "description": "Camel JBang command arguments.",
-            "$comment": "group:advanced"
-          }
-        },
-        "delayBetweenAttempts": {
-          "type": "integer",
-          "title": "DelayBetweenAttempts",
-          "description": "The delay in milliseconds to wait between validation attempts.",
-          "default": "1000",
-          "$comment": "group:advanced"
-        },
-        "integration": {
-          "type": "string",
-          "title": "Integration",
-          "description": "The Camel integration name."
-        },
-        "label": {
-          "type": "string",
-          "title": "Label",
-          "description": "Identify the Camel integration via a Kubernetes label."
-        },
-        "logMessage": {
-          "type": "string",
-          "title": "LogMessage",
-          "description": "The expected log message to verify."
-        },
-        "maxAttempts": {
-          "type": "integer",
-          "title": "MaxAttempts",
-          "description": "Maximum number of validation attempts.",
-          "default": "60",
-          "$comment": "group:advanced"
-        },
-        "namespace": {
-          "type": "string",
-          "title": "Namespace",
-          "description": "The Kubernetes namespace.",
-          "$comment": "group:advanced"
-        },
-        "printLogs": {
-          "type": "boolean",
-          "title": "PrintLogs",
-          "description": "When enabled the Camel integration log output is added to the test log output.",
-          "$comment": "group:advanced"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "camel-jbang-plugin": {
-    "kind": "testActionGroup",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-plugin",
-    "group": "camel-jbang",
-    "title": "Plugin",
-    "description": "Manage Camel JBang plugins.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "additionalProperties": false    }
-  },
-  "camel-jbang-plugin-add": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-plugin-add",
-    "group": "camel-jbang-plugin",
-    "title": "Add",
-    "description": "Adds a plugin to the Camel Jbang installation.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "args": {
-          "title": "Args",
-          "description": "Plugin arguments.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Args",
-            "description": "Plugin arguments.",
-            "$comment": "group:advanced"
-          }
-        },
-        "autoRemove": {
-          "type": "boolean",
-          "title": "AutoRemove",
-          "description": "When enabled the Camel plugin is automatically removed after the test.",
-          "default": "false",
-          "$comment": "group:advanced"
-        },
-        "name": {
-          "type": "string",
-          "title": "Name",
-          "description": "The plugin name."
-        }
-      },
-      "required": [
-        "name"
-      ],
-      "additionalProperties": false    }
-  },
-  "camel-jbang-plugin-delete": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-plugin-delete",
-    "group": "camel-jbang-plugin",
-    "title": "Delete",
-    "description": "Deletes a plugin from the Camel Jbang installation.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "title": "Name",
-          "description": "The plugin name."
-        }
-      },
-      "required": [
-        "name"
-      ],
-      "additionalProperties": false    }
-  },
-  "camel-jbang-run": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-run",
-    "group": "camel-jbang",
-    "title": "Run",
-    "description": "Runs a Camel integration.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "args": {
-          "title": "Args",
-          "description": "Optional command arguments.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Args",
-            "description": "Optional command arguments.",
-            "$comment": "group:advanced"
-          }
-        },
-        "autoRemove": {
-          "type": "boolean",
-          "title": "AutoRemove",
-          "description": "When enabled the Camel integration is automatically stopped after the test.",
-          "default": "true",
-          "$comment": "group:advanced"
-        },
-        "dumpIntegrationOutput": {
-          "type": "boolean",
-          "title": "DumpIntegrationOutput",
-          "description": "When enabled the integration output is saved to a log file.",
-          "default": "false",
-          "$comment": "group:advanced"
-        },
-        "integration": {
-          "type": "object",
-          "properties": {
-            "environment": {
-              "type": "object",
-              "properties": {
-                "file": {
-                  "type": "string",
-                  "title": "File",
-                  "description": "Environment variables loaded from a file resource."
-                },
-                "variables": {
-                  "title": "Variables",
-                  "description": "List of environment variables.",
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "title": "Name",
-                        "description": "The environment variable name."
-                      },
-                      "value": {
-                        "type": "string",
-                        "title": "Value",
-                        "description": "The environment variable value."
-                      }
-                    },
-                    "required": [
-                      "name",
-                      "value"
-                    ],
-                    "additionalProperties": false,
-                    "title": "Variables",
-                    "description": "List of environment variables."
-                  }
-                }
-              },
-              "additionalProperties": false,
-              "title": "Environment",
-              "description": "Environment variables set for the Camel JBang process.",
-              "$comment": "group:advanced"
-            },
-            "file": {
-              "type": "string",
-              "title": "File",
-              "description": "Camel integration source code loaded from a file resource."
-            },
-            "name": {
-              "type": "string",
-              "title": "Name",
-              "description": "The Camel integration name."
-            },
-            "source": {
-              "type": "string",
-              "title": "Source",
-              "description": "Camel integration source code as inline data."
-            },
-            "systemProperties": {
-              "type": "object",
-              "properties": {
-                "file": {
-                  "type": "string",
-                  "title": "File",
-                  "description": "System properties loaded from a file resource."
-                },
-                "properties": {
-                  "title": "Properties",
-                  "description": "List of system properties.",
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "title": "Name",
-                        "description": "The system property name."
-                      },
-                      "value": {
-                        "type": "string",
-                        "title": "Value",
-                        "description": "The system property value."
-                      }
-                    },
-                    "required": [
-                      "name",
-                      "value"
-                    ],
-                    "additionalProperties": false,
-                    "title": "Properties",
-                    "description": "List of system properties."
-                  }
-                }
-              },
-              "additionalProperties": false,
-              "title": "SystemProperties",
-              "description": "System properties set for the Camel JBang process.",
-              "$comment": "group:advanced"
-            }
-          },
-          "additionalProperties": false,
-          "title": "Integration",
-          "description": "The Camel integration."
-        },
-        "resources": {
-          "title": "Resources",
-          "description": "Optional list of resources added to the Camel JBang process.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Resources",
-            "description": "Optional list of resources added to the Camel JBang process.",
-            "$comment": "group:advanced"
-          }
-        },
-        "stub": {
-          "title": "Stub",
-          "description": "Optional stubbed components.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Stub",
-            "description": "Optional stubbed components.",
-            "$comment": "group:advanced"
-          }
-        },
-        "waitForRunningState": {
-          "type": "boolean",
-          "title": "WaitForRunningState",
-          "description": "Wait for the integration to report running state.",
-          "default": "true",
-          "$comment": "group:advanced"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "camel-jbang-stop": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-stop",
-    "group": "camel-jbang",
-    "title": "Stop",
-    "description": "Stops a Camel integration.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "integration": {
-          "type": "string",
-          "title": "Integration",
-          "description": "Camel integration name"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "camel-jbang-verify": {
-    "kind": "testAction",
-    "version": "${citrus.version}",
-    "name": "camel-jbang-verify",
-    "group": "camel-jbang",
-    "title": "Verify",
-    "description": "Verify the Camel integration status and log messages.",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "delayBetweenAttempts": {
-          "type": "integer",
-          "title": "DelayBetweenAttempts",
-          "description": "The delay in milliseconds to wait between validation attempts.",
-          "default": "1000",
-          "$comment": "group:advanced"
-        },
-        "integration": {
-          "type": "string",
-          "title": "Integration",
-          "description": "The Camel integration name."
-        },
-        "logMessage": {
-          "type": "string",
-          "title": "LogMessage",
-          "description": "The expected log message to verify."
-        },
-        "maxAttempts": {
-          "type": "integer",
-          "title": "MaxAttempts",
-          "description": "Maximum attempts to validate the integration.",
-          "default": "60",
-          "$comment": "group:advanced"
-        },
-        "phase": {
-          "type": "string",
-          "title": "Phase",
-          "description": "The expected integration status",
-          "default": "Running",
-          "$comment": "group:advanced"
-        },
-        "printLogs": {
-          "type": "boolean",
-          "title": "PrintLogs",
-          "description": "When enabled the Camel integration log output is added to the test log output.",
-          "$comment": "group:advanced"
-        },
-        "stopOnErrorStatus": {
-          "type": "boolean",
-          "title": "StopOnErrorStatus",
-          "description": "When enabled the validation attempts stop when error state is reported.",
-          "default": "true",
-          "$comment": "group:advanced"
         }
       },
       "additionalProperties": false    }

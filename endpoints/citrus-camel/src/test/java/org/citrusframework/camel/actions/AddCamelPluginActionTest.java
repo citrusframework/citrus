@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.camel.UnitTestSupport;
-import org.citrusframework.camel.jbang.CamelJBang;
+import org.citrusframework.camel.cli.CamelCli;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -37,19 +37,19 @@ import static org.mockito.Mockito.when;
 public class AddCamelPluginActionTest extends UnitTestSupport {
 
     @Mock
-    private CamelJBang camelJBang;
+    private CamelCli camelCli;
 
     @BeforeMethod
     @Override
     public void prepareTest() {
         super.prepareTest();
         MockitoAnnotations.openMocks(this);
-        context.getReferenceResolver().bind("camelJBang", camelJBang);
+        context.getReferenceResolver().bind("camelCli", camelCli);
     }
 
     @Test
     public void shouldInstallPluginWhenNotInstalled() {
-        when(camelJBang.getPlugins()).thenReturn(Collections.emptyList());
+        when(camelCli.getPlugins()).thenReturn(Collections.emptyList());
 
         AddCamelPluginAction action = new AddCamelPluginAction.Builder()
                 .pluginName("my-plugin")
@@ -58,13 +58,13 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
 
         action.execute(context);
 
-        verify(camelJBang).addPlugin("my-plugin");
-        verify(camelJBang, never()).deletePlugin("my-plugin");
+        verify(camelCli).addPlugin("my-plugin");
+        verify(camelCli, never()).deletePlugin("my-plugin");
     }
 
     @Test
     public void shouldSkipWhenAlreadyInstalledWithoutVersionArgs() {
-        when(camelJBang.getPlugins()).thenReturn(List.of("my-plugin"));
+        when(camelCli.getPlugins()).thenReturn(List.of("my-plugin"));
 
         AddCamelPluginAction action = new AddCamelPluginAction.Builder()
                 .pluginName("my-plugin")
@@ -73,13 +73,13 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
 
         action.execute(context);
 
-        verify(camelJBang, never()).addPlugin("my-plugin");
-        verify(camelJBang, never()).deletePlugin("my-plugin");
+        verify(camelCli, never()).addPlugin("my-plugin");
+        verify(camelCli, never()).deletePlugin("my-plugin");
     }
 
     @Test
     public void shouldReinstallWhenAlreadyInstalledWithVersionArg() {
-        when(camelJBang.getPlugins()).thenReturn(List.of("my-plugin"));
+        when(camelCli.getPlugins()).thenReturn(List.of("my-plugin"));
 
         AddCamelPluginAction action = new AddCamelPluginAction.Builder()
                 .pluginName("my-plugin")
@@ -89,14 +89,14 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
 
         action.execute(context);
 
-        InOrder order = inOrder(camelJBang);
-        order.verify(camelJBang).deletePlugin("my-plugin");
-        order.verify(camelJBang).addPlugin("my-plugin", "--version", "1.5.0-SNAPSHOT");
+        InOrder order = inOrder(camelCli);
+        order.verify(camelCli).deletePlugin("my-plugin");
+        order.verify(camelCli).addPlugin("my-plugin", "--version", "1.5.0-SNAPSHOT");
     }
 
     @Test
     public void shouldReinstallWhenAlreadyInstalledWithGavArg() {
-        when(camelJBang.getPlugins()).thenReturn(List.of("my-plugin"));
+        when(camelCli.getPlugins()).thenReturn(List.of("my-plugin"));
 
         AddCamelPluginAction action = new AddCamelPluginAction.Builder()
                 .pluginName("my-plugin")
@@ -106,14 +106,14 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
 
         action.execute(context);
 
-        InOrder order = inOrder(camelJBang);
-        order.verify(camelJBang).deletePlugin("my-plugin");
-        order.verify(camelJBang).addPlugin("my-plugin", "--gav", "com.example:my-plugin:2.0.0");
+        InOrder order = inOrder(camelCli);
+        order.verify(camelCli).deletePlugin("my-plugin");
+        order.verify(camelCli).addPlugin("my-plugin", "--gav", "com.example:my-plugin:2.0.0");
     }
 
     @Test
     public void shouldInstallWithVersionWhenNotInstalled() {
-        when(camelJBang.getPlugins()).thenReturn(Collections.emptyList());
+        when(camelCli.getPlugins()).thenReturn(Collections.emptyList());
 
         AddCamelPluginAction action = new AddCamelPluginAction.Builder()
                 .pluginName("my-plugin")
@@ -123,13 +123,13 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
 
         action.execute(context);
 
-        verify(camelJBang).addPlugin("my-plugin", "--version", "1.5.0-SNAPSHOT");
-        verify(camelJBang, never()).deletePlugin("my-plugin");
+        verify(camelCli).addPlugin("my-plugin", "--version", "1.5.0-SNAPSHOT");
+        verify(camelCli, never()).deletePlugin("my-plugin");
     }
 
     @Test
     public void shouldRegisterFinallyActionWhenAutoRemoveEnabled() {
-        when(camelJBang.getPlugins()).thenReturn(Collections.emptyList());
+        when(camelCli.getPlugins()).thenReturn(Collections.emptyList());
 
         AddCamelPluginAction action = new AddCamelPluginAction.Builder()
                 .pluginName("my-plugin")
@@ -139,7 +139,7 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
 
         action.execute(context);
 
-        verify(camelJBang).addPlugin("my-plugin");
+        verify(camelCli).addPlugin("my-plugin");
 
         List<TestActionBuilder<?>> finalActions = context.getFinalActions();
         Assert.assertEquals(finalActions.size(), 1);
@@ -148,7 +148,7 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
 
     @Test
     public void shouldNotRegisterFinallyActionWhenAutoRemoveDisabled() {
-        when(camelJBang.getPlugins()).thenReturn(Collections.emptyList());
+        when(camelCli.getPlugins()).thenReturn(Collections.emptyList());
 
         AddCamelPluginAction action = new AddCamelPluginAction.Builder()
                 .pluginName("my-plugin")
@@ -158,7 +158,7 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
 
         action.execute(context);
 
-        verify(camelJBang).addPlugin("my-plugin");
+        verify(camelCli).addPlugin("my-plugin");
         Assert.assertTrue(context.getFinalActions().isEmpty());
     }
 }

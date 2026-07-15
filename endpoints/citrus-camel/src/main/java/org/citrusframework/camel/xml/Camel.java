@@ -178,242 +178,247 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
     }
 
     @XmlElement(name = "jbang")
-    public void setJBang(JBang jbang) {
-        if (jbang.getRun() != null) {
+    public void setJBang(Cli cli) {
+        setCli(cli);
+    }
+
+    @XmlElement(name = "cli")
+    public void setCli(Cli cli) {
+        if (cli.getRun() != null) {
             CamelRunIntegrationAction.Builder builder = new CamelRunIntegrationAction.Builder();
 
-            if (jbang.getRun().getIntegration().getName() != null) {
-                builder.integrationName(jbang.getRun().getIntegration().getName());
+            if (cli.getRun().getIntegration().getName() != null) {
+                builder.integrationName(cli.getRun().getIntegration().getName());
             }
 
-            if (jbang.getRun().getIntegration().getSource() != null) {
-                builder.integration(jbang.getRun().getIntegration().getSource());
+            if (cli.getRun().getIntegration().getSource() != null) {
+                builder.integration(cli.getRun().getIntegration().getSource());
             }
 
-            builder.autoRemove(jbang.getRun().isAutoRemove());
-            builder.waitForRunningState(jbang.getRun().isWaitForRunningState());
-            builder.dumpIntegrationOutput(jbang.getRun().isDumpIntegrationOutput());
+            builder.autoRemove(cli.getRun().isAutoRemove());
+            builder.waitForRunningState(cli.getRun().isWaitForRunningState());
+            builder.dumpIntegrationOutput(cli.getRun().isDumpIntegrationOutput());
 
-            if (jbang.getRun().getArgLine() != null) {
-                builder.withArgs(jbang.getRun().getArgLine().split(" "));
+            if (cli.getRun().getArgLine() != null) {
+                builder.withArgs(cli.getRun().getArgLine().split(" "));
             }
 
-            if (jbang.getRun().getArgs() != null) {
-                builder.withArgs(jbang.getRun().getArgs().getArgs().toArray(String[]::new));
+            if (cli.getRun().getArgs() != null) {
+                builder.withArgs(cli.getRun().getArgs().getArgs().toArray(String[]::new));
             }
 
-            if (jbang.getRun().getStub() != null) {
-                builder.stub(jbang.getRun().getStub().split(" "));
+            if (cli.getRun().getStub() != null) {
+                builder.stub(cli.getRun().getStub().split(" "));
             }
 
-            if (jbang.getRun().getStubs() != null) {
-                builder.stub(jbang.getRun().getStubs().getStubs().toArray(String[]::new));
+            if (cli.getRun().getStubs() != null) {
+                builder.stub(cli.getRun().getStubs().getStubs().toArray(String[]::new));
             }
 
-            if (jbang.getRun().getResources() != null) {
-                jbang.getRun().getResources().getResources().forEach(builder::addResource);
+            if (cli.getRun().getResources() != null) {
+                cli.getRun().getResources().getResources().forEach(builder::addResource);
             }
 
-            if (jbang.getRun().getIntegration().getFile() != null) {
-                builder.integration(Resources.create(jbang.getRun().getIntegration().getFile()));
+            if (cli.getRun().getIntegration().getFile() != null) {
+                builder.integration(Resources.create(cli.getRun().getIntegration().getFile()));
             }
 
-            if (jbang.getRun().getIntegration().getSystemProperties() != null) {
-                if (jbang.getRun().getIntegration().getSystemProperties().getFile() != null) {
+            if (cli.getRun().getIntegration().getSystemProperties() != null) {
+                if (cli.getRun().getIntegration().getSystemProperties().getFile() != null) {
                     builder.withSystemProperties(Resources.create(
-                            jbang.getRun().getIntegration().getSystemProperties().getFile()));
+                            cli.getRun().getIntegration().getSystemProperties().getFile()));
                 }
 
-                jbang.getRun().getIntegration().getSystemProperties()
+                cli.getRun().getIntegration().getSystemProperties()
                         .getProperties()
                         .forEach(property -> builder.withSystemProperty(property.getName(), property.getValue()));
             }
 
-            if (jbang.getRun().getIntegration().getEnvironment() != null) {
-                if (jbang.getRun().getIntegration().getEnvironment().getFile() != null) {
+            if (cli.getRun().getIntegration().getEnvironment() != null) {
+                if (cli.getRun().getIntegration().getEnvironment().getFile() != null) {
                     builder.withEnvs(Resources.create(
-                            jbang.getRun().getIntegration().getEnvironment().getFile()));
+                            cli.getRun().getIntegration().getEnvironment().getFile()));
                 }
 
-                jbang.getRun().getIntegration().getEnvironment()
+                cli.getRun().getIntegration().getEnvironment()
                         .getVariables()
                         .forEach(variable -> builder.withEnv(variable.getName(), variable.getValue()));
             }
 
             this.builder = builder;
-        } else if (jbang.getStop() != null) {
+        } else if (cli.getStop() != null) {
             CamelStopIntegrationAction.Builder builder = new CamelStopIntegrationAction.Builder()
-                    .integrationName(jbang.getStop().getIntegration());
+                    .integrationName(cli.getStop().getIntegration());
             this.builder = builder;
-        }  else if (jbang.getCustom() != null) {
+        }  else if (cli.getCustom() != null) {
             CamelCustomizedRunIntegrationAction.Builder builder = new CamelCustomizedRunIntegrationAction.Builder()
-                    .commands(jbang.getCustom().getCommands().toArray(new String[0]));
+                    .commands(cli.getCustom().getCommands().toArray(new String[0]));
 
-            if (jbang.getCustom().getCommandLine() != null) {
-                builder.commands(jbang.getCustom().getCommandLine().split(" "));
+            if (cli.getCustom().getCommandLine() != null) {
+                builder.commands(cli.getCustom().getCommandLine().split(" "));
             }
 
-            builder.workDir(jbang.getCustom().getWorkDir());
-            if (jbang.getCustom().getProcessName() != null) {
-                builder.processName(jbang.getCustom().getProcessName());
+            builder.workDir(cli.getCustom().getWorkDir());
+            if (cli.getCustom().getProcessName() != null) {
+                builder.processName(cli.getCustom().getProcessName());
             }
 
-            builder.autoRemove(jbang.getCustom().isAutoRemove());
-            builder.waitForRunningState(jbang.getCustom().isWaitForRunningState());
-            builder.dumpIntegrationOutput(jbang.getCustom().isDumpIntegrationOutput());
+            builder.autoRemove(cli.getCustom().isAutoRemove());
+            builder.waitForRunningState(cli.getCustom().isWaitForRunningState());
+            builder.dumpIntegrationOutput(cli.getCustom().isDumpIntegrationOutput());
 
-            if (jbang.getCustom().getArgLine() != null) {
-                builder.withArgs(jbang.getCustom().getArgLine().split(" "));
+            if (cli.getCustom().getArgLine() != null) {
+                builder.withArgs(cli.getCustom().getArgLine().split(" "));
             }
 
-            if (jbang.getCustom().getArgs() != null) {
-                builder.withArgs(jbang.getCustom().getArgs().getArgs().toArray(String[]::new));
+            if (cli.getCustom().getArgs() != null) {
+                builder.withArgs(cli.getCustom().getArgs().getArgs().toArray(String[]::new));
             }
 
-            if (jbang.getCustom().getResources() != null) {
-                jbang.getCustom().getResources().getResources().forEach(builder::addResource);
+            if (cli.getCustom().getResources() != null) {
+                cli.getCustom().getResources().getResources().forEach(builder::addResource);
             }
 
-            if (jbang.getCustom().getIntegration().getFile() != null) {
-                builder.addResource(jbang.getCustom().getIntegration().getFile());
+            if (cli.getCustom().getIntegration().getFile() != null) {
+                builder.addResource(cli.getCustom().getIntegration().getFile());
             }
 
-            if (jbang.getCustom().getIntegration().getSystemProperties() != null) {
-                if (jbang.getCustom().getIntegration().getSystemProperties().getFile() != null) {
+            if (cli.getCustom().getIntegration().getSystemProperties() != null) {
+                if (cli.getCustom().getIntegration().getSystemProperties().getFile() != null) {
                     builder.withSystemProperties(Resources.create(
-                            jbang.getCustom().getIntegration().getSystemProperties().getFile()));
+                            cli.getCustom().getIntegration().getSystemProperties().getFile()));
                 }
 
-                jbang.getCustom().getIntegration().getSystemProperties()
+                cli.getCustom().getIntegration().getSystemProperties()
                         .getProperties()
                         .forEach(property -> builder.withSystemProperty(property.getName(), property.getValue()));
             }
 
-            if (jbang.getCustom().getIntegration().getEnvironment() != null) {
-                if (jbang.getCustom().getIntegration().getEnvironment().getFile() != null) {
+            if (cli.getCustom().getIntegration().getEnvironment() != null) {
+                if (cli.getCustom().getIntegration().getEnvironment().getFile() != null) {
                     builder.withEnvs(Resources.create(
-                            jbang.getCustom().getIntegration().getEnvironment().getFile()));
+                            cli.getCustom().getIntegration().getEnvironment().getFile()));
                 }
 
-                jbang.getCustom().getIntegration().getEnvironment()
+                cli.getCustom().getIntegration().getEnvironment()
                         .getVariables()
                         .forEach(variable -> builder.withEnv(variable.getName(), variable.getValue()));
             }
 
             this.builder = builder;
-        } else if (jbang.getVerify() != null) {
+        } else if (cli.getVerify() != null) {
             CamelVerifyIntegrationAction.Builder builder = new CamelVerifyIntegrationAction.Builder()
-                    .integrationName(jbang.getVerify().getIntegration())
-                    .isInPhase(jbang.getVerify().getPhase())
-                    .stopOnErrorStatus(jbang.getVerify().isStopOnErrorStatus())
-                    .printLogs(jbang.getVerify().isPrintLogs())
-                    .maxAttempts(jbang.getVerify().getMaxAttempts())
-                    .delayBetweenAttempts(jbang.getVerify().getDelayBetweenAttempts());
+                    .integrationName(cli.getVerify().getIntegration())
+                    .isInPhase(cli.getVerify().getPhase())
+                    .stopOnErrorStatus(cli.getVerify().isStopOnErrorStatus())
+                    .printLogs(cli.getVerify().isPrintLogs())
+                    .maxAttempts(cli.getVerify().getMaxAttempts())
+                    .delayBetweenAttempts(cli.getVerify().getDelayBetweenAttempts());
 
-            if (jbang.getVerify().getLogMessage() != null) {
-                builder.waitForLogMessage(jbang.getVerify().getLogMessage());
+            if (cli.getVerify().getLogMessage() != null) {
+                builder.waitForLogMessage(cli.getVerify().getLogMessage());
             }
 
-            builder.camelVersion(jbang.getCamelVersion());
-            builder.kameletsVersion(jbang.getKameletsVersion());
+            builder.camelVersion(cli.getCamelVersion());
+            builder.kameletsVersion(cli.getKameletsVersion());
 
             this.builder = builder;
-        } else if (jbang.getPlugin() != null) {
-            if (jbang.getPlugin().getAdd() != null) {
+        } else if (cli.getPlugin() != null) {
+            if (cli.getPlugin().getAdd() != null) {
                 AddCamelPluginAction.Builder builder = new AddCamelPluginAction.Builder();
-                builder.pluginName(jbang.getPlugin().getAdd().getName());
-                if (jbang.getPlugin().getAdd().getArgLine() != null) {
-                    builder.withArgs(jbang.getPlugin().getAdd().getArgLine().split(" "));
+                builder.pluginName(cli.getPlugin().getAdd().getName());
+                if (cli.getPlugin().getAdd().getArgLine() != null) {
+                    builder.withArgs(cli.getPlugin().getAdd().getArgLine().split(" "));
                 }
-                builder.autoRemove(jbang.getPlugin().getAdd().isAutoRemove());
+                builder.autoRemove(cli.getPlugin().getAdd().isAutoRemove());
                 this.builder = builder;
-            } else if (jbang.getPlugin().getDelete() != null) {
+            } else if (cli.getPlugin().getDelete() != null) {
                 DeleteCamelPluginAction.Builder builder = new DeleteCamelPluginAction.Builder();
-                builder.pluginName(jbang.getPlugin().getDelete().getName());
+                builder.pluginName(cli.getPlugin().getDelete().getName());
                 this.builder = builder;
             }
-        } else if (jbang.getCmd() != null) {
-            if (jbang.getCmd().getSend() != null) {
+        } else if (cli.getCmd() != null) {
+            if (cli.getCmd().getSend() != null) {
                 CamelCmdSendAction.Builder builder = new CamelCmdSendAction.Builder();
-                builder.integration(jbang.getCmd().getSend().getIntegration());
+                builder.integration(cli.getCmd().getSend().getIntegration());
 
-                builder.timeout(jbang.getCmd().getSend().getTimeout());
+                builder.timeout(cli.getCmd().getSend().getTimeout());
 
-                if (jbang.getCmd().getSend().getHeaders() != null) {
-                    for (JBang.Cmd.Send.Headers.Header header : jbang.getCmd().getSend().getHeaders().getHeaders()) {
+                if (cli.getCmd().getSend().getHeaders() != null) {
+                    for (Cli.Cmd.Send.Headers.Header header : cli.getCmd().getSend().getHeaders().getHeaders()) {
                         builder.header(header.getName(), header.getValue());
                     }
                 }
 
-                if (jbang.getCmd().getSend().getBody() != null) {
-                    if (jbang.getCmd().getSend().getBody().getData() != null) {
-                        builder.body(jbang.getCmd().getSend().getBody().getData());
-                    } else if (jbang.getCmd().getSend().getBody().getFile() != null) {
-                        builder.body("file:" + jbang.getCmd().getSend().getBody().getFile());
+                if (cli.getCmd().getSend().getBody() != null) {
+                    if (cli.getCmd().getSend().getBody().getData() != null) {
+                        builder.body(cli.getCmd().getSend().getBody().getData());
+                    } else if (cli.getCmd().getSend().getBody().getFile() != null) {
+                        builder.body("file:" + cli.getCmd().getSend().getBody().getFile());
                     }
                 }
 
-                if (jbang.getCmd().getSend().getInfra() != null) {
-                    builder.endpoint(jbang.getCmd().getSend().getInfra());
+                if (cli.getCmd().getSend().getInfra() != null) {
+                    builder.endpoint(cli.getCmd().getSend().getInfra());
                 }
 
-                if (jbang.getCmd().getSend().getEndpoint() != null) {
-                    builder.endpoint(jbang.getCmd().getSend().getEndpoint());
+                if (cli.getCmd().getSend().getEndpoint() != null) {
+                    builder.endpoint(cli.getCmd().getSend().getEndpoint());
                 }
 
-                if (jbang.getCmd().getSend().getUri() != null) {
-                    builder.endpointUri(jbang.getCmd().getSend().getUri());
+                if (cli.getCmd().getSend().getUri() != null) {
+                    builder.endpointUri(cli.getCmd().getSend().getUri());
                 }
 
-                if (jbang.getCmd().getSend().getArgLine() != null) {
-                    builder.withArgs(jbang.getCmd().getSend().getArgLine().split(" "));
+                if (cli.getCmd().getSend().getArgLine() != null) {
+                    builder.withArgs(cli.getCmd().getSend().getArgLine().split(" "));
                 }
 
-                builder.reply(jbang.getCmd().getSend().isReply());
+                builder.reply(cli.getCmd().getSend().isReply());
 
                 this.builder = builder;
-            } else if (jbang.getCmd().getReceive() != null) {
+            } else if (cli.getCmd().getReceive() != null) {
                 CamelCmdReceiveAction.Builder builder = new CamelCmdReceiveAction.Builder();
-                builder.integration(jbang.getCmd().getReceive().getIntegration());
+                builder.integration(cli.getCmd().getReceive().getIntegration());
 
-                if (jbang.getCmd().getReceive().getEndpoint() != null) {
-                    builder.endpoint(jbang.getCmd().getReceive().getEndpoint());
+                if (cli.getCmd().getReceive().getEndpoint() != null) {
+                    builder.endpoint(cli.getCmd().getReceive().getEndpoint());
                 }
 
-                if (jbang.getCmd().getReceive().getUri() != null) {
-                    builder.endpointUri(jbang.getCmd().getReceive().getUri());
+                if (cli.getCmd().getReceive().getUri() != null) {
+                    builder.endpointUri(cli.getCmd().getReceive().getUri());
                 }
 
-                if (jbang.getCmd().getReceive().getArgLine() != null) {
-                    builder.withArgs(jbang.getCmd().getReceive().getArgLine().split(" "));
+                if (cli.getCmd().getReceive().getArgLine() != null) {
+                    builder.withArgs(cli.getCmd().getReceive().getArgLine().split(" "));
                 }
 
-                if (jbang.getCmd().getReceive().getGrep() != null) {
-                    builder.grep(jbang.getCmd().getReceive().getGrep());
+                if (cli.getCmd().getReceive().getGrep() != null) {
+                    builder.grep(cli.getCmd().getReceive().getGrep());
                 }
 
-                builder.loggingColor(jbang.getCmd().getReceive().isLoggingColor());
+                builder.loggingColor(cli.getCmd().getReceive().isLoggingColor());
 
-                builder.jsonOutput(jbang.getCmd().getReceive().isJsonOutput());
+                builder.jsonOutput(cli.getCmd().getReceive().isJsonOutput());
 
-                if (jbang.getCmd().getReceive().getSince() != null) {
-                    builder.since(jbang.getCmd().getReceive().getSince());
+                if (cli.getCmd().getReceive().getSince() != null) {
+                    builder.since(cli.getCmd().getReceive().getSince());
                 }
 
-                if (jbang.getCmd().getReceive().getTail() != null) {
-                    builder.tail(jbang.getCmd().getReceive().getTail());
+                if (cli.getCmd().getReceive().getTail() != null) {
+                    builder.tail(cli.getCmd().getReceive().getTail());
                 }
 
-                builder.maxAttempts(jbang.getCmd().getReceive().getMaxAttempts());
-                builder.delayBetweenAttempts(jbang.getCmd().getReceive().getDelayBetweenAttempts());
+                builder.maxAttempts(cli.getCmd().getReceive().getMaxAttempts());
+                builder.delayBetweenAttempts(cli.getCmd().getReceive().getDelayBetweenAttempts());
 
                 this.builder = builder;
             }
-        } else if (jbang.getKubernetes() != null) {
-            if (jbang.getKubernetes().getRun() != null) {
+        } else if (cli.getKubernetes() != null) {
+            if (cli.getKubernetes().getRun() != null) {
                 CamelKubernetesRunIntegrationAction.Builder builder = new CamelKubernetesRunIntegrationAction.Builder();
 
-                JBang.Kubernetes.Run run = jbang.getKubernetes().getRun();
+                Cli.Kubernetes.Run run = cli.getKubernetes().getRun();
 
                 if (run.getIntegration().getName() != null) {
                     builder.integrationName(run.getIntegration().getName());
@@ -465,47 +470,47 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                 builder.waitForRunningState(run.isWaitForRunningState());
 
                 this.builder = builder;
-            } else if (jbang.getKubernetes().getVerify() != null) {
+            } else if (cli.getKubernetes().getVerify() != null) {
                 CamelKubernetesVerifyIntegrationAction.Builder builder = new CamelKubernetesVerifyIntegrationAction.Builder();
 
-                builder.integration(jbang.getKubernetes().getVerify().getIntegration())
-                        .label(jbang.getKubernetes().getVerify().getLabel())
-                        .namespace(jbang.getKubernetes().getVerify().getNamespace())
-                        .printLogs(jbang.getKubernetes().getVerify().isPrintLogs())
-                        .maxAttempts(jbang.getKubernetes().getVerify().getMaxAttempts())
-                        .delayBetweenAttempts(jbang.getKubernetes().getVerify().getDelayBetweenAttempts());
-                if (jbang.getKubernetes().getVerify().getLogMessage() != null) {
-                    builder.waitForLogMessage(jbang.getKubernetes().getVerify().getLogMessage());
+                builder.integration(cli.getKubernetes().getVerify().getIntegration())
+                        .label(cli.getKubernetes().getVerify().getLabel())
+                        .namespace(cli.getKubernetes().getVerify().getNamespace())
+                        .printLogs(cli.getKubernetes().getVerify().isPrintLogs())
+                        .maxAttempts(cli.getKubernetes().getVerify().getMaxAttempts())
+                        .delayBetweenAttempts(cli.getKubernetes().getVerify().getDelayBetweenAttempts());
+                if (cli.getKubernetes().getVerify().getLogMessage() != null) {
+                    builder.waitForLogMessage(cli.getKubernetes().getVerify().getLogMessage());
                 }
-                if (jbang.getKubernetes().getVerify().getArgs() != null) {
-                    builder.withArgs(jbang.getKubernetes().getVerify().getArgs().getArgs().toArray(String[]::new));
+                if (cli.getKubernetes().getVerify().getArgs() != null) {
+                    builder.withArgs(cli.getKubernetes().getVerify().getArgs().getArgs().toArray(String[]::new));
                 }
                 this.builder = builder;
-            } else if (jbang.getKubernetes().getDelete() != null) {
+            } else if (cli.getKubernetes().getDelete() != null) {
                 CamelKubernetesDeleteIntegrationAction.Builder builder = new CamelKubernetesDeleteIntegrationAction.Builder();
 
-                if (jbang.getKubernetes().getDelete().getIntegration() != null) {
-                    if (jbang.getKubernetes().getDelete().getIntegration().getFile() != null) {
-                        builder.integration(Resources.create(jbang.getKubernetes().getDelete().getIntegration().getFile()));
+                if (cli.getKubernetes().getDelete().getIntegration() != null) {
+                    if (cli.getKubernetes().getDelete().getIntegration().getFile() != null) {
+                        builder.integration(Resources.create(cli.getKubernetes().getDelete().getIntegration().getFile()));
                     }
-                    if (jbang.getKubernetes().getDelete().getIntegration().getName() != null) {
-                        builder.integration(jbang.getKubernetes().getDelete().getIntegration().getName());
+                    if (cli.getKubernetes().getDelete().getIntegration().getName() != null) {
+                        builder.integration(cli.getKubernetes().getDelete().getIntegration().getName());
                     }
                 }
-                builder.clusterType(jbang.getKubernetes().getDelete().getClusterType())
-                        .namespace(jbang.getKubernetes().getDelete().getNamespace())
-                        .workingDir(jbang.getKubernetes().getDelete().getWorkingDir());
+                builder.clusterType(cli.getKubernetes().getDelete().getClusterType())
+                        .namespace(cli.getKubernetes().getDelete().getNamespace())
+                        .workingDir(cli.getKubernetes().getDelete().getWorkingDir());
                 this.builder = builder;
             }
         }
 
-        if (this.builder instanceof AbstractCamelJBangAction.Builder<?, ?> camelBuilder) {
-            if (jbang.getCamelVersion() != null) {
-                camelBuilder.camelVersion(jbang.getCamelVersion());
+        if (this.builder instanceof AbstractCamelCliAction.Builder<?, ?> camelBuilder) {
+            if (cli.getCamelVersion() != null) {
+                camelBuilder.camelVersion(cli.getCamelVersion());
             }
 
-            if (jbang.getKameletsVersion() != null) {
-                camelBuilder.kameletsVersion(jbang.getKameletsVersion());
+            if (cli.getKameletsVersion() != null) {
+                camelBuilder.kameletsVersion(cli.getKameletsVersion());
             }
         }
     }

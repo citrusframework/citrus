@@ -1,9 +1,0 @@
-name: "CamelDeletePluginTest"
-author: "Christoph"
-status: "FINAL"
-actions:
-  - camel:
-      jbang:
-        plugin:
-          delete:
-            name: "my-plugin"

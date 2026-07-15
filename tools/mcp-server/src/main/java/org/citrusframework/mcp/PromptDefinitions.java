@@ -63,7 +63,7 @@ public class PromptDefinitions {
 
                 ### Step 2: Identify required infrastructure
                 Analyze the requirements above and identify test infrastructure needed such as databases, message brokers, 3rd party services.
-                If appropriate, use special test actions regarding Testcontainers or Apache Camel JBang infra services to start the infrastructure as part of the test.
+                If appropriate, use special test actions regarding Testcontainers or Apache Camel CLI infra services to start the infrastructure as part of the test.
 
                 ### Step 3: Identify endpoints
                 Analyze the requirements above and identify the Citrus endpoints needed.

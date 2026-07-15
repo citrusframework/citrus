@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.citrusframework.actions.camel.CamelIntegrationRunActionBuilder;
-import org.citrusframework.camel.jbang.CamelJBangSettings;
+import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
@@ -41,9 +41,9 @@ import org.slf4j.LoggerFactory;
 import static org.citrusframework.camel.dsl.CamelSupport.camel;
 
 /**
- * Runs given Camel integration with Camel JBang tooling.
+ * Runs given Camel integration with Camel CLI tooling.
  */
-public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
+public class CamelRunIntegrationAction extends AbstractCamelCliAction {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CamelRunIntegrationAction.class);
@@ -60,13 +60,13 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
     /** Source code to run as a Camel integration */
     private final String sourceCode;
 
-    /** Camel Jbang command arguments */
+    /** Camel CLI command arguments */
     private final List<String> args;
 
-    /** Environment variables set on the Camel JBang process */
+    /** Environment variables set on the Camel CLI process */
     private final Map<String, String> envVars;
 
-    /** System properties set on the Camel JBang process */
+    /** System properties set on the Camel CLI process */
     private final Map<String, String> systemProperties;
 
     private final boolean autoRemoveResources;
@@ -108,7 +108,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
 
             Path integrationToRun;
             if (StringUtils.hasText(sourceCode)) {
-                Path workDir = CamelJBangSettings.getWorkDir();
+                Path workDir = CamelCliSettings.getWorkDir();
                 Files.createDirectories(workDir);
                 integrationToRun = workDir.resolve(String.format("%s.%s", name, getFileExt(sourceCode)));
                 Files.writeString(integrationToRun, sourceCode,
@@ -121,12 +121,12 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
                 throw new CitrusRuntimeException("Missing Camel integration source code or file");
             }
 
-            camelJBang().dumpIntegrationOutput(dumpIntegrationOutput);
-            camelJBang().withEnvs(context.resolveDynamicValuesInMap(envVars));
-            camelJBang().withSystemProperties(context.resolveDynamicValuesInMap(systemProperties));
-            camelJBang().workingDir(integrationToRun.toAbsolutePath().getParent());
+            camelCli().dumpIntegrationOutput(dumpIntegrationOutput);
+            camelCli().withEnvs(context.resolveDynamicValuesInMap(envVars));
+            camelCli().withSystemProperties(context.resolveDynamicValuesInMap(systemProperties));
+            camelCli().workingDir(integrationToRun.toAbsolutePath().getParent());
 
-            ProcessAndOutput pao = camelJBang().run(name, integrationToRun.getFileName().toString(), resourceFiles,
+            ProcessAndOutput pao = camelCli().run(name, integrationToRun.getFileName().toString(), resourceFiles,
                     context.resolveDynamicValuesInList(args).toArray(String[]::new));
 
             verifyProcessIsAlive(pao, name);
@@ -176,7 +176,7 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelRunIntegrationAction, Builder>
+    public static final class Builder extends AbstractCamelCliAction.Builder<CamelRunIntegrationAction, Builder>
             implements CamelIntegrationRunActionBuilder<CamelRunIntegrationAction, Builder> {
 
         private String sourceCode;
@@ -192,9 +192,9 @@ public class CamelRunIntegrationAction extends AbstractCamelJBangAction {
 
         private String stub;
 
-        private boolean autoRemoveResources = CamelJBangSettings.isAutoRemoveResources();
-        private boolean waitForRunningState = CamelJBangSettings.isWaitForRunningState();
-        private boolean dumpIntegrationOutput = CamelJBangSettings.isDumpIntegrationOutput();
+        private boolean autoRemoveResources = CamelCliSettings.isAutoRemoveResources();
+        private boolean waitForRunningState = CamelCliSettings.isWaitForRunningState();
+        private boolean dumpIntegrationOutput = CamelCliSettings.isDumpIntegrationOutput();
 
         @Override
         public Builder integration(String sourceCode) {

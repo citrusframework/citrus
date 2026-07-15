@@ -19,10 +19,10 @@ package org.citrusframework.actions.camel;
 import org.citrusframework.TestAction;
 
 public interface CamelIntegrationVerifyActionBuilder<T extends TestAction, B extends CamelIntegrationVerifyActionBuilder<T, B>>
-        extends CamelJBangActionBuilderBase<T, B> {
+        extends CamelCliActionBuilderBase<T, B> {
 
     /**
-     * Identify Camel JBang process for this route.
+     * Identify Camel CLI process for this route.
      */
     B integration(String sourceCode);
 

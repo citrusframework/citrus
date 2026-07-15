@@ -19,7 +19,7 @@ package org.citrusframework.camel.actions;
 import java.util.Arrays;
 
 import org.citrusframework.camel.UnitTestSupport;
-import org.citrusframework.camel.jbang.CamelJBang;
+import org.citrusframework.camel.cli.CamelCli;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.message.Message;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 public class CamelCmdReceiveActionTest extends UnitTestSupport {
 
     @Mock
-    private CamelJBang camelJBang;
+    private CamelCli camelCli;
 
     @Mock
     private ProcessAndOutput pao;
@@ -73,13 +73,13 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
         when(process.exitValue()).thenReturn(0);
 
         when(pao.getOutput()).thenReturn(output);
-        when(camelJBang.receive(any(String[].class))).thenAnswer(invocation -> {
+        when(camelCli.receive(any(String[].class))).thenAnswer(invocation -> {
             String[] args = (String[]) invocation.getRawArguments()[0];
             Assert.assertEquals(args, expectedArgs);
             return pao;
         });
 
-        context.getReferenceResolver().bind("camelJBang", camelJBang);
+        context.getReferenceResolver().bind("camelCli", camelCli);
 
         CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
                 .integration("my-route")
@@ -131,13 +131,13 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
         when(process.exitValue()).thenReturn(0);
 
         when(pao.getOutput()).thenReturn(output);
-        when(camelJBang.receive(any(String[].class))).thenAnswer(invocation -> {
+        when(camelCli.receive(any(String[].class))).thenAnswer(invocation -> {
             String[] args = (String[]) invocation.getRawArguments()[0];
             Assert.assertEquals(args, expectedArgs, Arrays.toString(args));
             return pao;
         });
 
-        context.getReferenceResolver().bind("camelJBang", camelJBang);
+        context.getReferenceResolver().bind("camelCli", camelCli);
 
         CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
                 .integration("my-route")
@@ -219,13 +219,13 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
         when(process.exitValue()).thenReturn(0);
 
         when(pao.getOutput()).thenReturn(output);
-        when(camelJBang.receive(any(String[].class))).thenAnswer(invocation -> {
+        when(camelCli.receive(any(String[].class))).thenAnswer(invocation -> {
             String[] args = (String[]) invocation.getRawArguments()[0];
             Assert.assertEquals(args, expectedArgs, Arrays.toString(args));
             return pao;
         });
 
-        context.getReferenceResolver().bind("camelJBang", camelJBang);
+        context.getReferenceResolver().bind("camelCli", camelCli);
 
         CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
                 .integration("my-route")
@@ -253,9 +253,9 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
         when(process.exitValue()).thenReturn(0);
 
         when(pao.getOutput()).thenReturn(output);
-        when(camelJBang.receive(any(String[].class))).thenReturn(pao);
+        when(camelCli.receive(any(String[].class))).thenReturn(pao);
 
-        context.getReferenceResolver().bind("camelJBang", camelJBang);
+        context.getReferenceResolver().bind("camelCli", camelCli);
 
         CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
                 .integration("my-route")
@@ -279,9 +279,9 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
         when(process.exitValue()).thenReturn(0);
 
         when(pao.getOutput()).thenReturn(output);
-        when(camelJBang.receive(any(String[].class))).thenReturn(pao);
+        when(camelCli.receive(any(String[].class))).thenReturn(pao);
 
-        context.getReferenceResolver().bind("camelJBang", camelJBang);
+        context.getReferenceResolver().bind("camelCli", camelCli);
 
         CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
                 .integration("my-route")

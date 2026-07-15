@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.actions.camel.CamelJBangCmdSendActionBuilder;
+import org.citrusframework.actions.camel.CamelCliCmdSendActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;
@@ -30,9 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Camel JBang send command.
+ * Camel CLI send command.
  */
-public class CamelCmdSendAction extends AbstractCamelJBangAction {
+public class CamelCmdSendAction extends AbstractCamelCliAction {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CamelCmdSendAction.class);
@@ -61,7 +61,7 @@ public class CamelCmdSendAction extends AbstractCamelJBangAction {
     /** Endpoint URI to invoke */
     private final String endpointUri;
 
-    /** Camel JBang command arguments */
+    /** Camel CLI command arguments */
     private final List<String> args;
 
     /** Wait for reply */
@@ -89,10 +89,10 @@ public class CamelCmdSendAction extends AbstractCamelJBangAction {
         List<String> commandArgs = new ArrayList<>();
 
         if (StringUtils.hasText(integrationName)) {
-            logger.info("Camel JBang cmd sending message to integration '%s'".formatted(integrationName));
+            logger.info("Camel CLI cmd sending message to integration '%s'".formatted(integrationName));
             commandArgs.add(context.replaceDynamicContentInString(integrationName));
         } else {
-            logger.info("Camel JBang cmd sending message to current Camel integration");
+            logger.info("Camel CLI cmd sending message to current Camel integration");
         }
 
         commandArgs.add("--timeout");
@@ -134,20 +134,20 @@ public class CamelCmdSendAction extends AbstractCamelJBangAction {
             commandArgs.addAll(context.resolveDynamicValuesInList(args));
         }
 
-        ProcessAndOutput pao = camelJBang().send(commandArgs.toArray(new String[0]));
+        ProcessAndOutput pao = camelCli().send(commandArgs.toArray(new String[0]));
 
         if (reply) {
-            logger.info("Received reply from Camel JBang send command:%n%s".formatted(pao.getOutput()));
+            logger.info("Received reply from Camel CLI send command:%n%s".formatted(pao.getOutput()));
         }
 
-        logger.info("Successfully sent message to Camel integration via Camel JBang");
+        logger.info("Successfully sent message to Camel integration via Camel CLI");
     }
 
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelCmdSendAction, Builder>
-            implements CamelJBangCmdSendActionBuilder<CamelCmdSendAction, Builder> {
+    public static final class Builder extends AbstractCamelCliAction.Builder<CamelCmdSendAction, Builder>
+            implements CamelCliCmdSendActionBuilder<CamelCmdSendAction, Builder> {
 
         private String integrationName;
         private String timeout = "20000";

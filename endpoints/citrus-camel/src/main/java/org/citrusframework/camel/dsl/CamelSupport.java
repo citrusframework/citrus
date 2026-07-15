@@ -32,7 +32,7 @@ import org.citrusframework.camel.actions.CamelActionBuilder;
 import org.citrusframework.camel.actions.CamelContextActionBuilder;
 import org.citrusframework.camel.actions.CamelControlBusAction;
 import org.citrusframework.camel.actions.CamelExchangeActionBuilder;
-import org.citrusframework.camel.actions.CamelJBangActionBuilder;
+import org.citrusframework.camel.actions.CamelCliActionBuilder;
 import org.citrusframework.camel.actions.CamelRouteActionBuilder;
 import org.citrusframework.camel.actions.CreateCamelComponentAction;
 import org.citrusframework.camel.actions.infra.CamelInfraActionBuilder;
@@ -207,12 +207,20 @@ public class CamelSupport {
     }
 
     /**
-     * Perform actions with Camel JBang.
+     * Perform actions with Camel CLI.
      */
-    public CamelJBangActionBuilder jbang() {
+    public CamelCliActionBuilder cli() {
         return new CamelActionBuilder()
                 .camelContext(camelContext)
-                .jbang();
+                .cli();
+    }
+
+    /**
+     * @deprecated Use {@link #cli()} instead. Camel has renamed JBang to CLI.
+     */
+    @Deprecated
+    public CamelCliActionBuilder jbang() {
+        return cli();
     }
 
     /**

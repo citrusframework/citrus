@@ -31,7 +31,7 @@ import org.apache.camel.catalog.DefaultCamelCatalog;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.actions.camel.CamelInfraRunActionBuilder;
 import org.citrusframework.camel.actions.AbstractCamelAction;
-import org.citrusframework.camel.jbang.CamelJBangSettings;
+import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.ClassLoaderHelper;
@@ -115,7 +115,7 @@ public class CamelRunInfraAction extends AbstractCamelAction {
 
             if (dumpServiceOutput) {
                 if (Arrays.stream(instance.getClass().getInterfaces()).anyMatch(c -> c.getName().contains("ContainerService"))) {
-                    Path workDir = CamelJBangSettings.getWorkDir();
+                    Path workDir = CamelCliSettings.getWorkDir();
                     Path logFile = workDir.resolve(String.format("camel-infra-%s-output.txt", fullServiceName));
                     Object containerLogConsumer = Class.forName("org.apache.camel.test.infra.common.CamelLogConsumer", true, classLoader)
                             .getConstructor(Path.class, boolean.class).newInstance(logFile, true);

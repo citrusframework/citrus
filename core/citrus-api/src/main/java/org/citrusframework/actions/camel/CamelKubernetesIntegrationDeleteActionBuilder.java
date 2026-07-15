@@ -20,15 +20,15 @@ import org.citrusframework.TestAction;
 import org.citrusframework.spi.Resource;
 
 public interface CamelKubernetesIntegrationDeleteActionBuilder<T extends TestAction, B extends CamelKubernetesIntegrationDeleteActionBuilder<T, B>>
-        extends CamelJBangActionBuilderBase<T, B> {
+        extends CamelCliActionBuilderBase<T, B> {
 
     /**
-     * Delete Camel JBang kubernetes resources integration resource.
+     * Delete Camel CLI kubernetes resources integration resource.
      */
     B integration(Resource resource);
 
     /**
-     * Delete Camel JBang kubernetes resources for this integration.
+     * Delete Camel CLI kubernetes resources for this integration.
      */
     B integration(String name);
 

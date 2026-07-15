@@ -16,13 +16,13 @@
 
 package org.citrusframework.camel.actions;
 
-import org.citrusframework.actions.camel.CamelJBangKubernetesActionBuilder;
+import org.citrusframework.actions.camel.CamelCliKubernetesActionBuilder;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
 
-public class CamelKubernetesPluginActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelJBangAction>
-        implements CamelJBangKubernetesActionBuilder<AbstractCamelJBangAction, CamelKubernetesPluginActionBuilder> {
+public class CamelKubernetesPluginActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelCliAction>
+        implements CamelCliKubernetesActionBuilder<AbstractCamelCliAction, CamelKubernetesPluginActionBuilder> {
 
     @Override
     public CamelKubernetesRunIntegrationAction.Builder run() {
@@ -59,7 +59,7 @@ public class CamelKubernetesPluginActionBuilder extends AbstractReferenceResolve
     }
 
     @Override
-    public AbstractCamelJBangAction build() {
+    public AbstractCamelCliAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         return delegate.build();
     }

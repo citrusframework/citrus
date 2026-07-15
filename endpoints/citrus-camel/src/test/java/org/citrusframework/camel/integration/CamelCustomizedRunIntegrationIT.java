@@ -35,16 +35,16 @@ public class CamelCustomizedRunIntegrationIT extends TestNGCitrusSupport impleme
         }
 
         given(doFinally().actions(
-            catchException().actions(camel().jbang().stop().integration("route"))
+            catchException().actions(camel().cli().stop().integration("route"))
         ));
 
-        when(camel().jbang()
+        when(camel().cli()
                 .custom("run", "--name", "route")
                 .processName("route")
                 .addResource(Resources.fromClasspath("route.yaml", CamelCustomizedRunIntegrationIT.class))
                 .withEnv("GREETING", "Hello Camel"));
 
-        then(camel().jbang()
+        then(camel().cli()
                 .verify()
                 .integration("route")
                 .waitForLogMessage("HELLO CAMEL #10"));

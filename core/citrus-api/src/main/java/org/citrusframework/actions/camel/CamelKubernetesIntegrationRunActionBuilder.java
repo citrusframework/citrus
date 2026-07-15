@@ -20,7 +20,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.spi.Resource;
 
 public interface CamelKubernetesIntegrationRunActionBuilder<T extends TestAction, B extends CamelKubernetesIntegrationRunActionBuilder<T, B>>
-        extends CamelJBangActionBuilderBase<T, B> {
+        extends CamelCliActionBuilderBase<T, B> {
 
     /**
      * Sets the integration name.

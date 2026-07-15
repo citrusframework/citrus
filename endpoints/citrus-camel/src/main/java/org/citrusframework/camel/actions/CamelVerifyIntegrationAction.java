@@ -29,11 +29,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Verifies Camel integration via Camel JBang. Checks route for running/stopped state and optionally waits for a log message to be present.
+ * Verifies Camel integration via Camel CLI. Checks route for running/stopped state and optionally waits for a log message to be present.
  * Raises errors when either the Camel integration is not in expected state or the log message is not available.
  * Both operations are automatically retried for a given amount of attempts.
  */
-public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
+public class CamelVerifyIntegrationAction extends AbstractCamelCliAction {
 
     private static final Logger INTEGRATION_STATUS_LOG = LoggerFactory.getLogger("INTEGRATION_STATUS");
     private static final Logger INTEGRATION_LOG = LoggerFactory.getLogger("INTEGRATION_LOGS");
@@ -155,7 +155,7 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
                 }
             }
 
-            logger.info("{}{}", System.lineSeparator(), camelJBang().ps());
+            logger.info("{}{}", System.lineSeparator(), camelCli().ps());
             logger.info("Waiting for Camel integration '{}' to be in state '{}'- retry in {} ms", name, phase, delayBetweenAttempts);
             try {
                 Thread.sleep(delayBetweenAttempts);
@@ -172,12 +172,12 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
 
     private boolean findProcessAndVerifyStatus(Long pid, String name, String phase) {
         // 1st try to get Camel integration status identify by the process PID
-        if (verifyStatus(pid, name, phase, camelJBang().get(pid))) {
+        if (verifyStatus(pid, name, phase, camelCli().get(pid))) {
             return true;
         }
 
         // 2nd try to get Camel integration status identify by the process name
-        if (verifyStatus(pid, name, phase, camelJBang().get(name))) {
+        if (verifyStatus(pid, name, phase, camelCli().get(name))) {
             return true;
         }
 
@@ -209,7 +209,7 @@ public class CamelVerifyIntegrationAction extends AbstractCamelJBangAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelJBangAction.Builder<CamelVerifyIntegrationAction, Builder>
+    public static final class Builder extends AbstractCamelCliAction.Builder<CamelVerifyIntegrationAction, Builder>
             implements CamelIntegrationVerifyActionBuilder<CamelVerifyIntegrationAction, Builder> {
 
         private String integrationName = "route";

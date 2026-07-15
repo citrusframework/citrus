@@ -17,7 +17,7 @@
 package org.citrusframework.camel.actions;
 
 import org.citrusframework.camel.UnitTestSupport;
-import org.citrusframework.camel.jbang.CamelJBang;
+import org.citrusframework.camel.cli.CamelCli;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.mockito.Mock;
@@ -82,7 +82,7 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
 
         when(pao.getOutput()).thenReturn(output);
 
-        context.getReferenceResolver().bind("camelJBang", new CamelJBang() {
+        context.getReferenceResolver().bind("camelCli", new CamelCli() {
             @Override
             public String ps(String... args) {
                 if (args.length == 1 && args[0].equals("--json")) {
@@ -145,7 +145,7 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
 
         when(pao.getOutput()).thenReturn(output);
 
-        context.getReferenceResolver().bind("camelJBang", new CamelJBang() {
+        context.getReferenceResolver().bind("camelCli", new CamelCli() {
             @Override
             public String ps(String... args) {
                 if (args.length == 1 && args[0].equals("--json")) {
@@ -204,7 +204,7 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
 
         when(pao.getOutput()).thenReturn(output);
 
-        context.getReferenceResolver().bind("camelJBang", new CamelJBang() {
+        context.getReferenceResolver().bind("camelCli", new CamelCli() {
             @Override
             public String ps(String... args) {
                 if (args.length == 1 && args[0].equals("--json")) {
@@ -263,7 +263,7 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
 
         when(pao.getOutput()).thenReturn(output);
 
-        context.getReferenceResolver().bind("camelJBang", new CamelJBang() {
+        context.getReferenceResolver().bind("camelCli", new CamelCli() {
             @Override
             public String ps(String... args) {
                 if (args.length == 1 && args[0].equals("--json")) {
