@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
 
 /**
@@ -28,9 +27,9 @@ import org.citrusframework.jbang.ProcessAndOutput;
  */
 public class KubernetesPlugin {
 
-    private final JBangSupport camelApp;
+    private final CamelCliLauncher camelApp;
 
-    public KubernetesPlugin(JBangSupport camelApp) {
+    public KubernetesPlugin(CamelCliLauncher camelApp) {
         this.camelApp = camelApp;
     }
 

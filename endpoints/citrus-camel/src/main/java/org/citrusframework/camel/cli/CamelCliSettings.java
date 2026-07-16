@@ -95,6 +95,14 @@ public final class CamelCliSettings {
     private static final String WAIT_FOR_RUNNING_STATE_ENV_FALLBACK = JBANG_ENV_PREFIX + "WAIT_FOR_RUNNING_STATE";
     private static final String WAIT_FOR_RUNNING_STATE_DEFAULT = "true";
 
+    private static final String CLI_TYPE_PROPERTY = CLI_PROPERTY_PREFIX + "type";
+    private static final String CLI_TYPE_ENV = CLI_ENV_PREFIX + "TYPE";
+    private static final String CLI_TYPE_DEFAULT = "jbang";
+
+    private static final String LAUNCHER_JAR_PATH_PROPERTY = CLI_PROPERTY_PREFIX + "launcher.jar.path";
+    private static final String LAUNCHER_JAR_PATH_ENV = CLI_ENV_PREFIX + "LAUNCHER_JAR_PATH";
+    private static final String LAUNCHER_JAR_PATH_SYSTEM_PROPERTY_FALLBACK = "camel.launcher.jar";
+
     private CamelCliSettings() {
         // prevent instantiation of utility class
     }
@@ -237,5 +245,59 @@ public final class CamelCliSettings {
         return Boolean.parseBoolean(Optional.ofNullable(resolve(WAIT_FOR_RUNNING_STATE_PROPERTY, WAIT_FOR_RUNNING_STATE_ENV,
                 WAIT_FOR_RUNNING_STATE_PROPERTY_FALLBACK, WAIT_FOR_RUNNING_STATE_ENV_FALLBACK))
                 .orElse(WAIT_FOR_RUNNING_STATE_DEFAULT));
+    }
+
+    /**
+     * Camel CLI launcher type ("jbang" or "launcher").
+     */
+    public static String getCliType() {
+        String value = System.getProperty(CLI_TYPE_PROPERTY);
+        if (value != null) {
+            return value;
+        }
+
+        value = System.getenv(CLI_TYPE_ENV);
+        if (value != null) {
+            return value;
+        }
+
+        return CLI_TYPE_DEFAULT;
+    }
+
+    /**
+     * Path to the Camel Launcher jar file. Falls back to system property "camel.launcher.jar".
+     */
+    public static String getLauncherJarPath() {
+        String value = System.getProperty(LAUNCHER_JAR_PATH_PROPERTY);
+        if (value != null) {
+            return value;
+        }
+
+        value = System.getenv(LAUNCHER_JAR_PATH_ENV);
+        if (value != null) {
+            return value;
+        }
+
+        return System.getProperty(LAUNCHER_JAR_PATH_SYSTEM_PROPERTY_FALLBACK);
+    }
+
+    /**
+     * Creates a CamelCliLauncher based on the configured CLI type.
+     */
+    public static CamelCliLauncher createLauncher() {
+        String type = getCliType();
+
+        if ("launcher".equalsIgnoreCase(type)) {
+            String jarPath = getLauncherJarPath();
+            if (jarPath == null || jarPath.isBlank()) {
+                throw new IllegalStateException(
+                        "Camel CLI type is set to 'launcher' but no jar path is configured. " +
+                        "Set '%s' system property, '%s' environment variable, or '%s' system property."
+                                .formatted(LAUNCHER_JAR_PATH_PROPERTY, LAUNCHER_JAR_PATH_ENV, LAUNCHER_JAR_PATH_SYSTEM_PROPERTY_FALLBACK));
+            }
+            return new LauncherJarCamelLauncher(jarPath);
+        }
+
+        return new JBangCamelLauncher(getCamelApp());
     }
 }
