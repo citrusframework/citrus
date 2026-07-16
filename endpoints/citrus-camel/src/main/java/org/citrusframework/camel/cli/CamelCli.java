@@ -38,7 +38,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.util.StringUtils;
@@ -55,13 +54,15 @@ public class CamelCli {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CamelCli.class);
 
-    private final JBangSupport app = JBangSupport.jbang().app(CamelCliSettings.getCamelApp());
+    private final CamelCliLauncher app;
 
     private boolean dumpIntegrationOutput = CamelCliSettings.isDumpIntegrationOutput();
 
     private String version;
 
     public CamelCli() {
+        this.app = CamelCliSettings.createLauncher();
+
         if (!"latest".equals(CamelCliSettings.getCamelVersion())) {
             app.withSystemProperty("camel.cli.version", CamelCliSettings.getCamelVersion());
             app.withSystemProperty("camel.jbang.version", CamelCliSettings.getCamelVersion());
@@ -71,8 +72,10 @@ public class CamelCli {
             app.withSystemProperty("camel-kamelets.version", CamelCliSettings.getKameletsVersion());
         }
 
-        for (String url : CamelCliSettings.getTrustUrl()) {
-            app.trust(url);
+        if (app instanceof JBangCamelLauncher jbangLauncher) {
+            for (String url : CamelCliSettings.getTrustUrl()) {
+                jbangLauncher.trust(url);
+            }
         }
 
         String version = version();

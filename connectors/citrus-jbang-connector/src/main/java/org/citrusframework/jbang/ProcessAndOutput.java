@@ -48,19 +48,19 @@ public class ProcessAndOutput {
 
     private BufferedReader reader;
 
-    ProcessAndOutput(Process process) {
+    public ProcessAndOutput(Process process) {
         this(process, null, null);
     }
 
-    ProcessAndOutput(Process process, ProcessOutputListener outputListener) {
+    public ProcessAndOutput(Process process, ProcessOutputListener outputListener) {
         this(process, null, outputListener);
     }
 
-    ProcessAndOutput(Process process, File outputFile) {
+    public ProcessAndOutput(Process process, File outputFile) {
         this(process, outputFile, null);
     }
 
-    ProcessAndOutput(Process process, File outputFile, ProcessOutputListener outputListener) {
+    public ProcessAndOutput(Process process, File outputFile, ProcessOutputListener outputListener) {
         this.process = process;
         this.outputListener = outputListener;
 
