@@ -21,15 +21,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.citrusframework.jbang.ProcessAndOutput;
+import org.citrusframework.jbang.ProcessLauncher;
 
 /**
  * Class calling Camel CLI Kubernetes plugin operations
  */
 public class KubernetesPlugin {
 
-    private final CamelCliLauncher camelApp;
+    private final ProcessLauncher camelApp;
 
-    public KubernetesPlugin(CamelCliLauncher camelApp) {
+    public KubernetesPlugin(ProcessLauncher camelApp) {
         this.camelApp = camelApp;
     }
 

@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.cli;
 
+import org.citrusframework.jbang.ProcessLauncher;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
@@ -51,13 +52,13 @@ public class CamelCliSettingsTest {
     }
 
     @Test
-    public void shouldCreateLauncherJarWhenTypeIsLauncher() {
+    public void shouldCreateCamelLauncherSupportWhenTypeIsLauncher() {
         System.setProperty("citrus.camel.cli.type", "launcher");
         System.setProperty("citrus.camel.cli.launcher.jar.path", "/opt/camel/camel-cli.jar");
 
-        CamelCliLauncher launcher = CamelCliSettings.createLauncher();
+        ProcessLauncher launcher = CamelCliSettings.createLauncher();
 
-        Assert.assertTrue(launcher instanceof LauncherJarCamelLauncher);
+        Assert.assertTrue(launcher instanceof CamelLauncherSupport);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
@@ -73,8 +74,8 @@ public class CamelCliSettingsTest {
         System.setProperty("camel.launcher.jar", "/opt/camel/fallback.jar");
 
         try {
-            CamelCliLauncher launcher = CamelCliSettings.createLauncher();
-            Assert.assertTrue(launcher instanceof LauncherJarCamelLauncher);
+            ProcessLauncher launcher = CamelCliSettings.createLauncher();
+            Assert.assertTrue(launcher instanceof CamelLauncherSupport);
         } finally {
             System.clearProperty("camel.launcher.jar");
         }

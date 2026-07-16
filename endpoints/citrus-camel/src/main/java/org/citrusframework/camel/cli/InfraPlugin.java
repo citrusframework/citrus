@@ -21,15 +21,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.citrusframework.jbang.ProcessAndOutput;
+import org.citrusframework.jbang.ProcessLauncher;
 
 /**
  * Class calling Camel CLI infrastructure plugin operations
  */
 public class InfraPlugin {
 
-    private final CamelCliLauncher camelApp;
+    private final ProcessLauncher camelApp;
 
-    public InfraPlugin(CamelCliLauncher camelApp) {
+    public InfraPlugin(ProcessLauncher camelApp) {
         this.camelApp = camelApp;
     }
 

@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 import org.citrusframework.jbang.JBangSettings;
+import org.citrusframework.jbang.JBangSupport;
+import org.citrusframework.jbang.ProcessLauncher;
 import org.citrusframework.util.StringUtils;
 
 public final class CamelCliSettings {
@@ -282,9 +284,9 @@ public final class CamelCliSettings {
     }
 
     /**
-     * Creates a CamelCliLauncher based on the configured CLI type.
+     * Creates a ProcessLauncher based on the configured CLI type.
      */
-    public static CamelCliLauncher createLauncher() {
+    public static ProcessLauncher createLauncher() {
         String type = getCliType();
 
         if ("launcher".equalsIgnoreCase(type)) {
@@ -295,9 +297,9 @@ public final class CamelCliSettings {
                         "Set '%s' system property, '%s' environment variable, or '%s' system property."
                                 .formatted(LAUNCHER_JAR_PATH_PROPERTY, LAUNCHER_JAR_PATH_ENV, LAUNCHER_JAR_PATH_SYSTEM_PROPERTY_FALLBACK));
             }
-            return new LauncherJarCamelLauncher(jarPath);
+            return new CamelLauncherSupport(jarPath);
         }
 
-        return new JBangCamelLauncher(getCamelApp());
+        return JBangSupport.jbang().app(getCamelApp());
     }
 }
