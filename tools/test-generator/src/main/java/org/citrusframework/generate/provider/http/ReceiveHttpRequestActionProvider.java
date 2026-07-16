@@ -73,7 +73,7 @@ public class ReceiveHttpRequestActionProvider implements MessageActionProvider<R
                     );
         } else if (StringUtils.hasText(message.getQueryParamString())) {
             Stream.of(message.getQueryParamString()
-                    .split(","))
+                    .split("&"))
                     .map(nameValuePair -> nameValuePair.split("="))
                     .forEach(param -> {
                         ParamType paramType = new ParamType();
