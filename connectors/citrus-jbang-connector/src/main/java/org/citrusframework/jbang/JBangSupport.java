@@ -16,12 +16,6 @@
 
 package org.citrusframework.jbang;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,30 +36,26 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Support class prepares JBang executable and runs commands via spawned process using the JBang binary.
  */
-public class JBangSupport {
+public class JBangSupport implements ProcessLauncher {
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(JBangSupport.class);
-
-    private static final boolean IS_OS_CYGWIN = Optional.ofNullable(System.getenv("OSTYPE"))
-            .map(String::toLowerCase)
-            .orElse("")
-            .equals("cygwin");
-    private static final boolean IS_OS_WINDOWS = System.getProperty("os.name")
-            .toLowerCase(Locale.ENGLISH)
-            .contains("win");
 
     public static final int OK_EXIT_CODE = 0;
 
@@ -94,13 +84,15 @@ public class JBangSupport {
     }
 
     public static JBangSupport jbang() {
+        JBangSupport jbang = new JBangSupport();
+
         if (!initialized.getAndSet(true)) {
-            detectJBang();
+            detectJBang(jbang);
             Arrays.stream(JBangSettings.getTrustUrls())
-                    .forEach(JBangSupport::addTrust);
+                    .forEach(jbang::trust);
         }
 
-        return new JBangSupport();
+        return jbang;
     }
 
     /**
@@ -115,7 +107,13 @@ public class JBangSupport {
      * Adds JBang trust for given URL.
      */
     public JBangSupport trust(String url) {
-        addTrust(url);
+        if (trustUrls.add(url)) {
+            ProcessAndOutput result = execute(jBang("trust", "add", url), null, null, null);
+            int exitValue = result.getProcess().exitValue();
+            if (exitValue != OK_EXIT_CODE && exitValue != 1) {
+                throw new CitrusRuntimeException("Error while trusting JBang URLs. Exit code: " + exitValue);
+            }
+        }
         return this;
     }
 
@@ -258,14 +256,14 @@ public class JBangSupport {
         return allArgs;
     }
 
-    private static void detectJBang() {
-        ProcessAndOutput result = getVersion();
+    private static void detectJBang(JBangSupport jbang) {
+        ProcessAndOutput result = jbang.getVersion();
         if (result.getProcess().exitValue() == OK_EXIT_CODE) {
             LOG.debug("Found JBang v{}", result.getOutput());
         } else if (JBangSettings.isAutoDownload()){
             LOG.warn("JBang installation not found. Downloading ...");
             download();
-            result = getVersion();
+            result = jbang.getVersion();
             if (result.getProcess().exitValue() == OK_EXIT_CODE) {
                 LOG.debug("Using JBang v{}", result.getOutput());
             }
@@ -315,25 +313,8 @@ public class JBangSupport {
         installDir = installPath.resolve(homePath);
     }
 
-    private static ProcessAndOutput getVersion() {
+    private ProcessAndOutput getVersion() {
         return execute(jBang("version"), null, null, null);
-    }
-
-    /**
-     * Execute "jbang trust add URL..."
-     *
-     * @throws CitrusRuntimeException if the exit value is different from
-     *                                0: success
-     *                                1: Already trusted source(s)
-     */
-    private static void addTrust(String url) {
-        if (trustUrls.add(url)) {
-            ProcessAndOutput result = execute(jBang("trust", "add", url), null, null, null);
-            int exitValue = result.getProcess().exitValue();
-            if (exitValue != OK_EXIT_CODE && exitValue != 1) {
-                throw new CitrusRuntimeException("Error while trusting JBang URLs. Exit code: " + exitValue);
-            }
-        }
     }
 
     /**
@@ -401,109 +382,16 @@ public class JBangSupport {
                 .collect(Collectors.joining(" ")) + " ";
     }
 
-    /**
-     * Execute JBang command using the process API. Waits for the process to complete and returns the process instance so
-     * caller is able to access the exit code and process output.
-     */
-    private static ProcessAndOutput execute(List<String> command, Path workingDir,
+    public ProcessAndOutput execute(List<String> command, Path workingDir,
                                             Map<String, String> envVars, ProcessOutputListener outputListener) {
-        try {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Executing JBang command: %s".formatted(String.join(" ", command)));
-            }
+        ProcessAndOutput pao = ProcessLauncher.super.execute(command, workingDir, envVars, outputListener);
 
-            ProcessBuilder pBuilder = new ProcessBuilder(command)
-                    .redirectErrorStream(true);
-
-            if (envVars != null) {
-                pBuilder.environment().putAll(envVars);
-            }
-
-            if (workingDir != null) {
-                pBuilder.directory(workingDir.toFile());
-            }
-
-            Process p = pBuilder.start();
-            ProcessAndOutput pao = new ProcessAndOutput(p, outputListener);
-            String output = pao.waitFor();
-
-            if (JBangSettings.isDumpProcessOutput()) {
-                Path workDir = JBangSettings.getWorkDir();
-                FileUtils.writeToFile(output, workDir.resolve(String.format("%s-output.txt", p.pid())).toFile());
-            }
-
-            if (LOG.isDebugEnabled() && p.exitValue() != OK_EXIT_CODE) {
-                LOG.debug("Command failed: {}", String.join(" ", command));
-                LOG.debug(output);
-            }
-
-            return pao;
-        } catch (IOException | InterruptedException e) {
-            throw new CitrusRuntimeException("Error while executing JBang", e);
+        if (JBangSettings.isDumpProcessOutput()) {
+            Path workDir = JBangSettings.getWorkDir();
+            FileUtils.writeToFile(pao.getOutput(), workDir.resolve(String.format("%s-output.txt", pao.getProcess().pid())).toFile());
         }
-    }
 
-    /**
-     * Execute JBang command using the process API. Waits for the process to complete and returns the process instance so
-     * caller is able to access the exit code and process output.
-     */
-    private static ProcessAndOutput executeAsync(List<String> command, Path workingDir,
-                                                 Map<String, String> envVars, ProcessOutputListener outputListener) {
-        try {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Executing JBang command: %s".formatted(String.join(" ", command)));
-            }
-
-            ProcessBuilder pBuilder = new ProcessBuilder(command)
-                    .redirectErrorStream(true);
-
-            if (envVars != null) {
-                pBuilder.environment().putAll(envVars);
-            }
-
-            if (workingDir != null) {
-                pBuilder.directory(workingDir.toFile());
-            }
-
-            Process p = pBuilder.start();
-            return new ProcessAndOutput(p, outputListener);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Error while executing JBang", e);
-        }
-    }
-
-    /**
-     * Execute JBang command using the process API. Waits for the process to complete and returns the process instance so
-     * caller is able to access the exit code and process output.
-     */
-    private static ProcessAndOutput executeAsync(List<String> command, Path workingDir, File outputFile,
-                                                 Map<String, String> envVars, ProcessOutputListener outputListener) {
-        try {
-            if (!outputFile.getParentFile().exists() && !outputFile.getParentFile().mkdirs()) {
-                throw new CitrusRuntimeException("Unable to create process output directory: " + outputFile.getParent());
-            }
-
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Executing JBang command: %s".formatted(String.join(" ", command)));
-            }
-
-            ProcessBuilder pBuilder = new ProcessBuilder(command)
-                .redirectErrorStream(true)
-                .redirectOutput(outputFile);
-
-            if (envVars != null) {
-                pBuilder.environment().putAll(envVars);
-            }
-
-            if (workingDir != null) {
-                pBuilder.directory(workingDir.toFile());
-            }
-
-            Process p = pBuilder.start();
-            return new ProcessAndOutput(p, outputFile, outputListener);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Error while executing JBang", e);
-        }
+        return pao;
     }
 
     /**

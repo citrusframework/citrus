@@ -38,7 +38,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.jbang.JBangSupport;
 import org.citrusframework.jbang.ProcessAndOutput;
+import org.citrusframework.jbang.ProcessLauncher;
 import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -54,7 +56,7 @@ public class CamelCli {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CamelCli.class);
 
-    private final CamelCliLauncher app;
+    private final ProcessLauncher app;
 
     private boolean dumpIntegrationOutput = CamelCliSettings.isDumpIntegrationOutput();
 
@@ -72,9 +74,9 @@ public class CamelCli {
             app.withSystemProperty("camel-kamelets.version", CamelCliSettings.getKameletsVersion());
         }
 
-        if (app instanceof JBangCamelLauncher jbangLauncher) {
+        if (app instanceof JBangSupport jbangSupport) {
             for (String url : CamelCliSettings.getTrustUrl()) {
-                jbangLauncher.trust(url);
+                jbangSupport.trust(url);
             }
         }
 
