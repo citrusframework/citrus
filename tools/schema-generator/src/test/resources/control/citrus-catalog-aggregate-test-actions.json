@@ -2248,6 +2248,22 @@
                               "description": "Sets the Http server endpoint."
                             }
                           }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "client"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "server"
+                                ]
+                              }
+                            ]
+                          }
                         }
                       ]
                     }
@@ -2546,6 +2562,22 @@
                               "title": "Server",
                               "description": "Sets the SOAP WebService server endpoint."
                             }
+                          }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "client"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "server"
+                                ]
+                              }
+                            ]
                           }
                         }
                       ]
@@ -2924,6 +2956,22 @@
                               "description": "Sets the WebSocket server endpoint."
                             }
                           }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "client"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "server"
+                                ]
+                              }
+                            ]
+                          }
                         }
                       ]
                     }
@@ -3150,6 +3198,22 @@
                               "title": "Server",
                               "description": "Sets the mail server endpoint."
                             }
+                          }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "client"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "server"
+                                ]
+                              }
+                            ]
                           }
                         }
                       ]
@@ -3382,6 +3446,22 @@
                               "title": "Server",
                               "description": "Sets the ftp server endpoint."
                             }
+                          }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "client"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "server"
+                                ]
+                              }
+                            ]
                           }
                         }
                       ]
@@ -3651,6 +3731,22 @@
                               "description": "Sets the sftp server endpoint."
                             }
                           }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "client"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "server"
+                                ]
+                              }
+                            ]
+                          }
                         }
                       ]
                     }
@@ -3903,6 +3999,22 @@
                               "title": "Server",
                               "description": "Sets the sftp server endpoint."
                             }
+                          }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "client"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "server"
+                                ]
+                              }
+                            ]
                           }
                         }
                       ]
@@ -4275,6 +4387,22 @@
                               "description": "Sets the synchronous Jms endpoint."
                             }
                           }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "asynchronous"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "synchronous"
+                                ]
+                              }
+                            ]
+                          }
                         }
                       ]
                     }
@@ -4426,6 +4554,22 @@
                               "description": "Sets the synchronous Vert.x endpoint."
                             }
                           }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "asynchronous"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "synchronous"
+                                ]
+                              }
+                            ]
+                          }
                         }
                       ]
                     }
@@ -4525,6 +4669,22 @@
                               "title": "Synchronous",
                               "description": "Sets the synchronous direct endpoint."
                             }
+                          }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "asynchronous"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "synchronous"
+                                ]
+                              }
+                            ]
                           }
                         }
                       ]
@@ -4783,6 +4943,22 @@
                               "description": "Sets the synchronous Kafka endpoint."
                             }
                           }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "asynchronous"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "synchronous"
+                                ]
+                              }
+                            ]
+                          }
                         }
                       ]
                     }
@@ -4894,6 +5070,22 @@
                               "title": "Synchronous",
                               "description": "Sets the synchronous Camel endpoint."
                             }
+                          }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "asynchronous"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "synchronous"
+                                ]
+                              }
+                            ]
                           }
                         }
                       ]
@@ -5048,6 +5240,22 @@
                               "description": "Sets the synchronous Spring message channel endpoint."
                             }
                           }
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "asynchronous"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "synchronous"
+                                ]
+                              }
+                            ]
+                          }
                         }
                       ]
                     }
@@ -5137,6 +5345,97 @@
                   "title": "Selenium",
                   "description": "Selenium endpoint."
                 }
+              }
+            },
+            {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "http"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "soap"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "webSocket"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "context"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "mail"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "ftp"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "sftp"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "scp"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "docker"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "kubernetes"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "jms"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "vertx"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "direct"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "kafka"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "camel"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "channel"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "selenium"
+                    ]
+                  }
+                ]
               }
             }
           ]
@@ -5866,6 +6165,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -5877,14 +6179,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -5941,6 +6238,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -6003,6 +6321,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -6018,6 +6339,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -6025,14 +6349,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -6062,13 +6381,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -6170,6 +6505,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -6181,14 +6519,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -6245,6 +6578,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -6307,6 +6661,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -6322,6 +6679,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -6329,14 +6689,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -6366,13 +6721,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -6474,6 +6845,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -6485,14 +6859,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -6549,6 +6918,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -6611,6 +7001,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -6626,6 +7019,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -6633,14 +7029,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -6670,13 +7061,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -6765,13 +7172,6 @@
             {
               "type": "object",
               "properties": {
-                "PUT": {
-                }
-              }
-            },
-            {
-              "type": "object",
-              "properties": {
                 "DELETE": {
                   "type": "object",
                   "properties": {
@@ -6785,6 +7185,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -6796,14 +7199,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -6860,6 +7258,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -6922,6 +7341,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -6937,6 +7359,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -6944,14 +7369,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -6981,13 +7401,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -7089,6 +7525,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -7100,14 +7539,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -7164,6 +7598,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -7226,6 +7681,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -7241,6 +7699,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -7248,14 +7709,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -7285,13 +7741,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -7393,6 +7865,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -7404,14 +7879,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -7468,6 +7938,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -7530,6 +8021,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -7545,6 +8039,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -7552,14 +8049,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -7589,13 +8081,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -7697,6 +8205,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -7708,14 +8219,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -7772,6 +8278,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -7834,6 +8361,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -7849,6 +8379,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -7856,14 +8389,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -7893,13 +8421,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -8001,6 +8545,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -8012,14 +8559,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -8076,6 +8618,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -8138,6 +8701,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -8153,6 +8719,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -8160,14 +8729,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -8197,13 +8761,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -8287,6 +8867,52 @@
                   "title": "TRACE",
                   "description": "Http TRACE request"
                 }
+              }
+            },
+            {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "GET"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "POST"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "PUT"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "DELETE"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "HEAD"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "OPTIONS"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "PATCH"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "TRACE"
+                    ]
+                  }
+                ]
               }
             }
           ]
@@ -8393,6 +9019,9 @@
               "type": "object",
               "properties": {
                 "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
                 },
                 "resource": {
                 },
@@ -8404,14 +9033,9 @@
                 {
                   "oneOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "string",
-                          "title": "Data",
-                          "description": "The message body content as inline data."
-                        }
-                      }
+                      "required": [
+                        "data"
+                      ]
                     },
                     {
                       "type": "object",
@@ -8468,6 +9092,27 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
+                      }
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
                       }
                     }
                   ]
@@ -8530,6 +9175,9 @@
                 "type": "object",
                 "properties": {
                   "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
                   },
                   "name": {
                     "type": "string",
@@ -8545,6 +9193,9 @@
                     "$comment": "group:advanced"
                   },
                   "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
                   }
                 },
                 "additionalProperties": false,
@@ -8552,14 +9203,9 @@
                   {
                     "oneOf": [
                       {
-                        "type": "object",
-                        "properties": {
-                          "value": {
-                            "type": "string",
-                            "title": "Value",
-                            "description": "The message header value."
-                          }
-                        }
+                        "required": [
+                          "value"
+                        ]
                       },
                       {
                         "type": "object",
@@ -8589,13 +9235,29 @@
                         }
                       },
                       {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "string",
-                            "title": "Data",
-                            "description": "The message header value as inline data."
-                          }
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
                         }
                       }
                     ]
@@ -9006,6 +9668,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -9017,14 +9682,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -9081,6 +9741,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -9143,6 +9824,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -9158,6 +9842,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -9165,14 +9852,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -9202,13 +9884,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -9310,6 +10008,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -9321,14 +10022,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -9385,6 +10081,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -9447,6 +10164,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -9462,6 +10182,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -9469,14 +10192,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -9506,13 +10224,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -9614,6 +10348,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -9625,14 +10362,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -9689,6 +10421,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -9751,6 +10504,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -9766,6 +10522,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -9773,14 +10532,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -9810,13 +10564,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -9905,13 +10675,6 @@
             {
               "type": "object",
               "properties": {
-                "PUT": {
-                }
-              }
-            },
-            {
-              "type": "object",
-              "properties": {
                 "DELETE": {
                   "type": "object",
                   "properties": {
@@ -9925,6 +10688,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -9936,14 +10702,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -10000,6 +10761,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -10062,6 +10844,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -10077,6 +10862,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -10084,14 +10872,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -10121,13 +10904,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -10229,6 +11028,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -10240,14 +11042,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -10304,6 +11101,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -10366,6 +11184,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -10381,6 +11202,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -10388,14 +11212,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -10425,13 +11244,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -10533,6 +11368,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -10544,14 +11382,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -10608,6 +11441,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -10670,6 +11524,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -10685,6 +11542,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -10692,14 +11552,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -10729,13 +11584,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -10837,6 +11708,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -10848,14 +11722,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -10912,6 +11781,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -10974,6 +11864,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -10989,6 +11882,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -10996,14 +11892,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -11033,13 +11924,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -11141,6 +12048,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
+                          "type": "string",
+                          "title": "Data",
+                          "description": "The message body content as inline data."
                         },
                         "resource": {
                         },
@@ -11152,14 +12062,9 @@
                         {
                           "oneOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "data": {
-                                  "type": "string",
-                                  "title": "Data",
-                                  "description": "The message body content as inline data."
-                                }
-                              }
+                              "required": [
+                                "data"
+                              ]
                             },
                             {
                               "type": "object",
@@ -11216,6 +12121,27 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
+                              }
+                            },
+                            {
+                              "not": {
+                                "anyOf": [
+                                  {
+                                    "required": [
+                                      "data"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "resource"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "script"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -11278,6 +12204,9 @@
                         "type": "object",
                         "properties": {
                           "data": {
+                            "type": "string",
+                            "title": "Data",
+                            "description": "The message header value as inline data."
                           },
                           "name": {
                             "type": "string",
@@ -11293,6 +12222,9 @@
                             "$comment": "group:advanced"
                           },
                           "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "The message header value."
                           }
                         },
                         "additionalProperties": false,
@@ -11300,14 +12232,9 @@
                           {
                             "oneOf": [
                               {
-                                "type": "object",
-                                "properties": {
-                                  "value": {
-                                    "type": "string",
-                                    "title": "Value",
-                                    "description": "The message header value."
-                                  }
-                                }
+                                "required": [
+                                  "value"
+                                ]
                               },
                               {
                                 "type": "object",
@@ -11337,13 +12264,29 @@
                                 }
                               },
                               {
-                                "type": "object",
-                                "properties": {
-                                  "data": {
-                                    "type": "string",
-                                    "title": "Data",
-                                    "description": "The message header value as inline data."
-                                  }
+                                "required": [
+                                  "data"
+                                ]
+                              },
+                              {
+                                "not": {
+                                  "anyOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "resource"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "data"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             ]
@@ -11427,6 +12370,52 @@
                   "title": "TRACE",
                   "description": "Http TRACE request"
                 }
+              }
+            },
+            {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "GET"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "POST"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "PUT"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "DELETE"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "HEAD"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "OPTIONS"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "PATCH"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "TRACE"
+                    ]
+                  }
+                ]
               }
             }
           ]
@@ -11521,6 +12510,9 @@
               "type": "object",
               "properties": {
                 "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
                 },
                 "resource": {
                 },
@@ -11532,14 +12524,9 @@
                 {
                   "oneOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "string",
-                          "title": "Data",
-                          "description": "The message body content as inline data."
-                        }
-                      }
+                      "required": [
+                        "data"
+                      ]
                     },
                     {
                       "type": "object",
@@ -11596,6 +12583,27 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
+                      }
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
                       }
                     }
                   ]
@@ -11658,6 +12666,9 @@
                 "type": "object",
                 "properties": {
                   "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
                   },
                   "name": {
                     "type": "string",
@@ -11673,6 +12684,9 @@
                     "$comment": "group:advanced"
                   },
                   "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
                   }
                 },
                 "additionalProperties": false,
@@ -11680,14 +12694,9 @@
                   {
                     "oneOf": [
                       {
-                        "type": "object",
-                        "properties": {
-                          "value": {
-                            "type": "string",
-                            "title": "Value",
-                            "description": "The message header value."
-                          }
-                        }
+                        "required": [
+                          "value"
+                        ]
                       },
                       {
                         "type": "object",
@@ -11717,13 +12726,29 @@
                         }
                       },
                       {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "string",
-                            "title": "Data",
-                            "description": "The message header value as inline data."
-                          }
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
                         }
                       }
                     ]
@@ -12565,8 +13590,14 @@
           "title": "ApiVersion"
         },
         "data": {
+          "type": "string",
+          "title": "Data",
+          "description": "The custom resource specification as inline data."
         },
         "file": {
+          "type": "string",
+          "title": "File",
+          "description": "The custom resource specification loaded from a file resource."
         },
         "group": {
           "type": "string",
@@ -12590,23 +13621,29 @@
         {
           "oneOf": [
             {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "string",
-                  "title": "Data",
-                  "description": "The custom resource specification as inline data."
-                }
-              }
+              "required": [
+                "data"
+              ]
             },
             {
-              "type": "object",
-              "properties": {
-                "file": {
-                  "type": "string",
-                  "title": "File",
-                  "description": "The custom resource specification loaded from a file resource."
-                }
+              "required": [
+                "file"
+              ]
+            },
+            {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "data"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "file"
+                    ]
+                  }
+                ]
               }
             }
           ]
@@ -12667,8 +13704,14 @@
       "type": "object",
       "properties": {
         "data": {
+          "type": "string",
+          "title": "Data",
+          "description": "The custom resource specification as inline data."
         },
         "file": {
+          "type": "string",
+          "title": "File",
+          "description": "The custom resource specification loaded from a file resource."
         }
       },
       "additionalProperties": false,
@@ -12676,23 +13719,29 @@
         {
           "oneOf": [
             {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "string",
-                  "title": "Data",
-                  "description": "The custom resource specification as inline data."
-                }
-              }
+              "required": [
+                "data"
+              ]
             },
             {
-              "type": "object",
-              "properties": {
-                "file": {
-                  "type": "string",
-                  "title": "File",
-                  "description": "The custom resource specification loaded from a file resource."
-                }
+              "required": [
+                "file"
+              ]
+            },
+            {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "data"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "file"
+                    ]
+                  }
+                ]
               }
             }
           ]
@@ -12885,8 +13934,14 @@
       "type": "object",
       "properties": {
         "data": {
+          "type": "string",
+          "title": "Data",
+          "description": "The custom resource specification as inline data."
         },
         "file": {
+          "type": "string",
+          "title": "File",
+          "description": "The custom resource specification loaded from a file resource."
         }
       },
       "additionalProperties": false,
@@ -12894,23 +13949,29 @@
         {
           "oneOf": [
             {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "string",
-                  "title": "Data",
-                  "description": "The custom resource specification as inline data."
-                }
-              }
+              "required": [
+                "data"
+              ]
             },
             {
-              "type": "object",
-              "properties": {
-                "file": {
-                  "type": "string",
-                  "title": "File",
-                  "description": "The custom resource specification loaded from a file resource."
-                }
+              "required": [
+                "file"
+              ]
+            },
+            {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "data"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "file"
+                    ]
+                  }
+                ]
               }
             }
           ]
@@ -14326,6 +15387,9 @@
               "type": "object",
               "properties": {
                 "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
                 },
                 "resource": {
                 },
@@ -14337,14 +15401,9 @@
                 {
                   "oneOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "string",
-                          "title": "Data",
-                          "description": "The message body content as inline data."
-                        }
-                      }
+                      "required": [
+                        "data"
+                      ]
                     },
                     {
                       "type": "object",
@@ -14402,6 +15461,27 @@
                           "description": "The message body set via script."
                         }
                       }
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
@@ -14458,6 +15538,9 @@
                 "type": "object",
                 "properties": {
                   "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
                   },
                   "name": {
                     "type": "string",
@@ -14473,6 +15556,9 @@
                     "$comment": "group:advanced"
                   },
                   "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
                   }
                 },
                 "additionalProperties": false,
@@ -14480,14 +15566,9 @@
                   {
                     "oneOf": [
                       {
-                        "type": "object",
-                        "properties": {
-                          "value": {
-                            "type": "string",
-                            "title": "Value",
-                            "description": "The message header value."
-                          }
-                        }
+                        "required": [
+                          "value"
+                        ]
                       },
                       {
                         "type": "object",
@@ -14517,13 +15598,29 @@
                         }
                       },
                       {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "string",
-                            "title": "Data",
-                            "description": "The message header value as inline data."
-                          }
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
                         }
                       }
                     ]
@@ -15894,6 +16991,9 @@
               "type": "object",
               "properties": {
                 "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
                 },
                 "resource": {
                 },
@@ -15905,14 +17005,9 @@
                 {
                   "oneOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "string",
-                          "title": "Data",
-                          "description": "The message body content as inline data."
-                        }
-                      }
+                      "required": [
+                        "data"
+                      ]
                     },
                     {
                       "type": "object",
@@ -15970,6 +17065,27 @@
                           "description": "The message body set via script."
                         }
                       }
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
@@ -16026,6 +17142,9 @@
                 "type": "object",
                 "properties": {
                   "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
                   },
                   "name": {
                     "type": "string",
@@ -16041,6 +17160,9 @@
                     "$comment": "group:advanced"
                   },
                   "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
                   }
                 },
                 "additionalProperties": false,
@@ -16048,14 +17170,9 @@
                   {
                     "oneOf": [
                       {
-                        "type": "object",
-                        "properties": {
-                          "value": {
-                            "type": "string",
-                            "title": "Value",
-                            "description": "The message header value."
-                          }
-                        }
+                        "required": [
+                          "value"
+                        ]
                       },
                       {
                         "type": "object",
@@ -16085,13 +17202,29 @@
                         }
                       },
                       {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "string",
-                            "title": "Data",
-                            "description": "The message header value as inline data."
-                          }
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
                         }
                       }
                     ]
@@ -16357,6 +17490,9 @@
               "type": "object",
               "properties": {
                 "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
                 },
                 "resource": {
                 },
@@ -16368,14 +17504,9 @@
                 {
                   "oneOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "string",
-                          "title": "Data",
-                          "description": "The message body content as inline data."
-                        }
-                      }
+                      "required": [
+                        "data"
+                      ]
                     },
                     {
                       "type": "object",
@@ -16432,6 +17563,27 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
+                      }
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
                       }
                     }
                   ]
@@ -16494,6 +17646,9 @@
                 "type": "object",
                 "properties": {
                   "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
                   },
                   "name": {
                     "type": "string",
@@ -16509,6 +17664,9 @@
                     "$comment": "group:advanced"
                   },
                   "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
                   }
                 },
                 "additionalProperties": false,
@@ -16516,14 +17674,9 @@
                   {
                     "oneOf": [
                       {
-                        "type": "object",
-                        "properties": {
-                          "value": {
-                            "type": "string",
-                            "title": "Value",
-                            "description": "The message header value."
-                          }
-                        }
+                        "required": [
+                          "value"
+                        ]
                       },
                       {
                         "type": "object",
@@ -16553,13 +17706,29 @@
                         }
                       },
                       {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "string",
-                            "title": "Data",
-                            "description": "The message header value as inline data."
-                          }
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
                         }
                       }
                     ]
@@ -16843,6 +18012,9 @@
               "type": "object",
               "properties": {
                 "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
                 },
                 "resource": {
                 },
@@ -16854,14 +18026,9 @@
                 {
                   "oneOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "string",
-                          "title": "Data",
-                          "description": "The message body content as inline data."
-                        }
-                      }
+                      "required": [
+                        "data"
+                      ]
                     },
                     {
                       "type": "object",
@@ -16918,6 +18085,27 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
+                      }
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
                       }
                     }
                   ]
@@ -16980,6 +18168,9 @@
                 "type": "object",
                 "properties": {
                   "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
                   },
                   "name": {
                     "type": "string",
@@ -16995,6 +18186,9 @@
                     "$comment": "group:advanced"
                   },
                   "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
                   }
                 },
                 "additionalProperties": false,
@@ -17002,14 +18196,9 @@
                   {
                     "oneOf": [
                       {
-                        "type": "object",
-                        "properties": {
-                          "value": {
-                            "type": "string",
-                            "title": "Value",
-                            "description": "The message header value."
-                          }
-                        }
+                        "required": [
+                          "value"
+                        ]
                       },
                       {
                         "type": "object",
@@ -17039,13 +18228,29 @@
                         }
                       },
                       {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "string",
-                            "title": "Data",
-                            "description": "The message header value as inline data."
-                          }
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
                         }
                       }
                     ]
@@ -17459,6 +18664,9 @@
               "type": "object",
               "properties": {
                 "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
                 },
                 "resource": {
                 },
@@ -17470,14 +18678,9 @@
                 {
                   "oneOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "string",
-                          "title": "Data",
-                          "description": "The message body content as inline data."
-                        }
-                      }
+                      "required": [
+                        "data"
+                      ]
                     },
                     {
                       "type": "object",
@@ -17534,6 +18737,27 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
+                      }
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
                       }
                     }
                   ]
@@ -17637,6 +18861,9 @@
                 "type": "object",
                 "properties": {
                   "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
                   },
                   "name": {
                     "type": "string",
@@ -17652,6 +18879,9 @@
                     "$comment": "group:advanced"
                   },
                   "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
                   }
                 },
                 "additionalProperties": false,
@@ -17659,14 +18889,9 @@
                   {
                     "oneOf": [
                       {
-                        "type": "object",
-                        "properties": {
-                          "value": {
-                            "type": "string",
-                            "title": "Value",
-                            "description": "The message header value."
-                          }
-                        }
+                        "required": [
+                          "value"
+                        ]
                       },
                       {
                         "type": "object",
@@ -17696,13 +18921,29 @@
                         }
                       },
                       {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "string",
-                            "title": "Data",
-                            "description": "The message header value as inline data."
-                          }
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
                         }
                       }
                     ]
@@ -17908,6 +19149,9 @@
               "type": "object",
               "properties": {
                 "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
                 },
                 "resource": {
                 },
@@ -17919,14 +19163,9 @@
                 {
                   "oneOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "string",
-                          "title": "Data",
-                          "description": "The message body content as inline data."
-                        }
-                      }
+                      "required": [
+                        "data"
+                      ]
                     },
                     {
                       "type": "object",
@@ -17983,6 +19222,27 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
+                      }
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
                       }
                     }
                   ]
@@ -18045,6 +19305,9 @@
                 "type": "object",
                 "properties": {
                   "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
                   },
                   "name": {
                     "type": "string",
@@ -18060,6 +19323,9 @@
                     "$comment": "group:advanced"
                   },
                   "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
                   }
                 },
                 "additionalProperties": false,
@@ -18067,14 +19333,9 @@
                   {
                     "oneOf": [
                       {
-                        "type": "object",
-                        "properties": {
-                          "value": {
-                            "type": "string",
-                            "title": "Value",
-                            "description": "The message header value."
-                          }
-                        }
+                        "required": [
+                          "value"
+                        ]
                       },
                       {
                         "type": "object",
@@ -18104,13 +19365,29 @@
                         }
                       },
                       {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "string",
-                            "title": "Data",
-                            "description": "The message header value as inline data."
-                          }
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
                         }
                       }
                     ]
@@ -18316,6 +19593,9 @@
               "type": "object",
               "properties": {
                 "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
                 },
                 "resource": {
                 },
@@ -18327,14 +19607,9 @@
                 {
                   "oneOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "string",
-                          "title": "Data",
-                          "description": "The message body content as inline data."
-                        }
-                      }
+                      "required": [
+                        "data"
+                      ]
                     },
                     {
                       "type": "object",
@@ -18391,6 +19666,27 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
+                      }
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
                       }
                     }
                   ]
@@ -18453,6 +19749,9 @@
                 "type": "object",
                 "properties": {
                   "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
                   },
                   "name": {
                     "type": "string",
@@ -18468,6 +19767,9 @@
                     "$comment": "group:advanced"
                   },
                   "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
                   }
                 },
                 "additionalProperties": false,
@@ -18475,14 +19777,9 @@
                   {
                     "oneOf": [
                       {
-                        "type": "object",
-                        "properties": {
-                          "value": {
-                            "type": "string",
-                            "title": "Value",
-                            "description": "The message header value."
-                          }
-                        }
+                        "required": [
+                          "value"
+                        ]
                       },
                       {
                         "type": "object",
@@ -18512,13 +19809,29 @@
                         }
                       },
                       {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "string",
-                            "title": "Data",
-                            "description": "The message header value as inline data."
-                          }
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
                         }
                       }
                     ]
@@ -20087,6 +21400,32 @@
                   "title": "Action",
                   "description": "Waits for the test action to complete."
                 }
+              }
+            },
+            {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "message"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "http"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "file"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "action"
+                    ]
+                  }
+                ]
               }
             }
           ]

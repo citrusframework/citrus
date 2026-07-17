@@ -425,7 +425,6 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
        "GET",
        "POST",
        "PUT",
-       "PUT",
        "DELETE",
        "HEAD",
        "OPTIONS",
@@ -550,7 +549,6 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @SchemaType(oneOf = {
         "GET",
         "POST",
-        "PUT",
         "PUT",
         "DELETE",
         "HEAD",
