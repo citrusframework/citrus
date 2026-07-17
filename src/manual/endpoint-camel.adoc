@@ -885,7 +885,16 @@ public class CamelControlBusIT extends TestNGCitrusSpringSupport {
 [[camel-cli]]
 == Camel CLI support
 
-The Apache Camel project offers a great CLI tooling based on https://www.jbang.dev/[JBang].
+The Apache Camel project offers a great CLI tooling that allows you to run Camel integrations directly from the command line.
+Citrus supports two ways to launch the Camel CLI:
+
+* *JBang* (default) — uses https://www.jbang.dev/[JBang] to resolve and run the Camel CLI application.
+* *Camel Launcher jar* — uses a standalone Camel Launcher jar file executed via `java -jar`.
+
+[[camel-cli-jbang-setup]]
+=== Camel JBang setup
+
+By default, Citrus uses JBang to launch the Camel CLI.
 You can install the Camel CLI tooling on your local machine as a JBang application.
 
 [source,bash]
@@ -895,11 +904,35 @@ jbang app install camel@apache/camel
 
 The `--help` option will show you all available commands that you can run with Camel CLI.
 
+[[camel-cli-launcher-setup]]
+=== Camel Launcher setup
+
+As an alternative to JBang you can use the Camel Launcher jar to run Camel CLI commands.
+The Camel Launcher is a standalone executable jar that does not require JBang to be installed.
+
+To use the Camel Launcher jar, configure the following settings:
+
+.System properties
+[source,properties]
+----
+citrus.camel.cli.type=launcher
+citrus.camel.cli.launcher.jar.path=/path/to/camel-launcher.jar
+----
+
+.Environment variables
+[source,bash]
+----
+export CITRUS_CAMEL_CLI_TYPE=launcher
+export CITRUS_CAMEL_CLI_LAUNCHER_JAR_PATH=/path/to/camel-launcher.jar
+----
+
+When configured, Citrus will execute Camel CLI commands as `java -jar <path-to-jar> <command> <args>` instead of using JBang.
+
 === Run Camel integrations
 
 One of the available commands in Camel CLI is the `run` command that takes a Camel route as an input and runs the route locally without any prior project setup.
 
-Citrus is able to use this capability in a test to run a Camel integration in a separate JBang process.
+Citrus is able to use this capability in a test to run a Camel integration in a separate process.
 
 Given the following Camel route written in YAML:
 
@@ -1625,6 +1658,102 @@ when(camel().cli()
   </cli>
 </camel>
 ----
+
+[[camel-cli-settings]]
+=== Camel CLI settings
+
+The Camel CLI support uses the following environment settings.
+Settings use the `citrus.camel.cli.*` prefix. The older `citrus.camel.jbang.*` prefix is still supported as a fallback.
+
+.System properties
+|===
+|System property |Description
+
+| citrus.camel.cli.type
+| The launcher type to use: `jbang` (default) or `launcher`. When set to `launcher`, Citrus uses the Camel Launcher jar instead of JBang.
+
+| citrus.camel.cli.launcher.jar.path
+| Path to the Camel Launcher jar file. Required when `citrus.camel.cli.type` is set to `launcher`. Falls back to the `camel.launcher.jar` system property.
+
+| citrus.camel.cli.app
+| Camel JBang app name. (default="camel@apache/camel")
+
+| citrus.camel.cli.version
+| Camel version to use. (default="latest")
+
+| citrus.camel.cli.work.dir
+| Local working directory for the Camel CLI.
+
+| citrus.camel.cli.kamelets.version
+| Kamelets version used by the Camel CLI runtime.
+
+| citrus.camel.cli.kamelets.local.dir
+| Local Kamelets directory.
+
+| citrus.camel.cli.dump.integration.output
+| When set to true, Camel CLI process output for integrations will be redirected to a file in the current working directory. (default="false")
+
+| citrus.camel.cli.verbose
+| When set to true, Camel CLI will print detailed messages. (default="false")
+
+| citrus.camel.cli.auto.remove.resources
+| When set to true, Camel CLI resources created during the test are automatically removed after the test. (default="true")
+
+| citrus.camel.cli.auto.remove.plugins
+| When set to true, Camel CLI plugins added during the test are automatically removed after the test. (default="false")
+
+| citrus.camel.cli.wait.for.running.state
+| When set to true, Camel CLI will automatically wait for each integration created to be in running state. (default="true")
+
+| citrus.camel.cli.trust.url
+| Comma-separated list of trust URLs for JBang. (default="https://github.com/apache/camel/")
+
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_CAMEL_CLI_TYPE
+| The launcher type to use: `jbang` (default) or `launcher`.
+
+| CITRUS_CAMEL_CLI_LAUNCHER_JAR_PATH
+| Path to the Camel Launcher jar file.
+
+| CITRUS_CAMEL_CLI_APP
+| Camel JBang app name.
+
+| CITRUS_CAMEL_CLI_VERSION
+| Camel version to use.
+
+| CITRUS_CAMEL_CLI_WORK_DIR
+| Local working directory for the Camel CLI.
+
+| CITRUS_CAMEL_CLI_KAMELETS_VERSION
+| Kamelets version used by the Camel CLI runtime.
+
+| CITRUS_CAMEL_CLI_KAMELETS_LOCAL_DIR
+| Local Kamelets directory.
+
+| CITRUS_CAMEL_CLI_DUMP_INTEGRATION_OUTPUT
+| When set to true, integration output is redirected to a file.
+
+| CITRUS_CAMEL_CLI_VERBOSE
+| When set to true, Camel CLI will print detailed messages.
+
+| CITRUS_CAMEL_CLI_AUTO_REMOVE_RESOURCES
+| When set to true, resources are automatically removed after the test.
+
+| CITRUS_CAMEL_CLI_AUTO_REMOVE_PLUGINS
+| When set to true, plugins are automatically removed after the test.
+
+| CITRUS_CAMEL_CLI_WAIT_FOR_RUNNING_STATE
+| When set to true, waits for integrations to reach running state.
+
+| CITRUS_CAMEL_CLI_TRUST_URL
+| Comma-separated list of trust URLs for JBang.
+
+|===
 
 [[camel-cli-kubernetes]]
 == Camel CLI Kubernetes support
