@@ -194,11 +194,42 @@ public class CitrusModule implements Module {
                 .orElse(null);
     }
 
-    private String resolveDefault(MemberScope<?, ?> member){
+    private Object resolveDefault(MemberScope<?, ?> member) {
         return this.getSchemaPropertyAnnotation(member)
                 .map(SchemaProperty::defaultValue)
                 .filter(defaultValue -> !defaultValue.isEmpty())
+                .map(defaultValue -> parseDefault(defaultValue, member.getType()))
                 .orElse(null);
+    }
+
+    private static Object parseDefault(String defaultValue, ResolvedType type) {
+        Class<?> erasedType = type.getErasedType();
+        if (erasedType == boolean.class || erasedType == Boolean.class) {
+            return Boolean.parseBoolean(defaultValue);
+        }
+        if (erasedType == int.class || erasedType == Integer.class) {
+            try {
+                return Integer.parseInt(defaultValue);
+            } catch (NumberFormatException e) {
+                return defaultValue;
+            }
+        }
+        if (erasedType == long.class || erasedType == Long.class) {
+            try {
+                return Long.parseLong(defaultValue);
+            } catch (NumberFormatException e) {
+                return defaultValue;
+            }
+        }
+        if (erasedType == double.class || erasedType == Double.class
+                || erasedType == float.class || erasedType == Float.class) {
+            try {
+                return Double.parseDouble(defaultValue);
+            } catch (NumberFormatException e) {
+                return defaultValue;
+            }
+        }
+        return defaultValue;
     }
 
     private boolean resolveRequired(MemberScope<?, ?> member){

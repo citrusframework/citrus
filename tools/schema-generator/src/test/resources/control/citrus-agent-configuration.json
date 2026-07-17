@@ -62,7 +62,7 @@
       "type" : "boolean",
       "title" : "Offline",
       "description" : "When enabled there will be no attempts to resolve Maven artifacts via internet connection.",
-      "default" : "true"
+      "default" : true
     },
     "packages" : {
       "title" : "Packages",
@@ -78,13 +78,13 @@
       "type" : "integer",
       "title" : "Port",
       "description" : "The Http port the agent service is listening on.",
-      "default" : "4567"
+      "default" : 4567
     },
     "reset" : {
       "type" : "boolean",
       "title" : "Reset",
       "description" : "When enabled the Citrus context instance is reset after the test.",
-      "default" : "true"
+      "default" : true
     },
     "skipTests" : {
       "type" : "boolean",
@@ -138,7 +138,7 @@
       "type" : "boolean",
       "title" : "Verbose",
       "description" : "When enabled the test run prints verbose messages.",
-      "default" : "true"
+      "default" : true
     },
     "workDir" : {
       "type" : "string",

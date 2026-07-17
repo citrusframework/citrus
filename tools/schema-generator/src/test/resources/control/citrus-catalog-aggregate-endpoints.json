@@ -348,7 +348,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         },
         "username": {
           "type": "string",
@@ -473,7 +473,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         },
         "user": {
           "type": "string",
@@ -1008,6 +1008,95 @@
       },
       "additionalProperties": false    }
   },
+  "ssh-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "ssh-client",
+    "group": "ssh",
+    "module": "citrus-ssh",
+    "title": "SshClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "commandTimeout": {
+          "type": "integer",
+          "title": "CommandTimeout",
+          "description": "Sets the command timeout."
+        },
+        "connectionTimeout": {
+          "type": "integer",
+          "title": "ConnectionTimeout",
+          "description": "Sets the connection timeout."
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator."
+        },
+        "host": {
+          "type": "string",
+          "title": "Host",
+          "description": "Sets the host."
+        },
+        "knownHosts": {
+          "type": "string",
+          "title": "KnownHosts",
+          "description": "Sets the known hosts."
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the message converter."
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "password": {
+          "type": "string",
+          "title": "Password",
+          "description": "Sets the password."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval."
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "Sets the port."
+        },
+        "privateKeyPassword": {
+          "type": "string",
+          "title": "PrivateKeyPassword",
+          "description": "Sets the private key password."
+        },
+        "privateKeyPath": {
+          "type": "string",
+          "title": "PrivateKeyPath",
+          "description": "Sets the private key path."
+        },
+        "strictHostChecking": {
+          "type": "boolean",
+          "title": "StrictHostChecking",
+          "description": "Sets the strict host checking."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the default timeout."
+        },
+        "user": {
+          "type": "string",
+          "title": "User",
+          "description": "Sets the username."
+        }
+      },
+      "additionalProperties": false    }
+  },
   "http-client": {
     "kind": "testEndpoint",
     "version": "${citrus.version}",
@@ -1174,96 +1263,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The Http request timeout while waiting for a response",
-          "default": "5000"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "ssh-client": {
-    "kind": "testEndpoint",
-    "version": "${citrus.version}",
-    "name": "ssh-client",
-    "group": "ssh",
-    "module": "citrus-ssh",
-    "title": "SshClient",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "commandTimeout": {
-          "type": "integer",
-          "title": "CommandTimeout",
-          "description": "Sets the command timeout."
-        },
-        "connectionTimeout": {
-          "type": "integer",
-          "title": "ConnectionTimeout",
-          "description": "Sets the connection timeout."
-        },
-        "correlator": {
-          "type": "string",
-          "title": "Correlator",
-          "description": "Sets the message correlator."
-        },
-        "host": {
-          "type": "string",
-          "title": "Host",
-          "description": "Sets the host."
-        },
-        "knownHosts": {
-          "type": "string",
-          "title": "KnownHosts",
-          "description": "Sets the known hosts."
-        },
-        "messageConverter": {
-          "type": "string",
-          "title": "MessageConverter",
-          "description": "Sets the message converter."
-        },
-        "name": {
-          "type": "string",
-          "title": "Name",
-          "description": "The name of the endpoint"
-        },
-        "password": {
-          "type": "string",
-          "title": "Password",
-          "description": "Sets the password."
-        },
-        "pollingInterval": {
-          "type": "integer",
-          "title": "PollingInterval",
-          "description": "Sets the polling interval."
-        },
-        "port": {
-          "type": "integer",
-          "title": "Port",
-          "description": "Sets the port."
-        },
-        "privateKeyPassword": {
-          "type": "string",
-          "title": "PrivateKeyPassword",
-          "description": "Sets the private key password."
-        },
-        "privateKeyPath": {
-          "type": "string",
-          "title": "PrivateKeyPath",
-          "description": "Sets the private key path."
-        },
-        "strictHostChecking": {
-          "type": "boolean",
-          "title": "StrictHostChecking",
-          "description": "Sets the strict host checking."
-        },
-        "timeout": {
-          "type": "integer",
-          "title": "Timeout",
-          "description": "Sets the default timeout."
-        },
-        "user": {
-          "type": "string",
-          "title": "User",
-          "description": "Sets the username."
+          "default": 5000
         }
       },
       "additionalProperties": false    }
@@ -1317,7 +1317,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The Http request timeout while waiting for a response",
-          "default": "5000"
+          "default": 5000
         }
       },
       "additionalProperties": false    }
@@ -1371,7 +1371,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the receive timeout when waiting for messages.",
-          "default": "5000"
+          "default": 5000
         },
         "useObjectMessages": {
           "type": "boolean",
@@ -1550,7 +1550,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the server timeout while waiting for incoming requests.",
-          "default": "5000"
+          "default": 5000
         }
       },
       "additionalProperties": false    }
@@ -1616,7 +1616,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the receive timeout when waiting for messages.",
-          "default": "5000"
+          "default": 5000
         },
         "useObjectMessages": {
           "type": "boolean",
@@ -1742,7 +1742,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         },
         "user": {
           "type": "string",
@@ -1866,7 +1866,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         },
         "user": {
           "type": "string",
@@ -2306,7 +2306,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         }
       },
       "additionalProperties": false    }
@@ -2687,7 +2687,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the receive timeout when the client waits for response messages.",
-          "default": "5000"
+          "default": 5000
         },
         "webServiceTemplate": {
           "type": "string",
@@ -2782,7 +2782,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the receive timeout when the consumer waits for messages to arrive.",
-          "default": "5000"
+          "default": 5000
         },
         "useObjectMessages": {
           "type": "boolean",
@@ -2977,299 +2977,6 @@
           "title": "WebDriver",
           "description": "Sets a custom web driver as a bean reference.",
           "$comment": "group:advanced"
-        }
-      },
-      "additionalProperties": false    }
-  },
-  "http-server": {
-    "kind": "testEndpoint",
-    "version": "${citrus.version}",
-    "name": "http-server",
-    "group": "http",
-    "module": "citrus-http",
-    "title": "HttpServer",
-    "propertiesSchema": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "type": "object",
-      "properties": {
-        "authentication": {
-          "type": "string",
-          "title": "Authentication",
-          "description": "Use given authentication mechanism for all request paths.",
-          "$comment": "group:security"
-        },
-        "autoStart": {
-          "type": "boolean",
-          "title": "AutoStart",
-          "description": "When enabled the server is automatically started after creation."
-        },
-        "binaryMediaTypes": {
-          "title": "BinaryMediaTypes",
-          "description": "List of supported media types on this server.",
-          "$comment": "group:advanced",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "BinaryMediaTypes",
-            "description": "List of supported media types on this server.",
-            "$comment": "group:advanced"
-          }
-        },
-        "connector": {
-          "type": "string",
-          "title": "Connector",
-          "description": "Add a connector to this server.",
-          "$comment": "group:servlet"
-        },
-        "connectors": {
-          "title": "Connectors",
-          "description": "Sets a list of connectors for this server.",
-          "$comment": "group:servlet",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Connectors",
-            "description": "Sets a list of connectors for this server.",
-            "$comment": "group:servlet"
-          }
-        },
-        "contextConfigLocation": {
-          "type": "string",
-          "title": "ContextConfigLocation",
-          "description": "Sets the Spring context configuration loaded for this Http server.",
-          "$comment": "group:advanced"
-        },
-        "contextPath": {
-          "type": "string",
-          "title": "ContextPath",
-          "description": "Sets the context path on this server.",
-          "$comment": "group:servlet"
-        },
-        "debugLogging": {
-          "type": "boolean",
-          "title": "DebugLogging",
-          "description": "When enabled the server prints debug logging output.",
-          "$comment": "group:advanced"
-        },
-        "defaultStatus": {
-          "type": "string",
-          "enum": [
-            "CONTINUE",
-            "SWITCHING_PROTOCOLS",
-            "PROCESSING",
-            "EARLY_HINTS",
-            "OK",
-            "CREATED",
-            "ACCEPTED",
-            "NON_AUTHORITATIVE_INFORMATION",
-            "NO_CONTENT",
-            "RESET_CONTENT",
-            "PARTIAL_CONTENT",
-            "MULTI_STATUS",
-            "ALREADY_REPORTED",
-            "IM_USED",
-            "MULTIPLE_CHOICES",
-            "MOVED_PERMANENTLY",
-            "FOUND",
-            "SEE_OTHER",
-            "NOT_MODIFIED",
-            "TEMPORARY_REDIRECT",
-            "PERMANENT_REDIRECT",
-            "BAD_REQUEST",
-            "UNAUTHORIZED",
-            "PAYMENT_REQUIRED",
-            "FORBIDDEN",
-            "NOT_FOUND",
-            "METHOD_NOT_ALLOWED",
-            "NOT_ACCEPTABLE",
-            "PROXY_AUTHENTICATION_REQUIRED",
-            "REQUEST_TIMEOUT",
-            "CONFLICT",
-            "GONE",
-            "LENGTH_REQUIRED",
-            "PRECONDITION_FAILED",
-            "CONTENT_TOO_LARGE",
-            "PAYLOAD_TOO_LARGE",
-            "URI_TOO_LONG",
-            "UNSUPPORTED_MEDIA_TYPE",
-            "REQUESTED_RANGE_NOT_SATISFIABLE",
-            "EXPECTATION_FAILED",
-            "I_AM_A_TEAPOT",
-            "MISDIRECTED_REQUEST",
-            "UNPROCESSABLE_CONTENT",
-            "UNPROCESSABLE_ENTITY",
-            "LOCKED",
-            "FAILED_DEPENDENCY",
-            "TOO_EARLY",
-            "UPGRADE_REQUIRED",
-            "PRECONDITION_REQUIRED",
-            "TOO_MANY_REQUESTS",
-            "REQUEST_HEADER_FIELDS_TOO_LARGE",
-            "UNAVAILABLE_FOR_LEGAL_REASONS",
-            "INTERNAL_SERVER_ERROR",
-            "NOT_IMPLEMENTED",
-            "BAD_GATEWAY",
-            "SERVICE_UNAVAILABLE",
-            "GATEWAY_TIMEOUT",
-            "HTTP_VERSION_NOT_SUPPORTED",
-            "VARIANT_ALSO_NEGOTIATES",
-            "INSUFFICIENT_STORAGE",
-            "LOOP_DETECTED",
-            "BANDWIDTH_LIMIT_EXCEEDED",
-            "NOT_EXTENDED",
-            "NETWORK_AUTHENTICATION_REQUIRED"
-          ],
-          "title": "DefaultStatus",
-          "description": "Sets the default status returned by the server.",
-          "$comment": "group:advanced"
-        },
-        "endpointAdapter": {
-          "type": "string",
-          "title": "EndpointAdapter",
-          "description": "Sets a custom endpoint adapter to handle requests.",
-          "$comment": "group:advanced"
-        },
-        "filterMappings": {
-          "type": "object",
-          "title": "FilterMappings",
-          "description": "Filter mapping used on this server.",
-          "additionalProperties": {
-            "type": "string",
-            "title": "FilterMappings",
-            "description": "Filter mapping used on this server.",
-            "$comment": "group:filter"
-          },
-          "$comment": "group:filter"
-        },
-        "filters": {
-          "type": "object",
-          "title": "Filters",
-          "description": "Map of Http filters used on this server.",
-          "additionalProperties": {
-            "type": "string",
-            "title": "Filters",
-            "description": "Map of Http filters used on this server.",
-            "$comment": "group:filter"
-          },
-          "$comment": "group:filter"
-        },
-        "handleAttributeHeaders": {
-          "type": "boolean",
-          "title": "HandleAttributeHeaders",
-          "description": "When enabled the server handles attribute headers.",
-          "$comment": "group:advanced"
-        },
-        "handleCookies": {
-          "type": "boolean",
-          "title": "HandleCookies",
-          "description": "When enabled the server handles cookies.",
-          "$comment": "group:advanced"
-        },
-        "interceptor": {
-          "type": "string",
-          "title": "Interceptor",
-          "description": "Sets a handler interceptor.",
-          "$comment": "group:intercept"
-        },
-        "interceptors": {
-          "title": "Interceptors",
-          "description": "Sets the list of handler interceptor bean references.",
-          "$comment": "group:intercept",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "title": "Interceptors",
-            "description": "Sets the list of handler interceptor bean references.",
-            "$comment": "group:intercept"
-          }
-        },
-        "messageConverter": {
-          "type": "string",
-          "title": "MessageConverter",
-          "description": "Sets the Http message converter bean reference.",
-          "$comment": "group:advanced"
-        },
-        "name": {
-          "type": "string",
-          "title": "Name",
-          "description": "The name of the endpoint"
-        },
-        "port": {
-          "type": "integer",
-          "title": "Port",
-          "description": "The Http server port."
-        },
-        "removeSemicolonPathContent": {
-          "type": "boolean",
-          "title": "RemoveSemicolonPathContent",
-          "description": "When enabled the server removes semicolon path content from headers.",
-          "$comment": "group:advanced"
-        },
-        "resourceBase": {
-          "type": "string",
-          "title": "ResourceBase",
-          "description": "The server resource base path where resources get loaded from.",
-          "$comment": "group:advanced"
-        },
-        "responseCacheSize": {
-          "type": "integer",
-          "title": "ResponseCacheSize",
-          "description": "Sets the response cache size.",
-          "$comment": "group:advanced"
-        },
-        "rootParentContext": {
-          "type": "boolean",
-          "title": "RootParentContext",
-          "description": "When enabled the server uses the root Spring application context.",
-          "$comment": "group:advanced"
-        },
-        "securePort": {
-          "type": "integer",
-          "title": "SecurePort",
-          "description": "The secured port.",
-          "$comment": "group:security"
-        },
-        "securedConnection": {
-          "type": "string",
-          "title": "SecuredConnection",
-          "description": "Secure the connections on given secured port with given security mechanism.",
-          "$comment": "group:security"
-        },
-        "securityHandler": {
-          "type": "string",
-          "title": "SecurityHandler",
-          "description": "Sets the security handler as a bean reference.",
-          "$comment": "group:security"
-        },
-        "servletHandler": {
-          "type": "string",
-          "title": "ServletHandler",
-          "description": "Sets a custom servlet handler as a bean reference.",
-          "$comment": "group:servlet"
-        },
-        "servletMappingPath": {
-          "type": "string",
-          "title": "ServletMappingPath",
-          "description": "Sets the servlet mapping path.",
-          "$comment": "group:servlet"
-        },
-        "servletName": {
-          "type": "string",
-          "title": "ServletName",
-          "description": "Sets the servlet name.",
-          "$comment": "group:servlet"
-        },
-        "timeout": {
-          "type": "integer",
-          "title": "Timeout",
-          "description": "Sets the server timeout while waiting for incoming requests.",
-          "default": "5000"
-        },
-        "useDefaultFilters": {
-          "type": "boolean",
-          "title": "UseDefaultFilters",
-          "description": "When enabled the server uses the default set of Http servlet filters.",
-          "$comment": "group:filter"
         }
       },
       "additionalProperties": false    }
@@ -3556,7 +3263,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the server timeout while waiting for incoming requests.",
-          "default": "5000"
+          "default": 5000
         },
         "useDefaultFilters": {
           "type": "boolean",
@@ -3673,7 +3380,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         }
       },
       "additionalProperties": false    }
@@ -3750,7 +3457,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         },
         "user": {
           "type": "string",
@@ -3761,6 +3468,299 @@
           "type": "string",
           "title": "UserHomePath",
           "description": "Sets the user home path"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "http-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "http-server",
+    "group": "http",
+    "module": "citrus-http",
+    "title": "HttpServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "authentication": {
+          "type": "string",
+          "title": "Authentication",
+          "description": "Use given authentication mechanism for all request paths.",
+          "$comment": "group:security"
+        },
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "binaryMediaTypes": {
+          "title": "BinaryMediaTypes",
+          "description": "List of supported media types on this server.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "BinaryMediaTypes",
+            "description": "List of supported media types on this server.",
+            "$comment": "group:advanced"
+          }
+        },
+        "connector": {
+          "type": "string",
+          "title": "Connector",
+          "description": "Add a connector to this server.",
+          "$comment": "group:servlet"
+        },
+        "connectors": {
+          "title": "Connectors",
+          "description": "Sets a list of connectors for this server.",
+          "$comment": "group:servlet",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Connectors",
+            "description": "Sets a list of connectors for this server.",
+            "$comment": "group:servlet"
+          }
+        },
+        "contextConfigLocation": {
+          "type": "string",
+          "title": "ContextConfigLocation",
+          "description": "Sets the Spring context configuration loaded for this Http server.",
+          "$comment": "group:advanced"
+        },
+        "contextPath": {
+          "type": "string",
+          "title": "ContextPath",
+          "description": "Sets the context path on this server.",
+          "$comment": "group:servlet"
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "defaultStatus": {
+          "type": "string",
+          "enum": [
+            "CONTINUE",
+            "SWITCHING_PROTOCOLS",
+            "PROCESSING",
+            "EARLY_HINTS",
+            "OK",
+            "CREATED",
+            "ACCEPTED",
+            "NON_AUTHORITATIVE_INFORMATION",
+            "NO_CONTENT",
+            "RESET_CONTENT",
+            "PARTIAL_CONTENT",
+            "MULTI_STATUS",
+            "ALREADY_REPORTED",
+            "IM_USED",
+            "MULTIPLE_CHOICES",
+            "MOVED_PERMANENTLY",
+            "FOUND",
+            "SEE_OTHER",
+            "NOT_MODIFIED",
+            "TEMPORARY_REDIRECT",
+            "PERMANENT_REDIRECT",
+            "BAD_REQUEST",
+            "UNAUTHORIZED",
+            "PAYMENT_REQUIRED",
+            "FORBIDDEN",
+            "NOT_FOUND",
+            "METHOD_NOT_ALLOWED",
+            "NOT_ACCEPTABLE",
+            "PROXY_AUTHENTICATION_REQUIRED",
+            "REQUEST_TIMEOUT",
+            "CONFLICT",
+            "GONE",
+            "LENGTH_REQUIRED",
+            "PRECONDITION_FAILED",
+            "CONTENT_TOO_LARGE",
+            "PAYLOAD_TOO_LARGE",
+            "URI_TOO_LONG",
+            "UNSUPPORTED_MEDIA_TYPE",
+            "REQUESTED_RANGE_NOT_SATISFIABLE",
+            "EXPECTATION_FAILED",
+            "I_AM_A_TEAPOT",
+            "MISDIRECTED_REQUEST",
+            "UNPROCESSABLE_CONTENT",
+            "UNPROCESSABLE_ENTITY",
+            "LOCKED",
+            "FAILED_DEPENDENCY",
+            "TOO_EARLY",
+            "UPGRADE_REQUIRED",
+            "PRECONDITION_REQUIRED",
+            "TOO_MANY_REQUESTS",
+            "REQUEST_HEADER_FIELDS_TOO_LARGE",
+            "UNAVAILABLE_FOR_LEGAL_REASONS",
+            "INTERNAL_SERVER_ERROR",
+            "NOT_IMPLEMENTED",
+            "BAD_GATEWAY",
+            "SERVICE_UNAVAILABLE",
+            "GATEWAY_TIMEOUT",
+            "HTTP_VERSION_NOT_SUPPORTED",
+            "VARIANT_ALSO_NEGOTIATES",
+            "INSUFFICIENT_STORAGE",
+            "LOOP_DETECTED",
+            "BANDWIDTH_LIMIT_EXCEEDED",
+            "NOT_EXTENDED",
+            "NETWORK_AUTHENTICATION_REQUIRED"
+          ],
+          "title": "DefaultStatus",
+          "description": "Sets the default status returned by the server.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "filterMappings": {
+          "type": "object",
+          "title": "FilterMappings",
+          "description": "Filter mapping used on this server.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "FilterMappings",
+            "description": "Filter mapping used on this server.",
+            "$comment": "group:filter"
+          },
+          "$comment": "group:filter"
+        },
+        "filters": {
+          "type": "object",
+          "title": "Filters",
+          "description": "Map of Http filters used on this server.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "Filters",
+            "description": "Map of Http filters used on this server.",
+            "$comment": "group:filter"
+          },
+          "$comment": "group:filter"
+        },
+        "handleAttributeHeaders": {
+          "type": "boolean",
+          "title": "HandleAttributeHeaders",
+          "description": "When enabled the server handles attribute headers.",
+          "$comment": "group:advanced"
+        },
+        "handleCookies": {
+          "type": "boolean",
+          "title": "HandleCookies",
+          "description": "When enabled the server handles cookies.",
+          "$comment": "group:advanced"
+        },
+        "interceptor": {
+          "type": "string",
+          "title": "Interceptor",
+          "description": "Sets a handler interceptor.",
+          "$comment": "group:intercept"
+        },
+        "interceptors": {
+          "title": "Interceptors",
+          "description": "Sets the list of handler interceptor bean references.",
+          "$comment": "group:intercept",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Interceptors",
+            "description": "Sets the list of handler interceptor bean references.",
+            "$comment": "group:intercept"
+          }
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the Http message converter bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Http server port."
+        },
+        "removeSemicolonPathContent": {
+          "type": "boolean",
+          "title": "RemoveSemicolonPathContent",
+          "description": "When enabled the server removes semicolon path content from headers.",
+          "$comment": "group:advanced"
+        },
+        "resourceBase": {
+          "type": "string",
+          "title": "ResourceBase",
+          "description": "The server resource base path where resources get loaded from.",
+          "$comment": "group:advanced"
+        },
+        "responseCacheSize": {
+          "type": "integer",
+          "title": "ResponseCacheSize",
+          "description": "Sets the response cache size.",
+          "$comment": "group:advanced"
+        },
+        "rootParentContext": {
+          "type": "boolean",
+          "title": "RootParentContext",
+          "description": "When enabled the server uses the root Spring application context.",
+          "$comment": "group:advanced"
+        },
+        "securePort": {
+          "type": "integer",
+          "title": "SecurePort",
+          "description": "The secured port.",
+          "$comment": "group:security"
+        },
+        "securedConnection": {
+          "type": "string",
+          "title": "SecuredConnection",
+          "description": "Secure the connections on given secured port with given security mechanism.",
+          "$comment": "group:security"
+        },
+        "securityHandler": {
+          "type": "string",
+          "title": "SecurityHandler",
+          "description": "Sets the security handler as a bean reference.",
+          "$comment": "group:security"
+        },
+        "servletHandler": {
+          "type": "string",
+          "title": "ServletHandler",
+          "description": "Sets a custom servlet handler as a bean reference.",
+          "$comment": "group:servlet"
+        },
+        "servletMappingPath": {
+          "type": "string",
+          "title": "ServletMappingPath",
+          "description": "Sets the servlet mapping path.",
+          "$comment": "group:servlet"
+        },
+        "servletName": {
+          "type": "string",
+          "title": "ServletName",
+          "description": "Sets the servlet name.",
+          "$comment": "group:servlet"
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the server timeout while waiting for incoming requests.",
+          "default": 5000
+        },
+        "useDefaultFilters": {
+          "type": "boolean",
+          "title": "UseDefaultFilters",
+          "description": "When enabled the server uses the default set of Http servlet filters.",
+          "$comment": "group:filter"
         }
       },
       "additionalProperties": false    }
