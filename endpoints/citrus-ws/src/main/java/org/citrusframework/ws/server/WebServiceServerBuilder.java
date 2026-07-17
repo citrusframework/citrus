@@ -240,7 +240,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
             description = "Sets a custom servlet handler as a bean reference.")
     @XmlAttribute(name = "servlet-handler")
-    public void serServletHandler(String servletHandler) {
+    public void setServletHandler(String servletHandler) {
         this.servletHandler = servletHandler;
     }
 
