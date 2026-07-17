@@ -49,6 +49,7 @@ import com.github.victools.jsonschema.generator.naming.CleanSchemaDefinitionNami
 import com.github.victools.jsonschema.generator.naming.DefaultSchemaDefinitionNamingStrategy;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.dsl.schema.Catalog;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.ExamplesProvider;
 import org.citrusframework.yaml.SchemaProperty;
@@ -98,17 +99,39 @@ public class CitrusModule implements Module {
             if (anyOf.isEmpty()) {
                 ArrayNode oneOf = anyOf.addObject().withArray(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_ONEOF));
                 for (String oneOfItem : schemaType.oneOf()) {
+                    JsonNode original = schemaNode.get(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES)).get(oneOfItem);
+
+                    if (original == null) {
+                        throw new CitrusRuntimeException("Missing declared one of item " + oneOfItem + " in properties for " + schemaNode.asString());
+                    }
+
                     ObjectNode itemNode = oneOf.addObject();
-                    itemNode.put(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_TYPE), "object");
-                    ObjectNode propertyNode = itemNode.withObject(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES));
-                    propertyNode.set(oneOfItem, schemaNode.get(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES)).get(oneOfItem));
+                    String type = Optional.ofNullable(original.findValue(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_TYPE)))
+                            .map(JsonNode::asString)
+                            .orElse("object");
+                    if (type.equals("object")) {
+                        itemNode.put(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_TYPE), "object");
+                        ObjectNode propertyNode = itemNode.withObject(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES));
+                        propertyNode.set(oneOfItem, original);
 
-                    // remove all properties from old item node
-                    ((ObjectNode) schemaNode.get(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES))).putObject(oneOfItem);
-
-                    if (requireOneOfItem) {
+                        // remove all properties from old item node, but keep the property as an empty element.
+                        // This is required to pass the additionalProperties=false check
+                        ((ObjectNode) schemaNode.get(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES))).putObject(oneOfItem);
+                        if (requireOneOfItem) {
+                            itemNode.withArray(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_REQUIRED)).add(oneOfItem);
+                        }
+                    } else {
                         itemNode.withArray(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_REQUIRED)).add(oneOfItem);
                     }
+
+                }
+
+                // Add the inversion of the required oneOf elements, allows users to not specify any of the oneOf listed elements
+                ObjectNode not = oneOf.addObject().withObject(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_NOT));
+                ArrayNode notAnyOf = not.withArray(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_ANYOF));
+                for (String oneOfItem : schemaType.oneOf()) {
+                    ObjectNode itemNode = notAnyOf.addObject();
+                    itemNode.withArray(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_REQUIRED)).add(oneOfItem);
                 }
             }
         }
