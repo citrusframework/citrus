@@ -245,14 +245,14 @@
           "type": "integer",
           "title": "StartsWith",
           "description": "Index starts with this value.",
-          "default": "1",
+          "default": 1,
           "$comment": "group:advanced"
         },
         "step": {
           "type": "integer",
           "title": "Step",
           "description": "The step added to the index for each iteration.",
-          "default": "1",
+          "default": 1,
           "$comment": "group:advanced"
         }
       },
@@ -330,7 +330,7 @@
           "type": "integer",
           "title": "StartsWith",
           "description": "Index starts with this value.",
-          "default": "1",
+          "default": 1,
           "$comment": "group:advanced"
         },
         "until": {
@@ -385,7 +385,7 @@
           "type": "integer",
           "title": "StartsWith",
           "description": "Index starts with this value.",
-          "default": "1",
+          "default": 1,
           "$comment": "group:advanced"
         },
         "until": {
@@ -525,7 +525,7 @@
           "type": "boolean",
           "title": "AutoStop",
           "description": "Automatically stop the timer when the test is finished.",
-          "default": "true",
+          "default": true,
           "$comment": "group:advanced"
         },
         "delay": {
@@ -544,7 +544,7 @@
           "type": "boolean",
           "title": "Fork",
           "description": "Do not block the test while the timer is running.",
-          "default": "false",
+          "default": false,
           "$comment": "group:advanced"
         },
         "id": {
@@ -556,7 +556,7 @@
           "type": "integer",
           "title": "Interval",
           "description": "Timer interval in milliseconds.",
-          "default": "1000"
+          "default": 1000
         },
         "repeatCount": {
           "type": "integer",

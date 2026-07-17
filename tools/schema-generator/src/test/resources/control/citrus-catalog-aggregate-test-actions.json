@@ -631,7 +631,7 @@
           "type": "integer",
           "title": "DelayBetweenAttempts",
           "description": "The delay in milliseconds to wait between validation attempts.",
-          "default": "1000",
+          "default": 1000,
           "$comment": "group:advanced"
         },
         "endpoint": {
@@ -654,21 +654,21 @@
           "type": "boolean",
           "title": "JsonOutput",
           "description": "When enabled action stores messages from json output.",
-          "default": "false",
+          "default": false,
           "$comment": "group:advanced"
         },
         "loggingColor": {
           "type": "boolean",
           "title": "LoggingColor",
           "description": "When enabled the output uses logging color.",
-          "default": "false",
+          "default": false,
           "$comment": "group:advanced"
         },
         "maxAttempts": {
           "type": "integer",
           "title": "MaxAttempts",
           "description": "Maximum number of validation attempts.",
-          "default": "60",
+          "default": 60,
           "$comment": "group:advanced"
         },
         "printLogs": {
@@ -687,7 +687,7 @@
           "type": "boolean",
           "title": "StopOnErrorStatus",
           "description": "When enabled the validation attempts stop when error state is reported.",
-          "default": "true",
+          "default": true,
           "$comment": "group:advanced"
         },
         "tail": {
@@ -821,7 +821,7 @@
           "type": "boolean",
           "title": "AutoRemove",
           "description": "When enabled the Camel integration is automatically stopped after the test.",
-          "default": "true",
+          "default": true,
           "$comment": "group:advanced"
         },
         "commands": {
@@ -838,7 +838,7 @@
           "type": "boolean",
           "title": "DumpIntegrationOutput",
           "description": "When enabled the integration output is saved to a log file.",
-          "default": "false",
+          "default": false,
           "$comment": "group:advanced"
         },
         "integration": {
@@ -963,7 +963,7 @@
           "type": "boolean",
           "title": "WaitForRunningState",
           "description": "Wait for the integration to report running state.",
-          "default": "true",
+          "default": true,
           "$comment": "group:advanced"
         },
         "workDir": {
@@ -1070,8 +1070,7 @@
           "type": "boolean",
           "title": "AutoRemove",
           "description": "When enabled the Camel integration is automatically removed from Kubernetes after the test.",
-          "default": "true"
-        },
+          "default": true        },
         "buildProperties": {
           "title": "BuildProperties",
           "description": "List of build properties passed to the Camel JBang project build.",
@@ -1156,14 +1155,14 @@
           "type": "boolean",
           "title": "Verbose",
           "description": "When enabled the Camel JBang command print verbose log messages.",
-          "default": "false",
+          "default": false,
           "$comment": "group:advanced"
         },
         "waitForRunningState": {
           "type": "boolean",
           "title": "WaitForRunningState",
           "description": "When enabled the test waits for the Camel integration Kubernetes deployment to report proper running state.",
-          "default": "true",
+          "default": true,
           "$comment": "group:advanced"
         }
       },
@@ -1196,7 +1195,7 @@
           "type": "integer",
           "title": "DelayBetweenAttempts",
           "description": "The delay in milliseconds to wait between validation attempts.",
-          "default": "1000",
+          "default": 1000,
           "$comment": "group:advanced"
         },
         "integration": {
@@ -1218,7 +1217,7 @@
           "type": "integer",
           "title": "MaxAttempts",
           "description": "Maximum number of validation attempts.",
-          "default": "60",
+          "default": 60,
           "$comment": "group:advanced"
         },
         "namespace": {
@@ -1275,7 +1274,7 @@
           "type": "boolean",
           "title": "AutoRemove",
           "description": "When enabled the Camel plugin is automatically removed after the test.",
-          "default": "false",
+          "default": false,
           "$comment": "group:advanced"
         },
         "name": {
@@ -1338,14 +1337,14 @@
           "type": "boolean",
           "title": "AutoRemove",
           "description": "When enabled the Camel integration is automatically stopped after the test.",
-          "default": "true",
+          "default": true,
           "$comment": "group:advanced"
         },
         "dumpIntegrationOutput": {
           "type": "boolean",
           "title": "DumpIntegrationOutput",
           "description": "When enabled the integration output is saved to a log file.",
-          "default": "false",
+          "default": false,
           "$comment": "group:advanced"
         },
         "integration": {
@@ -1481,7 +1480,7 @@
           "type": "boolean",
           "title": "WaitForRunningState",
           "description": "Wait for the integration to report running state.",
-          "default": "true",
+          "default": true,
           "$comment": "group:advanced"
         }
       },
@@ -1521,7 +1520,7 @@
           "type": "integer",
           "title": "DelayBetweenAttempts",
           "description": "The delay in milliseconds to wait between validation attempts.",
-          "default": "1000",
+          "default": 1000,
           "$comment": "group:advanced"
         },
         "integration": {
@@ -1538,7 +1537,7 @@
           "type": "integer",
           "title": "MaxAttempts",
           "description": "Maximum attempts to validate the integration.",
-          "default": "60",
+          "default": 60,
           "$comment": "group:advanced"
         },
         "phase": {
@@ -1558,7 +1557,7 @@
           "type": "boolean",
           "title": "StopOnErrorStatus",
           "description": "When enabled the validation attempts stop when error state is reported.",
-          "default": "true",
+          "default": true,
           "$comment": "group:advanced"
         }
       },
@@ -1944,7 +1943,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "The Http request timeout while waiting for a response",
-                                  "default": "5000"
+                                  "default": 5000
                                 }
                               },
                               "additionalProperties": false,
@@ -2235,7 +2234,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "Sets the server timeout while waiting for incoming requests.",
-                                  "default": "5000"
+                                  "default": 5000
                                 },
                                 "useDefaultFilters": {
                                   "type": "boolean",
@@ -2362,7 +2361,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "Sets the receive timeout when the client waits for response messages.",
-                                  "default": "5000"
+                                  "default": 5000
                                 },
                                 "webServiceTemplate": {
                                   "type": "string",
@@ -2540,7 +2539,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "Sets the server timeout while waiting for incoming requests.",
-                                  "default": "5000"
+                                  "default": 5000
                                 }
                               },
                               "additionalProperties": false,
@@ -2610,7 +2609,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "The Http request timeout while waiting for a response",
-                                  "default": "5000"
+                                  "default": 5000
                                 }
                               },
                               "additionalProperties": false,
@@ -2901,7 +2900,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "Sets the server timeout while waiting for incoming requests.",
-                                  "default": "5000"
+                                  "default": 5000
                                 },
                                 "useDefaultFilters": {
                                   "type": "boolean",
@@ -3144,7 +3143,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "The server timeout.",
-                                  "default": "5000"
+                                  "default": 5000
                                 }
                               },
                               "additionalProperties": false,
@@ -3359,7 +3358,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "The server timeout.",
-                                  "default": "5000"
+                                  "default": 5000
                                 },
                                 "user": {
                                   "type": "string",
@@ -3634,7 +3633,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "The server timeout.",
-                                  "default": "5000"
+                                  "default": 5000
                                 },
                                 "user": {
                                   "type": "string",
@@ -3887,7 +3886,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "The server timeout.",
-                                  "default": "5000"
+                                  "default": 5000
                                 },
                                 "user": {
                                   "type": "string",
@@ -4170,7 +4169,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "Sets the receive timeout when the consumer waits for messages to arrive.",
-                                  "default": "5000"
+                                  "default": 5000
                                 },
                                 "useObjectMessages": {
                                   "type": "boolean",
@@ -4964,7 +4963,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "Sets the receive timeout when waiting for messages.",
-                                  "default": "5000"
+                                  "default": 5000
                                 },
                                 "useObjectMessages": {
                                   "type": "boolean",
@@ -5035,7 +5034,7 @@
                                   "type": "integer",
                                   "title": "Timeout",
                                   "description": "Sets the receive timeout when waiting for messages.",
-                                  "default": "5000"
+                                  "default": 5000
                                 },
                                 "useObjectMessages": {
                                   "type": "boolean",
@@ -13338,8 +13337,7 @@
           "type": "boolean",
           "title": "SchemaValidation",
           "description": "Enables the schema validation.",
-          "default": "false"
-        },
+          "default": false        },
         "select": {
           "type": "string",
           "title": "Select",
@@ -13623,8 +13621,7 @@
           "type": "boolean",
           "title": "SchemaValidation",
           "description": "Enables the schema validation.",
-          "default": "false"
-        },
+          "default": false        },
         "select": {
           "type": "string",
           "title": "Select",
@@ -13807,7 +13804,7 @@
           "type": "boolean",
           "title": "SchemaValidation",
           "description": "Enables the schema validation.",
-          "default": "false",
+          "default": false,
           "$comment": "group:advanced"
         },
         "uri": {
@@ -13921,7 +13918,7 @@
           "type": "boolean",
           "title": "SchemaValidation",
           "description": "Enables the schema validation.",
-          "default": "false",
+          "default": false,
           "$comment": "group:advanced"
         },
         "status": {

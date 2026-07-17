@@ -339,7 +339,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         },
         "user": {
           "type": "string",
@@ -904,7 +904,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The Http request timeout while waiting for a response",
-          "default": "5000"
+          "default": 5000
         }
       },
       "additionalProperties": false    }
@@ -971,7 +971,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The Http request timeout while waiting for a response",
-          "default": "5000"
+          "default": 5000
         }
       },
       "additionalProperties": false    }
@@ -1025,7 +1025,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the receive timeout when waiting for messages.",
-          "default": "5000"
+          "default": 5000
         },
         "useObjectMessages": {
           "type": "boolean",
@@ -1204,7 +1204,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the server timeout while waiting for incoming requests.",
-          "default": "5000"
+          "default": 5000
         }
       },
       "additionalProperties": false    }
@@ -1270,7 +1270,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the receive timeout when waiting for messages.",
-          "default": "5000"
+          "default": 5000
         },
         "useObjectMessages": {
           "type": "boolean",
@@ -1396,7 +1396,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         },
         "user": {
           "type": "string",
@@ -1523,7 +1523,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         },
         "user": {
           "type": "string",
@@ -2257,7 +2257,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the receive timeout when the client waits for response messages.",
-          "default": "5000"
+          "default": 5000
         },
         "webServiceTemplate": {
           "type": "string",
@@ -2352,7 +2352,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the receive timeout when the consumer waits for messages to arrive.",
-          "default": "5000"
+          "default": 5000
         },
         "useObjectMessages": {
           "type": "boolean",
@@ -2842,7 +2842,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the server timeout while waiting for incoming requests.",
-          "default": "5000"
+          "default": 5000
         },
         "useDefaultFilters": {
           "type": "boolean",
@@ -3140,7 +3140,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "Sets the server timeout while waiting for incoming requests.",
-          "default": "5000"
+          "default": 5000
         },
         "useDefaultFilters": {
           "type": "boolean",
@@ -3257,7 +3257,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         }
       },
       "additionalProperties": false    }
@@ -3299,7 +3299,7 @@
           "type": "integer",
           "title": "Timeout",
           "description": "The server timeout.",
-          "default": "5000"
+          "default": 5000
         }
       },
       "additionalProperties": false    }
