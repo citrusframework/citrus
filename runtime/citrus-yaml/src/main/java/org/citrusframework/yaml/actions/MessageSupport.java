@@ -27,6 +27,7 @@ import org.citrusframework.message.MessageHeaderType;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.ScriptPayloadBuilder;
 import org.citrusframework.message.builder.MessageBuilderSupport;
+import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
@@ -116,6 +117,11 @@ public final class MessageSupport {
                     builder.message().header(FileUtils.getFileResource(header.resource.file));
                 }
             }
+        }
+
+        if (message.isHeaderIgnoreCase() != null &&
+                (builder.message() instanceof ReceiveMessageBuilderSupport<?, ?, ?> receiveMessageBuilderSupport)) {
+            receiveMessageBuilderSupport.headerNameIgnoreCase(message.isHeaderIgnoreCase());
         }
     }
 

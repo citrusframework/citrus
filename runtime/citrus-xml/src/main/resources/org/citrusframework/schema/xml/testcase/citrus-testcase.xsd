@@ -87,7 +87,7 @@
               </xs:complexType>
             </xs:element>
           </xs:sequence>
-          <xs:attribute name="ignore-case" type="xs:string"/>
+          <xs:attribute name="ignore-case" type="xs:boolean"/>
         </xs:complexType>
       </xs:element>
       <xs:element name="body" minOccurs="0">

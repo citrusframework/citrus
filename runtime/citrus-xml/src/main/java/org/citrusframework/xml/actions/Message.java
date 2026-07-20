@@ -135,7 +135,7 @@ public class Message {
         @XmlElement(name = "header")
         protected List<Headers.Header> headers;
         @XmlAttribute(name = "ignore-case")
-        protected String ignoreCase;
+        protected Boolean ignoreCase;
 
         public List<Headers.Header> getHeaders() {
             if (headers == null) {
@@ -144,11 +144,11 @@ public class Message {
             return this.headers;
         }
 
-        public String getIgnoreCase() {
+        public Boolean isIgnoreCase() {
             return ignoreCase;
         }
 
-        public void setIgnoreCase(String value) {
+        public void setIgnoreCase(Boolean value) {
             this.ignoreCase = value;
         }
 
