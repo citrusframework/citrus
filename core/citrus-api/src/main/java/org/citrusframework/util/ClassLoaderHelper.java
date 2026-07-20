@@ -121,6 +121,7 @@ public final class ClassLoaderHelper {
     /**
      * Instantiate a type by its name. Uses given class loader to instantiate.
      */
+    @SuppressWarnings("unchecked")
     public static <T> T instantiateType(String type, ClassLoader cl, Object... initargs) {
         try {
             return (T) instantiateType(Class.forName(type, true, cl), cl, initargs);
@@ -134,6 +135,7 @@ public final class ClassLoaderHelper {
     /**
      * Instantiate given type. Uses given class loader to instantiate.
      */
+    @SuppressWarnings("unchecked")
     public static <T> T instantiateType(Class<T> clazz, ClassLoader cl, Object... initargs) {
         try {
             if (initargs.length == 0) {

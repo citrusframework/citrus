@@ -46,7 +46,6 @@ public interface MessageConverter<I, O, C extends EndpointConfiguration> {
      * @param internalMessage
      * @param endpointConfiguration
      * @param context
-     * @return
      */
     void convertOutbound(O externalMessage, Message internalMessage, C endpointConfiguration, TestContext context);
 

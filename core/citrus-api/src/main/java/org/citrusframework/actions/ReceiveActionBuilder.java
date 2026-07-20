@@ -96,6 +96,7 @@ public interface ReceiveActionBuilder<T extends TestAction, M extends ReceiveMes
 
     B validators(String... validators);
 
+    @SuppressWarnings("unchecked")
     B validators(MessageValidator<? extends ValidationContext>... validators);
 
     B validators(List<MessageValidator<? extends ValidationContext>> validators);

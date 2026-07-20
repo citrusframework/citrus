@@ -41,5 +41,6 @@ public interface SoapFaultValidationContextBuilder<T extends ValidationContext, 
     /**
      * Add fault detail validation context.
      */
+    @SuppressWarnings("unchecked")
     B details(D... detailValidationContexts);
 }

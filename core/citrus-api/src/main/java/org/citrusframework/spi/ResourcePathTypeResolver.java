@@ -145,6 +145,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T resolve(String resourcePath, String property, Object... initargs) {
         String cacheKey = toCacheKey(resourcePath, property, "NO_KEY_PROPERTY");
 
@@ -157,6 +158,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Map<String, T> resolveAll(String path, String property, String keyProperty) {
         Map<String, String> typeLookup = typeCache.computeIfAbsent(
             toCacheKey(path, property, keyProperty),

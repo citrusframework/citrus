@@ -46,7 +46,6 @@ public abstract class AbstractMessageProcessor implements MessageProcessor, Mess
      * Subclasses may overwrite this method in order to modify payload and/or headers of the processed message.
      * @param message the message to process.
      * @param context the current test context.
-     * @return the processed message.
      */
     protected void processMessage(Message message, TestContext context) {
         // subclasses may implement processing logic

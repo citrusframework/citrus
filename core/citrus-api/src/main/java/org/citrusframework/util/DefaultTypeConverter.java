@@ -46,6 +46,7 @@ public class DefaultTypeConverter implements TypeConverter {
     public static DefaultTypeConverter INSTANCE = new DefaultTypeConverter();
 
     @Override
+    @SuppressWarnings("unchecked")
     public final <T> T convertIfNecessary(Object target, Class<T> type) {
         if (type.isInstance(target)) {
             return type.cast(target);
@@ -203,6 +204,7 @@ public class DefaultTypeConverter implements TypeConverter {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T convertStringToType(String value, Class<T> type) {
         if (type.isAssignableFrom(String.class)) {
             return (T) value;
@@ -237,6 +239,7 @@ public class DefaultTypeConverter implements TypeConverter {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     protected <T> T convertAfter(Object target, Class<T> type) {
         if (String.class.equals(type)) {
             if (InputStream.class.isAssignableFrom(target.getClass())) {

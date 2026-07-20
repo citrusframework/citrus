@@ -78,7 +78,7 @@ public abstract class TypeConversionUtils {
             if (context.getReferenceResolver() != null && context.getReferenceResolver().isResolvable(value)) {
                 Object bean = context.getReferenceResolver().resolve(value, type);
                 if (type.isAssignableFrom(bean.getClass())) {
-                    return (T) bean;
+                    return type.cast(bean);
                 }
             }
 

@@ -40,6 +40,7 @@ public interface MessageValidationContext extends ValidationContext, SchemaValid
         protected String schemaRepository;
         protected String schema;
 
+        @SuppressWarnings("unchecked")
         protected Builder() {
             this.self = (S) this;
         }

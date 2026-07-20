@@ -101,7 +101,7 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T variable(String name);
 
     /**
-     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html>bean language</a> which
+     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html">bean language</a> which
      * basically means the bean is invoked to determine the expression value.
      *
      * @param  ref the name (bean id) of the bean to lookup from the registry
@@ -110,7 +110,7 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T method(String ref);
 
     /**
-     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html>bean language</a> which
+     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html">bean language</a> which
      * basically means the bean is invoked to determine the expression value.
      *
      * @param  instance the existing instance of the bean
@@ -119,7 +119,7 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T method(Object instance);
 
     /**
-     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html>bean language</a> which
+     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html">bean language</a> which
      * basically means the bean is invoked to determine the expression value.
      * <p>
      * Will lookup in registry and if there is a single instance of the same type, then the existing bean is used,
@@ -131,7 +131,7 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T method(Class<?> beanType);
 
     /**
-     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html>bean language</a> which
+     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html">bean language</a> which
      * basically means the bean is invoked to determine the expression value.
      *
      * @param  ref    the name (bean id) of the bean to lookup from the registry
@@ -141,7 +141,7 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T method(String ref, String method);
 
     /**
-     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html>bean language</a> which
+     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html">bean language</a> which
      * basically means the bean is invoked to determine the expression value.
      *
      * @param  ref   the name (bean id) of the bean to lookup from the registry
@@ -151,7 +151,7 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T method(String ref, Object scope);
 
     /**
-     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html>bean language</a> which
+     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html">bean language</a> which
      * basically means the bean is invoked to determine the expression value.
      *
      * @param  ref    the name (bean id) of the bean to lookup from the registry
@@ -162,7 +162,7 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T method(String ref, String method, Object scope);
 
     /**
-     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html>bean language</a> which
+     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html">bean language</a> which
      * basically means the bean is invoked to determine the expression value.
      *
      * @param  instance the existing instance of the bean
@@ -172,7 +172,7 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T method(Object instance, String method);
 
     /**
-     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html>bean language</a> which
+     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html">bean language</a> which
      * basically means the bean is invoked to determine the expression value.
      * <p>
      * Will lookup in registry and if there is a single instance of the same type, then the existing bean is used,
@@ -185,7 +185,7 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T method(Class<?> beanType, String method);
 
     /**
-     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html>bean language</a> which
+     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html">bean language</a> which
      * basically means the bean is invoked to determine the expression value.
      * <p>
      * Will lookup in registry and if there is a single instance of the same type, then the existing bean is used,
@@ -198,7 +198,7 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T method(Class<?> beanType, Object scope);
 
     /**
-     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html>bean language</a> which
+     * Evaluates an expression using the <a href="http://camel.apache.org/bean-language.html">bean language</a> which
      * basically means the bean is invoked to determine the expression value.
      * <p>
      * Will lookup in registry and if there is a single instance of the same type, then the existing bean is used,
