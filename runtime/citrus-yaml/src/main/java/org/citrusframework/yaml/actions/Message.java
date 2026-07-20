@@ -27,7 +27,7 @@ import org.citrusframework.yaml.SchemaType;
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 
 public class Message {
-    protected String headerIgnoreCase;
+    protected Boolean headerIgnoreCase;
     protected List<Header> headers;
     protected Body body;
     protected List<Expression> expression;
@@ -38,12 +38,12 @@ public class Message {
     protected String name;
     protected String type;
 
-    public String getHeaderIgnoreCase() {
+    public Boolean isHeaderIgnoreCase() {
         return headerIgnoreCase;
     }
 
     @SchemaProperty(advanced = true, description = "When enabled the header case is not verified.")
-    public void setHeaderIgnoreCase(String value) {
+    public void setHeaderIgnoreCase(Boolean value) {
         this.headerIgnoreCase = value;
     }
 

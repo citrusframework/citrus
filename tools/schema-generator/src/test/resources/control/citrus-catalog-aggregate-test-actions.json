@@ -6332,7 +6332,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -6672,7 +6672,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -7012,7 +7012,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -7352,7 +7352,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -7692,7 +7692,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -8032,7 +8032,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -8372,7 +8372,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -8712,7 +8712,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -9186,7 +9186,7 @@
               }
             },
             "headerIgnoreCase": {
-              "type": "string",
+              "type": "boolean",
               "title": "HeaderIgnoreCase",
               "description": "When enabled the header case is not verified.",
               "$comment": "group:advanced"
@@ -9835,7 +9835,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -10175,7 +10175,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -10515,7 +10515,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -10855,7 +10855,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -11195,7 +11195,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -11535,7 +11535,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -11875,7 +11875,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -12215,7 +12215,7 @@
                       }
                     },
                     "headerIgnoreCase": {
-                      "type": "string",
+                      "type": "boolean",
                       "title": "HeaderIgnoreCase",
                       "description": "When enabled the header case is not verified.",
                       "$comment": "group:advanced"
@@ -12677,7 +12677,7 @@
               }
             },
             "headerIgnoreCase": {
-              "type": "string",
+              "type": "boolean",
               "title": "HeaderIgnoreCase",
               "description": "When enabled the header case is not verified.",
               "$comment": "group:advanced"
@@ -15549,7 +15549,7 @@
               }
             },
             "headerIgnoreCase": {
-              "type": "string",
+              "type": "boolean",
               "title": "HeaderIgnoreCase",
               "description": "When enabled the header case is not verified.",
               "$comment": "group:advanced"
@@ -17527,7 +17527,7 @@
               }
             },
             "headerIgnoreCase": {
-              "type": "string",
+              "type": "boolean",
               "title": "HeaderIgnoreCase",
               "description": "When enabled the header case is not verified.",
               "$comment": "group:advanced"
@@ -18405,7 +18405,7 @@
               }
             },
             "headerIgnoreCase": {
-              "type": "string",
+              "type": "boolean",
               "title": "HeaderIgnoreCase",
               "description": "When enabled the header case is not verified.",
               "$comment": "group:advanced"
@@ -18927,7 +18927,7 @@
               }
             },
             "headerIgnoreCase": {
-              "type": "string",
+              "type": "boolean",
               "title": "HeaderIgnoreCase",
               "description": "When enabled the header case is not verified.",
               "$comment": "group:advanced"
@@ -19620,7 +19620,7 @@
               "description": "The SOAP fault string."
             },
             "headerIgnoreCase": {
-              "type": "string",
+              "type": "boolean",
               "title": "HeaderIgnoreCase",
               "description": "When enabled the header case is not verified.",
               "$comment": "group:advanced"
@@ -20064,7 +20064,7 @@
               }
             },
             "headerIgnoreCase": {
-              "type": "string",
+              "type": "boolean",
               "title": "HeaderIgnoreCase",
               "description": "When enabled the header case is not verified.",
               "$comment": "group:advanced"
@@ -20508,7 +20508,7 @@
               }
             },
             "headerIgnoreCase": {
-              "type": "string",
+              "type": "boolean",
               "title": "HeaderIgnoreCase",
               "description": "When enabled the header case is not verified.",
               "$comment": "group:advanced"
