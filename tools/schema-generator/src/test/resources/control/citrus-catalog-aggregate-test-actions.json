@@ -6473,7 +6473,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -6813,7 +6813,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -7153,7 +7153,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -7493,7 +7493,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -7833,7 +7833,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -8173,7 +8173,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -8513,7 +8513,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -8853,7 +8853,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -9304,7 +9304,7 @@
             "type": {
               "type": "string",
               "title": "Type",
-              "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
               "$comment": "group:advanced"
             },
             "version": {
@@ -9976,7 +9976,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -10316,7 +10316,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -10656,7 +10656,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -10996,7 +10996,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -11336,7 +11336,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -11676,7 +11676,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -12016,7 +12016,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -12356,7 +12356,7 @@
                     "type": {
                       "type": "string",
                       "title": "Type",
-                      "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+                      "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
                       "$comment": "group:advanced"
                     },
                     "version": {
@@ -12795,7 +12795,7 @@
             "type": {
               "type": "string",
               "title": "Type",
-              "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
               "$comment": "group:advanced"
             },
             "version": {
@@ -15656,7 +15656,7 @@
             "type": {
               "type": "string",
               "title": "Type",
-              "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
               "$comment": "group:advanced"
             }
           },
@@ -17260,7 +17260,7 @@
             "type": {
               "type": "string",
               "title": "Type",
-              "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
               "$comment": "group:advanced"
             }
           },
@@ -17780,7 +17780,7 @@
             "type": {
               "type": "string",
               "title": "Type",
-              "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
               "$comment": "group:advanced"
             },
             "version": {
@@ -18297,7 +18297,7 @@
             "type": {
               "type": "string",
               "title": "Type",
-              "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
               "$comment": "group:advanced"
             },
             "version": {
@@ -18990,7 +18990,7 @@
             "type": {
               "type": "string",
               "title": "Type",
-              "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
               "$comment": "group:advanced"
             },
             "version": {
@@ -19439,7 +19439,7 @@
             "type": {
               "type": "string",
               "title": "Type",
-              "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
               "$comment": "group:advanced"
             },
             "version": {
@@ -19878,7 +19878,7 @@
             "type": {
               "type": "string",
               "title": "Type",
-              "description": "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
               "$comment": "group:advanced"
             },
             "version": {
