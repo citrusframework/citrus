@@ -44,11 +44,10 @@ import org.slf4j.LoggerFactory;
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
-
 /**
  * @since 2.7.5
  */
+@SuppressWarnings("deprecation")
 public class JUnitReporter extends AbstractTestReporter {
 
     private static final Logger logger = LoggerFactory.getLogger(JUnitReporter.class);
@@ -107,6 +106,7 @@ public class JUnitReporter extends AbstractTestReporter {
     /**
      * Create report file for test class.
      */
+    @SuppressWarnings("deprecation")
     private String createReportContent(String suiteName, List<TestResult> results, ReportTemplates templates) throws IOException {
         final StringBuilder reportDetails = new StringBuilder();
         Duration suiteDuration = Duration.ofSeconds(0);
@@ -114,7 +114,7 @@ public class JUnitReporter extends AbstractTestReporter {
         for (TestResult result: results) {
             Properties detailProps = new Properties();
             detailProps.put("test.class", result.getClassName());
-            detailProps.put("test.name", escapeXml(result.getTestName()));
+            detailProps.put("test.name", org.apache.commons.lang3.StringEscapeUtils.escapeXml(result.getTestName()));
             detailProps.put("test.duration", toFormattedTimeString(result.getDuration()));
 
             if (nonNull(result.getDuration())) {
@@ -125,7 +125,7 @@ public class JUnitReporter extends AbstractTestReporter {
                 detailProps.put("test.error.cause", Optional.ofNullable(result.getCause()).map(Object::getClass).map(Class::getName).orElseGet(() -> Objects.toString(result.getFailureType(), "")));
 
                 if (nonNull(result.getErrorMessage())) {
-                    String escapedErrorMessage = escapeXml(result.getErrorMessage());
+                    String escapedErrorMessage = org.apache.commons.lang3.StringEscapeUtils.escapeXml(result.getErrorMessage());
                     detailProps.put("test.error.msg", escapedErrorMessage);
                 }
 

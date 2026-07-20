@@ -100,6 +100,7 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private VariableExtractor.Builder<?, ?> lookupVariableExtractor(String type, TestContext context) {
         return VariableExtractor.lookup(type)
                 .orElseGet(() -> {

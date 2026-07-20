@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Validation matcher for verifying a date is within the specified range. The following check is made when performing
  * the validation: <br />
- * from-date >= date-to-validate <= to-date
+ * {@code from-date >= date-to-validate <= to-date}
  *
  * @since 2.5
  */

@@ -29,15 +29,15 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
  * <p>
  * Example usage:
  * <pre>
- * {@code @GitHubIssue(1234)
+ * &#64;GitHubIssue(1234)
  * public class MyTest {
  *     // Class implementation
  * }
  *
- * {@code @GitHubIssue(5678)
+ * &#64;GitHubIssue(5678)
  * public void testMethod() {
  *     // Method implementation
- * }}
+ * }
  * </pre>
  */
 @Retention(SOURCE)

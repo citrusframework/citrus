@@ -140,6 +140,7 @@ public class XmlMessageValidationContext extends DefaultMessageValidationContext
         protected Map<String, String> namespaces = new HashMap<>();
         protected final Map<String, String> controlNamespaces = new HashMap<>();
 
+        @SuppressWarnings("unchecked")
         protected XmlValidationContextBuilder() {
             this.self = (S) this;
         }

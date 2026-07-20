@@ -59,6 +59,7 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
      * @param <V>
      * @return
      */
+    @SuppressWarnings("unchecked")
     protected <V> V convertIfNecessary(String value, V originalValue, TestContext context) {
         if (originalValue == null) {
             return (V) context.replaceDynamicContentInString(value);

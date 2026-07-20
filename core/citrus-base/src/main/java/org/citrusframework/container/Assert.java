@@ -170,7 +170,7 @@ public class Assert extends AbstractActionContainer {
         @Override
         public Builder exception(String type) {
             try {
-                this.exception = (Class<? extends Throwable>) Class.forName(type, false, ClassLoaderHelper.getClassLoader());
+                this.exception = Class.forName(type, false, ClassLoaderHelper.getClassLoader()).asSubclass(Throwable.class);
             } catch (ClassNotFoundException e) {
                 throw new CitrusRuntimeException(format("Failed to instantiate exception class of type '%s'", type), e);
             }

@@ -155,7 +155,7 @@ public class StringUtils {
     }
 
     /**
-     * Normalizes the given text by replacing all whitespace characters (identified by {@link Character#isWhitespace) by a single space
+     * Normalizes the given text by replacing all whitespace characters (identified by {@link Character#isWhitespace(char)}) by a single space
      * and replacing windows style line endings with unix style line endings.
      */
     public static String normalizeWhitespace(String text, boolean normalizeWhitespace, boolean normalizeLineEndingsToUnix) {

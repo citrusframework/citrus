@@ -133,6 +133,8 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
             return this;
         }
 
+        @Deprecated
+        @SuppressWarnings("deprecation")
         @Override
         public Builder autoSleep(long autoSleepInMillis) {
             this.autoSleep = Duration.ofMillis(autoSleepInMillis);

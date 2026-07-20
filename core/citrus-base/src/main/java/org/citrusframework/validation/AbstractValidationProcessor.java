@@ -31,6 +31,7 @@ public abstract class AbstractValidationProcessor<T> implements ValidationProces
     /** Bean reference resolver injected before validation callback is called */
     protected ReferenceResolver referenceResolver;
 
+    @SuppressWarnings("unchecked")
     @Override
     public void validate(Message message, TestContext context) {
         validate((T) message.getPayload(), message.getHeaders(), context);

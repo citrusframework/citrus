@@ -50,6 +50,7 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
         openedMocks.close();
     }
 
+    @SuppressWarnings({"deprecation", "removal"})
     @Test
     public void buildWithLongApi() {
         var autoSleepMillis = 5L;
@@ -65,6 +66,7 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
                 );
     }
 
+    @SuppressWarnings("removal")
     @Test
     public void buildWithDurationApi() {
         var autoSleepMillis = 120_000L;

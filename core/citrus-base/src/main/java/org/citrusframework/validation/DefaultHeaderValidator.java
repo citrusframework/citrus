@@ -189,6 +189,7 @@ public class DefaultHeaderValidator implements HeaderValidator {
         return validated;
     }
 
+    @SuppressWarnings("unchecked")
     private static List<String> toList(Object value) {
         List<String> receivedValuesList;
         if (value == null) {
@@ -197,7 +198,6 @@ public class DefaultHeaderValidator implements HeaderValidator {
             receivedValuesList = new ArrayList<>();
             receivedValuesList.add(value.toString());
         } else {
-            //noinspection unchecked
             receivedValuesList = (List<String>) value;
         }
 

@@ -44,7 +44,7 @@ import static java.lang.String.format;
  *     <li>Exclude min: Whether to exclude the minimum value (optional, default: false).</li>
  *     <li>Exclude max: Whether to exclude the maximum value (optional, default: false).</li>
  *     <li>Multiple of: The generated number will be a multiple of this value (optional).</li>
- *     <li>Format pattern: The format pattern for the returned string (optional, default: null)</li
+ *     <li>Format pattern: The format pattern for the returned string (optional, default: null)</li>
  * </ol>
  * <p>
  */
