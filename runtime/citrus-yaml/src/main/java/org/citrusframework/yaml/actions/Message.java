@@ -140,7 +140,7 @@ public class Message {
     }
 
     @SchemaProperty(advanced = true,
-            description = "The message type. Gives the validator a hint which validatory are capable of performing proper message validation.")
+            description = "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.")
     public void setType(String value) {
         this.type = value;
     }
