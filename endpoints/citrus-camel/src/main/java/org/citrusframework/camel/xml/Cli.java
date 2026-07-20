@@ -1235,7 +1235,7 @@ public class Cli {
             @XmlAttribute(name = "since")
             protected String since;
             @XmlAttribute(name = "tail")
-            protected String tail;
+            protected int tail;
 
             @XmlAttribute(name = "max-attempts")
             private int maxAttempts = CamelSettings.getMaxAttempts();
@@ -1306,11 +1306,11 @@ public class Cli {
                 return since;
             }
 
-            public void setTail(String tail) {
+            public void setTail(int tail) {
                 this.tail = tail;
             }
 
-            public String getTail() {
+            public int getTail() {
                 return tail;
             }
 

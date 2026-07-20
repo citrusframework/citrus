@@ -53,7 +53,7 @@ public interface CamelCliCmdReceiveActionBuilder<T extends TestAction, B extends
 
     B since(String duration);
 
-    B tail(String numberOfMessages);
+    B tail(int numberOfMessages);
 
     B maxAttempts(int maxAttempts);
 

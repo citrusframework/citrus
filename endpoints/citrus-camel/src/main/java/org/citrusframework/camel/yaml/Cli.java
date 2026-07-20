@@ -804,9 +804,7 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
                 builder.since(receive.getSince());
             }
 
-            if (receive.getTail() != null) {
-                builder.tail(receive.getTail());
-            }
+            builder.tail(receive.getTail());
 
             builder.maxAttempts(receive.getMaxAttempts());
             builder.delayBetweenAttempts(receive.getDelayBetweenAttempts());
@@ -958,7 +956,7 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
 
             protected String grep;
             protected String since;
-            protected String tail;
+            protected int tail;
 
             protected int maxAttempts = CamelSettings.getMaxAttempts();
             protected long delayBetweenAttempts = CamelSettings.getDelayBetweenAttempts();
@@ -1041,12 +1039,12 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
                 this.since = since;
             }
 
-            public String getTail() {
+            public int getTail() {
                 return tail;
             }
 
             @SchemaProperty(advanced = true, description = "The number of messages from the end to show.", defaultValue = "0")
-            public void setTail(String tail) {
+            public void setTail(int tail) {
                 this.tail = tail;
             }
 
