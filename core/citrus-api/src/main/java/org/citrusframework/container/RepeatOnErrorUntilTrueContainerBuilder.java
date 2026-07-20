@@ -37,6 +37,7 @@ public interface RepeatOnErrorUntilTrueContainerBuilder<T extends TestActionCont
      * Sets the auto sleep time in between repeats in milliseconds.
      * @deprecated use {@link RepeatOnErrorUntilTrueContainerBuilder#autoSleep(Duration)} instead
      */
+    @Deprecated
     RepeatOnErrorUntilTrueContainerBuilder<T, B> autoSleep(long autoSleepInMillis);
 
     /**

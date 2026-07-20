@@ -104,6 +104,7 @@ public interface ReceiveMessageBuilderFactory<T extends TestAction, M extends Re
      * @param validators
      * @return The modified receive message action builder
      */
+    @SuppressWarnings("unchecked")
     M validators(MessageValidator<? extends ValidationContext>... validators);
 
     /**

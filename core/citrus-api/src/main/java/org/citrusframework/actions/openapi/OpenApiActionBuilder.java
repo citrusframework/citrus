@@ -35,6 +35,7 @@ public interface OpenApiActionBuilder<T extends TestAction, S extends Specificat
 
     OpenApiActionBuilder<T, S, B> specification(String specUrl);
 
+    @SuppressWarnings("unchecked")
     default OpenApiActionBuilder<T, S, B> specification(Object spec) {
         if (spec instanceof Specification) {
             return specification((S) spec);

@@ -60,7 +60,6 @@ public interface MessageProcessor extends MessageTransformer {
      * Process message with given test context. Processors can change the message payload and headers.
      * @param message the message to process.
      * @param context the current test context.
-     * @return the processed message.
      */
     void process(Message message, TestContext context);
 

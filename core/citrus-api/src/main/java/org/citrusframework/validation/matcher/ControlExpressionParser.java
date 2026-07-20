@@ -31,7 +31,7 @@ public interface ControlExpressionParser {
      * Some validation matchers can optionally contain one or more control values nested within a control expression.
      * Matchers implementing this interface should take care of extracting the individual control values from the
      * expression. <br />
-     * For example, the {@link org.citrusframework.validation.matcher.core.DateRangeValidationMatcher} expects
+     * For example, the {@code org.citrusframework.validation.matcher.core.DateRangeValidationMatcher} expects
      * between 2 to 3 control values (dateFrom, dateTo and optionally datePattern) to be provided. It's
      * ControlExpressionParser would be expected to parse the control expression, returning each individual control
      * value for each nested parameter found within the control expression.

@@ -77,7 +77,6 @@ public interface SchemaValidator<T extends SchemaValidationContext> {
      * @param message The message to be validated
      * @param context The test context of the current test execution
      * @param validationContext The context of the validation to be used for the validation
-     * @return A report holding the results of the validation
      */
     void validate(Message message, TestContext context, T validationContext);
 

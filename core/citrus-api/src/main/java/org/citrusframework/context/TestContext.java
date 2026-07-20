@@ -324,6 +324,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * @param list having optional variable entries.
      * @return the constructed list without variable entries.
      */
+    @SuppressWarnings("unchecked")
     public <T> List<T> resolveDynamicValuesInList(final List<T> list) {
         List<T> variableFreeList = new ArrayList<>(list.size());
 
@@ -343,6 +344,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * @param <V>
      * @return the original value or the value with the resolved dynamic content
      */
+    @SuppressWarnings("unchecked")
     private <V> V resolveDynamicContentIfRequired(V value) {
         final V adaptedValue;
         if (value instanceof String) {

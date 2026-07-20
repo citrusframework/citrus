@@ -50,7 +50,6 @@ public interface TestLoader {
 
     /**
      * Loads and creates new test case object.
-     * @return
      */
     void load();
 

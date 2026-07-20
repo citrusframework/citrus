@@ -41,6 +41,7 @@ public class TestListeners implements TestListenerAware {
      * @deprecated use on {@link #onTestExecutionEnd(TestCase)}
      */
     @Deprecated(forRemoval = true)
+    @SuppressWarnings("removal")
     public void onTestFinish(TestCase test) {
         for (TestListener listener : testListeners) {
             listener.onTestFinish(test);
