@@ -380,10 +380,10 @@
           "$comment": "group:advanced"
         },
         "tail": {
-          "type": "string",
+          "type": "integer",
           "title": "Tail",
           "description": "The number of messages from the end to show.",
-          "default": "0",
+          "default": 0,
           "$comment": "group:advanced"
         },
         "uri": {

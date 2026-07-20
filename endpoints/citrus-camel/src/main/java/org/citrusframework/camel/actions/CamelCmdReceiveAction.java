@@ -61,7 +61,7 @@ public class CamelCmdReceiveAction extends AbstractCamelCliAction {
     private final String since;
 
     /** The number of messages from the end to show */
-    private final String tail;
+    private final int tail;
 
     /** Should use Json output and verify */
     private final boolean jsonOutput;
@@ -126,10 +126,8 @@ public class CamelCmdReceiveAction extends AbstractCamelCliAction {
             commandArgs.add(since);
         }
 
-        if (StringUtils.hasText(tail)) {
-            commandArgs.add("--tail");
-            commandArgs.add(tail);
-        }
+        commandArgs.add("--tail");
+        commandArgs.add(String.valueOf(tail));
 
         if (jsonOutput) {
             commandArgs.add("--output=json");
@@ -238,7 +236,7 @@ public class CamelCmdReceiveAction extends AbstractCamelCliAction {
         private String endpointUri;
         private String grep;
         private String since;
-        private String tail = "0";
+        private int tail = 0;
         private boolean jsonOutput;
         private final List<String> args = new ArrayList<>();
 
@@ -310,7 +308,7 @@ public class CamelCmdReceiveAction extends AbstractCamelCliAction {
         }
 
         @Override
-        public Builder tail(String numberOfMessages) {
+        public Builder tail(int numberOfMessages) {
             this.tail = numberOfMessages;
             return this;
         }

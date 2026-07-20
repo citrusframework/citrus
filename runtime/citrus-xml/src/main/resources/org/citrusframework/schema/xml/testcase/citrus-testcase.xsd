@@ -2455,7 +2455,7 @@
                         <xs:attribute name="args" type="xs:string"/>
                         <xs:attribute name="grep" type="xs:string"/>
                         <xs:attribute name="since" type="xs:string"/>
-                        <xs:attribute name="tail" type="xs:string"/>
+                        <xs:attribute name="tail" type="xs:int"/>
                         <xs:attribute name="max-attempts" type="xs:int"/>
                         <xs:attribute name="delay-between-attempts" type="xs:int"/>
                         <xs:attribute name="print-logs" type="xs:boolean"/>
@@ -2901,7 +2901,7 @@
                         <xs:attribute name="args" type="xs:string"/>
                         <xs:attribute name="grep" type="xs:string"/>
                         <xs:attribute name="since" type="xs:string"/>
-                        <xs:attribute name="tail" type="xs:string"/>
+                        <xs:attribute name="tail" type="xs:int"/>
                         <xs:attribute name="max-attempts" type="xs:int"/>
                         <xs:attribute name="delay-between-attempts" type="xs:int"/>
                         <xs:attribute name="print-logs" type="xs:boolean"/>

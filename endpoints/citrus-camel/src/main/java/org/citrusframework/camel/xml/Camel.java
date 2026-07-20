@@ -405,9 +405,7 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                     builder.since(cli.getCmd().getReceive().getSince());
                 }
 
-                if (cli.getCmd().getReceive().getTail() != null) {
-                    builder.tail(cli.getCmd().getReceive().getTail());
-                }
+                builder.tail(cli.getCmd().getReceive().getTail());
 
                 builder.maxAttempts(cli.getCmd().getReceive().getMaxAttempts());
                 builder.delayBetweenAttempts(cli.getCmd().getReceive().getDelayBetweenAttempts());
