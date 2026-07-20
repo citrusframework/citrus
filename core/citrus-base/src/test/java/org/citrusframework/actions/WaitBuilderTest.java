@@ -32,11 +32,11 @@ import static org.testng.Assert.assertEquals;
 
 public class WaitBuilderTest {
 
-    private Wait.Builder waitBuilder;
+    private Wait.Builder<Condition> waitBuilder;
 
     @BeforeMethod
     public void setup(){
-        waitBuilder = new Wait.Builder();
+        waitBuilder = new Wait.Builder<>();
     }
 
     @Test
@@ -124,7 +124,7 @@ public class WaitBuilderTest {
         double seconds = 42.0;
 
         //WHEN
-        final Wait.Builder builder = waitBuilder.seconds(seconds);
+        final Wait.Builder<Condition> builder = waitBuilder.seconds(seconds);
 
         //THEN
         assertEquals(builder.build().getTime(), "42000");
@@ -137,7 +137,7 @@ public class WaitBuilderTest {
         long seconds = 42L;
 
         //WHEN
-        final Wait.Builder builder = waitBuilder.seconds(seconds);
+        final Wait.Builder<Condition> builder = waitBuilder.seconds(seconds);
 
         //THEN
         assertEquals(builder.build().getTime(), "42000");
@@ -150,7 +150,7 @@ public class WaitBuilderTest {
         long milliseconds = 400L;
 
         //WHEN
-        final Wait.Builder builder = waitBuilder.milliseconds(milliseconds);
+        final Wait.Builder<Condition> builder = waitBuilder.milliseconds(milliseconds);
 
         //THEN
         assertEquals(builder.build().getTime(), "400");
@@ -163,7 +163,7 @@ public class WaitBuilderTest {
         long interval = 100L;
 
         //WHEN
-        final Wait.Builder builder = waitBuilder.interval(interval);
+        final Wait.Builder<Condition> builder = waitBuilder.interval(interval);
 
         //THEN
         assertEquals(builder.build().getInterval(), "100");

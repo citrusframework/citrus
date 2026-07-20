@@ -29,6 +29,7 @@ import org.citrusframework.validation.Validations;
 import org.citrusframework.variable.DefaultVariableExtractors;
 import org.citrusframework.variable.VariableExtractors;
 
+@SuppressWarnings("unchecked")
 public class DefaultTestCaseRunner implements TestCaseRunner {
 
     /** The test case */
@@ -176,7 +177,6 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public ApplyTestBehaviorAction.Builder applyBehavior(TestBehavior behavior) {
         return new ApplyTestBehaviorAction.Builder()
                 .behavior(behavior)

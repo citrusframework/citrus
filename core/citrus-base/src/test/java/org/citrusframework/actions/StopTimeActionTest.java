@@ -33,7 +33,7 @@ public class StopTimeActionTest extends UnitTestSupport {
 		stopTime.execute(context);
         Assert.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID));
         Assert.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX));
-		Assert.assertEquals(context.getVariable(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX, Long.class), new Long(0L));
+		Assert.assertEquals(context.getVariable(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX, Long.class), 0L);
 		Thread.sleep(100L);
 		stopTime.execute(context);
         Assert.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID));
@@ -59,7 +59,7 @@ public class StopTimeActionTest extends UnitTestSupport {
         stopTime.execute(context);
         Assert.assertTrue(context.getVariables().containsKey("stopMe"));
         Assert.assertTrue(context.getVariables().containsKey("stopMe_time"));
-        Assert.assertEquals(context.getVariable("stopMe_time", Long.class), new Long(0L));
+        Assert.assertEquals(context.getVariable("stopMe_time", Long.class), 0L);
 
         Thread.sleep(100L);
         stopTime.execute(context);
@@ -92,7 +92,7 @@ public class StopTimeActionTest extends UnitTestSupport {
         Assert.assertTrue(context.getVariables().containsKey("stopThem_VALUE"));
         Assert.assertFalse(context.getVariables().containsKey("stopUs"));
         Assert.assertFalse(context.getVariables().containsKey("stopUs_VALUE"));
-        Assert.assertEquals(context.getVariable("stopThem_VALUE", Long.class), new Long(0L));
+        Assert.assertEquals(context.getVariable("stopThem_VALUE", Long.class), 0L);
 
         Thread.sleep(100L);
         stopTime2.execute(context);
@@ -100,8 +100,8 @@ public class StopTimeActionTest extends UnitTestSupport {
         Assert.assertTrue(context.getVariables().containsKey("stopThem_VALUE"));
         Assert.assertTrue(context.getVariables().containsKey("stopUs"));
         Assert.assertTrue(context.getVariables().containsKey("stopUs_VALUE"));
-        Assert.assertEquals(context.getVariable("stopThem_VALUE", Long.class), new Long(0L));
-        Assert.assertEquals(context.getVariable("stopUs_VALUE", Long.class), new Long(0L));
+        Assert.assertEquals(context.getVariable("stopThem_VALUE", Long.class), 0L);
+        Assert.assertEquals(context.getVariable("stopUs_VALUE", Long.class), 0L);
         Thread.sleep(100L);
         stopTime1.execute(context);
         stopTime2.execute(context);

@@ -28,6 +28,7 @@ public abstract class AbstractServerBuilder<T extends AbstractServer, B extends 
 
     private String endpointAdapter;
 
+    @SuppressWarnings("unchecked")
     protected AbstractServerBuilder() {
         this.self = (B) this;
     }

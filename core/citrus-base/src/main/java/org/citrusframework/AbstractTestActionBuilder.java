@@ -25,6 +25,7 @@ public abstract class AbstractTestActionBuilder<T extends TestAction, S extends 
     private String description;
     private TestActor actor;
 
+    @SuppressWarnings("unchecked")
     protected AbstractTestActionBuilder() {
         self = (S) this;
     }

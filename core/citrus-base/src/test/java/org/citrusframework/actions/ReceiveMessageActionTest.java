@@ -94,6 +94,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.expectThrows;
 
+@SuppressWarnings("unchecked")
 @Listeners(SystemStubsListener.class)
 public class ReceiveMessageActionTest extends UnitTestSupport {
 

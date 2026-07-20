@@ -37,6 +37,7 @@ public abstract class WaitConditionBuilder<T extends Condition, S extends WaitCo
      * Default constructor using fields.
      * @param builder
      */
+    @SuppressWarnings("unchecked")
     public WaitConditionBuilder(Wait.Builder<T> builder) {
         this.builder = builder;
         this.self = (S) this;

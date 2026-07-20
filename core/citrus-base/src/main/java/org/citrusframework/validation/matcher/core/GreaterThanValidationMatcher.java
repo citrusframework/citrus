@@ -22,7 +22,7 @@ import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.validation.matcher.parameter.NumberParameter;
 
 /**
- * ValidationMatcher based on double < double.
+ * ValidationMatcher based on {@code double < double}.
  */
 public class GreaterThanValidationMatcher implements ParameterizedValidationMatcher<NumberParameter> {
 

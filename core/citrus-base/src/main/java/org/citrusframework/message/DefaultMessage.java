@@ -54,7 +54,7 @@ public class DefaultMessage implements Message {
     /** The message name for internal use */
     private String name;
 
-    /** Type of the message indicates the content type - also see {@link MessageType) */
+    /** Type of the message indicates the content type - also see {@link MessageType} */
     private String type;
 
     /**

@@ -107,7 +107,7 @@ public abstract class ValidationUtils {
                     String expectedValueString = expectedValue.toString();
                     String actualValueString;
                     if (List.class.isAssignableFrom(actualValue.getClass())) {
-                        actualValueString = String.join(",", ((List) actualValue).stream().map(Object::toString).toList());
+                        actualValueString = String.join(",", ((List<?>) actualValue).stream().map(Object::toString).toList());
                         expectedValueString = expectedValueString.replaceAll("^\\[", "").replaceAll("\\]$", "").replaceAll(",\\s", ",");
                     } else {
                         actualValueString = actualValue.toString();

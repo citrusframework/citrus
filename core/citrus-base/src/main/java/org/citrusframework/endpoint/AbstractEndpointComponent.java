@@ -42,7 +42,7 @@ import org.citrusframework.util.TypeConversionUtils;
  * Default endpoint component reads component name from endpoint uri and parses parameters from uri using
  * the HTTP uri pattern.
  * <p>
- * http://localhost:8080?param1=value1&param2=value2&param3=value3
+ * {@code http://localhost:8080?param1=value1&param2=value2&param3=value3}
  * jms:queue.name?connectionFactory=specialConnectionFactory
  * soap:localhost:8080?soapAction=sayHello
  *

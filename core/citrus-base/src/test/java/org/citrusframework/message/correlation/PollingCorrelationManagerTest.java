@@ -27,7 +27,8 @@ import static org.testng.Assert.assertNull;
 
 public class PollingCorrelationManagerTest {
 
-    private ObjectStore objectStore = Mockito.mock(ObjectStore.class);
+    @SuppressWarnings("unchecked")
+    private ObjectStore<String> objectStore = Mockito.mock(ObjectStore.class);
 
     @Test
     public void testFind() {
@@ -55,6 +56,7 @@ public class PollingCorrelationManagerTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testFindWithRetry() {
         DirectSyncEndpointConfiguration pollableEndpointConfiguration = new DirectSyncEndpointConfiguration();
@@ -70,6 +72,7 @@ public class PollingCorrelationManagerTest {
 
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testNotFindWithRetry() {
         DirectSyncEndpointConfiguration pollableEndpointConfiguration = new DirectSyncEndpointConfiguration();

@@ -78,7 +78,7 @@ public class DigestAuthHeaderFunction implements ParameterizedFunction<DigestAut
         if (algorithm.equals("md5")) {
             return DigestUtils.md5Hex(key);
         } else if (algorithm.equals("sha")) {
-            return DigestUtils.shaHex(key);
+            return DigestUtils.sha1Hex(key);
         }
 
         throw new CitrusRuntimeException("Unsupported digest algorithm: " + algorithm);

@@ -85,6 +85,7 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private MessageProcessor.Builder<?, ?> lookupMessageProcessor(String type, TestContext context) {
         return MessageProcessor.lookup(type)
                 .orElseGet(() -> {

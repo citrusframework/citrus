@@ -260,11 +260,7 @@ public abstract class CitrusAnnotations {
         Arrays.stream(configClass.getDeclaredFields())
                 .filter(f -> f.getAnnotation(BindToRegistry.class) != null)
                 .peek(f -> {
-                    if ((!Modifier.isPublic(f.getModifiers()) ||
-                            !Modifier.isPublic(f.getDeclaringClass().getModifiers()) ||
-                            Modifier.isFinal(f.getModifiers())) && !f.isAccessible()) {
-                        f.setAccessible(true);
-                    }
+                    f.setAccessible(true);
                 })
                 .forEach(f -> {
                     try {

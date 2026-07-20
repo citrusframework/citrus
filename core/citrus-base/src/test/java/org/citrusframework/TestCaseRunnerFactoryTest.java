@@ -25,6 +25,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+@SuppressWarnings("unchecked")
 public class TestCaseRunnerFactoryTest {
 
     @Test

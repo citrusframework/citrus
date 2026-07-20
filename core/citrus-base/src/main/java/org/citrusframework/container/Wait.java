@@ -147,6 +147,7 @@ public class Wait extends AbstractTestAction {
     /**
      * Action builder.
      */
+    @SuppressWarnings("unchecked")
     public static class Builder<C extends Condition> extends AbstractTestActionBuilder<Wait, Builder<C>>
             implements TestActionBuilder.DelegatingTestActionBuilder<Wait>, WaitContainerBuilder<Wait, Builder<C>, C> {
 

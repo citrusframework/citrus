@@ -20,8 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.StringFunction;
 import org.citrusframework.functions.parameter.StringParameter;
 
-import static org.apache.commons.lang3.StringEscapeUtils.escapeJson;
-
 /**
  * This function takes a JSON string as input and escapes all double quotes within it.
  *
@@ -31,11 +29,12 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeJson;
  * <p>Example input: <code>"{\"mySuperJson\": \"valium\"}"</code></p>
  * <p>Example output: <code>"{\\\"mySuperJson\\\": \\\"valium\\\"}"</code></p>
  */
+@SuppressWarnings("deprecation")
 public class EscapeJsonFunction implements StringFunction {
 
     @Override
     public String execute(String param, TestContext testContext) {
-        return escapeJson(param);
+        return org.apache.commons.lang3.StringEscapeUtils.escapeJson(param);
     }
 
     @Override

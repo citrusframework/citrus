@@ -148,7 +148,7 @@ public class WaitTest {
     }
 
     private Wait getWaitAction(String waitTimeSeconds, String interval) {
-        return new Wait.Builder()
+        return new Wait.Builder<>()
                 .condition(conditionMock)
                 .interval(interval)
                 .seconds(Long.parseLong(waitTimeSeconds))

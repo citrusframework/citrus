@@ -132,9 +132,9 @@ public class DefaultMessageBuilderTest extends UnitTestSupport {
         assertNotNull(resultingMessage.getHeader("boolValue"));
         assertEquals(resultingMessage.getHeader("boolValue"), Boolean.TRUE);
         assertNotNull(resultingMessage.getHeader("shortValue"));
-        assertEquals(resultingMessage.getHeader("shortValue"), new Short("5"));
+        assertEquals(resultingMessage.getHeader("shortValue"), Short.valueOf("5"));
         assertNotNull(resultingMessage.getHeader("byteValue"));
-        assertEquals(resultingMessage.getHeader("byteValue"), new Byte("1"));
+        assertEquals(resultingMessage.getHeader("byteValue"), Byte.valueOf("1"));
         assertNotNull(resultingMessage.getHeader("stringValue"));
         assertEquals(resultingMessage.getHeader("stringValue"), "5.0");
     }

@@ -163,7 +163,9 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
 
         try {
             List<Source> schemaSources = new ArrayList<>();
-            XMLReader xmlReader = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
+            javax.xml.parsers.SAXParserFactory spf = javax.xml.parsers.SAXParserFactory.newInstance();
+            spf.setNamespaceAware(true);
+            XMLReader xmlReader = spf.newSAXParser().getXMLReader();
             xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
             for (Resource resource : schemas) {
                 if (resource == null || !resource.exists()) {
@@ -177,7 +179,7 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
             }
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             return schemaFactory.newSchema(schemaSources.toArray(new Source[0]));
-        } catch (SAXException e) {
+        } catch (SAXException | javax.xml.parsers.ParserConfigurationException e) {
             throw new CitrusRuntimeException("Failed to load schemas for marshaller", e);
         }
     }

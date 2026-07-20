@@ -53,6 +53,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
     /** Endpoint cache for endpoint reuse */
     private final Map<String, Endpoint> endpointCache = new ConcurrentHashMap<>();
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Endpoint create(String endpointName, Annotation endpointConfig, TestContext context) {
         String qualifier = endpointConfig.annotationType().getAnnotation(CitrusEndpointConfig.class).qualifier();
@@ -65,6 +66,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
         return endpoint;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Endpoint create(String endpointName, CitrusEndpoint endpointConfig, Class<?> endpointType, TestContext context) {
         EndpointBuilder<?> builder = context.getReferenceResolver().resolveAll(EndpointBuilder.class)

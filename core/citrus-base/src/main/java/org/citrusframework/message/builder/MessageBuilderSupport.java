@@ -73,6 +73,7 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
     protected DataDictionary<?> dataDictionary;
     protected String dataDictionaryName;
 
+    @SuppressWarnings("unchecked")
     protected MessageBuilderSupport(B delegate) {
         this.self = (S) this;
         this.delegate = delegate;

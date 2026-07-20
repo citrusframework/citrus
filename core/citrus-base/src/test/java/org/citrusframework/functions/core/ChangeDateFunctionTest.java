@@ -202,7 +202,7 @@ public class ChangeDateFunctionTest extends UnitTestSupport {
 
 	@Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        fixture.execute(Collections.EMPTY_LIST, context);
+        fixture.execute(Collections.emptyList(), context);
     }
 
     private Calendar getAndInsertMockCalendar() {
