@@ -49,6 +49,7 @@ public record RestDocSoapClientInterceptor(
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
         Map<String, Object> configuration;
 

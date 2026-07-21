@@ -83,6 +83,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
     private final JsonPathMappingDataDictionary outboundDataDictionary = new JsonPathMappingDataDictionary();
 
     @Override
+    @SuppressWarnings("deprecation")
     public void create() {
         Swagger swagger;
         try {
@@ -499,6 +500,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
      * @param parameter
      * @return
      */
+    @SuppressWarnings("unchecked")
     private String createValidationExpression(AbstractSerializableParameter parameter) {
         switch (parameter.getType()) {
             case "integer":
@@ -528,6 +530,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
      * @param parameter
      * @return
      */
+    @SuppressWarnings("unchecked")
     private String createRandomValueExpression(AbstractSerializableParameter parameter) {
         switch (parameter.getType()) {
             case "integer":

@@ -37,6 +37,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("unchecked")
 public class CreateDocsMojoTest {
 
     private Prompter prompter = Mockito.mock(Prompter.class);

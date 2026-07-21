@@ -103,6 +103,7 @@ public class RestDocSoapClientInterceptorTest {
         assertExpectedSnippetFilesExist("soap-markdown", "http-request.md", "http-response.md", "curl-request.md");
     }
 
+    @SuppressWarnings("unchecked")
     private void prepareExecution(String uri, final String requestBody, final String responseBody, String identifier, Snippet... snippets) throws IOException, URISyntaxException {
         when(transportContext.getConnection()).thenReturn(connection);
         when(connection.getUri()).thenReturn(URI.create(uri));

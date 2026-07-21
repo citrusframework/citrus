@@ -32,6 +32,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("unchecked")
 public class CreateTestMojoTest {
 
     private Prompter prompter = Mockito.mock(Prompter.class);

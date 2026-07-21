@@ -32,6 +32,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -122,7 +125,9 @@ public class XmlTestMarshaller {
         }
 
         try {
-            XMLReader xmlReader = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            spf.setNamespaceAware(true);
+            XMLReader xmlReader = spf.newSAXParser().getXMLReader();
             xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 
             if (resource == null || !resource.exists()) {
@@ -134,7 +139,7 @@ public class XmlTestMarshaller {
 
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             return schemaFactory.newSchema(schemaSource);
-        } catch (SAXException e) {
+        } catch (SAXException | ParserConfigurationException e) {
             throw new CitrusRuntimeException("Failed to load schema for marshaller", e);
         }
     }

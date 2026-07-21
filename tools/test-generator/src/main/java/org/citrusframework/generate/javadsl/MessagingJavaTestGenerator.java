@@ -84,6 +84,7 @@ public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator<T>>
         return message;
     }
 
+    @SuppressWarnings("unchecked")
     protected <M extends Message> CodeProvider<M> getSendRequestCodeProvider(M message) {
         if (message instanceof HttpMessage) {
             return (CodeProvider<M>) new SendHttpRequestCodeProvider();
@@ -94,6 +95,7 @@ public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator<T>>
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected <M extends Message> CodeProvider<M> getReceiveResponseCodeProvider(M message) {
         if (message instanceof HttpMessage) {
             return (CodeProvider<M>) new ReceiveHttpResponseCodeProvider();
@@ -104,6 +106,7 @@ public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator<T>>
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected <M extends Message> CodeProvider<M> getSendResponseCodeProvider(M message) {
         if (message instanceof HttpMessage) {
             return (CodeProvider<M>) new SendHttpResponseCodeProvider();
@@ -114,6 +117,7 @@ public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator<T>>
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected <M extends Message> CodeProvider<M> getReceiveRequestCodeProvider(M message) {
         if (message instanceof HttpMessage) {
             return (CodeProvider<M>) new ReceiveHttpRequestCodeProvider();

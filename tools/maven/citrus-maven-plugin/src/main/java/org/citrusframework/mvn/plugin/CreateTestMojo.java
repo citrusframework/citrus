@@ -55,6 +55,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
     @Parameter(property = "citrus.skip.create.test", defaultValue = "false")
     protected boolean skipCreateTest;
 
+    @SuppressWarnings("deprecation")
     @Component
     private Prompter prompter;
 

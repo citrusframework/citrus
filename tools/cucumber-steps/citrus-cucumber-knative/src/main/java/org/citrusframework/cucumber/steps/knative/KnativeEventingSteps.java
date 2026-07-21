@@ -93,6 +93,7 @@ public class KnativeEventingSteps {
     }
 
     @Given("^Knative broker ([^\\s]+) is running$")
+    @SuppressWarnings("deprecation")
     public void verifyBrokerIsRunning(String brokerName) {
         runner.then(repeatOnError()
             .autoSleep(500)

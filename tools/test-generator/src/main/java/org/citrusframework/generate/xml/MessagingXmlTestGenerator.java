@@ -87,6 +87,7 @@ public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator<T>> e
         return message;
     }
 
+    @SuppressWarnings("unchecked")
     protected <T, M extends Message> MessageActionProvider<T, M> getSendRequestActionProvider(M message) {
         if (message instanceof HttpMessage) {
             return (MessageActionProvider<T, M>) new SendHttpRequestActionProvider();
@@ -97,6 +98,7 @@ public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator<T>> e
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected <T, M extends Message> MessageActionProvider<T, M> getReceiveResponseActionProvider(M message) {
         if (message instanceof HttpMessage) {
             return (MessageActionProvider<T, M>) new ReceiveHttpResponseActionProvider();
@@ -107,6 +109,7 @@ public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator<T>> e
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected <T, M extends Message> MessageActionProvider<T, M> getSendResponseActionProvider(M message) {
         if (message instanceof HttpMessage) {
             return (MessageActionProvider<T, M>) new SendHttpResponseActionProvider();
@@ -117,6 +120,7 @@ public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator<T>> e
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected <T, M extends Message> MessageActionProvider<T, M> getReceiveRequestActionProvider(M message) {
         if (message instanceof HttpMessage) {
             return (MessageActionProvider<T, M>) new ReceiveHttpRequestActionProvider();

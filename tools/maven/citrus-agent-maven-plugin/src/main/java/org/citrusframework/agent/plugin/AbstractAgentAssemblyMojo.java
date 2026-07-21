@@ -51,15 +51,19 @@ public abstract class AbstractAgentAssemblyMojo extends AbstractAgentMojo {
     @Parameter
     protected TestJarConfiguration testJar;
 
+    @SuppressWarnings("deprecation")
     @Component
     private AssemblyArchiver assemblyArchiver;
 
+    @SuppressWarnings("deprecation")
     @Component
     private AssemblyReader assemblyReader;
 
+    @SuppressWarnings("deprecation")
     @Component
     private MavenReaderFilter readerFilter;
 
+    @SuppressWarnings("deprecation")
     @Component
     protected MavenProjectHelper projectHelper;
 

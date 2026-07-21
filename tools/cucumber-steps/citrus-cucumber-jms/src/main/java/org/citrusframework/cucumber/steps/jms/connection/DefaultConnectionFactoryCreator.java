@@ -33,6 +33,7 @@ import org.citrusframework.util.ObjectHelper;
  */
 public class DefaultConnectionFactoryCreator implements ConnectionFactoryCreator {
 
+    @SuppressWarnings("unchecked")
     @Override
     public ConnectionFactory create(Map<String, String> properties) {
         String className = properties.remove("type");

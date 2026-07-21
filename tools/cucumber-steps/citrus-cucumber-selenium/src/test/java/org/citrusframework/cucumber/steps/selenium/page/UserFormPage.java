@@ -25,6 +25,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.springframework.util.StringUtils;
 
+@SuppressWarnings("deprecation")
 public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
 
     @FindBy(id = "userForm")

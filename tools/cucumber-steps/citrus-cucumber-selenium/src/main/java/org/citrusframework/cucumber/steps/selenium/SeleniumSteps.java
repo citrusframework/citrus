@@ -42,6 +42,7 @@ import org.citrusframework.variable.VariableUtils;
 
 import static org.citrusframework.selenium.actions.SeleniumActionBuilder.selenium;
 
+@SuppressWarnings("deprecation")
 public class SeleniumSteps {
 
     @CitrusResource

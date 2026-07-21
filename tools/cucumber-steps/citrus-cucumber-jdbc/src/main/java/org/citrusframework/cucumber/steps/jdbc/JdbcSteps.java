@@ -126,6 +126,7 @@ public class JdbcSteps {
         statements.asList().forEach(this::addQueryStatement);
     }
 
+    @SuppressWarnings("deprecation")
     @Then("^verify column ([^\"\\s]+)=(.+)$")
     public void verifyColumn(String name, String value) {
         if (maxRetryAttempts > 0) {
@@ -143,6 +144,7 @@ public class JdbcSteps {
         sqlQueryStatements.clear();
     }
 
+    @SuppressWarnings("deprecation")
     @Then("^verify columns$")
     public void verifyResultSet(DataTable expectedResults) {
         ExecuteSQLQueryAction.Builder action = query(dataSource)
@@ -168,6 +170,7 @@ public class JdbcSteps {
         sqlQueryStatements.clear();
     }
 
+    @SuppressWarnings("deprecation")
     @Then("^verify result set$")
     public void verifyResultSet(String verifyScript) {
         if (maxRetryAttempts > 0) {
