@@ -84,6 +84,7 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport implements 
         MockitoAnnotations.openMocks(this);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testKubernetesBuilder() throws Exception {
         Watch watch = Mockito.mock(Watch.class);

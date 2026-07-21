@@ -38,6 +38,7 @@ public abstract class AbstractClientCommand<T extends HasMetadata, O, L extends 
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public final void execute(KubernetesClient kubernetesClient, TestContext context) {
         MixedOperation<T, L, R> operation = operation(kubernetesClient, context);
 

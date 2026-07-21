@@ -104,6 +104,7 @@ public final class KnativeSupport {
      * Get secure http client implementation with trust all strategy and noop host name verifier.
      * @return
      */
+    @SuppressWarnings("deprecation")
     private static HttpClient sslClient() {
         try {
             SSLContext sslcontext = SSLContexts

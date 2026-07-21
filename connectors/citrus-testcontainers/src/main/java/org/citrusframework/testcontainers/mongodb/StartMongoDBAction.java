@@ -25,6 +25,7 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
+@SuppressWarnings("deprecation")
 public class StartMongoDBAction extends StartTestcontainersAction<MongoDBContainer> {
 
     public StartMongoDBAction(Builder builder) {

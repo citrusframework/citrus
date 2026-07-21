@@ -68,6 +68,7 @@ public class DockerClient extends AbstractEndpoint implements Producer, ReplyCon
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void send(Message message, TestContext context) {
         String correlationKeyName = getEndpointConfiguration().getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);

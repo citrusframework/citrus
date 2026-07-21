@@ -103,6 +103,7 @@ public class MongoDBSettings {
      * @param serviceName the service name of the container.
      * @param context the test context to receive the test variables.
      */
+    @SuppressWarnings("deprecation")
     public static void exposeConnectionSettings(MongoDBContainer container, String serviceName, TestContext context) {
         if (container.getContainerId() != null) {
             String dockerContainerId = container.getContainerId().substring(0, 12);

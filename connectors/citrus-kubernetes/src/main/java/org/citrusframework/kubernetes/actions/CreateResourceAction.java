@@ -40,6 +40,7 @@ public class CreateResourceAction extends AbstractKubernetesAction implements Ku
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void doExecute(TestContext context) {
         InputStream is;
         if (content != null) {

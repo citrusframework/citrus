@@ -60,6 +60,7 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
      *
      * @return
      */
+    @SuppressWarnings("deprecation")
     private io.fabric8.kubernetes.client.KubernetesClient createKubernetesClient() {
         return new DefaultKubernetesClient(getKubernetesClientConfig());
     }

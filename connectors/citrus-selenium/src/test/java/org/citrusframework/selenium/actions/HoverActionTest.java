@@ -41,6 +41,7 @@ public class HoverActionTest extends AbstractTestNGUnitTest {
     private final RemoteWebElement element = Mockito.mock(RemoteWebElement.class);
 
     @BeforeMethod
+    @SuppressWarnings("unchecked")
     public void setup() {
         reset(webDriver, element);
 

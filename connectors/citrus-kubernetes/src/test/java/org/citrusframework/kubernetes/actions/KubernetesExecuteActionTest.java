@@ -38,6 +38,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings({"unchecked", "deprecation"})
 public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
     private final KubernetesClient client = new KubernetesClient();

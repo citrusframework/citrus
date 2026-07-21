@@ -128,6 +128,7 @@ public class RandomContext {
      * @param mappingFunction the function to compute the value if it is not present
      * @return the context variable value
      */
+    @SuppressWarnings("unchecked")
     public <T> T get(String key, Function<String, T> mappingFunction) {
         //noinspection unchecked
         return (T) contextVariables.computeIfAbsent(key, mappingFunction);

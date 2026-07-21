@@ -48,6 +48,7 @@ public abstract class AbstractDeleteCommand<T extends HasMetadata, L extends Kub
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void execute(MixedOperation<T, L, R> operation, TestContext context) {
         boolean success;
 

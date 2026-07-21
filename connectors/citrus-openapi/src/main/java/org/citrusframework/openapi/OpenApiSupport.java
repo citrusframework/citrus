@@ -65,6 +65,7 @@ public class OpenApiSupport {
         return OBJECT_MAPPER;
     }
 
+    @SuppressWarnings("deprecation")
     public static Yaml yaml() {
         Representer representer = new Representer(new DumperOptions()) {
             @Override

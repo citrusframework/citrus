@@ -196,6 +196,7 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> i
         this.clients.put(service, client);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getClient(AwsService service) {
         if (!services.contains(service)) {
             throw new CitrusRuntimeException("Unable to create client for disabled service: %s".formatted(service));

@@ -163,6 +163,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     /**
      * Find proper JSON message validator. Uses several strategies to lookup default JSON message validator.
      */
+    @SuppressWarnings("unchecked")
     private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
         if (jsonMessageValidator != null) {
             return jsonMessageValidator;
@@ -191,6 +192,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     /**
      * Find proper JSON path message validator. Uses several strategies to lookup default JSON path message validator.
      */
+    @SuppressWarnings("unchecked")
     private MessageValidator<? extends ValidationContext> getPathValidator(TestContext context) {
         if (jsonPathMessageValidator != null) {
             return jsonPathMessageValidator;

@@ -34,6 +34,7 @@ public abstract class AbstractDockerCommandBuilder<R, T extends AbstractDockerCo
 
     protected final DockerExecuteAction.Builder delegate;
 
+    @SuppressWarnings("unchecked")
     public AbstractDockerCommandBuilder(DockerExecuteAction.Builder delegate, T command) {
         this.delegate = delegate;
         this.command = command;

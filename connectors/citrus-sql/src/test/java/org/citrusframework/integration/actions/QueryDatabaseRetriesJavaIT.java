@@ -32,6 +32,7 @@ public class QueryDatabaseRetriesJavaIT extends TestNGCitrusSpringSupport implem
     @Qualifier("testDataSource")
     private DataSource dataSource;
 
+    @SuppressWarnings("deprecation")
     @CitrusTest
     public void sqlQueryRetries() {
         run(sql().dataSource(dataSource)

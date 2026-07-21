@@ -107,6 +107,7 @@ public class AbstractYamlActionTest extends AbstractTestNGUnitTest {
         return testLoader;
     }
 
+    @SuppressWarnings("unchecked")
     protected static class NoopTestCaseRunner extends DefaultTestCaseRunner {
         public NoopTestCaseRunner(TestContext context) {
             super(context);
