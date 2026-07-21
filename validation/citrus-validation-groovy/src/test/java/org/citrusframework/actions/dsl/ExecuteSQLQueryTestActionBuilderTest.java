@@ -187,6 +187,7 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport implem
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCustomScriptValidator() {
         List<Map<String, Object>> results = new ArrayList<>();
         results.add(Collections.<String, Object>singletonMap("NAME", "Howard"));

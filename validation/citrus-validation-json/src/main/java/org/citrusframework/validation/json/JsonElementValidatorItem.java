@@ -100,10 +100,11 @@ public class JsonElementValidatorItem<T> {
 
     /**
      * @param type to cast the values to
-     * @return {@link this} as {@link JsonElementValidatorItem<O>}
+     * @return {@code this} as {@link JsonElementValidatorItem<O>}
      * @throws ValidationException if either {@link JsonElementValidatorItem#expected}
      *                             or {@link JsonElementValidatorItem#expected} is not of the given {@code type}
      */
+    @SuppressWarnings("unchecked")
     public <O> JsonElementValidatorItem<O> ensureType(Class<O> type) {
         if (((actual != null) && !type.isInstance(actual)) || ((expected != null) && !type.isInstance(expected))) {
             throw new ValidationException(buildValueMismatchErrorMessage(

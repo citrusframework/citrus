@@ -193,6 +193,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
         return result;
     }
 
+    @SuppressWarnings("deprecation")
     private JsonNode parseValue(String value) {
         try {
             return jsonMapper.readTree(value);

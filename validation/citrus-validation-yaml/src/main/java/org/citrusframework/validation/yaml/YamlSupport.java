@@ -32,6 +32,7 @@ public final class YamlSupport {
         // prevent instantiation of utility class
     }
 
+    @SuppressWarnings("deprecation")
     public static Yaml yaml() {
         Representer representer = new Representer(new DumperOptions()) {
             @Override

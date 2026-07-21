@@ -73,10 +73,11 @@ public class YamlNodeValidatorItem<T> {
 
     /**
      * @param type to cast the values to
-     * @return {@link this} as {@link YamlNodeValidatorItem<O>}
+     * @return {@code this} as {@link YamlNodeValidatorItem<O>}
      * @throws ValidationException if either {@link YamlNodeValidatorItem#expected}
      *                             or {@link YamlNodeValidatorItem#expected} is not of the given {@code type}
      */
+    @SuppressWarnings("unchecked")
     public <O> YamlNodeValidatorItem<O> ensureType(Class<O> type) {
         if (((actual != null) && !type.isInstance(actual)) || ((expected != null) && !type.isInstance(expected))) {
             throw new ValidationException(buildValueMismatchErrorMessage(

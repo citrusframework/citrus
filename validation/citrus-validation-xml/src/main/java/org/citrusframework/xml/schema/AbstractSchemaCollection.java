@@ -91,6 +91,7 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
      *
      * @param schema
      */
+    @SuppressWarnings("unchecked")
     protected void addImportedSchemas(Schema schema) throws TransformerException, TransformerFactoryConfigurationError {
         for (Object imports : schema.getImports().values()) {
             for (SchemaImport schemaImport : (Vector<SchemaImport>)imports) {
@@ -118,6 +119,7 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
     /**
      * Recursively add all included schemas as schema resource.
      */
+    @SuppressWarnings("unchecked")
     protected void addIncludedSchemas(Schema schema) throws TransformerException, TransformerFactoryConfigurationError {
         List<SchemaReference> includes = schema.getIncludes();
         for (SchemaReference schemaReference : includes) {

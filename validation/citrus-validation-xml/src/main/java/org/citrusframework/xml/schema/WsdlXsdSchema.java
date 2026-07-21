@@ -100,6 +100,7 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
      * @throws TransformerFactoryConfigurationError
      * @throws TransformerException
      */
+    @SuppressWarnings("unchecked")
     private Resource loadSchemas(Definition definition) throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
         Types types = definition.getTypes();
         Resource targetXsd = null;

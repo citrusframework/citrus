@@ -73,6 +73,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     /**
      * Extract variables using Xpath expressions.
      */
+    @SuppressWarnings("unchecked")
     public void extractVariables(Message message, TestContext context) {
         if (xPathExpressions == null || xPathExpressions.isEmpty()) {
             return;

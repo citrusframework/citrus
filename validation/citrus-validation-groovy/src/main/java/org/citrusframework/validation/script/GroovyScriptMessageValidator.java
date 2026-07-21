@@ -88,7 +88,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
                         throw new CitrusRuntimeException("Failed to load groovy validation script resource");
                     }
 
-                    GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
+                    GroovyObject groovyObject = (GroovyObject) groovyClass.getDeclaredConstructor().newInstance();
                     ((GroovyScriptExecutor) groovyObject).validate(receivedMessage, context);
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to load groovy validation script resource", e);
@@ -96,13 +96,14 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
 
                 logger.debug("Groovy message validation successful: All values OK");
             }
-        } catch (CompilationFailedException | InstantiationException | IllegalAccessException e) {
+        } catch (CompilationFailedException | ReflectiveOperationException e) {
             throw new CitrusRuntimeException(e);
         } catch (AssertionError e) {
             throw new ValidationException("Groovy script validation failed with assertion error:\n" + e.getMessage(), e);
         }
     }
 
+    @SuppressWarnings("removal")
     private static GroovyClassLoader getPrivilegedGroovyLoader() {
         return AccessController.doPrivileged((PrivilegedAction<GroovyClassLoader>) () -> new GroovyClassLoader(ClassLoaderHelper.getClassLoader()));
     }
