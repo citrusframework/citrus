@@ -118,6 +118,7 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
      * @param context
      * @return
      */
+    @SuppressWarnings("unchecked")
     private MessageValidator<? extends ValidationContext> getXmlMessageValidator(TestContext context) {
         if (xmlMessageValidator != null) {
             return xmlMessageValidator;
@@ -151,6 +152,7 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
      * @param message
      * @return
      */
+    @SuppressWarnings("unchecked")
     private FormData createFormData(Message message) {
         FormData formData = new ObjectFactory().createFormData();
 

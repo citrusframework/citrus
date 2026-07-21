@@ -94,6 +94,7 @@ public class RestApiReceiveMessageActionParser extends HttpReceiveResponseAction
         this.defaultApiEndpointName = defaultApiEndpointName;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected BeanDefinitionBuilder createBeanDefinitionBuilder(Element element,
         ParserContext parserContext) {

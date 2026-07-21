@@ -68,6 +68,7 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
 	    return testContextFactory;
     }
 
+    @SuppressWarnings("unchecked")
     private MessageValidator<? extends ValidationContext> getMessageValidator() {
 	    if (messageValidator != null) {
 	        return messageValidator;

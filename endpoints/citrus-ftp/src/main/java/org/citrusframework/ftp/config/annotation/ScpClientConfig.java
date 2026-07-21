@@ -69,7 +69,7 @@ public @interface ScpClientConfig {
     String privateKeyPath() default "";
 
     /**
-     * <privateKeyPassword.
+     * Private key password.
      * @return
      */
     String privateKeyPassword() default "";

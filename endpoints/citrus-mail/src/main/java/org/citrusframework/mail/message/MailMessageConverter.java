@@ -353,6 +353,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
      * @param contentType 'Content-Type' header value as String
      * @return a charset information parsed from the Content-Type, or {@link CitrusSettings#CITRUS_FILE_ENCODING} as default if there is no charset definition
      */
+    @SuppressWarnings("deprecation")
     static String parseCharsetFromContentType(String contentType) {
         final String charsetPrefix = "charset=";
         if (org.apache.commons.lang3.StringUtils.contains(contentType, charsetPrefix)) {

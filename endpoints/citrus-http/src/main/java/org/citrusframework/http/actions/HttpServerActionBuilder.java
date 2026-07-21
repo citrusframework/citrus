@@ -42,6 +42,7 @@ import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
  *
  * @since 2.4
  */
+@SuppressWarnings("unchecked")
 public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
         implements org.citrusframework.actions.http.HttpServerActionBuilder<TestAction, HttpServerActionBuilder> {
 

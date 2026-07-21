@@ -88,6 +88,7 @@ public class KafkaConsumer extends AbstractSelectiveMessageConsumer {
     /**
      * Stop message listener container.
      */
+    @SuppressWarnings("deprecation")
     public void stop() {
         try {
             if (consumer.subscription() != null && !consumer.subscription().isEmpty()) {

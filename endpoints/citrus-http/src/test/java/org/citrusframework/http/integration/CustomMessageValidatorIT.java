@@ -46,6 +46,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implemen
 
     @Test
     @CitrusTest
+    @SuppressWarnings("unchecked")
     public void test() {
         this.getClass().getResource("/citrus.properties");
 
@@ -77,6 +78,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implemen
 
     @Test
     @CitrusTest
+    @SuppressWarnings("unchecked")
     public void testFailure() {
         then(doFinally().actions(
                 stop(httpServer)

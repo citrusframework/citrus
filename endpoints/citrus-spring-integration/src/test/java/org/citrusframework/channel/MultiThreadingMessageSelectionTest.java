@@ -60,6 +60,7 @@ public class MultiThreadingMessageSelectionTest extends AbstractTestNGUnitTest {
                 .build());
     }
 
+    @SuppressWarnings("unchecked")
     @Test(invocationCount = 100, threadPoolSize = 100)
     public void testHeaderMatchingSelectorConcurrent() {
         int i = index.incrementAndGet();

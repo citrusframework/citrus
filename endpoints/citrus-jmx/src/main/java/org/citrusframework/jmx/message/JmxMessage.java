@@ -189,6 +189,7 @@ public class JmxMessage extends DefaultMessage {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getPayload(Class<T> type) {
         if (String.class.equals(type)) {
             return (T) getPayload();

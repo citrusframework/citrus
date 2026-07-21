@@ -126,6 +126,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
      * @param exchange
      * @return
      */
+    @SuppressWarnings("deprecation")
     private void buildOutMessage(Exchange exchange, Message message) {
         org.apache.camel.Message reply = exchange.getOut();
         for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {

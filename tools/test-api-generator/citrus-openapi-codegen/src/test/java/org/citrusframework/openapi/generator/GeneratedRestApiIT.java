@@ -3018,6 +3018,7 @@ class GeneratedRestApiIT {
         }
 
         @Test
+        @SuppressWarnings("unchecked")
         void java(@CitrusResource TestCaseRunner runner) {
             runner.variable("petId", "1234");
             runner.variable("nick1", "Wind");
@@ -3045,7 +3046,6 @@ class GeneratedRestApiIT {
                     {
                         Object messagePayload = message.getPayload();
                         assertThat(messagePayload).isInstanceOf(Map.class);
-                        //noinspection unchecked
                         assertThat(
                             (Map<String, List<String>>) messagePayload).containsExactlyInAnyOrderEntriesOf(
                             Map.of(
@@ -3076,6 +3076,7 @@ class GeneratedRestApiIT {
     class TypeSafeJavaDsl implements TestActionSupport {
 
         @Test
+        @SuppressWarnings("unchecked")
         void java(@CitrusResource TestCaseRunner runner) {
             runner.variable("petId", "1234");
             runner.variable("nick1", "Wind");
@@ -3101,7 +3102,6 @@ class GeneratedRestApiIT {
                 .validate((Message message, TestContext context) -> {
                         Object messagePayload = message.getPayload();
                         assertThat(messagePayload).isInstanceOf(Map.class);
-                        //noinspection unchecked
                         assertThat(
                             (Map<String, List<String>>) messagePayload).containsExactlyInAnyOrderEntriesOf(
                             Map.of(

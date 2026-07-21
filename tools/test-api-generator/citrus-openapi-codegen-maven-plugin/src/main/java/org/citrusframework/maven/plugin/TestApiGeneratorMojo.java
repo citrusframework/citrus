@@ -138,6 +138,7 @@ public class TestApiGeneratorMojo extends AbstractMojo {
      */
     public static final String GENERATE_SPRING_INTEGRATION_FILES = "citrus.test.api.generator.generate.spring.integration.files";
 
+    @SuppressWarnings("deprecation")
     @Component
     private final BuildContext buildContext = new DefaultBuildContext();
 
@@ -301,6 +302,7 @@ public class TestApiGeneratorMojo extends AbstractMojo {
         return codeGenMojo;
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, String> createApiConfigOptions(ApiConfig apiConfig) {
         Map<String, String> configOptions = new HashMap<>();
 
@@ -309,7 +311,6 @@ public class TestApiGeneratorMojo extends AbstractMojo {
             configOptions.put("addTestCompileSourceRoot", "true");
         }
 
-        //noinspection unchecked
         configOptions.putAll(apiConfig.toConfigOptionsProperties(globalConfigOptions));
         return configOptions;
     }

@@ -87,6 +87,7 @@ public class SSLConnection implements HttpSecureConnection {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public HttpClientConnectionManager getClientConnectionManager() {
         try {
             SSLContextBuilder sslContext;

@@ -109,6 +109,7 @@ public class PurgeChannels implements TestActionBuilder<TestAction>, ReferenceRe
         return channels;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public TestAction build() {
         builder.setReferenceResolver(referenceResolver);

@@ -145,6 +145,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
      * @param context
      * @return
      */
+    @SuppressWarnings("removal")
     private List<HandlerInterceptor> adaptInterceptors(List<Object> interceptors, ApplicationContext context) {
         List<HandlerInterceptor> handlerInterceptors = new ArrayList<>();
 

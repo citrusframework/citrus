@@ -62,6 +62,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     private final List<String> interceptors = new ArrayList<>();
 
     @Override
+    @SuppressWarnings("unchecked")
     public HttpClient build() {
         if (referenceResolver != null) {
             if (StringUtils.hasText(restTemplate)) {

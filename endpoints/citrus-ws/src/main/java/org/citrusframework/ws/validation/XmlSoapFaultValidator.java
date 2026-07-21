@@ -60,6 +60,7 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailValidator {
      * @param context
      * @return
      */
+    @SuppressWarnings("unchecked")
     private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
         if (messageValidator != null) {
             return messageValidator;

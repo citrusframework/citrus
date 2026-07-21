@@ -204,7 +204,6 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     /**
      * Create new JMS connection.
-     * @return connection
      * @throws JMSException
      */
     protected void createConnection() throws JMSException {
@@ -227,7 +226,6 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     /**
      * Create new JMS session.
      * @param connection to use for session creation.
-     * @return session.
      * @throws JMSException
      */
     protected void createSession(Connection connection) throws JMSException {

@@ -47,6 +47,7 @@ public abstract class AbstractVertxInstanceFactory implements VertxInstanceFacto
      * method in order to provide special Vert.x instance.
      * @return
      */
+    @SuppressWarnings("deprecation")
     protected Vertx createVertx(VertxEndpointConfiguration endpointConfiguration) {
         final CompletableFuture<Vertx> loading = new CompletableFuture<>();
 

@@ -74,6 +74,7 @@ public class ManagedBeanInvocation {
      * Gets this service result as object casted to target type if necessary.
      * @return
      */
+    @SuppressWarnings("unchecked")
     public java.lang.Object getAttributeValue(ReferenceResolver referenceResolver) {
         if (attribute == null) {
             return null;
@@ -427,6 +428,7 @@ public class ManagedBeanInvocation {
          * Gets method parameter as objects. Automatically converts simple types and ready referenced beans.
          * @return
          */
+        @SuppressWarnings("unchecked")
         public Object[] getParamValues(ReferenceResolver referenceResolver) {
             List<Object> argValues = new ArrayList<>();
 

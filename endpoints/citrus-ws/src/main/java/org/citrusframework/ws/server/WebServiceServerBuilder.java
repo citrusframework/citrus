@@ -289,6 +289,7 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     /**
      * Sets the interceptors.
      */
+    @SuppressWarnings("unchecked")
     public WebServiceServerBuilder interceptors(List<EndpointInterceptor> interceptors) {
         endpoint.setInterceptors((List) interceptors);
         return this;
@@ -309,8 +310,9 @@ public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceSer
     /**
      * Sets the interceptors.
      */
+    @SuppressWarnings("unchecked")
     public WebServiceServerBuilder interceptors(EndpointInterceptor... interceptors) {
-        endpoint.setInterceptors(Arrays.asList(interceptors));
+        endpoint.setInterceptors(new ArrayList<>(Arrays.asList(interceptors)));
         return this;
     }
 

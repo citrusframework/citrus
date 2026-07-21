@@ -204,6 +204,7 @@ class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @ParameterizedTest(name = "{0}")
     @MethodSource
     void configureMojo(String name, ApiConfig apiConfig, CodeGenMojoParams controlParams)

@@ -55,6 +55,7 @@ public class JmxServerBuilder extends AbstractServerBuilder<JmxServer, JmxServer
     private String mbeans;
 
     @Override
+    @SuppressWarnings("unchecked")
     public JmxServer build() {
         if (referenceResolver != null) {
             if (StringUtils.hasText(messageConverter)) {

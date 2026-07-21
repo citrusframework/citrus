@@ -114,6 +114,7 @@ public class PurgeMessageChannelTestActionBuilderTest extends UnitTestSupport im
         Assert.assertEquals(action.getMessageSelector(), messageSelector);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testCustomChannelResolver() {
         reset(referenceResolver, channelResolver, channel1);

@@ -124,6 +124,7 @@ public class SftpClient extends FtpClient {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected FtpMessage listFiles(ListCommand list, TestContext context) {
         String remoteFilePath = Optional.ofNullable(list.getTarget())
                                         .map(ListCommand.Target::getPath)
@@ -144,6 +145,7 @@ public class SftpClient extends FtpClient {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected FtpMessage deleteFile(DeleteCommand delete, TestContext context) {
         String remoteFilePath = context.replaceDynamicContentInString(delete.getTarget().getPath());
 

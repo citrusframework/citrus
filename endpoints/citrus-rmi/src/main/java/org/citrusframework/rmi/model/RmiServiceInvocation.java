@@ -117,6 +117,7 @@ public class RmiServiceInvocation {
      * Gets method args as objects. Automatically converts simple types and ready referenced beans.
      * @return
      */
+    @SuppressWarnings("unchecked")
     public Object[] getArgValues(ReferenceResolver referenceResolver) {
         List<Object> argValues = new ArrayList<>();
 

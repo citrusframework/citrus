@@ -91,6 +91,7 @@ public class CamelCustomizedRunIntegrationAction extends AbstractCamelCliAction 
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void doExecute(TestContext context) {
         if(commands.length == 0) {
             throw new CitrusRuntimeException("Missing Camel integration name");

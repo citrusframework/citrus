@@ -38,6 +38,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
+@SuppressWarnings("unchecked")
 public class KafkaMessageFilteringConsumerTest {
 
     private static final Long TIMEOUT = 10_000L;

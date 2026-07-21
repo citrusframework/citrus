@@ -82,6 +82,7 @@ public abstract class AbstractFtpClientTest extends AbstractTestNGUnitTest {
         return command;
     }
 
+    @SuppressWarnings("unchecked")
     protected void verifyMessage(FtpMessage message, Class expectedCommandResultType, Integer expectedReplyCode, String expectedReplyMessage) {
         assertEquals(message.getReplyCode(), expectedReplyCode);
         String actualReplyMessage = message.getReplyString();

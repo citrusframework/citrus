@@ -245,6 +245,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:serialize") },
             description = "Sets the fully qualified key serializer type class name.")
     @XmlAttribute(name = "key-serializer")
+    @SuppressWarnings("unchecked")
     public void setKeySerializer(String serializerType) {
         try {
             keySerializer((Class<? extends Serializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
@@ -265,6 +266,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:serialize") },
             description = "Sets the fully qualified value serializer type class name.")
     @XmlAttribute(name = "value-serializer")
+    @SuppressWarnings("unchecked")
     public void setValueSerializer(String serializerType) {
         try {
             valueSerializer((Class<? extends Serializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
@@ -285,6 +287,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:deserialize") },
             description = "Sets the fully qualified key deserializer type class name.")
     @XmlAttribute(name = "key-deserializer")
+    @SuppressWarnings("unchecked")
     public void setKeyDeserializer(String serializerType) {
         try {
             keyDeserializer((Class<? extends Deserializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
@@ -305,6 +308,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:deserialize") },
             description = "Sets the fully qualified value deserializer type class name.")
     @XmlAttribute(name = "value-deserializer")
+    @SuppressWarnings("unchecked")
     public void setValueDeserializer(String serializerType) {
         try {
             valueDeserializer((Class<? extends Deserializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));

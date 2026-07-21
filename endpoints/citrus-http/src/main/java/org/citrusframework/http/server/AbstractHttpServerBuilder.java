@@ -60,6 +60,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     private final B self;
 
+    @SuppressWarnings("unchecked")
     protected AbstractHttpServerBuilder(T server) {
         this.endpoint = server;
         this.self = (B) this;
