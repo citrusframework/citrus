@@ -70,7 +70,6 @@ public abstract class AbstractEndpointParser extends AbstractBeanDefinitionParse
      * @param endpointConfigurationBuilder
      * @param element
      * @param parserContext
-     * @return
      */
     protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfigurationBuilder, Element element, ParserContext parserContext) {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, element.getAttribute("timeout"), "timeout");
@@ -81,7 +80,6 @@ public abstract class AbstractEndpointParser extends AbstractBeanDefinitionParse
      * @param endpointBuilder
      * @param element
      * @param parserContext
-     * @return
      */
     protected void parseEndpoint(BeanDefinitionBuilder endpointBuilder, Element element, ParserContext parserContext) {
     }

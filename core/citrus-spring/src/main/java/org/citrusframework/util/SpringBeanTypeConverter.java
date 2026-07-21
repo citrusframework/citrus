@@ -48,6 +48,7 @@ public final class SpringBeanTypeConverter extends DefaultTypeConverter {
     private SpringBeanTypeConverter() {
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected <T> Optional<T> convertBefore(Object target, Class<T> type) {
         if (Source.class.isAssignableFrom(type) &&

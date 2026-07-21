@@ -48,7 +48,7 @@ public class MessageValidatorRegistryParser implements BeanDefinitionParser {
      * @param element the source element.
      */
     private void parseValidators(BeanDefinitionBuilder builder, Element element) {
-        ManagedMap validators = new ManagedMap();
+        ManagedMap<String, Object> validators = new ManagedMap<>();
         for (Element validator : DomUtils.getChildElementsByTagName(element, "validator")) {
 
             if (validator.hasAttribute("ref")) {
