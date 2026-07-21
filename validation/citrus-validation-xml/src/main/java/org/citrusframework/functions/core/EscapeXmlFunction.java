@@ -21,17 +21,16 @@ import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.functions.parameter.StringParameter;
 import org.citrusframework.yaml.SchemaType;
 
-import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
-
 /**
- * Escapes XML fragment with escaped characters for '<', '>'.
+ * Escapes XML fragment with escaped characters for {@code '<'}, {@code '>'}.
  */
+@SuppressWarnings("deprecation")
 @SchemaType(module = "citrus-validation-xml")
 public class EscapeXmlFunction implements ParameterizedFunction<StringParameter> {
 
     @Override
     public String execute(StringParameter param, TestContext context) {
-        return escapeXml(param.getValue());
+        return org.apache.commons.lang3.StringEscapeUtils.escapeXml(param.getValue());
     }
 
     @Override

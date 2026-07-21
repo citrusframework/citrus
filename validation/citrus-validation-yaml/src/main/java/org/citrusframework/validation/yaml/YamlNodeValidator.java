@@ -59,6 +59,7 @@ public class YamlNodeValidator {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void validateObject(YamlNodeValidator validator, YamlNodeValidatorItem<?> control) {
         var objectControl = control.ensureType(Map.class);
 
@@ -92,6 +93,7 @@ public class YamlNodeValidator {
         return ignoreExpressions.stream().anyMatch(controlEntry::isPathIgnoredBy);
     }
 
+    @SuppressWarnings("unchecked")
     private void validateArray(YamlNodeValidator validator, YamlNodeValidatorItem<?> control) {
         var arrayControl = control.ensureType(Iterable.class);
         List<Object> controlItems = new ArrayList<>();

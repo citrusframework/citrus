@@ -60,6 +60,7 @@ public class XmlValidationMatcher implements StringValidationMatcher {
      * Find proper XML message validator. Uses several strategies to lookup default XML message validator. Caches found validator for
      * future usage once the lookup is done.
      */
+    @SuppressWarnings("unchecked")
     private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
         if (messageValidator != null) {
             return messageValidator;

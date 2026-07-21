@@ -29,6 +29,7 @@ import static org.hamcrest.Matchers.is;
 import static org.testng.Assert.assertEquals;
 
 public class RepeatOnErrorTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
+    @SuppressWarnings({"deprecation", "removal"})
     @Test
     public void testRepeatOnErrorBuilderWithHamcrestConditionExpression() {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);

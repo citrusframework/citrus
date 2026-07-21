@@ -33,6 +33,7 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
 
     private TestAction action = Mockito.mock(TestAction.class);
 
+    @SuppressWarnings("deprecation")
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testRepeatOnErrorNoSuccessHamcrestConditionExpression() {
         reset(action);

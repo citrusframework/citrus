@@ -43,6 +43,7 @@ public class ValidationUtilsTest extends AbstractTestNGUnitTest {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
+    @SuppressWarnings("deprecation")
     @DataProvider
     public Object[][] testData() {
         return new Object[][] {
@@ -52,6 +53,7 @@ public class ValidationUtilsTest extends AbstractTestNGUnitTest {
         };
     }
 
+    @SuppressWarnings("deprecation")
     @DataProvider
     public Object[][] testDataFailed() {
         return new Object[][] {
