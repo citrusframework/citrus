@@ -40,6 +40,7 @@ public class CreateDocsMojo extends AbstractCitrusMojo {
     @Parameter(property = "citrus.skip.create.docs", defaultValue = "false")
     protected boolean skipCreateDocs;
 
+    @SuppressWarnings("deprecation")
     @Component
     private Prompter prompter;
 

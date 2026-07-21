@@ -482,6 +482,7 @@ public class CitrusModule implements Module {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public <A extends Annotation> A getAnnotation(Class<A> annotationClass) {
             if (annotationClass == SchemaProperty.class) {
                 return (A) schema;

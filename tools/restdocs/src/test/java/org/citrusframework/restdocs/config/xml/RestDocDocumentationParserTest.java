@@ -35,6 +35,7 @@ import java.util.Map;
 public class RestDocDocumentationParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testConfigurerParser() {
         Map<String, CitrusRestDocConfigurer> configurers = beanDefinitionContext.getBeansOfType(CitrusRestDocConfigurer.class);
         Assert.assertEquals(configurers.size(), 1);

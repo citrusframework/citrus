@@ -71,6 +71,7 @@ public abstract class CitrusCommand implements Callable<Integer> {
     protected abstract static class ParameterConsumer<T> implements IParameterConsumer {
 
         @Override
+        @SuppressWarnings("unchecked")
         public void consumeParameters(Stack<String> args, ArgSpec argSpec, CommandSpec cmdSpec) {
             if (args.isEmpty()) {
                 throw new ParameterException(cmdSpec.commandLine(), "Error: missing required parameter");

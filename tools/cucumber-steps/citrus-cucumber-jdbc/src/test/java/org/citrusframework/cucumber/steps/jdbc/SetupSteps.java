@@ -26,15 +26,20 @@ import org.testcontainers.utility.DockerImageName;
 
 public class SetupSteps {
 
-    public static PostgreSQLContainer testdbContainer = new PostgreSQLContainer(
-            DockerImageName.parse(PostgreSQLSettings.getImageName()).withTag(PostgreSQLSettings.getPostgreSQLVersion()))
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("secret")
-            .withInitScript("test-db-init.sql")
-            .withCreateContainerCmdModifier(modifier -> modifier.withPortBindings(
-                    new PortBinding(Ports.Binding.bindPort(PostgreSQLContainer.POSTGRESQL_PORT),
-                            new ExposedPort(PostgreSQLContainer.POSTGRESQL_PORT))));
+    public static PostgreSQLContainer testdbContainer = createContainer();
+
+    @SuppressWarnings("deprecation")
+    private static PostgreSQLContainer createContainer() {
+        return new PostgreSQLContainer(
+                DockerImageName.parse(PostgreSQLSettings.getImageName()).withTag(PostgreSQLSettings.getPostgreSQLVersion()))
+                .withDatabaseName("testdb")
+                .withUsername("test")
+                .withPassword("secret")
+                .withInitScript("test-db-init.sql")
+                .withCreateContainerCmdModifier(modifier -> modifier.withPortBindings(
+                        new PortBinding(Ports.Binding.bindPort(PostgreSQLContainer.POSTGRESQL_PORT),
+                                new ExposedPort(PostgreSQLContainer.POSTGRESQL_PORT))));
+    }
 
     @Given("^Start database$")
     public void startDatabase() {

@@ -29,6 +29,7 @@ import org.w3c.dom.NodeList;
 public class InboundXmlDataDictionary extends XpathMappingDataDictionary {
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T translate(Node node, T value, TestContext context) {
         if (value instanceof String) {
             String toTranslate;

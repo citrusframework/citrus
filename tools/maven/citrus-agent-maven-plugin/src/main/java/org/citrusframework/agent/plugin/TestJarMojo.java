@@ -40,6 +40,7 @@ public class TestJarMojo extends AbstractAgentAssemblyMojo {
     @Parameter(property = "citrus.skip.test.jar", defaultValue = "false")
     protected boolean skipTestJar;
 
+    @SuppressWarnings("deprecation")
     @Component( role = Archiver.class, hint = "jar" )
     private JarArchiver jarArchiver;
 
@@ -82,6 +83,7 @@ public class TestJarMojo extends AbstractAgentAssemblyMojo {
      *
      * @throws MojoExecutionException
      */
+    @SuppressWarnings("deprecation")
     public void createTestJarArchive() throws MojoExecutionException {
         File jarFile = new File(getOutputDirectory(), getFinalName() + "-" + getTestJar().getClassifier() + ".jar");
         MavenArchiver archiver = new MavenArchiver();

@@ -33,6 +33,7 @@ import org.testcontainers.containers.MongoDBContainer;
 
 import static org.citrusframework.testcontainers.actions.TestcontainersActionBuilder.testcontainers;
 
+@SuppressWarnings("deprecation")
 public class MongoDBSteps {
 
     @CitrusFramework

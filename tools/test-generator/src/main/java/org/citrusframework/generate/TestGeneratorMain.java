@@ -30,6 +30,7 @@ import org.apache.commons.cli.ParseException;
 /**
  * @since 2.7.4
  */
+@SuppressWarnings("deprecation")
 public class TestGeneratorMain {
 
     /**

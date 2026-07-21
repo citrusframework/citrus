@@ -477,6 +477,7 @@ public class HttpClientSteps implements HttpSteps {
      * Get secure http client implementation with trust all strategy and noop host name verifier.
      * @return
      */
+    @SuppressWarnings("deprecation")
     private org.apache.hc.client5.http.classic.HttpClient sslClient() {
         try {
             SSLContextBuilder sslContextBuilder = SSLContexts.custom();

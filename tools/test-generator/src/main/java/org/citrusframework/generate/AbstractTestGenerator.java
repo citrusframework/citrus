@@ -53,6 +53,7 @@ public abstract class AbstractTestGenerator<T extends TestGenerator<T>> implemen
 
     protected T self;
 
+    @SuppressWarnings("unchecked")
     public AbstractTestGenerator() {
         self = (T) this;
     }

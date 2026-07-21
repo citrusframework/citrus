@@ -72,6 +72,7 @@ public class KnativeTestSteps {
     }
 
     @Given("^activate Knative broker ([^\\s]+)$")
+    @SuppressWarnings("deprecation")
     public void activateBroker(String brokerName) {
         runner.run(new KnativeTestAction() {
             @Override

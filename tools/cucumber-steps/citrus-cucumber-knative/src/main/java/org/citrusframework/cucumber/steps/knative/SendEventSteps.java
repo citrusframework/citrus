@@ -148,6 +148,7 @@ public class SendEventSteps {
     /**
      * Get secure http client implementation with trust all strategy and noop host name verifier.
      */
+    @SuppressWarnings("deprecation")
     private org.apache.hc.client5.http.classic.HttpClient sslClient() {
         try {
             SSLContext sslcontext = SSLContexts
