@@ -119,6 +119,7 @@ public class RmiMessage extends DefaultMessage {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getPayload(Class<T> type) {
         if (RmiServiceInvocation.class.equals(type) && serviceInvocation != null) {
             return (T) serviceInvocation;

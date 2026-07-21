@@ -62,6 +62,7 @@ public class CamelMessageConverter implements MessageConverter<Exchange, Exchang
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void convertOutbound(Exchange exchange, Message message, CamelEndpointConfiguration endpointConfiguration, TestContext context) {
         org.apache.camel.Message in = exchange.getIn();
         for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {
@@ -176,7 +177,7 @@ public class CamelMessageConverter implements MessageConverter<Exchange, Exchang
     }
 
     /**
-     * Converts a basic Java Map<String, String> into a mapping node.
+     * Converts a basic Java {@code Map<String, String>} into a mapping node.
      * Supports only String and boolean scalars as this is sufficient for data formats in Camel.
      */
     public static MappingNode createMappingNode(Map<?, ?> spec) {

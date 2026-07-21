@@ -123,6 +123,7 @@ public class DelegatingHttpEntityMessageConverter extends AbstractHttpMessageCon
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void writeInternal(Object responseBody, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
         HttpMessageConverter<?> delegate = responseMessageConverters.stream()
                 .filter(converter -> converter.getSupportedMediaTypes()

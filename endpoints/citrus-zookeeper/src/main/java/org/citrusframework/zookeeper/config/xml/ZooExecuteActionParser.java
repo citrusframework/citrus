@@ -69,8 +69,8 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         ZooCommand command;
         try {
-            command = zookeeperCommandClass.newInstance();
-        } catch (IllegalAccessException | InstantiationException e) {
+            command = zookeeperCommandClass.getDeclaredConstructor().newInstance();
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | java.lang.reflect.InvocationTargetException e) {
             throw new CitrusRuntimeException(e);
         }
 
@@ -156,7 +156,6 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
          * Sets zookeeper command to execute.
          *
          * @param command
-         * @return
          */
         public void setCommand(ZooCommand<?> command) {
             builder.command(command);

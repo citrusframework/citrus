@@ -37,6 +37,7 @@ import static org.mockito.Mockito.*;
 /**
  * @since 1.4.1
  */
+@SuppressWarnings("unchecked")
 public class VertxEndpointTest extends AbstractTestNGUnitTest {
 
     private Vertx vertx = Mockito.mock(Vertx.class);

@@ -131,6 +131,7 @@ public class CamelKubernetesRunIntegrationAction extends AbstractCamelCliAction 
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void doExecute(TestContext context) {
         try {
             String name;

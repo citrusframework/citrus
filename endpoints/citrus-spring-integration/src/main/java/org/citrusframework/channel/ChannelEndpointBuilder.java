@@ -122,6 +122,7 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
     /**
      * Sets the channel resolver.
      */
+    @SuppressWarnings("unchecked")
     public ChannelEndpointBuilder channelResolver(DestinationResolver resolver) {
         endpoint.getEndpointConfiguration().setChannelResolver(resolver);
         return this;

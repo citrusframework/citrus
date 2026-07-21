@@ -129,6 +129,7 @@ public class ZooExecuteAction extends AbstractTestAction {
      * @param context
      * @return
      */
+    @SuppressWarnings("unchecked")
     private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
         if (jsonMessageValidator != null) {
             return jsonMessageValidator;
@@ -159,6 +160,7 @@ public class ZooExecuteAction extends AbstractTestAction {
      * @param context
      * @return
      */
+    @SuppressWarnings("unchecked")
     private MessageValidator<? extends ValidationContext> getPathValidator(TestContext context) {
         if (jsonPathMessageValidator != null) {
             return jsonPathMessageValidator;
@@ -189,6 +191,7 @@ public class ZooExecuteAction extends AbstractTestAction {
      * @param command
      * @param context
      */
+    @SuppressWarnings("unchecked")
     private void validateCommandResult(ZooCommand command, TestContext context) {
         Message commandResult = getCommandResult(command);
 
@@ -421,6 +424,7 @@ public class ZooExecuteAction extends AbstractTestAction {
          * @param callback
          * @return
          */
+        @SuppressWarnings("unchecked")
         public Builder validateCommandResult(CommandResultCallback<ZooResponse> callback) {
             ((AbstractZooCommand<ZooResponse>) command).validateCommandResult(callback);
             return this;

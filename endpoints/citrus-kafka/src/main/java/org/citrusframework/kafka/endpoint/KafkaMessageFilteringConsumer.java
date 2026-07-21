@@ -194,6 +194,7 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
         return (KafkaEndpointConfiguration) super.getEndpointConfiguration();
     }
 
+    @SuppressWarnings("unchecked")
     private List<ConsumerRecord<Object, Object>> findMessagesSatisfyingMatcher(String topic) {
         List<TopicPartition> partitions = consumer.partitionsFor(topic).stream()
                 .map(partitionInfo -> new TopicPartition(topic, partitionInfo.partition()))

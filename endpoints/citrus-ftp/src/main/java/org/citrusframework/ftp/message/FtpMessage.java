@@ -394,6 +394,7 @@ public class FtpMessage extends DefaultMessage {
         return getPayload(type, marshaller);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getPayload(Class<T> type, FtpMarshaller marshaller) {
         if (CommandType.class.isAssignableFrom(type)) {
             return (T) getCommand(marshaller);
@@ -438,6 +439,7 @@ public class FtpMessage extends DefaultMessage {
      * Gets the command result if any or tries to unmarshal String payload representation to an command result model.
      * @return
      */
+    @SuppressWarnings("unchecked")
     private <T extends CommandResultType> T getCommandResult(FtpMarshaller marshaller) {
         if (commandResult == null) {
             Object payload = getPayload(marshaller);
@@ -456,6 +458,7 @@ public class FtpMessage extends DefaultMessage {
      * Gets the command if any or tries to unmarshal String payload representation to an command model.
      * @return
      */
+    @SuppressWarnings("unchecked")
     private <T extends CommandType> T getCommand(FtpMarshaller marshaller) {
         if (command == null) {
             Object payload = getPayload(marshaller);

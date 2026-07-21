@@ -173,6 +173,7 @@ public class CamelRunInfraAction extends AbstractCamelAction {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void exposeServiceProperties(Map<String, Object> serviceProperties, String serviceVariableName, TestContext context) {
         serviceProperties.forEach((key, value) -> {
             if (value instanceof Map valueMap) {

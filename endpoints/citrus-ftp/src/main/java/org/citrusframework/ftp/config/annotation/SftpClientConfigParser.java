@@ -33,6 +33,7 @@ import org.citrusframework.util.StringUtils;
 public class SftpClientConfigParser implements AnnotationConfigParser<SftpClientConfig, SftpClient> {
 
     @Override
+    @SuppressWarnings("unchecked")
     public SftpClient parse(SftpClientConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         SftpClientBuilder builder = new SftpClientBuilder();
 

@@ -35,7 +35,7 @@ public interface WebSocketEndpointConfiguration extends PollableEndpointConfigur
 
     /**
      * Sets web socket handler.
-     * @return
+     * @param handler
      */
     void setHandler(CitrusWebSocketHandler handler);
 

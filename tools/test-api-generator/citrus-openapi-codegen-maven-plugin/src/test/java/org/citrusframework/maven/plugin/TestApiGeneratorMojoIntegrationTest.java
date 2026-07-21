@@ -136,6 +136,7 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
         setUp();
     }
 
+    @SuppressWarnings("unchecked")
     @ParameterizedTest
     @MethodSource
     void executeMojoWithConfigurations(String configName, Exception expectedException,
@@ -175,11 +176,8 @@ public class TestApiGeneratorMojoIntegrationTest extends AbstractMojoTestCase {
             @SuppressWarnings("rawtypes")
             Map configOptions = (Map) ReflectionTestUtils.getField(codeGenMojo, "configOptions");
 
-            //noinspection unchecked
             assertThat(globalProperties).containsExactlyInAnyOrderEntriesOf(expectedGlobalProperties);
-            //noinspection unchecked
             assertThat(configOptions).containsAllEntriesOf(expectedConfigOptions);
-            //noinspection unchecked
             List<String> additionalPropertyList = (List<String>) ReflectionTestUtils.getField(
                 codeGenMojo, "additionalProperties");
 

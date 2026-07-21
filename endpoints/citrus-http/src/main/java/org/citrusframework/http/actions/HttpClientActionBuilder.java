@@ -35,6 +35,7 @@ import org.springframework.http.HttpStatusCode;
  *
  * @since 2.4
  */
+@SuppressWarnings("unchecked")
 public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
         implements org.citrusframework.actions.http.HttpClientActionBuilder<TestAction, HttpClientActionBuilder> {
 

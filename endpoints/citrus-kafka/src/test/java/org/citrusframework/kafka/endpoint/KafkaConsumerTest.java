@@ -51,6 +51,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
+@SuppressWarnings({"unchecked", "deprecation", "removal"})
 public class KafkaConsumerTest extends AbstractTestNGUnitTest {
 
     private final org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumerMock = mock(KafkaConsumer.class);

@@ -65,6 +65,7 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
      * Convert query string key-value expression to map. Note, that there could be hamcrest matchers
      * encoded in the expression.
      */
+    @SuppressWarnings("unchecked")
     private Map<String, Object> convertToMap(Object expression) {
         if (expression instanceof Map<?,?>) {
             return (Map<String, Object>) expression;

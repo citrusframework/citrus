@@ -75,7 +75,7 @@ public @interface SftpClientConfig {
     String privateKeyPath() default "";
 
     /**
-     * <privateKeyPassword.
+     * Private key password.
      * @return
      */
     String privateKeyPassword() default "";

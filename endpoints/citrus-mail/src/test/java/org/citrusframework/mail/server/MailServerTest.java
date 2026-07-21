@@ -43,6 +43,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.testng.Assert.*;
 
+@SuppressWarnings("removal")
 public class MailServerTest {
 
     private AutoCloseable mockitoContext;

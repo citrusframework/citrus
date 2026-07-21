@@ -85,6 +85,7 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testCamelSyncEndpointConsumer() {
         String endpointUri = "direct:news-feed";
         CamelSyncEndpointConfiguration endpointConfiguration = new CamelSyncEndpointConfiguration();

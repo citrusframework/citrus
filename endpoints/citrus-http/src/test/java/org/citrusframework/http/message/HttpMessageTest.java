@@ -251,6 +251,7 @@ public class HttpMessageTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testStatusCodeObjectIsPreserved() {
         //GIVEN
         httpMessage.header(HttpMessageHeaders.HTTP_STATUS_CODE, HttpStatus.I_AM_A_TEAPOT);

@@ -71,6 +71,7 @@ public class CookieConverterTest {
     }
 
     @Test
+    @SuppressWarnings({"deprecation", "removal"})
     public void testCookieCommentIsNoLongerPreserved() {
         // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Comment=wtf"));
@@ -136,6 +137,7 @@ public class CookieConverterTest {
     }
 
     @Test
+    @SuppressWarnings({"deprecation", "removal"})
     public void testCookieVersionIsNoLongerPreserved() {
         // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Version=1"));
@@ -162,6 +164,7 @@ public class CookieConverterTest {
     }
 
     @Test
+    @SuppressWarnings({"deprecation", "removal"})
     public void testCookieStringDoesNotContainVersion() {
         // GIVEN
         cookie.setVersion(42);
@@ -214,6 +217,7 @@ public class CookieConverterTest {
     }
 
     @Test
+    @SuppressWarnings({"deprecation", "removal"})
     public void testCookieStringContainsComment() {
         // GIVEN
         cookie.setComment("whatever");

@@ -35,6 +35,7 @@ import org.citrusframework.util.StringUtils;
 public class KafkaEndpointConfigParser implements AnnotationConfigParser<KafkaEndpointConfig, KafkaEndpoint> {
 
     @Override
+    @SuppressWarnings("unchecked")
     public KafkaEndpoint parse(KafkaEndpointConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         KafkaEndpointBuilder builder = new KafkaEndpointBuilder();
 

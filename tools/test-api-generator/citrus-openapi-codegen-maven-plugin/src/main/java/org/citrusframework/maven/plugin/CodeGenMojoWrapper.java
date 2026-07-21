@@ -36,6 +36,7 @@ import static org.citrusframework.openapi.generator.CitrusJavaCodegen.ROOT_CONTE
  * Wrapper class that uses reflection to expose several properties of the {@link CodeGenMojo} for
  * explicit assignment.
  */
+@SuppressWarnings("unchecked")
 public class CodeGenMojoWrapper extends CodeGenMojo {
 
     private MavenProject localMavenProject;
@@ -106,7 +107,7 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
 
     public CodeGenMojoWrapper configOptions(
         @SuppressWarnings("rawtypes") Map configProperties) throws MojoExecutionException {
-        //noinspection unchecked
+
         configOptionsProperties.putAll(configProperties);
 
         propagateContextPathToCodegen();
@@ -131,7 +132,7 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
 
             // Additional properties are stored as comma separated key-value pairs.
             // See org.openapitools.codegen.config.CodegenConfiguratorUtils.applyAdditionalPropertiesKvp for details.
-            //noinspection unchecked
+    
             configOptionsProperties.put("additional-properties",
                 "rootContextPath=" + contextPath);
         }
@@ -166,13 +167,13 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
     }
 
     public CodeGenMojoWrapper globalProperties(@SuppressWarnings("rawtypes") Map globalProperties) {
-        //noinspection unchecked
+
         this.globalProperties.putAll(globalProperties);
         return this;
     }
 
     public CodeGenMojoWrapper schemaFolder(String schemaFolder) {
-        //noinspection unchecked
+
         configOptionsProperties.put(GENERATED_SCHEMA_FOLDER, schemaFolder);
         return this;
     }
@@ -199,7 +200,7 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
         try {
             var field = CodeGenMojo.class.getDeclaredField(fieldName);
             field.setAccessible(true);
-            //noinspection unchecked
+    
             return (T) field.get(this);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new MojoExecutionException(

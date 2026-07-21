@@ -21,7 +21,7 @@ import org.citrusframework.message.ErrorHandlingStrategy;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.lang.Nullable;
+import jakarta.annotation.Nullable;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 
 import java.io.IOException;

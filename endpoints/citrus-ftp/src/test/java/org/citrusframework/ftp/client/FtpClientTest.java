@@ -273,7 +273,7 @@ public class FtpClientTest extends AbstractFtpClientTest {
 
         Assert.assertNull(ftpReply.getSignal());
         Assert.assertNull(ftpReply.getArguments());
-        Assert.assertEquals(ftpReply.getReplyCode(), new Integer(200));
+        Assert.assertEquals(ftpReply.getReplyCode(), Integer.valueOf(200));
         Assert.assertEquals(ftpReply.getReplyString(), "OK");
 
         verify(apacheFtpClient).connect("localhost", 22222);
@@ -310,7 +310,7 @@ public class FtpClientTest extends AbstractFtpClientTest {
 
         Assert.assertNull(ftpReply.getSignal());
         Assert.assertNull(ftpReply.getArguments());
-        Assert.assertEquals(ftpReply.getReplyCode(), new Integer(200));
+        Assert.assertEquals(ftpReply.getReplyCode(), Integer.valueOf(200));
         Assert.assertEquals(ftpReply.getReplyString(), "OK");
 
         ftpClient.send(FtpMessage.command(FTPCmd.MKD).arguments("testDir"), context);
@@ -323,7 +323,7 @@ public class FtpClientTest extends AbstractFtpClientTest {
 
         Assert.assertNull(ftpReply.getSignal());
         Assert.assertNull(ftpReply.getArguments());
-        Assert.assertEquals(ftpReply.getReplyCode(), new Integer(201));
+        Assert.assertEquals(ftpReply.getReplyCode(), Integer.valueOf(201));
         Assert.assertEquals(ftpReply.getReplyString(), "OK");
 
         verify(apacheFtpClient).connect("localhost", 22222);

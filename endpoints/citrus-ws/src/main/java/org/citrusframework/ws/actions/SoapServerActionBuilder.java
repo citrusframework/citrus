@@ -29,6 +29,7 @@ import org.citrusframework.util.ObjectHelper;
  *
  * @since 2.6
  */
+@SuppressWarnings("unchecked")
 public class SoapServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
         implements org.citrusframework.actions.ws.SoapServerActionBuilder<TestAction, SoapServerActionBuilder> {
 

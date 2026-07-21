@@ -211,6 +211,7 @@ public class SshClientTest extends AbstractTestNGUnitTest {
 
     }
 
+    @SuppressWarnings("unchecked")
     private UserInfo getUserInfo(final String arg) {
         argThat(new ArgumentMatcher() {
             public boolean matches(Object argument) {

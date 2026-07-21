@@ -183,12 +183,14 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
     /**
      * Sets the remote interfaces property.
      */
-    public RmiServerBuilder remoteInterfaces(Class<? extends Remote> ... remoteInterfaces) {
+    @SafeVarargs
+    public final RmiServerBuilder remoteInterfaces(Class<? extends Remote> ... remoteInterfaces) {
         endpoint.setRemoteInterfaces(Arrays.asList(remoteInterfaces));
         return this;
     }
 
     @SchemaProperty(description = "List of remote interfaces as fully qualified class name.")
+    @SuppressWarnings("unchecked")
     public void setRemoteInterfaces(List<String> remoteInterfaces) {
         List<Class<? extends Remote>> interfaces = new ArrayList<>();
 

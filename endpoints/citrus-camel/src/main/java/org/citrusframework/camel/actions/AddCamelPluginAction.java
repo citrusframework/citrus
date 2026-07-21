@@ -48,6 +48,7 @@ public class AddCamelPluginAction extends AbstractCamelCliAction {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void doExecute(TestContext context) {
         String pluginName = context.replaceDynamicContentInString(name);
         List<String> resolvedArgs = context.resolveDynamicValuesInList(args);

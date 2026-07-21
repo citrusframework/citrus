@@ -134,6 +134,7 @@ public class CamelMessageProcessor implements MessageProcessor {
 
         private final B self;
 
+        @SuppressWarnings("unchecked")
         public CamelMessageProcessorBuilder() {
             self = (B) this;
         }

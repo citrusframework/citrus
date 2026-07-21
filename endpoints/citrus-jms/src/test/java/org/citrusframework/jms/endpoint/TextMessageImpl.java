@@ -199,6 +199,7 @@ public class TextMessageImpl implements TextMessage {
     public void clearBody() {
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getBody(Class<T> c) {
         return (T) payload;
     }

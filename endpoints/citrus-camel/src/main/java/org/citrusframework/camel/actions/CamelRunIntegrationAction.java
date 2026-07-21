@@ -93,6 +93,7 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void doExecute(TestContext context) {
         String name;
         if (StringUtils.hasText(integrationName)) {

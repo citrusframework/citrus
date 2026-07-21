@@ -127,6 +127,7 @@ public class CamelTransformMessageProcessorTest extends AbstractTestNGUnitTest {
             return "Hello from Camel!";
         }
 
+        @SuppressWarnings("deprecation")
         public void process(Exchange exchange) {
             exchange.getMessage().setBody(getText());
             exchange.getMessage().setHeader("operation", "sayHelloFromCamel");
