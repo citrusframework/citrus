@@ -21,7 +21,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.StandardEnvironment;
-import org.springframework.lang.Nullable;
+import jakarta.annotation.Nullable;
 import org.springframework.util.StringUtils;
 
 /**

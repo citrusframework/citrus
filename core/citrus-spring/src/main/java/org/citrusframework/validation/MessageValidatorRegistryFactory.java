@@ -41,6 +41,7 @@ public class MessageValidatorRegistryFactory implements FactoryBean<MessageValid
         this.registry = messageValidatorRegistry;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public MessageValidatorRegistry getObject() {
         if (applicationContext != null) {

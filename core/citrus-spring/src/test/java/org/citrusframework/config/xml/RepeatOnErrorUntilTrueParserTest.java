@@ -27,6 +27,7 @@ import static org.testng.Assert.assertNull;
 
 public class RepeatOnErrorUntilTrueParserTest extends AbstractActionParserTest<RepeatOnErrorUntilTrue> {
 
+    @SuppressWarnings("removal")
     @Test
     public void testRepeatOnErrorParser() {
         assertActionCount(4);

@@ -26,6 +26,7 @@ public class SpringBeanTypeConverterTest {
 
     private final SpringBeanTypeConverter converter = SpringBeanTypeConverter.INSTANCE;
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testConverter() {
         Assert.assertEquals(converter.convertIfNecessary("{key=[value]}", MultiValueMap.class).getFirst("key"), new String[] {"value"});

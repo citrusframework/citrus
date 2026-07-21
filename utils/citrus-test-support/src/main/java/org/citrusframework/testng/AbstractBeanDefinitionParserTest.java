@@ -35,7 +35,6 @@ public abstract class AbstractBeanDefinitionParserTest extends AbstractTestNGUni
      * for SimpleClassName-context.xml application context file in test package and
      * builds child application context.
      *
-     * @return
      */
     @BeforeClass(alwaysRun = true, dependsOnMethods = "springTestContextPrepareTestInstance")
     protected void parseBeanDefinitions() {

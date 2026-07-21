@@ -85,7 +85,7 @@ public class CustomTestCaseParserTest extends AbstractActionParserTest<EchoActio
         }
     }
 
-    public static class CustomTestCaseParser extends BaseTestCaseParser {
+    public static class CustomTestCaseParser extends BaseTestCaseParser<CustomTestCase> {
 
         public CustomTestCaseParser() {
             super(CustomTestCase.class);
