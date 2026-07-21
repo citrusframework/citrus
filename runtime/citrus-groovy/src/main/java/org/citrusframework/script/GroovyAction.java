@@ -140,6 +140,7 @@ public class GroovyAction extends AbstractTestAction {
         }
     }
 
+    @SuppressWarnings("removal")
     private GroovyClassLoader getPrivilegedGroovyLoader() {
         return AccessController.doPrivileged((PrivilegedAction<GroovyClassLoader>) () -> {
             ClassLoader parent = ClassLoaderHelper.getClassLoader();

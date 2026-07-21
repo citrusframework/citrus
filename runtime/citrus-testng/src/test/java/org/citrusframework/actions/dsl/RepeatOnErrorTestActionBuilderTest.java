@@ -28,6 +28,7 @@ import static org.testng.Assert.assertEquals;
 
 public class RepeatOnErrorTestActionBuilderTest extends UnitTestSupport {
     @Test
+    @SuppressWarnings({"deprecation", "removal"})
     public void testRepeatOnErrorBuilder() {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.variable("var", "foo");
@@ -70,6 +71,7 @@ public class RepeatOnErrorTestActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
+    @SuppressWarnings({"deprecation", "removal"})
     public void testRepeatOnErrorBuilderWithConditionExpression() {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.variable("var", "foo");

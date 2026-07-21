@@ -54,6 +54,7 @@ public class RepeatOnError implements TestActionBuilder<RepeatOnErrorUntilTrue>,
         builder.until(condition);
     }
 
+    @SuppressWarnings("deprecation")
     @SchemaProperty(description = "Automatically sleep the time in milliseconds with each attempt.")
     public void setAutoSleep(long milliseconds) {
         builder.autoSleep(milliseconds);

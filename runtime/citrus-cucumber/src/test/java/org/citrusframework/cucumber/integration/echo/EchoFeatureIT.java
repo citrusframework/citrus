@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 /**
  * @since 2.6
  */
+@SuppressWarnings("deprecation")
 @RunWith(Cucumber.class)
 @CucumberOptions(
         plugin = { "pretty", "org.citrusframework.cucumber.CitrusReporter" } )

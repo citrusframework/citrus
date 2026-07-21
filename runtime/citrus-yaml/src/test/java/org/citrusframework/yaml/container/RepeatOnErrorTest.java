@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 public class RepeatOnErrorTest extends AbstractYamlActionTest {
 
     @Test
+    @SuppressWarnings("removal")
     public void shouldLoadRepeatOnError() {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/repeat-on-error.citrus.it.yaml");
 

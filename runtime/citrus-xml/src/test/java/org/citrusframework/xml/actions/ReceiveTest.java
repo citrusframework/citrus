@@ -73,6 +73,7 @@ public class ReceiveTest extends AbstractXmlActionTest {
     final MessageValidator<?> defaultMessageValidator = Mockito.mock(MessageValidator.class);
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldLoadReceive() throws IOException {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/receive.citrus.it.xml");
 

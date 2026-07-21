@@ -74,6 +74,7 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
     final MessageValidator<?> defaultMessageValidator = Mockito.mock(MessageValidator.class);
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldLoadReceive() throws IOException {
         GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/receive.citrus.test.groovy");
 

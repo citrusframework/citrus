@@ -75,6 +75,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
         delegate.stop();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getInstance(Class<T> type) {
         if (TestContext.class.isAssignableFrom(type)) {

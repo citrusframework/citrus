@@ -41,7 +41,6 @@ public interface ActionsBuilder extends TestActionSupport {
      * Shortcut method running given test action builder.
      * @param builder
      * @param <T>
-     * @return
      */
     <T extends TestAction> void $(TestActionBuilder<T> builder);
 

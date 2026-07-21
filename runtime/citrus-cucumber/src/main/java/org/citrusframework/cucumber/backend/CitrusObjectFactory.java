@@ -64,6 +64,7 @@ public class CitrusObjectFactory implements ObjectFactory {
         instances.clear();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getInstance(Class<T> type) {
         if (CitrusObjectFactory.class.isAssignableFrom(type)) {

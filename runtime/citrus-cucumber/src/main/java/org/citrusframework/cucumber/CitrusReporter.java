@@ -27,6 +27,7 @@ import io.cucumber.plugin.event.TestRunFinished;
 /**
  * @since 2.6
  */
+@SuppressWarnings("deprecation")
 public class CitrusReporter implements SummaryPrinter, ColorAware, ConcurrentEventListener {
 
     public static final String SUITE_NAME = "cucumber-suite";

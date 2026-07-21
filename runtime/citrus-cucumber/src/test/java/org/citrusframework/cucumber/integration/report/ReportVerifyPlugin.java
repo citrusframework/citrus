@@ -29,6 +29,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("deprecation")
 public class ReportVerifyPlugin implements SummaryPrinter, EventListener {
 
     /** Logger */

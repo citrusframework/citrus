@@ -86,9 +86,9 @@ public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
                 throw new CitrusRuntimeException("Could not load groovy script!");
             }
 
-            GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
+            GroovyObject groovyObject = (GroovyObject) groovyClass.getDeclaredConstructor().newInstance();
             return (String) groovyObject.invokeMethod("run", new Object[] {});
-        } catch (CompilationFailedException | IllegalAccessException | InstantiationException | IOException e) {
+        } catch (CompilationFailedException | ReflectiveOperationException | IOException e) {
             throw new CitrusRuntimeException(e);
         }
     }

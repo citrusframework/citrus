@@ -45,7 +45,6 @@ public class AntRun implements TestActionBuilder<AntRunAction>, ReferenceResolve
     /**
      * Sets the build file path.
      * @param buildFilePath
-     * @return
      */
     @XmlAttribute(name = "build-file")
     public void setBuildFile(String buildFilePath) {

@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 public class RepeatOnErrorTest extends AbstractXmlActionTest {
 
     @Test
+    @SuppressWarnings("removal")
     public void shouldLoadRepeatOnError() {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/repeat-on-error.citrus.it.xml");
 
