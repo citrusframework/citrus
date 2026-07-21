@@ -62,6 +62,7 @@ public class TerminationLogReporter extends CitrusReporter {
         super.setEventPublisher(publisher);
     }
 
+    @SuppressWarnings("deprecation")
     private void addTestDetail(TestCaseStarted event) {
         testResults.addTestResult(new TestResult(event.getTestCase().getId(), event.getTestCase().getName(),
                 FeatureHelper.extractFeatureFileName(event.getTestCase().getUri()) + ":" + event.getTestCase().getLine()));
@@ -70,6 +71,7 @@ public class TerminationLogReporter extends CitrusReporter {
     /**
      * Adds step error to test results.
      */
+    @SuppressWarnings("deprecation")
     private void checkStepErrors(TestStepFinished event) {
         if (event.getTestStep() instanceof HookTestStep) {
             return;

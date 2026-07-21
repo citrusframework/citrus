@@ -37,6 +37,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  *
  * @since 2.2
  */
+@SuppressWarnings("deprecation")
 public class CitrusSpringJUnit4Runner extends SpringJUnit4ClassRunner {
 
     /**

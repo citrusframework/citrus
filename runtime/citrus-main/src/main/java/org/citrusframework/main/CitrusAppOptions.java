@@ -208,6 +208,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
      * Apply options based on given argument line.
      * @param arguments
      */
+    @SuppressWarnings("unchecked")
     public T apply(String[] arguments) {
         return apply((T) new CitrusAppConfiguration(), arguments);
     }

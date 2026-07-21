@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 /**
  * @since 2.6
  */
+@SuppressWarnings("deprecation")
 @RunWith(Cucumber.class)
 @CucumberOptions(
         glue = { "org.citrusframework.cucumber.integration.birthday" },

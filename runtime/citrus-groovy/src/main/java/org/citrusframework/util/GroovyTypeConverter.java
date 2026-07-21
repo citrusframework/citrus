@@ -32,6 +32,7 @@ public final class GroovyTypeConverter extends DefaultTypeConverter {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected <T> Optional<T> convertBefore(Object target, Class<T> type) {
         if (GString.class.isAssignableFrom(type)) {
             return (Optional<T>) Optional.of(new GStringImpl(new Object[]{ target }, new String[] {"", ""}));
@@ -43,6 +44,7 @@ public final class GroovyTypeConverter extends DefaultTypeConverter {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T convertStringToType(String value, Class<T> type) {
         if (GString.class.isAssignableFrom(type)) {
             return (T) new GStringImpl(new Object[]{ value }, new String[] {"", ""});

@@ -59,8 +59,9 @@ public class EndpointBuilderHelper {
             }
 
             // Remove when bug in EndpointBuilder.lookup() with cached endpoint builders is fixed
-            return builder.getClass().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return builder.getClass().getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                 java.lang.reflect.InvocationTargetException e) {
             throw new CitrusRuntimeException("Unable to instantiate endpoint builder", e);
         }
     }

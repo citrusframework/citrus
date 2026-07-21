@@ -72,6 +72,7 @@ public class ReceiveTest extends AbstractYamlActionTest {
     final MessageValidator<?> defaultMessageValidator = Mockito.mock(MessageValidator.class);
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldLoadReceive() throws IOException {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/receive.citrus.it.yaml");
 

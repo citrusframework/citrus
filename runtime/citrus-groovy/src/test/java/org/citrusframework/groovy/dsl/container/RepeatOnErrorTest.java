@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 public class RepeatOnErrorTest extends AbstractGroovyActionDslTest {
 
     @Test
+    @SuppressWarnings("removal")
     public void shouldLoadRepeatOnError() {
         GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/repeat-on-error.citrus.test.groovy");
 

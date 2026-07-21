@@ -198,6 +198,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
             );
         }
 
+        @SuppressWarnings("unchecked")
         <T> T getOptionValue(String optionName) {
             try {
                 Method method = options.annotationType().getDeclaredMethod(optionName);

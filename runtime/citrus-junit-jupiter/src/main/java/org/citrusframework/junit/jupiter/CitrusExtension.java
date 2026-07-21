@@ -274,6 +274,7 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
         }
     }
 
+    @SuppressWarnings("deprecation")
     private record AfterSuiteCallback(ExtensionContext extensionContext, String suiteName,
                                       String... tags) implements ExtensionContext.Store.CloseableResource, AutoCloseable {
 

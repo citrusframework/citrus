@@ -85,6 +85,7 @@ public final class CitrusExtensionHelper {
      * Get the {@link TestCaseRunner} associated with the supplied {@code ExtensionContext} and its required test class name.
      * @return the {@code TestCaseRunner} (never {@code null})
      */
+    @SuppressWarnings("deprecation")
     public static TestCaseRunner getTestRunner(ExtensionContext extensionContext) {
         ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
 
@@ -106,6 +107,7 @@ public final class CitrusExtensionHelper {
      * Get the {@link TestLoader} associated with the supplied {@code ExtensionContext} and its required test class name.
      * @return the {@code TestLoader} (never {@code null})
      */
+    @SuppressWarnings("deprecation")
     public static TestLoader getTestLoader(ExtensionContext extensionContext) {
         ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
 
@@ -117,6 +119,7 @@ public final class CitrusExtensionHelper {
      * Get the {@link TestCase} associated with the supplied {@code ExtensionContext} and its required test class name.
      * @return the {@code TestCase} (never {@code null})
      */
+    @SuppressWarnings("deprecation")
     public static TestCase getTestCase(ExtensionContext extensionContext) {
         ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
         return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCase.class.getSimpleName(), key -> {
@@ -163,6 +166,7 @@ public final class CitrusExtensionHelper {
      * Get the {@link TestContext} associated with the supplied {@code ExtensionContext} and its required test class name.
      * @return the {@code TestContext} (never {@code null})
      */
+    @SuppressWarnings("deprecation")
     public static TestContext getTestContext(ExtensionContext extensionContext) {
         ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
         return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestContext.class.getSimpleName(),

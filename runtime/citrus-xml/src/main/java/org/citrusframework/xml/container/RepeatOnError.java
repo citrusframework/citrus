@@ -51,6 +51,7 @@ public class RepeatOnError implements TestActionBuilder<org.citrusframework.cont
         builder.until(condition);
     }
 
+    @SuppressWarnings("deprecation")
     @XmlAttribute
     public void setAutoSleep(long milliseconds) {
         builder.autoSleep(milliseconds);

@@ -72,6 +72,7 @@ public class GroovyShellUtils {
      * @param <T> return type
      * @return script result
      */
+    @SuppressWarnings("unchecked")
     public static <T> T run(ImportCustomizer ic, Object delegate, String scriptCode, Citrus citrus, TestContext context) {
         CompilerConfiguration cc = new CompilerConfiguration();
         cc.addCompilationCustomizers(ic);

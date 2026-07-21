@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 public class RepeatOnErrorJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @CitrusTest
+    @SuppressWarnings("deprecation")
     public void repeatOnErrorContainer() {
         variable("message", "Hello TestFramework");
 
