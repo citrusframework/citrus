@@ -46,6 +46,7 @@ import org.springframework.transaction.TransactionDefinition;
  * access to a {@link javax.sql.DataSource}.
  *
  */
+@SuppressWarnings("removal")
 public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSupport implements TestAction, Named, Described, TestActorAware {
 
     /** Text describing the test action */

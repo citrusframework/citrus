@@ -127,6 +127,7 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
      * @param context
      * @return
      */
+    @SuppressWarnings("unchecked")
     private HasMetadata getResource(String name, String condition, TestContext context) {
         if (resourceType != null) {
             CustomResource<?, ?> resource = getKubernetesClient().resources(resourceType)
@@ -154,6 +155,7 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
      * @param context
      * @return
      */
+    @SuppressWarnings("unchecked")
     private HasMetadata getResourceFromLabel(String labelExpression, String condition, TestContext context) {
         if (labelExpression == null || labelExpression.isEmpty()) {
             return null;
@@ -238,6 +240,7 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
      * @param objectMap
      * @return
      */
+    @SuppressWarnings("unchecked")
     private Map<String, Object> getAsPropertyMap(String property, Map<String, Object> objectMap) {
         if (objectMap != null && objectMap.containsKey(property) && objectMap.get(property) instanceof Map) {
             return (Map<String, Object>) objectMap.get(property);
@@ -252,6 +255,7 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
      * @param objectMap
      * @return
      */
+    @SuppressWarnings("unchecked")
     private List<Map<String, Object>> getAsPropertyList(String property, Map<String, Object> objectMap) {
         if (objectMap.containsKey(property) && objectMap.get(property) instanceof List) {
             return ((List<?>) objectMap.get(property)).stream()
@@ -300,6 +304,7 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Builder resourceType(Class<?> resourceType) {
             if (CustomResource.class.isAssignableFrom(resourceType)) {
                 this.resourceType = (Class<? extends CustomResource<?, ?>>) resourceType;
@@ -311,6 +316,7 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Builder type(Class<?> resourceType) {
             if (CustomResource.class.isAssignableFrom(resourceType)) {
                 version(resourceType.getAnnotation(Version.class).value());

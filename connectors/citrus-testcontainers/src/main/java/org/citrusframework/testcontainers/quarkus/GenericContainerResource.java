@@ -22,6 +22,7 @@ import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testcontainers.containers.GenericContainer;
 
+@SuppressWarnings("unchecked")
 public class GenericContainerResource extends TestcontainersResource<GenericContainer<?>>
         implements QuarkusTestResourceConfigurableLifecycleManager<TestcontainersSupport> {
 

@@ -66,6 +66,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void execute(SeleniumBrowser browser, TestContext context) {
         try {
             if (browser.getWebDriver() instanceof JavascriptExecutor jsEngine) {

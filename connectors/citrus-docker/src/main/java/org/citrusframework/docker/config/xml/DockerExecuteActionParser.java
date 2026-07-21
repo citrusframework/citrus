@@ -115,8 +115,8 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
      */
     private DockerCommand<?> createCommand(Class<? extends DockerCommand<?>> commandType) {
         try {
-            return commandType.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return commandType.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
             throw new BeanCreationException("Failed to create Docker command of type: " + commandType, e);
         }
     }

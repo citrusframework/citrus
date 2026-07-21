@@ -57,6 +57,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void executeDockerCommand(DockerClient dockerClient, CreateContainerCmd command, TestContext testContext) {
         if (hasParameter("name")) {
             command.withName(getParameter("name", testContext));

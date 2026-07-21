@@ -120,6 +120,7 @@ public class DockerExecuteAction extends AbstractTestAction {
     /**
      * Validate command results.
      */
+    @SuppressWarnings("unchecked")
     private void validateCommandResult(DockerCommand command, TestContext context) {
         logger.debug("Starting Docker command result validation");
 
@@ -146,6 +147,7 @@ public class DockerExecuteAction extends AbstractTestAction {
     /**
      * Find proper JSON message validator. Uses several strategies to lookup default JSON message validator.
      */
+    @SuppressWarnings("unchecked")
     private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
         if (jsonMessageValidator != null) {
             return jsonMessageValidator;

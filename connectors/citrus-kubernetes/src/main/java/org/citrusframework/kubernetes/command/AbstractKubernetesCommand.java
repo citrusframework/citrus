@@ -52,6 +52,7 @@ public abstract class AbstractKubernetesCommand<T extends HasMetadata, O, C exte
      * Default constructor initializing the command name.
      * @param name
      */
+    @SuppressWarnings("unchecked")
     public AbstractKubernetesCommand(String name) {
         this.name = name;
         this.self = (C) this;

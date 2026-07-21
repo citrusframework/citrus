@@ -379,6 +379,7 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
         protected void prepareBuild() {
         }
 
+        @SuppressWarnings("unchecked")
         protected C buildContainer() {
             String imageName;
             if (StringUtils.hasText(TestContainersSettings.getRegistry()) &&

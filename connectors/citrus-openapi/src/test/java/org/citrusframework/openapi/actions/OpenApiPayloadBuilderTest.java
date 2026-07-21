@@ -34,6 +34,7 @@ public class OpenApiPayloadBuilderTest {
         context = new TestContext();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testBuildPayloadWithMultiValueMap() {
         // Given

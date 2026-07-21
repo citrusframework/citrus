@@ -86,6 +86,7 @@ public class DeleteCustomResourceAction extends AbstractKubernetesAction {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Builder resourceType(Class<?> resourceType) {
             if (HasMetadata.class.isAssignableFrom(resourceType)) {
                 this.resourceType = (Class<? extends HasMetadata>) resourceType;
@@ -97,6 +98,7 @@ public class DeleteCustomResourceAction extends AbstractKubernetesAction {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Builder type(Class<?> resourceType) {
             if (HasMetadata.class.isAssignableFrom(resourceType)) {
                 version(resourceType.getAnnotation(Version.class).value());

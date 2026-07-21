@@ -40,6 +40,7 @@ public class TestcontainersResource<T extends GenericContainer<?>> implements Qu
         this.containerType = containerType;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public final void init(Map<String, String> initArgs) {
         String[] qualifiedClassNames = initArgs.getOrDefault(ContainerLifecycleListener.INIT_ARG, "").split(",");

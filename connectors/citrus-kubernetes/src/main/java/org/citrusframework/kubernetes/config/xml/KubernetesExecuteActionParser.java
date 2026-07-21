@@ -120,8 +120,8 @@ public class KubernetesExecuteActionParser<T extends KubernetesCommand<?, ?>> im
      */
     private T createCommand(Class<T> commandType) {
         try {
-            return commandType.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return commandType.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
             throw new BeanCreationException("Failed to create Kubernetes command of type: " + commandType, e);
         }
     }
@@ -153,7 +153,6 @@ public class KubernetesExecuteActionParser<T extends KubernetesCommand<?, ?>> im
         /**
          * Sets kubernetes command to execute.
          * @param command
-         * @return
          */
         public void setCommand(KubernetesCommand<?, ?> command) {
             builder.command(command);

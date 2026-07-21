@@ -163,6 +163,7 @@ public class CreateCustomResourceAction extends AbstractKubernetesAction impleme
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Builder resourceType(Class<?> resourceType) {
             if (HasMetadata.class.isAssignableFrom(resourceType)) {
                 this.resourceType = (Class<? extends HasMetadata>) resourceType;

@@ -43,6 +43,7 @@ public class AbstractDockerIT extends TestNGCitrusSpringSupport {
     private static boolean connected = false;
 
     @BeforeSuite(alwaysRun = true)
+    @SuppressWarnings("deprecation")
     public void checkDockerEnvironment() {
         boolean enabled = Boolean.parseBoolean(System.getProperty("citrus.docker.it.enabled", Boolean.FALSE.toString()));
         if (enabled) {

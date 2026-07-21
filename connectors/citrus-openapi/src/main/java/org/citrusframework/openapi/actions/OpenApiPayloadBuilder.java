@@ -42,6 +42,7 @@ public class OpenApiPayloadBuilder extends DefaultPayloadBuilder {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static void replaceDynamicContentInEntry(TestContext context, MultiValueMap<Object, Object> multiValueMap, Entry<?, ?> entry) {
         Object key = entry.getKey();
 
@@ -59,6 +60,7 @@ public class OpenApiPayloadBuilder extends DefaultPayloadBuilder {
         multiValueMap.put(newKey, list);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object buildPayload(TestContext context) {
         if (getPayload() instanceof MultiValueMap<?, ?> multiValueMap) {

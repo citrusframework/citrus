@@ -541,6 +541,7 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("${height}"), "0,3");
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testResultSetScriptValidation() {
         String sql = "select ORDERTYPES, STATUS from orders where ID=5";
@@ -564,6 +565,7 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         verify(resultSetScriptValidator).validateSqlResultSet(any(List.class), any(ScriptValidationContext.class), eq(context));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testResultSetScriptValidationMultipleStatements() {
         String sql1 = "select ORDERTYPES, STATUS from orders where ID=5";
@@ -604,6 +606,7 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         verify(resultSetScriptValidator).validateSqlResultSet(any(List.class), any(ScriptValidationContext.class), eq(context));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testResultSetScriptValidationWrongValue() {
         String sql = "select ORDERTYPES, STATUS from orders where ID=5";
@@ -634,6 +637,7 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         verify(resultSetScriptValidator).validateSqlResultSet(any(List.class), any(ScriptValidationContext.class), eq(context));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testResultSetScriptValidationCombination() {
         String sql = "select ORDERTYPES, STATUS from orders where ID=5";

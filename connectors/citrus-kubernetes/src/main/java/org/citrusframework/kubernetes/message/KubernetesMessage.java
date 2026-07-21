@@ -164,6 +164,7 @@ public class KubernetesMessage extends DefaultMessage {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getPayload(Class<T> type) {
         try {
             if (KubernetesRequest.class.isAssignableFrom(type)) {

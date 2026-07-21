@@ -33,6 +33,7 @@ import static org.springframework.http.HttpStatus.OK;
  *
  * @since 4.1
  */
+@SuppressWarnings("unchecked")
 public class OpenApiClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
         implements OpenApiSpecificationSourceAwareBuilder<TestAction>, org.citrusframework.actions.openapi.OpenApiClientActionBuilder<TestAction, OpenApiClientActionBuilder> {
 

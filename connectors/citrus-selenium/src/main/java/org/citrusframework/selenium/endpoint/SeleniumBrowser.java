@@ -106,6 +106,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
     /**
      * Starts the browser and create local or remote web driver.
      */
+    @SuppressWarnings("unchecked")
     public void start() {
         if (!isStarted()) {
             if (getEndpointConfiguration().getWebDriver() != null) {

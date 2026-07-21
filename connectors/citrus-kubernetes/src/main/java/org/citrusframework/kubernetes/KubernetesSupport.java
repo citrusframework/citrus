@@ -126,6 +126,7 @@ public final class KubernetesSupport {
         return !KubernetesSettings.isLocal();
     }
 
+    @SuppressWarnings("deprecation")
     public static Yaml yaml() {
         Representer representer = new Representer(new DumperOptions()) {
             @Override

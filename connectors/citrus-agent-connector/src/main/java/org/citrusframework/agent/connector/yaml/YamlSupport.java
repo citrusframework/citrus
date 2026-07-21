@@ -61,6 +61,7 @@ public final class YamlSupport {
         return yaml().dumpAsMap(json().convertValue(model, Map.class));
     }
 
+    @SuppressWarnings("deprecation")
     public static Yaml yaml() {
         Representer representer = new Representer(new DumperOptions()) {
             @Override
