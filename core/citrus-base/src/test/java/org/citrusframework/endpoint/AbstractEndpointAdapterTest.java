@@ -16,6 +16,7 @@
 
 package org.citrusframework.endpoint;
 
+import org.citrusframework.base.endpoint.AbstractEndpointAdapter;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.mockito.Mockito;

@@ -18,7 +18,7 @@ package org.citrusframework.groovy.dsl.configuration.endpoints;
 
 import java.util.function.Supplier;
 
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 import groovy.lang.Closure;

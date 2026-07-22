@@ -16,6 +16,7 @@
 
 package org.citrusframework.endpoint.adapter;
 
+import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.testng.Assert;

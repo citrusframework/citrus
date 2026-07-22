@@ -16,8 +16,8 @@
 
 package org.citrusframework.ws.servlet;
 
-import org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter;
-import org.citrusframework.endpoint.adapter.TimeoutProducingEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.TimeoutProducingEndpointAdapter;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.ws.addressing.WsAddressingHeaders;
 import org.citrusframework.ws.interceptor.*;

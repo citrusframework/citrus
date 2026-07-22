@@ -17,7 +17,7 @@
 package org.citrusframework.config.xml;
 
 import org.citrusframework.spring.context.TestContextFactoryBean;
-import org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;

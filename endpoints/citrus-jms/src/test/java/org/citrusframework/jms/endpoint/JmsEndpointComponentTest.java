@@ -23,7 +23,7 @@ import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
 import org.citrusframework.springintegration.channel.ChannelEndpointComponent;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.endpoint.DefaultEndpointFactory;
+import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.endpoint.direct.DirectEndpointComponent;

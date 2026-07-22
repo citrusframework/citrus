@@ -18,12 +18,11 @@ package org.citrusframework.openapi.yaml;
 
 import java.util.Map;
 
-import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
-import org.citrusframework.endpoint.AbstractEndpointAdapter;
+import org.citrusframework.base.endpoint.AbstractEndpointAdapter;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.http.message.HttpMessage;
@@ -34,10 +33,8 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
-import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

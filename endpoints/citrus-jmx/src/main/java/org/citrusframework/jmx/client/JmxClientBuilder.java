@@ -20,7 +20,7 @@ import javax.management.NotificationFilter;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.jmx.message.JmxMessageConverter;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.util.StringUtils;

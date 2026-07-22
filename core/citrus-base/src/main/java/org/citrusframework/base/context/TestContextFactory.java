@@ -22,7 +22,7 @@ import java.util.List;
 import org.citrusframework.api.container.AfterTest;
 import org.citrusframework.api.container.BeforeTest;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.endpoint.DefaultEndpointFactory;
+import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.functions.DefaultFunctionRegistry;
 import org.citrusframework.functions.FunctionRegistry;

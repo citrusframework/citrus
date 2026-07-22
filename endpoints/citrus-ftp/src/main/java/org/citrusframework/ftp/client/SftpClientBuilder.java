@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.util.StringUtils;

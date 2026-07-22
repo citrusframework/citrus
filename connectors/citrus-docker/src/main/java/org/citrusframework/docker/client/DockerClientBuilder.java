@@ -18,7 +18,7 @@ package org.citrusframework.docker.client;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;

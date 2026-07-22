@@ -16,6 +16,8 @@
 
 package org.citrusframework.endpoint.adapter;
 
+import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.RequestDispatchingEndpointAdapter;
 import org.citrusframework.endpoint.adapter.mapping.SimpleMappingStrategy;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;

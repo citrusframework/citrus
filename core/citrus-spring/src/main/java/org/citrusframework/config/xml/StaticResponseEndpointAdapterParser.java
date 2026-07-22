@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.endpoint.adapter.StaticResponseEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.StaticResponseEndpointAdapter;
 import org.citrusframework.message.MessageHeaderType;
 import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.BeanNameAware;

@@ -25,7 +25,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.http.message.HttpMessage;

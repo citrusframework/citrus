@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.endpoint.adapter.StaticResponseEndpointAdapter;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.testng.Assert;

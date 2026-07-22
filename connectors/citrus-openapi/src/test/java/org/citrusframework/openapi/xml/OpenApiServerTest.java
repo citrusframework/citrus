@@ -23,7 +23,7 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
-import org.citrusframework.endpoint.AbstractEndpointAdapter;
+import org.citrusframework.base.endpoint.AbstractEndpointAdapter;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.http.message.HttpMessage;

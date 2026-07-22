@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.endpoint.adapter;
+package org.citrusframework.base.endpoint.adapter;
 
 import org.citrusframework.endpoint.adapter.mapping.EndpointAdapterMappingStrategy;
 import org.citrusframework.endpoint.adapter.mapping.MappingKeyExtractor;

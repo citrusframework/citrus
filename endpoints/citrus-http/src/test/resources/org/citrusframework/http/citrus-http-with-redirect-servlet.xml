@@ -24,7 +24,7 @@
   <!-- Controller for handling rest requests -->
   <bean class="org.citrusframework.http.controller.HttpMessageController">
     <property name="endpointAdapter">
-      <bean class="org.citrusframework.endpoint.adapter.StaticResponseEndpointAdapter">
+      <bean class="org.citrusframework.base.endpoint.adapter.StaticResponseEndpointAdapter">
         <property name="messageHeader">
           <map>
             <entry key="citrus_http_status_code" value="302"/>

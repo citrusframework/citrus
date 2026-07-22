@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.endpoint;
+package org.citrusframework.base.endpoint;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -28,6 +28,10 @@ import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.EndpointBuilder;
+import org.citrusframework.endpoint.EndpointComponent;
+import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;

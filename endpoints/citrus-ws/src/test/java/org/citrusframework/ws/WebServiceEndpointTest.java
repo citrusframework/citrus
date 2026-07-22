@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
-import org.citrusframework.endpoint.adapter.StaticEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.StaticEndpointAdapter;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.ws.client.WebServiceEndpointConfiguration;

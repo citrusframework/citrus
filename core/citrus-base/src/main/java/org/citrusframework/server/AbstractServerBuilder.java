@@ -17,7 +17,7 @@
 package org.citrusframework.server;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;

@@ -21,6 +21,7 @@ import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusEndpointAnnotations;
 import org.citrusframework.annotations.CitrusEndpointProperty;
 import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 

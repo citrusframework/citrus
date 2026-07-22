@@ -20,7 +20,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.EndpointUriBuilder;
 import org.citrusframework.camel.message.CamelMessageConverter;
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.citrusframework.util.StringUtils;

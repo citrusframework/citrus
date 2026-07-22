@@ -19,7 +19,7 @@ package org.citrusframework.config.xml;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.endpoint.adapter.RequestDispatchingEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.RequestDispatchingEndpointAdapter;
 import org.citrusframework.endpoint.adapter.mapping.EndpointAdapterMappingStrategy;
 import org.citrusframework.endpoint.adapter.mapping.MappingKeyExtractor;
 import org.springframework.beans.factory.BeanNameAware;

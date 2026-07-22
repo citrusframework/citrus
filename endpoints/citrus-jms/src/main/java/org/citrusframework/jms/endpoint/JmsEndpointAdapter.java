@@ -17,7 +17,7 @@
 package org.citrusframework.jms.endpoint;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.endpoint.AbstractEndpointAdapter;
+import org.citrusframework.base.endpoint.AbstractEndpointAdapter;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.jms.message.JmsMessageHeaderMapper;

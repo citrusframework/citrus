@@ -19,7 +19,7 @@ package org.citrusframework.camel.endpoint;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.camel.message.CamelMessageConverter;
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;

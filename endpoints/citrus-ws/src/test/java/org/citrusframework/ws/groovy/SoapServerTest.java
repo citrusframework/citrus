@@ -21,7 +21,7 @@ import java.util.Arrays;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.endpoint.AbstractEndpointAdapter;
+import org.citrusframework.base.endpoint.AbstractEndpointAdapter;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.groovy.GroovyTestLoader;
