@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.sql.actions;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.sql.actions.ExecuteSQLAction;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.dao.DataAccessException;

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.groovy.actions;
 
 import java.util.List;
 
+import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;

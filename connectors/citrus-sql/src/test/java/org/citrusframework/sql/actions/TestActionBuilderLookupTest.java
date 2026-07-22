@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.sql.actions;
 
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.sql.actions.ExecutePLSQLAction;
-import org.citrusframework.sql.actions.ExecuteSQLAction;
-import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
