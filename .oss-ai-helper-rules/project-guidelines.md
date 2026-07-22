@@ -2,9 +2,9 @@
 
 This rule file contains branching, commit, PR, and task-finding conventions for the project. Commands read this file to determine how to name branches, format commits, and search for tasks.
 
-- **Fix branch:** `fix/<ISSUE_NUMBER>`
+- **Fix branch:** `fix/<ISSUE_NUMBER>-<short-slug>`
 - **Feature branch:** `feature/<ISSUE_NUMBER>-<short-slug>`
-- **Bugfix branch:** `bugfix/<ISSUE_NUMBER>`
+- **Bugfix branch:** `bugfix/<ISSUE_NUMBER>-<short-slug>`
 - **Quick-fix branch:** `quick-fix/<short-slug>`
 - **SonarCloud branch:** _(not configured)_
 - **Commit format (fix):** `fix(#<ISSUE_NUMBER>): <brief description of fix>`
