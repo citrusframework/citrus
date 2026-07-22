@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.integration;
+package org.citrusframework.json.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
@@ -22,10 +22,10 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
- * @since 2.3
+ * @since 2.5
  */
-public class JsonPathValidationIT extends TestNGCitrusSpringSupport {
+public class HamcrestValidationMatcherIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
-    public void JsonPathValidationIT() {}
+    public void HamcrestValidationMatcherIT() {}
 }

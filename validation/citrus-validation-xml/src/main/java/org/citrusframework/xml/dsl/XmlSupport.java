@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.dsl;
+package org.citrusframework.xml.dsl;
 
 import org.citrusframework.validation.GenericValidationProcessor;
 import org.citrusframework.validation.xml.XmlMarshallingValidationProcessor;

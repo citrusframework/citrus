@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework.integration;
+package org.citrusframework.json.integration;
 
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.dsl.JsonSupport;
+import org.citrusframework.json.dsl.JsonSupport;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
 import org.citrusframework.exceptions.TestCaseFailedException;

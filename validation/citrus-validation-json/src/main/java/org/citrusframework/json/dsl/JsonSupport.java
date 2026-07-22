@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.dsl;
+package org.citrusframework.json.dsl;
 
 import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.message.builder.ObjectMappingPayloadBuilder;
