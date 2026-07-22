@@ -26,7 +26,7 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.actions.ExecuteSQLQueryAction;
+import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.spi.Resources;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;

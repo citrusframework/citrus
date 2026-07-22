@@ -17,7 +17,6 @@
 package org.citrusframework.actions.dsl;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +26,7 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.actions.ExecuteSQLQueryAction;
+import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.spi.Resource;

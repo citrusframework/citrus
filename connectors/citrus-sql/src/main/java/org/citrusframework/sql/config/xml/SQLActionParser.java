@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.config.xml;
+package org.citrusframework.sql.config.xml;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,8 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.actions.ExecuteSQLAction;
-import org.citrusframework.actions.ExecuteSQLQueryAction;
+import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.sql.actions.ExecuteSQLAction;
+import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;

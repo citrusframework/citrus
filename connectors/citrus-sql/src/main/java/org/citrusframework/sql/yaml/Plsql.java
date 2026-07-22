@@ -19,7 +19,7 @@ package org.citrusframework.sql.yaml;
 import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ExecutePLSQLAction;
+import org.citrusframework.sql.actions.ExecutePLSQLAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.yaml.SchemaProperty;

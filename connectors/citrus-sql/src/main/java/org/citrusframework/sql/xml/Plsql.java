@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ExecutePLSQLAction;
+import org.citrusframework.sql.actions.ExecutePLSQLAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.springframework.transaction.PlatformTransactionManager;

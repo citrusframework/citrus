@@ -17,13 +17,12 @@
 package org.citrusframework.actions.dsl;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.actions.ExecutePLSQLAction;
+import org.citrusframework.sql.actions.ExecutePLSQLAction;
 import org.citrusframework.spi.Resource;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;

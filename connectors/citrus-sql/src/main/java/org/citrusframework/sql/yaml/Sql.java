@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.AbstractDatabaseConnectingTestAction;
-import org.citrusframework.actions.ExecuteSQLAction;
-import org.citrusframework.actions.ExecuteSQLQueryAction;
+import org.citrusframework.sql.actions.AbstractDatabaseConnectingTestAction;
+import org.citrusframework.sql.actions.ExecuteSQLAction;
+import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;

@@ -17,6 +17,7 @@
 package org.citrusframework.actions;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.sql.actions.ExecutePLSQLAction;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
