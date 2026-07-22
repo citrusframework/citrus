@@ -21,7 +21,7 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.cucumber.CucumberSettings;

@@ -24,7 +24,7 @@ import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.context.TestContext;
@@ -43,7 +43,7 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.opentest4j.TestAbortedException;
 
-import static org.citrusframework.annotations.CitrusAnnotations.injectCitrusFramework;
+import static org.citrusframework.base.annotations.CitrusAnnotations.injectCitrusFramework;
 import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.*;
 
 /**

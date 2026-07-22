@@ -26,7 +26,7 @@ import io.cucumber.core.exception.CucumberException;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.context.TestContext;
 
 /**

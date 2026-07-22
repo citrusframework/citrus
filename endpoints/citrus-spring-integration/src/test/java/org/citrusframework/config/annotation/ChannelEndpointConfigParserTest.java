@@ -19,7 +19,7 @@ package org.citrusframework.config.annotation;
 import java.util.Map;
 
 import org.citrusframework.TestActor;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.springintegration.channel.ChannelEndpoint;
 import org.citrusframework.springintegration.channel.ChannelMessageConverter;

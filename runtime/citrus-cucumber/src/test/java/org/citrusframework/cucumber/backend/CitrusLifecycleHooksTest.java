@@ -32,8 +32,8 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.TestResult.failed;
 import static org.citrusframework.TestResult.success;
-import static org.citrusframework.annotations.CitrusAnnotations.injectTestContext;
-import static org.citrusframework.annotations.CitrusAnnotations.injectTestRunner;
+import static org.citrusframework.base.annotations.CitrusAnnotations.injectTestContext;
+import static org.citrusframework.base.annotations.CitrusAnnotations.injectTestRunner;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;

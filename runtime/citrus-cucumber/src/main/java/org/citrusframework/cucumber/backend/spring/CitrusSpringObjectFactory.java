@@ -26,7 +26,7 @@ import org.citrusframework.CitrusSpringContext;
 import org.citrusframework.CitrusSpringContextProvider;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactoryBean;
 import org.slf4j.Logger;

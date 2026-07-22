@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static org.citrusframework.annotations.CitrusAnnotations.injectEndpoints;
+import static org.citrusframework.base.annotations.CitrusAnnotations.injectEndpoints;
 import static org.citrusframework.config.annotation.AnnotationConfigParser.lookup;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;

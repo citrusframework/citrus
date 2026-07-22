@@ -18,7 +18,7 @@ package org.citrusframework.container;
 
 import org.citrusframework.CitrusContext;
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.spi.BindToRegistry;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.annotations;
+package org.citrusframework.base.annotations;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -26,6 +26,12 @@ import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusConfiguration;
+import org.citrusframework.annotations.CitrusEndpoint;
+import org.citrusframework.annotations.CitrusEndpointAnnotations;
+import org.citrusframework.annotations.CitrusEndpointConfig;
+import org.citrusframework.annotations.CitrusFramework;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.api.common.Named;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
