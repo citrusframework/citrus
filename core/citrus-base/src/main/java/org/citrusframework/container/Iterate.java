@@ -17,6 +17,7 @@
 package org.citrusframework.container;
 
 import org.citrusframework.AbstractIteratingContainerBuilder;
+import org.citrusframework.api.container.IterateContainerBuilder;
 import org.citrusframework.context.TestContext;
 
 /**

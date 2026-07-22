@@ -27,7 +27,7 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestResult;
 import org.citrusframework.common.Described;
 import org.citrusframework.common.ShutdownPhase;
-import org.citrusframework.container.TestActionContainer;
+import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.log.CitrusLogSettings;
 import org.citrusframework.log.LogColors;

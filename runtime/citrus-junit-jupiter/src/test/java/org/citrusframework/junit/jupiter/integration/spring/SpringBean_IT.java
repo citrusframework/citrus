@@ -21,7 +21,7 @@ import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.config.CitrusSpringConfig;
-import org.citrusframework.container.BeforeTest;
+import org.citrusframework.api.container.BeforeTest;
 import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.direct.DirectEndpoint;

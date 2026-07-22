@@ -20,6 +20,7 @@ import org.citrusframework.AbstractTestBoundaryContainerBuilder;
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.AfterTest;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

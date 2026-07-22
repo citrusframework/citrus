@@ -18,7 +18,7 @@ package org.citrusframework.config.xml;
 
 import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.container.AbstractIteratingActionContainer;
-import org.citrusframework.container.IteratingConditionExpression;
+import org.citrusframework.api.container.IteratingConditionExpression;
 
 import java.time.Duration;
 

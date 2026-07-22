@@ -17,6 +17,8 @@
 package org.citrusframework.report;
 
 import org.citrusframework.TestCase;
+import org.citrusframework.api.container.AfterTest;
+import org.citrusframework.api.container.BeforeTest;
 
 /**
  * Test listener interface. Listeners invoked on test start, finish, failure, skip, success.
@@ -37,7 +39,7 @@ public interface TestListener {
 
     /**
      * Invoked when test execution starts
-     * (after {@link org.citrusframework.container.BeforeTest} execution} execution)
+     * (after {@link BeforeTest} execution} execution)
      */
     default void onTestExecutionStart(TestCase test) {
         // Default implementation does nothing
@@ -46,7 +48,7 @@ public interface TestListener {
 
     /**
      * Invoked when test execution has ended (after final actions execution and
-     * before {@link org.citrusframework.container.AfterTest} execution)
+     * before {@link AfterTest} execution)
      *
      * @see #onTestEnd(TestCase)
      */
@@ -93,28 +95,28 @@ public interface TestListener {
     }
 
     /**
-     * Invoked when {@link org.citrusframework.container.BeforeTest} execution starts, only if any exist
+     * Invoked when {@link BeforeTest} execution starts, only if any exist
      */
     default void onBeforeTestStart(TestCase test) {
         // Default implementation does nothing
     }
 
     /**
-     * Invoked when {@link org.citrusframework.container.BeforeTest} execution ends, only if any exist
+     * Invoked when {@link BeforeTest} execution ends, only if any exist
      */
     default void onBeforeTestEnd(TestCase test) {
         // Default implementation does nothing
     }
 
     /**
-     * Invoked when {@link org.citrusframework.container.AfterTest} execution starts, only if any exist
+     * Invoked when {@link AfterTest} execution starts, only if any exist
      */
     default void onAfterTestStart(TestCase test) {
         // Default implementation does nothing
     }
 
     /**
-     * Invoked when {@link org.citrusframework.container.AfterTest} execution ends, only if any exist
+     * Invoked when {@link AfterTest} execution ends, only if any exist
      */
     default void onAfterTestEnd(TestCase test) {
         // Default implementation does nothing

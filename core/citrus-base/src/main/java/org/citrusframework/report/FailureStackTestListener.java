@@ -23,7 +23,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
-import org.citrusframework.container.TestActionContainer;
+import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;

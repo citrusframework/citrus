@@ -25,7 +25,7 @@ import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.container.Sequence;
-import org.citrusframework.container.TestActionContainer;
+import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;

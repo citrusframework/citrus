@@ -18,8 +18,8 @@ package org.citrusframework;
 
 import java.util.Collections;
 
-import org.citrusframework.container.AfterSuite;
-import org.citrusframework.container.BeforeSuite;
+import org.citrusframework.api.container.AfterSuite;
+import org.citrusframework.api.container.BeforeSuite;
 import org.citrusframework.container.SequenceAfterSuite;
 import org.citrusframework.container.SequenceBeforeSuite;
 import org.citrusframework.container.SequenceBeforeTest;

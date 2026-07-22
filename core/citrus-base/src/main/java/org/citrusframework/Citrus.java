@@ -16,8 +16,8 @@
 
 package org.citrusframework;
 
-import org.citrusframework.container.AfterSuite;
-import org.citrusframework.container.BeforeSuite;
+import org.citrusframework.api.container.AfterSuite;
+import org.citrusframework.api.container.BeforeSuite;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.report.MessageListener;
 import org.citrusframework.report.MessageListenerAware;

@@ -29,6 +29,8 @@ import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.api.container.ApplyTemplateBuilder;
+import org.citrusframework.api.container.TemplateLoader;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;

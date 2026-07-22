@@ -22,7 +22,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionContainerBuilder;
 import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
-import org.citrusframework.container.TestActionContainer;
+import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.context.ValidationContext;

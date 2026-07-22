@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestAction;
-import org.citrusframework.container.TestActionContainer;
+import org.citrusframework.api.container.TestActionContainer;
 
 public abstract class AbstractTestContainerFactoryBean<T extends TestActionContainer, B extends AbstractTestContainerBuilder<?, ?>> extends AbstractTestActionFactoryBean<T, B> {
 

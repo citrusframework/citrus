@@ -30,6 +30,8 @@ import org.citrusframework.api.actions.ReceiveActionBuilder;
 import org.citrusframework.api.actions.ReceiveMessageBuilderFactory;
 import org.citrusframework.api.actions.SendActionBuilder;
 import org.citrusframework.api.actions.SendMessageBuilderFactory;
+import org.citrusframework.api.container.TestActionContainer;
+import org.citrusframework.api.container.WaitContainerBuilder;
 import org.citrusframework.condition.Condition;
 import org.citrusframework.container.*;
 

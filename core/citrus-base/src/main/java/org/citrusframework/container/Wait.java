@@ -26,6 +26,7 @@ import java.util.concurrent.TimeoutException;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.api.container.WaitContainerBuilder;
 import org.citrusframework.condition.ActionCondition;
 import org.citrusframework.condition.Condition;
 import org.citrusframework.condition.FileCondition;

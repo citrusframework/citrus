@@ -18,6 +18,7 @@ package org.citrusframework.container;
 
 import java.io.File;
 
+import org.citrusframework.api.container.WaitContainerBuilder;
 import org.citrusframework.condition.FileCondition;
 
 /**

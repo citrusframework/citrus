@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.ParallelContainerBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ParallelContainerException;

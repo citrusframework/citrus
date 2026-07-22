@@ -19,6 +19,7 @@ package org.citrusframework.container;
 import java.time.Duration;
 
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.WaitContainerBuilder;
 import org.citrusframework.condition.Condition;
 
 /**

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.container.AfterSuite;
+import org.citrusframework.api.container.AfterSuite;
 import org.citrusframework.container.SequenceAfterSuite;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
