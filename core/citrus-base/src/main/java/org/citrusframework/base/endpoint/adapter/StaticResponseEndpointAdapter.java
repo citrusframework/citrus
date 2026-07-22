@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.endpoint.adapter;
+package org.citrusframework.base.endpoint.adapter;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

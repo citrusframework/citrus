@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework.endpoint.adapter;
+package org.citrusframework.base.endpoint.adapter;
 
-import org.citrusframework.endpoint.AbstractEndpointAdapter;
+import org.citrusframework.base.endpoint.AbstractEndpointAdapter;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
-import org.citrusframework.endpoint.StaticEndpoint;
+import org.citrusframework.base.endpoint.StaticEndpoint;
 import org.citrusframework.message.Message;
 
 /**

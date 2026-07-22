@@ -18,7 +18,7 @@ package org.citrusframework.websocket.client;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;

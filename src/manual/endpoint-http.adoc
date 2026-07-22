@@ -2033,7 +2033,7 @@ public HttpMessageController citrusHttpMessageController() {
 <bean id="citrusHttpMessageController" class="org.citrusframework.http.controller.HttpMessageController">
   <property name="endpointAdapter">
       <bean
-       class="org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter"/>
+       class="org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter"/>
   </property>
 </bean>
 ----

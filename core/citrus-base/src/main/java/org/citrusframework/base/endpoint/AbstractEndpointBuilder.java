@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package org.citrusframework.endpoint;
+package org.citrusframework.base.endpoint;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
 import org.citrusframework.TestActor;
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.api.common.Named;
+import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;

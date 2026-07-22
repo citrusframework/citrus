@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package org.citrusframework.endpoint.adapter;
-
-import org.citrusframework.message.DefaultMessage;
+package org.citrusframework.base.endpoint.adapter;
 
 /**
- * Endpoint adapter always returning empty response message.
+ * Endpoint adapter produces no response message forcing a request timeout on client side.
  *
  * @since 1.4
  */
-public class EmptyResponseEndpointAdapter extends StaticEndpointAdapter {
+public class TimeoutProducingEndpointAdapter extends StaticEndpointAdapter {
 
-    public EmptyResponseEndpointAdapter() {
-        super(new DefaultMessage(""));
+    public TimeoutProducingEndpointAdapter() {
+        super(null);
     }
 }

@@ -19,7 +19,7 @@ package org.citrusframework.kubernetes.client;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;

@@ -17,6 +17,7 @@
 package org.citrusframework.endpoint.adapter;
 
 import org.citrusframework.TestCase;
+import org.citrusframework.base.endpoint.adapter.RequestDispatchingEndpointAdapter;
 import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.base.context.TestContextFactory;

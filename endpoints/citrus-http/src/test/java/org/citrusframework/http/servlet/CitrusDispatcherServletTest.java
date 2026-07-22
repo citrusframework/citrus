@@ -19,8 +19,8 @@ package org.citrusframework.http.servlet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter;
-import org.citrusframework.endpoint.adapter.TimeoutProducingEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.TimeoutProducingEndpointAdapter;
 import org.citrusframework.http.controller.HttpMessageController;
 import org.citrusframework.http.interceptor.DelegatingHandlerInterceptor;
 import org.citrusframework.http.interceptor.LoggingHandlerInterceptor;

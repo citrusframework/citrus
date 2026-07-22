@@ -18,7 +18,7 @@ package org.citrusframework.ws.server;
 
 import jakarta.xml.soap.MimeHeaders;
 import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;

@@ -23,7 +23,7 @@ import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusEndpointAnnotations;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.endpoint.DefaultEndpointFactory;
+import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.spi.ReferenceResolver;

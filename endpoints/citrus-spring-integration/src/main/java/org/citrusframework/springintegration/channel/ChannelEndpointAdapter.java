@@ -17,7 +17,7 @@
 package org.citrusframework.springintegration.channel;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.endpoint.AbstractEndpointAdapter;
+import org.citrusframework.base.endpoint.AbstractEndpointAdapter;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.message.Message;
 import org.slf4j.Logger;

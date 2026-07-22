@@ -18,7 +18,7 @@ package org.citrusframework.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.endpoint.adapter.StaticResponseEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.StaticResponseEndpointAdapter;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;

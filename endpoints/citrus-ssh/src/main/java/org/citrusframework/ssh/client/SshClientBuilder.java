@@ -18,7 +18,7 @@ package org.citrusframework.ssh.client;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.ssh.message.SshMessageConverter;
 import org.citrusframework.util.StringUtils;

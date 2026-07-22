@@ -19,7 +19,7 @@ package org.citrusframework.agent.connector.actions;
 import org.citrusframework.agent.connector.CitrusAgentSettings;
 import org.citrusframework.agent.connector.UnitTestSupport;
 import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.endpoint.adapter.StaticEndpointAdapter;
+import org.citrusframework.base.endpoint.adapter.StaticEndpointAdapter;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.server.HttpServer;

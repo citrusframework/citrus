@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.endpoint;
+package org.citrusframework.base.endpoint;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

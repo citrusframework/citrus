@@ -21,7 +21,6 @@ import java.util.StringTokenizer;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.citrusframework.util.StringUtils;
 
 /**
  * Endpoint uri resolver working on message headers. Resolver is searching for a specific header entry which holds the actual
@@ -43,7 +42,7 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
         String requestUri;
         if (headers.containsKey(ENDPOINT_URI_HEADER_NAME)) {
             requestUri = headers.get(ENDPOINT_URI_HEADER_NAME).toString();
-        } else if (StringUtils.hasText(defaultUri)) {
+        } else if (defaultUri != null && !defaultUri.isEmpty()) {
             requestUri = defaultUri;
         } else {
             requestUri = defaultEndpointUri;
