@@ -22,7 +22,7 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.condition.ActionCondition;
-import org.citrusframework.condition.Condition;
+import org.citrusframework.api.condition.Condition;
 import org.citrusframework.condition.FileCondition;
 import org.citrusframework.container.Wait;
 import org.citrusframework.context.TestContext;

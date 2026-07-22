@@ -22,7 +22,7 @@ import java.time.Duration;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.api.actions.ActionBuilder;
-import org.citrusframework.condition.Condition;
+import org.citrusframework.api.condition.Condition;
 
 public interface WaitContainerBuilder<T extends TestAction, B extends TestActionBuilder<T>, C extends Condition>
         extends ActionBuilder<T, B>, TestActionBuilder<T> {

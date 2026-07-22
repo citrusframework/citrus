@@ -32,7 +32,7 @@ import org.citrusframework.api.actions.SendActionBuilder;
 import org.citrusframework.api.actions.SendMessageBuilderFactory;
 import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.api.container.WaitContainerBuilder;
-import org.citrusframework.condition.Condition;
+import org.citrusframework.api.condition.Condition;
 import org.citrusframework.container.*;
 
 public interface BaseTestActionSupport extends BaseTestActions, TestActionContainers {

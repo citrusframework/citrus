@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.condition;
+package org.citrusframework.api.condition;
 
 import org.citrusframework.context.TestContext;
 

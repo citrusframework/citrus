@@ -16,7 +16,7 @@
 
 package org.citrusframework.actions;
 
-import org.citrusframework.condition.Condition;
+import org.citrusframework.api.condition.Condition;
 import org.citrusframework.container.Wait;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;

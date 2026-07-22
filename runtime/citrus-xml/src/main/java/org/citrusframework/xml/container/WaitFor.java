@@ -24,7 +24,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.condition.ActionCondition;
-import org.citrusframework.condition.Condition;
+import org.citrusframework.api.condition.Condition;
 import org.citrusframework.condition.FileCondition;
 import org.citrusframework.condition.HttpCondition;
 import org.citrusframework.condition.MessageCondition;

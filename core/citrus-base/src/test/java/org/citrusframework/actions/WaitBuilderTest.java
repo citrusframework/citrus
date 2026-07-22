@@ -18,7 +18,7 @@ package org.citrusframework.actions;
 
 import java.io.File;
 
-import org.citrusframework.condition.Condition;
+import org.citrusframework.api.condition.Condition;
 import org.citrusframework.container.Wait;
 import org.citrusframework.container.WaitActionConditionBuilder;
 import org.citrusframework.container.WaitFileConditionBuilder;
