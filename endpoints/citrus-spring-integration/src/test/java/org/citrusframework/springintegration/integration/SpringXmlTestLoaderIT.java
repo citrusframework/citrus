@@ -1,0 +1,107 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.citrusframework.springintegration.integration;
+
+import org.citrusframework.DefaultTestCase;
+import org.citrusframework.TestCase;
+import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.spring.BeanDefinitionParserConfiguration;
+import org.citrusframework.spring.SpringXmlTestLoaderConfiguration;
+import org.citrusframework.config.xml.BaseTestCaseMetaInfoParser;
+import org.citrusframework.config.xml.BaseTestCaseParser;
+import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.util.xml.DomUtils;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.w3c.dom.Element;
+
+@SpringXmlTestLoaderConfiguration(
+        parserConfigurations = {
+                @BeanDefinitionParserConfiguration(name = "testcase", parser = SpringXmlTestLoaderIT.CustomTestCaseParser.class),
+                @BeanDefinitionParserConfiguration(name = "meta-info", parser = SpringXmlTestLoaderIT.CustomTestCaseMetaInfoParser.class)
+        })
+public class SpringXmlTestLoaderIT extends TestNGCitrusSpringSupport {
+
+    @Test
+    @CitrusTestSource(type = TestLoader.SPRING)
+    public void SpringXmlTestLoaderIT() {
+        TestCase testCase = getTestCase();
+        Assert.assertTrue(testCase instanceof CustomTestCase);
+
+        TestCaseMetaInfo metaInfo = testCase.getMetaInfo();
+        Assert.assertTrue(metaInfo instanceof CustomTestCaseMetaInfo);
+        Assert.assertEquals(((CustomTestCaseMetaInfo)metaInfo).getDescription(), "Foo bar: F#!$§ed up beyond all repair");
+    }
+
+    /**
+     * A custom test case implementation
+     */
+    public static class CustomTestCase extends DefaultTestCase {
+    }
+
+    /**
+     * A custom test case meta info that should be created by the loader
+     */
+    public static class CustomTestCaseMetaInfo extends TestCaseMetaInfo {
+
+        private String description;
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
+
+    /**
+     * A custom test case parser implementation used to create the custom test case
+     */
+    public static class CustomTestCaseParser extends BaseTestCaseParser<CustomTestCase> {
+
+        public CustomTestCaseParser() {
+            super(CustomTestCase.class);
+        }
+
+    }
+
+    /**
+     * A custom meta info parser used to create the custom test case meta info
+     */
+    public static class CustomTestCaseMetaInfoParser extends BaseTestCaseMetaInfoParser<CustomTestCaseMetaInfo> {
+
+        public CustomTestCaseMetaInfoParser() {
+            super(CustomTestCaseMetaInfo.class);
+        }
+
+        @Override
+        protected void parseAdditionalProperties(Element metaInfoElement, BeanDefinitionBuilder metaInfoBuilder) {
+
+            Element descriptionElement = DomUtils.getChildElementByTagName(metaInfoElement, "description");
+            if (descriptionElement != null) {
+                String description = DomUtils.getTextValue(descriptionElement);
+                metaInfoBuilder.addPropertyValue("description", description);
+            }
+
+        }
+    }
+
+}
