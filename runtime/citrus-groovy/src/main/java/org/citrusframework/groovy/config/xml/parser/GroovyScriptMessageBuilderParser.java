@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.config.xml.parser;
+package org.citrusframework.groovy.config.xml.parser;
 
-import org.citrusframework.message.builder.script.GroovyFileResourcePayloadBuilder;
-import org.citrusframework.message.builder.script.GroovyScriptPayloadBuilder;
+import org.citrusframework.config.xml.parser.ScriptMessageBuilderParser;
+import org.citrusframework.groovy.message.builder.GroovyFileResourcePayloadBuilder;
+import org.citrusframework.groovy.message.builder.GroovyScriptPayloadBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.springframework.util.xml.DomUtils;

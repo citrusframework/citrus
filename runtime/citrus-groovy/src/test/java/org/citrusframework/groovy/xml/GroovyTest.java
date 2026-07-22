@@ -18,7 +18,7 @@ package org.citrusframework.groovy.xml;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.script.GroovyAction;
+import org.citrusframework.groovy.actions.GroovyAction;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
 import org.testng.Assert;

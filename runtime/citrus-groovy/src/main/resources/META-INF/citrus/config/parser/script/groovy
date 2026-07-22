@@ -1,1 +1,1 @@
-type=org.citrusframework.config.xml.parser.GroovyScriptMessageBuilderParser
+type=org.citrusframework.groovy.config.xml.parser.GroovyScriptMessageBuilderParser

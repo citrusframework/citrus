@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.message.builder.script;
+package org.citrusframework.groovy.message.builder;
 
 import java.io.IOException;
 

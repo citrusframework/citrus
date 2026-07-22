@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.config.xml;
+package org.citrusframework.groovy.config.xml;
 
-import org.citrusframework.script.GroovyAction;
+import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
+import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.groovy.actions.GroovyAction;
 import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

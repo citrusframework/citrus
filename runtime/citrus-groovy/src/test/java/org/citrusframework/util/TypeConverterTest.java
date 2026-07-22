@@ -19,6 +19,7 @@ package org.citrusframework.util;
 import java.util.Map;
 
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.groovy.util.GroovyTypeConverter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

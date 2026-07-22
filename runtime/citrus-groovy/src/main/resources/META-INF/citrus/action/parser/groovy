@@ -1,1 +1,1 @@
-type=org.citrusframework.config.xml.GroovyActionParser
+type=org.citrusframework.groovy.config.xml.GroovyActionParser

@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework.script;
+package org.citrusframework.groovy.actions;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
@@ -30,11 +35,6 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * Action executes groovy scripts either specified inline or from external file resource.
