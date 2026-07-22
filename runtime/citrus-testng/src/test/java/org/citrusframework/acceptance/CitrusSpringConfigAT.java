@@ -17,8 +17,8 @@
 package org.citrusframework.acceptance;
 
 import org.citrusframework.CitrusSpringSettings;
-import org.citrusframework.context.SpringBeanReferenceResolver;
-import org.citrusframework.context.TestContextFactoryBean;
+import org.citrusframework.spring.context.SpringBeanReferenceResolver;
+import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.functions.DefaultFunctionLibrary;

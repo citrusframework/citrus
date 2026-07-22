@@ -16,7 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;

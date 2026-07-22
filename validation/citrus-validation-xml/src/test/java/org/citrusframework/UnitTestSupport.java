@@ -17,7 +17,7 @@
 package org.citrusframework;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.AbstractTestNGUnitTest;

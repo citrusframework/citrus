@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.context;
+package org.citrusframework.spring.context;
 
 import java.util.Arrays;
 import java.util.HashMap;

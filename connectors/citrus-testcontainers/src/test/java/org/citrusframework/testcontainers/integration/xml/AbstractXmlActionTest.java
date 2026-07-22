@@ -24,7 +24,7 @@ import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.common.TestSourceHelper;
-import org.citrusframework.context.StaticTestContextFactory;
+import org.citrusframework.base.context.StaticTestContextFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.xml.XmlTestLoader;

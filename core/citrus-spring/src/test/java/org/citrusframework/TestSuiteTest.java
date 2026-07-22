@@ -24,7 +24,7 @@ import org.citrusframework.container.SequenceAfterSuite;
 import org.citrusframework.container.SequenceBeforeSuite;
 import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactoryBean;
+import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.log.LogModifier;

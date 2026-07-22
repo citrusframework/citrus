@@ -18,8 +18,8 @@ package org.citrusframework.endpoint.adapter;
 
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.config.CitrusSpringConfig;
-import org.citrusframework.context.TestContextFactory;
-import org.citrusframework.context.TestContextFactoryBean;
+import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.endpoint.direct.DirectSyncEndpoint;

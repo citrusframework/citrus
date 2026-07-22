@@ -17,10 +17,10 @@
 package org.citrusframework.endpoint.adapter;
 
 import org.citrusframework.TestCase;
-import org.citrusframework.context.SpringBeanReferenceResolver;
+import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
-import org.citrusframework.context.TestContextFactoryBean;
+import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.adapter.mapping.BeanNameMappingStrategy;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;

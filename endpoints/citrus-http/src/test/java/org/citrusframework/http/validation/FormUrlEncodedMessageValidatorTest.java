@@ -18,7 +18,7 @@ package org.citrusframework.http.validation;
 
 import java.util.Collections;
 
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.message.DefaultMessage;

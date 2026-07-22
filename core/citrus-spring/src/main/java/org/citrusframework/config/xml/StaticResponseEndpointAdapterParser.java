@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.context.TestContextFactoryBean;
+import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.adapter.StaticResponseEndpointAdapter;
 import org.citrusframework.message.MessageHeaderType;

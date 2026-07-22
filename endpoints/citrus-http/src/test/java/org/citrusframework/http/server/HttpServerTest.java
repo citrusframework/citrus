@@ -19,7 +19,7 @@ package org.citrusframework.http.server;
 import java.util.Random;
 
 import org.apache.hc.core5.http.ContentType;
-import org.citrusframework.context.SpringBeanReferenceResolver;
+import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.http.client.HttpClient;

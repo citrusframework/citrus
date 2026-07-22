@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;

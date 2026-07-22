@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework.context;
+package org.citrusframework.base.context;
+
+import org.citrusframework.context.TestContext;
 
 /**
  * Static test context factory always returns a single test context instance.

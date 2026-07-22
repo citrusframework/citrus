@@ -26,7 +26,7 @@ import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;

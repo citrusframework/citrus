@@ -17,7 +17,7 @@
 package org.citrusframework;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.testng.annotations.BeforeMethod;
 

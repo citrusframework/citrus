@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.context;
+package org.citrusframework.base.context;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +28,7 @@ import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.CreateVariablesAction;
 import org.citrusframework.api.container.StopTimer;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.VariableNullValueException;
 import org.citrusframework.message.DefaultMessage;

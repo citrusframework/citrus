@@ -17,7 +17,7 @@
 package org.citrusframework.endpoint;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

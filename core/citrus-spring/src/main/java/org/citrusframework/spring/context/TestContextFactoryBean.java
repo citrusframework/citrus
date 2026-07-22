@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package org.citrusframework.context;
+package org.citrusframework.spring.context;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.api.container.AfterTest;
 import org.citrusframework.api.container.BeforeTest;
+import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.log.LogModifier;
