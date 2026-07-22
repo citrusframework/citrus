@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.groovy.actions;
 
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.groovy.actions.GroovyActionBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

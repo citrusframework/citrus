@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.sql.actions;
 
 import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.CitrusSettings;
@@ -23,7 +23,6 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.script.ScriptTypes;
-import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.mockito.Mockito;

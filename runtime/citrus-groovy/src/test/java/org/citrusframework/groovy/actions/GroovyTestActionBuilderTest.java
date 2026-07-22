@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions.dsl;
+package org.citrusframework.groovy.actions;
 
 import java.io.ByteArrayInputStream;
 
@@ -22,7 +22,6 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.groovy.actions.GroovyAction;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.mockito.Mockito;

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.sql.actions;
+
+import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.sql.actions.ExecutePLSQLAction;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,8 +26,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;

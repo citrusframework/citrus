@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.groovy.actions;
 
+import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
