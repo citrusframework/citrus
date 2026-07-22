@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 import jakarta.annotation.Nullable;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.citrusframework.DefaultTestActions;
-import org.citrusframework.actions.ReceiveMessageBuilderFactory;
+import org.citrusframework.api.actions.ReceiveMessageBuilderFactory;
 import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;

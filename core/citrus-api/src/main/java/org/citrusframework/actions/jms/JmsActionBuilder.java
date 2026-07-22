@@ -18,7 +18,7 @@ package org.citrusframework.actions.jms;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 
 public interface JmsActionBuilder<T extends TestAction, B extends JmsActionBuilder<T, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {

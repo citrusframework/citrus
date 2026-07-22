@@ -18,8 +18,8 @@ package org.citrusframework.actions.camel;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 
 public interface CamelCliActionBuilderBase<T extends TestAction, B extends TestActionBuilder<T>>
         extends ActionBuilder<T, B>, TestActionBuilder<T>, ReferenceResolverAwareBuilder<T, B> {

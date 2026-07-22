@@ -16,7 +16,7 @@
 
 package org.citrusframework;
 
-import org.citrusframework.actions.BaseTestActions;
+import org.citrusframework.api.actions.BaseTestActions;
 import org.citrusframework.actions.agent.AgentTestActions;
 import org.citrusframework.actions.camel.CamelTestActions;
 import org.citrusframework.actions.docker.DockerTestActions;

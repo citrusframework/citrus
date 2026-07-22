@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions.ws;
+package org.citrusframework.api.actions;
 
-import org.citrusframework.TestAction;
-import org.citrusframework.api.actions.SendActionBuilder;
-
-public interface SoapSendActionBuilderBase<T extends TestAction, M extends SoapSendMessageBuilderFactory<T, M>, B extends SoapSendActionBuilderBase<T, M, B>>
-    extends SendActionBuilder<T, M, B> {
-
-    B mtomEnabled(boolean mtomEnabled);
+public interface MessageActionBuilder {
 }

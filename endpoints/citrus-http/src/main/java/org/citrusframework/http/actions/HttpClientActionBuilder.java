@@ -17,9 +17,9 @@
 package org.citrusframework.http.actions;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.actions.ReceiveActionBuilder;
+import org.citrusframework.api.actions.ReceiveActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.actions.SendActionBuilder;
+import org.citrusframework.api.actions.SendActionBuilder;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;

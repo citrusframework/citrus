@@ -25,6 +25,11 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionContainerBuilder;
 import org.citrusframework.TestActionContainers;
 import org.citrusframework.actions.*;
+import org.citrusframework.api.actions.BaseTestActions;
+import org.citrusframework.api.actions.ReceiveActionBuilder;
+import org.citrusframework.api.actions.ReceiveMessageBuilderFactory;
+import org.citrusframework.api.actions.SendActionBuilder;
+import org.citrusframework.api.actions.SendMessageBuilderFactory;
 import org.citrusframework.condition.Condition;
 import org.citrusframework.container.*;
 

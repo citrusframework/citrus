@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.actions.ReceiveMessageBuilderFactory;
+import org.citrusframework.api.actions.ReceiveMessageBuilderFactory;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.HeaderValidator;
 import org.citrusframework.validation.MessageValidator;

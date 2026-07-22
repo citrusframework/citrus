@@ -18,7 +18,7 @@ package org.citrusframework.actions.ws;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 
 public interface SoapServerActionBuilder<T extends TestAction, B extends SoapServerActionBuilder<T, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {

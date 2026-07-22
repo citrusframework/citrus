@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
 import org.citrusframework.spi.Resource;
 
 public interface GroovyCreateBeansActionBuilder<T extends TestAction, B extends GroovyCreateBeansActionBuilder<T, B>>

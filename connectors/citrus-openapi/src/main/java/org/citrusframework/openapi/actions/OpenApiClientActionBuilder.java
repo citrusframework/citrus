@@ -17,8 +17,8 @@
 package org.citrusframework.openapi.actions;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.actions.ReceiveActionBuilder;
-import org.citrusframework.actions.SendActionBuilder;
+import org.citrusframework.api.actions.ReceiveActionBuilder;
+import org.citrusframework.api.actions.SendActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;

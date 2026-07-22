@@ -19,7 +19,7 @@ package org.citrusframework.actions.ws;
 import java.nio.charset.Charset;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.actions.SendMessageBuilderFactory;
+import org.citrusframework.api.actions.SendMessageBuilderFactory;
 import org.citrusframework.spi.Resource;
 
 public interface SoapSendMessageBuilderFactory<T extends TestAction, M extends SoapSendMessageBuilderFactory<T, M>>

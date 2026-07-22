@@ -14,27 +14,32 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.api.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActor;
 
-public interface StopTimerActionBuilder<T extends TestAction>
-        extends ActionBuilder<T, StopTimerActionBuilder<T>>, TestActionBuilder<T> {
+public interface ActionBuilder<T extends TestAction, B extends TestActionBuilder<T>> {
 
-    StopTimerActionBuilder<T> id(String id);
+    /**
+     * Sets the test action name.
+     * @param name the test action name.
+     * @return
+     */
+    B name(String name);
 
-    interface BuilderFactory {
+    /**
+     * Sets the description.
+     * @param description
+     * @return
+     */
+    B description(String description);
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         */
-        StopTimerActionBuilder<?> stopTimer();
-
-        default StopTimerActionBuilder<?> stopTimer(String id) {
-            return stopTimer().id(id);
-        }
-
-    }
-
+    /**
+     * Sets the test actor for this action.
+     * @param actor the actor.
+     * @return
+     */
+    B actor(TestActor actor);
 }

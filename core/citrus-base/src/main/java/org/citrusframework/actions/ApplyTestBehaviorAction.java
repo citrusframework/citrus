@@ -19,6 +19,7 @@ package org.citrusframework.actions;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestBehavior;
+import org.citrusframework.api.actions.ApplyTestBehaviorActionBuilder;
 import org.citrusframework.context.TestContext;
 
 /**

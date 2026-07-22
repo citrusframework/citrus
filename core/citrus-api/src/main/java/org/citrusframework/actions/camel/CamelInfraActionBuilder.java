@@ -18,7 +18,7 @@ package org.citrusframework.actions.camel;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 
 public interface CamelInfraActionBuilder<T extends TestAction, B extends CamelInfraActionBuilder<T, B>>
         extends ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {

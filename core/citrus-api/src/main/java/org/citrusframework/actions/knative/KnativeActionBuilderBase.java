@@ -18,8 +18,8 @@ package org.citrusframework.actions.knative;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.kubernetes.ClusterType;
 
 public interface KnativeActionBuilderBase<T extends TestAction, B extends KnativeActionBuilderBase<T, B>>

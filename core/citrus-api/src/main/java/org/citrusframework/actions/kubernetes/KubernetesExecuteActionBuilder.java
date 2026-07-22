@@ -18,8 +18,8 @@ package org.citrusframework.actions.kubernetes;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.actions.kubernetes.command.KubernetesCommand;
 import org.citrusframework.actions.kubernetes.command.KubernetesEndpointCommandActionBuilder;
 import org.citrusframework.actions.kubernetes.command.KubernetesEventCommandActionBuilder;

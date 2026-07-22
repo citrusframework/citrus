@@ -18,7 +18,7 @@ package org.citrusframework.actions.openapi;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.actions.http.HttpReceiveResponseMessageBuilderFactory;
 import org.citrusframework.actions.http.HttpSendRequestMessageBuilderFactory;
 import org.citrusframework.endpoint.Endpoint;

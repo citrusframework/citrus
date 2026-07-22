@@ -25,6 +25,7 @@ import javax.xml.transform.TransformerFactory;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.api.actions.TransformActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;

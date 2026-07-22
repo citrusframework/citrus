@@ -17,7 +17,7 @@
 package org.citrusframework.actions.http;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.actions.SendMessageBuilderFactory;
+import org.citrusframework.api.actions.SendMessageBuilderFactory;
 
 public interface HttpSendResponseMessageBuilderFactory<T extends TestAction, M extends HttpSendResponseMessageBuilderFactory<T, M>>
         extends SendMessageBuilderFactory<T, M> {

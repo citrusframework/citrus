@@ -14,16 +14,27 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.api.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.spi.ReferenceResolver;
 
-public interface ReferenceResolverAwareBuilder<T extends TestAction, B extends TestActionBuilder<T>> {
+public interface StopTimerActionBuilder<T extends TestAction>
+        extends ActionBuilder<T, StopTimerActionBuilder<T>>, TestActionBuilder<T> {
 
-    /**
-     * Sets the bean reference resolver for using endpoint names.
-     */
-    B withReferenceResolver(ReferenceResolver referenceResolver);
+    StopTimerActionBuilder<T> id(String id);
+
+    interface BuilderFactory {
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         */
+        StopTimerActionBuilder<?> stopTimer();
+
+        default StopTimerActionBuilder<?> stopTimer(String id) {
+            return stopTimer().id(id);
+        }
+
+    }
+
 }

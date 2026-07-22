@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.api.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 
-public interface StopTimeActionBuilder<T extends TestAction>
-        extends ActionBuilder<T, StopTimeActionBuilder<T>>, TestActionBuilder<T> {
+public interface EchoActionBuilder<T extends TestAction>
+        extends ActionBuilder<T, EchoActionBuilder<T>>, TestActionBuilder<T> {
 
-    StopTimeActionBuilder<T> id(String id);
-
-    StopTimeActionBuilder<T> suffix(String suffix);
+    EchoActionBuilder<T> message(String message);
 
     interface BuilderFactory {
 
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         */
-        StopTimeActionBuilder<?> stopTime();
+        EchoActionBuilder<?> echo();
 
-        default StopTimeActionBuilder<?> stopTime(String id) {
-            return stopTime().id(id);
+        default EchoActionBuilder<?> echo(String message) {
+            return echo().message(message);
         }
 
-        default StopTimeActionBuilder<?> stopTime(String id, String suffix) {
-            return stopTime().id(id).suffix(suffix);
+        default EchoActionBuilder<?> print() {
+            return echo();
+        }
+
+        default EchoActionBuilder<?> print(String message) {
+            return print().message(message);
         }
 
     }

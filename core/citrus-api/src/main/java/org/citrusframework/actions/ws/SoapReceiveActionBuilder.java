@@ -17,7 +17,7 @@
 package org.citrusframework.actions.ws;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.actions.ReceiveActionBuilder;
+import org.citrusframework.api.actions.ReceiveActionBuilder;
 
 public interface SoapReceiveActionBuilder<T extends TestAction, M extends SoapClientReceiveMessageBuilderFactory<T, M>, B extends SoapReceiveActionBuilder<T, M, B>>
         extends ReceiveActionBuilder<T, M, B> {

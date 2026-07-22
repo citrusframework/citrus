@@ -18,11 +18,11 @@ package org.citrusframework.actions.camel;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ReceiveActionBuilder;
-import org.citrusframework.actions.ReceiveMessageBuilderFactory;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
-import org.citrusframework.actions.SendActionBuilder;
-import org.citrusframework.actions.SendMessageBuilderFactory;
+import org.citrusframework.api.actions.ReceiveActionBuilder;
+import org.citrusframework.api.actions.ReceiveMessageBuilderFactory;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.SendActionBuilder;
+import org.citrusframework.api.actions.SendMessageBuilderFactory;
 
 public interface CamelActionBuilder<T extends TestAction, B extends TestActionBuilder.DelegatingTestActionBuilder<T>>
         extends ReferenceResolverAwareBuilder<T, B> {

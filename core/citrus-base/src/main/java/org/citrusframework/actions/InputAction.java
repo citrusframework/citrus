@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 import java.util.stream.Stream;
 
 import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.api.actions.InputActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.StringUtils;

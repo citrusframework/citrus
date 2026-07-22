@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.api.actions.CreateVariablesActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.variable.VariableUtils;
 import org.slf4j.Logger;

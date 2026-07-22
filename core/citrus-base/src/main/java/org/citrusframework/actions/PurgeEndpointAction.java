@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.api.actions.PurgeEndpointActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.ActionTimeoutException;
