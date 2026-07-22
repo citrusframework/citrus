@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.citrusframework.integration;
+package org.citrusframework.json.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-public class JsonPathSegmentVariableExtractorIT extends TestNGCitrusSpringSupport {
-
+public class MessageValidationIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
-    public void JsonPathSegmentVariableExtractorIT() {}
+    public void MessageValidationIT() {}
 }

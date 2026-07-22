@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.dsl;
+package org.citrusframework.xml.dsl;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

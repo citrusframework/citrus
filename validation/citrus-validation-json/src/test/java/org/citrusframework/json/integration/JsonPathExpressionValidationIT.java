@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.integration;
+package org.citrusframework.json.integration;
 
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
