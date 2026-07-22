@@ -18,7 +18,7 @@ package org.citrusframework.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.actions.CustomTestAction;
+import org.citrusframework.spring.actions.CustomTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.SleepAction;
 import org.citrusframework.container.SequenceAfterSuite;

@@ -18,7 +18,7 @@ package org.citrusframework.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.actions.CustomTestAction;
+import org.citrusframework.spring.actions.CustomTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;

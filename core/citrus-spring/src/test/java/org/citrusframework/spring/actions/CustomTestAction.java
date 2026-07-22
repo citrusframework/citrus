@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.spring.actions;
 
+import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.springframework.beans.factory.annotation.Autowired;

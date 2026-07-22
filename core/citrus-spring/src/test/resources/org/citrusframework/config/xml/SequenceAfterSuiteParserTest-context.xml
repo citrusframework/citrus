@@ -38,7 +38,7 @@
     </citrus:actions>
   </citrus:after-suite>
 
-  <bean id="customAction" class="org.citrusframework.actions.CustomTestAction"/>
+  <bean id="customAction" class="org.citrusframework.spring.actions.CustomTestAction"/>
 
   <citrus:direct-endpoint id="customEndpoint"/>
 
