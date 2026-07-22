@@ -27,7 +27,7 @@ import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.CreateVariablesAction;
-import org.citrusframework.container.StopTimer;
+import org.citrusframework.api.container.StopTimer;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.VariableNullValueException;
 import org.citrusframework.message.DefaultMessage;

@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.FinallyContainerBuilder;
 import org.citrusframework.context.TestContext;
 
 /**

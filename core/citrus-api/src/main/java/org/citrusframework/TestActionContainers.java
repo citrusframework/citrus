@@ -16,20 +16,20 @@
 
 package org.citrusframework;
 
-import org.citrusframework.container.ApplyTemplateBuilder;
-import org.citrusframework.container.AssertContainerBuilder;
-import org.citrusframework.container.AsyncContainerBuilder;
-import org.citrusframework.container.CatchContainerBuilder;
-import org.citrusframework.container.ConditionalContainerBuilder;
-import org.citrusframework.container.FinallyContainerBuilder;
-import org.citrusframework.container.IterateContainerBuilder;
-import org.citrusframework.container.ParallelContainerBuilder;
-import org.citrusframework.container.RepeatOnErrorUntilTrueContainerBuilder;
-import org.citrusframework.container.RepeatUntilTrueContainerBuilder;
-import org.citrusframework.container.SequentialContainerBuilder;
-import org.citrusframework.container.TestActionContainer;
-import org.citrusframework.container.TimerContainerBuilder;
-import org.citrusframework.container.WaitContainerBuilder;
+import org.citrusframework.api.container.ApplyTemplateBuilder;
+import org.citrusframework.api.container.AssertContainerBuilder;
+import org.citrusframework.api.container.AsyncContainerBuilder;
+import org.citrusframework.api.container.CatchContainerBuilder;
+import org.citrusframework.api.container.ConditionalContainerBuilder;
+import org.citrusframework.api.container.FinallyContainerBuilder;
+import org.citrusframework.api.container.IterateContainerBuilder;
+import org.citrusframework.api.container.ParallelContainerBuilder;
+import org.citrusframework.api.container.RepeatOnErrorUntilTrueContainerBuilder;
+import org.citrusframework.api.container.RepeatUntilTrueContainerBuilder;
+import org.citrusframework.api.container.SequentialContainerBuilder;
+import org.citrusframework.api.container.TestActionContainer;
+import org.citrusframework.api.container.TimerContainerBuilder;
+import org.citrusframework.api.container.WaitContainerBuilder;
 
 /**
  * Interface combines domain specific language methods for all test action containers available in Citrus.

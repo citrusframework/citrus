@@ -18,6 +18,7 @@ package org.citrusframework.container;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.WaitContainerBuilder;
 import org.citrusframework.condition.ActionCondition;
 
 /**

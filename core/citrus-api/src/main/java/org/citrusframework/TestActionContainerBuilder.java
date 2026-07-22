@@ -18,7 +18,7 @@ package org.citrusframework;
 
 import java.util.List;
 
-import org.citrusframework.container.TestActionContainer;
+import org.citrusframework.api.container.TestActionContainer;
 
 /**
  * @since 2.3

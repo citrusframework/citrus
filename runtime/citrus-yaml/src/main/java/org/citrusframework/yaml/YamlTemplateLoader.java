@@ -18,7 +18,7 @@ package org.citrusframework.yaml;
 
 import java.io.IOException;
 
-import org.citrusframework.container.TemplateLoader;
+import org.citrusframework.api.container.TemplateLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;

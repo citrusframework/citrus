@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
-import org.citrusframework.container.TemplateLoader;
+import org.citrusframework.api.container.TemplateLoader;
 import org.citrusframework.context.resolver.TypeAliasResolver;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.endpoint.EndpointComponent;

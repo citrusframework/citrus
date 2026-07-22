@@ -29,6 +29,7 @@ import org.citrusframework.Completable;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

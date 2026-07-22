@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
-import org.citrusframework.container.TemplateLoader;
+import org.citrusframework.api.container.TemplateLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;

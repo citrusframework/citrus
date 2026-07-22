@@ -18,6 +18,8 @@ package org.citrusframework.container;
 
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.ConditionExpression;
+import org.citrusframework.api.container.ConditionalContainerBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.BooleanExpressionParser;

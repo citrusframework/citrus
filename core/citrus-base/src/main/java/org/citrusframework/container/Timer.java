@@ -23,6 +23,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.StopTimer;
+import org.citrusframework.api.container.TimerContainerBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.StringUtils;

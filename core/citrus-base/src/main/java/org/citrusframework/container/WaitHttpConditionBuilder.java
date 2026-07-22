@@ -16,6 +16,7 @@
 
 package org.citrusframework.container;
 
+import org.citrusframework.api.container.WaitContainerBuilder;
 import org.citrusframework.condition.HttpCondition;
 
 /**

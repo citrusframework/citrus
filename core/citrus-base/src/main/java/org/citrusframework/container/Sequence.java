@@ -18,6 +18,7 @@ package org.citrusframework.container;
 
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.SequentialContainerBuilder;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

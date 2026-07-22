@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.citrusframework.common.Described;
 import org.citrusframework.common.Named;
-import org.citrusframework.container.TestActionContainer;
+import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointBuilder;
 

@@ -22,6 +22,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.IteratingConditionExpression;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;

@@ -17,7 +17,7 @@
 package org.citrusframework.config.xml;
 
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.container.ConditionExpression;
+import org.citrusframework.api.container.ConditionExpression;
 import org.citrusframework.container.Conditional;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

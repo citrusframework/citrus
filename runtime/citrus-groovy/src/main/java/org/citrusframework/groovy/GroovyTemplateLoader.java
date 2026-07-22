@@ -19,7 +19,7 @@ package org.citrusframework.groovy;
 import java.io.IOException;
 
 import org.citrusframework.container.Template;
-import org.citrusframework.container.TemplateLoader;
+import org.citrusframework.api.container.TemplateLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.groovy.dsl.GroovyShellUtils;
 import org.citrusframework.groovy.dsl.actions.ActionsScript;

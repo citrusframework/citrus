@@ -19,6 +19,8 @@ package org.citrusframework.container;
 import java.time.Duration;
 
 import org.citrusframework.AbstractIteratingContainerBuilder;
+import org.citrusframework.api.container.IteratingConditionExpression;
+import org.citrusframework.api.container.RepeatOnErrorUntilTrueContainerBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;

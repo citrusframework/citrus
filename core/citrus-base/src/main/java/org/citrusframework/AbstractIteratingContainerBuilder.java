@@ -19,7 +19,7 @@ package org.citrusframework;
 import java.time.Duration;
 
 import org.citrusframework.container.AbstractIteratingActionContainer;
-import org.citrusframework.container.IteratingConditionExpression;
+import org.citrusframework.api.container.IteratingConditionExpression;
 
 public abstract class AbstractIteratingContainerBuilder<T extends AbstractIteratingActionContainer, S extends AbstractIteratingContainerBuilder<T, S>>
         extends AbstractTestContainerBuilder<T, S> {
