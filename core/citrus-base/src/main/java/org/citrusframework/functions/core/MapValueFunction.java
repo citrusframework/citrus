@@ -18,7 +18,7 @@ package org.citrusframework.functions.core;
 
 import java.util.Map;
 
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;

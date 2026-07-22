@@ -16,7 +16,7 @@
 
 package org.citrusframework.validation.xhtml;
 
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;

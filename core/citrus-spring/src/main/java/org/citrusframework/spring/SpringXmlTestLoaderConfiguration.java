@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.common;
+package org.citrusframework.spring;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

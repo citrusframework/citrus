@@ -16,8 +16,8 @@
 
 package org.citrusframework.jms.endpoint;
 
-import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.api.common.InitializingPhase;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.AbstractEndpoint;

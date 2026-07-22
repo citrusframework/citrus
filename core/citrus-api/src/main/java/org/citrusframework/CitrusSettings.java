@@ -23,7 +23,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.validation.CustomValidatorStrategy;
 import org.slf4j.Logger;
@@ -39,10 +39,10 @@ import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Collections.emptySet;
 import static java.util.logging.LogManager.getLogManager;
 import static java.util.stream.Collectors.toSet;
-import static org.citrusframework.common.TestLoader.GROOVY;
-import static org.citrusframework.common.TestLoader.JAVA;
-import static org.citrusframework.common.TestLoader.SPRING;
-import static org.citrusframework.common.TestLoader.YAML;
+import static org.citrusframework.api.common.TestLoader.GROOVY;
+import static org.citrusframework.api.common.TestLoader.JAVA;
+import static org.citrusframework.api.common.TestLoader.SPRING;
+import static org.citrusframework.api.common.TestLoader.YAML;
 import static org.citrusframework.message.MessageType.XML;
 
 public final class CitrusSettings {

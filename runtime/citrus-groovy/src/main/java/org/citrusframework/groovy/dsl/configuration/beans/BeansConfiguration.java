@@ -26,7 +26,7 @@ import groovy.lang.GroovyRuntimeException;
 import groovy.lang.MissingMethodException;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.spi.ReferenceResolver;

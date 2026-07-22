@@ -17,7 +17,7 @@
 package org.citrusframework.variable.dictionary.xml;
 
 import org.citrusframework.XmlValidationHelper;
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.variable.dictionary.DataDictionary;

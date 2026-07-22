@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.common;
+package org.citrusframework.spring;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -24,6 +24,9 @@ import org.citrusframework.CitrusSpringContext;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestSource;
+import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.api.common.TestSourceAware;
+import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.config.CitrusNamespaceParserRegistry;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;

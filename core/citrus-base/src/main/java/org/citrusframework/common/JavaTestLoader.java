@@ -31,6 +31,8 @@ import javax.tools.ToolProvider;
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
 import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.api.common.TestSourceAware;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.ClassLoaderHelper;

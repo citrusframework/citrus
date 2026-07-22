@@ -16,9 +16,9 @@
 
 package org.citrusframework.config;
 
-import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.common.Named;
-import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.api.common.InitializingPhase;
+import org.citrusframework.api.common.Named;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;

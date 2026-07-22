@@ -16,7 +16,7 @@
 
 package org.citrusframework.cucumber.steps.groovy;
 
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 
 public class Foo implements InitializingPhase {
 

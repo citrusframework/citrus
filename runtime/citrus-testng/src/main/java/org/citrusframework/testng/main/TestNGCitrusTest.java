@@ -17,8 +17,8 @@
 package org.citrusframework.testng.main;
 
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.common.TestLoader;
-import org.citrusframework.common.TestSourceAware;
+import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.api.common.TestSourceAware;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.TestNGCitrusSupport;

@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.annotations.CitrusAnnotations;
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ClasspathResourceResolver;
 import org.citrusframework.util.FileUtils;

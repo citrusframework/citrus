@@ -3,7 +3,7 @@ package org.citrusframework.openapi.generator;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringExtension;
 import org.citrusframework.openapi.generator.GeneratedSoapApiIT.Config;

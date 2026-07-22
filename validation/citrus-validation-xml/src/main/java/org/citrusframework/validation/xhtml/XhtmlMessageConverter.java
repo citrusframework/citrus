@@ -19,7 +19,7 @@ package org.citrusframework.validation.xhtml;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.spi.Resource;
 import org.w3c.tidy.Tidy;
 

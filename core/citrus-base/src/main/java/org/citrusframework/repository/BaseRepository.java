@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.common.Named;
+import org.citrusframework.api.common.InitializingPhase;
+import org.citrusframework.api.common.Named;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ClasspathResourceResolver;
 import org.citrusframework.spi.Resource;

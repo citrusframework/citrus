@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework.common;
+package org.citrusframework.spring;
 
+import org.citrusframework.api.common.TestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

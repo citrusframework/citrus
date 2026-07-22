@@ -19,7 +19,7 @@ package org.citrusframework.junit.jupiter.integration.spring;
 import java.util.stream.Stream;
 
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.junit.jupiter.CitrusTestFactorySupport;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;

@@ -31,7 +31,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionResult;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestResult;
-import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.container.AbstractIteratingActionContainer;
 import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.exceptions.CitrusRuntimeException;

@@ -18,7 +18,7 @@ package org.citrusframework.groovy.dsl.configuration.endpoints;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.groovy.dsl.GroovyShellUtils;

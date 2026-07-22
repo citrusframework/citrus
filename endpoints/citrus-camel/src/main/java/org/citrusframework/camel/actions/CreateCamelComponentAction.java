@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import org.citrusframework.api.actions.camel.CamelCreateComponentActionBuilder;
 import org.citrusframework.camel.context.CamelReferenceResolver;
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.groovy.dsl.GroovySupport;

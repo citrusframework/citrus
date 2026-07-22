@@ -24,7 +24,7 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.annotations.CitrusAnnotations;
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;

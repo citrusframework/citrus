@@ -19,7 +19,7 @@ package org.citrusframework.mail.client;
 import jakarta.mail.Authenticator;
 import jakarta.mail.MessagingException;
 import jakarta.mail.PasswordAuthentication;
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;

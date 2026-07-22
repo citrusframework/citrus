@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.common;
+package org.citrusframework.spring;
 
 /**
  * A marker interface for identifying beans that supply a {@link SpringXmlTestLoaderConfiguration}
