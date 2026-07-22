@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 import org.apache.camel.tooling.maven.MavenArtifact;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.agent.CitrusAgentConfiguration;
+import org.citrusframework.api.agent.CitrusAgentConfiguration;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;

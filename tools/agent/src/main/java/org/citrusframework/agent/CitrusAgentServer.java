@@ -28,6 +28,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.ext.web.Router;
 import org.citrusframework.agent.util.ConfigurationHelper;
+import org.citrusframework.api.agent.CitrusAgentConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.server.Server;
 import org.slf4j.Logger;
