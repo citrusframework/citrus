@@ -18,7 +18,7 @@ package org.citrusframework.springintegration.yaml;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.actions.PurgeMessageChannelAction;
+import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
 import org.mockito.Mock;

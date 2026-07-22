@@ -16,7 +16,8 @@
 
 package org.citrusframework.channel;
 
-import org.citrusframework.channel.selector.HeaderMatchingMessageSelector;
+import org.citrusframework.springintegration.channel.selector.HeaderMatchingMessageSelector;
+import org.citrusframework.springintegration.channel.MessageSelectingQueueChannel;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.MessageBuilder;

@@ -18,7 +18,7 @@ package org.citrusframework.springintegration.xml;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.actions.PurgeMessageChannelAction;
+import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
 import org.mockito.Mock;

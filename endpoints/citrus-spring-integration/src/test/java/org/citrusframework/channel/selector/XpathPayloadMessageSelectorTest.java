@@ -18,6 +18,7 @@ package org.citrusframework.channel.selector;
 
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.springintegration.channel.selector.XpathPayloadMessageSelector;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -1,1 +1,1 @@
-type=org.citrusframework.config.xml.PurgeMessageChannelActionParser
+type=org.citrusframework.springintegration.config.xml.PurgeMessageChannelActionParser

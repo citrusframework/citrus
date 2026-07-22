@@ -18,7 +18,7 @@ package org.citrusframework.endpoint;
 
 import java.util.Collections;
 
-import org.citrusframework.channel.ChannelEndpoint;
+import org.citrusframework.springintegration.channel.ChannelEndpoint;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.context.TestContext;
 import org.mockito.Mockito;

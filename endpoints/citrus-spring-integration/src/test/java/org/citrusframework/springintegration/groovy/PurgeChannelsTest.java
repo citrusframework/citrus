@@ -18,7 +18,7 @@ package org.citrusframework.springintegration.groovy;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.actions.PurgeMessageChannelAction;
+import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
 import org.citrusframework.groovy.GroovyTestLoader;
 import org.mockito.Mock;
 import org.springframework.integration.core.MessageSelector;

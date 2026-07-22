@@ -19,6 +19,7 @@ package org.citrusframework.channel;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.springintegration.channel.ChannelEndpoint;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.integration.core.MessagingTemplate;

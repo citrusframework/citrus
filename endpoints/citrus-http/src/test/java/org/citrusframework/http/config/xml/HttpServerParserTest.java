@@ -19,8 +19,8 @@ package org.citrusframework.http.config.xml;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.channel.ChannelEndpointAdapter;
-import org.citrusframework.channel.ChannelEndpointConfiguration;
+import org.citrusframework.springintegration.channel.ChannelEndpointAdapter;
+import org.citrusframework.springintegration.channel.ChannelEndpointConfiguration;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.citrusframework.endpoint.adapter.StaticResponseEndpointAdapter;

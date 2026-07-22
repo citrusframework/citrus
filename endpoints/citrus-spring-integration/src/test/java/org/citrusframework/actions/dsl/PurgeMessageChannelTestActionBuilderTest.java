@@ -22,7 +22,7 @@ import java.util.HashMap;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.actions.PurgeMessageChannelAction;
+import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;

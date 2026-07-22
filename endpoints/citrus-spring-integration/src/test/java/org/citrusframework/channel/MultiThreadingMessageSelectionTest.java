@@ -16,8 +16,9 @@
 
 package org.citrusframework.channel;
 
-import org.citrusframework.channel.selector.DispatchingMessageSelector;
+import org.citrusframework.springintegration.channel.selector.DispatchingMessageSelector;
 import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.springintegration.channel.MessageSelectingQueueChannel;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;

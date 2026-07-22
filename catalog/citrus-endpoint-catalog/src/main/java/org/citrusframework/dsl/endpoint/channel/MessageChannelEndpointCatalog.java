@@ -16,9 +16,9 @@
 
 package org.citrusframework.dsl.endpoint.channel;
 
-import org.citrusframework.channel.ChannelEndpointBuilder;
-import org.citrusframework.channel.ChannelSyncEndpointBuilder;
-import org.citrusframework.channel.endpoint.builder.MessageChannelEndpoints;
+import org.citrusframework.springintegration.channel.ChannelEndpointBuilder;
+import org.citrusframework.springintegration.channel.ChannelSyncEndpointBuilder;
+import org.citrusframework.springintegration.channel.endpoint.builder.MessageChannelEndpoints;
 
 public class MessageChannelEndpointCatalog {
 

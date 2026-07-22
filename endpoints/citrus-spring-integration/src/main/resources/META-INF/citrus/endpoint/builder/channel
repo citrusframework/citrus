@@ -1,5 +1,5 @@
-type=org.citrusframework.channel.endpoint.builder.MessageChannelEndpointsBuilder
-async=org.citrusframework.channel.ChannelEndpointBuilder
-asynchronous=org.citrusframework.channel.ChannelEndpointBuilder
-sync=org.citrusframework.channel.ChannelSyncEndpointBuilder
-synchronous=org.citrusframework.channel.ChannelSyncEndpointBuilder
+type=org.citrusframework.springintegration.channel.endpoint.builder.MessageChannelEndpointsBuilder
+async=org.citrusframework.springintegration.channel.ChannelEndpointBuilder
+asynchronous=org.citrusframework.springintegration.channel.ChannelEndpointBuilder
+sync=org.citrusframework.springintegration.channel.ChannelSyncEndpointBuilder
+synchronous=org.citrusframework.springintegration.channel.ChannelSyncEndpointBuilder

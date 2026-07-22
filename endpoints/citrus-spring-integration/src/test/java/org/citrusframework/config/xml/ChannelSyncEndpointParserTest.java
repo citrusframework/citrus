@@ -19,7 +19,7 @@ package org.citrusframework.config.xml;
 import java.util.Map;
 
 import org.citrusframework.TestActor;
-import org.citrusframework.channel.ChannelSyncEndpoint;
+import org.citrusframework.springintegration.channel.ChannelSyncEndpoint;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;

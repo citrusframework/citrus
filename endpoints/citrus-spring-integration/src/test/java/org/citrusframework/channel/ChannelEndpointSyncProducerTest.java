@@ -25,6 +25,8 @@ import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageHeaders;
+import org.citrusframework.springintegration.channel.ChannelSyncEndpoint;
+import org.citrusframework.springintegration.channel.ChannelSyncProducer;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.integration.core.MessagingTemplate;

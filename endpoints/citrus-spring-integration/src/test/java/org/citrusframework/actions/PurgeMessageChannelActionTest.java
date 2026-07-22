@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

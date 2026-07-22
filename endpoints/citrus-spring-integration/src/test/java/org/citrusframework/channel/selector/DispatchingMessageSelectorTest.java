@@ -20,6 +20,8 @@ import java.util.Map;
 
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.springintegration.channel.selector.DispatchingMessageSelector;
+import org.citrusframework.springintegration.channel.selector.MessageSelectorFactory;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.BeanFactory;

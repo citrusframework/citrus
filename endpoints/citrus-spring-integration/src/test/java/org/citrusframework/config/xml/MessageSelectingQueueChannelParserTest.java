@@ -16,7 +16,7 @@
 
 package org.citrusframework.config.xml;
 
-import org.citrusframework.channel.MessageSelectingQueueChannel;
+import org.citrusframework.springintegration.channel.MessageSelectingQueueChannel;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;

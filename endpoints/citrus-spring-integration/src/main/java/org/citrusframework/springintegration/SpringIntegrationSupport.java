@@ -16,8 +16,8 @@
 
 package org.citrusframework.springintegration;
 
-import org.citrusframework.actions.PurgeMessageChannelAction;
-import org.citrusframework.actions.PurgeMessageChannelActionBuilder;
+import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
+import org.citrusframework.springintegration.actions.PurgeMessageChannelActionBuilder;
 
 /**
  * Default interface for all available Spring integration test actions.
