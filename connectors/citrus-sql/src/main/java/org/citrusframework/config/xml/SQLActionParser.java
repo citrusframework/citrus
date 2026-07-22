@@ -26,7 +26,7 @@ import org.citrusframework.actions.ExecuteSQLAction;
 import org.citrusframework.actions.ExecuteSQLQueryAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.script.support.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContextBuilder;
 import org.springframework.beans.factory.BeanCreationException;

@@ -44,7 +44,7 @@ import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mockito;
 import org.testng.Assert;

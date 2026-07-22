@@ -18,7 +18,7 @@ package org.citrusframework.ws.config.xml;
 
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.citrusframework.ws.actions.AssertSoapFault;
-import org.citrusframework.validation.ws.SoapFaultDetailValidationContext;
+import org.citrusframework.validation.ws.support.SoapFaultDetailValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

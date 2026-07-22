@@ -24,7 +24,7 @@ import org.citrusframework.config.xml.DescriptionElementParser;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonPathMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.zookeeper.actions.ZooExecuteAction;
 import org.citrusframework.zookeeper.client.ZooClient;

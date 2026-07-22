@@ -18,12 +18,12 @@ package org.citrusframework.validation;
 
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonMessageValidationContext;
 import org.citrusframework.validation.openapi.OpenApiMessageValidationContextBuilder;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
-import org.citrusframework.validation.ws.SoapFaultValidationContext;
+import org.citrusframework.validation.script.support.DefaultScriptValidationContext;
+import org.citrusframework.validation.ws.support.SoapFaultValidationContext;
 import org.citrusframework.validation.ws.SoapMessageValidationContextBuilder;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
 import org.citrusframework.validation.yaml.YamlMessageValidationContext;
 
 /**

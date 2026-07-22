@@ -29,7 +29,7 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.context.MessageValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext.Builder;
+import org.citrusframework.validation.json.support.JsonMessageValidationContext.Builder;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

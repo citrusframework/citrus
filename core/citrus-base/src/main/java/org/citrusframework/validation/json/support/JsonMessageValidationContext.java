@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.json;
+package org.citrusframework.validation.json.support;
 
 import java.util.Map;
 import java.util.Optional;
 
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
+import org.citrusframework.validation.json.JsonMessageValidationContextBuilder;
 
 /**
  * Validation context holding JSON specific validation information.

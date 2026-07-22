@@ -48,7 +48,7 @@ import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;

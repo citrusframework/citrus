@@ -28,6 +28,7 @@ import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.schema.JsonSchemaValidation;
+import org.citrusframework.validation.json.support.JsonMessageValidationContext;
 
 import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.util.MessageUtils.hasJsonPayload;

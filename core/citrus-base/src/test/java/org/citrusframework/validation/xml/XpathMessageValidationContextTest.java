@@ -16,6 +16,7 @@
 
 package org.citrusframework.validation.xml;
 
+import org.citrusframework.validation.xml.support.XpathMessageValidationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

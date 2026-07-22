@@ -33,7 +33,7 @@ import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;

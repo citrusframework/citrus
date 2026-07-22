@@ -18,6 +18,7 @@ package org.citrusframework.validation.script;
 
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.TestUtils;
+import org.citrusframework.validation.script.support.TemplateBasedScriptBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

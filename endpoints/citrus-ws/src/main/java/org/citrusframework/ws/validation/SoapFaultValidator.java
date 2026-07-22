@@ -18,7 +18,7 @@ package org.citrusframework.ws.validation;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.ws.SoapFaultValidationContext;
+import org.citrusframework.validation.ws.support.SoapFaultValidationContext;
 import org.citrusframework.ws.message.SoapFault;
 
 /**

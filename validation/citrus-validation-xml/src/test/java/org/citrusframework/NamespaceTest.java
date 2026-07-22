@@ -30,8 +30,8 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XpathMessageValidationContext;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 

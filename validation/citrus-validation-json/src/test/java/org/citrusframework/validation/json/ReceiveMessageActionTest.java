@@ -35,6 +35,8 @@ import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
+import org.citrusframework.validation.json.support.JsonMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonPathMessageValidationContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;

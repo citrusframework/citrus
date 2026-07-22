@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.xml;
+package org.citrusframework.validation.xml.support;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +23,9 @@ import java.util.Optional;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationStatus;
+import org.citrusframework.validation.xml.XmlMessageValidationContextBuilder;
+import org.citrusframework.validation.xml.XmlNamespaceAware;
+import org.citrusframework.validation.xml.XmlValidationContextBuilderBase;
 
 /**
  * XML validation context holding validation specific information needed for XML

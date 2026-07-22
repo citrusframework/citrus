@@ -24,7 +24,7 @@ import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageProcessor;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonPathMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 

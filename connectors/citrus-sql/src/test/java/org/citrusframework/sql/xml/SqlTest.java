@@ -21,7 +21,7 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.ExecuteSQLAction;
 import org.citrusframework.actions.ExecuteSQLQueryAction;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.script.support.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.XmlTestActionBuilder;

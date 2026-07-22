@@ -16,6 +16,7 @@
 
 package org.citrusframework.validation.script;
 
+import org.citrusframework.validation.script.support.TemplateBasedScriptBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;

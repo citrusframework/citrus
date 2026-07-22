@@ -14,40 +14,42 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.xml;
+package org.citrusframework.validation.json.support;
 
+import org.citrusframework.validation.json.JsonPathMessageValidationContextBuilder;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
+import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
- * Specialised Xml validation context adds XPath expression evaluation.
+ * Specialised validation context adds JSON path expressions for message validation.
  * @since 2.3
  */
-public class XpathMessageValidationContext extends XmlMessageValidationContext {
+public class JsonPathMessageValidationContext extends DefaultValidationContext {
 
-    /** Map holding xpath expressions as key and expected values as values */
-    private final Map<String, Object> xPathExpressions;
-
-    /**
-     * Default constructor.
-     */
-    public XpathMessageValidationContext() {
-        this(new Builder());
-    }
+    /** Map holding jsonPath expressions as key and expected values as values */
+    private final Map<String, Object> jsonPathExpressions;
 
     /**
      * Constructor using fluent builder.
      * @param builder
      */
-    public XpathMessageValidationContext(Builder builder) {
-        super(builder);
-        this.xPathExpressions = builder.expressions;
+    public JsonPathMessageValidationContext(Builder builder) {
+        this.jsonPathExpressions = builder.expressions;
+    }
+
+    /**
+     * Default constructor.
+     */
+    public JsonPathMessageValidationContext() {
+        this(new Builder());
     }
 
     @Override
@@ -55,18 +57,22 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
         return true;
     }
 
+    @Override
+    public Optional<String> getCorrespondingValidationModule() {
+        return Optional.of("org.citrusframework:citrus-validation-json");
+    }
+
     /**
      * Fluent builder.
      */
-    public static final class Builder extends XmlValidationContextBuilder<XpathMessageValidationContext, Builder>
-            implements XpathMessageValidationContextBuilder<XpathMessageValidationContext, Builder> {
+    public static final class Builder implements JsonPathMessageValidationContextBuilder<JsonPathMessageValidationContext, Builder> {
 
         private final Map<String, Object> expressions = new HashMap<>();
 
         /**
          * Static entry method for fluent builder API.
          */
-        public static Builder xpath() {
+        public static Builder jsonPath() {
             return new Builder();
         }
 
@@ -81,6 +87,7 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
             this.expressions.put(expression, value);
             return this;
         }
+
         @Override
         public MessageProcessor asProcessor() {
             return new DelegatingPathExpressionProcessor.Builder()
@@ -96,18 +103,18 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
         }
 
         @Override
-        public XpathMessageValidationContext build() {
-            return new XpathMessageValidationContext(this);
+        public JsonPathMessageValidationContext build() {
+            return new JsonPathMessageValidationContext(this);
         }
     }
 
     /**
      * Get the control message elements that have to be present in
      * the received message. Message element values are compared as well.
-     * @return the xPathExpressions
+     * @return the jsonPathExpressions
      */
-    public Map<String, Object> getXpathExpressions() {
-        return xPathExpressions;
+    public Map<String, Object> getJsonPathExpressions() {
+        return jsonPathExpressions;
     }
 
     /**
@@ -115,7 +122,7 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
      * @param pathExpression
      * @return
      */
-    public static boolean isXpathExpression(String pathExpression) {
-        return StringUtils.hasText(pathExpression) && (pathExpression.startsWith("/"));
+    public static boolean isJsonPathExpression(String pathExpression) {
+        return StringUtils.hasText(pathExpression) && (pathExpression.startsWith("$"));
     }
 }

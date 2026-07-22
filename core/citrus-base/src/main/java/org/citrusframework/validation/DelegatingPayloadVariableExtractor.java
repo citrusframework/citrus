@@ -23,7 +23,7 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonPathMessageValidationContext;
 import org.citrusframework.validation.xml.XmlNamespaceAware;
 import org.citrusframework.variable.DelegatingPayloadVariableExtractorBuilder;
 import org.citrusframework.variable.VariableExtractor;

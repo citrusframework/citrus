@@ -33,7 +33,7 @@ import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.script.GroovyScriptMessageValidator;
 import org.citrusframework.validation.script.ScriptValidationContext;
-import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
+import org.citrusframework.validation.script.support.TemplateBasedScriptBuilder;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

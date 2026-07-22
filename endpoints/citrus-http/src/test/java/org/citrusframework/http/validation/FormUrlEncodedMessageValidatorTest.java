@@ -26,7 +26,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageValidatorRegistry;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
 import org.testng.annotations.Test;
 
 public class FormUrlEncodedMessageValidatorTest extends AbstractTestNGUnitTest {

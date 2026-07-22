@@ -36,7 +36,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
 import org.citrusframework.ws.UnitTestSupport;
 import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
 import org.citrusframework.ws.message.SoapAttachment;

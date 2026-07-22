@@ -27,7 +27,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
+import org.citrusframework.validation.script.support.TemplateBasedScriptBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

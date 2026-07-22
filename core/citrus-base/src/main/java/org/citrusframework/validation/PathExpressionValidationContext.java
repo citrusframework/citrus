@@ -25,8 +25,8 @@ import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.expression.PathExpressionValidationContextBuilder;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonPathMessageValidationContext;
+import org.citrusframework.validation.xml.support.XpathMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 
 public class PathExpressionValidationContext {

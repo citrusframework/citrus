@@ -24,7 +24,7 @@ import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.xml.XpathMessageProcessor;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
+import org.citrusframework.validation.xml.support.XpathMessageValidationContext;
 import org.citrusframework.validation.xml.XpathPayloadVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 

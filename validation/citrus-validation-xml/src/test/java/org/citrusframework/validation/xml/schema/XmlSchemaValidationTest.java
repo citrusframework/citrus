@@ -22,7 +22,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.SystemProvider;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
 import org.citrusframework.xml.XsdSchemaRepository;
 import org.mockito.Mock;
 import org.springframework.core.io.ClassPathResource;

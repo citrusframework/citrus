@@ -58,8 +58,8 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonPathMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

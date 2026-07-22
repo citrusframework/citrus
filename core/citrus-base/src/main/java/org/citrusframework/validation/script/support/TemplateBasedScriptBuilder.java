@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.script.support;
 
 import java.io.BufferedReader;
 import java.io.IOException;

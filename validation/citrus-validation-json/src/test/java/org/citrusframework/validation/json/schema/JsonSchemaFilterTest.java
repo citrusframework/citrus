@@ -24,7 +24,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.json.schema.SimpleJsonSchema;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonMessageValidationContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;

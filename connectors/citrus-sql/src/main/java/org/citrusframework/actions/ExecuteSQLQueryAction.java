@@ -38,7 +38,7 @@ import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.script.support.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.slf4j.Logger;

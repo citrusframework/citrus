@@ -30,7 +30,7 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.script.support.DefaultScriptValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

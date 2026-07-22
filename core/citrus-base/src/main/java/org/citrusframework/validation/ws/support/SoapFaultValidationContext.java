@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.ws;
+package org.citrusframework.validation.ws.support;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.citrusframework.validation.context.DefaultValidationContext;
+import org.citrusframework.validation.ws.SoapFaultValidationContextBuilder;
 
 /**
  * Special validation context holds 1-n {@link SoapFaultDetailValidationContext} instances for

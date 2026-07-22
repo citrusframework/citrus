@@ -24,7 +24,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.MessageUtils;
 import org.citrusframework.validation.xml.DomXmlMessageValidator;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
 
 /**
  * XHTML message validator using W3C jtidy to automatically convert HTML content to XHTML fixing most common

@@ -40,6 +40,8 @@ import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.xhtml.XhtmlMessageValidator;
 import org.citrusframework.validation.xhtml.XhtmlXpathMessageValidator;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XpathMessageValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mock;
 import org.testng.Assert;

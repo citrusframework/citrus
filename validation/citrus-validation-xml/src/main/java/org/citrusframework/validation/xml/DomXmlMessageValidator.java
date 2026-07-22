@@ -39,6 +39,7 @@ import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.citrusframework.validation.xml.schema.XmlSchemaValidation;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

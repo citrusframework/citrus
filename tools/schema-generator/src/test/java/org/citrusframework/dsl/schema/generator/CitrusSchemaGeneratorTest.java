@@ -26,7 +26,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonTextMessageValidator;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

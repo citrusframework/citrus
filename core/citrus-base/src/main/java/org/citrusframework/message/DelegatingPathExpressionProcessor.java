@@ -24,7 +24,7 @@ import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.processor.DelegatingPathExpressionProcessorBuilder;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonPathMessageValidationContext;
 
 /**
  * Generic processor implementation delegating to JSONPath or XPath message processor based on given expression

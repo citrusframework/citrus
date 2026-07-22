@@ -30,7 +30,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.context.SchemaValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonMessageValidationContext;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;

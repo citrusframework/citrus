@@ -16,6 +16,7 @@
 
 package org.citrusframework.validation.json;
 
+import org.citrusframework.validation.json.support.JsonMessageValidationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.ws;
+package org.citrusframework.validation.ws.support;
 
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
+import org.citrusframework.validation.ws.SoapFaultDetailValidationContextBuilder;
+import org.citrusframework.validation.xml.support.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.support.XpathMessageValidationContext;
 
 /**
  * Soap fault detail validation context extends XML validation context.

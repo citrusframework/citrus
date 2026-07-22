@@ -30,7 +30,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.json.support.JsonPathMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidator;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;

@@ -34,6 +34,7 @@ import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.ValidationStatus;
+import org.citrusframework.validation.json.support.JsonPathMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

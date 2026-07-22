@@ -29,7 +29,7 @@ import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
+import org.citrusframework.validation.xml.support.XpathMessageValidationContext;
 import org.citrusframework.validation.xml.XpathPayloadVariableExtractor;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mockito;

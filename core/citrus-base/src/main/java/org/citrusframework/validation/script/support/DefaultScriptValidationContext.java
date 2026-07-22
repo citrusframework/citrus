@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.script.support;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -26,6 +26,8 @@ import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.context.DefaultValidationContext;
+import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.script.ScriptValidationContextBuilder;
 
 /**
  * Basic script validation context providing the validation code either from file resource or
