@@ -20,6 +20,7 @@ The MCP server exposes Citrus framework capabilities through standardized tools 
 
 This enables AI assistants to provide context-aware suggestions, validate component usage, and generate syntactically correct Citrus tests.
 
+[[citrus-mcp-server-info]]
 == What is MCP?
 
 The Model Context Protocol (MCP) is an open protocol that enables AI applications to securely connect to external data sources and tools. MCP provides a standardized way for:
@@ -40,6 +41,7 @@ For more information about MCP:
 
 The MCP server is packaged as an uber-JAR that can be run standalone or integrated with AI development tools.
 
+[[citrus-mcp-server-install-maven]]
 === Maven Dependency
 
 If you need to add the MCP server module to your project:
@@ -53,8 +55,10 @@ If you need to add the MCP server module to your project:
 </dependency>
 ----
 
+[[citrus-mcp-server-ai-tools]]
 === Integrate with AI assistance tools
 
+[[citrus-mcp-server-install-plugin]]
 ==== Install as a plugin
 
 Claude Code can install the Citrus MCP server from the marketplace defined in the `citrusframework/citrus`
@@ -70,9 +74,13 @@ claude plugin install citrus-mcp@citrus-marketplace
 The first command registers the marketplace; the second installs the `citrus-mcp` plugin, which ships
 the MCP server configuration. The server is launched on demand over STDIO via JBang.
 
+[[citrus-mcp-server-install-manual]]
 ==== Manual configuration
 
-Alternatively, add you can integrate the Citrus MCP server into AI code assistance tools using a local `.mcp.json` configuration file in your project folder.
+Alternatively, you can integrate the Citrus MCP server into AI code assistance tools using an MCP configuration file.
+The exact file name and location depends on the AI tool you are using (see <<citrus-mcp-server-config-locations>> below).
+
+The MCP server configuration looks like this:
 
 [source,json]
 ----
@@ -89,12 +97,14 @@ Alternatively, add you can integrate the Citrus MCP server into AI code assistan
 }
 ----
 
-NOTE: The very same approach also works with Claude desktop integration where you add this configuration to your `claude_desktop_config.json`.
-
 Running the MCP server with JBang is the most convenient way to do this.
-The --quiet flag prevents JBang’s output from interfering with the MCP protocol.
+The `--quiet` flag prevents JBang’s output from interfering with the MCP protocol.
 
-NOTE: You can also run the server directly without using JBang - then it would be something like `java -jar <FULL PATH>/citrus-mcp-server-${citrus.version}-runner.jar`. JBang might be the simpler approach though because it automatically deals with downloading the JAR file from Maven central.
+TIP: JBang supports the `LATEST` version placeholder.
+Use `org.citrusframework:citrus-mcp-server:LATEST:runner` to always fetch the latest available release from Maven Central without having to specify a concrete version number.
+
+NOTE: You can also run the server directly without using JBang - then it would be something like `java -jar <FULL PATH>/citrus-mcp-server-${citrus.version}-runner.jar`.
+JBang might be the simpler approach though because it automatically deals with downloading the JAR file from Maven central.
 
 [source,json]
 ----
@@ -111,6 +121,62 @@ NOTE: You can also run the server directly without using JBang - then it would b
 }
 ----
 
+[[citrus-mcp-server-config-locations]]
+==== Configuration file locations
+
+Each AI tool has its own conventions for where the MCP configuration file lives.
+The table below shows both project and global locations for each tool.
+When adding the configuration to the project root directory the configuration applies only to sessions started in that project.
+Global configuration applies to all sessions for that AI tool (`~/` refers to your individual user home directory).
+
+[cols="1,2,2", options="header"]
+|===
+| AI Tool
+| Project
+| Global
+
+| Claude Code
+| `.mcp.json` in project root directory
+| `~/.claude/mcp.json`
+
+| Claude Desktop
+| _n/a_
+| `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) +
+`%APPDATA%\Claude\claude_desktop_config.json` (Windows)
+
+| IBM Bob
+| `.bob/mcp.json` in project root directory
+| `~/.bob/settings/mcp.json` or `~/.bob/settings/mcp_settings.json` (Bob 1.x)
+
+| VS Code / GitHub Copilot
+| `.vscode/mcp.json` in project root directory
+| VS Code user `settings.json` under the `"mcp"` key
+
+| JetBrains IDEs (2025.1+)
+| `.junie/mcp.json` in project root directory or in `Settings > Tools > AI Assistant > MCP Servers`
+| `~/.junie/mcp.json`
+|===
+
+IMPORTANT: VS Code uses `"servers"` as the top-level key instead of `"mcpServers"`.
+See the example below.
+
+.VS Code .vscode/mcp.json example
+[source,json]
+----
+{
+  "servers": {
+    "citrus": {
+      "command": "jbang",
+      "args": [
+        "--quiet",
+        "org.citrusframework:citrus-mcp-server:LATEST:runner"
+      ]
+    }
+  }
+}
+----
+
+[[citrus-mcp-server-build]]
 === Building from Source
 
 You can build the Citrus MCP server uber-JAR locally with:
