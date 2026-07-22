@@ -19,7 +19,7 @@ package org.citrusframework.mail.config.annotation;
 import java.util.Properties;
 
 import org.citrusframework.TestActor;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;

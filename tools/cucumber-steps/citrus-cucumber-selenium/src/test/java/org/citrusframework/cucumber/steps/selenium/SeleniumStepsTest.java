@@ -23,7 +23,7 @@ import org.citrusframework.DefaultCitrusContextProvider;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.actions.CheckInputAction;
 import org.citrusframework.selenium.actions.ClickAction;

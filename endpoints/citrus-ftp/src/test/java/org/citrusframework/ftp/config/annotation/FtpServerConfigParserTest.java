@@ -18,7 +18,7 @@ package org.citrusframework.ftp.config.annotation;
 
 import org.apache.ftpserver.ftplet.UserManager;
 import org.citrusframework.TestActor;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;

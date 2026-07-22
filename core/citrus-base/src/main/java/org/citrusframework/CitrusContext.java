@@ -22,7 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.api.container.AfterSuite;

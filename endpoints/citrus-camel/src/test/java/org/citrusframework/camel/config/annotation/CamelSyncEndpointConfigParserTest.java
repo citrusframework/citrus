@@ -18,7 +18,7 @@ package org.citrusframework.camel.config.annotation;
 
 import org.apache.camel.CamelContext;
 import org.citrusframework.TestActor;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.endpoint.CamelSyncEndpoint;

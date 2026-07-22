@@ -18,7 +18,7 @@ package org.citrusframework.docker.config.annotation;
 
 import java.util.Map;
 
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.docker.client.DockerClient;

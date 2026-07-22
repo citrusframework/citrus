@@ -26,7 +26,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import org.citrusframework.Citrus;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
