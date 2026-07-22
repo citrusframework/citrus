@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import io.quarkus.test.common.QuarkusTestResource;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.LocalStackContainer;
 import org.citrusframework.testcontainers.quarkus.ContainerLifecycleListener;
 

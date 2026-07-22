@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.camel;
 
-import org.citrusframework.actions.camel.CamelActionBuilder;
-import org.citrusframework.actions.camel.CamelTestActions;
+import org.citrusframework.api.actions.camel.CamelActionBuilder;
+import org.citrusframework.api.actions.camel.CamelTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface CamelTestActionSupport extends CamelTestActions, TestActionLookupSupport {

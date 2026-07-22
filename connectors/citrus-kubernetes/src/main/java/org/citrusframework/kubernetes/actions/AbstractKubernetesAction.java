@@ -20,7 +20,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.kubernetes.KubernetesActionBuilderBase;
+import org.citrusframework.api.actions.kubernetes.KubernetesActionBuilderBase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.KubernetesActor;
 import org.citrusframework.kubernetes.KubernetesSettings;

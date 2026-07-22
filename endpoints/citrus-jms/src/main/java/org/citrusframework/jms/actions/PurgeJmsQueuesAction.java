@@ -31,7 +31,7 @@ import jakarta.jms.QueueConnectionFactory;
 import jakarta.jms.Session;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.jms.JmsPurgeQueuesActionBuilder;
+import org.citrusframework.api.actions.jms.JmsPurgeQueuesActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;

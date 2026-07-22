@@ -24,7 +24,7 @@ import io.fabric8.kubernetes.client.CustomResource;
 import io.fabric8.kubernetes.client.dsl.base.ResourceDefinitionContext;
 import io.fabric8.kubernetes.model.annotation.Group;
 import io.fabric8.kubernetes.model.annotation.Version;
-import org.citrusframework.actions.kubernetes.KubernetesCustomResourceVerifyActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesCustomResourceVerifyActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;

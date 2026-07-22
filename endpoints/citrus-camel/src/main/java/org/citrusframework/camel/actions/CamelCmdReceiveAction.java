@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.citrusframework.actions.camel.CamelCliCmdReceiveActionBuilder;
+import org.citrusframework.api.actions.camel.CamelCliCmdReceiveActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;

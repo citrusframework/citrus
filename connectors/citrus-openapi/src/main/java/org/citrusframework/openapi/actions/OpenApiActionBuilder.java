@@ -35,7 +35,7 @@ import static org.citrusframework.openapi.OpenApiSettings.getOpenApiValidationPo
  * @since 4.1
  */
 public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
-        implements OpenApiSpecificationSourceAwareBuilder<TestAction>, org.citrusframework.actions.openapi.OpenApiActionBuilder<TestAction, OpenApiSpecification, OpenApiActionBuilder> {
+        implements OpenApiSpecificationSourceAwareBuilder<TestAction>, org.citrusframework.api.actions.openapi.OpenApiActionBuilder<TestAction, OpenApiSpecification, OpenApiActionBuilder> {
 
     private OpenApiSpecificationSource openApiSpecificationSource;
 

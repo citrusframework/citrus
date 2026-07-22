@@ -20,7 +20,7 @@ import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.knative.KnativeActionBuilderBase;
+import org.citrusframework.api.actions.knative.KnativeActionBuilderBase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.knative.KnativeSettings;

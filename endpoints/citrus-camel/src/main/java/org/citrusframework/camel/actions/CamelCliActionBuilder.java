@@ -25,7 +25,7 @@ import org.citrusframework.util.ObjectHelper;
  * Action builder.
  */
 public class CamelCliActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelCliAction>
-        implements org.citrusframework.actions.camel.CamelCliActionBuilder<AbstractCamelCliAction, CamelCliActionBuilder> {
+        implements org.citrusframework.api.actions.camel.CamelCliActionBuilder<AbstractCamelCliAction, CamelCliActionBuilder> {
 
     private String camelVersion;
     private String kameletsVersion;

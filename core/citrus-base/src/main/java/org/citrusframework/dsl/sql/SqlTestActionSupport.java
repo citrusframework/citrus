@@ -16,10 +16,10 @@
 
 package org.citrusframework.dsl.sql;
 
-import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
-import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
-import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
-import org.citrusframework.actions.sql.SqlTestActions;
+import org.citrusframework.api.actions.sql.ExecutePlsqlActionBuilder;
+import org.citrusframework.api.actions.sql.ExecuteSqlActionBuilder;
+import org.citrusframework.api.actions.sql.ExecuteSqlQueryActionBuilder;
+import org.citrusframework.api.actions.sql.SqlTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface SqlTestActionSupport extends SqlTestActions, TestActionLookupSupport {

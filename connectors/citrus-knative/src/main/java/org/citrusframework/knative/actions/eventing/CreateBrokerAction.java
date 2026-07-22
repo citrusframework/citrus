@@ -19,7 +19,7 @@ package org.citrusframework.knative.actions.eventing;
 import io.fabric8.knative.eventing.v1.Broker;
 import io.fabric8.knative.eventing.v1.BrokerBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
-import org.citrusframework.actions.knative.KnativeBrokerCreateActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeBrokerCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;

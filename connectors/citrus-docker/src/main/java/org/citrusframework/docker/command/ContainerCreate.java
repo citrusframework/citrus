@@ -26,7 +26,7 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Volume;
-import org.citrusframework.actions.docker.DockerContainerCreateActionBuilder;
+import org.citrusframework.api.actions.docker.DockerContainerCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;

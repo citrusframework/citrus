@@ -17,5 +17,5 @@
 package org.citrusframework.selenium.model;
 
 @Deprecated
-public interface WebPage extends org.citrusframework.actions.selenium.WebPage {
+public interface WebPage extends org.citrusframework.api.actions.selenium.WebPage {
 }

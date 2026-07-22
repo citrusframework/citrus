@@ -17,7 +17,7 @@
 package org.citrusframework.docker.command;
 
 import com.github.dockerjava.api.model.ResponseItem;
-import org.citrusframework.actions.docker.DockerContainerStopActionBuilder;
+import org.citrusframework.api.actions.docker.DockerContainerStopActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;

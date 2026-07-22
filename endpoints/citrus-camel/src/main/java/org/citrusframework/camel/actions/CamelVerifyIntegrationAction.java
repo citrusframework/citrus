@@ -16,7 +16,7 @@
 
 package org.citrusframework.camel.actions;
 
-import org.citrusframework.actions.camel.CamelIntegrationVerifyActionBuilder;
+import org.citrusframework.api.actions.camel.CamelIntegrationVerifyActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;

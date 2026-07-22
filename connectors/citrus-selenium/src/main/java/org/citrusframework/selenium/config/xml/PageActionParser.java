@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.selenium.actions.PageAction;
-import org.citrusframework.actions.selenium.PageValidator;
-import org.citrusframework.actions.selenium.WebPage;
+import org.citrusframework.api.actions.selenium.PageValidator;
+import org.citrusframework.api.actions.selenium.WebPage;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;

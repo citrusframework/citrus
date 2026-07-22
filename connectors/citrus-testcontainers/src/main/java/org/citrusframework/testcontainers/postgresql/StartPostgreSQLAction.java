@@ -20,7 +20,7 @@ import java.io.IOException;
 import javax.script.ScriptException;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.citrusframework.actions.testcontainers.TestcontainersPostgreSQLStartActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersPostgreSQLStartActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;

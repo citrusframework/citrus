@@ -16,7 +16,7 @@
 
 package org.citrusframework.kubernetes.actions;
 
-import org.citrusframework.actions.kubernetes.KubernetesDisconnectActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesDisconnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesVariableNames;
 

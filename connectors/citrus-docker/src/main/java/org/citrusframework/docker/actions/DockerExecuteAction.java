@@ -18,7 +18,7 @@ package org.citrusframework.docker.actions;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.docker.DockerActionBuilder;
+import org.citrusframework.api.actions.docker.DockerActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.command.AbstractDockerCommandBuilder;

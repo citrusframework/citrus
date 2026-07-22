@@ -16,7 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
-import org.citrusframework.actions.selenium.SeleniumSwitchWindowActionBuilder;
+import org.citrusframework.api.actions.selenium.SeleniumSwitchWindowActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;

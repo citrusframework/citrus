@@ -31,7 +31,7 @@ import org.citrusframework.util.ObjectHelper;
  */
 @SuppressWarnings("unchecked")
 public class SoapServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
-        implements org.citrusframework.actions.ws.SoapServerActionBuilder<TestAction, SoapServerActionBuilder> {
+        implements org.citrusframework.api.actions.ws.SoapServerActionBuilder<TestAction, SoapServerActionBuilder> {
 
     /** Target soap client instance */
     private Endpoint soapServer;

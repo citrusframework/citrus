@@ -17,20 +17,20 @@
 package org.citrusframework;
 
 import org.citrusframework.api.actions.BaseTestActions;
-import org.citrusframework.actions.agent.AgentTestActions;
-import org.citrusframework.actions.camel.CamelTestActions;
-import org.citrusframework.actions.docker.DockerTestActions;
-import org.citrusframework.actions.http.HttpTestActions;
-import org.citrusframework.actions.jbang.JBangTestActions;
-import org.citrusframework.actions.jms.JmsTestActions;
-import org.citrusframework.actions.knative.KnativeTestActions;
-import org.citrusframework.actions.kubernetes.KubernetesTestActions;
-import org.citrusframework.actions.openapi.OpenApiTestActions;
-import org.citrusframework.actions.script.ScriptTestActions;
-import org.citrusframework.actions.selenium.SeleniumTestActions;
-import org.citrusframework.actions.sql.SqlTestActions;
-import org.citrusframework.actions.testcontainers.TestcontainersTestActions;
-import org.citrusframework.actions.ws.SoapTestActions;
+import org.citrusframework.api.actions.agent.AgentTestActions;
+import org.citrusframework.api.actions.camel.CamelTestActions;
+import org.citrusframework.api.actions.docker.DockerTestActions;
+import org.citrusframework.api.actions.http.HttpTestActions;
+import org.citrusframework.api.actions.jbang.JBangTestActions;
+import org.citrusframework.api.actions.jms.JmsTestActions;
+import org.citrusframework.api.actions.knative.KnativeTestActions;
+import org.citrusframework.api.actions.kubernetes.KubernetesTestActions;
+import org.citrusframework.api.actions.openapi.OpenApiTestActions;
+import org.citrusframework.api.actions.script.ScriptTestActions;
+import org.citrusframework.api.actions.selenium.SeleniumTestActions;
+import org.citrusframework.api.actions.sql.SqlTestActions;
+import org.citrusframework.api.actions.testcontainers.TestcontainersTestActions;
+import org.citrusframework.api.actions.ws.SoapTestActions;
 
 /**
  * Interface combines domain specific language methods for all test actions available in Citrus.

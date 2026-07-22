@@ -18,9 +18,9 @@ package org.citrusframework.testcontainers.aws2.client;
 
 import java.util.Map;
 
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
-import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
-import org.citrusframework.actions.testcontainers.aws2.AwsContainer;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.ClientFactory;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;

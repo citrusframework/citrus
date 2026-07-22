@@ -18,7 +18,7 @@ package org.citrusframework.camel.actions;
 
 import java.io.IOException;
 
-import org.citrusframework.actions.camel.CamelCreateComponentActionBuilder;
+import org.citrusframework.api.actions.camel.CamelCreateComponentActionBuilder;
 import org.citrusframework.camel.context.CamelReferenceResolver;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;

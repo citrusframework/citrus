@@ -17,7 +17,7 @@
 package org.citrusframework.camel.actions;
 
 import org.apache.camel.impl.engine.AbstractCamelContext;
-import org.citrusframework.actions.camel.CamelStopRouteActionBuilder;
+import org.citrusframework.api.actions.camel.CamelStopRouteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;

@@ -44,7 +44,7 @@ import io.fabric8.kubernetes.api.model.VolumeMountBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.Updatable;
-import org.citrusframework.actions.kubernetes.KubernetesAgentConnectActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesAgentConnectActionBuilder;
 import org.citrusframework.condition.HttpCondition;
 import org.citrusframework.container.Wait;
 import org.citrusframework.context.TestContext;

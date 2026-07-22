@@ -18,20 +18,20 @@ package org.citrusframework.kubernetes.actions;
 
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesAgentActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesConfigMapActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesCustomResourceActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesDeploymentActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesPodActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesResourceActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesSecretActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesServiceActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesAgentActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesConfigMapActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesCustomResourceActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesDeploymentActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesPodActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesResourceActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesSecretActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesServiceActionBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.endpoint.KubernetesEndpointConfiguration;
 import org.citrusframework.util.ObjectHelper;
 
 public class KubernetesActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<KubernetesAction>,
-        org.citrusframework.actions.kubernetes.KubernetesActionBuilder<KubernetesAction, KubernetesActionBuilder> {
+        org.citrusframework.api.actions.kubernetes.KubernetesActionBuilder<KubernetesAction, KubernetesActionBuilder> {
 
     /** Kubernetes client */
     private KubernetesClient kubernetesClient;

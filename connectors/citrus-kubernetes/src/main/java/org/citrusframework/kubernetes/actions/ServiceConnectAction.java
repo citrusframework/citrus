@@ -17,7 +17,7 @@
 package org.citrusframework.kubernetes.actions;
 
 import io.fabric8.kubernetes.client.LocalPortForward;
-import org.citrusframework.actions.kubernetes.KubernetesServiceConnectActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesServiceConnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;

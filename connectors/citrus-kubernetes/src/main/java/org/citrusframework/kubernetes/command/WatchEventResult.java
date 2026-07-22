@@ -20,7 +20,7 @@ import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.WatcherException;
-import org.citrusframework.actions.kubernetes.command.KubernetesWatchCommandResult;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesWatchCommandResult;
 
 /**
  * @since 2.7

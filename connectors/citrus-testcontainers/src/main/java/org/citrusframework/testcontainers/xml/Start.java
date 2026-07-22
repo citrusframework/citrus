@@ -30,7 +30,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import jakarta.xml.bind.annotation.XmlValue;
 import org.citrusframework.TestActor;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;

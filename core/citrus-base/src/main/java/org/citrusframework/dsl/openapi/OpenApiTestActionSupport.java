@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.openapi;
 
-import org.citrusframework.actions.openapi.OpenApiActionBuilder;
-import org.citrusframework.actions.openapi.OpenApiTestActions;
+import org.citrusframework.api.actions.openapi.OpenApiActionBuilder;
+import org.citrusframework.api.actions.openapi.OpenApiTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface OpenApiTestActionSupport extends OpenApiTestActions, TestActionLookupSupport {

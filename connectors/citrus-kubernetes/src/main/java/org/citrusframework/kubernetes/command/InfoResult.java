@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.*;
 import io.fabric8.kubernetes.api.model.*;
 
 import jakarta.validation.constraints.NotNull;
-import org.citrusframework.actions.kubernetes.command.KubernetesInfoCommandResult;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesInfoCommandResult;
 
 /**
  * @since 2.7

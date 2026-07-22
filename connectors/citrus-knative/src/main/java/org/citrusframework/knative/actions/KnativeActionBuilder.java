@@ -19,11 +19,11 @@ package org.citrusframework.knative.actions;
 import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.knative.KnativeBrokerActionBuilder;
-import org.citrusframework.actions.knative.KnativeChannelActionBuilder;
-import org.citrusframework.actions.knative.KnativeEventActionBuilder;
-import org.citrusframework.actions.knative.KnativeSubscriptionActionBuilder;
-import org.citrusframework.actions.knative.KnativeTriggerActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeBrokerActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeChannelActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeEventActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeSubscriptionActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeTriggerActionBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.knative.actions.eventing.CreateBrokerAction;
 import org.citrusframework.knative.actions.eventing.CreateTriggerAction;
@@ -37,7 +37,7 @@ import org.citrusframework.knative.actions.messaging.CreateSubscriptionAction;
 import org.citrusframework.util.ObjectHelper;
 
 public class KnativeActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<KnativeAction>,
-        org.citrusframework.actions.knative.KnativeActionBuilder<KnativeAction, KnativeActionBuilder> {
+        org.citrusframework.api.actions.knative.KnativeActionBuilder<KnativeAction, KnativeActionBuilder> {
 
     /** Kubernetes client */
     private KubernetesClient kubernetesClient;

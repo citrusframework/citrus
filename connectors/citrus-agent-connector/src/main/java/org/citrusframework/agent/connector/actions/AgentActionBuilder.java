@@ -21,7 +21,7 @@ import org.citrusframework.agent.connector.CitrusAgentSettings;
 import org.citrusframework.util.ObjectHelper;
 
 public class AgentActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<AgentAction>,
-        org.citrusframework.actions.agent.AgentActionBuilder<AgentAction, AgentActionBuilder> {
+        org.citrusframework.api.actions.agent.AgentActionBuilder<AgentAction, AgentActionBuilder> {
 
     private AbstractAgentAction.Builder<? extends AgentAction, ?> delegate;
 

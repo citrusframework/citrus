@@ -28,7 +28,7 @@ import org.citrusframework.util.ObjectHelper;
  * @since 2.4
  */
 public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
-		implements org.citrusframework.actions.http.HttpActionBuilder<TestAction, HttpActionBuilder> {
+		implements org.citrusframework.api.actions.http.HttpActionBuilder<TestAction, HttpActionBuilder> {
 
 	/**
 	 * Static entrance method for the Http fluent action builder.

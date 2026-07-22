@@ -19,7 +19,7 @@ package org.citrusframework.docker.command;
 import com.github.dockerjava.api.command.PullImageCmd;
 import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.PullResponseItem;
-import org.citrusframework.actions.docker.DockerImagePullActionBuilder;
+import org.citrusframework.api.actions.docker.DockerImagePullActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;

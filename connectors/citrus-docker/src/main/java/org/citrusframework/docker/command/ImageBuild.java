@@ -21,7 +21,7 @@ import java.util.Collections;
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.model.BuildResponseItem;
-import org.citrusframework.actions.docker.DockerImageBuildActionBuilder;
+import org.citrusframework.api.actions.docker.DockerImageBuildActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;

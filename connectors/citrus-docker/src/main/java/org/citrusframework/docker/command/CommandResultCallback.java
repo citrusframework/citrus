@@ -17,5 +17,5 @@
 package org.citrusframework.docker.command;
 
 @Deprecated
-public interface CommandResultCallback<R> extends org.citrusframework.actions.docker.command.CommandResultCallback<R> {
+public interface CommandResultCallback<R> extends org.citrusframework.api.actions.docker.command.CommandResultCallback<R> {
 }

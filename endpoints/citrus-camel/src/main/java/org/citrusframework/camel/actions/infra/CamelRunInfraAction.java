@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import org.apache.camel.catalog.CamelCatalog;
 import org.apache.camel.catalog.DefaultCamelCatalog;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.citrusframework.actions.camel.CamelInfraRunActionBuilder;
+import org.citrusframework.api.actions.camel.CamelInfraRunActionBuilder;
 import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;

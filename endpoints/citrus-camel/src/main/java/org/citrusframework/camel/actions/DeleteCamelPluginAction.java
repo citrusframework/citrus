@@ -16,7 +16,7 @@
 
 package org.citrusframework.camel.actions;
 
-import org.citrusframework.actions.camel.CamelCliPluginDeleteActionBuilder;
+import org.citrusframework.api.actions.camel.CamelCliPluginDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

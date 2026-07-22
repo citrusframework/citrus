@@ -18,7 +18,7 @@ package org.citrusframework.camel.actions;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.citrusframework.actions.camel.CamelCreateContextActionBuilder;
+import org.citrusframework.api.actions.camel.CamelCreateContextActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.context.CamelReferenceResolver;
 import org.citrusframework.context.TestContext;

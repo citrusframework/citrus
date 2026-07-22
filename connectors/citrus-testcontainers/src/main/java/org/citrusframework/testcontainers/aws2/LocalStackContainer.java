@@ -29,9 +29,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.citrusframework.actions.testcontainers.aws2.AwsContainer;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
-import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsContainer;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.ClientFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testcontainers.aws2.client.DefaultClientFactoryResolver;
 import org.citrusframework.util.StringUtils;

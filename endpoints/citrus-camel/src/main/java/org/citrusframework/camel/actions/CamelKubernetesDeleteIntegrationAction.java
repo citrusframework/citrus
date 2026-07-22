@@ -19,7 +19,7 @@ package org.citrusframework.camel.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.actions.camel.CamelKubernetesIntegrationDeleteActionBuilder;
+import org.citrusframework.api.actions.camel.CamelKubernetesIntegrationDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;

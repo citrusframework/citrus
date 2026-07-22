@@ -27,7 +27,7 @@ import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.citrusframework.actions.testcontainers.TestcontainersKafkaStartActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersKafkaStartActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testcontainers.TestContainersSettings;

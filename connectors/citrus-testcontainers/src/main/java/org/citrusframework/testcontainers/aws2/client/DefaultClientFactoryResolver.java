@@ -18,8 +18,8 @@ package org.citrusframework.testcontainers.aws2.client;
 
 import java.util.Optional;
 
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
-import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.ClientFactory;
 import org.citrusframework.spi.ReferenceResolver;
 
 /**

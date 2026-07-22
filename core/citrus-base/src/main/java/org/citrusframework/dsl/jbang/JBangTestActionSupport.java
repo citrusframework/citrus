@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.jbang;
 
-import org.citrusframework.actions.jbang.JBangActionBuilder;
-import org.citrusframework.actions.jbang.JBangTestActions;
+import org.citrusframework.api.actions.jbang.JBangActionBuilder;
+import org.citrusframework.api.actions.jbang.JBangTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface JBangTestActionSupport extends JBangTestActions, TestActionLookupSupport {

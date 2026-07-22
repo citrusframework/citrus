@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.knative;
 
-import org.citrusframework.actions.knative.KnativeActionBuilder;
-import org.citrusframework.actions.knative.KnativeTestActions;
+import org.citrusframework.api.actions.knative.KnativeActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface KnativeTestActionSupport extends KnativeTestActions, TestActionLookupSupport {

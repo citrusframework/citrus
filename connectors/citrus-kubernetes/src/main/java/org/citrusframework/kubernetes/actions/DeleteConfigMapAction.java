@@ -16,7 +16,7 @@
 
 package org.citrusframework.kubernetes.actions;
 
-import org.citrusframework.actions.kubernetes.KubernetesConfigMapDeleteActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesConfigMapDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 
 public class DeleteConfigMapAction extends AbstractKubernetesAction {

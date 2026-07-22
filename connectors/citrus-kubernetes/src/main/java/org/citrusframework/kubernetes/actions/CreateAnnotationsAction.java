@@ -24,7 +24,7 @@ import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.fabric8.kubernetes.api.model.ServiceBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesCreateAnnotationsActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesCreateAnnotationsActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.KubernetesResourceType;

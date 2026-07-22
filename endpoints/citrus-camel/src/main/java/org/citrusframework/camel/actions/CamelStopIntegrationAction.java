@@ -18,7 +18,7 @@ package org.citrusframework.camel.actions;
 
 import java.util.List;
 
-import org.citrusframework.actions.camel.CamelIntegrationStopActionBuilder;
+import org.citrusframework.api.actions.camel.CamelIntegrationStopActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;

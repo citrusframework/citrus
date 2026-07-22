@@ -25,10 +25,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import io.floci.testcontainers.FlociContainer;
-import org.citrusframework.actions.testcontainers.TestcontainersFlociStartActionBuilder;
-import org.citrusframework.actions.testcontainers.aws2.AwsContainer;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
-import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
+import org.citrusframework.api.actions.testcontainers.TestcontainersFlociStartActionBuilder;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsContainer;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.ClientFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;

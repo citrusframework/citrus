@@ -26,7 +26,7 @@ import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.dsl.Updatable;
 import io.fabric8.kubernetes.model.annotation.Group;
 import io.fabric8.kubernetes.model.annotation.Version;
-import org.citrusframework.actions.kubernetes.KubernetesCustomResourceCreateActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesCustomResourceCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.KubernetesSupport;

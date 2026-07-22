@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.citrusframework.actions.testcontainers.TestcontainersStartActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersStartActionBuilderBase;
+import org.citrusframework.api.actions.testcontainers.TestcontainersStartActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersStartActionBuilderBase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;

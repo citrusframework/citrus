@@ -20,7 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import org.citrusframework.actions.kubernetes.KubernetesResourceCreateActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesResourceCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;

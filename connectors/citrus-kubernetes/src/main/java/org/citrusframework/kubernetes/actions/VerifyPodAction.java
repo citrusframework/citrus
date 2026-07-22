@@ -19,7 +19,7 @@ package org.citrusframework.kubernetes.actions;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.dsl.PodResource;
-import org.citrusframework.actions.kubernetes.KubernetesPodVerifyActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesPodVerifyActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;

@@ -28,7 +28,7 @@ import org.citrusframework.util.ObjectHelper;
  * @since 2.6
  */
 public class SoapActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
-        implements org.citrusframework.actions.ws.SoapActionBuilder<TestAction, SoapActionBuilder> {
+        implements org.citrusframework.api.actions.ws.SoapActionBuilder<TestAction, SoapActionBuilder> {
 
     /**
      * Static entrance method for the SOAP fluent action builder.

@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.script;
 
-import org.citrusframework.actions.script.ScriptActionBuilder;
-import org.citrusframework.actions.script.ScriptTestActions;
+import org.citrusframework.api.actions.script.ScriptActionBuilder;
+import org.citrusframework.api.actions.script.ScriptTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface ScriptTestActionSupport extends ScriptTestActions, TestActionLookupSupport {

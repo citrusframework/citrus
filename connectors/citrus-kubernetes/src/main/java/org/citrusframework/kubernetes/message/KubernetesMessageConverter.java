@@ -19,7 +19,7 @@ package org.citrusframework.kubernetes.message;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResult;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesCommandResult;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.command.*;

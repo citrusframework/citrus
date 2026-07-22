@@ -21,7 +21,7 @@ import java.util.Map;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.actions.SendMessageAction;
-import org.citrusframework.actions.http.HttpSendRequestMessageBuilderFactory;
+import org.citrusframework.api.actions.http.HttpSendRequestMessageBuilderFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
@@ -37,7 +37,7 @@ import org.springframework.util.MultiValueMap;
  */
 public class HttpClientRequestActionBuilder extends
         SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder>
-        implements org.citrusframework.actions.http.HttpClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
+        implements org.citrusframework.api.actions.http.HttpClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
 
     /**
      * Http message to send or receive

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.citrusframework.actions.camel.CamelIntegrationRunActionBuilder;
+import org.citrusframework.api.actions.camel.CamelIntegrationRunActionBuilder;
 import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;

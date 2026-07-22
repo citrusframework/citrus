@@ -19,7 +19,7 @@ package org.citrusframework.kubernetes.actions;
 import java.io.IOException;
 
 import io.fabric8.kubernetes.client.LocalPortForward;
-import org.citrusframework.actions.kubernetes.KubernetesServiceDisconnectActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesServiceDisconnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.kubernetes.KubernetesSupport;

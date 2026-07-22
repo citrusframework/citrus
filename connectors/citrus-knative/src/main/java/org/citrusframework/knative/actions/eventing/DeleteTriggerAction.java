@@ -16,7 +16,7 @@
 
 package org.citrusframework.knative.actions.eventing;
 
-import org.citrusframework.actions.knative.KnativeTriggerDeleteActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeTriggerDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.kubernetes.KubernetesSettings;

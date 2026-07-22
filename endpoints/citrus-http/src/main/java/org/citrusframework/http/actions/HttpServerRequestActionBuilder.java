@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.actions.http.HttpReceiveRequestMessageBuilderFactory;
+import org.citrusframework.api.actions.http.HttpReceiveRequestMessageBuilderFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
@@ -39,7 +39,7 @@ import org.springframework.util.MultiValueMap;
  */
 public class HttpServerRequestActionBuilder extends
         ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder>
-        implements org.citrusframework.actions.http.HttpServerRequestActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
+        implements org.citrusframework.api.actions.http.HttpServerRequestActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
 
     /** Http message to send or receive */
     private final HttpMessage httpMessage;

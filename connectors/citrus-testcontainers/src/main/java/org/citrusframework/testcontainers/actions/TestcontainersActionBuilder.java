@@ -17,14 +17,14 @@
 package org.citrusframework.testcontainers.actions;
 
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersComposeActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersFlociActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersGenericContainerActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersKafkaActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersLocalStackActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersMongoDBActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersPostgreSQLActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersRedpandaActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersComposeActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersFlociActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersGenericContainerActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersKafkaActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersLocalStackActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersMongoDBActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersPostgreSQLActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersRedpandaActionBuilder;
 import org.citrusframework.testcontainers.aws2.StartFlociAction;
 import org.citrusframework.testcontainers.aws2.StartLocalStackAction;
 import org.citrusframework.testcontainers.compose.ComposeDownAction;
@@ -37,7 +37,7 @@ import org.citrusframework.util.ObjectHelper;
 import org.testcontainers.containers.GenericContainer;
 
 public class TestcontainersActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestcontainersAction>,
-        org.citrusframework.actions.testcontainers.TestcontainersActionBuilder<TestcontainersAction, TestcontainersActionBuilder> {
+        org.citrusframework.api.actions.testcontainers.TestcontainersActionBuilder<TestcontainersAction, TestcontainersActionBuilder> {
 
     private AbstractTestcontainersAction.Builder<? extends TestcontainersAction, ?> delegate;
 

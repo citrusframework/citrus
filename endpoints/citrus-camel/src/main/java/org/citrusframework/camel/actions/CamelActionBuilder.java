@@ -31,7 +31,7 @@ import org.citrusframework.util.ObjectHelper;
 @SuppressWarnings("unchecked")
 public class CamelActionBuilder implements
         TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware,
-        org.citrusframework.actions.camel.CamelActionBuilder<TestAction, CamelActionBuilder> {
+        org.citrusframework.api.actions.camel.CamelActionBuilder<TestAction, CamelActionBuilder> {
 
     private CamelContext camelContext;
 

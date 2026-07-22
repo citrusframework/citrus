@@ -20,7 +20,7 @@ import io.fabric8.knative.duck.v1.KReferenceBuilder;
 import io.fabric8.knative.messaging.v1.Subscription;
 import io.fabric8.knative.messaging.v1.SubscriptionBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
-import org.citrusframework.actions.knative.KnativeSubscriptionCreateActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeSubscriptionCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;

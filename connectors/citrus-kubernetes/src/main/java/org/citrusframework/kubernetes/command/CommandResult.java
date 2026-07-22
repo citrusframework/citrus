@@ -19,7 +19,7 @@ package org.citrusframework.kubernetes.command;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.fabric8.kubernetes.client.KubernetesClientException;
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResult;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesCommandResult;
 
 /**
  * @since 2.7

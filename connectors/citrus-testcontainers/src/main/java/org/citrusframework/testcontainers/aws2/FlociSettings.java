@@ -24,7 +24,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import io.floci.testcontainers.FlociContainer;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;

@@ -19,7 +19,7 @@ package org.citrusframework.kubernetes.actions;
 import java.util.List;
 
 import io.fabric8.kubernetes.api.model.Pod;
-import org.citrusframework.actions.kubernetes.KubernetesPodDeleteActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesPodDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 
 public class DeletePodAction extends AbstractKubernetesAction {

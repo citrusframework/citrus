@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.kubernetes;
 
-import org.citrusframework.actions.kubernetes.KubernetesActionBuilder;
-import org.citrusframework.actions.kubernetes.KubernetesTestActions;
+import org.citrusframework.api.actions.kubernetes.KubernetesActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface KubernetesTestActionSupport extends KubernetesTestActions, TestActionLookupSupport {

@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.selenium;
 
-import org.citrusframework.actions.selenium.SeleniumActionBuilder;
-import org.citrusframework.actions.selenium.SeleniumTestActions;
+import org.citrusframework.api.actions.selenium.SeleniumActionBuilder;
+import org.citrusframework.api.actions.selenium.SeleniumTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface SeleniumTestActionSupport extends SeleniumTestActions, TestActionLookupSupport {

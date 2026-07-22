@@ -32,7 +32,7 @@ import org.citrusframework.util.ObjectHelper;
  */
 public class CamelExchangeActionBuilder<T extends MessageBuilderSupport.MessageActionBuilder<?, ?, ?>>
         implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware,
-        org.citrusframework.actions.camel.CamelExchangeActionBuilder<TestAction, T, CamelExchangeActionBuilder<T>> {
+        org.citrusframework.api.actions.camel.CamelExchangeActionBuilder<TestAction, T, CamelExchangeActionBuilder<T>> {
 
     private T delegate;
 

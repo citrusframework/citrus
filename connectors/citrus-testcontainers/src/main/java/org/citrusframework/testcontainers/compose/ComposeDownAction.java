@@ -16,7 +16,7 @@
 
 package org.citrusframework.testcontainers.compose;
 
-import org.citrusframework.actions.testcontainers.TestcontainersComposeDownActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersComposeDownActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.testcontainers.containers.ComposeContainer;

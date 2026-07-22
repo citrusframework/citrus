@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.http;
 
-import org.citrusframework.actions.http.HttpActionBuilder;
-import org.citrusframework.actions.http.HttpTestActions;
+import org.citrusframework.api.actions.http.HttpActionBuilder;
+import org.citrusframework.api.actions.http.HttpTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface HttpTestActionSupport extends HttpTestActions, TestActionLookupSupport {

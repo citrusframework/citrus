@@ -22,7 +22,7 @@ import org.apache.camel.dsl.yaml.YamlRoutesBuilderLoader;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
 import org.apache.camel.support.ResourceHelper;
-import org.citrusframework.actions.camel.CamelCreateRouteActionBuilder;
+import org.citrusframework.api.actions.camel.CamelCreateRouteActionBuilder;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;

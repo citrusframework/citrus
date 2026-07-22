@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.docker;
 
-import org.citrusframework.actions.docker.DockerActionBuilder;
-import org.citrusframework.actions.docker.DockerTestActions;
+import org.citrusframework.api.actions.docker.DockerActionBuilder;
+import org.citrusframework.api.actions.docker.DockerTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface DockerTestActionSupport extends DockerTestActions, TestActionLookupSupport {
