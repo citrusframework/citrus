@@ -22,7 +22,7 @@ import io.vertx.ext.web.RoutingContext;
 import org.apache.camel.tooling.maven.MavenArtifact;
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
-import org.citrusframework.agent.CitrusAgentConfiguration;
+import org.citrusframework.api.agent.CitrusAgentConfiguration;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.jbang.maven.MavenDependencyResolver;

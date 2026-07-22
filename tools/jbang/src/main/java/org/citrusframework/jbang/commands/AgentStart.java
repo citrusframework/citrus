@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.citrusframework.agent.CitrusAgentConfiguration;
+import org.citrusframework.api.agent.CitrusAgentConfiguration;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.jbang.maven.MavenDependencyResolver;

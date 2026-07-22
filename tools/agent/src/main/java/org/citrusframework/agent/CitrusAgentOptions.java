@@ -19,6 +19,7 @@ package org.citrusframework.agent;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import org.citrusframework.api.agent.CitrusAgentConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.main.CitrusAppOptions;
 import org.citrusframework.util.StringUtils;

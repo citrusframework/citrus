@@ -42,6 +42,8 @@ import org.citrusframework.TestResult;
 import org.citrusframework.agent.listener.AgentTestListener;
 import org.citrusframework.agent.util.ConfigurationHelper;
 import org.citrusframework.agent.util.JsonSupport;
+import org.citrusframework.api.agent.CitrusAgentConfiguration;
+import org.citrusframework.api.agent.CitrusAgentSettings;
 import org.citrusframework.main.CitrusAppConfiguration;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.report.JUnitReporter;

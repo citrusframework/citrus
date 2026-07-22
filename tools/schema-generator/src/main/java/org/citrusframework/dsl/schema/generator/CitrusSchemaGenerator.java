@@ -30,7 +30,7 @@ import com.github.victools.jsonschema.generator.SchemaGeneratorConfig;
 import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.github.victools.jsonschema.generator.TypeContext;
-import org.citrusframework.agent.CitrusAgentConfiguration;
+import org.citrusframework.api.agent.CitrusAgentConfiguration;
 import org.citrusframework.dsl.schema.Catalog;
 import org.citrusframework.dsl.schema.Test;
 import org.citrusframework.message.MessagePayloadUtils;
