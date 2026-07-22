@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.citrusframework.TestSource;
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.TestNGEngine;

@@ -17,7 +17,7 @@
 package org.citrusframework.endpoint;
 
 import org.citrusframework.TestActor;
-import org.citrusframework.common.Named;
+import org.citrusframework.api.common.Named;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.Producer;
 

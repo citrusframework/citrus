@@ -19,8 +19,8 @@ package org.citrusframework.server;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.api.common.InitializingPhase;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.endpoint.EndpointAdapter;

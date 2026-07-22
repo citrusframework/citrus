@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.citrusframework.bean.BeanDefinition;
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.api.container.AfterTest;
 import org.citrusframework.api.container.BeforeTest;

@@ -18,7 +18,7 @@ package org.citrusframework.agent.connector.actions;
 
 import org.citrusframework.agent.connector.CitrusAgentSettings;
 import org.citrusframework.agent.connector.UnitTestSupport;
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.adapter.StaticEndpointAdapter;
 import org.citrusframework.http.message.HttpMessage;

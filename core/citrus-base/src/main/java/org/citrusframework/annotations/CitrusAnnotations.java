@@ -17,7 +17,6 @@
 package org.citrusframework.annotations;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
 import org.citrusframework.Citrus;
@@ -27,7 +26,7 @@ import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.common.Named;
+import org.citrusframework.api.common.Named;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.BindToRegistry;

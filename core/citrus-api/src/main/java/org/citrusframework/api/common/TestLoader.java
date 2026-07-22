@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.common;
+package org.citrusframework.api.common;
 
 import java.util.Map;
 import java.util.Optional;

@@ -1,1 +1,1 @@
-type=org.citrusframework.common.SpringXmlTestLoader
+type=org.citrusframework.spring.SpringXmlTestLoader

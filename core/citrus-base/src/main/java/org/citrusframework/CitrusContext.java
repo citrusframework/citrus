@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.citrusframework.annotations.CitrusAnnotations;
-import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.api.common.InitializingPhase;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.api.container.AfterSuite;
 import org.citrusframework.api.container.AfterTest;
 import org.citrusframework.api.container.BeforeSuite;

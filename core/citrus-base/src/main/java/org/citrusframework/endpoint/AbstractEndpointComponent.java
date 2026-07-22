@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolverAware;

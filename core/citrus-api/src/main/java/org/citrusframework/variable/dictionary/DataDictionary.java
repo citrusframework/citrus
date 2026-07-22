@@ -17,7 +17,7 @@
 package org.citrusframework.variable.dictionary;
 
 import org.citrusframework.Scoped;
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessageDirectionAware;
 import org.citrusframework.message.MessageProcessor;

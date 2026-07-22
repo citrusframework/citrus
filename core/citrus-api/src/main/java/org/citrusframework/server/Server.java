@@ -16,7 +16,7 @@
 
 package org.citrusframework.server;
 
-import org.citrusframework.common.Named;
+import org.citrusframework.api.common.Named;
 
 /**
  * Server representation in Citrus is a runnable instance accepting client

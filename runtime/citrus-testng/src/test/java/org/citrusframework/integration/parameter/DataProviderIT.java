@@ -17,7 +17,7 @@
 package org.citrusframework.integration.parameter;
 
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.testng.CitrusParameters;
 import org.testng.annotations.*;

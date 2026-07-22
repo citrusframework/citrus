@@ -16,7 +16,7 @@
 
 package org.citrusframework.jms.endpoint;
 
-import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
 

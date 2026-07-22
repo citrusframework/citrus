@@ -18,7 +18,7 @@ package org.citrusframework;
 
 import java.nio.charset.StandardCharsets;
 
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;

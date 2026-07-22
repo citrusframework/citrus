@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.common.Named;
+import org.citrusframework.api.common.Named;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.parser.CitrusXmlConfigParser;
 import org.citrusframework.config.xml.parser.ScriptMessageBuilderParser;

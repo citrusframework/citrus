@@ -21,7 +21,7 @@ import jakarta.servlet.http.Cookie;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;

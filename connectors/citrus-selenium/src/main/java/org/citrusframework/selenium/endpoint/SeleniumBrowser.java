@@ -17,7 +17,7 @@
 package org.citrusframework.selenium.endpoint;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
-import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;

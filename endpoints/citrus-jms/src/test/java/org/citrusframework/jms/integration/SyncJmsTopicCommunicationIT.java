@@ -20,7 +20,7 @@ import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.common.TestLoader.SPRING;
+import static org.citrusframework.api.common.TestLoader.SPRING;
 
 /**
  * @since 2008

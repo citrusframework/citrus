@@ -30,7 +30,7 @@ import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.bean.BeanDefinition;
-import org.citrusframework.common.Named;
+import org.citrusframework.api.common.Named;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;

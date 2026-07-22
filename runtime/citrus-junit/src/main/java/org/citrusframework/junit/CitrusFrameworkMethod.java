@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.TestSource;
-import org.citrusframework.common.TestSourceAware;
+import org.citrusframework.api.common.TestSourceAware;
 import org.junit.runners.model.FrameworkMethod;
 
 /**

@@ -29,7 +29,7 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.api.actions.MessageBuilderFactory;
-import org.citrusframework.common.Named;
+import org.citrusframework.api.common.Named;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointUriBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;

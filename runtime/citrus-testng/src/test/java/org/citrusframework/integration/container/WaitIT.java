@@ -18,7 +18,7 @@ package org.citrusframework.integration.container;
 
 import com.sun.net.httpserver.HttpServer;
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;

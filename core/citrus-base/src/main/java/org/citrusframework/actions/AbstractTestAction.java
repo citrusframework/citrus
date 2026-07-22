@@ -22,8 +22,8 @@ import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestActorAware;
-import org.citrusframework.common.Described;
-import org.citrusframework.common.Named;
+import org.citrusframework.api.common.Described;
+import org.citrusframework.api.common.Named;
 import org.citrusframework.context.TestContext;
 
 /**

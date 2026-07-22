@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package org.citrusframework.common;
+package org.citrusframework.api.common;
+
+import org.citrusframework.TestSource;
 
 @FunctionalInterface
-public interface ShutdownPhase {
+public interface TestSourceAware {
 
     /**
-     * Destroy component.
+     * Sets the test source.
      */
-    void destroy();
+    void setSource(TestSource source);
 }

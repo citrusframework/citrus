@@ -17,7 +17,7 @@
 package org.citrusframework.docker.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.testng.annotations.Test;
 
 /**

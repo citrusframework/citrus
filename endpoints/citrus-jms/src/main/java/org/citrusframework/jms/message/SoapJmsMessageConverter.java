@@ -29,7 +29,7 @@ import javax.xml.transform.TransformerFactory;
 import jakarta.jms.Message;
 import jakarta.jms.Session;
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jms.endpoint.JmsEndpointConfiguration;

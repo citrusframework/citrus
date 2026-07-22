@@ -19,7 +19,7 @@ package org.citrusframework.endpoint;
 import java.lang.annotation.Annotation;
 
 import org.citrusframework.annotations.CitrusEndpoint;
-import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.context.TestContext;
 
 /**

@@ -16,7 +16,7 @@
 
 package org.citrusframework.xml;
 
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.api.common.TestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

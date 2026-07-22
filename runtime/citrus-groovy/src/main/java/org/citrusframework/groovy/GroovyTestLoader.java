@@ -20,8 +20,8 @@ import java.io.IOException;
 
 import org.citrusframework.TestSource;
 import org.citrusframework.common.DefaultTestLoader;
-import org.citrusframework.common.TestLoader;
-import org.citrusframework.common.TestSourceAware;
+import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.api.common.TestSourceAware;
 import org.citrusframework.groovy.dsl.GroovyShellUtils;
 import org.citrusframework.groovy.dsl.test.TestCaseScript;
 import org.citrusframework.spi.Resource;
