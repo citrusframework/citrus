@@ -16,7 +16,7 @@
 
 package org.citrusframework.integration.server;
 
-import org.citrusframework.context.TestContextFactoryBean;
+import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.message.RawMessage;

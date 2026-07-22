@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework.context.resolver;
+package org.citrusframework.spring.context.resolver;
 
+import org.citrusframework.context.resolver.TypeAliasResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.MarshallerAdapter;

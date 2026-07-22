@@ -30,7 +30,7 @@ import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
-import org.citrusframework.context.SpringBeanReferenceResolver;
+import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;

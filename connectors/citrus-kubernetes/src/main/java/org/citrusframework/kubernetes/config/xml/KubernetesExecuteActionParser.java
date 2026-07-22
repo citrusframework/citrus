@@ -23,7 +23,7 @@ import java.util.Map;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
 import org.citrusframework.config.xml.DescriptionElementParser;
-import org.citrusframework.context.SpringBeanReferenceResolver;
+import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.kubernetes.actions.KubernetesExecuteAction;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.command.KubernetesCommand;

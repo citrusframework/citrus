@@ -30,7 +30,7 @@ import org.citrusframework.api.container.AfterTest;
 import org.citrusframework.api.container.BeforeSuite;
 import org.citrusframework.api.container.BeforeTest;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;

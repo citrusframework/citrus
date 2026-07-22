@@ -16,7 +16,7 @@
 
 package org.citrusframework.ws.server;
 
-import org.citrusframework.context.SpringBeanReferenceResolver;
+import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.server.AbstractServer;

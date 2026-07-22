@@ -16,7 +16,7 @@
 
 package org.citrusframework.springintegration.channel;
 
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.testng.AbstractTestNGUnitTest;

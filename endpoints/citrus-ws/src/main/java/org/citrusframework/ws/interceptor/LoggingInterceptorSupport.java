@@ -16,7 +16,7 @@
 
 package org.citrusframework.ws.interceptor;
 
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.message.RawMessage;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.util.XMLUtils;

@@ -17,7 +17,7 @@
 package org.citrusframework.http;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.validation.xml.DomXmlMessageValidator;
 import org.testng.annotations.BeforeMethod;
 

@@ -34,7 +34,7 @@
           mapping-strategy="beanNameMappingStrategy"/>
 
   <bean id="payloadRootQnameMappingKeyExtractor" class="org.citrusframework.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor"/>
-  <bean id="referenceResolver" class="org.citrusframework.context.SpringBeanReferenceResolver"/>
+  <bean id="referenceResolver" class="org.citrusframework.spring.context.SpringBeanReferenceResolver"/>
   <bean id="beanNameMappingStrategy" class="org.citrusframework.endpoint.adapter.mapping.BeanNameMappingStrategy">
     <constructor-arg ref="referenceResolver"/>
   </bean>

@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.apache.camel.catalog.DefaultCamelCatalog;
 import org.citrusframework.CitrusVersion;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.spi.Resources;

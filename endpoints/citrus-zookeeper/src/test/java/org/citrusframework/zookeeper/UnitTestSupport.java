@@ -17,7 +17,7 @@
 package org.citrusframework.zookeeper;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.testng.annotations.BeforeMethod;
 
 public abstract class UnitTestSupport {

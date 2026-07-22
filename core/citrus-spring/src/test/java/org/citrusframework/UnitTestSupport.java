@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
-import org.citrusframework.context.TestContextFactoryBean;
+import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.report.HtmlReporter;
 import org.citrusframework.report.JUnitReporter;

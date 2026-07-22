@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.citrusframework.actions.PurgeEndpointAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.context.SpringBeanReferenceResolver;
+import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.util.StringUtils;
 import org.springframework.beans.BeansException;

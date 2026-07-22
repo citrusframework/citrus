@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.message.DefaultMessage;

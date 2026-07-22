@@ -22,7 +22,7 @@ import java.util.Optional;
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.api.container.AfterSuite;
 import org.citrusframework.api.container.BeforeSuite;
-import org.citrusframework.context.TestContextFactoryBean;
+import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.log.LogModifier;
 import org.citrusframework.report.MessageListeners;

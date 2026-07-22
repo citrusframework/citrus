@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.Filter;
-import org.citrusframework.context.SpringBeanReferenceResolver;
+import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.context.ParentDelegatingWebApplicationContext;
 import org.citrusframework.http.interceptor.LoggingHandlerInterceptor;

@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.api.common.ShutdownPhase;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.EndpointConfiguration;

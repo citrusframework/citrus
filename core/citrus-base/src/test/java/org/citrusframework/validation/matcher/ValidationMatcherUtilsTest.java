@@ -19,7 +19,7 @@ package org.citrusframework.validation.matcher;
 import java.util.Collections;
 
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.base.context.TestContextFactory;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
