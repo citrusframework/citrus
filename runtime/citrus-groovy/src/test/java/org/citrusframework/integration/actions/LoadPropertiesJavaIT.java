@@ -40,7 +40,7 @@ public class LoadPropertiesJavaIT extends TestNGCitrusSpringSupport implements T
                 import org.citrusframework.*
                 import org.citrusframework.variable.*
                 import org.citrusframework.context.TestContext
-                import org.citrusframework.script.GroovyAction.ScriptExecutor
+                import org.citrusframework.groovy.actions.GroovyAction.ScriptExecutor
                 import org.testng.Assert;
                 
                 public class GScript implements ScriptExecutor {
