@@ -11,7 +11,7 @@
                          http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                          http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
-  <import resource="classpath:org/citrusframework/integration/service/hello-service-context.xml"/>
+  <import resource="classpath:org/citrusframework/springintegration/integration/service/hello-service-context.xml"/>
 
   <context:property-placeholder location="classpath:citrus.properties"
                                 ignore-unresolvable="true"/>
