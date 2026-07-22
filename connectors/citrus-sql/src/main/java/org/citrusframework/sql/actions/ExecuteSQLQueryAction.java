@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.sql.actions;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

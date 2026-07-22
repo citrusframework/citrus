@@ -16,8 +16,9 @@
 
 package org.citrusframework.config.xml;
 
-import org.citrusframework.actions.ExecuteSQLAction;
+import org.citrusframework.sql.actions.ExecuteSQLAction;
 import org.citrusframework.config.CitrusNamespaceParserRegistry;
+import org.citrusframework.sql.config.xml.SQLActionParser;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.transaction.PlatformTransactionManager;

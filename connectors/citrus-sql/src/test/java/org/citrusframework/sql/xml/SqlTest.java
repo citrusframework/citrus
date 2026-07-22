@@ -18,8 +18,8 @@ package org.citrusframework.sql.xml;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.actions.ExecuteSQLAction;
-import org.citrusframework.actions.ExecuteSQLQueryAction;
+import org.citrusframework.sql.actions.ExecuteSQLAction;
+import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;

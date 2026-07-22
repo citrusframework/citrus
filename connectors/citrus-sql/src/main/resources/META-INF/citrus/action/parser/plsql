@@ -1,1 +1,1 @@
-type=org.citrusframework.config.xml.ExecutePLSQLActionParser
+type=org.citrusframework.sql.config.xml.ExecutePLSQLActionParser

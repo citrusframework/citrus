@@ -19,7 +19,7 @@ package org.citrusframework.sql.groovy;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.actions.ExecutePLSQLAction;
+import org.citrusframework.sql.actions.ExecutePLSQLAction;
 import org.citrusframework.groovy.GroovyTestLoader;
 import org.citrusframework.spi.BindToRegistry;
 import org.mockito.Mockito;

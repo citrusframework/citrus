@@ -29,15 +29,15 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.citrusframework.Citrus;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.actions.ExecuteSQLQueryAction;
+import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
-import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql;
-import static org.citrusframework.actions.ExecuteSQLQueryAction.Builder.query;
+import static org.citrusframework.sql.actions.ExecuteSQLAction.Builder.sql;
+import static org.citrusframework.sql.actions.ExecuteSQLQueryAction.Builder.query;
 import static org.citrusframework.container.RepeatOnErrorUntilTrue.Builder.repeatOnError;
 
 public class JdbcSteps {

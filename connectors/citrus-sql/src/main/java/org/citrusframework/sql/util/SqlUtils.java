@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.util;
+package org.citrusframework.sql.util;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;

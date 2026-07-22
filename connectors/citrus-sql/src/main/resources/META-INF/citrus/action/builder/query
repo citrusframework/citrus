@@ -1,1 +1,1 @@
-type=org.citrusframework.actions.ExecuteSQLQueryAction$Builder
+type=org.citrusframework.sql.actions.ExecuteSQLQueryAction$Builder

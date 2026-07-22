@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package org.citrusframework.config.xml;
+package org.citrusframework.sql.config.xml;
 
-import org.citrusframework.actions.ExecutePLSQLAction;
+import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.sql.actions.ExecutePLSQLAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.sql.actions;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -28,7 +28,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.SqlUtils;
+import org.citrusframework.sql.util.SqlUtils;
 import org.citrusframework.util.StringUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;

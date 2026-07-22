@@ -16,7 +16,7 @@
 
 package org.citrusframework.config.xml;
 
-import org.citrusframework.actions.ExecuteSQLQueryAction;
+import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.springframework.beans.factory.BeanDefinitionStoreException;

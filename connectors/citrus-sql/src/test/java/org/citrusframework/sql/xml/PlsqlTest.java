@@ -18,7 +18,7 @@ package org.citrusframework.sql.xml;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.actions.ExecutePLSQLAction;
+import org.citrusframework.sql.actions.ExecutePLSQLAction;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.xml.XmlTestLoader;
 import org.apache.commons.dbcp2.BasicDataSource;
