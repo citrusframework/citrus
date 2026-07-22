@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 import org.apache.camel.impl.DefaultCamelContext;
-import org.citrusframework.actions.camel.CamelInfraStopActionBuilder;
+import org.citrusframework.api.actions.camel.CamelInfraStopActionBuilder;
 import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;

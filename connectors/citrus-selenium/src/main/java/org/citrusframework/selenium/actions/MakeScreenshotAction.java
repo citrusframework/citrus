@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.actions.selenium.SeleniumMakeScreenshotActionBuilder;
+import org.citrusframework.api.actions.selenium.SeleniumMakeScreenshotActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;

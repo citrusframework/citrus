@@ -16,7 +16,7 @@
 
 package org.citrusframework.knative.actions.eventing;
 
-import org.citrusframework.actions.knative.KnativeBrokerDeleteActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeBrokerDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.knative.actions.AbstractKnativeAction;

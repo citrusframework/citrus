@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.validation.constraints.NotNull;
-import org.citrusframework.actions.kubernetes.command.KubernetesDeleteCommandResult;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesDeleteCommandResult;
 
 /**
  * @since 2.7

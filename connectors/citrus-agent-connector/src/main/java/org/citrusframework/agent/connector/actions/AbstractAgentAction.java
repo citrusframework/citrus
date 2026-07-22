@@ -18,7 +18,7 @@ package org.citrusframework.agent.connector.actions;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.agent.AgentActionBuilderBase;
+import org.citrusframework.api.actions.agent.AgentActionBuilderBase;
 import org.citrusframework.agent.connector.CitrusAgentSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

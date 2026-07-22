@@ -23,7 +23,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 
 public class CamelInfraActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelAction>
-        implements org.citrusframework.actions.camel.CamelInfraActionBuilder<AbstractCamelAction, CamelInfraActionBuilder> {
+        implements org.citrusframework.api.actions.camel.CamelInfraActionBuilder<AbstractCamelAction, CamelInfraActionBuilder> {
 
     @Override
     public CamelRunInfraAction.Builder run() {

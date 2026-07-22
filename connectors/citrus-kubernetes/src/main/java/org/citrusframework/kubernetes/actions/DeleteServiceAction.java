@@ -19,7 +19,7 @@ package org.citrusframework.kubernetes.actions;
 import java.util.List;
 
 import io.fabric8.kubernetes.api.model.Service;
-import org.citrusframework.actions.kubernetes.KubernetesServiceDeleteActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesServiceDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 
 public class DeleteServiceAction extends AbstractKubernetesAction {

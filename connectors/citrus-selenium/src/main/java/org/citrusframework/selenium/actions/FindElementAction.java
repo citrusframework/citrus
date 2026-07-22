@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.actions.selenium.SeleniumElementActionBuilderBase;
-import org.citrusframework.actions.selenium.SeleniumFindElementActionBuilder;
+import org.citrusframework.api.actions.selenium.SeleniumElementActionBuilderBase;
+import org.citrusframework.api.actions.selenium.SeleniumFindElementActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;

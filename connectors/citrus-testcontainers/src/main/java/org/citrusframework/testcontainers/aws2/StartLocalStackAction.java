@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.citrusframework.actions.testcontainers.TestcontainersLocalStackStartActionBuilder;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
-import org.citrusframework.actions.testcontainers.aws2.ClientFactory;
+import org.citrusframework.api.actions.testcontainers.TestcontainersLocalStackStartActionBuilder;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.ClientFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;

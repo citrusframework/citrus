@@ -28,7 +28,7 @@ import org.citrusframework.util.ObjectHelper;
  * @since 2.7
  */
 public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<SeleniumAction>,
-        org.citrusframework.actions.selenium.SeleniumActionBuilder<SeleniumAction, SeleniumActionBuilder> {
+        org.citrusframework.api.actions.selenium.SeleniumActionBuilder<SeleniumAction, SeleniumActionBuilder> {
 
     /** Selenium browser */
     private SeleniumBrowser seleniumBrowser;

@@ -19,7 +19,7 @@ package org.citrusframework.kubernetes.actions;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.actions.kubernetes.KubernetesConnectActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesConnectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesVariableNames;
 

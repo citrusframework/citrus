@@ -32,7 +32,7 @@ import org.citrusframework.util.ObjectHelper;
  */
 @SuppressWarnings("unchecked")
 public class SoapClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
-        implements org.citrusframework.actions.ws.SoapClientActionBuilder<TestAction, SoapClientActionBuilder> {
+        implements org.citrusframework.api.actions.ws.SoapClientActionBuilder<TestAction, SoapClientActionBuilder> {
 
     /** Bean reference resolver */
     private ReferenceResolver referenceResolver;

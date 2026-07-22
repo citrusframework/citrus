@@ -16,7 +16,7 @@
 
 package org.citrusframework.knative.actions;
 
-import org.citrusframework.actions.knative.KnativeResourceDeleteActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeResourceDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.kubernetes.KubernetesSupport;

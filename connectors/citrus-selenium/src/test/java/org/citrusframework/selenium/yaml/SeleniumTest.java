@@ -16,7 +16,6 @@
 
 package org.citrusframework.selenium.yaml;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -26,8 +25,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.selenium.actions.*;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumBrowserConfiguration;
-import org.citrusframework.actions.selenium.PageValidator;
-import org.citrusframework.actions.selenium.WebPage;
+import org.citrusframework.api.actions.selenium.PageValidator;
+import org.citrusframework.api.actions.selenium.WebPage;
 import org.citrusframework.selenium.pages.UserFormPage;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;

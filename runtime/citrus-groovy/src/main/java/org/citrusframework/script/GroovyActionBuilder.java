@@ -24,7 +24,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 
 public class GroovyActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>,
-        ReferenceResolverAware, org.citrusframework.actions.groovy.GroovyActionBuilder<TestAction, GroovyActionBuilder> {
+        ReferenceResolverAware, org.citrusframework.api.actions.groovy.GroovyActionBuilder<TestAction, GroovyActionBuilder> {
 
     private TestActionBuilder<?> delegate;
 

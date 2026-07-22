@@ -18,7 +18,7 @@ package org.citrusframework.http.actions;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.actions.SendMessageAction;
-import org.citrusframework.actions.http.HttpSendResponseMessageBuilderFactory;
+import org.citrusframework.api.actions.http.HttpSendResponseMessageBuilderFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
@@ -33,7 +33,7 @@ import org.springframework.http.HttpStatusCode;
  */
 public class HttpServerResponseActionBuilder extends
         SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder>
-        implements org.citrusframework.actions.http.HttpServerResponseActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {
+        implements org.citrusframework.api.actions.http.HttpServerResponseActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {
 
     /** Http message to send or receive */
     private final HttpMessage httpMessage;

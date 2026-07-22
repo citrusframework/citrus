@@ -44,7 +44,7 @@ import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
  */
 @SuppressWarnings("unchecked")
 public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
-        implements org.citrusframework.actions.http.HttpServerActionBuilder<TestAction, HttpServerActionBuilder> {
+        implements org.citrusframework.api.actions.http.HttpServerActionBuilder<TestAction, HttpServerActionBuilder> {
 
     private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
             .enable(INDENT_OUTPUT)
@@ -166,7 +166,7 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
      * Provides send response action methods.
      */
     public class HttpServerSendActionBuilder implements
-            org.citrusframework.actions.http.HttpServerSendActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {
+            org.citrusframework.api.actions.http.HttpServerSendActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {
 
         @Override
         public HttpServerResponseActionBuilder response() {
@@ -222,7 +222,7 @@ public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestA
      * Provides receive request action methods.
      */
     public class HttpServerReceiveActionBuilder implements
-            org.citrusframework.actions.http.HttpServerReceiveActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
+            org.citrusframework.api.actions.http.HttpServerReceiveActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
 
         /**
          * Receive Http GET request as server.

@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.jbang.JBangActionBuilder;
+import org.citrusframework.api.actions.jbang.JBangActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.jbang.JBangSupport;

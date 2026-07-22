@@ -63,7 +63,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
  * @since 4.1
  */
 public class OpenApiServerResponseActionBuilder extends HttpServerResponseActionBuilder
-        implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction>, org.citrusframework.actions.openapi.OpenApiServerResponseActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {
+        implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction>, org.citrusframework.api.actions.openapi.OpenApiServerResponseActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;

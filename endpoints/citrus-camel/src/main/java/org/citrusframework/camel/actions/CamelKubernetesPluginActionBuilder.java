@@ -16,7 +16,7 @@
 
 package org.citrusframework.camel.actions;
 
-import org.citrusframework.actions.camel.CamelCliKubernetesActionBuilder;
+import org.citrusframework.api.actions.camel.CamelCliKubernetesActionBuilder;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;

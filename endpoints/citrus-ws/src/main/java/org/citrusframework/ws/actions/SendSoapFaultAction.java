@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.actions.ws.SoapSendFaultActionBuilder;
-import org.citrusframework.actions.ws.SoapSendFaultMessageBuilderFactory;
+import org.citrusframework.api.actions.ws.SoapSendFaultActionBuilder;
+import org.citrusframework.api.actions.ws.SoapSendFaultMessageBuilderFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessageHeaders;

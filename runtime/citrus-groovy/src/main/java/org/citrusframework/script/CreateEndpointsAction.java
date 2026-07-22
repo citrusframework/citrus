@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.groovy.GroovyCreateEndpointsActionBuilder;
+import org.citrusframework.api.actions.groovy.GroovyCreateEndpointsActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;

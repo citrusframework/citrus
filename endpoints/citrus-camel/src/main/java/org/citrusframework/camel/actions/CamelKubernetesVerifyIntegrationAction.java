@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.citrusframework.actions.camel.CamelKubernetesIntegrationVerifyActionBuilder;
+import org.citrusframework.api.actions.camel.CamelKubernetesIntegrationVerifyActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;

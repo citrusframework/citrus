@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.citrusframework.actions.selenium.PageValidator;
-import org.citrusframework.actions.selenium.SeleniumPageActionBuilder;
-import org.citrusframework.actions.selenium.WebPage;
+import org.citrusframework.api.actions.selenium.PageValidator;
+import org.citrusframework.api.actions.selenium.SeleniumPageActionBuilder;
+import org.citrusframework.api.actions.selenium.WebPage;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;

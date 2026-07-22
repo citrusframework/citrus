@@ -19,7 +19,7 @@ package org.citrusframework.camel.actions;
 import org.apache.camel.CamelContext;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.camel.CamelActionBuilderBase;
+import org.citrusframework.api.actions.camel.CamelActionBuilderBase;
 import org.citrusframework.camel.CamelTestActor;
 import org.citrusframework.camel.context.CamelReferenceResolver;
 import org.citrusframework.camel.util.CamelUtils;

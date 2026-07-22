@@ -22,7 +22,7 @@ import java.util.Map;
 
 import io.floci.testcontainers.FlociContainer;
 import io.quarkus.test.common.QuarkusTestResourceConfigurableLifecycleManager;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testcontainers.aws2.StartFlociAction;
 import org.citrusframework.testcontainers.quarkus.ContainerLifecycleListener;

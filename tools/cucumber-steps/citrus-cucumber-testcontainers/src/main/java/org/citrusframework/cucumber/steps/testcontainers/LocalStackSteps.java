@@ -27,7 +27,7 @@ import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import org.citrusframework.Citrus;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;

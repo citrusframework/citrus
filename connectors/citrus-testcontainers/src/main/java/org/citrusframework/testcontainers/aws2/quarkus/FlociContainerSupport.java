@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 import io.floci.testcontainers.FlociContainer;
 import io.quarkus.test.common.QuarkusTestResource;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.quarkus.ContainerLifecycleListener;
 
 @QuarkusTestResource(FlociContainerResource.class)

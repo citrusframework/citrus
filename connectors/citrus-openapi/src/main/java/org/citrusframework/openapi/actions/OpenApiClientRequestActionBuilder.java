@@ -56,7 +56,7 @@ import static org.citrusframework.openapi.model.OasModelHelper.isOperationReques
  */
 public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder
     implements OpenApiSpecificationSourceAwareBuilder<SendMessageAction>,
-    org.citrusframework.actions.openapi.OpenApiClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
+        org.citrusframework.api.actions.openapi.OpenApiClientRequestActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
 
     private final OpenApiSpecificationSource openApiSpecificationSource;
     private final String operationKey;

@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.fabric8.kubernetes.api.model.HasMetadata;
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesCommandResultCallback;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;

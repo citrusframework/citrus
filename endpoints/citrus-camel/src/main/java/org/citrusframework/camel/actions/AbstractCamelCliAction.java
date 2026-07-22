@@ -18,7 +18,7 @@ package org.citrusframework.camel.actions;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.camel.CamelCliActionBuilderBase;
+import org.citrusframework.api.actions.camel.CamelCliActionBuilderBase;
 import org.citrusframework.camel.cli.CamelCli;
 import org.citrusframework.camel.cli.CamelCliTestActor;
 import org.citrusframework.context.TestContext;

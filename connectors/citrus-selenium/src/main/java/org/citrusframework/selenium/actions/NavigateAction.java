@@ -20,7 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
-import org.citrusframework.actions.selenium.SeleniumNavigateActionBuilder;
+import org.citrusframework.api.actions.selenium.SeleniumNavigateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;

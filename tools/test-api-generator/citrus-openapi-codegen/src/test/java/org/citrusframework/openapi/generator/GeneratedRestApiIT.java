@@ -16,7 +16,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.actions.ReceiveMessageAction.ReceiveMessageActionBuilder;
 import org.citrusframework.actions.SendMessageAction.SendMessageActionBuilder;
-import org.citrusframework.actions.http.HttpReceiveRequestMessageBuilderFactory;
+import org.citrusframework.api.actions.http.HttpReceiveRequestMessageBuilderFactory;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;

@@ -17,7 +17,7 @@
 package org.citrusframework.docker.command;
 
 import com.github.dockerjava.api.command.InspectContainerResponse;
-import org.citrusframework.actions.docker.DockerContainerInspectActionBuilder;
+import org.citrusframework.api.actions.docker.DockerContainerInspectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;

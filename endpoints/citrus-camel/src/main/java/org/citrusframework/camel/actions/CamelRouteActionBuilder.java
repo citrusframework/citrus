@@ -29,7 +29,7 @@ import org.citrusframework.util.ObjectHelper;
  * Action builder.
  */
 public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelRouteAction>
-        implements org.citrusframework.actions.camel.CamelRouteActionBuilder<AbstractCamelRouteAction, CamelRouteActionBuilder> {
+        implements org.citrusframework.api.actions.camel.CamelRouteActionBuilder<AbstractCamelRouteAction, CamelRouteActionBuilder> {
 
     private CamelContext camelContext;
     private String camelContextName;

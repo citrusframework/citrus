@@ -16,7 +16,7 @@
 
 package org.citrusframework.testcontainers.mongodb;
 
-import org.citrusframework.actions.testcontainers.TestcontainersMongoDBStartActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersMongoDBStartActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;

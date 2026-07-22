@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.actions.agent.AgentRunActionBuilder;
+import org.citrusframework.api.actions.agent.AgentRunActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;

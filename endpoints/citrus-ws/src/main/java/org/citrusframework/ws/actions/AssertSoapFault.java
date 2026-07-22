@@ -25,7 +25,7 @@ import java.util.List;
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ws.SoapAssertFaultActionBuilder;
+import org.citrusframework.api.actions.ws.SoapAssertFaultActionBuilder;
 import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;

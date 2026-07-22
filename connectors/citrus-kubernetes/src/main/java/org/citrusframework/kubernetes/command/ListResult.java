@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import jakarta.validation.constraints.NotNull;
-import org.citrusframework.actions.kubernetes.command.KubernetesListCommandResult;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesListCommandResult;
 
 /**
  * @since 2.7

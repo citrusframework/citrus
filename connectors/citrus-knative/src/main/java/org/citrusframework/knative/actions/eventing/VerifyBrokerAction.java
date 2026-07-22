@@ -18,7 +18,7 @@ package org.citrusframework.knative.actions.eventing;
 
 import io.fabric8.knative.eventing.v1.Broker;
 import io.fabric8.kubernetes.client.KubernetesClientException;
-import org.citrusframework.actions.knative.KnativeBrokerVerifyActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeBrokerVerifyActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.server.HttpServer;

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.citrusframework.actions.selenium.SeleniumJavaScriptActionBuilder;
+import org.citrusframework.api.actions.selenium.SeleniumJavaScriptActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;

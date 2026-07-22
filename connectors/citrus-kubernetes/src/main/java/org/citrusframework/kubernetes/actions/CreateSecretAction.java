@@ -28,7 +28,7 @@ import java.util.Map;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
-import org.citrusframework.actions.kubernetes.KubernetesSecretCreateActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesSecretCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;

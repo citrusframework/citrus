@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.testcontainers;
 
-import org.citrusframework.actions.testcontainers.TestcontainersActionBuilder;
-import org.citrusframework.actions.testcontainers.TestcontainersTestActions;
+import org.citrusframework.api.actions.testcontainers.TestcontainersActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface TestcontainersTestActionSupport extends TestcontainersTestActions, TestActionLookupSupport {

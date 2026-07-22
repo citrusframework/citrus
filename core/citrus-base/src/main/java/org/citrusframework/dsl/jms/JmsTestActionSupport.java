@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.jms;
 
-import org.citrusframework.actions.jms.JmsActionBuilder;
-import org.citrusframework.actions.jms.JmsTestActions;
+import org.citrusframework.api.actions.jms.JmsActionBuilder;
+import org.citrusframework.api.actions.jms.JmsTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface JmsTestActionSupport extends JmsTestActions, TestActionLookupSupport {

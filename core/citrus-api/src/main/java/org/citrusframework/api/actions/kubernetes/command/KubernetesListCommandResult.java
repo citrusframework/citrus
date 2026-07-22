@@ -1,0 +1,52 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.citrusframework.api.actions.kubernetes.command;
+
+import java.util.List;
+
+public interface KubernetesListCommandResult<T> {
+
+    /**
+     * Gets the items.
+     */
+    List<T> getItems();
+
+    /**
+     * Sets the items.
+     */
+    void setItems(List<T> items);
+
+    /**
+     * Gets the api version.
+     */
+    String getApiVersion();
+
+    /**
+     * Sets the api version.
+     */
+    void setApiVersion(String apiVersion);
+
+    /**
+     * Gets the resource kind.
+     */
+    String getKind();
+
+    /**
+     * Sets the resource kind.
+     */
+    void setKind(String kind);
+}

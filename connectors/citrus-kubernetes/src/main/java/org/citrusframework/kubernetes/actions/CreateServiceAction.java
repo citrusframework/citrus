@@ -30,7 +30,7 @@ import io.fabric8.kubernetes.api.model.ServicePort;
 import io.fabric8.kubernetes.api.model.ServicePortBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.actions.kubernetes.KubernetesServiceCreateActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesServiceCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.http.server.HttpServer;

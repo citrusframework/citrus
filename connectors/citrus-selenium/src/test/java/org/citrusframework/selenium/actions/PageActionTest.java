@@ -16,8 +16,8 @@
 
 package org.citrusframework.selenium.actions;
 
-import org.citrusframework.actions.selenium.PageValidator;
-import org.citrusframework.actions.selenium.WebPage;
+import org.citrusframework.api.actions.selenium.PageValidator;
+import org.citrusframework.api.actions.selenium.WebPage;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;

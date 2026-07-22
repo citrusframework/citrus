@@ -20,7 +20,7 @@ import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.groovy.GroovyRunActionBuilder;
+import org.citrusframework.api.actions.groovy.GroovyRunActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;

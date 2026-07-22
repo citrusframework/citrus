@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
-import org.citrusframework.actions.camel.CamelRouteActionBuilderBase;
+import org.citrusframework.api.actions.camel.CamelRouteActionBuilderBase;
 
 /**
  * @since 2.4

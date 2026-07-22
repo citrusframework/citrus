@@ -17,8 +17,8 @@
 package org.citrusframework.docker.command;
 
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.docker.DockerActionBuilderBase;
-import org.citrusframework.actions.docker.command.CommandResultCallback;
+import org.citrusframework.api.actions.docker.DockerActionBuilderBase;
+import org.citrusframework.api.actions.docker.command.CommandResultCallback;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.exceptions.CitrusRuntimeException;

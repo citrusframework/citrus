@@ -18,7 +18,7 @@ package org.citrusframework.testcontainers.actions;
 
 import java.util.Optional;
 
-import org.citrusframework.actions.testcontainers.TestcontainersStopActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersStopActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testcontainers.containers.GenericContainer;

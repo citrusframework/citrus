@@ -24,7 +24,7 @@ import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.FlociSettings;
 import org.citrusframework.testcontainers.integration.AbstractTestcontainersIT;
 import org.testng.Assert;

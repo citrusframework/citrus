@@ -25,7 +25,7 @@ import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestActorAware;
-import org.citrusframework.actions.sql.DatabaseConnectingActionBuilder;
+import org.citrusframework.api.actions.sql.DatabaseConnectingActionBuilder;
 import org.citrusframework.common.Described;
 import org.citrusframework.common.Named;
 import org.citrusframework.context.TestContext;

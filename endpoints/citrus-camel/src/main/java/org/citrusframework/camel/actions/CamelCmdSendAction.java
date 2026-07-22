@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.actions.camel.CamelCliCmdSendActionBuilder;
+import org.citrusframework.api.actions.camel.CamelCliCmdSendActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;

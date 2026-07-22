@@ -32,20 +32,20 @@ import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.events.v1.Event;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.actions.kubernetes.KubernetesExecuteActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResult;
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
-import org.citrusframework.actions.kubernetes.command.KubernetesEndpointCommandActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesEventCommandActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesInfoCommandActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesNamedCommandActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesNamespaceCommandActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesNamespacedCommandActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesNodeCommandActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesPodCommandActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesReplicationControllerCommandActionBuilder;
-import org.citrusframework.actions.kubernetes.command.KubernetesServiceCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesExecuteActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesCommandResult;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesCommandResultCallback;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesEndpointCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesEventCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesInfoCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesNamedCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesNamespaceCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesNamespacedCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesNodeCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesPodCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesReplicationControllerCommandActionBuilder;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesServiceCommandActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
@@ -292,7 +292,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
          * Use a kubernetes command.
          */
         @Override
-        public Builder command(org.citrusframework.actions.kubernetes.command.KubernetesCommand<?, ?, ?> command) {
+        public Builder command(org.citrusframework.api.actions.kubernetes.command.KubernetesCommand<?, ?, ?> command) {
             if (command instanceof KubernetesCommand<?, ?> kubernetesCommand) {
                 this.command = kubernetesCommand;
             } else {

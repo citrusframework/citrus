@@ -23,7 +23,7 @@ import io.fabric8.knative.eventing.v1.Trigger;
 import io.fabric8.knative.eventing.v1.TriggerBuilder;
 import io.fabric8.knative.eventing.v1.TriggerSpecBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
-import org.citrusframework.actions.knative.KnativeTriggerCreateActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeTriggerCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;

@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.soap;
 
-import org.citrusframework.actions.ws.SoapActionBuilder;
-import org.citrusframework.actions.ws.SoapTestActions;
+import org.citrusframework.api.actions.ws.SoapActionBuilder;
+import org.citrusframework.api.actions.ws.SoapTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface SoapTestActionSupport extends SoapTestActions, TestActionLookupSupport {

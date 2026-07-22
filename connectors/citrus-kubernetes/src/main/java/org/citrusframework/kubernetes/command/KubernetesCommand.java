@@ -26,6 +26,6 @@ import org.citrusframework.kubernetes.client.KubernetesClient;
  * <O> the command output that may be validated (e.g. Pod, PodList, InfoResult, ...)
  * @since 2.7
  */
-public interface KubernetesCommand<T extends HasMetadata, O> extends org.citrusframework.actions.kubernetes.command.KubernetesCommand<T, O, KubernetesClient> {
+public interface KubernetesCommand<T extends HasMetadata, O> extends org.citrusframework.api.actions.kubernetes.command.KubernetesCommand<T, O, KubernetesClient> {
 
 }

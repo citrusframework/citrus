@@ -19,7 +19,7 @@ package org.citrusframework.knative.actions.eventing;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.actions.knative.KnativeEventReceiveActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeEventReceiveActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;

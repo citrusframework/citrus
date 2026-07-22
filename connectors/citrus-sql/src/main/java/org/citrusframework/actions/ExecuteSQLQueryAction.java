@@ -29,7 +29,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.actions.sql.ExecuteSqlQueryActionBuilder;
+import org.citrusframework.api.actions.sql.ExecuteSqlQueryActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;

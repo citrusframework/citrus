@@ -37,7 +37,7 @@ import org.springframework.http.HttpStatusCode;
  */
 @SuppressWarnings("unchecked")
 public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
-        implements org.citrusframework.actions.http.HttpClientActionBuilder<TestAction, HttpClientActionBuilder> {
+        implements org.citrusframework.api.actions.http.HttpClientActionBuilder<TestAction, HttpClientActionBuilder> {
 
     /** Target http client instance */
     private Endpoint httpClient;
@@ -114,7 +114,7 @@ public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestA
      * Provides send request action methods.
      */
     public class HttpClientSendActionBuilder implements
-            org.citrusframework.actions.http.HttpClientSendActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
+            org.citrusframework.api.actions.http.HttpClientSendActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
 
         @Override
         public HttpClientRequestActionBuilder get() {
@@ -201,7 +201,7 @@ public class HttpClientActionBuilder extends AbstractReferenceResolverAwareTestA
      * Provides receive response action methods.
      */
     public class HttpClientReceiveActionBuilder implements
-            org.citrusframework.actions.http.HttpClientReceiveActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
+            org.citrusframework.api.actions.http.HttpClientReceiveActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
 
         @Override
         public HttpClientResponseActionBuilder response() {

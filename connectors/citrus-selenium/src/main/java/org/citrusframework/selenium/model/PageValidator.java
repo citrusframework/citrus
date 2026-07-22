@@ -16,10 +16,10 @@
 
 package org.citrusframework.selenium.model;
 
-import org.citrusframework.actions.selenium.WebPage;
+import org.citrusframework.api.actions.selenium.WebPage;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 
 @Deprecated
 @FunctionalInterface
-public interface PageValidator<T extends WebPage> extends org.citrusframework.actions.selenium.PageValidator<T, SeleniumBrowser> {
+public interface PageValidator<T extends WebPage> extends org.citrusframework.api.actions.selenium.PageValidator<T, SeleniumBrowser> {
 }

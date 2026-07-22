@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import javax.sql.DataSource;
 
-import org.citrusframework.actions.sql.ExecutePlsqlActionBuilder;
+import org.citrusframework.api.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;

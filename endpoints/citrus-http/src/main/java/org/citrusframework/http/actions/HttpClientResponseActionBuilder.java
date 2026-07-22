@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.actions.http.HttpReceiveResponseMessageBuilderFactory;
+import org.citrusframework.api.actions.http.HttpReceiveResponseMessageBuilderFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
@@ -35,7 +35,7 @@ import org.springframework.http.HttpStatusCode;
  */
 public class HttpClientResponseActionBuilder extends
         ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder>
-        implements org.citrusframework.actions.http.HttpClientResponseActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
+        implements org.citrusframework.api.actions.http.HttpClientResponseActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
 
     /** Http message to send or receive */
     private final HttpMessage httpMessage;

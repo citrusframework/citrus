@@ -16,7 +16,7 @@
 
 package org.citrusframework.agent.connector.actions;
 
-import org.citrusframework.actions.agent.AgentConnectActionBuilder;
+import org.citrusframework.api.actions.agent.AgentConnectActionBuilder;
 import org.citrusframework.agent.connector.CitrusAgentSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;

@@ -16,7 +16,7 @@
 
 package org.citrusframework.testcontainers.redpanda;
 
-import org.citrusframework.actions.testcontainers.TestcontainersRedpandaStartActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersRedpandaStartActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;

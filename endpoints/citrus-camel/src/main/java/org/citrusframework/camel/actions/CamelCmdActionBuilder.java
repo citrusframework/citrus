@@ -16,7 +16,7 @@
 
 package org.citrusframework.camel.actions;
 
-import org.citrusframework.actions.camel.CamelCliCmdActionBuilder;
+import org.citrusframework.api.actions.camel.CamelCliCmdActionBuilder;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;

@@ -16,7 +16,7 @@
 
 package org.citrusframework.kubernetes.command;
 
-import org.citrusframework.actions.kubernetes.command.KubernetesCommandResultCallback;
+import org.citrusframework.api.actions.kubernetes.command.KubernetesCommandResultCallback;
 
 /**
  * @since 2.7

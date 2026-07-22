@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.agent;
 
-import org.citrusframework.actions.agent.AgentActionBuilder;
-import org.citrusframework.actions.agent.AgentTestActions;
+import org.citrusframework.api.actions.agent.AgentActionBuilder;
+import org.citrusframework.api.actions.agent.AgentTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface AgentTestActionSupport extends AgentTestActions, TestActionLookupSupport {

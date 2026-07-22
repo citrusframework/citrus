@@ -24,7 +24,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 
 public class JmsActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>,
-        ReferenceResolverAware, org.citrusframework.actions.jms.JmsActionBuilder<TestAction, JmsActionBuilder> {
+        ReferenceResolverAware, org.citrusframework.api.actions.jms.JmsActionBuilder<TestAction, JmsActionBuilder> {
 
     private TestActionBuilder<? extends TestAction> delegate;
 

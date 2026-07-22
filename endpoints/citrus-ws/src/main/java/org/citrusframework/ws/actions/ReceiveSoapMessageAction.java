@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.actions.ws.SoapClientReceiveMessageBuilderFactory;
-import org.citrusframework.actions.ws.SoapReceiveActionBuilder;
+import org.citrusframework.api.actions.ws.SoapClientReceiveMessageBuilderFactory;
+import org.citrusframework.api.actions.ws.SoapReceiveActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;

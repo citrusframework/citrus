@@ -16,7 +16,7 @@
 
 package org.citrusframework.kubernetes.actions;
 
-import org.citrusframework.actions.kubernetes.KubernetesSecretDeleteActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesSecretDeleteActionBuilder;
 import org.citrusframework.context.TestContext;
 
 public class DeleteSecretAction extends AbstractKubernetesAction {

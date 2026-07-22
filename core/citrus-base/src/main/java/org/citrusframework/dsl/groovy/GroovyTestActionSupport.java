@@ -16,8 +16,8 @@
 
 package org.citrusframework.dsl.groovy;
 
-import org.citrusframework.actions.groovy.GroovyActionBuilder;
-import org.citrusframework.actions.groovy.GroovyTestActions;
+import org.citrusframework.api.actions.groovy.GroovyActionBuilder;
+import org.citrusframework.api.actions.groovy.GroovyTestActions;
 import org.citrusframework.dsl.TestActionLookupSupport;
 
 public interface GroovyTestActionSupport extends GroovyTestActions, TestActionLookupSupport {

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.citrusframework.actions.testcontainers.TestcontainersComposeUpActionBuilder;
+import org.citrusframework.api.actions.testcontainers.TestcontainersComposeUpActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;

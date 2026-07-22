@@ -19,7 +19,7 @@ package org.citrusframework.knative.actions.messaging;
 import io.fabric8.knative.messaging.v1.Channel;
 import io.fabric8.knative.messaging.v1.ChannelBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
-import org.citrusframework.actions.knative.KnativeChannelCreateActionBuilder;
+import org.citrusframework.api.actions.knative.KnativeChannelCreateActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;

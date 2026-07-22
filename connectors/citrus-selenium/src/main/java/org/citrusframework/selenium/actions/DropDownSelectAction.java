@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.citrusframework.actions.selenium.SeleniumDropDownSelectActionBuilder;
+import org.citrusframework.api.actions.selenium.SeleniumDropDownSelectActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.util.StringUtils;

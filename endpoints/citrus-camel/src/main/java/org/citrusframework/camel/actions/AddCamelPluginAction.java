@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.citrusframework.actions.camel.CamelCliPluginAddActionBuilder;
+import org.citrusframework.api.actions.camel.CamelCliPluginAddActionBuilder;
 import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;

@@ -18,7 +18,7 @@ package org.citrusframework.camel.actions;
 
 import org.apache.camel.ServiceStatus;
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.actions.camel.CamelControlBusActionBuilder;
+import org.citrusframework.api.actions.camel.CamelControlBusActionBuilder;
 import org.citrusframework.camel.endpoint.CamelSyncEndpoint;
 import org.citrusframework.camel.endpoint.CamelSyncEndpointConfiguration;
 import org.citrusframework.context.TestContext;

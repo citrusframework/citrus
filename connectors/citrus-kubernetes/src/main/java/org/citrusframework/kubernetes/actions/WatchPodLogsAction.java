@@ -26,7 +26,7 @@ import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import io.fabric8.kubernetes.client.dsl.PodResource;
-import org.citrusframework.actions.kubernetes.KubernetesPodWatchLogsActionBuilder;
+import org.citrusframework.api.actions.kubernetes.KubernetesPodWatchLogsActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;

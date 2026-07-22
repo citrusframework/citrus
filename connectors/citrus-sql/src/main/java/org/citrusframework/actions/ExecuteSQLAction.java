@@ -19,7 +19,7 @@ package org.citrusframework.actions;
 import java.util.List;
 import javax.sql.DataSource;
 
-import org.citrusframework.actions.sql.ExecuteSqlActionBuilder;
+import org.citrusframework.api.actions.sql.ExecuteSqlActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.springframework.transaction.support.TransactionTemplate;

@@ -16,7 +16,7 @@
 
 package org.citrusframework.selenium.actions;
 
-import org.citrusframework.actions.selenium.SeleniumSetInputActionBuilder;
+import org.citrusframework.api.actions.selenium.SeleniumSetInputActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.openqa.selenium.WebElement;
