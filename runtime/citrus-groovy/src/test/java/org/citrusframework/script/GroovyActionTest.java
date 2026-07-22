@@ -16,6 +16,7 @@
 
 package org.citrusframework.script;
 
+import org.citrusframework.groovy.actions.GroovyAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

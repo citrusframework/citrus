@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.script;
+package org.citrusframework.groovy.actions;
 
 import jakarta.annotation.Nullable;
 import org.citrusframework.TestAction;

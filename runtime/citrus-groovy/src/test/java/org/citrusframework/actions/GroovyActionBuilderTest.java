@@ -19,7 +19,7 @@ package org.citrusframework.actions;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.script.GroovyActionBuilder;
+import org.citrusframework.groovy.actions.GroovyActionBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

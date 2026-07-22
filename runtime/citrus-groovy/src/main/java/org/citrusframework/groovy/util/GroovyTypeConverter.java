@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework.util;
+package org.citrusframework.groovy.util;
 
 import java.util.Optional;
 
 import groovy.lang.GString;
+import org.citrusframework.util.DefaultTypeConverter;
 import org.codehaus.groovy.runtime.GStringImpl;
 
 public final class GroovyTypeConverter extends DefaultTypeConverter {

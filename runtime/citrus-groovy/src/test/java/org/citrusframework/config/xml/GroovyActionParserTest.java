@@ -17,7 +17,8 @@
 package org.citrusframework.config.xml;
 
 import org.citrusframework.config.CitrusNamespaceParserRegistry;
-import org.citrusframework.script.GroovyAction;
+import org.citrusframework.groovy.actions.GroovyAction;
+import org.citrusframework.groovy.config.xml.GroovyActionParser;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;

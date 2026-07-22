@@ -14,28 +14,23 @@
  * limitations under the License.
  */
 
-package org.citrusframework.script;
+package org.citrusframework.groovy.actions;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.api.actions.groovy.GroovyCreateEndpointsActionBuilder;
+import org.citrusframework.api.actions.groovy.GroovyCreateBeansActionBuilder;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.groovy.dsl.configuration.endpoints.EndpointConfigurationScript;
+import org.citrusframework.groovy.dsl.GroovyShellUtils;
+import org.citrusframework.groovy.dsl.configuration.beans.BeansConfiguration;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class CreateEndpointsAction extends AbstractTestAction {
-
-    /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(CreateEndpointsAction.class);
+public class CreateBeansAction extends AbstractTestAction {
 
     /** Inline groovy script */
     private final String script;
@@ -46,8 +41,8 @@ public class CreateEndpointsAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public CreateEndpointsAction(Builder builder) {
-        super("groovy-endpoints", builder);
+    public CreateBeansAction(Builder builder) {
+        super("groovy-beans", builder);
 
         this.script = builder.script;
         this.scriptResourcePath = builder.scriptResourcePath;
@@ -64,14 +59,9 @@ public class CreateEndpointsAction extends AbstractTestAction {
             String resolvedScript = StringUtils.hasText(script) ? script.trim() : FileUtils.readToString(FileUtils.getFileResource(scriptResourcePath, context));
             resolvedScript = context.replaceDynamicContentInString(resolvedScript.trim());
 
-            new EndpointConfigurationScript(resolvedScript, context.getReferenceResolver()) {
-                @Override
-                protected void onCreate(Endpoint endpoint) {
-                    logger.debug("Creating endpoint from script configuration: %s".formatted(endpoint.getName()));
-                }
-            }.execute(context);
+            GroovyShellUtils.run(new BeansConfiguration(context.getReferenceResolver()), resolvedScript, null, context);
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to load endpoint configuration script", e);
+            throw new CitrusRuntimeException("Failed to load bean configuration script", e);
         }
     }
 
@@ -86,8 +76,8 @@ public class CreateEndpointsAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<CreateEndpointsAction, Builder>
-            implements GroovyCreateEndpointsActionBuilder<CreateEndpointsAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<CreateBeansAction, Builder>
+            implements GroovyCreateBeansActionBuilder<CreateBeansAction, Builder> {
 
         private String script;
         private String scriptResourcePath;
@@ -120,8 +110,8 @@ public class CreateEndpointsAction extends AbstractTestAction {
         }
 
         @Override
-        public CreateEndpointsAction build() {
-            return new CreateEndpointsAction(this);
+        public CreateBeansAction build() {
+            return new CreateBeansAction(this);
         }
     }
 }

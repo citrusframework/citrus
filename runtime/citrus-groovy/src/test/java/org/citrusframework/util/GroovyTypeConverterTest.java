@@ -16,6 +16,7 @@
 
 package org.citrusframework.util;
 
+import org.citrusframework.groovy.util.GroovyTypeConverter;
 import org.codehaus.groovy.runtime.GStringImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;

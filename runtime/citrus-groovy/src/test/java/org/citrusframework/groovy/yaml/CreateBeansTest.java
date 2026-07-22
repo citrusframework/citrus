@@ -18,7 +18,7 @@ package org.citrusframework.groovy.yaml;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.script.CreateBeansAction;
+import org.citrusframework.groovy.actions.CreateBeansAction;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.testng.Assert;

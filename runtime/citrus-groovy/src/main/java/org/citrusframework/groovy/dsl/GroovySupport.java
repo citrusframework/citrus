@@ -21,7 +21,7 @@ import java.util.Arrays;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.script.GroovyActionBuilder;
+import org.citrusframework.groovy.actions.GroovyActionBuilder;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;

@@ -1,1 +1,1 @@
-type=org.citrusframework.script.GroovyActionBuilder
+type=org.citrusframework.groovy.actions.GroovyActionBuilder

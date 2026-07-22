@@ -16,6 +16,7 @@
 
 package org.citrusframework.message.builder.script;
 
+import org.citrusframework.groovy.message.builder.GroovyScriptPayloadBuilder;
 import org.citrusframework.message.ScriptPayloadBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;

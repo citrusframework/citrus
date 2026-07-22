@@ -42,7 +42,7 @@ public class GroovyActionJavaIT extends TestNGCitrusSpringSupport implements Tes
         run(script().groovy("import org.citrusframework.*" + NEWLINE +
                 "import org.citrusframework.variable.*" + NEWLINE +
                 "import org.citrusframework.context.TestContext" + NEWLINE +
-                "import org.citrusframework.script.GroovyAction.ScriptExecutor" + NEWLINE +
+                "import org.citrusframework.groovy.actions.GroovyAction.ScriptExecutor" + NEWLINE +
                 "import org.testng.Assert" + NEWLINE +
                 "public class GScript implements ScriptExecutor {" + NEWLINE +
                     "public void execute(TestContext context) {" + NEWLINE +
