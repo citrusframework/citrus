@@ -19,7 +19,7 @@ package org.citrusframework.container;
 import java.time.Duration;
 
 import org.citrusframework.TestActionContainerBuilder;
-import org.citrusframework.actions.ActionBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
 
 public interface IteratingContainerBuilder<T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>>
         extends ActionBuilder<T, B> {

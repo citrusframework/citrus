@@ -14,32 +14,16 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.api.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.TestActor;
+import org.citrusframework.spi.ReferenceResolver;
 
-public interface ActionBuilder<T extends TestAction, B extends TestActionBuilder<T>> {
-
-    /**
-     * Sets the test action name.
-     * @param name the test action name.
-     * @return
-     */
-    B name(String name);
+public interface ReferenceResolverAwareBuilder<T extends TestAction, B extends TestActionBuilder<T>> {
 
     /**
-     * Sets the description.
-     * @param description
-     * @return
+     * Sets the bean reference resolver for using endpoint names.
      */
-    B description(String description);
-
-    /**
-     * Sets the test actor for this action.
-     * @param actor the actor.
-     * @return
-     */
-    B actor(TestActor actor);
+    B withReferenceResolver(ReferenceResolver referenceResolver);
 }

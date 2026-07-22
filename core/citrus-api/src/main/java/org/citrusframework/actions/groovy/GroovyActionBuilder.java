@@ -18,7 +18,7 @@ package org.citrusframework.actions.groovy;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.spi.Resource;
 
 public interface GroovyActionBuilder<T extends TestAction, B extends GroovyActionBuilder<T, B>>

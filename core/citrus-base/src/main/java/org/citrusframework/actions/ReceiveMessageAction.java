@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.api.actions.ReceiveActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointUriBuilder;

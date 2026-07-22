@@ -18,8 +18,8 @@ package org.citrusframework.ws.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ReceiveActionBuilder;
-import org.citrusframework.actions.SendActionBuilder;
+import org.citrusframework.api.actions.ReceiveActionBuilder;
+import org.citrusframework.api.actions.SendActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;

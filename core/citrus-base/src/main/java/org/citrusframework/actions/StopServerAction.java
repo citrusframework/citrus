@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.api.actions.StopServerActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.server.Server;
 import org.citrusframework.spi.ReferenceResolver;

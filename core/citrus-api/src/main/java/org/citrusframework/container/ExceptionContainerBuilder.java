@@ -19,7 +19,7 @@ package org.citrusframework.container;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionContainerBuilder;
-import org.citrusframework.actions.ActionBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
 
 public interface ExceptionContainerBuilder<T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>>
         extends ActionBuilder<T, B> {

@@ -22,9 +22,9 @@ import java.util.Optional;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ReceiveActionBuilder;
+import org.citrusframework.api.actions.ReceiveActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.actions.SendActionBuilder;
+import org.citrusframework.api.actions.SendActionBuilder;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;

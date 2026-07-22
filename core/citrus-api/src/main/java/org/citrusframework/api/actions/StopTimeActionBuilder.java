@@ -14,25 +14,31 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.api.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 
-public interface LoadPropertiesActionBuilder<T extends TestAction>
-        extends ActionBuilder<T, LoadPropertiesActionBuilder<T>>, TestActionBuilder<T> {
+public interface StopTimeActionBuilder<T extends TestAction>
+        extends ActionBuilder<T, StopTimeActionBuilder<T>>, TestActionBuilder<T> {
 
-    LoadPropertiesActionBuilder<T> filePath(String filePath);
+    StopTimeActionBuilder<T> id(String id);
+
+    StopTimeActionBuilder<T> suffix(String suffix);
 
     interface BuilderFactory {
 
         /**
          * Fluent API action building entry method used in Java DSL.
          */
-        LoadPropertiesActionBuilder<?> load();
+        StopTimeActionBuilder<?> stopTime();
 
-        default LoadPropertiesActionBuilder<?> load(String filePath) {
-            return load().filePath(filePath);
+        default StopTimeActionBuilder<?> stopTime(String id) {
+            return stopTime().id(id);
+        }
+
+        default StopTimeActionBuilder<?> stopTime(String id, String suffix) {
+            return stopTime().id(id).suffix(suffix);
         }
 
     }

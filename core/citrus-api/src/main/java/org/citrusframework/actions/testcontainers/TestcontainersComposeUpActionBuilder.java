@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
 import org.citrusframework.spi.Resource;
 
 public interface TestcontainersComposeUpActionBuilder<C extends AutoCloseable, T extends TestAction, B extends TestcontainersComposeUpActionBuilder<C, T, B>>

@@ -20,8 +20,8 @@ import java.util.List;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 
 public interface JmsPurgeQueuesActionBuilder<T extends TestAction, B extends JmsPurgeQueuesActionBuilder<T, B>>
         extends ActionBuilder<T, B>, ReferenceResolverAwareBuilder<T, B>, TestActionBuilder<T> {

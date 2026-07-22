@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionContainerBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.spi.Resource;

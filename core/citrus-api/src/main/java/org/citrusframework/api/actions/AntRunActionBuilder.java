@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.api.actions;
 
 import java.util.Properties;
 

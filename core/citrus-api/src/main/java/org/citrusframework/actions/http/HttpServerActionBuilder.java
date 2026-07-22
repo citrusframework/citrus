@@ -18,7 +18,7 @@ package org.citrusframework.actions.http;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 
 public interface HttpServerActionBuilder<T extends TestAction, B extends TestActionBuilder<T>>
         extends ReferenceResolverAwareBuilder<T, B> {

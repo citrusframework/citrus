@@ -18,7 +18,7 @@ package org.citrusframework.actions.testcontainers;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
 
 public interface TestcontainersStopActionBuilder<T extends TestAction, B extends TestcontainersStopActionBuilder<T, B>>
         extends ActionBuilder<T, B>, TestActionBuilder<T> {

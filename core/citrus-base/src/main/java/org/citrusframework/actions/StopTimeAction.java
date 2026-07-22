@@ -17,6 +17,7 @@
 package org.citrusframework.actions;
 
 import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.api.actions.StopTimeActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;

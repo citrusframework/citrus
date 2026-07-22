@@ -18,7 +18,7 @@ package org.citrusframework.actions.selenium;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
 
 public interface SeleniumActionBuilderBase<T extends TestAction, B extends TestActionBuilder<T>>
         extends ActionBuilder<T, B>, TestActionBuilder<T> {

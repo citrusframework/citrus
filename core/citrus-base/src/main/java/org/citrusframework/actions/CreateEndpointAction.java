@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.api.actions.CreateEndpointActionBuilder;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;

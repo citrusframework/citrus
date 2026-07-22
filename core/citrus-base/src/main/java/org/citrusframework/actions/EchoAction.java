@@ -19,6 +19,7 @@ package org.citrusframework.actions;
 import java.util.Date;
 
 import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.api.actions.EchoActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

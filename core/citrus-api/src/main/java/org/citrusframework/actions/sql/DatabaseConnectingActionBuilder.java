@@ -21,8 +21,8 @@ import javax.sql.DataSource;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
-import org.citrusframework.actions.ReferenceResolverAwareBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
+import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.spi.Resource;
 
 public interface DatabaseConnectingActionBuilder<T extends TestAction, B extends DatabaseConnectingActionBuilder<T, B>>

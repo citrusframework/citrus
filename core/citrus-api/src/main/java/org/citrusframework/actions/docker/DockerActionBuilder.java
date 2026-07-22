@@ -18,7 +18,7 @@ package org.citrusframework.actions.docker;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 

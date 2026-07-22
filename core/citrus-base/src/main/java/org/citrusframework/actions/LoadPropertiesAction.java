@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.api.actions.LoadPropertiesActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;

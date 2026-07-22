@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.api.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestBehavior;
 
-public interface FailActionBuilder<T extends TestAction>
-        extends ActionBuilder<T, FailActionBuilder<T>>, TestActionBuilder<T> {
+public interface ApplyTestBehaviorActionBuilder<T extends TestAction>
+        extends ActionBuilder<T, ApplyTestBehaviorActionBuilder<T>>, TestActionBuilder<T> {
 
-    FailActionBuilder<T> message(String message);
+    ApplyTestBehaviorActionBuilder<T> behavior(TestBehavior behavior);
+
+    ApplyTestBehaviorActionBuilder<T> on(TestActionRunner runner);
 
     interface BuilderFactory {
 
-        FailActionBuilder<?> fail();
+        ApplyTestBehaviorActionBuilder<?> apply();
 
-        default FailActionBuilder<?> fail(String message) {
-            return fail().message(message);
+        default ApplyTestBehaviorActionBuilder<?> apply(TestBehavior behavior) {
+            return apply().behavior(behavior);
         }
 
     }

@@ -17,6 +17,7 @@
 package org.citrusframework.actions;
 
 import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.api.actions.FailActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 

@@ -18,7 +18,7 @@ package org.citrusframework.actions.testcontainers;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.ActionBuilder;
+import org.citrusframework.api.actions.ActionBuilder;
 
 public interface TestcontainersComposeDownActionBuilder<C extends AutoCloseable, T extends TestAction, B extends TestcontainersComposeDownActionBuilder<C, T, B>>
         extends ActionBuilder<T, B>, TestActionBuilder<T> {

@@ -26,12 +26,12 @@ import groovy.lang.MissingMethodException;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionSupport;
-import org.citrusframework.actions.ReceiveActionBuilder;
+import org.citrusframework.api.actions.ReceiveActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.actions.ReceiveMessageBuilderFactory;
-import org.citrusframework.actions.SendActionBuilder;
+import org.citrusframework.api.actions.ReceiveMessageBuilderFactory;
+import org.citrusframework.api.actions.SendActionBuilder;
 import org.citrusframework.actions.SendMessageAction;
-import org.citrusframework.actions.SendMessageBuilderFactory;
+import org.citrusframework.api.actions.SendMessageBuilderFactory;
 import org.citrusframework.groovy.dsl.test.TestCaseScript;
 import org.citrusframework.util.ReflectionHelper;
 

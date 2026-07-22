@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.actions.ReceiveMessageBuilderFactory;
+import org.citrusframework.api.actions.ReceiveMessageBuilderFactory;
 
 public interface HttpReceiveRequestMessageBuilderFactory<T extends TestAction, M extends HttpReceiveRequestMessageBuilderFactory<T, M>>
         extends ReceiveMessageBuilderFactory<T, M> {

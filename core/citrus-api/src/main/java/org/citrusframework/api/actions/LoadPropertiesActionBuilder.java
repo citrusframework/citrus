@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions;
+package org.citrusframework.api.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.TestActionRunner;
-import org.citrusframework.TestBehavior;
 
-public interface ApplyTestBehaviorActionBuilder<T extends TestAction>
-        extends ActionBuilder<T, ApplyTestBehaviorActionBuilder<T>>, TestActionBuilder<T> {
+public interface LoadPropertiesActionBuilder<T extends TestAction>
+        extends ActionBuilder<T, LoadPropertiesActionBuilder<T>>, TestActionBuilder<T> {
 
-    ApplyTestBehaviorActionBuilder<T> behavior(TestBehavior behavior);
-
-    ApplyTestBehaviorActionBuilder<T> on(TestActionRunner runner);
+    LoadPropertiesActionBuilder<T> filePath(String filePath);
 
     interface BuilderFactory {
 
-        ApplyTestBehaviorActionBuilder<?> apply();
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         */
+        LoadPropertiesActionBuilder<?> load();
 
-        default ApplyTestBehaviorActionBuilder<?> apply(TestBehavior behavior) {
-            return apply().behavior(behavior);
+        default LoadPropertiesActionBuilder<?> load(String filePath) {
+            return load().filePath(filePath);
         }
 
     }
