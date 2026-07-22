@@ -311,7 +311,7 @@ public StaticResponseEndpointAdapter helloEndpointAdapter() {
 </bean>
 
 <bean id="mappingKeyExtractor"
-  class="org.citrusframework.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor">
+  class="org.citrusframework.xml.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor">
     <property name="xpathExpression" value="//TestMessage/Operation/*"/>
 </bean>
 
