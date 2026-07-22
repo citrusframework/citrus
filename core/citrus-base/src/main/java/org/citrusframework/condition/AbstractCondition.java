@@ -16,6 +16,8 @@
 
 package org.citrusframework.condition;
 
+import org.citrusframework.api.condition.Condition;
+
 /**
  * @since 2.4
  */

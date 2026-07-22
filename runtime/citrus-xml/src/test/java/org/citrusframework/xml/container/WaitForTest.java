@@ -20,7 +20,7 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.condition.ActionCondition;
-import org.citrusframework.condition.Condition;
+import org.citrusframework.api.condition.Condition;
 import org.citrusframework.condition.FileCondition;
 import org.citrusframework.condition.HttpCondition;
 import org.citrusframework.condition.MessageCondition;

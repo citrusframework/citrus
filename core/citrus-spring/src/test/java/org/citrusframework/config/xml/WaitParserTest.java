@@ -17,6 +17,7 @@
 package org.citrusframework.config.xml;
 
 import org.citrusframework.actions.EchoAction;
+import org.citrusframework.api.condition.Condition;
 import org.citrusframework.container.Wait;
 import org.citrusframework.condition.*;
 import org.citrusframework.testng.AbstractActionParserTest;

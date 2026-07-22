@@ -19,7 +19,7 @@ package org.citrusframework.config.xml;
 import org.apache.xerces.util.DOMUtil;
 import org.citrusframework.TestAction;
 import org.citrusframework.condition.ActionCondition;
-import org.citrusframework.condition.Condition;
+import org.citrusframework.api.condition.Condition;
 import org.citrusframework.condition.FileCondition;
 import org.citrusframework.condition.HttpCondition;
 import org.citrusframework.condition.MessageCondition;
