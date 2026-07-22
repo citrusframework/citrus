@@ -16,10 +16,10 @@
 
 package org.citrusframework.validation.yaml;
 
+import java.util.Optional;
+
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
-
-import java.util.Optional;
 
 /**
  * Validation context holding YAML specific validation information.
