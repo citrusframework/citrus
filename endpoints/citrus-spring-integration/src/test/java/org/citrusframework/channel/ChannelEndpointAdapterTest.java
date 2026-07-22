@@ -19,6 +19,8 @@ package org.citrusframework.channel;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.springintegration.channel.ChannelEndpointAdapter;
+import org.citrusframework.springintegration.channel.ChannelSyncEndpointConfiguration;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.springframework.integration.channel.QueueChannel;
 import org.testng.Assert;

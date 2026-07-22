@@ -17,7 +17,7 @@
 package org.citrusframework.dsl.schema;
 
 import org.citrusframework.camel.endpoint.CamelEndpointsBuilder;
-import org.citrusframework.channel.endpoint.builder.MessageChannelEndpointsBuilder;
+import org.citrusframework.springintegration.channel.endpoint.builder.MessageChannelEndpointsBuilder;
 import org.citrusframework.docker.endpoint.builder.DockerEndpointBuilder;
 import org.citrusframework.endpoint.context.ContextEndpointsBuilder;
 import org.citrusframework.endpoint.direct.DirectEndpointsBuilder;

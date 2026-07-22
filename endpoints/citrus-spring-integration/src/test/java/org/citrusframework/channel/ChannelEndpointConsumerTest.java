@@ -19,11 +19,13 @@ package org.citrusframework.channel;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.channel.selector.DispatchingMessageSelector;
-import org.citrusframework.channel.selector.HeaderMatchingMessageSelector;
+import org.citrusframework.springintegration.channel.selector.DispatchingMessageSelector;
+import org.citrusframework.springintegration.channel.selector.HeaderMatchingMessageSelector;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
+import org.citrusframework.springintegration.channel.ChannelEndpoint;
+import org.citrusframework.springintegration.channel.MessageSelectingQueueChannel;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.integration.core.MessagingTemplate;

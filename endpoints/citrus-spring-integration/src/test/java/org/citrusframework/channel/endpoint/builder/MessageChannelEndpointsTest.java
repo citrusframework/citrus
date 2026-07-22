@@ -18,9 +18,10 @@ package org.citrusframework.channel.endpoint.builder;
 
 import java.util.Map;
 
-import org.citrusframework.channel.ChannelEndpointBuilder;
-import org.citrusframework.channel.ChannelSyncEndpointBuilder;
+import org.citrusframework.springintegration.channel.ChannelEndpointBuilder;
+import org.citrusframework.springintegration.channel.ChannelSyncEndpointBuilder;
 import org.citrusframework.endpoint.EndpointBuilder;
+import org.citrusframework.springintegration.channel.endpoint.builder.MessageChannelEndpointsBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -16,7 +16,7 @@
 
 package org.citrusframework.springintegration.groovy
 
-import static org.citrusframework.actions.PurgeMessageChannelAction.Builder.purgeChannels
+import static org.citrusframework.springintegration.actions.PurgeMessageChannelAction.Builder.purgeChannels
 
 name "PurgeChannelsTest"
 author "Christoph"

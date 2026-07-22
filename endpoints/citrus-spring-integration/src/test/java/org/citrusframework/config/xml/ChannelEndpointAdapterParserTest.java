@@ -18,7 +18,7 @@ package org.citrusframework.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.channel.ChannelEndpointAdapter;
+import org.citrusframework.springintegration.channel.ChannelEndpointAdapter;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;

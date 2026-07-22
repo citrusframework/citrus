@@ -18,7 +18,7 @@ package org.citrusframework.http.client;
 
 import java.util.Map;
 
-import org.citrusframework.channel.ChannelEndpointComponent;
+import org.citrusframework.springintegration.channel.ChannelEndpointComponent;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;

@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
-import org.citrusframework.actions.PurgeMessageChannelAction;
+import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
