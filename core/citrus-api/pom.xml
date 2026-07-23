@@ -20,6 +20,11 @@
     </dependency>
 
     <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>uk.org.webcompere</groupId>
       <artifactId>system-stubs-testng</artifactId>
       <scope>test</scope>

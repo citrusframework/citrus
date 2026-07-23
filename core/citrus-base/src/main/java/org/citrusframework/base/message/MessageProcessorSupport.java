@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.message;
 
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessorLookupSupport;
 import org.citrusframework.message.Processors;
 import org.citrusframework.message.processor.DelegatingVariableExtractorBuilder;

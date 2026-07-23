@@ -33,6 +33,7 @@ import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.IsJsonPathPredicate;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
@@ -194,7 +195,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     private void extractJsonPathValidateExpressions(Validate validateElement, Map<String, Object> validateJsonPathExpressions) {
         //check for jsonPath validation - old style with direct attribute
         String pathExpression = validateElement.path;
-        if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
+        if (IsJsonPathPredicate.getInstance().test(pathExpression)) {
             validateJsonPathExpressions.put(pathExpression, validateElement.value);
         }
 
@@ -284,7 +285,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     private void extractXPathValidateExpressions(Validate validateElement, Map<String, Object> validateXpathExpressions) {
         //check for xpath validation - old style with direct attribute
         String pathExpression = validateElement.path;
-        if (StringUtils.hasText(pathExpression) && !JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
+        if (StringUtils.hasText(pathExpression) && !IsJsonPathPredicate.getInstance().test(pathExpression)) {
             //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
             if (validateElement.resultType != null) {
                 pathExpression = validateElement.resultType + ":" + pathExpression;

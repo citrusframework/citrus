@@ -23,7 +23,7 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.util.IsJsonPathPredicate;
 import org.citrusframework.validation.xml.XmlNamespaceAware;
 import org.citrusframework.variable.DelegatingPayloadVariableExtractorBuilder;
 import org.citrusframework.variable.VariableExtractor;
@@ -70,7 +70,7 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
             final String path = context.replaceDynamicContentInString(pathExpression.getKey());
             final Object variable = pathExpression.getValue();
 
-            if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
+            if (IsJsonPathPredicate.getInstance().test(path)) {
                 jsonPathExpressions.put(path, variable);
             } else {
                 xpathExpressions.put(path, variable);

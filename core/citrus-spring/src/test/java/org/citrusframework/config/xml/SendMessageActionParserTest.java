@@ -18,7 +18,7 @@ package org.citrusframework.config.xml;
 
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;

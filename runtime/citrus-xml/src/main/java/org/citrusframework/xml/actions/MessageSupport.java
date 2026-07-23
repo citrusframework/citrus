@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageHeaderType;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.ScriptPayloadBuilder;
