@@ -12,7 +12,7 @@
   <citrus:validation-matcher-library id="matcherLib" prefix="foo">
     <citrus:matcher name="start" ref="startsWithMatcher"/>
     <citrus:matcher name="end" ref="endsWithMatcher"/>
-    <citrus:matcher name="custom" class="org.citrusframework.validation.matcher.CustomValidationMatcher"/>
+    <citrus:matcher name="custom" class="org.citrusframework.spring.validation.matcher.CustomValidationMatcher"/>
   </citrus:validation-matcher-library>
 
   <citrus:validation-matcher-library id="matcherLib2" prefix="bar">
@@ -20,7 +20,7 @@
     <citrus:matcher name="custom" ref="customMatcher"/>
   </citrus:validation-matcher-library>
 
-  <bean id="customMatcher" class="org.citrusframework.validation.matcher.CustomValidationMatcher"/>
+  <bean id="customMatcher" class="org.citrusframework.spring.validation.matcher.CustomValidationMatcher"/>
   <bean id="startsWithMatcher" class="org.citrusframework.base.validation.matcher.core.StartsWithValidationMatcher"/>
   <bean id="endsWithMatcher" class="org.citrusframework.base.validation.matcher.core.EndsWithValidationMatcher"/>
 

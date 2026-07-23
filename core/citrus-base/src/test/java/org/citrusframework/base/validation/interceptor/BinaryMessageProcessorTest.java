@@ -92,6 +92,6 @@ public class BinaryMessageProcessorTest extends UnitTestSupport {
     }
 
     private Resource getTestFile() {
-        return Resources.create("foo.txt", BinaryMessageProcessor.class);
+        return Resources.create("foo.txt", BinaryMessageProcessorTest.class);
     }
 }
