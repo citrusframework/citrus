@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
@@ -30,6 +29,7 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.yaml.YamlMessageValidationContext;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;

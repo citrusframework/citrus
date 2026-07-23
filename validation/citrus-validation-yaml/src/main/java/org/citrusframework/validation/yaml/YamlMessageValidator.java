@@ -28,6 +28,7 @@ import org.citrusframework.validation.ValidationUtils;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.yaml.YamlMessageValidationContext;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
 import static org.citrusframework.message.MessageType.YAML;
