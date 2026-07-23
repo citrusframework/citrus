@@ -1,0 +1,54 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.citrusframework.base.validation.matcher.core;
+
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
+import org.citrusframework.validation.matcher.parameter.NumberParameter;
+
+/**
+ * ValidationMatcher based on {@code double < double}.
+ */
+public class GreaterThanValidationMatcher implements ParameterizedValidationMatcher<NumberParameter> {
+
+    public void validate(String fieldName, String value, NumberParameter controlParameter, TestContext context) throws ValidationException {
+    	double dValue;
+    	double dControl;
+    	try {
+    		dValue = Double.parseDouble(value);
+    		dControl = controlParameter.asDouble();
+    	} catch (Exception e) {
+    		throw new ValidationException(this.getClass().getSimpleName()
+                    + " failed for field '" + fieldName
+                    + "'. Received value is '" + value
+                    + "', control value is '" + controlParameter.getValue() + "'", e);
+		}
+
+        if (!(dValue > dControl)) {
+            throw new ValidationException(this.getClass().getSimpleName()
+                    + " failed for field '" + fieldName
+                    + "'. Received value is '" + value
+                    + "', control value is '" + controlParameter.getValue() + "'");
+        }
+    }
+
+    @Override
+    public NumberParameter getParameters() {
+        return new NumberParameter();
+    }
+}

@@ -76,8 +76,8 @@ public ValidationMatcherLibrary testMatcherLibrary() {
            http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
     <citrus:validation-matcher-library id="testMatcherLibrary" prefix="foo:">
-          <citrus:matcher name="isNumber" class="org.citrusframework.validation.matcher.core.IsNumberValidationMatcher"/>
-          <citrus:matcher name="contains" class="org.citrusframework.validation.matcher.core.ContainsValidationMatcher"/>
+          <citrus:matcher name="isNumber" class="org.citrusframework.base.validation.matcher.core.IsNumberValidationMatcher"/>
+          <citrus:matcher name="contains" class="org.citrusframework.base.validation.matcher.core.ContainsValidationMatcher"/>
           <citrus:matcher name="customMatcher" ref="customMatcherBean"/>
           ...
     </citrus:validation-matcher-library>

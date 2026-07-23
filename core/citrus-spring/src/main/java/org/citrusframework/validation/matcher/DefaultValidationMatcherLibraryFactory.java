@@ -17,6 +17,7 @@
 package org.citrusframework.validation.matcher;
 
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.base.validation.matcher.DefaultValidationMatcherLibrary;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;

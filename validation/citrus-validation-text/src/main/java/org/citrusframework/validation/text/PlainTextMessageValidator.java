@@ -35,7 +35,7 @@ import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
-import org.citrusframework.validation.matcher.core.IsNumberValidationMatcher;
+import org.citrusframework.base.validation.matcher.core.IsNumberValidationMatcher;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
