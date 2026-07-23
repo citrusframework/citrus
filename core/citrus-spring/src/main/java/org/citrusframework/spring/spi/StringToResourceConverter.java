@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.citrusframework.spi;
+package org.citrusframework.spring.spi;
 
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.core.convert.converter.Converter;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.spi;
+package org.citrusframework.spring.spi;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
+
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalConverter;
