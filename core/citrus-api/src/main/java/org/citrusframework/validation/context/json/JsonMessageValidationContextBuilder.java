@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.json;
+package org.citrusframework.validation.context.json;
 
 import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.validation.context.MessageValidationContextBuilder;

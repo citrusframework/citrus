@@ -22,6 +22,8 @@ import java.util.Set;
 
 import net.minidev.json.parser.ParseException;
 import org.citrusframework.UnitTestSupport;
+import org.citrusframework.validation.context.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.json.JsonSchemaRepository;

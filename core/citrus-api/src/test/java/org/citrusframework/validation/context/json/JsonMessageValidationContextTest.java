@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.json;
+package org.citrusframework.validation.context.json;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

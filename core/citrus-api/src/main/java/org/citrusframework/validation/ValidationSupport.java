@@ -18,7 +18,7 @@ package org.citrusframework.validation;
 
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.validation.openapi.OpenApiMessageValidationContextBuilder;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.ws.SoapFaultValidationContext;

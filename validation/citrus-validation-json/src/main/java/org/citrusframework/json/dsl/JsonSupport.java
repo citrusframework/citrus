@@ -19,7 +19,7 @@ package org.citrusframework.json.dsl;
 import tools.jackson.databind.ObjectMapper;
 import org.citrusframework.json.message.builder.ObjectMappingPayloadBuilder;
 import org.citrusframework.validation.json.JsonMappingValidationProcessor;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 
 public class JsonSupport {
 

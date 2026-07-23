@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.validation.context.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
