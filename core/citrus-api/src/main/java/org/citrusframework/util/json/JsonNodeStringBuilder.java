@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.json;
+package org.citrusframework.util.json;
 
 import java.util.List;
 import java.util.Map;

@@ -24,7 +24,7 @@ import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Optional;
 
-import org.citrusframework.kubernetes.ClusterType;
+import org.citrusframework.api.kubernetes.ClusterType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

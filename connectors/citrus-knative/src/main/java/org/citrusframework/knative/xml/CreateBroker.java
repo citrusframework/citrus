@@ -23,7 +23,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.CreateBrokerAction;
-import org.citrusframework.kubernetes.ClusterType;
+import org.citrusframework.api.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 
 @XmlRootElement(name = "create-broker")

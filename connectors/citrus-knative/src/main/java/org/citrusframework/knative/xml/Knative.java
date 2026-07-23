@@ -28,7 +28,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.KnativeAction;
-import org.citrusframework.kubernetes.ClusterType;
+import org.citrusframework.api.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 

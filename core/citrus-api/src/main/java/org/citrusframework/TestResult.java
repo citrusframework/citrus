@@ -22,7 +22,7 @@ import java.util.Map;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.citrusframework.json.JsonStringBuilder;
+import org.citrusframework.util.json.JsonStringBuilder;
 import org.citrusframework.yaml.YamlStringBuilder;
 
 import static java.util.Objects.nonNull;

@@ -23,7 +23,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.http.server.HttpServerBuilder;
-import org.citrusframework.kubernetes.ClusterType;
+import org.citrusframework.api.kubernetes.ClusterType;
 import org.citrusframework.kubernetes.KubernetesVariableNames;
 import org.citrusframework.kubernetes.UnitTestSupport;
 import org.testng.Assert;

@@ -23,7 +23,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.knative.KnativeSettings;
 import org.citrusframework.knative.KnativeSupport;
 import org.citrusframework.knative.KnativeVariableNames;
-import org.citrusframework.kubernetes.ClusterType;
+import org.citrusframework.api.kubernetes.ClusterType;
 import org.citrusframework.kubernetes.KubernetesSettings;
 
 /**

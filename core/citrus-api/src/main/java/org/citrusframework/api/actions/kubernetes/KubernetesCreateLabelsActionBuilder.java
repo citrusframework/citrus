@@ -19,7 +19,7 @@ package org.citrusframework.api.actions.kubernetes;
 import java.util.Map;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.kubernetes.KubernetesResourceType;
+import org.citrusframework.api.kubernetes.KubernetesResourceType;
 
 public interface KubernetesCreateLabelsActionBuilder<T extends TestAction, B extends KubernetesCreateLabelsActionBuilder<T, B>>
         extends KubernetesActionBuilderBase<T, B> {
