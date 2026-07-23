@@ -39,7 +39,7 @@ import org.citrusframework.base.functions.DefaultFunctionRegistry;
 import org.citrusframework.functions.Function;
 import org.citrusframework.functions.FunctionLibrary;
 import org.citrusframework.functions.FunctionRegistry;
-import org.citrusframework.base.log.DefaultLogModifier;
+import org.citrusframework.log.DefaultLogModifier;
 import org.citrusframework.log.LogModifier;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageProcessors;

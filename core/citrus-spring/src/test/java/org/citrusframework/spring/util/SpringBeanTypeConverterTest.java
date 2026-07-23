@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.util;
+package org.citrusframework.spring.util;
 
 import java.util.ArrayList;
 

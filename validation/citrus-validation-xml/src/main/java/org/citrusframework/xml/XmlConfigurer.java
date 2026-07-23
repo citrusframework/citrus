@@ -18,7 +18,7 @@ package org.citrusframework.xml;
 
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMImplementationList;

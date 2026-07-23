@@ -21,7 +21,7 @@ import java.util.Map;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.util.DefaultTypeConverter;
 import org.citrusframework.groovy.util.GroovyTypeConverter;
-import org.citrusframework.util.SpringBeanTypeConverter;
+import org.citrusframework.spring.util.SpringBeanTypeConverter;
 import org.citrusframework.util.TypeConversionUtils;
 import org.citrusframework.util.TypeConverter;
 import org.testng.Assert;

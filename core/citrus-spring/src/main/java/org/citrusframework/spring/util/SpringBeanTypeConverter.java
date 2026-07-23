@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.util;
+package org.citrusframework.spring.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +27,8 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.DefaultTypeConverter;
+import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.SimpleTypeConverter;

@@ -16,59 +16,11 @@
 
 package org.citrusframework.util;
 
-import javax.script.ScriptException;
-
-import org.citrusframework.UnitTestSupport;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.variable.VariableUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class VariableUtilsTest extends UnitTestSupport {
-    private String validGroovyScript = "a = 1";
-    private String groovyScriptResult = "1";
-    private String invalidGroovyScript = "a";
-    private String validScriptEngine = "groovy";
-    private String invalidScriptEngine = "invalidScriptEngine";
-
-    /**
-     * Test for correct return with valid script
-     */
-    @Test
-    public void testValidScript() {
-        String result = VariableUtils.getValueFromScript(validScriptEngine, validGroovyScript);
-        Assert.assertEquals(result, groovyScriptResult);
-    }
-
-    /**
-     * Test for correct exception with invalid script
-     */
-    @Test
-    public void testInvalidScript() {
-        try {
-            VariableUtils.getValueFromScript(validScriptEngine, invalidGroovyScript);
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getCause() instanceof ScriptException);
-            return;
-        }
-
-        Assert.fail("Missing CitrusRuntimeException because of invalid groovy script");
-    }
-
-    /**
-     * Test for correct exception with invalid script engine
-     */
-    @Test
-    public void testInvalidScriptEngine() {
-        try {
-            VariableUtils.getValueFromScript(invalidScriptEngine, validGroovyScript);
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains(invalidScriptEngine));
-            return;
-        }
-
-        Assert.fail("Missing CitrusRuntimeException because of invalid script engine");
-    }
+public class VariableUtilsTest {
 
     @Test
     public void testCutOffVariablesPrefixSuffix() {

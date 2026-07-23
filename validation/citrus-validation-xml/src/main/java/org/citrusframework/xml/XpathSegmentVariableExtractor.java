@@ -25,7 +25,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.util.IsXmlPredicate;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
 import org.citrusframework.variable.VariableExpressionSegmentMatcher;
 import org.citrusframework.xml.xpath.XPathExpressionResult;

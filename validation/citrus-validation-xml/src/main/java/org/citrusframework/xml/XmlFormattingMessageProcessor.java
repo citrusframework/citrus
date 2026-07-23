@@ -20,7 +20,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 
 /**
  * @since 2.6.2

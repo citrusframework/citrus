@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 
 import org.citrusframework.actions.JavaAction;
 import org.citrusframework.testng.AbstractActionParserTest;
-import org.citrusframework.util.InvocationDummy;
+import org.citrusframework.spring.util.InvocationDummy;
 
 public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
 
@@ -32,7 +32,7 @@ public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
         assertActionClassAndName(JavaAction.class, "java");
 
         JavaAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getClassName(), "org.citrusframework.util.InvocationDummy");
+        Assert.assertEquals(action.getClassName(), "org.citrusframework.spring.util.InvocationDummy");
         Assert.assertEquals(action.getMethodName(), "invoke");
         Assert.assertEquals(action.getConstructorArgs().size(), 1);
         Assert.assertEquals(action.getConstructorArgs().get(0), "Test Invocation");
@@ -40,7 +40,7 @@ public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
         Assert.assertEquals(action.getMethodArgs().get(0), new String[] {"1", "2"});
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getClassName(), "org.citrusframework.util.InvocationDummy");
+        Assert.assertEquals(action.getClassName(), "org.citrusframework.spring.util.InvocationDummy");
         Assert.assertEquals(action.getMethodName(), "invoke");
         Assert.assertEquals(action.getConstructorArgs().size(), 0);
         Assert.assertEquals(action.getMethodArgs().size(), 3);

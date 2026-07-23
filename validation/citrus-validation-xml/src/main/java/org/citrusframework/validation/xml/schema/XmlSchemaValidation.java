@@ -37,7 +37,7 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.SystemProvider;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext.Builder;

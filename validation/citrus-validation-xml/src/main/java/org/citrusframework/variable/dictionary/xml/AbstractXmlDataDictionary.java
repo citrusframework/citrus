@@ -22,7 +22,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.validation.xhtml.XhtmlMessageConverter;
 import org.citrusframework.variable.dictionary.AbstractDataDictionary;
 import org.springframework.util.xml.DomUtils;
