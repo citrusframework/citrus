@@ -17,7 +17,7 @@
 package org.citrusframework.config.xml;
 
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.citrusframework.validation.matcher.CustomValidationMatcher;
+import org.citrusframework.spring.validation.matcher.CustomValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
 import org.citrusframework.base.validation.matcher.core.EndsWithValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.IsNumberValidationMatcher;

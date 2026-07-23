@@ -81,7 +81,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveMessageWithMessageBuilderScriptResource() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload.groovy"));
+        controlMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:org/citrusframework/validation/script/actions/test-request-payload.groovy"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest>\n  <Message>Hello World!</Message>\n</TestRequest>");
 
@@ -131,7 +131,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     public void testReceiveMessageWithValidationScriptResource() {
         ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
-                .scriptResource("classpath:org/citrusframework/actions/test-validation-script.groovy")
+                .scriptResource("classpath:org/citrusframework/validation/script/actions/test-validation-script.groovy")
                 .build();
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");

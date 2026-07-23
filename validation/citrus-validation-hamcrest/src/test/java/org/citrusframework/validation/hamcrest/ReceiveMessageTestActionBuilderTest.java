@@ -22,7 +22,6 @@ import java.util.Optional;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
-import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;

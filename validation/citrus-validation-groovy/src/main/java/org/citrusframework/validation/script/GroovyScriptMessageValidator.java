@@ -59,7 +59,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
      * Default constructor using default script template.
      */
     public GroovyScriptMessageValidator() {
-        this(Resources.fromClasspath("org/citrusframework/validation/script-validation-template.groovy"));
+        this(Resources.fromClasspath("org/citrusframework/validation/script/script-validation-template.groovy"));
     }
 
     /**
