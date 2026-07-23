@@ -22,7 +22,7 @@ import org.citrusframework.groovy.dsl.actions.model.HeaderSpec;
 import org.citrusframework.groovy.dsl.actions.model.JsonBodySpec;
 import org.citrusframework.groovy.dsl.actions.model.XmlBodySpec;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
-import org.citrusframework.message.builder.SendMessageBuilderSupport;
+import org.citrusframework.base.message.builder.SendMessageBuilderSupport;
 import groovy.lang.Closure;
 import org.citrusframework.util.FileUtils;
 

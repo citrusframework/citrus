@@ -30,7 +30,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.message.builder.MarshallingPayloadBuilder;
+import org.citrusframework.xml.message.builder.MarshallingPayloadBuilder;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;

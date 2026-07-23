@@ -31,7 +31,7 @@ import org.citrusframework.dsl.selenium.SeleniumTestActionSupport;
 import org.citrusframework.dsl.soap.SoapTestActionSupport;
 import org.citrusframework.dsl.sql.SqlTestActionSupport;
 import org.citrusframework.dsl.testcontainers.TestcontainersTestActionSupport;
-import org.citrusframework.message.DefaultMessageProcessors;
+import org.citrusframework.base.message.DefaultMessageProcessors;
 import org.citrusframework.message.Processors;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;

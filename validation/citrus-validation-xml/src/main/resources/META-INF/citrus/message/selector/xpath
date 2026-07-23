@@ -1,1 +1,1 @@
-type=org.citrusframework.message.selector.XpathPayloadMessageSelector$Factory
+type=org.citrusframework.xml.message.selector.XpathPayloadMessageSelector$Factory

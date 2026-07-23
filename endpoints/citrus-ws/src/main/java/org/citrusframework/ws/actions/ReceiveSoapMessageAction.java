@@ -28,7 +28,7 @@ import org.citrusframework.api.actions.ws.SoapReceiveActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
+import org.citrusframework.base.message.builder.ReceiveMessageBuilderSupport;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.builder.StaticMessageBuilder;

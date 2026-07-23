@@ -27,7 +27,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.citrusframework.message.builder.SendMessageBuilderSupport;
+import org.citrusframework.base.message.builder.SendMessageBuilderSupport;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.builder.StaticMessageBuilder;

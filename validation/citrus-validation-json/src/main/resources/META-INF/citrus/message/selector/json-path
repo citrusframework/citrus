@@ -1,1 +1,1 @@
-type=org.citrusframework.message.selector.JsonPathPayloadMessageSelector$Factory
+type=org.citrusframework.json.message.selector.JsonPathPayloadMessageSelector$Factory

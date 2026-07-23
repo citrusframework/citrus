@@ -25,7 +25,7 @@ import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageUtils;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageBuilder;
-import org.citrusframework.message.builder.SendMessageBuilderSupport;
+import org.citrusframework.base.message.builder.SendMessageBuilderSupport;
 import org.springframework.http.HttpStatusCode;
 
 /**

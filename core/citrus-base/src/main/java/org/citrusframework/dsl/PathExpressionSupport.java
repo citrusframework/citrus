@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.citrusframework.builder.PathExpressionAdapter;
 import org.citrusframework.builder.WithExpressions;
-import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.PathExpressionValidationContext;
