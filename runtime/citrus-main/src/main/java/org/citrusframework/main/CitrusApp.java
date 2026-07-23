@@ -18,6 +18,8 @@ package org.citrusframework.main;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusInstanceManager;
+import org.citrusframework.api.main.CitrusAppConfiguration;
+import org.citrusframework.api.main.TestEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

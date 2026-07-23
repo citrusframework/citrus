@@ -48,7 +48,7 @@ import org.citrusframework.agent.plugin.config.KubernetesConfiguration;
 import org.citrusframework.agent.plugin.config.RunConfiguration;
 import org.citrusframework.agent.plugin.model.RemoteResult;
 import org.citrusframework.common.TestSourceHelper;
-import org.citrusframework.main.TestRunConfiguration;
+import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.report.HtmlReporter;
 import org.citrusframework.report.JUnitReporterSettings;
 import org.citrusframework.report.OutputStreamReporter;

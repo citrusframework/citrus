@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package org.citrusframework.main.scan;
+package org.citrusframework.base.main;
 
-import java.util.List;
-
-import org.citrusframework.TestClass;
+import org.citrusframework.api.main.TestEngine;
+import org.citrusframework.api.main.TestRunConfiguration;
 
 /**
  * @since 2.7.4
  */
-public interface TestScanner {
+public abstract class AbstractTestEngine implements TestEngine {
+
+    private final TestRunConfiguration configuration;
+
+    public AbstractTestEngine(TestRunConfiguration configuration) {
+        this.configuration = configuration;
+    }
 
     /**
-     * Find classes in package suitable to running as test with given annotation.
-     * @param packageName
-     * @return
+     * Gets the configuration.
      */
-    List<TestClass> findTestsInPackage(String packageName);
+    public TestRunConfiguration getConfiguration() {
+        return configuration;
+    }
 }

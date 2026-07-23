@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package org.citrusframework.main.scan;
+package org.citrusframework.base.main.scan;
 
 import java.util.Arrays;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.citrusframework.api.main.scan.TestScanner;
 
 /**
  * @since 2.7.4
