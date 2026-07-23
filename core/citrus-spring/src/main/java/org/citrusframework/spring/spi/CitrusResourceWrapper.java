@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package org.citrusframework.spi;
-
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.ConditionalConverter;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.io.ClassPathResource;
+package org.citrusframework.spring.spi;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.ConditionalConverter;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.io.ClassPathResource;
 
 public class CitrusResourceWrapper implements Resource {
 

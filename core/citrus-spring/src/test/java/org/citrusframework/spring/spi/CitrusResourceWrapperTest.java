@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.citrusframework.spi;
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileUrlResource;
-import org.testng.annotations.Test;
+package org.citrusframework.spring.spi;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileUrlResource;
+import org.testng.annotations.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
