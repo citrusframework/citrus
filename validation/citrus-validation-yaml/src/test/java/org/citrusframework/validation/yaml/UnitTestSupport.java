@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.validation.yaml;
 
 import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
-import org.citrusframework.validation.yaml.YamlMessageValidator;
 
 public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
 

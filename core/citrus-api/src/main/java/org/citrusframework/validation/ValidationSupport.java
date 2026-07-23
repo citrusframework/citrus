@@ -24,7 +24,7 @@ import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.ws.SoapFaultValidationContext;
 import org.citrusframework.validation.ws.SoapMessageValidationContextBuilder;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
-import org.citrusframework.validation.yaml.YamlMessageValidationContext;
+import org.citrusframework.validation.context.yaml.YamlMessageValidationContext;
 
 /**
  * Interface combines default implementations with
