@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.openapi;
+package org.citrusframework.api.openapi;
 
 public interface Specification {
 }

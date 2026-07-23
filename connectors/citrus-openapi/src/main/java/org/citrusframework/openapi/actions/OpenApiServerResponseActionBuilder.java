@@ -39,7 +39,7 @@ import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaderBuilder;
 import org.citrusframework.message.builder.DefaultHeaderBuilder;
-import org.citrusframework.openapi.AutoFillType;
+import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.OpenApiSupport;
 import org.citrusframework.openapi.model.OasAdapter;
@@ -49,8 +49,8 @@ import org.citrusframework.openapi.validation.OpenApiOperationToMessageHeadersPr
 import org.citrusframework.openapi.validation.OpenApiValidationContext;
 
 import static java.util.Collections.singletonMap;
-import static org.citrusframework.openapi.AutoFillType.NONE;
-import static org.citrusframework.openapi.AutoFillType.REQUIRED;
+import static org.citrusframework.api.openapi.AutoFillType.NONE;
+import static org.citrusframework.api.openapi.AutoFillType.REQUIRED;
 import static org.citrusframework.openapi.OpenApiMessageType.RESPONSE;
 import static org.citrusframework.openapi.OpenApiSettings.getResponseAutoFillRandomValues;
 import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabled;

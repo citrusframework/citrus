@@ -22,7 +22,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.api.actions.ReferenceResolverAwareBuilder;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.openapi.Specification;
+import org.citrusframework.api.openapi.Specification;
 
 public interface OpenApiActionBuilder<T extends TestAction, S extends Specification, B extends TestActionBuilder<T>>
         extends ReferenceResolverAwareBuilder<T, B> {

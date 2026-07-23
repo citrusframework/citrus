@@ -29,7 +29,7 @@ import org.citrusframework.http.actions.HttpClientRequestActionBuilder.HttpMessa
 import org.citrusframework.http.config.xml.HttpSendRequestActionParser;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
-import org.citrusframework.openapi.AutoFillType;
+import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder.OpenApiClientRequestMessageBuilder;
 import org.citrusframework.openapi.actions.OpenApiSpecificationSource;

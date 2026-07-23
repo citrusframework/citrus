@@ -22,9 +22,9 @@ import org.citrusframework.util.SystemProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.openapi.AutoFillType.ALL;
-import static org.citrusframework.openapi.AutoFillType.NONE;
-import static org.citrusframework.openapi.AutoFillType.REQUIRED;
+import static org.citrusframework.api.openapi.AutoFillType.ALL;
+import static org.citrusframework.api.openapi.AutoFillType.NONE;
+import static org.citrusframework.api.openapi.AutoFillType.REQUIRED;
 import static org.citrusframework.openapi.OpenApiSettings.GENERATE_OPTIONAL_FIELDS_ENABLED_ENV;
 import static org.citrusframework.openapi.OpenApiSettings.GENERATE_OPTIONAL_FIELDS_ENABLED_PROPERTY;
 import static org.citrusframework.openapi.OpenApiSettings.NEGLECT_OPEN_API_BASE_PATH_ENABLED_ENV;

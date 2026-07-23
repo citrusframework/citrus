@@ -35,7 +35,7 @@ import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringExtension;
 import org.citrusframework.message.Message;
-import org.citrusframework.openapi.AutoFillType;
+import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
 import org.citrusframework.openapi.generator.GeneratedRestApiIT.Config;
 import org.citrusframework.openapi.generator.rest.extpetstore.model.PetIdentifier;
