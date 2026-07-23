@@ -42,6 +42,8 @@ import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.ValidationStatus;
+import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;

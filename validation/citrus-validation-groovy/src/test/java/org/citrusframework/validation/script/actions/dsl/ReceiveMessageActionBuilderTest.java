@@ -37,7 +37,7 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.GroovyJsonMessageValidator;
 import org.mockito.Mockito;
 import org.testng.Assert;

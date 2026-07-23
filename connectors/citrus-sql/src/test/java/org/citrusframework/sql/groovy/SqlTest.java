@@ -23,7 +23,7 @@ import org.citrusframework.sql.actions.ExecuteSQLAction;
 import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.groovy.GroovyTestLoader;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;

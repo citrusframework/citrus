@@ -34,7 +34,7 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
 import org.citrusframework.validation.json.schema.JsonSchemaValidation;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

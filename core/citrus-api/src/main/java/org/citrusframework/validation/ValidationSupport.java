@@ -20,7 +20,7 @@ import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.validation.openapi.OpenApiMessageValidationContextBuilder;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.ws.SoapFaultValidationContext;
 import org.citrusframework.validation.context.ws.SoapMessageValidationContextBuilder;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;

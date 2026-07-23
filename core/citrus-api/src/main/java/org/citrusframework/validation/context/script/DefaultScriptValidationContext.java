@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.context.script;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

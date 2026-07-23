@@ -23,7 +23,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

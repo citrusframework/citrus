@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.spi.Resource;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 
 public interface ExecuteSqlQueryActionBuilder<T extends TestAction, B extends ExecuteSqlQueryActionBuilder<T, B>>

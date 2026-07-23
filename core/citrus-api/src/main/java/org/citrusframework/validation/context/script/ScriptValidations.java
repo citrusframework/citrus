@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.context.script;
 
 public interface ScriptValidations extends
         ScriptValidationContextBuilder.Factory {

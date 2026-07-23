@@ -38,8 +38,8 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
-import org.citrusframework.validation.script.ScriptValidationContextBuilder;
+import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.context.script.ScriptValidationContextBuilder;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.xml.actions.script.ScriptDefinitionType;
 
