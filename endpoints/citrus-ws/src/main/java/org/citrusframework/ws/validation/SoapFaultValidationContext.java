@@ -17,9 +17,9 @@
 package org.citrusframework.ws.validation;
 
 @Deprecated
-public class SoapFaultValidationContext extends org.citrusframework.validation.ws.SoapFaultValidationContext {
+public class SoapFaultValidationContext extends org.citrusframework.validation.context.ws.SoapFaultValidationContext {
 
-    public static class Builder extends org.citrusframework.validation.ws.SoapFaultValidationContext.Builder {
+    public static class Builder extends org.citrusframework.validation.context.ws.SoapFaultValidationContext.Builder {
 
         /**
          * Static entry method for fluent builder API.

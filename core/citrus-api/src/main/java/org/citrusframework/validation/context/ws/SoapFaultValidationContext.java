@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.ws;
+package org.citrusframework.validation.context.ws;
 
 import java.util.ArrayList;
 import java.util.Arrays;

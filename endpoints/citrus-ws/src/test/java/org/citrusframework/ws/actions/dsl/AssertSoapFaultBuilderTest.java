@@ -17,7 +17,6 @@
 package org.citrusframework.ws.actions.dsl;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +31,7 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.ws.UnitTestSupport;
 import org.citrusframework.ws.actions.AssertSoapFault;
-import org.citrusframework.validation.ws.SoapFaultValidationContext;
+import org.citrusframework.validation.context.ws.SoapFaultValidationContext;
 import org.citrusframework.ws.validation.SoapFaultValidator;
 import org.citrusframework.xml.StringSource;
 import org.mockito.Mockito;

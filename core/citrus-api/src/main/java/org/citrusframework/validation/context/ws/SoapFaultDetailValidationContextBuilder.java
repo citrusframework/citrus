@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.ws;
+package org.citrusframework.validation.context.ws;
 
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.xml.XmlValidationContextBuilderBase;
