@@ -54,7 +54,7 @@ import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.validation.xml.XpathPayloadVariableExtractor;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.citrusframework.variable.dictionary.xml.NodeMappingDataDictionary;
+import org.citrusframework.xml.variable.dictionary.NodeMappingDataDictionary;
 import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.StringSource;

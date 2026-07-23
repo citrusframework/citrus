@@ -48,7 +48,7 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.variable.dictionary.json.JsonPathMappingDataDictionary;
+import org.citrusframework.json.variable.dictionary.JsonPathMappingDataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

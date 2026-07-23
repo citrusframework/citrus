@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.variable.dictionary.json;
+package org.citrusframework.json.variable.dictionary;
 
 import org.citrusframework.message.MessageType;
 import org.citrusframework.variable.dictionary.AbstractDataDictionary;

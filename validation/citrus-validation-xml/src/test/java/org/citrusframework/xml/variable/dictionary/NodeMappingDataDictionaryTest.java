@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.variable.dictionary.xml;
+package org.citrusframework.xml.variable.dictionary;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -162,7 +162,7 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         context.setVariable("newText", "Hello!");
 
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
-        dictionary.setMappingFile(Resources.create("mapping.properties", DataDictionary.class));
+        dictionary.setMappingFile(Resources.create("mapping.properties", NodeMappingDataDictionaryTest.class));
         dictionary.initialize();
 
         dictionary.processMessage(message, context);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.variable.dictionary.json;
+package org.citrusframework.json.variable.dictionary;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -131,7 +131,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
 
         JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
-        dictionary.setMappingFile(Resources.create("jsonmapping.properties", DataDictionary.class));
+        dictionary.setMappingFile(Resources.create("jsonmapping.properties", JsonMappingDataDictionaryTest.class));
         dictionary.initialize();
 
         dictionary.processMessage(message, context);

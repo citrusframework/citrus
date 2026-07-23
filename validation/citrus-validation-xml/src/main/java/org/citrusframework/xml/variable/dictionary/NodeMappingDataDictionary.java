@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.variable.dictionary.xml;
+package org.citrusframework.xml.variable.dictionary;
 
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;

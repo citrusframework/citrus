@@ -24,7 +24,7 @@
   </citrus:json-data-dictionary>
 
   <citrus:json-data-dictionary id="dataDictionary3">
-    <citrus:mapping-file path="classpath:org/citrusframework/variable/dictionary/json.data.dictionary"/>
+    <citrus:mapping-file path="classpath:org/citrusframework/json/variable/dictionary/json.data.dictionary"/>
   </citrus:json-data-dictionary>
 
 </beans>
