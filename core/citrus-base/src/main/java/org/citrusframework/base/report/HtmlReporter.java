@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.report;
+package org.citrusframework.base.report;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -30,6 +30,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.report.AbstractOutputFileReporter;
+import org.citrusframework.report.FailureStackElement;
+import org.citrusframework.report.TestListener;
+import org.citrusframework.report.TestResults;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.PropertyUtils;

@@ -21,7 +21,7 @@ import java.io.StringWriter;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
 import org.citrusframework.report.OutputStreamReporter;
-import org.citrusframework.report.TestFlowReporter;
+import org.citrusframework.base.report.TestFlowReporter;
 import org.citrusframework.report.TestResults;
 
 public class AgentTestListener extends OutputStreamReporter {

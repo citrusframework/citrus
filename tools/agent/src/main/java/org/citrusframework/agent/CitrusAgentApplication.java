@@ -46,7 +46,7 @@ import org.citrusframework.api.agent.CitrusAgentConfiguration;
 import org.citrusframework.api.agent.CitrusAgentSettings;
 import org.citrusframework.api.main.CitrusAppConfiguration;
 import org.citrusframework.api.main.TestRunConfiguration;
-import org.citrusframework.report.JUnitReporter;
+import org.citrusframework.base.report.JUnitReporter;
 import org.citrusframework.report.OutputStreamReporter;
 import org.citrusframework.report.TestReporterSettings;
 import org.citrusframework.report.TestResults;

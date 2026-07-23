@@ -16,15 +16,15 @@
 
 package org.citrusframework.report;
 
-import org.citrusframework.TestResult;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import java.time.Duration;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
+
+import org.citrusframework.TestResult;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static java.lang.Thread.currentThread;
 import static java.util.concurrent.Executors.newFixedThreadPool;

@@ -27,7 +27,6 @@ import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -60,7 +59,7 @@ public class FailureStackTestListener extends AbstractTestListener {
         try {
             final String testFilePath = test.getPackageName().replace('.', '/') + "/" + test.getName();
 
-            Resource testFileResource = Resources.fromClasspath(testFilePath + FileUtils.FILE_EXTENSION_XML);
+            Resource testFileResource = Resources.fromClasspath(testFilePath + ".xml");
             if (!testFileResource.exists()) {
                 return failureStack;
             }

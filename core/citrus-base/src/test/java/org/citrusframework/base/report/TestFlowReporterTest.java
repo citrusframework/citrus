@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.report;
+package org.citrusframework.base.report;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
@@ -28,6 +28,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
+import org.citrusframework.report.TestResults;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -58,7 +59,7 @@ public class TestFlowReporterTest {
 
     @Mock
     private Iterate iteration;
-    
+
     @Mock
     private Sequence sequence;
 

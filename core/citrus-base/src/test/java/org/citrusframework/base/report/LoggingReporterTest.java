@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.report;
+package org.citrusframework.base.report;
 
 import java.time.Duration;
 import java.util.Locale;
@@ -24,6 +24,8 @@ import org.citrusframework.DefaultTestCase;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.log.LogColors;
+import org.citrusframework.report.LoggingReporter;
+import org.citrusframework.report.TestResults;
 import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.testng.annotations.AfterMethod;

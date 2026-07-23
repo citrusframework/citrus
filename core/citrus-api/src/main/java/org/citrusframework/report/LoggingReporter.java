@@ -16,10 +16,11 @@
 
 package org.citrusframework.report;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.CitrusVersion;
 import org.citrusframework.TestAction;
@@ -41,7 +42,6 @@ import org.slf4j.helpers.NOPLoggerFactory;
 import static java.lang.String.format;
 import static java.time.Duration.ZERO;
 import static java.util.Objects.nonNull;
-import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Simple logging reporter printing test start and ending to the console/logger.
@@ -83,7 +83,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     }
 
     private static String resolveActionName(TestAction testAction) {
-        return hasText(testAction.getName()) ? testAction.getName() : testAction.getClass().getSimpleName();
+        return (testAction.getName() != null && !testAction.getName().isEmpty()) ? testAction.getName() : testAction.getClass().getSimpleName();
     }
 
     private static String formatDuration(TestCase test) {
@@ -117,8 +117,8 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
             if (testResult.isFailed()) {
                 info(LogColors.failed(
                         Optional.ofNullable(testResult.getCause())
-                                .filter(cause -> hasText(cause.getMessage()))
-                                .map(ExceptionUtils::getRootCause)
+                                .map(LoggingReporter::getRootCause)
+                                .filter(cause -> (cause.getMessage() != null && !cause.getMessage().isEmpty()))
                                 .map(cause -> "    Caused by: " + cause.getClass().getSimpleName() + ": " + cause.getMessage())
                                 .orElse("    Caused by: " + Optional.ofNullable(testResult.getErrorMessage()).orElse("Unknown error")))
                 );
@@ -166,7 +166,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         info(SINGLE_SEPARATOR);
         var duration = formatDuration(testCase);
         String line = LogColors.failed(INDICATOR_FAILED) + " TEST FAILED: " + testCase.getName();
-        if (hasText(duration)) {
+        if (!duration.isEmpty()) {
             line += LogColors.dim("  " + duration);
         }
         info(line);
@@ -211,7 +211,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
         var duration = formatDuration(test);
         String line = LogColors.success(INDICATOR_SUCCESS) + " TEST SUCCESS: " + test.getName();
-        if (hasText(duration)) {
+        if (!duration.isEmpty()) {
             line += LogColors.dim("  " + duration);
         }
         info(line);
@@ -319,7 +319,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
             debug(LogColors.start(INDICATOR_START) + " " + actionName);
         }
 
-        if (testAction instanceof Described described && hasText(described.getDescription())) {
+        if (testAction instanceof Described described && (described.getDescription() != null && !described.getDescription().isEmpty())) {
             debug("    " + LogColors.dim(described.getDescription()));
         }
     }
@@ -330,7 +330,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
         var duration = formatDuration(testCase);
         String line = LogColors.success(INDICATOR_SUCCESS) + " " + actionName;
-        if (hasText(duration)) {
+        if (!duration.isEmpty()) {
             line += LogColors.dim("  " + duration);
         }
         info(line);
@@ -342,7 +342,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
         var duration = formatDuration(testCase);
         String line = LogColors.failed(INDICATOR_FAILED) + " " + actionName;
-        if (hasText(duration)) {
+        if (!duration.isEmpty()) {
             line += LogColors.dim("  " + duration);
         }
         info(line);
@@ -449,4 +449,23 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         initialized(false);
     }
 
+    /**
+     * Utility method to obtain the root cause of the given throwable.
+     * Traverse through the hierarchy of throwable cause and get the last one in line.
+     */
+    private static Throwable getRootCause(Throwable throwable) {
+        List<Throwable> list = new ArrayList<>();
+        Throwable cause = throwable;
+        while (cause != null && !list.contains(cause)) {
+            cause = cause.getCause();
+            list.add(cause);
+        }
+
+        Throwable rootCause = list.isEmpty() ? throwable : list.get(list.size() - 1);
+        if (rootCause != null && rootCause.getMessage() != null) {
+            return rootCause;
+        } else {
+            return throwable;
+        }
+    }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.report;
+package org.citrusframework.base.report;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -35,6 +35,8 @@ import java.util.Properties;
 import jakarta.annotation.Nullable;
 import org.citrusframework.TestResult;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.report.AbstractTestReporter;
+import org.citrusframework.report.TestResults;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
