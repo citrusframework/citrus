@@ -19,6 +19,7 @@ package org.citrusframework.validation.json;
 import java.util.List;
 import java.util.Optional;
 
+import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.json.JsonSettings;

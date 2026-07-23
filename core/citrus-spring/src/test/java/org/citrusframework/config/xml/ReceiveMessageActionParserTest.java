@@ -29,7 +29,7 @@ import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;

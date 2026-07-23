@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions.dsl;
+package org.citrusframework.json.actions.dsl;
 
 import com.networknt.schema.Schema;
 import org.citrusframework.DefaultTestCaseRunner;
@@ -42,8 +42,8 @@ import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.context.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;

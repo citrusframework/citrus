@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions.dsl;
+package org.citrusframework.json.actions.dsl;
 
 /**
  * Sample model object mapped to message payload.

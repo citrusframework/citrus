@@ -26,7 +26,7 @@ import org.citrusframework.util.IsJsonPathPredicate;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.expression.PathExpressionValidationContextBuilder;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.xml.XpathMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 

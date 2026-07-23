@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.actions.dsl;
+package org.citrusframework.json.actions.dsl;
 
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;

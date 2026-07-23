@@ -21,7 +21,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.IsJsonPathPredicate;
 import org.citrusframework.util.IsJsonPredicate;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
 import org.citrusframework.variable.VariableExpressionSegmentMatcher;
 
