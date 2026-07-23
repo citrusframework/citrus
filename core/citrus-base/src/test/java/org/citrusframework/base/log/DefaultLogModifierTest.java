@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework.log;
+package org.citrusframework.base.log;
 
+import org.citrusframework.log.CitrusLogSettings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

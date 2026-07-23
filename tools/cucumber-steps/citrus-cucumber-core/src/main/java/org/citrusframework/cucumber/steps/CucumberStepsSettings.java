@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Locale;
 
-import org.citrusframework.kubernetes.ClusterType;
+import org.citrusframework.api.kubernetes.ClusterType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

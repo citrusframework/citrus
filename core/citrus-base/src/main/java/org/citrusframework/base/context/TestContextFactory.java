@@ -26,7 +26,7 @@ import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.base.functions.DefaultFunctionRegistry;
 import org.citrusframework.functions.FunctionRegistry;
-import org.citrusframework.log.DefaultLogModifier;
+import org.citrusframework.base.log.DefaultLogModifier;
 import org.citrusframework.log.LogModifier;
 import org.citrusframework.message.MessageProcessors;
 import org.citrusframework.report.MessageListeners;

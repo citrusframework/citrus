@@ -27,7 +27,7 @@ import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import org.citrusframework.api.actions.kubernetes.KubernetesCreateLabelsActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.kubernetes.KubernetesResourceType;
+import org.citrusframework.api.kubernetes.KubernetesResourceType;
 
 public class CreateLabelsAction extends AbstractKubernetesAction implements KubernetesAction {
 

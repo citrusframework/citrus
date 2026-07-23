@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package org.citrusframework.kubernetes;
+package org.citrusframework.api.kubernetes;
 
 /**
- * Cluster types with different operator namespaces.
+ * Enumeration of supported Kubernetes resources this action is capable of adding annotations to.
  */
-public enum ClusterType {
-
-    LOCAL(""),
-    KUBERNETES("citrus-system"),
-    OPENSHIFT("openshift-operators");
-
-    private final String operatorNamespace;
-
-    ClusterType(String operatorNamespace) {
-        this.operatorNamespace = operatorNamespace;
-    }
-
-    public String operatorNamespace() {
-        return operatorNamespace;
-    }
+public enum KubernetesResourceType {
+    DEPLOYMENT,
+    POD,
+    SECRET,
+    CONFIGMAP,
+    SERVICE
 }
