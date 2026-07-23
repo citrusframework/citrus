@@ -16,7 +16,7 @@
 
 package org.citrusframework.validation.xhtml;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.xml.UnitTestSupport;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.base.context.TestContextFactory;
@@ -29,7 +29,7 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
+import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.Test;

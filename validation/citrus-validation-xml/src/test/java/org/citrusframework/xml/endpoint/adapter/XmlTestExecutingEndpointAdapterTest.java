@@ -16,7 +16,7 @@
 
 package org.citrusframework.xml.endpoint.adapter;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.xml.UnitTestSupport;
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.spring.context.TestContextFactoryBean;

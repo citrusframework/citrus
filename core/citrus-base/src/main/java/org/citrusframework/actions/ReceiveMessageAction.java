@@ -64,7 +64,7 @@ import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.yaml.YamlMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;

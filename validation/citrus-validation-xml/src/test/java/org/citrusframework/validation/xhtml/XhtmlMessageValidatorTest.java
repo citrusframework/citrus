@@ -16,7 +16,7 @@
 
 package org.citrusframework.validation.xhtml;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.xml.UnitTestSupport;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.base.context.TestContextFactory;

@@ -38,6 +38,8 @@ import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.validation.xhtml.XhtmlMessageValidator;
 import org.citrusframework.validation.xhtml.XhtmlXpathMessageValidator;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;

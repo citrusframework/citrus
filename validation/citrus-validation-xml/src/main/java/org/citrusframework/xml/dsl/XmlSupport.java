@@ -18,7 +18,7 @@ package org.citrusframework.xml.dsl;
 
 import org.citrusframework.validation.GenericValidationProcessor;
 import org.citrusframework.validation.xml.XmlMarshallingValidationProcessor;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 
 public class XmlSupport {
 

@@ -21,13 +21,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.xml.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;

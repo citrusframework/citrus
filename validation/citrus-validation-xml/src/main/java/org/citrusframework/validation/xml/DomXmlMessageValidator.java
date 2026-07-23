@@ -24,7 +24,7 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.XmlValidationHelper;
+import org.citrusframework.xml.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
@@ -32,6 +32,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.MessageUtils;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;

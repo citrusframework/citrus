@@ -1,6 +1,6 @@
 package org.citrusframework.validation.xml;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.xml.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.SimpleReferenceResolver;

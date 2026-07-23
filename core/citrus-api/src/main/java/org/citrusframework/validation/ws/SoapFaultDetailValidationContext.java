@@ -16,8 +16,8 @@
 
 package org.citrusframework.validation.ws;
 
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
-import org.citrusframework.validation.xml.XpathMessageValidationContext;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 
 /**
  * Soap fault detail validation context extends XML validation context.

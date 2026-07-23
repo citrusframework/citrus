@@ -24,7 +24,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.IsJsonPathPredicate;
-import org.citrusframework.validation.xml.XmlNamespaceAware;
+import org.citrusframework.validation.context.xml.XmlNamespaceAware;
 import org.citrusframework.variable.DelegatingPayloadVariableExtractorBuilder;
 import org.citrusframework.variable.VariableExtractor;
 import org.slf4j.Logger;

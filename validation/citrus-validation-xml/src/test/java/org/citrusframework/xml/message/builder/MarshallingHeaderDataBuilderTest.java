@@ -18,8 +18,8 @@ package org.citrusframework.xml.message.builder;
 
 import java.util.Collections;
 
-import org.citrusframework.UnitTestSupport;
-import org.citrusframework.actions.dsl.TestRequest;
+import org.citrusframework.xml.UnitTestSupport;
+import org.citrusframework.xml.actons.dsl.TestRequest;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
