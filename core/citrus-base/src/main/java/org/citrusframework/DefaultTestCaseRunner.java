@@ -21,7 +21,7 @@ import java.util.Date;
 import org.citrusframework.actions.ApplyTestBehaviorAction;
 import org.citrusframework.container.FinallySequence;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.message.DefaultMessageProcessors;
+import org.citrusframework.base.message.DefaultMessageProcessors;
 import org.citrusframework.message.Processors;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.validation.DefaultValidations;

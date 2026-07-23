@@ -23,7 +23,7 @@ import org.citrusframework.groovy.dsl.actions.model.HeaderSpec;
 import org.citrusframework.groovy.dsl.actions.model.JsonBodySpec;
 import org.citrusframework.groovy.dsl.actions.model.XmlBodySpec;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
-import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
+import org.citrusframework.base.message.builder.ReceiveMessageBuilderSupport;
 import org.citrusframework.util.FileUtils;
 
 public class ReceiveActionBuilderWrapper extends ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, ReceiveActionBuilderWrapper.ReceiveMessageActionBuilderSupport, ReceiveActionBuilderWrapper> {

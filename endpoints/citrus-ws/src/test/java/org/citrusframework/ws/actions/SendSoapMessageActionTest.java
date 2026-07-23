@@ -25,7 +25,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.builder.DefaultHeaderDataBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
-import org.citrusframework.message.builder.FileResourceHeaderDataBuilder;
+import org.citrusframework.base.message.builder.FileResourceHeaderDataBuilder;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;

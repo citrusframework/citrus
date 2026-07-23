@@ -22,7 +22,7 @@ import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageBuilder;
-import org.citrusframework.message.builder.SendMessageBuilderSupport;
+import org.citrusframework.base.message.builder.SendMessageBuilderSupport;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 

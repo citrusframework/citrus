@@ -28,7 +28,7 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.message.builder.ObjectMappingPayloadBuilder;
+import org.citrusframework.json.message.builder.ObjectMappingPayloadBuilder;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;

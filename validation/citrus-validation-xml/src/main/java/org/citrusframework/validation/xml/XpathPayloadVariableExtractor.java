@@ -19,7 +19,7 @@ package org.citrusframework.validation.xml;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
-import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.util.XMLUtils;

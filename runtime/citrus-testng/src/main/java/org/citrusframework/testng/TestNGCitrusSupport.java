@@ -44,7 +44,7 @@ import org.citrusframework.api.common.TestSourceAware;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.message.DefaultMessageProcessors;
+import org.citrusframework.base.message.DefaultMessageProcessors;
 import org.citrusframework.message.Processors;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;

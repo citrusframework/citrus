@@ -30,7 +30,7 @@ import org.citrusframework.http.message.HttpMessageUtils;
 import org.citrusframework.http.message.HttpQueryParamHeaderValidator;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageBuilder;
-import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
+import org.citrusframework.base.message.builder.ReceiveMessageBuilderSupport;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
 

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;

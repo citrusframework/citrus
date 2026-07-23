@@ -16,7 +16,7 @@
 
 package org.citrusframework.validation.json;
 
-import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;

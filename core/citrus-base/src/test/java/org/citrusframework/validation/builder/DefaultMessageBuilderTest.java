@@ -27,8 +27,8 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.message.builder.DefaultHeaderDataBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
-import org.citrusframework.message.builder.FileResourceHeaderDataBuilder;
-import org.citrusframework.message.builder.FileResourcePayloadBuilder;
+import org.citrusframework.base.message.builder.FileResourceHeaderDataBuilder;
+import org.citrusframework.base.message.builder.FileResourcePayloadBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

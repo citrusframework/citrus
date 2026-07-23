@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;

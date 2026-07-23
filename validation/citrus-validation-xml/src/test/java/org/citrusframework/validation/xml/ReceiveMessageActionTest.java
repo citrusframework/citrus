@@ -33,7 +33,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
-import org.citrusframework.message.builder.FileResourcePayloadBuilder;
+import org.citrusframework.base.message.builder.FileResourcePayloadBuilder;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;

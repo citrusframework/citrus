@@ -1,0 +1,163 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.citrusframework.base.message;
+
+import java.util.Map;
+
+import org.citrusframework.UnitTestSupport;
+import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.message.DefaultMessagePrinter;
+import org.citrusframework.message.MessageHeaders;
+import org.citrusframework.message.MessagePrinterLayout;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+
+public class DefaultMessageTest extends UnitTestSupport {
+
+    @BeforeClass
+    public void setup() {
+        DefaultMessagePrinter.setDefaultLayout(MessagePrinterLayout.COMPACT);
+    }
+
+    @AfterClass
+    public void teardown() {
+        DefaultMessagePrinter.resetDefaultLayout();
+    }
+
+    @Test
+    public void testPrint() {
+        DefaultMessage message = new DefaultMessage("<credentials><password>foo</password></credentials>");
+
+        message.setHeader("operation", "getCredentials");
+        message.setHeader("password", "foo");
+
+        String output = message.print();
+        assertThat(output).isEqualToIgnoringNewLines(String.format(
+                    "[id: %s]" +
+                    "[headers: {" +
+                        "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=foo" +
+                    "}]" +
+                    "[payload: <credentials>%n  <password>foo</password>%n</credentials>%n]", message.getId(), message.getId(), message.getTimestamp()));
+    }
+
+    @Test
+    public void testPrintMaskKeyValue() {
+        DefaultMessage message = new DefaultMessage("password=foo,secret=bar");
+
+        message.setHeader("operation", "getCredentials");
+        message.setHeader("password", "foo");
+        message.setHeader("secret", "bar");
+
+        String output = message.print(context);
+        assertThat(output).isEqualToIgnoringNewLines(String.format(
+                    "[id: %s]" +
+                    "[headers: {" +
+                        "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secret=****" +
+                    "}]" +
+                    "[payload: password=****,secret=****]", message.getId(), message.getId(), message.getTimestamp()));
+    }
+
+    @Test
+    public void testPrintMaskFormUrlEncoded() {
+        DefaultMessage message = new DefaultMessage("password=foo&secret=bar");
+
+        message.setHeader("operation", "getCredentials");
+        message.setHeader("password", "foo");
+        message.setHeader("secret", "bar");
+
+        String output = message.print(context);
+        assertThat(output).isEqualToIgnoringNewLines(String.format(
+                    "[id: %s]" +
+                    "[headers: {" +
+                        "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secret=****" +
+                    "}]" +
+                    "[payload: password=****&secret=****]", message.getId(), message.getId(), message.getTimestamp()));
+    }
+
+    @Test
+    public void testPrintMaskXml() {
+        DefaultMessage message = new DefaultMessage("<credentials><password>foo</password></credentials>");
+
+        message.setHeader("operation", "getCredentials");
+        message.setHeader("password", "foo");
+
+        String output = message.print(context);
+        assertThat(output).isEqualToIgnoringNewLines(String.format(
+                    "[id: %s]" +
+                    "[headers: {" +
+                        "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****" +
+                    "}]" +
+                    "[payload: <credentials>%n  <password>****</password>%n</credentials>%n]", message.getId(), message.getId(), message.getTimestamp()));
+    }
+
+    @Test
+    public void testPrintMaskJson() {
+        DefaultMessage message = new DefaultMessage("{ \"credentials\": { \"password\": \"foo\", \"secretKey\": \"bar\" }}");
+
+        message.setHeader("operation", "getCredentials");
+        message.setHeader("password", "foo");
+        message.setHeader("secretKey", "bar");
+
+        String output = message.print(context);
+        assertThat(output).isEqualToIgnoringNewLines(String.format(
+                    "[id: %s]" +
+                    "[headers: {" +
+                        "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secretKey=****" +
+                    "}]" +
+                    "[payload: {%n  \"credentials\": {%n    \"password\": \"****\",%n    \"secretKey\": \"****\"%n  }%n}]", message.getId(), message.getId(), message.getTimestamp()));
+    }
+
+    @Test
+    public void testCopyConstructorPreservesIdAndTimestamp() {
+
+        // Given
+        DefaultMessage originalMessage = new DefaultMessage("myPayload", Map.of("k1","v1"));
+
+        // When
+        DefaultMessage copiedMessage = new DefaultMessage(originalMessage);
+
+        // Then
+        assertEquals(originalMessage.getHeader(MessageHeaders.ID), copiedMessage.getHeader(MessageHeaders.ID));
+        assertEquals(originalMessage.getHeader(MessageHeaders.TIMESTAMP), copiedMessage.getHeader(MessageHeaders.TIMESTAMP));
+        assertEquals(originalMessage.getHeader("k1"), copiedMessage.getHeader("k1"));
+        assertEquals(originalMessage.getPayload(), copiedMessage.getPayload());
+
+    }
+
+    @Test
+    public void testCopyConstructorWithCitrusOverwriteDoesNotPreserveIdAndTimestamp() {
+
+        // Given
+        DefaultMessage originalMessage = new DefaultMessage("myPayload", Map.of("k1","v1"));
+        originalMessage.setHeader(MessageHeaders.TIMESTAMP, System.currentTimeMillis() - 1);
+
+        // When
+        DefaultMessage copiedMessage = new DefaultMessage(originalMessage, true);
+
+        // Then
+        assertNotEquals(originalMessage.getHeader(MessageHeaders.ID), copiedMessage.getHeader(MessageHeaders.ID));
+        assertNotEquals(originalMessage.getHeader(MessageHeaders.TIMESTAMP), copiedMessage.getHeader(MessageHeaders.TIMESTAMP));
+        assertEquals(originalMessage.getHeader("k1"), copiedMessage.getHeader("k1"));
+        assertEquals(originalMessage.getPayload(), copiedMessage.getPayload());
+
+    }
+}
