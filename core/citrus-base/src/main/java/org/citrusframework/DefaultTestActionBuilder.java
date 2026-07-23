@@ -19,6 +19,9 @@ package org.citrusframework;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
 
+import static java.util.Objects.nonNull;
+import static org.citrusframework.util.StringUtils.hasText;
+
 public class DefaultTestActionBuilder extends AbstractTestActionBuilder<AbstractTestAction, AbstractTestActionBuilder<AbstractTestAction, ?>> {
 
     private final TestAction delegate;
@@ -46,9 +49,9 @@ public class DefaultTestActionBuilder extends AbstractTestActionBuilder<Abstract
             }
         };
 
-        testAction.setName(this.getName());
+        testAction.setName(hasText(this.getName()) ? this.getName() : delegate.getName());
         testAction.setDescription(this.getDescription());
-        testAction.setActor(this.getActor());
+        testAction.setActor(nonNull(this.getActor()) ? this.getActor() : delegate.getActor());
 
         return testAction;
     }
