@@ -36,7 +36,7 @@ import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.json.JsonPathMessageProcessor;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.citrusframework.variable.dictionary.json.JsonMappingDataDictionary;
+import org.citrusframework.json.variable.dictionary.JsonMappingDataDictionary;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;

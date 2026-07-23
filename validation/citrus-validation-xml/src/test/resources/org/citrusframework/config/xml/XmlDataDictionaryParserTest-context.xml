@@ -22,7 +22,7 @@
   </citrus:xml-data-dictionary>
 
   <citrus:xml-data-dictionary id="dataDictionary3">
-    <citrus:mapping-file path="classpath:org/citrusframework/variable/dictionary/node.data.dictionary"/>
+    <citrus:mapping-file path="classpath:org/citrusframework/xml/variable/dictionary/node.data.dictionary"/>
   </citrus:xml-data-dictionary>
 
 </beans>

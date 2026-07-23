@@ -21,7 +21,7 @@ import java.util.Map;
 import org.citrusframework.message.MessageDirection;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.citrusframework.variable.dictionary.xml.XpathMappingDataDictionary;
+import org.citrusframework.xml.variable.dictionary.XpathMappingDataDictionary;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

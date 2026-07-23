@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.variable.dictionary.json;
+package org.citrusframework.json.variable.dictionary;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;

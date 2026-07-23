@@ -17,7 +17,7 @@
 package org.citrusframework.generate.dictionary;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.variable.dictionary.xml.XpathMappingDataDictionary;
+import org.citrusframework.xml.variable.dictionary.XpathMappingDataDictionary;
 import org.w3c.dom.Node;
 
 public class OutboundXmlDataDictionary extends XpathMappingDataDictionary {

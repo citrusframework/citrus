@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.variable.dictionary.xml;
+package org.citrusframework.xml.variable.dictionary;
 
 import org.citrusframework.xml.XmlValidationHelper;
 import org.citrusframework.api.common.InitializingPhase;

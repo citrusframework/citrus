@@ -17,7 +17,7 @@
 package org.citrusframework.config.xml;
 
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.citrusframework.variable.dictionary.xml.NodeMappingDataDictionary;
+import org.citrusframework.xml.variable.dictionary.NodeMappingDataDictionary;
 
 /**
  * @since 2.0

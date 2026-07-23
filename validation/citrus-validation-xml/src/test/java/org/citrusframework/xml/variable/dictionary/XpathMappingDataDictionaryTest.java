@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.variable.dictionary.xml;
+package org.citrusframework.xml.variable.dictionary;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,6 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -163,7 +162,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage(payload);
 
         XpathMappingDataDictionary dictionary = new XpathMappingDataDictionary();
-        dictionary.setMappingFile(Resources.create("xpathmapping.properties", DataDictionary.class));
+        dictionary.setMappingFile(Resources.create("xpathmapping.properties", XpathMappingDataDictionaryTest.class));
         dictionary.initialize();
 
         dictionary.processMessage(message, context);
