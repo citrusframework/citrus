@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.server;
+package org.citrusframework.base.server;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,8 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.Producer;
+import org.citrusframework.server.Server;
+import org.citrusframework.server.ServerEndpoint;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;

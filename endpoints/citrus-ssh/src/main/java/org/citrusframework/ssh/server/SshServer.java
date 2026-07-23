@@ -39,7 +39,7 @@ import org.apache.sshd.sftp.server.SftpEventListener;
 import org.apache.sshd.sftp.server.SftpSubsystemFactory;
 import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.server.AbstractServer;
+import org.citrusframework.base.server.AbstractServer;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.ssh.SshCommand;

@@ -33,7 +33,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.rmi.endpoint.RmiEndpointConfiguration;
 import org.citrusframework.rmi.model.RmiServiceInvocation;
 import org.citrusframework.rmi.model.RmiServiceResult;
-import org.citrusframework.server.AbstractServer;
+import org.citrusframework.base.server.AbstractServer;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

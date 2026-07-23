@@ -18,7 +18,7 @@ package org.citrusframework.config.xml;
 
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.message.DefaultMessageQueue;
-import org.citrusframework.server.AbstractServer;
+import org.citrusframework.base.server.AbstractServer;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;

@@ -21,7 +21,7 @@ import org.citrusframework.config.xml.AbstractServerParser;
 import org.citrusframework.jmx.endpoint.JmxEndpointConfiguration;
 import org.citrusframework.jmx.model.*;
 import org.citrusframework.jmx.server.JmxServer;
-import org.citrusframework.server.AbstractServer;
+import org.citrusframework.base.server.AbstractServer;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;

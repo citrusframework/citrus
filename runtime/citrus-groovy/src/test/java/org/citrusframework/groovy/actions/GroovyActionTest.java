@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.citrusframework.script;
+package org.citrusframework.groovy.actions;
 
-import org.citrusframework.groovy.actions.GroovyAction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

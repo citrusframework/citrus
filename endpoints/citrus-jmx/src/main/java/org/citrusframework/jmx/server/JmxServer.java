@@ -19,7 +19,7 @@ package org.citrusframework.jmx.server;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jmx.endpoint.JmxEndpointConfiguration;
 import org.citrusframework.jmx.model.ManagedBeanDefinition;
-import org.citrusframework.server.AbstractServer;
+import org.citrusframework.base.server.AbstractServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

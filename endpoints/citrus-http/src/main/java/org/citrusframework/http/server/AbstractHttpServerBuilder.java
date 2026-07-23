@@ -30,7 +30,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
-import org.citrusframework.server.AbstractServerBuilder;
+import org.citrusframework.base.server.AbstractServerBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
 import org.eclipse.jetty.ee11.servlet.ServletHandler;
