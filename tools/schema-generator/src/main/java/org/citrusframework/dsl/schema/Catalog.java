@@ -36,7 +36,7 @@ import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.functions.Function;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
+import org.citrusframework.base.validation.matcher.DefaultValidationMatcherLibrary;
 import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.yaml.SchemaProperty;

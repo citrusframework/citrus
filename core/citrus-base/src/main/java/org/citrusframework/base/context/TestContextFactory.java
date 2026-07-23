@@ -38,7 +38,7 @@ import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.DefaultMessageValidatorRegistry;
 import org.citrusframework.validation.MessageValidatorRegistry;
-import org.citrusframework.validation.matcher.DefaultValidationMatcherRegistry;
+import org.citrusframework.base.validation.matcher.DefaultValidationMatcherRegistry;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;

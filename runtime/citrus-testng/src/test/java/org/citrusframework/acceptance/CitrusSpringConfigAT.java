@@ -39,7 +39,7 @@ import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.MessageValidatorRegistry;
-import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
+import org.citrusframework.base.validation.matcher.DefaultValidationMatcherLibrary;
 import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
 import org.mockito.Mock;
