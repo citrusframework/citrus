@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.UUID;
 import javax.xml.namespace.NamespaceContext;
 
-import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;

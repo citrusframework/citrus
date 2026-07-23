@@ -16,7 +16,7 @@
 
 package org.citrusframework.xml.message.selector;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.xml.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.testng.Assert;
 import org.testng.annotations.Test;

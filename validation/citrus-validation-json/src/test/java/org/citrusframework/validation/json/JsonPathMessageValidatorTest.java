@@ -36,7 +36,7 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

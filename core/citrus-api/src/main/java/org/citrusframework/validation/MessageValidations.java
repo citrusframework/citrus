@@ -20,7 +20,7 @@ import org.citrusframework.validation.context.MessageValidationContextBuilder;
 import org.citrusframework.validation.context.json.JsonMessageValidationContextBuilder;
 import org.citrusframework.validation.openapi.OpenApiMessageValidationContextBuilder;
 import org.citrusframework.validation.ws.SoapMessageValidationContextBuilder;
-import org.citrusframework.validation.xml.XmlMessageValidationContextBuilder;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContextBuilder;
 import org.citrusframework.validation.yaml.YamlMessageValidationContextBuilder;
 
 public interface MessageValidations extends

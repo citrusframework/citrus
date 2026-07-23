@@ -40,7 +40,7 @@ import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContextBuilder;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.xml.actions.script.ScriptDefinitionType;
 
 @XmlRootElement(name = "receive")

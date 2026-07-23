@@ -17,8 +17,8 @@
 package org.citrusframework.validation.ws;
 
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.xml.XmlValidationContextBuilderBase;
-import org.citrusframework.validation.xml.XpathMessageValidationContextBuilder;
+import org.citrusframework.validation.context.xml.XmlValidationContextBuilderBase;
+import org.citrusframework.validation.context.xml.XpathMessageValidationContextBuilder;
 
 public interface SoapFaultDetailValidationContextBuilder<T extends ValidationContext, B extends SoapFaultDetailValidationContextBuilder<T, B>>
         extends XmlValidationContextBuilderBase<T, B> {

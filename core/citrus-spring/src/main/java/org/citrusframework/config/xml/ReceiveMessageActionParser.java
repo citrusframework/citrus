@@ -37,7 +37,7 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContextBuilder;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;

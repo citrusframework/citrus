@@ -34,7 +34,7 @@ import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContextBuilder;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 

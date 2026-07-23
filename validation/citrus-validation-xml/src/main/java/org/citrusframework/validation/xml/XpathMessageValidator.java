@@ -21,12 +21,13 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.NamespaceContext;
 
-import org.citrusframework.XmlValidationHelper;
+import org.citrusframework.xml.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
