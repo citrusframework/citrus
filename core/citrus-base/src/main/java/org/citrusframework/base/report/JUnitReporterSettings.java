@@ -25,15 +25,15 @@ public class JUnitReporterSettings {
     /** Reporter related settings */
     private static final String REPORT_TEMPLATE_PROPERTY = "citrus.junit.report.template";
     private static final String REPORT_TEMPLATE_ENV = "CITRUS_JUNIT_REPORT_TEMPLATE";
-    private static final String REPORT_TEMPLATE_DEFAULT = "classpath:org/citrusframework/report/junit-report.xml";
+    private static final String REPORT_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/junit-report.xml";
 
     private static final String REPORT_SUCCESS_TEMPLATE_PROPERTY = "citrus.junit.report.success.template";
     private static final String REPORT_SUCCESS_TEMPLATE_ENV = "CITRUS_JUNIT_REPORT_SUCCESS_TEMPLATE";
-    private static final String REPORT_SUCCESS_TEMPLATE_DEFAULT = "classpath:org/citrusframework/report/junit-test.xml";
+    private static final String REPORT_SUCCESS_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/junit-test.xml";
 
     private static final String REPORT_FAILED_TEMPLATE_PROPERTY = "citrus.junit.report.failed.template";
     private static final String REPORT_FAILED_TEMPLATE_ENV = "CITRUS_JUNIT_REPORT_FAILED_TEMPLATE";
-    private static final String REPORT_FAILED_TEMPLATE_DEFAULT = "classpath:org/citrusframework/report/junit-test-failed.xml";
+    private static final String REPORT_FAILED_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/junit-test-failed.xml";
 
     private static final String REPORT_DIRECTORY_PROPERTY = "citrus.junit.report.directory";
     private static final String REPORT_DIRECTORY_ENV = "CITRUS_JUNIT_REPORT_DIRECTORY";

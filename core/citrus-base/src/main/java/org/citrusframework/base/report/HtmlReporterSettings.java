@@ -25,11 +25,11 @@ public class HtmlReporterSettings {
     /** Reporter related settings */
     private static final String REPORT_TEMPLATE_PROPERTY = "citrus.html.report.template";
     private static final String REPORT_TEMPLATE_ENV = "CITRUS_HTML_REPORT_TEMPLATE";
-    private static final String REPORT_TEMPLATE_DEFAULT = "classpath:org/citrusframework/report/test-report.html";
+    private static final String REPORT_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/test-report.html";
 
     private static final String REPORT_DETAIL_TEMPLATE_PROPERTY = "citrus.html.report.detail.template";
     private static final String REPORT_DETAIL_TEMPLATE_ENV = "CITRUS_HTML_REPORT_DETAIL_TEMPLATE";
-    private static final String REPORT_DETAIL_TEMPLATE_DEFAULT = "classpath:org/citrusframework/report/test-detail.html";
+    private static final String REPORT_DETAIL_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/test-detail.html";
 
     private static final String REPORT_DIRECTORY_PROPERTY = "citrus.html.report.directory";
     private static final String REPORT_DIRECTORY_ENV = "CITRUS_HTML_REPORT_DIRECTORY";
@@ -40,7 +40,7 @@ public class HtmlReporterSettings {
 
     private static final String REPORT_LOGO_PROPERTY = "citrus.html.report.logo";
     private static final String REPORT_LOGO_ENV = "CITRUS_HTML_REPORT_LOGO";
-    private static final String REPORT_LOGO_DEFAULT = "classpath:org/citrusframework/report/citrus_logo.png";
+    private static final String REPORT_LOGO_DEFAULT = "classpath:org/citrusframework/base/report/citrus_logo.png";
 
     private static final String REPORT_ENABLED_PROPERTY = "citrus.html.report.enabled";
     private static final String REPORT_ENABLED_ENV = "CITRUS_HTML_REPORT_ENABLED";
