@@ -23,7 +23,7 @@ import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.script.ScriptTypes;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;

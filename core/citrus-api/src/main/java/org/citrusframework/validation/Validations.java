@@ -17,7 +17,7 @@
 package org.citrusframework.validation;
 
 import org.citrusframework.validation.expression.PathExpressionValidations;
-import org.citrusframework.validation.script.ScriptValidations;
+import org.citrusframework.validation.context.script.ScriptValidations;
 
 public interface Validations extends
         HeaderValidations,

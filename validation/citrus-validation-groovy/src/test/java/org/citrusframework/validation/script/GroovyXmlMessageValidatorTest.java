@@ -27,6 +27,8 @@ import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.testng.Assert;

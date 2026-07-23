@@ -18,7 +18,7 @@ package org.citrusframework.config.xml;
 
 import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.testng.AbstractActionParserTest;
-import org.citrusframework.validation.script.DefaultScriptValidationContext;
+import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;

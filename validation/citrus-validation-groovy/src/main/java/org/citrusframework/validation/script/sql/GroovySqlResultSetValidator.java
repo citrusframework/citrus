@@ -31,7 +31,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;

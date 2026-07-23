@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.groovy;
 
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.TestUtils;
+import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,7 +29,7 @@ public class TemplateBasedScriptBuilderTest {
         Assert.assertEquals(
             TestUtils.normalizeLineEndings(
                 TemplateBasedScriptBuilder.fromTemplateResource(
-                        Resources.fromClasspath("org/citrusframework/validation/script/script-template.groovy")
+                        Resources.fromClasspath("org/citrusframework/groovy/script-template.groovy")
                     ).withCode("BODY")
                     .build()
             ),
