@@ -27,7 +27,7 @@ import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
 import org.citrusframework.validation.context.ValidationContext;

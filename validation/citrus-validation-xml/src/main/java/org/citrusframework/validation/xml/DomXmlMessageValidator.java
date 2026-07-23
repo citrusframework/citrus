@@ -32,7 +32,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.MessageUtils;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
@@ -52,7 +52,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.ls.LSException;
 
 import static org.citrusframework.util.StringUtils.hasText;
-import static org.citrusframework.util.XMLUtils.prettyPrint;
+import static org.citrusframework.xml.util.XMLUtils.prettyPrint;
 
 /**
  * Default message validator implementation. Working on XML messages

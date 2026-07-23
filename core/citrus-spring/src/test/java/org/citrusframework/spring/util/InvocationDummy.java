@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.util;
+package org.citrusframework.spring.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

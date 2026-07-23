@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package org.citrusframework.util;
+package org.citrusframework.groovy.util;
 
-import java.util.Map;
-
+import org.codehaus.groovy.runtime.GStringImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class TypeConverterTest {
+public class GroovyTypeConverterTest {
+
+    private final GroovyTypeConverter converter = GroovyTypeConverter.INSTANCE;
 
     @Test
-    public void testLookup() {
-        Map<String, TypeConverter> converters = TypeConverter.lookup();
-        Assert.assertEquals(converters.size(), 1L);
-        Assert.assertEquals(converters.get(TypeConverter.SPRING).getClass(), SpringBeanTypeConverter.class);
-        Assert.assertEquals(converters.get(TypeConverter.SPRING), TypeConverter.lookupDefault());
-
-        Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.DEFAULT));
+    public void testConverter() {
+        Assert.assertEquals(converter.convertIfNecessary(new GStringImpl(new Object[]{ "foo" }, new String[]{ "", "" }), String.class), "foo");
+        Assert.assertEquals(converter.convertIfNecessary(new GStringImpl(new Object[]{ "foo" }, new String[]{ "the message is: ", "!" }), String.class), "the message is: foo!");
     }
 }

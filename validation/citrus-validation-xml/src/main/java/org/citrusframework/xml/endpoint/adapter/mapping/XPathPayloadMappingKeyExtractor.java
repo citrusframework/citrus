@@ -20,7 +20,7 @@ import java.util.Collections;
 
 import org.citrusframework.endpoint.adapter.mapping.AbstractMappingKeyExtractor;
 import org.citrusframework.message.Message;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.citrusframework.xml.xpath.XPathUtils;
 

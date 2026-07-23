@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-package org.citrusframework.util;
+package org.citrusframework.xml.util;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Map;
+import javax.xml.XMLConstants;
 
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
@@ -24,12 +30,6 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import javax.xml.XMLConstants;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Map;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;

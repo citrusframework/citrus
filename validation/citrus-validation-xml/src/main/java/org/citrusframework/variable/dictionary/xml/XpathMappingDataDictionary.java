@@ -19,7 +19,7 @@ package org.citrusframework.variable.dictionary.xml;
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.xml.namespace.DefaultNamespaceContext;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;

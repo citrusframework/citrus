@@ -23,7 +23,7 @@ public class EnvUtils {
             .orElseGet(()->
                 systemProvider.getEnv(envName)
                     .orElse(null));
-        return StringUtils.isNotEmpty(value) ? parseBoolean(value) : defaultValue;
+        return (value != null && !value.isEmpty()) ? parseBoolean(value) : defaultValue;
     }
 
     @Nonnull

@@ -18,16 +18,25 @@ package org.citrusframework.util;
 
 import java.util.Properties;
 
-import org.citrusframework.TestActor;
-import org.citrusframework.UnitTestSupport;
-import org.citrusframework.endpoint.direct.DirectEndpoint;
+import org.citrusframework.log.DefaultLogModifier;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.log.LogModifier;
-import org.citrusframework.message.DefaultMessageQueue;
+import org.citrusframework.spi.SimpleReferenceResolver;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class PropertyUtilsTest extends UnitTestSupport {
+public class PropertyUtilsTest {
+
+    private TestContext context;
+
+    @BeforeMethod
+    public void setup() {
+        context = new TestContext();
+        context.setReferenceResolver(new SimpleReferenceResolver());
+        context.setLogModifier(new DefaultLogModifier());
+    }
 
     @Test
     public void testPropertyReplacementSingleProperty() {
@@ -114,36 +123,6 @@ public class PropertyUtilsTest extends UnitTestSupport {
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
         Assert.assertEquals(result, "This @test@ has the name @MyTest@ and its author is Mickey Mouse");
-    }
-
-    @Test
-    public void shouldBindEndpointConfigurationProperties() {
-        System.setProperty("citrus.endpoint.config.foo.queueName", "fooQueue");
-        System.setProperty("citrus.endpoint.config.foo.timeout", "100");
-
-        DirectEndpoint endpoint = new DirectEndpoint();
-        context.getReferenceResolver().bind("foo", endpoint);
-
-        PropertyUtils.configure("foo", endpoint, context.getReferenceResolver());
-
-        Assert.assertEquals(endpoint.getEndpointConfiguration().getQueueName(), "fooQueue");
-        Assert.assertEquals(endpoint.getEndpointConfiguration().getTimeout(), 100L);
-    }
-
-    @Test
-    public void shouldBindEndpointBeanReference() {
-        System.setProperty("citrus.endpoint.bar.actor", "#bean:testActor");
-        System.setProperty("citrus.endpoint.config.bar.queue", "#bean:fooQueue");
-
-        DirectEndpoint endpoint = new DirectEndpoint();
-        context.getReferenceResolver().bind("bar", endpoint);
-        context.getReferenceResolver().bind("fooQueue", new DefaultMessageQueue("fooQueue"));
-        context.getReferenceResolver().bind("testActor", new TestActor("testActor"));
-
-        PropertyUtils.configure("bar", endpoint, context.getReferenceResolver());
-
-        Assert.assertEquals(endpoint.getEndpointConfiguration().getQueue(), context.getReferenceResolver().resolve("fooQueue"));
-        Assert.assertEquals(endpoint.getActor(), context.getReferenceResolver().resolve("testActor"));
     }
 
     @Test

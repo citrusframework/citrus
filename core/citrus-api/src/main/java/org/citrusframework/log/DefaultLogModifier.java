@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.log;
+package org.citrusframework.log;
 
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.citrusframework.log.CitrusLogSettings;
-import org.citrusframework.log.LogMessageModifier;
 import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.IsYamlPredicate;

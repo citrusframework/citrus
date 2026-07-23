@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.util;
+package org.citrusframework.xml.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
@@ -28,6 +28,7 @@ import javax.xml.XMLConstants;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.XmlConfigurer;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;

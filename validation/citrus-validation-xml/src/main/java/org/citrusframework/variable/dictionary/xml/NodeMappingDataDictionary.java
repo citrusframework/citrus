@@ -18,7 +18,7 @@ package org.citrusframework.variable.dictionary.xml;
 
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * Very basic data dictionary that holds a list of mappings for message elements. Mapping key is the element path inside
- * the XML structure {@link org.citrusframework.util.XMLUtils getNodesPathName()}. The mapping value is set as new element
+ * the XML structure {@link XMLUtils getNodesPathName()}. The mapping value is set as new element
  * value where test variables are supported in value expressions.
  * @since 1.4
  */

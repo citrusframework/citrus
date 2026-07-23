@@ -18,7 +18,7 @@ package org.citrusframework.validation.xml;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

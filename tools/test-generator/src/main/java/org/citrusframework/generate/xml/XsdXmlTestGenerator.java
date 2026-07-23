@@ -35,7 +35,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.xml.XmlConfigurer;
 
 /**

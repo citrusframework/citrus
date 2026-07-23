@@ -22,7 +22,7 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPathFactory;
 
-import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.util.XMLUtils;
 import org.citrusframework.xml.namespace.DefaultNamespaceContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;

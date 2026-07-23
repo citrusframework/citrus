@@ -21,7 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.testng.Assert;
@@ -34,10 +34,10 @@ import static org.testng.Assert.assertTrue;
 /**
  * @since 2.7
  */
-public class FileUtilsTest extends UnitTestSupport {
+public class FileUtilsTest {
     @Test
     public void testGetFileResource() {
-        Resource resource = FileUtils.getFileResource("classpath:citrus-context.xml", context);
+        Resource resource = FileUtils.getFileResource("classpath:citrus-context.xml", new TestContext());
 
         assertNotNull(resource);
         assertTrue(resource.exists());
@@ -68,7 +68,7 @@ public class FileUtilsTest extends UnitTestSupport {
 
     @Test
     public void testGetFileResourceExplicitCharset() {
-        Resource resource = FileUtils.getFileResource("classpath:citrus-context.xml" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1", context);
+        Resource resource = FileUtils.getFileResource("classpath:citrus-context.xml" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1", new TestContext());
 
         assertNotNull(resource);
         assertTrue(resource.exists());
