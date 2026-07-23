@@ -29,7 +29,7 @@ public class JavaActionTest extends UnitTestSupport {
 	@Test
 	public void testJavaCallNoMethodParameter() {
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.build();
 		action.execute(context);
@@ -41,7 +41,7 @@ public class JavaActionTest extends UnitTestSupport {
 		args.add("Test");
 
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.methodArgs(args)
 				.build();
@@ -56,7 +56,7 @@ public class JavaActionTest extends UnitTestSupport {
 		args.add(true);
 
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.methodArgs(args)
 				.build();
@@ -66,7 +66,7 @@ public class JavaActionTest extends UnitTestSupport {
 	@Test
 	public void testJavaCallConstructorNoArgs() {
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.constructorArgs(Collections.emptyList())
 				.build();
@@ -79,7 +79,7 @@ public class JavaActionTest extends UnitTestSupport {
         args.add("Test");
 
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.constructorArgs(args)
 				.build();
@@ -94,7 +94,7 @@ public class JavaActionTest extends UnitTestSupport {
 		args.add(true);
 
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.constructorArgs(args)
 				.build();
@@ -111,7 +111,7 @@ public class JavaActionTest extends UnitTestSupport {
         args.add(true);
 
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.constructorArgs(args)
 				.build();
@@ -126,7 +126,7 @@ public class JavaActionTest extends UnitTestSupport {
 		args.add(true);
 
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.constructorArgs(args)
 				.methodArgs(args)
@@ -144,7 +144,7 @@ public class JavaActionTest extends UnitTestSupport {
         args.add(true);
 
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.constructorArgs(args)
 				.methodArgs(args)
@@ -160,7 +160,7 @@ public class JavaActionTest extends UnitTestSupport {
 		args.add(true);
 
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.constructorArgs(args)
 				.build();
@@ -175,7 +175,7 @@ public class JavaActionTest extends UnitTestSupport {
 		args.add(true);
 
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("invoke")
 				.methodArgs(args)
 				.build();
@@ -194,7 +194,7 @@ public class JavaActionTest extends UnitTestSupport {
 	@Test(expectedExceptions = {CitrusRuntimeException.class})
 	public void testJavaCallNoSuchMethod() {
 		JavaAction action = new JavaAction.Builder()
-				.className("org.citrusframework.util.InvocationDummy")
+				.className("org.citrusframework.actions.InvocationDummy")
 				.method("doesNotExist")
 				.build();
 		action.execute(context);
