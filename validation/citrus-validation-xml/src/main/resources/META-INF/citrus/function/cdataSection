@@ -1,1 +1,1 @@
-type=org.citrusframework.functions.core.CreateCDataSectionFunction
+type=org.citrusframework.xml.functions.core.CreateCDataSectionFunction

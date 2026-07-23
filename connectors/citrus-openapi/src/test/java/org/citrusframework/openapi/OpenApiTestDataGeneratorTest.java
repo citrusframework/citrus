@@ -26,7 +26,7 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import io.swagger.v3.oas.models.media.Schema;
 import org.apache.commons.lang3.StringUtils;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.functions.DefaultFunctionRegistry;
+import org.citrusframework.base.functions.DefaultFunctionRegistry;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.spi.Resources;
 import org.testng.annotations.BeforeClass;

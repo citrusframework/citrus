@@ -1,1 +1,1 @@
-type=org.citrusframework.functions.core.XpathFunction
+type=org.citrusframework.xml.functions.core.XpathFunction

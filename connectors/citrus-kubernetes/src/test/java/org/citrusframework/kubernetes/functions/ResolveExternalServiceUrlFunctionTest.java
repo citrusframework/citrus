@@ -27,7 +27,7 @@ import io.fabric8.kubernetes.api.model.ServiceStatus;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.MixedOperation;
 import io.fabric8.kubernetes.client.dsl.ServiceResource;
-import org.citrusframework.functions.DefaultFunctionLibrary;
+import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.kubernetes.UnitTestSupport;
 import org.mockito.Mock;

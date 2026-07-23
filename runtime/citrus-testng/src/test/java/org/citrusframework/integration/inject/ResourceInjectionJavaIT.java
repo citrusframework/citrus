@@ -26,7 +26,7 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
-import org.citrusframework.functions.Functions;
+import org.citrusframework.base.functions.Functions;
 import org.citrusframework.testng.CitrusParameters;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.Assert;
