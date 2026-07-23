@@ -16,9 +16,9 @@
 
 package org.citrusframework.reporter;
 
-import org.citrusframework.report.HtmlReporter;
-import org.citrusframework.report.JUnitReporter;
-import org.citrusframework.report.TestFlowReporter;
+import org.citrusframework.base.report.HtmlReporter;
+import org.citrusframework.base.report.JUnitReporter;
+import org.citrusframework.base.report.TestFlowReporter;
 import org.citrusframework.report.LoggingReporter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Condition;

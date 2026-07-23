@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.report;
+package org.citrusframework.base.report;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -35,6 +35,10 @@ import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.container.AbstractIteratingActionContainer;
 import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.report.AbstractTestReporter;
+import org.citrusframework.report.TestActionListener;
+import org.citrusframework.report.TestListener;
+import org.citrusframework.report.TestResults;
 import org.citrusframework.util.json.JsonNodeStringBuilder;
 import org.citrusframework.util.json.JsonStringBuilder;
 import org.citrusframework.message.MessageAwareTestAction;

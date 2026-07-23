@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package org.citrusframework.report;
+package org.citrusframework.base.report;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.citrusframework.report.LoggingReporter;
+import org.citrusframework.report.TestReporter;
+import org.citrusframework.report.TestReporters;
 
 /**
  *

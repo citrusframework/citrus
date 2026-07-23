@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework.report;
+package org.citrusframework.base.report;
 
 import java.io.File;
 import java.time.Duration;
 
+import org.citrusframework.report.TestResults;
 import org.testng.annotations.Test;
 
 import static java.lang.String.format;
@@ -50,8 +51,8 @@ public class JUnitReporterTest {
                 normalizeLineEndings(reportFile),
                 """
                         <?xml version="1.0" encoding="UTF-8"?>
-                        <testsuite name="org.citrusframework.report.JUnitReporterTest" time="0.100" tests="1" errors="0" skipped="0" failures="0">
-                            <testcase name="fooTest" classname="org.citrusframework.report.JUnitReporterTest" time="0.100"/>
+                        <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="0.100" tests="1" errors="0" skipped="0" failures="0">
+                            <testcase name="fooTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.100"/>
                         </testsuite>"""
         );
 
@@ -59,7 +60,7 @@ public class JUnitReporterTest {
                 normalizeLineEndings(testSuiteFile),
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                         "<testsuite name=\"" + reporter.getSuiteName() + "\" time=\"0.100\" tests=\"1\" errors=\"0\" skipped=\"0\" failures=\"0\">\n" +
-                        "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.100\"/>\n" +
+                        "    <testcase name=\"fooTest\" classname=\"org.citrusframework.base.report.JUnitReporterTest\" time=\"0.100\"/>\n" +
                         "</testsuite>"
         );
     }
@@ -77,9 +78,9 @@ public class JUnitReporterTest {
                 normalizeLineEndings(reportFile),
                 """
                         <?xml version="1.0" encoding="UTF-8"?>
-                        <testsuite name="org.citrusframework.report.JUnitReporterTest" time="2.623" tests="2" errors="0" skipped="0" failures="0">
-                            <testcase name="fooTest" classname="org.citrusframework.report.JUnitReporterTest" time="0.123"/>
-                            <testcase name="barTest" classname="org.citrusframework.report.JUnitReporterTest" time="2.500"/>
+                        <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="2.623" tests="2" errors="0" skipped="0" failures="0">
+                            <testcase name="fooTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.123"/>
+                            <testcase name="barTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="2.500"/>
                         </testsuite>""");
     }
 
@@ -98,9 +99,9 @@ public class JUnitReporterTest {
                         .startsWith(
                                 """
                                         <?xml version="1.0" encoding="UTF-8"?>
-                                        <testsuite name="org.citrusframework.report.JUnitReporterTest" time="0.300" tests="2" errors="0" skipped="0" failures="1">
-                                            <testcase name="fooTest" classname="org.citrusframework.report.JUnitReporterTest" time="0.100"/>
-                                            <testcase name="barTest" classname="org.citrusframework.report.JUnitReporterTest" time="0.200">
+                                        <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="0.300" tests="2" errors="0" skipped="0" failures="1">
+                                            <testcase name="fooTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.100"/>
+                                            <testcase name="barTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.200">
                                               <failure type="java.lang.NullPointerException" message="Something went wrong!">
                                                 <![CDATA[
                                                 java.lang.NullPointerException: Something went wrong!"""
@@ -125,9 +126,9 @@ public class JUnitReporterTest {
                 normalizeLineEndings(reportFile),
                 """
                         <?xml version="1.0" encoding="UTF-8"?>
-                        <testsuite name="org.citrusframework.report.JUnitReporterTest" time="0.100" tests="2" errors="0" skipped="1" failures="0">
-                            <testcase name="fooTest" classname="org.citrusframework.report.JUnitReporterTest" time="0.100"/>
-                            <testcase name="barTest" classname="org.citrusframework.report.JUnitReporterTest" time="0.000"/>
+                        <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="0.100" tests="2" errors="0" skipped="1" failures="0">
+                            <testcase name="fooTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.100"/>
+                            <testcase name="barTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.000"/>
                         </testsuite>""");
     }
 
@@ -146,9 +147,9 @@ public class JUnitReporterTest {
                         .startsWith(
                                 """
                                         <?xml version="1.0" encoding="UTF-8"?>
-                                        <testsuite name="org.citrusframework.report.JUnitReporterTest" time="1.100" tests="2" errors="0" skipped="0" failures="1">
-                                            <testcase name="foo&quot;Test" classname="org.citrusframework.report.JUnitReporterTest" time="0.500"/>
-                                            <testcase name="bar&quot;Test" classname="org.citrusframework.report.JUnitReporterTest" time="0.600">
+                                        <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="1.100" tests="2" errors="0" skipped="0" failures="1">
+                                            <testcase name="foo&quot;Test" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.500"/>
+                                            <testcase name="bar&quot;Test" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.600">
                                               <failure type="java.lang.NullPointerException" message="Something &quot;went wrong!">
                                                 <![CDATA[
                                                 java.lang.NullPointerException: Something "went wrong!"""
@@ -175,9 +176,9 @@ public class JUnitReporterTest {
                         .startsWith(
                                 """
                                         <?xml version="1.0" encoding="UTF-8"?>
-                                        <testsuite name="org.citrusframework.report.JUnitReporterTest" time="12.000" tests="2" errors="0" skipped="0" failures="1">
-                                            <testcase name="fooTest" classname="org.citrusframework.report.JUnitReporterTest" time="5.500"/>
-                                            <testcase name="barTest" classname="org.citrusframework.report.JUnitReporterTest" time="6.500">
+                                        <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="12.000" tests="2" errors="0" skipped="0" failures="1">
+                                            <testcase name="fooTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="5.500"/>
+                                            <testcase name="barTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="6.500">
                                               <failure type="" message="Something went wrong!">"""
                         )
         );

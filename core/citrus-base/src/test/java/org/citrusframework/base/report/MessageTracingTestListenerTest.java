@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.report;
+package org.citrusframework.base.report;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +23,7 @@ import java.util.Scanner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.message.RawMessage;
+import org.citrusframework.report.MessageTracingTestListener;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

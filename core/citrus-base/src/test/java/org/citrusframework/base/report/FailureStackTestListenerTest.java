@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.report;
+package org.citrusframework.base.report;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,8 @@ import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.container.Sequence;
 import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.report.FailureStackElement;
+import org.citrusframework.report.FailureStackTestListener;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

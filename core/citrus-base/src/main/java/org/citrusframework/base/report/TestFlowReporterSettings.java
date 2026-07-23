@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.report;
+package org.citrusframework.base.report;
 
 import java.util.Arrays;
 

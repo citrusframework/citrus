@@ -17,8 +17,8 @@
 package org.citrusframework.reporter;
 
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.report.HtmlReporter;
-import org.citrusframework.report.JUnitReporter;
+import org.citrusframework.base.report.HtmlReporter;
+import org.citrusframework.base.report.JUnitReporter;
 import org.citrusframework.report.LoggingReporter;
 import org.testng.annotations.Test;
 
