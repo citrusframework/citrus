@@ -21,18 +21,17 @@ import java.util.List;
 
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestAction;
-import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.container.Sequence;
-import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.report.FailureStackElement;
 import org.citrusframework.report.FailureStackTestListener;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class FailureStackTestListenerTest extends UnitTestSupport {
+public class FailureStackTestListenerTest {
 
     @Test
     public void testFirstActionFailing() {

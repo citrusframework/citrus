@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.report;
+package org.citrusframework.report;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
 import org.citrusframework.TestCase;
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.message.RawMessage;
-import org.citrusframework.report.MessageTracingTestListener;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -35,9 +34,10 @@ import static org.testng.Assert.assertTrue;
 /**
  * @since 2.5
  */
-public class MessageTracingTestListenerTest extends UnitTestSupport {
+public class MessageTracingTestListenerTest {
 
     private final MessageTracingTestListener testling = new MessageTracingTestListener();
+    private final TestContext context = new TestContext();
 
     @BeforeClass
     public void setupTestling() {

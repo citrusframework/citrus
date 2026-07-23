@@ -25,7 +25,7 @@ public class SummaryReporterSettings {
     /** Reporter related settings */
     private static final String REPORT_TEMPLATE_PROPERTY = "citrus.summary.report.template";
     private static final String REPORT_TEMPLATE_ENV = "CITRUS_SUMMARY_REPORT_TEMPLATE";
-    private static final String REPORT_TEMPLATE_DEFAULT = "classpath:org/citrusframework/report/summary-report.xml";
+    private static final String REPORT_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/summary-report.xml";
 
     private static final String REPORT_FILE_PROPERTY = "citrus.summary.report.file";
     private static final String REPORT_FILE_ENV = "CITRUS_SUMMARY_REPORT_FILE";
