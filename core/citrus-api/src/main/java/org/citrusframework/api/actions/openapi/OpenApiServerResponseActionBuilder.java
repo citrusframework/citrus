@@ -19,7 +19,7 @@ package org.citrusframework.api.actions.openapi;
 import org.citrusframework.TestAction;
 import org.citrusframework.api.actions.http.HttpSendResponseMessageBuilderFactory;
 import org.citrusframework.api.actions.http.HttpServerResponseActionBuilder;
-import org.citrusframework.openapi.AutoFillType;
+import org.citrusframework.api.openapi.AutoFillType;
 
 public interface OpenApiServerResponseActionBuilder<T extends TestAction, M extends HttpSendResponseMessageBuilderFactory<T, M>, B extends HttpServerResponseActionBuilder<T, M, B>>
         extends HttpServerResponseActionBuilder<T, M, B> {

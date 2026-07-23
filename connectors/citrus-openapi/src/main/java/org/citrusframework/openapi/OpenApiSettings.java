@@ -17,11 +17,12 @@
 package org.citrusframework.openapi;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
 import org.citrusframework.util.SystemProvider;
 
 import static java.lang.Boolean.parseBoolean;
-import static org.citrusframework.openapi.AutoFillType.REQUIRED;
+import static org.citrusframework.api.openapi.AutoFillType.REQUIRED;
 import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.REPORT;
 import static org.citrusframework.util.EnvUtils.booleanPropertyOrDefault;
 import static org.citrusframework.util.EnvUtils.enumPropertyOrDefault;

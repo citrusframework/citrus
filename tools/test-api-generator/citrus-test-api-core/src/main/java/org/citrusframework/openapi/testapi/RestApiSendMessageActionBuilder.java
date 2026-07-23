@@ -31,7 +31,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.openapi.AutoFillType;
+import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiClientRequestActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiSpecificationSource;

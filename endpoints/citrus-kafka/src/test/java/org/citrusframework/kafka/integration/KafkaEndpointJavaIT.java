@@ -24,7 +24,7 @@ import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.internal.GitHubIssue;
+import org.citrusframework.annotations.internal.GitHubIssue;
 import org.citrusframework.kafka.endpoint.KafkaEndpoint;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;

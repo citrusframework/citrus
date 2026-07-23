@@ -28,7 +28,7 @@ import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.message.Message;
-import org.citrusframework.openapi.AutoFillType;
+import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
@@ -42,7 +42,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
-import static org.citrusframework.openapi.AutoFillType.NONE;
+import static org.citrusframework.api.openapi.AutoFillType.NONE;
 import static org.citrusframework.openapi.OpenApiMessageType.REQUEST;
 import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabled;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;

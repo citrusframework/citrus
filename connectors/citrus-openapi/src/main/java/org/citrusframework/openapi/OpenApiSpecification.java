@@ -36,6 +36,8 @@ import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.citrusframework.api.openapi.AutoFillType;
+import org.citrusframework.api.openapi.Specification;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;

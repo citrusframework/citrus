@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.internal;
+package org.citrusframework.annotations.internal;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
