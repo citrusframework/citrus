@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.groovy;
 
 import java.io.IOException;
 import java.security.AccessController;
@@ -36,6 +36,8 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.script.ScriptValidationContext;
+import org.citrusframework.validation.script.GroovyScriptExecutor;
+import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +62,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
      * Default constructor using default script template.
      */
     public GroovyScriptMessageValidator() {
-        this(Resources.fromClasspath("org/citrusframework/validation/script/script-validation-template.groovy"));
+        this(Resources.fromClasspath("org/citrusframework/validation/groovy/script-validation-template.groovy"));
     }
 
     /**

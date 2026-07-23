@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script.actions.dsl;
+package org.citrusframework.validation.groovy.actions.dsl;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.Map;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
-import org.citrusframework.validation.script.UnitTestSupport;
+import org.citrusframework.validation.groovy.UnitTestSupport;
 import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.script.ScriptTypes;

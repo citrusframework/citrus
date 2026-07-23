@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.groovy;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.base.context.TestContextFactory;

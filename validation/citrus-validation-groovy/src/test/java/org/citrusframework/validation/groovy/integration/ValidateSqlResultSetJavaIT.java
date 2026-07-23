@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script.integration;
+package org.citrusframework.validation.groovy.integration;
 
 import javax.sql.DataSource;
 

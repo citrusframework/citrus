@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.groovy;
 
 import java.util.Map;
 
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.groovy.GroovyJsonMessageValidator;
+import org.citrusframework.validation.groovy.GroovyScriptMessageValidator;
+import org.citrusframework.validation.groovy.GroovyXmlMessageValidator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

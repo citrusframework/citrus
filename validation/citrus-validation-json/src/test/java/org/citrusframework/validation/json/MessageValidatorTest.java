@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation;
+package org.citrusframework.validation.json;
 
 import java.util.Map;
 
+import org.citrusframework.validation.DefaultMessageHeaderValidator;
+import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.json.JsonPathMessageValidator;
-import org.citrusframework.validation.json.JsonTextMessageValidator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

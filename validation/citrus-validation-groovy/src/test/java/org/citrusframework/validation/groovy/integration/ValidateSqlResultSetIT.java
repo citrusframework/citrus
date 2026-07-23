@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script.integration;
+package org.citrusframework.validation.groovy.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
-public class ScriptMessageValidationIT extends TestNGCitrusSpringSupport {
+/**
+ * @since 2008
+ */
+public class ValidateSqlResultSetIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
-    public void ScriptMessageValidationIT() {}
+    public void ValidateSqlResultSetIT() {}
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.groovy;
 
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
@@ -33,7 +33,7 @@ public class GroovyJsonMessageValidator extends GroovyScriptMessageValidator {
      * Default constructor using default script template.
      */
     public GroovyJsonMessageValidator() {
-        super(Resources.fromClasspath("org/citrusframework/validation/script/json-validation-template.groovy"));
+        super(Resources.fromClasspath("org/citrusframework/validation/groovy/json-validation-template.groovy"));
     }
 
     @Override
