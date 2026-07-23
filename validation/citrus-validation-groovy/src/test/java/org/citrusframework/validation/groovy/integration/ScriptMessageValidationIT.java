@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.openapi;
+package org.citrusframework.validation.groovy.integration;
 
-import org.citrusframework.validation.context.SchemaValidationContextBuilder;
-import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.testng.annotations.Test;
 
-public interface OpenApiMessageValidationContextBuilder<T extends ValidationContext, B extends OpenApiMessageValidationContextBuilder<T, B>>
-        extends ValidationContext.Builder<T, B>, SchemaValidationContextBuilder<B> {
-
-    interface Factory {
-
-        /**
-         * Fluent API action building entry method used in Java DSL.
-         */
-        OpenApiMessageValidationContextBuilder<?, ?> openApi();
-    }
+public class ScriptMessageValidationIT extends TestNGCitrusSpringSupport {
+    @Test
+    @CitrusTestSource(type = TestLoader.SPRING)
+    public void ScriptMessageValidationIT() {}
 }

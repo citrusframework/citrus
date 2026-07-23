@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.groovy;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.context.TestContext;
 import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
+import org.citrusframework.groovy.message.builder.GroovyFileResourcePayloadBuilder;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
-import org.citrusframework.groovy.message.builder.GroovyFileResourcePayloadBuilder;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
@@ -83,7 +83,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveMessageWithMessageBuilderScriptResource() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:org/citrusframework/validation/script/actions/test-request-payload.groovy"));
+        controlMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:org/citrusframework/validation/groovy/actions/test-request-payload.groovy"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest>\n  <Message>Hello World!</Message>\n</TestRequest>");
 
@@ -133,7 +133,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     public void testReceiveMessageWithValidationScriptResource() {
         ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
-                .scriptResource("classpath:org/citrusframework/validation/script/actions/test-validation-script.groovy")
+                .scriptResource("classpath:org/citrusframework/validation/groovy/actions/test-validation-script.groovy")
                 .build();
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");

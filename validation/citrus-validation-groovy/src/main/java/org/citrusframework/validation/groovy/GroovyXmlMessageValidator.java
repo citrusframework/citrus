@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.groovy;
 
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
@@ -33,7 +33,7 @@ public class GroovyXmlMessageValidator extends GroovyScriptMessageValidator {
      * Default constructor using default script template.
      */
     public GroovyXmlMessageValidator() {
-        super(Resources.fromClasspath("org/citrusframework/validation/script/xml-validation-template.groovy"));
+        super(Resources.fromClasspath("org/citrusframework/validation/groovy/xml-validation-template.groovy"));
     }
 
     @Override

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script.sql;
+package org.citrusframework.validation.groovy.sql;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -33,6 +33,8 @@ import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
+import org.citrusframework.validation.script.sql.SqlResultSetScriptExecutor;
+import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +57,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
      * Default constructor using a default script template.
      */
     public GroovySqlResultSetValidator() {
-        this(Resources.fromClasspath("org/citrusframework/validation/script/sql/sql-validation-template.groovy"));
+        this(Resources.fromClasspath("org/citrusframework/validation/groovy/sql/sql-validation-template.groovy"));
     }
 
     /**

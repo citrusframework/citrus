@@ -20,7 +20,7 @@ import org.citrusframework.openapi.OpenApiSettings;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
-import org.citrusframework.validation.openapi.OpenApiMessageValidationContextBuilder;
+import org.citrusframework.validation.context.openapi.OpenApiMessageValidationContextBuilder;
 
 /**
  * Validation context holding OpenAPI specific validation information.

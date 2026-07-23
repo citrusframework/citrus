@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.validation.script;
+package org.citrusframework.validation.groovy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -27,36 +26,32 @@ import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
-import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
+import org.citrusframework.validation.groovy.GroovyScriptMessageValidator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
+public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
 
-    private final GroovyXmlMessageValidator validator = new GroovyXmlMessageValidator();
+    GroovyScriptMessageValidator validator = new GroovyScriptMessageValidator();
 
     private Message message;
 
     @BeforeMethod
     public void prepareTestData() {
-        message = new DefaultMessage("<RequestMessage Id=\"123456789\" xmlns=\"http://citrus/test\">"
-                + "<CorrelationId>Kx1R123456789</CorrelationId>"
-                + "<BookingId>Bx1G987654321</BookingId>"
-                + "<Text>Hello TestFramework</Text>"
-            + "</RequestMessage>");
+        message = new DefaultMessage("This is plain text!").setHeader("operation", "unitTesting");
     }
 
     @Test
     public void testGroovyScriptValidation() throws ValidationException {
         String validationScript = """
-                assert root.children().size() == 3\s
-                assert root.CorrelationId.text() == 'Kx1R123456789'\s
-                assert root.BookingId.text() == 'Bx1G987654321'\s
-                assert root.Text.text() == 'Hello TestFramework'""";
+                assert headers.operation == 'unitTesting'
+                assert payload == 'This is plain text!'
+                assert payload.contains('!')""";
 
         ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
@@ -67,15 +62,13 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testGroovyScriptValidationVariableSupport() {
-        context.setVariable("user", "TestFramework");
-        context.setVariable("correlationId", "Kx1R123456789");
-
+    public void testGroovyScriptValidationVariableSupport() throws ValidationException {
         String validationScript = """
-                assert root.children().size() == 3\s
-                assert root.CorrelationId.text() == '${correlationId}'\s
-                assert root.BookingId.text() == 'Bx1G987654321'\s
-                assert root.Text.text() == 'Hello ' + context.getVariable("user")""";
+                assert headers.operation == 'unitTesting'
+                assert payload == '${plainText}'
+                assert payload.contains('!')""";
+
+        context.setVariable("plainText", "This is plain text!");
 
         ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
@@ -86,12 +79,11 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testGroovyScriptValidationFailed() {
+    public void testGroovyScriptValidationWrongValue() throws ValidationException {
         String validationScript = """
-                assert root.children().size() == 3\s
-                assert root.CorrelationId.text() == 'Kx1R123456789'\s
-                assert root.BookingId.text() == 'Bx1G987654321'\s
-                assert root.Text == 'Hello Citrus'"""; //should fail
+                assert headers.operation == 'somethingElse'
+                assert payload == 'This is plain text!'
+                assert payload.contains('!')""";
 
         ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
@@ -100,25 +92,33 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Groovy script validation failed"));
-            Assert.assertTrue(e.getMessage().contains("Hello Citrus"));
-            Assert.assertTrue(e.getMessage().contains("Hello TestFramework"));
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getCause() instanceof AssertionError);
             return;
         }
 
-        Assert.fail("Missing script validation exception caused by wrong control value");
+        Assert.fail("Missing validation exception due to wrong value");
     }
 
     @Test
-    public void testEmptyValidationScript() {
-        String validationScript = "";
+    public void testTestContextSupport() throws ValidationException {
+        String validationScript = "context.setVariable('operation', 'unitTesting')\n" +
+                "context.setVariable('text', 'This is plain text!')";
+
         ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
                 .script(validationScript)
                 .build();
 
+        Assert.assertNull(context.getVariables().get("operation"));
+        Assert.assertNull(context.getVariables().get("text"));
+
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+
+        Assert.assertNotNull(context.getVariables().get("operation"));
+        Assert.assertNotNull(context.getVariables().get("text"));
+        Assert.assertEquals(context.getVariable("operation"), "unitTesting");
+        Assert.assertEquals(context.getVariable("text"), "This is plain text!");
     }
 
     @Test
@@ -126,7 +126,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         List<ValidationContext> validationContexts = new ArrayList<>();
         validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
-        validationContexts.add(new XpathMessageValidationContext());
+        validationContexts.add(new JsonMessageValidationContext());
         validationContexts.add(new DefaultScriptValidationContext("scala"));
 
         Assert.assertNull(validator.findValidationContext(validationContexts));
@@ -134,19 +134,5 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContexts.add(new DefaultScriptValidationContext(ScriptTypes.GROOVY));
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
-    }
-
-    @Test
-    public void shouldProcessXmlWithDTD() {
-        message = new DefaultMessage("""
-  <!DOCTYPE test [ <!ELEMENT test (#PCDATA)> ]>
-  <test>citrus</test>""");
-        String validationScript = "assert root == 'citrus'";
-        ScriptValidationContext validationContext = new DefaultScriptValidationContext.Builder()
-              .scriptType(ScriptTypes.GROOVY)
-              .script(validationScript)
-              .build();
-
-        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 }

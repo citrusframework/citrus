@@ -78,7 +78,7 @@ public GroovyJsonMessageValidator defaultGroovyJsonMessageValidator() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="defaultGroovyJsonMessageValidator" class="org.citrusframework.validation.script.GroovyJsonMessageValidator"/>
+<bean id="defaultGroovyJsonMessageValidator" class="org.citrusframework.validation.groovy.GroovyJsonMessageValidator"/>
 ----
 
 This is how you can customize the message validators used for Json message data.

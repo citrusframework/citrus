@@ -150,7 +150,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     public void testReceiveMessageWithMessagePayloadResource() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(
-                new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload.xml"));
+                new FileResourcePayloadBuilder("classpath:org/citrusframework/xml/actions/test-request-payload.xml"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -197,7 +197,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     public void testReceiveMessageWithMessagePayloadResourceVariablesSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(
-                new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload-with-variables.xml"));
+                new FileResourcePayloadBuilder("classpath:org/citrusframework/xml/actions/test-request-payload-with-variables.xml"));
 
         context.setVariable("myText", "Hello World!");
 
@@ -222,7 +222,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     public void testReceiveMessageWithMessagePayloadResourceFunctionsSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(
-                new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload-with-functions.xml"));
+                new FileResourcePayloadBuilder("classpath:org/citrusframework/xml/actions/test-request-payload-with-functions.xml"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
