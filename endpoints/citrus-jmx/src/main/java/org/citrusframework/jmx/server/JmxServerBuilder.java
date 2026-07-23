@@ -32,7 +32,7 @@ import org.citrusframework.jmx.message.JmxMessageConverter;
 import org.citrusframework.jmx.model.JmxMarshaller;
 import org.citrusframework.jmx.model.ManagedBeanDefinition;
 import org.citrusframework.message.MessageCorrelator;
-import org.citrusframework.server.AbstractServerBuilder;
+import org.citrusframework.base.server.AbstractServerBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;
 import org.citrusframework.yaml.SchemaType;

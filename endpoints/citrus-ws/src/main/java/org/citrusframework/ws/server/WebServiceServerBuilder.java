@@ -24,7 +24,7 @@ import java.util.List;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.server.AbstractServerBuilder;
+import org.citrusframework.base.server.AbstractServerBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.message.converter.WebServiceMessageConverter;
 import org.citrusframework.yaml.SchemaProperty;

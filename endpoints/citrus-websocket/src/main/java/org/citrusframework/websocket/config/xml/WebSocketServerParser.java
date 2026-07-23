@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.config.xml.HttpServerParser;
-import org.citrusframework.server.AbstractServer;
+import org.citrusframework.base.server.AbstractServer;
 import org.citrusframework.websocket.server.WebSocketServer;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

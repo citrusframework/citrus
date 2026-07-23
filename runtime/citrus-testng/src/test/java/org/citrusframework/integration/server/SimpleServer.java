@@ -20,7 +20,7 @@ import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.message.RawMessage;
-import org.citrusframework.server.AbstractServer;
+import org.citrusframework.base.server.AbstractServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

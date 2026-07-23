@@ -23,7 +23,7 @@ import org.apache.ftpserver.listener.ListenerFactory;
 import org.citrusframework.ftp.message.FtpMarshaller;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
-import org.citrusframework.server.AbstractServerBuilder;
+import org.citrusframework.base.server.AbstractServerBuilder;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;

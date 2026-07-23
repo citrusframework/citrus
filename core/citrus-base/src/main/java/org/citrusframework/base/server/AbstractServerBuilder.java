@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.server;
+package org.citrusframework.base.server;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;

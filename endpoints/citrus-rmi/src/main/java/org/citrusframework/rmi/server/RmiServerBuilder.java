@@ -29,7 +29,7 @@ import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.rmi.endpoint.RmiEndpointUtils;
 import org.citrusframework.rmi.message.RmiMessageConverter;
 import org.citrusframework.rmi.model.RmiMarshaller;
-import org.citrusframework.server.AbstractServerBuilder;
+import org.citrusframework.base.server.AbstractServerBuilder;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.SchemaProperty;

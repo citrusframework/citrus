@@ -19,7 +19,7 @@ package org.citrusframework.ws.server;
 import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.report.MessageListeners;
-import org.citrusframework.server.AbstractServer;
+import org.citrusframework.base.server.AbstractServer;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.context.ParentDelegatingWebApplicationContext;
 import org.citrusframework.ws.interceptor.LoggingEndpointInterceptor;

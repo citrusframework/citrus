@@ -28,7 +28,7 @@ import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.ftp.client.FtpEndpointConfiguration;
-import org.citrusframework.server.AbstractServer;
+import org.citrusframework.base.server.AbstractServer;
 import org.citrusframework.spi.Resource;
 
 /**

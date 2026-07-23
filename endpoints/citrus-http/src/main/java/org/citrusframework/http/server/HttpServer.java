@@ -30,7 +30,7 @@ import org.citrusframework.http.servlet.CitrusDispatcherServlet;
 import org.citrusframework.http.servlet.GzipServletFilter;
 import org.citrusframework.http.servlet.RequestCachingServletFilter;
 import org.citrusframework.report.MessageListeners;
-import org.citrusframework.server.AbstractServer;
+import org.citrusframework.base.server.AbstractServer;
 import org.eclipse.jetty.ee11.servlet.FilterHolder;
 import org.eclipse.jetty.ee11.servlet.FilterMapping;
 import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
