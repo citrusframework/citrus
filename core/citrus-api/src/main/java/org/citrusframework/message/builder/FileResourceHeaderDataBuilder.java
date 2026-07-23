@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.message.builder;
+package org.citrusframework.message.builder;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

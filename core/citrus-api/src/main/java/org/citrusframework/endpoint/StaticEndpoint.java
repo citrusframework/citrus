@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.endpoint;
+package org.citrusframework.endpoint;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.endpoint.AbstractEndpoint;
-import org.citrusframework.endpoint.AbstractEndpointConfiguration;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;

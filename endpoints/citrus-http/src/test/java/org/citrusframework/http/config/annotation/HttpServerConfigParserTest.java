@@ -28,7 +28,7 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.springintegration.config.annotation.ChannelEndpointConfigParser;
 import org.citrusframework.springintegration.config.annotation.ChannelSyncEndpointConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.base.endpoint.StaticEndpoint;
+import org.citrusframework.endpoint.StaticEndpoint;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import org.citrusframework.http.message.HttpMessageConverter;

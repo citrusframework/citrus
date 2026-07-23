@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.message;
+package org.citrusframework.message;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,7 +27,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;

@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.report;
+package org.citrusframework.report;
 
 import java.io.IOException;
 import java.util.Properties;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.report.AbstractOutputFileReporter;
-import org.citrusframework.report.TestResults;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.PropertyUtils;
 
