@@ -20,8 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.util.IsJsonPathPredicate;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.expression.PathExpressionValidationContextBuilder;
@@ -66,7 +67,7 @@ public class PathExpressionValidationContext {
 
         @Override
         public Builder jsonPath(final String expression, final Object value) {
-            if (!JsonPathMessageValidationContext.isJsonPathExpression(expression)) {
+            if (!IsJsonPathPredicate.getInstance().test(expression)) {
                 throw new CitrusRuntimeException(String.format("Unsupported json path expression '%s'", expression));
             }
             return expression(expression, value);
@@ -103,7 +104,7 @@ public class PathExpressionValidationContext {
 
             String expression = expressions.keySet().iterator().next();
 
-            if (JsonPathMessageValidationContext.isJsonPathExpression(expression)) {
+            if (IsJsonPathPredicate.getInstance().test(expression)) {
                 return new JsonPathMessageValidationContext.Builder()
                         .expressions(expressions)
                         .build();

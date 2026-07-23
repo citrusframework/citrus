@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.config.util.ValidateMessageParserUtil;
 import org.citrusframework.config.util.VariableExtractorParserUtil;
+import org.citrusframework.util.IsJsonPathPredicate;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
@@ -383,7 +384,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             Element validateElement, Map<String, Object> validateXpathExpressions) {
         //check for xpath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
-        if (hasText(pathExpression) && !JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
+        if (hasText(pathExpression) && !IsJsonPathPredicate.getInstance().test(pathExpression)) {
             //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
             if (validateElement.hasAttribute("result-type")) {
                 pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;
@@ -418,7 +419,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
     private void extractJsonPathValidateExpressions(Element validateElement, Map<String, Object> validateJsonPathExpressions) {
         //check for jsonPath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
-        if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
+        if (IsJsonPathPredicate.getInstance().test(pathExpression)) {
             validateJsonPathExpressions.put(pathExpression, validateElement.getAttribute("value"));
         }
 

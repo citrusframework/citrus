@@ -28,7 +28,7 @@ import org.citrusframework.api.common.Named;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.parser.CitrusXmlConfigParser;
 import org.citrusframework.config.xml.parser.ScriptMessageBuilderParser;
-import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageHeaderType;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;

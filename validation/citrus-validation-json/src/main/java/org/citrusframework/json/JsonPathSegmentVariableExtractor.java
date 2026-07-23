@@ -19,6 +19,7 @@ package org.citrusframework.json;
 import com.jayway.jsonpath.InvalidPathException;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.IsJsonPathPredicate;
 import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
@@ -28,7 +29,7 @@ public class JsonPathSegmentVariableExtractor extends SegmentVariableExtractorRe
 
     @Override
     public boolean canExtract(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher) {
-        return object == null  || (object instanceof  String && IsJsonPredicate.getInstance().test((String)object) && JsonPathMessageValidationContext.isJsonPathExpression(matcher.getSegmentExpression()));
+        return object == null  || (object instanceof  String && IsJsonPredicate.getInstance().test((String)object) && IsJsonPathPredicate.getInstance().test(matcher.getSegmentExpression()));
     }
 
     @Override

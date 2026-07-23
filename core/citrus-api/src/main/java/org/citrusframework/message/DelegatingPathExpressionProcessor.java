@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.message;
+package org.citrusframework.message;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,10 +23,8 @@ import java.util.Map;
 import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.message.Message;
-import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.processor.DelegatingPathExpressionProcessorBuilder;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
+import org.citrusframework.util.IsJsonPathPredicate;
 
 /**
  * Generic processor implementation delegating to JSONPath or XPath message processor based on given expression
@@ -58,7 +56,7 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
             final String path = context.replaceDynamicContentInString(pathExpression.getKey());
             final Object variable = pathExpression.getValue();
 
-            if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
+            if (IsJsonPathPredicate.getInstance().test(path)) {
                 jsonPathExpressions.put(path, variable);
             } else {
                 xpathExpressions.put(path, variable);

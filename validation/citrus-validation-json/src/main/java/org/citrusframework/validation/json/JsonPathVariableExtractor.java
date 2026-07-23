@@ -25,7 +25,7 @@ import net.minidev.json.parser.ParseException;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.JsonPathUtils;
-import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.PathExpressionValidationContext;

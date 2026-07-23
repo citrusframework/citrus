@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.base.message.DefaultMessageProcessors;
-import org.citrusframework.base.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageHeaderType;
 import org.citrusframework.base.message.MessageProcessorSupport;
 import org.citrusframework.message.MessageType;
