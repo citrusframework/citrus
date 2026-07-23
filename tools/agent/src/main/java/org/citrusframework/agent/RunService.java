@@ -18,8 +18,8 @@ package org.citrusframework.agent;
 
 import org.apache.camel.tooling.maven.MavenArtifact;
 import org.citrusframework.agent.util.ConfigurationHelper;
-import org.citrusframework.main.TestEngine;
-import org.citrusframework.main.TestRunConfiguration;
+import org.citrusframework.api.main.TestEngine;
+import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;

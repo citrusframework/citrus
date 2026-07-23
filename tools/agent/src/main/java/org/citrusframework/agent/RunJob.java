@@ -19,7 +19,7 @@ package org.citrusframework.agent;
 import java.util.function.Supplier;
 
 import org.citrusframework.agent.listener.AgentTestListener;
-import org.citrusframework.main.TestRunConfiguration;
+import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.report.TestResults;
 
 public record RunJob(RunService runService,

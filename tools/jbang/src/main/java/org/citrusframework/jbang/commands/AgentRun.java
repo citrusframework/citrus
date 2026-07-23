@@ -53,7 +53,7 @@ import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.CitrusJBangMain;
 import org.citrusframework.jbang.JsonSupport;
-import org.citrusframework.main.TestRunConfiguration;
+import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.report.OutputStreamReporter;
 import org.citrusframework.report.TestResults;
 import org.citrusframework.spi.Resource;

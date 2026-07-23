@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.main;
-
-import org.citrusframework.TestSource;
-import org.citrusframework.spi.Resources;
-import org.citrusframework.yaml.SchemaProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package org.citrusframework.api.main;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,6 +24,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import org.citrusframework.TestSource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.yaml.SchemaProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @since 2.7.4

@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import org.citrusframework.TestClass;
 import org.citrusframework.TestSource;
+import org.citrusframework.api.main.CitrusAppConfiguration;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.ClassLoaderHelper;

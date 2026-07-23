@@ -36,7 +36,7 @@ import org.citrusframework.context.resolver.TypeAliasResolver;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.main.TestEngine;
+import org.citrusframework.api.main.TestEngine;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageSelector;
 import org.citrusframework.message.ScriptPayloadBuilder;

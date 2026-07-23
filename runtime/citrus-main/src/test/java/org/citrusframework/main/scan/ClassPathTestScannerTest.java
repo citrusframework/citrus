@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import org.citrusframework.TestClass;
+import org.citrusframework.base.main.scan.ClassPathTestScanner;
 import org.citrusframework.junit.scan.SampleJUnit4Test;
 import org.citrusframework.testng.scan.SampleTestNGTest;
 import org.testng.Assert;

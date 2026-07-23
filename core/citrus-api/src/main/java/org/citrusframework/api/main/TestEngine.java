@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.main;
+package org.citrusframework.api.main;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.main.scan;
+package org.citrusframework.base.main.scan;
 
 import java.io.File;
 import java.io.IOException;

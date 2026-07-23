@@ -21,7 +21,7 @@ import java.util.Collections;
 
 import org.citrusframework.TestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.main.TestRunConfiguration;
+import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.TestNGEngine;
 import org.citrusframework.util.FileUtils;

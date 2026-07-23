@@ -20,8 +20,8 @@ import java.util.Collections;
 
 import org.citrusframework.TestSource;
 import org.citrusframework.junit.scan.SampleJUnit4Test;
-import org.citrusframework.main.TestEngine;
-import org.citrusframework.main.TestRunConfiguration;
+import org.citrusframework.api.main.TestEngine;
+import org.citrusframework.api.main.TestRunConfiguration;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
 import org.testng.Assert;

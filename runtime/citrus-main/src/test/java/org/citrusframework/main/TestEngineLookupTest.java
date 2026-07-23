@@ -16,6 +16,8 @@
 
 package org.citrusframework.main;
 
+import org.citrusframework.api.main.TestEngine;
+import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.cucumber.CucumberTestEngine;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.junit.JUnit4TestEngine;

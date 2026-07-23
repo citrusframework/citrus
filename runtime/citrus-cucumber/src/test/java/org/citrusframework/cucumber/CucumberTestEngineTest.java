@@ -20,8 +20,8 @@ import java.util.Collections;
 
 import org.citrusframework.TestSource;
 import org.citrusframework.cucumber.integration.echo.EchoFeatureIT;
-import org.citrusframework.main.TestEngine;
-import org.citrusframework.main.TestRunConfiguration;
+import org.citrusframework.api.main.TestEngine;
+import org.citrusframework.api.main.TestRunConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

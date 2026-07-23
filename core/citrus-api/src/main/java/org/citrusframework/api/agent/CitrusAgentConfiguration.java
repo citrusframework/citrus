@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.citrusframework.TestSourceProvider;
-import org.citrusframework.main.CitrusAppConfiguration;
+import org.citrusframework.api.main.CitrusAppConfiguration;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.yaml.SchemaProperty;
