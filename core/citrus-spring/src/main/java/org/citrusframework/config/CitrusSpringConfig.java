@@ -21,7 +21,7 @@ import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
-import org.citrusframework.functions.FunctionConfig;
+import org.citrusframework.spring.functions.FunctionConfig;
 import org.citrusframework.io.CitrusResourceEditor;
 import org.citrusframework.log.DefaultLogModifier;
 import org.citrusframework.log.LogModifier;

@@ -29,7 +29,7 @@ import org.citrusframework.container.Async;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
-import org.citrusframework.functions.core.CurrentDateFunction;
+import org.citrusframework.base.functions.core.CurrentDateFunction;
 import org.citrusframework.util.TestUtils;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;

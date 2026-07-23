@@ -34,7 +34,7 @@ import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.functions.DefaultFunctionRegistry;
+import org.citrusframework.base.functions.DefaultFunctionRegistry;
 import org.citrusframework.functions.Function;
 import org.citrusframework.functions.FunctionLibrary;
 import org.citrusframework.functions.FunctionRegistry;

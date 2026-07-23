@@ -21,7 +21,7 @@ import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
-import org.citrusframework.functions.core.CurrentDateFunction;
+import org.citrusframework.base.functions.core.CurrentDateFunction;
 import org.citrusframework.report.TestListener;
 import org.mockito.InOrder;
 import org.slf4j.LoggerFactory;

@@ -12,17 +12,17 @@
   <citrus:function-library id="functionLib" prefix="foo">
     <citrus:function name="randomNr" ref="randomNumber"/>
     <citrus:function name="randomStr" ref="randomString"/>
-    <citrus:function name="custom" class="org.citrusframework.functions.CustomFunction"/>
+    <citrus:function name="custom" class="org.citrusframework.spring.functions.CustomFunction"/>
   </citrus:function-library>
 
   <citrus:function-library id="functionLib2" prefix="bar">
-    <citrus:function name="concat" class="org.citrusframework.functions.core.ConcatFunction"/>
+    <citrus:function name="concat" class="org.citrusframework.base.functions.core.ConcatFunction"/>
     <citrus:function name="custom" ref="customFunction"/>
   </citrus:function-library>
 
-  <bean id="customFunction" class="org.citrusframework.functions.CustomFunction"/>
-  <bean id="randomNumber" class="org.citrusframework.functions.core.RandomNumberFunction"/>
-  <bean id="randomString" class="org.citrusframework.functions.core.RandomStringFunction"/>
+  <bean id="customFunction" class="org.citrusframework.spring.functions.CustomFunction"/>
+  <bean id="randomNumber" class="org.citrusframework.base.functions.core.RandomNumberFunction"/>
+  <bean id="randomString" class="org.citrusframework.base.functions.core.RandomStringFunction"/>
 
   <citrus:direct-endpoint id="customEndpoint"/>
 

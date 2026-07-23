@@ -32,7 +32,7 @@ import org.citrusframework.camel.actions.infra.InfraServiceUtils;
 import org.citrusframework.dsl.schema.generator.CitrusModule;
 import org.citrusframework.dsl.schema.generator.CitrusSchemaGenerator;
 import org.citrusframework.endpoint.EndpointBuilder;
-import org.citrusframework.functions.DefaultFunctionLibrary;
+import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.functions.Function;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.util.StringUtils;

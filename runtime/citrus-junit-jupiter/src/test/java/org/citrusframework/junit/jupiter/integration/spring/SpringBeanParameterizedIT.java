@@ -27,7 +27,7 @@ import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
-import org.citrusframework.functions.Functions;
+import org.citrusframework.base.functions.Functions;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;

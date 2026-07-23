@@ -24,7 +24,7 @@ import org.citrusframework.api.container.BeforeTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
-import org.citrusframework.functions.DefaultFunctionRegistry;
+import org.citrusframework.base.functions.DefaultFunctionRegistry;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.log.DefaultLogModifier;
 import org.citrusframework.log.LogModifier;

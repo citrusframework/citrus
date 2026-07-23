@@ -18,12 +18,12 @@ package org.citrusframework.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.functions.CustomFunction;
+import org.citrusframework.spring.functions.CustomFunction;
 import org.citrusframework.functions.FunctionLibrary;
 import org.citrusframework.functions.FunctionParameterHelper;
-import org.citrusframework.functions.core.ConcatFunction;
-import org.citrusframework.functions.core.RandomNumberFunction;
-import org.citrusframework.functions.core.RandomStringFunction;
+import org.citrusframework.base.functions.core.ConcatFunction;
+import org.citrusframework.base.functions.core.RandomNumberFunction;
+import org.citrusframework.base.functions.core.RandomStringFunction;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
