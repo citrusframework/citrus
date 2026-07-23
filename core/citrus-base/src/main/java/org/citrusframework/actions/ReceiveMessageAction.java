@@ -44,7 +44,7 @@ import org.citrusframework.message.MessageSelectorBuilder;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.WithPayloadBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
-import org.citrusframework.base.message.builder.FileResourcePayloadBuilder;
+import org.citrusframework.message.builder.FileResourcePayloadBuilder;
 import org.citrusframework.base.message.builder.MessageBuilderSupport;
 import org.citrusframework.base.message.builder.ReceiveMessageBuilderSupport;
 import org.citrusframework.messaging.Consumer;

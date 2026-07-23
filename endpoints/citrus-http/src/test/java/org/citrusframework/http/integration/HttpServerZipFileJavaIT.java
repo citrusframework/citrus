@@ -19,7 +19,7 @@ package org.citrusframework.http.integration;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.base.message.ZipMessage;
+import org.citrusframework.message.ZipMessage;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;

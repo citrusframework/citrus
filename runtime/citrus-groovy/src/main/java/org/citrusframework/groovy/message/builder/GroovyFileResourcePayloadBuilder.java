@@ -17,7 +17,7 @@
 package org.citrusframework.groovy.message.builder;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.message.builder.FileResourcePayloadBuilder;
+import org.citrusframework.message.builder.FileResourcePayloadBuilder;
 import org.citrusframework.spi.Resource;
 
 public class GroovyFileResourcePayloadBuilder extends FileResourcePayloadBuilder {

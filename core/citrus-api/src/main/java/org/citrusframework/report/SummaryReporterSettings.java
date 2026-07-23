@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.report;
+package org.citrusframework.report;
 
 public class SummaryReporterSettings {
 

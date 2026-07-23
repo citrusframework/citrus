@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.message;
-
-import org.citrusframework.spi.Resources;
-import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+package org.citrusframework.message;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,6 +23,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @since 2.7.5

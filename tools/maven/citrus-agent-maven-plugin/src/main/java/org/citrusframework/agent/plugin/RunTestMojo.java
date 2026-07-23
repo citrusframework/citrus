@@ -16,6 +16,24 @@
 
 package org.citrusframework.agent.plugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Stream;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
@@ -47,33 +65,15 @@ import org.citrusframework.TestSource;
 import org.citrusframework.agent.plugin.config.KubernetesConfiguration;
 import org.citrusframework.agent.plugin.config.RunConfiguration;
 import org.citrusframework.agent.plugin.model.RemoteResult;
-import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.base.report.HtmlReporter;
 import org.citrusframework.base.report.JUnitReporterSettings;
+import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.report.OutputStreamReporter;
-import org.citrusframework.base.report.SummaryReporter;
+import org.citrusframework.report.SummaryReporter;
 import org.citrusframework.report.TestResults;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 
