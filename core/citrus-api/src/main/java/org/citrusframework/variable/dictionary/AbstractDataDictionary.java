@@ -16,15 +16,15 @@
 
 package org.citrusframework.variable.dictionary;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
 
 import static org.citrusframework.spi.PropertiesLoader.loadProperties;
 

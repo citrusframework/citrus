@@ -16,8 +16,11 @@
 
 package org.citrusframework.variable.dictionary;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.tools.ant.filters.StringInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.InvalidPropertiesFormatException;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -26,9 +29,6 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.InputStream;
-import java.util.InvalidPropertiesFormatException;
 
 import static org.mockito.Mockito.doReturn;
 import static org.testng.Assert.expectThrows;
@@ -58,7 +58,7 @@ public class AbstractDataDictionaryTest {
     @Test
     public void testInitializeWithNormalPropertiesFile() {
         // Normal properties file
-        InputStream inputStream = new StringInputStream(String.format("%s=%s", KEY, VALUE));
+        InputStream inputStream = new ByteArrayInputStream(String.format("%s=%s", KEY, VALUE).getBytes(StandardCharsets.UTF_8));
 
         // Setup mock resource
         doReturn(inputStream).when(mappingFile).getInputStream();
@@ -72,14 +72,14 @@ public class AbstractDataDictionaryTest {
     @Test
     public void testInitializeWithXMLPropertiesFile() {
         // XML properties file
-        InputStream inputStream = new StringInputStream(String.format(
+        InputStream inputStream = new ByteArrayInputStream(String.format(
                 """
                         <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
                         <properties>
                           <entry key="%s">%s</entry>
                         </properties>
                         """
-                , KEY, VALUE));
+                , KEY, VALUE).getBytes(StandardCharsets.UTF_8));
 
         // Setup mock resource
         doReturn(inputStream).when(mappingFile).getInputStream();
@@ -93,7 +93,7 @@ public class AbstractDataDictionaryTest {
     @Test
     public void testInitializeThrowsExceptionWithInvalidXMLPropertiesFile() {
         // Normal properties file
-        InputStream inputStream = new StringInputStream(String.format("%s=%s", KEY, VALUE));
+        InputStream inputStream = new ByteArrayInputStream(String.format("%s=%s", KEY, VALUE).getBytes(StandardCharsets.UTF_8));
 
         // Setup mock resource
         doReturn(inputStream).when(mappingFile).getInputStream();
@@ -120,7 +120,7 @@ public class AbstractDataDictionaryTest {
 
         @Override
         public <R> R translate(Object key, R value, TestContext context) {
-            throw new NotImplementedException();
+            throw new CitrusRuntimeException("Should not be called");
         }
     }
 }

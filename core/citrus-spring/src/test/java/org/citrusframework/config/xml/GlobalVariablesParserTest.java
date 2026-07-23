@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.citrusframework.BeanDefinitionParserTestSupport;
 import org.citrusframework.variable.GlobalVariables;
-import org.citrusframework.variable.GlobalVariablesPropertyLoader;
+import org.citrusframework.spring.variable.GlobalVariablesPropertyLoader;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

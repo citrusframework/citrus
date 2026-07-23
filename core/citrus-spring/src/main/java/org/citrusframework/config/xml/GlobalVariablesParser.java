@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.variable.GlobalVariables;
-import org.citrusframework.variable.GlobalVariablesPropertyLoader;
+import org.citrusframework.spring.variable.GlobalVariablesPropertyLoader;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
