@@ -221,7 +221,7 @@
     <hsqldb.version>2.7.4</hsqldb.version>
     <jackson.version>3.2.0</jackson.version>
     <jackson-databind-nullable.version>0.2.10</jackson-databind-nullable.version>
-    <jackson2.version>2.22.0</jackson2.version>
+    <jackson2.version>2.22.1</jackson2.version>
     <jackson2.annotations.version>2.22</jackson2.annotations.version>
     <jakarta-activation.version>2.1.4</jakarta-activation.version>
     <jakarta-activation-api.version>2.1.4</jakarta-activation-api.version>
