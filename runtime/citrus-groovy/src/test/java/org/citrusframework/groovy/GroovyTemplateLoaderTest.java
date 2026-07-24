@@ -16,7 +16,6 @@
 
 package org.citrusframework.groovy;
 
-import org.citrusframework.UnitTestSupport;
 import org.citrusframework.container.Template;
 import org.testng.Assert;
 import org.testng.annotations.Test;

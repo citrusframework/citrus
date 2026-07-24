@@ -153,7 +153,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessageBuilderScriptResource() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload.groovy"));
+        controlMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:org/citrusframework/groovy/actions/test-request-payload.groovy"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
                 "  <Message>Hello World!</Message>" + System.lineSeparator() +

@@ -17,11 +17,11 @@ actions:
         useScriptTemplate: false
   - groovy:
       script:
-        template: "classpath:org/citrusframework/script/custom-script-template.groovy"
+        template: "classpath:org/citrusframework/groovy/script/custom-script-template.groovy"
         value: |
           Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
           Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
           Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
   - groovy:
       script:
-        file: "classpath:org/citrusframework/script/example.groovy"
+        file: "classpath:org/citrusframework/groovy/script/example.groovy"
