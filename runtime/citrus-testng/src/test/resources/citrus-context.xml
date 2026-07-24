@@ -30,7 +30,7 @@
   <citrus:queue id="helloQueue"/>
 
   <!-- Simple server implementation with status event channel -->
-  <bean id="simpleServer" class="org.citrusframework.integration.server.SimpleServer">
+  <bean id="simpleServer" class="org.citrusframework.testng.integration.server.SimpleServer">
     <property name="autoStart" value="false"/>
     <property name="statusEndpoint" ref="statusEndpoint"/>
   </bean>
