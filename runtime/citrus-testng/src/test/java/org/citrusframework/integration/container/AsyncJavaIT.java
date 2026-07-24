@@ -63,7 +63,7 @@ public class AsyncJavaIT extends TestNGCitrusSpringSupport implements TestAction
         run(traceVariables("anonymous"));
     }
 
-    @Test(groups = "org.citrusframework.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
+    @Test(groups = "org.citrusframework.testng.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
     @CitrusTest
     public void asyncContainerError() {
         run(async().actions(

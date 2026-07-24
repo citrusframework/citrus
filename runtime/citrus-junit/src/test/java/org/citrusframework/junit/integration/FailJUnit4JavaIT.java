@@ -16,7 +16,7 @@
 
 package org.citrusframework.junit.integration;
 
-import org.citrusframework.ShouldFailGroup;
+import org.citrusframework.junit.ShouldFailGroup;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.TestCaseFailedException;
