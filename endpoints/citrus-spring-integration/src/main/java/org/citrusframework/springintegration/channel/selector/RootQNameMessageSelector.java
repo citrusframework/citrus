@@ -20,7 +20,7 @@ import javax.xml.namespace.QName;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.xml.util.XMLUtils;
+import org.citrusframework.xml.support.XMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;

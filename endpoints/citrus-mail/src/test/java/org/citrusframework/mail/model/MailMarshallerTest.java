@@ -18,8 +18,8 @@ package org.citrusframework.mail.model;
 
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.xml.StringResult;
-import org.citrusframework.xml.StringSource;
+import org.citrusframework.api.xml.StringResult;
+import org.citrusframework.api.xml.StringSource;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

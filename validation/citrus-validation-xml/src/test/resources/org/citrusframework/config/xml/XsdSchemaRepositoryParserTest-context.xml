@@ -46,7 +46,7 @@
       <property name="xsd" value="classpath:org/citrusframework/validation/test.xsd"/>
     </bean>
 
-    <bean id="testSchemaRepositoryBean" class="org.citrusframework.xml.XsdSchemaRepository">
+    <bean id="testSchemaRepositoryBean" class="org.citrusframework.xml.schema.XsdSchemaRepository">
       <property name="schemas">
         <list>
           <ref bean="testSchemaBean"/>

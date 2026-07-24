@@ -16,13 +16,13 @@
 
 package org.citrusframework.xml.variable.dictionary;
 
-import org.citrusframework.xml.XmlValidationHelper;
+import org.citrusframework.xml.support.XmlValidationHelper;
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.xml.util.XMLUtils;
+import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.citrusframework.xml.namespace.DefaultNamespaceContext;
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.api.xml.namespace.DefaultNamespaceContext;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

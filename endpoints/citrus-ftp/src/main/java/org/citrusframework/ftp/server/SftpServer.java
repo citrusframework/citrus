@@ -31,7 +31,7 @@ import org.citrusframework.ftp.message.FtpMessage;
 import org.citrusframework.ftp.model.Command;
 import org.citrusframework.ftp.model.CommandResult;
 import org.citrusframework.ssh.server.SshServer;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

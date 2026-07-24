@@ -39,8 +39,8 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.xml.StringResult;
-import org.citrusframework.xml.StringSource;
+import org.citrusframework.api.xml.StringResult;
+import org.citrusframework.api.xml.StringSource;
 
 /**
  * @since 2.7.5

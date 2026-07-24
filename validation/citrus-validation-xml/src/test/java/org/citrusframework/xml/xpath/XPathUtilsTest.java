@@ -22,8 +22,8 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPathFactory;
 
-import org.citrusframework.xml.util.XMLUtils;
-import org.citrusframework.xml.namespace.DefaultNamespaceContext;
+import org.citrusframework.xml.support.XMLUtils;
+import org.citrusframework.api.xml.namespace.DefaultNamespaceContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;

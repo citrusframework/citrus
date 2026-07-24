@@ -55,7 +55,7 @@
 
   <bean id="loggingInterceptor" class="org.citrusframework.springintegration.integration.service.LoggingInterceptor"/>
 
-  <bean id="helloMarshaller" class="org.citrusframework.xml.Jaxb2Marshaller">
+  <bean id="helloMarshaller" class="org.citrusframework.base.xml.Jaxb2Marshaller">
     <constructor-arg value="org.citrusframework.springintegration.integration.service.model"/>
   </bean>
 

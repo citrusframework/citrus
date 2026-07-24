@@ -24,7 +24,7 @@ import org.citrusframework.rmi.model.MethodArg;
 import org.citrusframework.rmi.model.RmiMarshaller;
 import org.citrusframework.rmi.model.RmiServiceInvocation;
 import org.citrusframework.rmi.model.RmiServiceResult;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 
 /**
  * @since 2.5

@@ -19,7 +19,7 @@ package org.citrusframework.ws.interceptor;
 import org.citrusframework.base.context.TestContextFactory;
 import org.citrusframework.message.RawMessage;
 import org.citrusframework.report.MessageListeners;
-import org.citrusframework.xml.util.XMLUtils;
+import org.citrusframework.xml.support.XMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ws.WebServiceMessage;

@@ -16,7 +16,7 @@
 package org.citrusframework.springintegration.channel.selector;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.xml.util.XMLUtils;
+import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

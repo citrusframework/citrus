@@ -18,7 +18,7 @@ package org.citrusframework.xml.variable.dictionary;
 
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.xml.util.XMLUtils;
+import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

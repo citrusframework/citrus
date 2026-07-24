@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.xml.util.XMLUtils;
+import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.validation.context.ws.SoapFaultDetailValidationContext;
 import org.citrusframework.validation.context.ws.SoapFaultValidationContext;
 import org.citrusframework.ws.message.SoapFault;

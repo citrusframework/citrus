@@ -643,7 +643,7 @@ public XmlConfigurer xmlConfigurer() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="xmlConfigurer" class="org.citrusframework.xml.XmlConfigurer">
+<bean id="xmlConfigurer" class="org.citrusframework.xml.support.XmlConfigurer">
     <property name="parseSettings">
         <map>
             <entry key="validate-if-schema" value="false" value-type="java.lang.Boolean"/>

@@ -19,7 +19,7 @@ package org.citrusframework.config.xml;
 import java.util.Map;
 
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

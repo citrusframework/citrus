@@ -22,7 +22,8 @@ import java.io.StringReader;
 import java.util.Map;
 import javax.xml.XMLConstants;
 
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.xml.support.XMLUtils;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;

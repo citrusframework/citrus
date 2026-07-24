@@ -31,8 +31,8 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.validation.AbstractValidationProcessor;
 import org.citrusframework.validation.GenericValidationProcessor;
-import org.citrusframework.xml.StringSource;
-import org.citrusframework.xml.Unmarshaller;
+import org.citrusframework.api.xml.StringSource;
+import org.citrusframework.api.xml.Unmarshaller;
 import org.w3c.dom.Document;
 
 /**

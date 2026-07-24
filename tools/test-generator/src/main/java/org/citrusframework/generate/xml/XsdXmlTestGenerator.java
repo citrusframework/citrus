@@ -35,8 +35,8 @@ import org.citrusframework.message.Message;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.xml.util.XMLUtils;
-import org.citrusframework.xml.XmlConfigurer;
+import org.citrusframework.xml.support.XMLUtils;
+import org.citrusframework.xml.support.XmlConfigurer;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.

@@ -21,7 +21,7 @@ import javax.xml.xpath.XPathConstants;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.xml.variable.dictionary.XpathMappingDataDictionary;
-import org.citrusframework.xml.namespace.DefaultNamespaceContext;
+import org.citrusframework.api.xml.namespace.DefaultNamespaceContext;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

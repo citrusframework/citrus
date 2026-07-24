@@ -5,8 +5,8 @@ import org.citrusframework.message.Message;
 import org.citrusframework.ssh.model.SshMarshaller;
 import org.citrusframework.ssh.model.SshRequest;
 import org.citrusframework.ssh.model.SshResponse;
-import org.citrusframework.xml.StringResult;
-import org.citrusframework.xml.StringSource;
+import org.citrusframework.api.xml.StringResult;
+import org.citrusframework.api.xml.StringSource;
 
 public class SshMessage extends DefaultMessage {
 

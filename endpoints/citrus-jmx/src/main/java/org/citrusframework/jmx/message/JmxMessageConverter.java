@@ -26,7 +26,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 
 /**
  * @since 2.5

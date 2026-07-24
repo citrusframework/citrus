@@ -345,7 +345,7 @@ $(receive("helloService")
 
 The `receive` action uses the marshalling message builder provided with Citrus and just provides the model object `new TestRequest()`.
 The marshalling message builder automatically loads a proper XML message marshaller that should be available as a bean in the project context (e.g. the
-Spring application context). By default, Citrus is searching for a bean of type *org.citrusframework.xml.Marshaller*.
+Spring application context). By default, Citrus is searching for a bean of type *org.citrusframework.api.xml.Marshaller*.
 You can add the marshaller to your project context as a bean.
 
 .Marshaller bean

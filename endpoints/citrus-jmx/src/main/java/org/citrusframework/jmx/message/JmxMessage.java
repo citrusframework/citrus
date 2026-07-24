@@ -22,7 +22,7 @@ import org.citrusframework.jmx.model.ManagedBeanInvocation;
 import org.citrusframework.jmx.model.ManagedBeanResult;
 import org.citrusframework.jmx.model.OperationParam;
 import org.citrusframework.message.DefaultMessage;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 
 /**
  * @since 2.5

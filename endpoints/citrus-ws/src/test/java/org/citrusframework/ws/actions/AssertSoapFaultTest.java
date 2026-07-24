@@ -27,7 +27,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.ws.UnitTestSupport;
 import org.citrusframework.ws.validation.SoapFaultValidator;
-import org.citrusframework.xml.StringSource;
+import org.citrusframework.api.xml.StringSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;

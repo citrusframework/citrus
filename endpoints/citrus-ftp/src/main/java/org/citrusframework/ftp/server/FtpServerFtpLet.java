@@ -32,7 +32,7 @@ import org.citrusframework.ftp.client.FtpEndpointConfiguration;
 import org.citrusframework.ftp.message.FtpMessage;
 import org.citrusframework.ftp.model.Command;
 import org.citrusframework.ftp.model.CommandResultType;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

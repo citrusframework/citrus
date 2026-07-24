@@ -26,7 +26,7 @@ import org.citrusframework.ssh.client.SshEndpointConfiguration;
 import org.citrusframework.ssh.model.SshMarshaller;
 import org.citrusframework.ssh.model.SshRequest;
 import org.citrusframework.ssh.model.SshResponse;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

@@ -42,7 +42,7 @@ import org.citrusframework.rmi.model.RmiServiceInvocation;
 import org.citrusframework.rmi.model.RmiServiceResult;
 import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

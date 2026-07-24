@@ -33,7 +33,7 @@ import org.citrusframework.ws.interceptor.LoggingClientInterceptor;
 import org.citrusframework.ws.message.SoapMessage;
 import org.citrusframework.ws.message.callback.SoapRequestMessageCallback;
 import org.citrusframework.ws.message.callback.SoapResponseMessageCallback;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ws.WebServiceMessage;

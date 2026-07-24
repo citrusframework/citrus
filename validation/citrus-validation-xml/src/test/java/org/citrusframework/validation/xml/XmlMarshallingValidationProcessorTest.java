@@ -5,7 +5,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.validation.GenericValidationProcessor;
-import org.citrusframework.xml.Unmarshaller;
+import org.citrusframework.api.xml.Unmarshaller;
 import org.testng.annotations.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

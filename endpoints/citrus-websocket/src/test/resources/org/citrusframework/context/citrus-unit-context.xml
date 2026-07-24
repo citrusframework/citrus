@@ -4,9 +4,9 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	 
-    <bean id="schemaRepository" class="org.citrusframework.xml.XsdSchemaRepository"/>
-    
+
+    <bean id="schemaRepository" class="org.citrusframework.xml.schema.XsdSchemaRepository"/>
+
     <bean id="citrusHandlerInterceptor" class="org.citrusframework.http.interceptor.DelegatingHandlerInterceptor"/>
     <bean id="citrusHttpMessageController" class="org.citrusframework.http.controller.HttpMessageController"/>
 

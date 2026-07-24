@@ -33,8 +33,8 @@ import org.citrusframework.agent.connector.actions.AbstractAgentAction;
 import org.citrusframework.agent.connector.actions.AgentConnectAction;
 import org.citrusframework.agent.connector.actions.AgentRunAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.xml.Jaxb2Marshaller;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.base.xml.Jaxb2Marshaller;
+import org.citrusframework.api.xml.StringResult;
 
 @XmlRootElement(name = "agent")
 public class Agent implements TestActionBuilder<AbstractAgentAction> {

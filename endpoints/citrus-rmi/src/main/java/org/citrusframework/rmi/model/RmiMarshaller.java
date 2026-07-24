@@ -22,9 +22,9 @@ import javax.xml.transform.Source;
 import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.xml.Jaxb2Marshaller;
-import org.citrusframework.xml.Marshaller;
-import org.citrusframework.xml.Unmarshaller;
+import org.citrusframework.base.xml.Jaxb2Marshaller;
+import org.citrusframework.api.xml.Marshaller;
+import org.citrusframework.api.xml.Unmarshaller;
 
 /**
  * @since 2.5

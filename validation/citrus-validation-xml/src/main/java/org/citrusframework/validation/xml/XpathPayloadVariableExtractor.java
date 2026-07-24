@@ -23,7 +23,7 @@ import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.context.xml.XmlNamespaceAware;
-import org.citrusframework.xml.util.XMLUtils;
+import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.validation.PathExpressionValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;

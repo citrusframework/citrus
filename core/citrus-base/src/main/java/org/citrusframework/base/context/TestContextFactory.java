@@ -42,7 +42,7 @@ import org.citrusframework.base.validation.matcher.DefaultValidationMatcherRegis
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 
 /**
  * Factory bean implementation constructs test context instances. Takes care of adding proper default components

@@ -41,7 +41,7 @@ import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.xml.schema.XmlSchemaValidation;
-import org.citrusframework.xml.XsdSchemaRepository;
+import org.citrusframework.xml.schema.XsdSchemaRepository;
 import org.citrusframework.xml.schema.XsdSchemaCollection;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
