@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.message;
+package org.citrusframework.message;
 
-import org.citrusframework.message.DelegatingPathExpressionProcessor;
-import org.citrusframework.message.MessageProcessorLookupSupport;
-import org.citrusframework.message.Processors;
 import org.citrusframework.message.processor.DelegatingVariableExtractorBuilder;
 import org.citrusframework.message.processor.camel.CamelMessageProcessors;
 import org.citrusframework.message.processor.json.JsonMappingValidationProcessorBuilder;

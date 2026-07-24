@@ -18,7 +18,7 @@ package org.citrusframework.api.container;
 
 import org.citrusframework.TestActionContainerBuilder;
 
-public interface RepeatUntilTrueContainerBuilder<T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>>
+public interface RepeatUntilTrueContainerBuilder<T extends IteratingActionContainer, B extends TestActionContainerBuilder<T, B>>
         extends IteratingContainerBuilder<T, B>, TestActionContainerBuilder<T, B> {
 
     /**

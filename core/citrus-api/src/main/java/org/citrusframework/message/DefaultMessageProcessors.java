@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.base.message;
+package org.citrusframework.message;
 
 /**
  * Default implementation of Citrus message processors.

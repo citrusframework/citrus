@@ -16,12 +16,9 @@
 
 package org.citrusframework.dsl;
 
-import java.util.stream.Collectors;
-
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.DefaultTestActionBuilder;
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionContainerBuilder;
 import org.citrusframework.TestActionContainers;
 import org.citrusframework.actions.*;
@@ -30,10 +27,22 @@ import org.citrusframework.api.actions.ReceiveActionBuilder;
 import org.citrusframework.api.actions.ReceiveMessageBuilderFactory;
 import org.citrusframework.api.actions.SendActionBuilder;
 import org.citrusframework.api.actions.SendMessageBuilderFactory;
+import org.citrusframework.api.condition.Condition;
 import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.api.container.WaitContainerBuilder;
-import org.citrusframework.api.condition.Condition;
-import org.citrusframework.container.*;
+import org.citrusframework.container.Assert;
+import org.citrusframework.container.Async;
+import org.citrusframework.container.Catch;
+import org.citrusframework.container.Conditional;
+import org.citrusframework.container.FinallySequence;
+import org.citrusframework.container.Iterate;
+import org.citrusframework.container.Parallel;
+import org.citrusframework.container.RepeatOnErrorUntilTrue;
+import org.citrusframework.container.RepeatUntilTrue;
+import org.citrusframework.container.Sequence;
+import org.citrusframework.container.Template;
+import org.citrusframework.container.Timer;
+import org.citrusframework.container.Wait;
 
 public interface BaseTestActionSupport extends BaseTestActions, TestActionContainers {
 
@@ -44,25 +53,7 @@ public interface BaseTestActionSupport extends BaseTestActions, TestActionContai
 
     @Override
     default <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container) {
-        return new AbstractTestContainerBuilder<>() {
-            @Override
-            public T doBuild() {
-                container.setActions(actions.stream()
-                        .map(TestActionBuilder::build)
-                        .collect(Collectors.toList()));
-
-                return container;
-            }
-
-            @Override
-            public T build() {
-                if (!container.getActions().isEmpty()) {
-                    return container;
-                }
-
-                return super.build();
-            }
-        };
+        return AbstractTestContainerBuilder.container(container);
     }
 
     @Override

@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.container.AbstractSuiteActionContainer;
+import org.citrusframework.api.container.TestSuiteActionContainer;
 
 /**
  * Abstract container builder takes care on calling the container runner when actions are placed in the container.
  */
-public abstract class AbstractSuiteContainerBuilder<T extends AbstractSuiteActionContainer, S extends AbstractSuiteContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
+public abstract class AbstractSuiteContainerBuilder<T extends TestSuiteActionContainer, S extends AbstractSuiteContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
 
     private final List<String> suiteNames = new ArrayList<>();
     private final List<String> testGroups = new ArrayList<>();
