@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
-import org.citrusframework.config.xml.ActionContainerParser;
-import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.xml.AbstractTestActionFactoryBean;
+import org.citrusframework.spring.config.xml.ActionContainerParser;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.citrusframework.cucumber.container.StepTemplate;
 import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;

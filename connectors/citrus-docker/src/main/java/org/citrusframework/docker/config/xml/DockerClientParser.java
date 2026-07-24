@@ -16,7 +16,7 @@
 
 package org.citrusframework.docker.config.xml;
 
-import org.citrusframework.config.xml.AbstractEndpointParser;
+import org.citrusframework.spring.config.xml.AbstractEndpointParser;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.client.DockerEndpointConfiguration;
 import org.citrusframework.endpoint.Endpoint;

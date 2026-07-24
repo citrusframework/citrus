@@ -16,8 +16,8 @@
 
 package org.citrusframework.ftp.config.xml;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.AbstractServerParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.AbstractServerParser;
 import org.citrusframework.ftp.client.FtpEndpointConfiguration;
 import org.citrusframework.ftp.server.FtpServer;
 import org.citrusframework.base.server.AbstractServer;

@@ -16,7 +16,7 @@
 
 package org.citrusframework.json.config.xml;
 
-import org.citrusframework.config.xml.SchemaRepositoryParser;
+import org.citrusframework.spring.config.xml.SchemaRepositoryParser;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

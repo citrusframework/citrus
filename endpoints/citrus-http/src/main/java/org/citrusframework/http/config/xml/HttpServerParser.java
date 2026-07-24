@@ -16,8 +16,8 @@
 
 package org.citrusframework.http.config.xml;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.AbstractServerParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.AbstractServerParser;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.base.server.AbstractServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

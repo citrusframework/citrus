@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.openqa.selenium.By;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

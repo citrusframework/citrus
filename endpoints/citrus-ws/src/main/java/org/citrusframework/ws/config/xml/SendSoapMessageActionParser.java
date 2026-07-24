@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.config.xml.AbstractSendMessageActionFactoryBean;
-import org.citrusframework.config.xml.SendMessageActionParser;
+import org.citrusframework.spring.config.xml.AbstractSendMessageActionFactoryBean;
+import org.citrusframework.spring.config.xml.SendMessageActionParser;
 import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.ValidationContext;

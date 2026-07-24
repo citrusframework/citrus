@@ -16,7 +16,7 @@
 
 package org.citrusframework.xml.config.xml;
 
-import org.citrusframework.config.xml.AbstractDataDictionaryParser;
+import org.citrusframework.spring.config.xml.AbstractDataDictionaryParser;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.xml.variable.dictionary.XpathMappingDataDictionary;
 

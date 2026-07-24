@@ -16,5 +16,5 @@
         </actions>
     </testcase>
 
-    <spring:bean id="echoAction" class="org.citrusframework.config.xml.EchoActionParser.EchoActionFactoryBean"/>
+    <spring:bean id="echoAction" class="org.citrusframework.spring.config.xml.EchoActionParser.EchoActionFactoryBean"/>
 </spring:beans>

@@ -16,7 +16,7 @@
 
 package org.citrusframework.mail.config.xml;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.mail.client.MailClient;
 import org.citrusframework.mail.client.MailEndpointConfiguration;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;

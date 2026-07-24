@@ -26,7 +26,7 @@ import org.citrusframework.TestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.api.common.TestSourceAware;
 import org.citrusframework.common.DefaultTestLoader;
-import org.citrusframework.config.CitrusNamespaceParserRegistry;
+import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;

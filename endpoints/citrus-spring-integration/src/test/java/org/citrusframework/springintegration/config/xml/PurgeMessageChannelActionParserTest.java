@@ -17,7 +17,7 @@
 package org.citrusframework.springintegration.config.xml;
 
 import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
-import org.citrusframework.config.CitrusNamespaceParserRegistry;
+import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.testng.Assert;

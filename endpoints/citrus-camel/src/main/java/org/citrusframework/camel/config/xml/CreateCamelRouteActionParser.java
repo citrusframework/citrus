@@ -17,7 +17,7 @@
 package org.citrusframework.camel.config.xml;
 
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
-import org.citrusframework.config.xml.PayloadElementParser;
+import org.citrusframework.spring.config.xml.PayloadElementParser;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;

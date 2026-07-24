@@ -16,7 +16,7 @@
 
 package org.citrusframework.kubernetes.config.xml;
 
-import org.citrusframework.config.xml.AbstractEndpointParser;
+import org.citrusframework.spring.config.xml.AbstractEndpointParser;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.kubernetes.client.KubernetesClient;
@@ -25,9 +25,9 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import static org.citrusframework.config.util.BeanDefinitionParserUtils.registerBean;
-import static org.citrusframework.config.util.BeanDefinitionParserUtils.setPropertyReference;
-import static org.citrusframework.config.util.BeanDefinitionParserUtils.setPropertyValue;
+import static org.citrusframework.spring.config.util.BeanDefinitionParserUtils.registerBean;
+import static org.citrusframework.spring.config.util.BeanDefinitionParserUtils.setPropertyReference;
+import static org.citrusframework.spring.config.util.BeanDefinitionParserUtils.setPropertyValue;
 import static org.citrusframework.kubernetes.config.CredentialValidator.isValid;
 
 /**

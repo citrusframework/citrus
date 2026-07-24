@@ -19,7 +19,7 @@ package org.citrusframework.sql.config.xml;
 import javax.sql.DataSource;
 import java.util.List;
 
-import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
+import org.citrusframework.spring.config.xml.AbstractTestActionFactoryBean;
 import org.citrusframework.sql.actions.AbstractDatabaseConnectingTestAction;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;

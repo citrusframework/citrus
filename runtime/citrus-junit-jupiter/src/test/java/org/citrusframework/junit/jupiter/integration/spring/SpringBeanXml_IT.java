@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.config.CitrusSpringConfig;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.junit.jupiter.CitrusTestFactorySupport;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringXmlTestFactory;

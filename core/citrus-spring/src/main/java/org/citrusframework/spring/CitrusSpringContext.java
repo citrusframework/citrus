@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.citrusframework.CitrusContext;
-import org.citrusframework.config.CitrusSpringConfig;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.api.container.AfterSuite;
 import org.citrusframework.api.container.BeforeSuite;
 import org.citrusframework.spring.context.TestContextFactoryBean;

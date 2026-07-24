@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
-import org.citrusframework.config.xml.AbstractReceiveMessageActionFactoryBean;
+import org.citrusframework.spring.config.xml.AbstractReceiveMessageActionFactoryBean;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpClientResponseActionBuilder;
 import org.citrusframework.http.actions.HttpClientResponseActionBuilder.HttpMessageBuilderSupport;

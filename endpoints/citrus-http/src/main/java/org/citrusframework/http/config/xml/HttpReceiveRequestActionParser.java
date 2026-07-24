@@ -19,10 +19,10 @@ package org.citrusframework.http.config.xml;
 import java.util.List;
 
 import jakarta.servlet.http.Cookie;
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.DescriptionElementParser;
-import org.citrusframework.config.xml.MessageSelectorParser;
-import org.citrusframework.config.xml.ReceiveMessageActionParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.xml.MessageSelectorParser;
+import org.citrusframework.spring.config.xml.ReceiveMessageActionParser;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpQueryParamHeaderValidator;

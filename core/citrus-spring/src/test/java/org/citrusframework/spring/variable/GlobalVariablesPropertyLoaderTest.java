@@ -31,7 +31,7 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
     @Test
     public void testPropertyLoadingFromClasspath() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
-        propertyLoader.setPropertyFiles(Collections.singletonList("classpath:org/citrusframework/variable/loadtest.properties"));
+        propertyLoader.setPropertyFiles(Collections.singletonList("classpath:org/citrusframework/spring/variable/loadtest.properties"));
 
         GlobalVariables globalVariables = new GlobalVariables();
 
@@ -47,7 +47,7 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
     @Test
     public void testOverrideExistingVariables() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
-        propertyLoader.setPropertyFiles(Collections.singletonList("classpath:org/citrusframework/variable/loadtest.properties"));
+        propertyLoader.setPropertyFiles(Collections.singletonList("classpath:org/citrusframework/spring/variable/loadtest.properties"));
 
         GlobalVariables globalVariables = new GlobalVariables();
 
@@ -78,7 +78,7 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
     @Test
     public void testVariablesSupport() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
-        propertyLoader.setPropertyFiles(Collections.singletonList("classpath:org/citrusframework/variable/global-variable.properties"));
+        propertyLoader.setPropertyFiles(Collections.singletonList("classpath:org/citrusframework/spring/variable/global-variable.properties"));
 
         GlobalVariables globalVariables = new GlobalVariables();
 
@@ -96,7 +96,7 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
     @Test
     public void testFunctionSupport() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
-        propertyLoader.setPropertyFiles(Collections.singletonList("classpath:org/citrusframework/variable/global-variable.properties"));
+        propertyLoader.setPropertyFiles(Collections.singletonList("classpath:org/citrusframework/spring/variable/global-variable.properties"));
 
         GlobalVariables globalVariables = new GlobalVariables();
 
@@ -113,7 +113,7 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
     @Test
     public void testUnknownVariableDuringPropertyLoading() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
-        propertyLoader.setPropertyFiles(Collections.singletonList("classpath:org/citrusframework/variable/global-variable-error.properties"));
+        propertyLoader.setPropertyFiles(Collections.singletonList("classpath:org/citrusframework/spring/variable/global-variable-error.properties"));
 
         GlobalVariables globalVariables = new GlobalVariables();
 

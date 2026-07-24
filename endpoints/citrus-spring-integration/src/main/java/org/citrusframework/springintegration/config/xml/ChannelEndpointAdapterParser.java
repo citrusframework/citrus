@@ -18,7 +18,7 @@ package org.citrusframework.springintegration.config.xml;
 
 import org.citrusframework.springintegration.channel.ChannelEndpointAdapter;
 import org.citrusframework.springintegration.channel.ChannelSyncEndpointConfiguration;
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.springframework.beans.BeansException;

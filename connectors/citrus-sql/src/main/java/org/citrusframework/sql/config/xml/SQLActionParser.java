@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.citrusframework.sql.actions.ExecuteSQLAction;
 import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.script.ScriptValidationContext;

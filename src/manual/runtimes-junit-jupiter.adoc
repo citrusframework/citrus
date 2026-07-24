@@ -203,7 +203,7 @@ Note that sharding is available with all kind of `Stream`-sources.
 import static org.citrusframework.junit.jupiter.CitrusTestFactorySupport.springXml;
 import static org.citrusframework.sharding.Shard.createShard;
 
-import org.citrusframework.config.CitrusSpringConfig;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringXmlTestFactory;
 import org.springframework.test.context.ContextConfiguration;

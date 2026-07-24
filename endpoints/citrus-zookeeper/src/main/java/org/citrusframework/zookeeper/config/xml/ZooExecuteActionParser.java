@@ -16,11 +16,11 @@
 
 package org.citrusframework.zookeeper.config.xml;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.util.ValidateMessageParserUtil;
-import org.citrusframework.config.util.VariableExtractorParserUtil;
-import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
-import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.ValidateMessageParserUtil;
+import org.citrusframework.spring.config.util.VariableExtractorParserUtil;
+import org.citrusframework.spring.config.xml.AbstractTestActionFactoryBean;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;

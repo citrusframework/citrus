@@ -21,9 +21,9 @@ import java.util.List;
 
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Queue;
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
-import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.AbstractTestActionFactoryBean;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.citrusframework.jms.actions.PurgeJmsQueuesAction;
 import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.BeanCreationException;

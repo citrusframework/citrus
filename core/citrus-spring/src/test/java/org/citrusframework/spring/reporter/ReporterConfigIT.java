@@ -23,9 +23,9 @@ import org.citrusframework.report.LoggingReporter;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.citrusframework.reporter.ReporterConfig.CITRUS_HTML_REPORTER;
-import static org.citrusframework.reporter.ReporterConfig.CITRUS_JUNIT_REPORTER;
-import static org.citrusframework.reporter.ReporterConfig.CITRUS_LOGGING_REPORTER;
+import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_HTML_REPORTER;
+import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_JUNIT_REPORTER;
+import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_LOGGING_REPORTER;
 
 public class ReporterConfigIT extends UnitTestSupport {
 

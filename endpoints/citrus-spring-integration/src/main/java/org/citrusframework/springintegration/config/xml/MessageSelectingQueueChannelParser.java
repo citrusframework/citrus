@@ -23,7 +23,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import org.citrusframework.springintegration.channel.MessageSelectingQueueChannel;
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for special message channel configuration which
