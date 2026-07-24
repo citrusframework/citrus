@@ -29,7 +29,7 @@ public class ContextLoadingMappingStrategyTest {
     @Test
     public void testGetEndpointAdapter() {
         ContextLoadingMappingStrategy mappingStrategy = new ContextLoadingMappingStrategy();
-        mappingStrategy.setContextConfigLocation("classpath:org/citrusframework/endpoint/adapter-mapping-context.xml");
+        mappingStrategy.setContextConfigLocation("classpath:org/citrusframework/spring/endpoint/adapter-mapping-context.xml");
 
         Assert.assertNotNull(mappingStrategy.getEndpointAdapter("emptyResponseEndpointAdapter"));
         Assert.assertNotNull(mappingStrategy.getEndpointAdapter("staticResponseEndpointAdapter"));

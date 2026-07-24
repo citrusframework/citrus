@@ -16,7 +16,7 @@
 
 package org.citrusframework.jms.config.xml;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.jms.endpoint.JmsEndpointAdapter;

@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.citrusframework.actions.SendMessageAction;
-import org.citrusframework.config.xml.AbstractSendMessageActionFactoryBean;
-import org.citrusframework.config.xml.AbstractTestContainerFactoryBean;
-import org.citrusframework.config.xml.AsyncParser.AsyncFactoryBean;
-import org.citrusframework.config.xml.SequenceParser.SequenceFactoryBean;
+import org.citrusframework.spring.config.xml.AbstractSendMessageActionFactoryBean;
+import org.citrusframework.spring.config.xml.AbstractTestContainerFactoryBean;
+import org.citrusframework.spring.config.xml.AsyncParser.AsyncFactoryBean;
+import org.citrusframework.spring.config.xml.SequenceParser.SequenceFactoryBean;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder.HttpMessageBuilderSupport;
 import org.citrusframework.http.config.xml.HttpSendRequestActionParser;

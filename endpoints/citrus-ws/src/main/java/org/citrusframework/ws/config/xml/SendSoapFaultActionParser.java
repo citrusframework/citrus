@@ -19,7 +19,7 @@ package org.citrusframework.ws.config.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.config.xml.AbstractSendMessageActionFactoryBean;
+import org.citrusframework.spring.config.xml.AbstractSendMessageActionFactoryBean;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.actions.SendSoapFaultAction;

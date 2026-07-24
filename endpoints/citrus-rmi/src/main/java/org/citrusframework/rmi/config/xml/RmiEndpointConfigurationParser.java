@@ -16,7 +16,7 @@
 
 package org.citrusframework.rmi.config.xml;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.w3c.dom.Element;
 

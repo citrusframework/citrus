@@ -20,9 +20,9 @@ import java.util.List;
 
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.AbstractCamelRouteAction;
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
-import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.AbstractTestActionFactoryBean;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.apache.camel.CamelContext;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

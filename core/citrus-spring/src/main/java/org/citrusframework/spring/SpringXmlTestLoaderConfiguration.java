@@ -21,8 +21,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.citrusframework.spring.config.handler.CitrusTestCaseNamespaceHandler;
+
 /**
- * Xml test loader annotation used to configure parsers in {@link org.citrusframework.config.handler.CitrusTestCaseNamespaceHandler}
+ * Xml test loader annotation used to configure parsers in {@link CitrusTestCaseNamespaceHandler}
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -30,7 +32,7 @@ import java.lang.annotation.Target;
 public @interface SpringXmlTestLoaderConfiguration {
 
     /**
-     * Test case parser configurations to apply to {@link org.citrusframework.config.handler.CitrusTestCaseNamespaceHandler}
+     * Test case parser configurations to apply to {@link CitrusTestCaseNamespaceHandler}
      * @return
      */
     BeanDefinitionParserConfiguration[] parserConfigurations() default {};

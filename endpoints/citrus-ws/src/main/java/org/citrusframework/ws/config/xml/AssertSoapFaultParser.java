@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.config.CitrusNamespaceParserRegistry;
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
-import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.AbstractTestActionFactoryBean;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.actions.AssertSoapFault;

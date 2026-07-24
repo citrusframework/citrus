@@ -4,7 +4,7 @@ import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.config.CitrusSpringConfig;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringExtension;
 import org.citrusframework.openapi.generator.GeneratedSoapApiIT.Config;
 import org.citrusframework.openapi.generator.soap.bookservice.request.BookServiceSoapApi;

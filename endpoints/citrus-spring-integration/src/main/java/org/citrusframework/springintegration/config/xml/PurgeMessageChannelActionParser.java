@@ -19,10 +19,10 @@ package org.citrusframework.springintegration.config.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
-import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.xml.AbstractTestActionFactoryBean;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.util.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;

@@ -19,7 +19,7 @@ package org.citrusframework.selenium.config.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.selenium.actions.JavaScriptAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;

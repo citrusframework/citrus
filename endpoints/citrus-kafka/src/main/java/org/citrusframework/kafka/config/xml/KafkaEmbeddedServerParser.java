@@ -16,7 +16,7 @@
 
 package org.citrusframework.kafka.config.xml;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.kafka.embedded.EmbeddedKafkaServer;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

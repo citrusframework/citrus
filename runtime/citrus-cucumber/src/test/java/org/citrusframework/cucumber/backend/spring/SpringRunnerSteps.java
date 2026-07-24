@@ -18,7 +18,7 @@ package org.citrusframework.cucumber.backend.spring;
 
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
-import org.citrusframework.config.CitrusSpringConfig;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.test.context.ContextConfiguration;

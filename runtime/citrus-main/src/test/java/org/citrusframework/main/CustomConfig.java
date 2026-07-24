@@ -16,7 +16,7 @@
 
 package org.citrusframework.main;
 
-import org.citrusframework.config.CitrusSpringConfig;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.context.annotation.Configuration;
 
 /**

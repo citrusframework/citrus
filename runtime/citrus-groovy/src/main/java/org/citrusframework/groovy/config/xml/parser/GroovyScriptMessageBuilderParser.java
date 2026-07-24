@@ -16,7 +16,7 @@
 
 package org.citrusframework.groovy.config.xml.parser;
 
-import org.citrusframework.config.xml.parser.ScriptMessageBuilderParser;
+import org.citrusframework.spring.config.xml.parser.ScriptMessageBuilderParser;
 import org.citrusframework.groovy.message.builder.GroovyFileResourcePayloadBuilder;
 import org.citrusframework.groovy.message.builder.GroovyScriptPayloadBuilder;
 import org.citrusframework.util.StringUtils;

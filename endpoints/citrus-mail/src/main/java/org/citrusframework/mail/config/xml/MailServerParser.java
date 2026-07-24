@@ -19,8 +19,8 @@ package org.citrusframework.mail.config.xml;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.AbstractServerParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.AbstractServerParser;
 import org.citrusframework.mail.server.MailServer;
 import org.citrusframework.base.server.AbstractServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

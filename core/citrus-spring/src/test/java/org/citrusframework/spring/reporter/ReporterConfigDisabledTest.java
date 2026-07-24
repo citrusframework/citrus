@@ -16,9 +16,9 @@
 
 package org.citrusframework.spring.reporter;
 
-import static org.citrusframework.reporter.ReporterConfig.CITRUS_HTML_REPORTER;
-import static org.citrusframework.reporter.ReporterConfig.CITRUS_JUNIT_REPORTER;
-import static org.citrusframework.reporter.ReporterConfig.CITRUS_LOGGING_REPORTER;
+import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_HTML_REPORTER;
+import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_JUNIT_REPORTER;
+import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_LOGGING_REPORTER;
 
 import org.citrusframework.spring.UnitTestSupport;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -26,7 +26,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-@TestPropertySource(value = "classpath:org/citrusframework/reporter/default-logger-disabled.properties")
+@TestPropertySource(value = "classpath:org/citrusframework/spring/reporter/default-logger-disabled.properties")
 public class ReporterConfigDisabledTest extends UnitTestSupport {
 
     @Test

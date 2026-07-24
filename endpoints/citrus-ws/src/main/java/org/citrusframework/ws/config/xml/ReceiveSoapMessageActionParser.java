@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.AbstractReceiveMessageActionFactoryBean;
-import org.citrusframework.config.xml.ReceiveMessageActionParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.AbstractReceiveMessageActionFactoryBean;
+import org.citrusframework.spring.config.xml.ReceiveMessageActionParser;
 import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.ValidationContext;

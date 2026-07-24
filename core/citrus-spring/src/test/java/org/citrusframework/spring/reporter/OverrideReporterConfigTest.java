@@ -26,9 +26,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.reporter.ReporterConfig.CITRUS_HTML_REPORTER;
-import static org.citrusframework.reporter.ReporterConfig.CITRUS_JUNIT_REPORTER;
-import static org.citrusframework.reporter.ReporterConfig.CITRUS_LOGGING_REPORTER;
+import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_HTML_REPORTER;
+import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_JUNIT_REPORTER;
+import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_LOGGING_REPORTER;
 
 @ContextConfiguration
 public class OverrideReporterConfigTest extends UnitTestSupport {

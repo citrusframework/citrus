@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
-import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.AbstractTestActionFactoryBean;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.kubernetes.actions.KubernetesExecuteAction;
 import org.citrusframework.kubernetes.client.KubernetesClient;

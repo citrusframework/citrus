@@ -16,7 +16,7 @@
 
 package org.citrusframework.groovy.config.xml.parser;
 
-import org.citrusframework.config.xml.parser.CitrusXmlConfigParser;
+import org.citrusframework.spring.config.xml.parser.CitrusXmlConfigParser;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

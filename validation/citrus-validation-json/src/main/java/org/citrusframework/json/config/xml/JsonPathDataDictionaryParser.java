@@ -16,7 +16,7 @@
 
 package org.citrusframework.json.config.xml;
 
-import org.citrusframework.config.xml.AbstractDataDictionaryParser;
+import org.citrusframework.spring.config.xml.AbstractDataDictionaryParser;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.json.variable.dictionary.JsonPathMappingDataDictionary;
 

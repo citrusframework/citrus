@@ -16,9 +16,9 @@
 
 package org.citrusframework.openapi.testapi.spring;
 
-import org.citrusframework.config.xml.AbstractTestContainerFactoryBean;
-import org.citrusframework.config.xml.AsyncParser.AsyncFactoryBean;
-import org.citrusframework.config.xml.SequenceParser.SequenceFactoryBean;
+import org.citrusframework.spring.config.xml.AbstractTestContainerFactoryBean;
+import org.citrusframework.spring.config.xml.AsyncParser.AsyncFactoryBean;
+import org.citrusframework.spring.config.xml.SequenceParser.SequenceFactoryBean;
 import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.citrusframework.openapi.testapi.SoapApiReceiveMessageActionBuilder;
 import org.citrusframework.openapi.testapi.SoapApiSendMessageActionBuilder;

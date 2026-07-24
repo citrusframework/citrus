@@ -17,7 +17,7 @@
 package org.citrusframework.xml.endpoint.adapter;
 
 import org.citrusframework.xml.UnitTestSupport;
-import org.citrusframework.config.CitrusSpringConfig;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.xml.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.endpoint.direct.DirectSyncEndpoint;

@@ -16,8 +16,8 @@
 
 package org.citrusframework.xml.config.xml;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.SchemaRepositoryParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.SchemaRepositoryParser;
 import org.citrusframework.xml.schema.XsdSchemaRepository;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

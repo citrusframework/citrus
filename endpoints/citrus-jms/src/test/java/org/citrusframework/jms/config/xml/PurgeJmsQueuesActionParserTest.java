@@ -16,7 +16,7 @@
 
 package org.citrusframework.jms.config.xml;
 
-import org.citrusframework.config.CitrusNamespaceParserRegistry;
+import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;
 import org.citrusframework.jms.actions.PurgeJmsQueuesAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;

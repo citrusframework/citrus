@@ -18,9 +18,9 @@ package org.citrusframework.http.config.xml;
 
 import java.util.List;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.DescriptionElementParser;
-import org.citrusframework.config.xml.ReceiveMessageActionParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.xml.ReceiveMessageActionParser;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
@@ -34,7 +34,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import static java.lang.Boolean.parseBoolean;
-import static org.citrusframework.config.xml.MessageSelectorParser.doParse;
+import static org.citrusframework.spring.config.xml.MessageSelectorParser.doParse;
 import static org.citrusframework.http.config.xml.CookieUtils.setCookieElement;
 import static org.springframework.util.xml.DomUtils.getChildElementByTagName;
 import static org.springframework.util.xml.DomUtils.getChildElementsByTagName;

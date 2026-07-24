@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.http.Cookie;
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.config.xml.DescriptionElementParser;
-import org.citrusframework.config.xml.SendMessageActionParser;
+import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.xml.SendMessageActionParser;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;

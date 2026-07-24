@@ -16,8 +16,8 @@
 
 package org.citrusframework.groovy.config.xml;
 
-import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
-import org.citrusframework.config.xml.DescriptionElementParser;
+import org.citrusframework.spring.config.xml.AbstractTestActionFactoryBean;
+import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.citrusframework.groovy.actions.GroovyAction;
 import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;

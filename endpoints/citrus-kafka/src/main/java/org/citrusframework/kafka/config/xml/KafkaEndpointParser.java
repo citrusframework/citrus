@@ -17,7 +17,7 @@
 package org.citrusframework.kafka.config.xml;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.citrusframework.config.xml.AbstractEndpointParser;
+import org.citrusframework.spring.config.xml.AbstractEndpointParser;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.kafka.endpoint.KafkaEndpoint;
@@ -27,8 +27,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import static java.lang.Boolean.parseBoolean;
-import static org.citrusframework.config.util.BeanDefinitionParserUtils.setPropertyReference;
-import static org.citrusframework.config.util.BeanDefinitionParserUtils.setPropertyValue;
+import static org.citrusframework.spring.config.util.BeanDefinitionParserUtils.setPropertyReference;
+import static org.citrusframework.spring.config.util.BeanDefinitionParserUtils.setPropertyValue;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
 
 /**
