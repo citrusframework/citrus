@@ -19,7 +19,7 @@ package org.citrusframework.json.variable.dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.spi.Resources;

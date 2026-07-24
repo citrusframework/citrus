@@ -16,7 +16,6 @@
 
 package org.citrusframework.json;
 
-import org.citrusframework.UnitTestSupport;
 import org.citrusframework.variable.VariableExpressionSegmentMatcher;
 import org.testng.Assert;
 import org.testng.annotations.Test;

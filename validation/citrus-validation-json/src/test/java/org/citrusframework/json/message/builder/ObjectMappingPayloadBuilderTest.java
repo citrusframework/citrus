@@ -16,7 +16,7 @@
 
 package org.citrusframework.json.message.builder;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.json.actions.dsl.TestRequest;
 import org.citrusframework.spi.ReferenceResolver;
 import org.mockito.Mockito;
