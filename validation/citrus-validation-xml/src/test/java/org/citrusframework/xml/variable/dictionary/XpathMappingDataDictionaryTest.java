@@ -24,7 +24,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

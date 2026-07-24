@@ -42,7 +42,7 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;

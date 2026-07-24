@@ -17,9 +17,9 @@
 package org.citrusframework.spring.context;
 
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.xml.Marshaller;
-import org.citrusframework.xml.MarshallerAdapter;
-import org.citrusframework.xml.Unmarshaller;
+import org.citrusframework.api.xml.Marshaller;
+import org.citrusframework.spring.xml.MarshallerAdapter;
+import org.citrusframework.api.xml.Unmarshaller;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;

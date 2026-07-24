@@ -66,7 +66,7 @@ import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
 import org.citrusframework.variable.VariableExpressionIterator;
 import org.citrusframework.variable.VariableUtils;
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

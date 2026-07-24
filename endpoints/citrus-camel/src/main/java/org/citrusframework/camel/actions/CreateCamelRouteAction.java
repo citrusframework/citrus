@@ -31,7 +31,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.xml.StringSource;
+import org.citrusframework.api.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

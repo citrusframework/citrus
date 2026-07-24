@@ -24,7 +24,7 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.xml.XmlValidationHelper;
+import org.citrusframework.xml.support.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
@@ -33,14 +33,14 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.MessageUtils;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
-import org.citrusframework.xml.util.XMLUtils;
+import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.citrusframework.validation.xml.schema.XmlSchemaValidation;
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.xml.DomUtils;
@@ -53,7 +53,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.ls.LSException;
 
 import static org.citrusframework.util.StringUtils.hasText;
-import static org.citrusframework.xml.util.XMLUtils.prettyPrint;
+import static org.citrusframework.xml.support.XMLUtils.prettyPrint;
 
 /**
  * Default message validator implementation. Working on XML messages

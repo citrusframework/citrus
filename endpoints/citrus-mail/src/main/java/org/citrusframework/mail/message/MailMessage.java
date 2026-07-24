@@ -29,7 +29,7 @@ import org.citrusframework.mail.model.MailRequest;
 import org.citrusframework.mail.model.MailResponse;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 
 /**
  * @since 2.7

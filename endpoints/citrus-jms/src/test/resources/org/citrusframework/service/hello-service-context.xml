@@ -72,7 +72,7 @@
 
   <bean id="loggingInterceptor" class="org.citrusframework.jms.integration.service.LoggingInterceptor"/>
 
-  <bean id="helloMarshaller" class="org.citrusframework.xml.Jaxb2Marshaller">
+  <bean id="helloMarshaller" class="org.citrusframework.base.xml.Jaxb2Marshaller">
     <constructor-arg value="org.citrusframework.jms.integration.service.model"/>
   </bean>
 

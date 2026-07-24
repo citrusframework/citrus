@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.citrusframework.springintegration.UnitTestSupport;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;

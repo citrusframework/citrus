@@ -19,7 +19,7 @@ package org.citrusframework.springintegration.channel;
 import org.citrusframework.springintegration.channel.selector.DispatchingMessageSelector;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;

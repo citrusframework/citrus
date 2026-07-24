@@ -27,7 +27,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.ssh.model.SshMarshaller;
 import org.citrusframework.ssh.model.SshRequest;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;

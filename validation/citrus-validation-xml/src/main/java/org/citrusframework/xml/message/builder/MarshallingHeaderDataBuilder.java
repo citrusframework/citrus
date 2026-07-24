@@ -21,8 +21,8 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.builder.DefaultHeaderDataBuilder;
-import org.citrusframework.xml.Marshaller;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.Marshaller;
+import org.citrusframework.api.xml.StringResult;
 
 public class MarshallingHeaderDataBuilder extends DefaultHeaderDataBuilder {
 

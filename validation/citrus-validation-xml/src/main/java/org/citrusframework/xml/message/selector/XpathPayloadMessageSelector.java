@@ -18,7 +18,7 @@ package org.citrusframework.xml.message.selector;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.selector.AbstractMessageSelector;
-import org.citrusframework.xml.util.XMLUtils;
+import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

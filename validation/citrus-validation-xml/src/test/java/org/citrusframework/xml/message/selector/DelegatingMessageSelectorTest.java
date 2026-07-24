@@ -20,7 +20,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.selector.DelegatingMessageSelector;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;

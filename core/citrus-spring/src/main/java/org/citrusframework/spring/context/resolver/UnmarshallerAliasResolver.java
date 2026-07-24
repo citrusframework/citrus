@@ -18,8 +18,8 @@ package org.citrusframework.spring.context.resolver;
 
 import org.citrusframework.context.resolver.TypeAliasResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.xml.MarshallerAdapter;
-import org.citrusframework.xml.Unmarshaller;
+import org.citrusframework.spring.xml.MarshallerAdapter;
+import org.citrusframework.api.xml.Unmarshaller;
 import org.springframework.oxm.Marshaller;
 
 public class UnmarshallerAliasResolver implements TypeAliasResolver<Unmarshaller, org.springframework.oxm.Unmarshaller> {

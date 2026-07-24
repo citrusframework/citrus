@@ -29,7 +29,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.xml.transform.Source;
 
-import org.citrusframework.xml.StringSource;
+import org.citrusframework.api.xml.StringSource;
 import org.springframework.util.MultiValueMap;
 import org.testng.Assert;
 import org.testng.annotations.Test;

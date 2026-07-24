@@ -16,7 +16,6 @@
 
 package org.citrusframework.ws.message.converter;
 
-import java.io.IOException;
 import java.util.Collections;
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
@@ -28,7 +27,7 @@ import org.citrusframework.ws.addressing.WsAddressingHeaders;
 import org.citrusframework.ws.addressing.WsAddressingMessageHeaders;
 import org.citrusframework.ws.addressing.WsAddressingVersion;
 import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 import org.mockito.Mockito;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapHeader;

@@ -23,6 +23,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestSource;
+import org.citrusframework.api.xml.StringSource;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.api.common.TestSourceAware;

@@ -25,7 +25,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.ssh.client.SshEndpointConfiguration;
 import org.citrusframework.ssh.model.SshMessage;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 
 /**
  * @since 2.1

@@ -26,7 +26,7 @@ import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapFault;
 import org.citrusframework.ws.message.SoapMessageHeaders;
-import org.citrusframework.xml.StringSource;
+import org.citrusframework.api.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

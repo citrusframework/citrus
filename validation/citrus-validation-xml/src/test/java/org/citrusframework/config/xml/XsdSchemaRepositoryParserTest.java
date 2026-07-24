@@ -19,7 +19,7 @@ package org.citrusframework.config.xml;
 import java.util.Map;
 
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.citrusframework.xml.XsdSchemaRepository;
+import org.citrusframework.xml.schema.XsdSchemaRepository;
 import org.citrusframework.xml.schema.RootQNameSchemaMappingStrategy;
 import org.citrusframework.xml.schema.TargetNamespaceSchemaMappingStrategy;
 import org.citrusframework.xml.schema.WsdlXsdSchema;

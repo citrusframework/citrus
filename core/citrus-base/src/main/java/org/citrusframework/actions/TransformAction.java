@@ -30,8 +30,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.xml.StringResult;
-import org.citrusframework.xml.StringSource;
+import org.citrusframework.api.xml.StringResult;
+import org.citrusframework.api.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -29,7 +29,7 @@ import javax.xml.transform.TransformerFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 import org.springframework.beans.propertyeditors.LocaleEditor;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.xml.namespace.QNameEditor;

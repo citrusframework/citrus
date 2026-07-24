@@ -29,7 +29,7 @@ import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessageHeaders;
-import org.citrusframework.xml.StringResult;
+import org.citrusframework.api.xml.StringResult;
 import jakarta.xml.soap.MimeHeader;
 import jakarta.xml.soap.MimeHeaders;
 import jakarta.xml.soap.SOAPMessage;

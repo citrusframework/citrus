@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
-import org.citrusframework.xml.util.XMLUtils;
-import org.citrusframework.xml.XmlFormattingMessageProcessor;
+import org.citrusframework.xml.support.XMLUtils;
+import org.citrusframework.xml.message.processor.XmlFormattingMessageProcessor;
 
 /**
  * @since 2.6.2
