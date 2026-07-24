@@ -1,5 +1,3 @@
-///usr/bin/env jbang "$0" "$@" ; exit $?
-
 /*
  * Copyright the original author or authors.
  *
@@ -15,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-//JAVA 17+
-//REPOS mavencentral
-//DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:5.0.0-SNAPSHOT}@pom
-//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:5.0.0-SNAPSHOT}
-package main;
+package org.citrusframework.jbang.cli.commands;
 
 import org.citrusframework.jbang.cli.CitrusJBangMain;
+import picocli.CommandLine;
 
-/**
- * Main to run CitrusJBang
- */
-public class CitrusJBang {
+@CommandLine.Command(name = "agent",
+                     description = "Manage Citrus agents (use agent --help to see sub commands)",
+                     sortOptions = false, showDefaultValues = true)
+public class Agent extends CitrusCommand {
 
-    public static void main(String... args) {
-        CitrusJBangMain.run(args);
+    public Agent(CitrusJBangMain main) {
+        super(main);
     }
+
+    @Override
+    public Integer call() {
+        new CommandLine(this).execute("--help");
+        return 0;
+    }
+
 }

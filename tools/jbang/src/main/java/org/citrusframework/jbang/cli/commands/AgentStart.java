@@ -1,0 +1,211 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.citrusframework.jbang.cli.commands;
+
+import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.citrusframework.api.agent.CitrusAgentConfiguration;
+import org.citrusframework.common.TestSourceHelper;
+import org.citrusframework.jbang.cli.CitrusJBangMain;
+import org.citrusframework.jbang.cli.maven.MavenDependencyResolver;
+import org.citrusframework.server.Server;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ClassLoaderHelper;
+import org.citrusframework.util.StringUtils;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+
+@Command(name = "start", description = "Starts the Citrus agent as a server")
+public class AgentStart extends CitrusCommand {
+
+    @Option(names = { "--engine" }, description = "Name of the test engine that is used ti run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
+    private String engine;
+
+    @Option(names = { "--port" }, description = "Server port.")
+    private String port;
+
+    @Option(names = { "--verbose" }, defaultValue = "true", description = "Should the test engine print verbose test summary information.")
+    private String verbose;
+
+    @Option(names = { "--reset" }, defaultValue = "true", description = "Should the test engine reset the suite state for each run.")
+    private String reset;
+
+    @Option(names = { "--system-exit" }, description = "Should the server exit based on success or failure of the test run.")
+    private String systemExit;
+
+    @Option(names = { "--skip-tests" }, description = "Should the server skip the test run at startup.")
+    private String skipTests;
+
+    @Option(names = { "--config-class" }, description = "Configuration class name.")
+    private String configClass;
+
+    @Option(names = { "--time-to-live" }, description = "If this time is set the server automatically terminates after the given time.")
+    private String timeToLive;
+
+    @Option(names = { "--test-jar" }, description = "Path to a Java archive that holds tests to run.")
+    private String testJar;
+
+    @Option(names = { "--packages" }, arity = "0..*", description = "Test package name to include in the test run.")
+    private String[] packages;
+
+    @Option(names = { "--includes" }, arity = "0..*", description = "Includes test name pattern.")
+    private String[] includes;
+
+    @Option(names = { "--modules" }, description = "Comma delimited list of additional Citrus modules that should be loaded with the agent.")
+    private String modules;
+
+    @Option(names = { "--dep" }, arity = "0..*", description = "Set of additional Maven dependencies that should be loaded with the agent.")
+    private String[] dependencies;
+
+    @Option(names = { "--offline" }, description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
+    private String offline;
+
+    @Option(names = { "--inspect-code" }, defaultValue = "true", description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
+    private String inspectCode;
+
+    @Option(names = { "--property" }, arity = "0..*", description = "Default System property to set before the test run.")
+    private String[] properties;
+
+    @Option(names = { "--work-directory" }, description = "The working directory used by the file based test engines to load file resources from.")
+    private String workDir;
+
+    public AgentStart(CitrusJBangMain main) {
+        super(main);
+    }
+
+    @Override
+    public Integer call() {
+        return start();
+    }
+
+    private int start() {
+        resolveArtifacts();
+
+        CitrusAgentConfiguration config = fromCliOptions(CitrusAgentConfiguration.fromEnvVars(TestSourceHelper::create));
+        Server server = ClassLoaderHelper.instantiateType("org.citrusframework.agent.CitrusAgentServer", config);
+        server.run();
+
+        return 0;
+    }
+
+    /**
+     * Resolve citrus-agent Maven artifact and its transitive dependencies and add it to the classpath.
+     */
+    private void resolveArtifacts() {
+        try {
+            MavenDependencyResolver resolver = new MavenDependencyResolver();
+            resolver.resolveModule("citrus-agent")
+                    .stream()
+                    .filter(mavenArtifact -> !mavenArtifact.getGav().getArtifactId().equals("citrus-jbang")) // avoid adding citrus-jbang multiple times
+                    .forEach(mavenArtifact -> {
+                        try {
+                            ClassLoaderHelper.addArtifact(mavenArtifact.toString(), mavenArtifact.getFile().toURI().toURL());
+                        } catch (MalformedURLException e) {
+                            printer().printErr(String.format("Error resolving artifact %s due to '%s'", mavenArtifact, e.getMessage()));
+                        }
+                    });
+
+            // Adapt and set class loader in main thread
+            ClassLoaderHelper.updateContextClassloader();
+        } catch (Throwable e) {
+            printer().printErr("Failed to set context class loader with additional dependencies due to '%s'".formatted(e.getMessage()));
+        }
+    }
+
+    private CitrusAgentConfiguration fromCliOptions(CitrusAgentConfiguration configuration) {
+        if (StringUtils.hasText(engine)) {
+            configuration.setEngine(engine);
+        }
+
+        if (StringUtils.hasText(verbose)) {
+            configuration.setVerbose(Boolean.parseBoolean(verbose));
+        }
+
+        if (StringUtils.hasText(reset)) {
+            configuration.setReset(Boolean.parseBoolean(reset));
+        }
+
+        if (StringUtils.hasText(port)) {
+            configuration.setPort(Integer.parseInt(port));
+        }
+
+        if (StringUtils.hasText(systemExit)) {
+            configuration.setSystemExit(Boolean.parseBoolean(systemExit));
+        }
+
+        if (StringUtils.hasText(skipTests)) {
+            configuration.setSkipTests(Boolean.parseBoolean(skipTests));
+        }
+
+        if (StringUtils.hasText(testJar)) {
+            configuration.setTestJar(Resources.create(testJar).file());
+        }
+
+        if (StringUtils.hasText(configClass)) {
+            configuration.setConfigClass(configClass);
+        }
+
+        if (StringUtils.hasText(timeToLive)) {
+            configuration.setTimeToLive(Long.parseLong(timeToLive));
+        }
+
+        if (includes != null) {
+            configuration.setIncludes(includes);
+        }
+
+        if (workDir != null) {
+            configuration.setWorkDir(workDir);
+        }
+
+        if (packages != null) {
+            configuration.setPackages(List.of(packages));
+        }
+
+        if (properties != null) {
+            configuration.addDefaultProperties(Arrays.stream(properties)
+                    .filter(p -> p.contains("="))
+                    .map(p -> p.split("=", 2))
+                    .collect(Collectors.toMap(p -> p[0], p -> p[1])));
+        }
+
+        if (StringUtils.hasText(modules)) {
+            configuration.setModules(Arrays.stream(modules.split(","))
+                    .map(String::trim)
+                    .filter(StringUtils::hasText)
+                    .collect(Collectors.toSet()));
+        }
+
+        if (dependencies != null) {
+            configuration.setDependencies(Arrays.stream(dependencies)
+                    .map(String::trim)
+                    .filter(StringUtils::hasText)
+                    .collect(Collectors.toSet()));
+        }
+
+        if (StringUtils.hasText(offline)) {
+            configuration.setOffline(Boolean.parseBoolean(offline));
+        }
+
+        if (StringUtils.hasText(inspectCode)) {
+            configuration.setInspectCode(Boolean.parseBoolean(inspectCode));
+        }
+
+        return configuration;
+    }
+}

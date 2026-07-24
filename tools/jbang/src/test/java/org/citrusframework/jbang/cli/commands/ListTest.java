@@ -1,5 +1,3 @@
-///usr/bin/env jbang "$0" "$@" ; exit $?
-
 /*
  * Copyright the original author or authors.
  *
@@ -16,20 +14,20 @@
  * limitations under the License.
  */
 
-//JAVA 17+
-//REPOS mavencentral
-//DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:5.0.0-SNAPSHOT}@pom
-//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:5.0.0-SNAPSHOT}
-package main;
+package org.citrusframework.jbang.cli.commands;
 
 import org.citrusframework.jbang.cli.CitrusJBangMain;
+import org.junit.jupiter.api.Assertions;
+import org.testng.annotations.Test;
 
-/**
- * Main to run CitrusJBang
- */
-public class CitrusJBang {
+public class ListTest extends CommandTest {
 
-    public static void main(String... args) {
-        CitrusJBangMain.run(args);
+    @Test
+    public void shouldListTests() {
+        CitrusJBangMain main = createCitrusJBangMain();
+
+        main.execute("ls");
+
+        Assertions.assertTrue(printer.getOutput().contains("PID  NAME  STATUS  AGE"));
     }
 }
