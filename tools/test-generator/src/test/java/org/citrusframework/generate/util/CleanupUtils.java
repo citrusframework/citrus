@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework.utils;
-
-import org.citrusframework.util.FileUtils;
+package org.citrusframework.generate.util;
 
 import java.io.File;
 import java.util.Set;
+
+import org.citrusframework.util.FileUtils;
 
 public class CleanupUtils {
 
