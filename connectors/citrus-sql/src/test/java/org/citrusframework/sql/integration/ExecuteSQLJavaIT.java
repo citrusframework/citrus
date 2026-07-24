@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.integration.actions;
+package org.citrusframework.sql.integration;
 
 import javax.sql.DataSource;
 
@@ -38,7 +38,7 @@ public class ExecuteSQLJavaIT extends TestNGCitrusSpringSupport implements TestA
         variable("customerId", "1");
 
         run(sql().dataSource(dataSource)
-            .sqlResource("classpath:org/citrusframework/integration/actions/script.sql"));
+            .sqlResource("classpath:org/citrusframework/sql/integration/script.sql"));
 
         run(query().dataSource(dataSource)
             .statement("select NAME from CUSTOMERS where CUSTOMER_ID='${customerId}'")
@@ -51,7 +51,7 @@ public class ExecuteSQLJavaIT extends TestNGCitrusSpringSupport implements TestA
             .validate("DESCRIPTION", "NULL"));
 
         run(query().dataSource(dataSource)
-            .sqlResource("classpath:org/citrusframework/integration/actions/query-script.sql")
+            .sqlResource("classpath:org/citrusframework/sql/integration/query-script.sql")
             .validate("ORDER_ID", "1")
             .validate("NAME", "Christoph")
             .validate("OVERALL_CNT", "${rowsCount}")

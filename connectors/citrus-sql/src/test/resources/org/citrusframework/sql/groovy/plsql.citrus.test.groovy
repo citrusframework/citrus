@@ -25,7 +25,7 @@ actions {
     $(plsql()
         .dataSource(dataSource)
         .ignoreErrors(true)
-        .sqlResource("classpath:org/citrusframework/integration/actions/plsql.sql")
+        .sqlResource("classpath:org/citrusframework/sql/integration/plsql.sql")
     )
 
     $(plsql()

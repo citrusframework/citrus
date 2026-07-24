@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.integration.actions;
+package org.citrusframework.sql.integration;
 
 import javax.sql.DataSource;
 
@@ -35,7 +35,7 @@ public class ExecutePLSQLJavaIT extends TestNGCitrusSpringSupport implements Tes
     @CitrusTest
     public void executePLSQLAction() {
         run(plsql().dataSource(dataSource)
-            .sqlResource("classpath:org/citrusframework/integration/actions/plsql.sql")
+            .sqlResource("classpath:org/citrusframework/sql/integration/plsql.sql")
             .ignoreErrors(true));
 
         run(plsql().dataSource(dataSource)
