@@ -122,7 +122,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testPLSQLExecutionWithFileResource() {
-        executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/actions/test-plsql.sql");
+        executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-plsql.sql");
 
         String controlStatement = """
                 DECLARE
@@ -173,7 +173,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
         context.setVariable("myText", "Hello World!");
         context.setVariable("tableName", "Greetings");
 
-        executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/actions/test-plsql-with-variables.sql");
+        executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-plsql-with-variables.sql");
 
         String controlStatement = """
                 DECLARE
@@ -225,7 +225,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testPLSQLExecutionWithFileResourceMultipleStmts() {
-        executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/actions/test-plsql-multiple-stmts.sql");
+        executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-plsql-multiple-stmts.sql");
 
         String controlStatement = """
                 DECLARE

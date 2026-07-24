@@ -1,1 +1,1 @@
-type=org.citrusframework.config.xml.JsonSchemaParser
+type=org.citrusframework.json.config.xml.JsonSchemaParser

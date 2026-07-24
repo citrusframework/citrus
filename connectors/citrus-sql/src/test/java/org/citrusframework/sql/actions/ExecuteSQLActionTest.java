@@ -16,6 +16,10 @@
 
 package org.citrusframework.sql.actions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
@@ -25,10 +29,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
@@ -85,7 +85,7 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSQLExecutionWithFileResource() {
-        executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/actions/test-sql-statements.sql");
+        executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-statements.sql");
 
         reset(jdbcTemplate);
 
@@ -119,7 +119,7 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         context.setVariable("resolvedStatus", "resolved");
         context.setVariable("version", "1");
 
-        executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/actions/test-sql-with-variables.sql");
+        executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-with-variables.sql");
 
         reset(jdbcTemplate);
 

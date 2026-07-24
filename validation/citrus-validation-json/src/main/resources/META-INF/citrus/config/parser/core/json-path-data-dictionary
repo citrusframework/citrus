@@ -1,1 +1,1 @@
-type=org.citrusframework.config.xml.JsonPathDataDictionaryParser
+type=org.citrusframework.json.config.xml.JsonPathDataDictionaryParser

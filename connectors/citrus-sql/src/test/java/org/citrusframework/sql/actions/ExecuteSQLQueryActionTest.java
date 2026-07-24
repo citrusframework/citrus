@@ -524,7 +524,7 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
 
         when(jdbcTemplate.queryForList(sql2)).thenReturn(Collections.singletonList(resultMap2));
 
-        executeSQLQueryAction.sqlResource("classpath:org/citrusframework/actions/test-sql-query-statements.sql");
+        executeSQLQueryAction.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-query-statements.sql");
         executeSQLQueryAction.extract("ORDERTYPE", "orderType");
         executeSQLQueryAction.extract("STATUS", "status");
         executeSQLQueryAction.extract("NAME", "name");
