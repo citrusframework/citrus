@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 
 public class AsyncFailIT extends TestNGCitrusSpringSupport {
 
-    @Test(groups = "org.citrusframework.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
+    @Test(groups = "org.citrusframework.testng.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
     @CitrusTestSource(type = TestLoader.SPRING)
     public void AsyncFailIT() {}
 }

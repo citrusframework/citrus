@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.junit;
 
 /**
  * Test group to mark a test should fail on purpose. Group is executed during Maven integration-test phase in a separate

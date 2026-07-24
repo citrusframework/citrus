@@ -76,13 +76,13 @@
               <goal>integration-test</goal>
             </goals>
             <configuration>
-              <groups>org.citrusframework.ShouldFailGroup</groups>
+              <groups>org.citrusframework.junit.ShouldFailGroup</groups>
               <excludedGroups>NonExisting</excludedGroups>
             </configuration>
           </execution>
         </executions>
         <configuration>
-          <excludedGroups>org.citrusframework.ShouldFailGroup</excludedGroups>
+          <excludedGroups>org.citrusframework.junit.ShouldFailGroup</excludedGroups>
         </configuration>
         <dependencies>
           <dependency>

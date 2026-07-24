@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 
 public class FailTestNgIT extends TestNGCitrusSpringSupport {
 
-    @Test(groups = "org.citrusframework.ShouldFailGroup", expectedExceptions = CitrusRuntimeException.class)
+    @Test(groups = "org.citrusframework.testng.ShouldFailGroup", expectedExceptions = CitrusRuntimeException.class)
     @CitrusTestSource(type = TestLoader.SPRING)
     public void FailTestNgIT() {}
 }
