@@ -23,7 +23,7 @@
 
             <send endpoint="myMessageEndpoint">
                 <message>
-                    <builder type="groovy" file="classpath:org/citrusframework/actions/payload.groovy"/>
+                    <builder type="groovy" file="classpath:org/citrusframework/groovy/actions/payload.groovy"/>
                 </message>
             </send>
 

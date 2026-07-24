@@ -52,12 +52,12 @@ public class GroovyTest extends AbstractXmlActionTest {
 
         action = (GroovyAction) result.getTestAction(actionIndex++);
         Assert.assertNull(action.getScriptResourcePath());
-        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:org/citrusframework/script/custom-script-template.groovy");
+        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:org/citrusframework/groovy/script/custom-script-template.groovy");
         Assert.assertNotNull(action.getScript());
 
         action = (GroovyAction) result.getTestAction(actionIndex);
         Assert.assertNotNull(action.getScriptResourcePath());
-        Assert.assertEquals(action.getScriptResourcePath(), "classpath:org/citrusframework/script/example.groovy");
+        Assert.assertEquals(action.getScriptResourcePath(), "classpath:org/citrusframework/groovy/script/example.groovy");
         Assert.assertNull(action.getScript());
     }
 

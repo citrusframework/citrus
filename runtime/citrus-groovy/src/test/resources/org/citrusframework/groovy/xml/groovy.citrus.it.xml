@@ -35,7 +35,7 @@
     </groovy>
 
     <groovy>
-      <script script-template="classpath:org/citrusframework/script/custom-script-template.groovy">
+      <script script-template="classpath:org/citrusframework/groovy/script/custom-script-template.groovy">
         <![CDATA[
           Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
           Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
@@ -45,7 +45,7 @@
     </groovy>
 
     <groovy>
-      <script file="classpath:org/citrusframework/script/example.groovy"/>
+      <script file="classpath:org/citrusframework/groovy/script/example.groovy"/>
     </groovy>
   </actions>
 </test>

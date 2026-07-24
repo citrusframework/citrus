@@ -126,7 +126,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     public void testSendMessageWithMessageBuilderScriptResource() {
         DefaultMessageBuilder messageContentBuilder = new DefaultMessageBuilder();
         messageContentBuilder.setPayloadBuilder(
-                new GroovyFileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload.groovy"));
+                new GroovyFileResourcePayloadBuilder("classpath:org/citrusframework/groovy/actions/test-request-payload.groovy"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
                 "  <Message>Hello World!</Message>" + System.lineSeparator() +

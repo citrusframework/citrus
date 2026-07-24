@@ -35,7 +35,7 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testScriptResource() {
         GroovyAction bean = new GroovyAction.Builder()
-                .scriptResourcePath("classpath:org/citrusframework/script/example.groovy")
+                .scriptResourcePath("classpath:org/citrusframework/groovy/script/example.groovy")
                 .build();
         bean.execute(context);
     }
@@ -114,7 +114,7 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testCustomScriptTemplate() {
         GroovyAction bean = new GroovyAction.Builder()
-                .template("classpath:org/citrusframework/script/custom-script-template.groovy")
+                .template("classpath:org/citrusframework/groovy/script/custom-script-template.groovy")
                 .script("Assert.assertEquals(context.getVariable('scriptTemplateVar'), 'It works!')")
                 .build();
         bean.execute(context);
@@ -123,7 +123,7 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testInvalidScriptTemplate() {
         GroovyAction bean = new GroovyAction.Builder()
-                .template("classpath:org/citrusframework/script/invalid-script-template.groovy")
+                .template("classpath:org/citrusframework/groovy/script/invalid-script-template.groovy")
                 .script("println 'This should not work!'")
                 .build();
 

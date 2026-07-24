@@ -22,7 +22,6 @@ import org.citrusframework.DefaultTestCase;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.UnitTestSupport;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
