@@ -16,7 +16,7 @@
 
 package org.citrusframework.main.spring;
 
-import org.citrusframework.CitrusSpringSettings;
+import org.citrusframework.spring.CitrusSpringSettings;
 import org.citrusframework.api.main.CitrusAppConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

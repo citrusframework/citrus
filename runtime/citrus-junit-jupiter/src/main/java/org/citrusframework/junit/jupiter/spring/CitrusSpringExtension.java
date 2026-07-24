@@ -19,8 +19,8 @@ package org.citrusframework.junit.jupiter.spring;
 import java.lang.reflect.Method;
 
 import org.citrusframework.Citrus;
-import org.citrusframework.CitrusSpringContext;
-import org.citrusframework.CitrusSpringContextProvider;
+import org.citrusframework.spring.CitrusSpringContext;
+import org.citrusframework.spring.CitrusSpringContextProvider;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.CitrusExtensionHelper;

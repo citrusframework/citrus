@@ -14,33 +14,36 @@
  * limitations under the License.
  */
 
-package org.citrusframework.reporter;
+package org.citrusframework.spring.reporter;
 
+import org.citrusframework.spring.UnitTestSupport;
+import org.citrusframework.base.report.HtmlReporter;
+import org.citrusframework.base.report.JUnitReporter;
+import org.citrusframework.report.LoggingReporter;
+import org.testng.annotations.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.reporter.ReporterConfig.CITRUS_HTML_REPORTER;
 import static org.citrusframework.reporter.ReporterConfig.CITRUS_JUNIT_REPORTER;
 import static org.citrusframework.reporter.ReporterConfig.CITRUS_LOGGING_REPORTER;
 
-import org.citrusframework.UnitTestSupport;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.test.context.TestPropertySource;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-@TestPropertySource(value = "classpath:org/citrusframework/reporter/default-logger-disabled.properties")
-public class ReporterConfigDisabledTest extends UnitTestSupport {
+public class ReporterConfigIT extends UnitTestSupport {
 
     @Test
     public void testDefaultLoggingReporter() {
-        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_LOGGING_REPORTER));
+        assertThat(applicationContext.getBean(CITRUS_LOGGING_REPORTER))
+                .isInstanceOf(LoggingReporter.class);
     }
 
     @Test
     public void testDefaultJunitReporter() {
-        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_JUNIT_REPORTER));
+        assertThat(applicationContext.getBean(CITRUS_JUNIT_REPORTER))
+                .isInstanceOf(JUnitReporter.class);
     }
 
     @Test
     public void testDefaultHtmlReporter() {
-        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_HTML_REPORTER));
+        assertThat(applicationContext.getBean(CITRUS_HTML_REPORTER))
+                .isInstanceOf(HtmlReporter.class);
     }
 }

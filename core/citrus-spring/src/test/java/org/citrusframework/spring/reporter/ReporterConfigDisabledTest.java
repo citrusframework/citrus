@@ -14,36 +14,33 @@
  * limitations under the License.
  */
 
-package org.citrusframework.reporter;
+package org.citrusframework.spring.reporter;
 
-import org.citrusframework.UnitTestSupport;
-import org.citrusframework.base.report.HtmlReporter;
-import org.citrusframework.base.report.JUnitReporter;
-import org.citrusframework.report.LoggingReporter;
-import org.testng.annotations.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.reporter.ReporterConfig.CITRUS_HTML_REPORTER;
 import static org.citrusframework.reporter.ReporterConfig.CITRUS_JUNIT_REPORTER;
 import static org.citrusframework.reporter.ReporterConfig.CITRUS_LOGGING_REPORTER;
 
-public class ReporterConfigIT extends UnitTestSupport {
+import org.citrusframework.spring.UnitTestSupport;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.test.context.TestPropertySource;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+@TestPropertySource(value = "classpath:org/citrusframework/reporter/default-logger-disabled.properties")
+public class ReporterConfigDisabledTest extends UnitTestSupport {
 
     @Test
     public void testDefaultLoggingReporter() {
-        assertThat(applicationContext.getBean(CITRUS_LOGGING_REPORTER))
-                .isInstanceOf(LoggingReporter.class);
+        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_LOGGING_REPORTER));
     }
 
     @Test
     public void testDefaultJunitReporter() {
-        assertThat(applicationContext.getBean(CITRUS_JUNIT_REPORTER))
-                .isInstanceOf(JUnitReporter.class);
+        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_JUNIT_REPORTER));
     }
 
     @Test
     public void testDefaultHtmlReporter() {
-        assertThat(applicationContext.getBean(CITRUS_HTML_REPORTER))
-                .isInstanceOf(HtmlReporter.class);
+        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_HTML_REPORTER));
     }
 }

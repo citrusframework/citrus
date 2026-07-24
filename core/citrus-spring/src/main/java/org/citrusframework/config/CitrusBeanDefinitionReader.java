@@ -16,7 +16,7 @@
 
 package org.citrusframework.config;
 
-import org.citrusframework.CitrusSpringSettings;
+import org.citrusframework.spring.CitrusSpringSettings;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;

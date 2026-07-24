@@ -18,7 +18,7 @@ package org.citrusframework.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.BeanDefinitionParserTestSupport;
+import org.citrusframework.spring.BeanDefinitionParserTestSupport;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.spring.variable.GlobalVariablesPropertyLoader;
 import org.testng.Assert;

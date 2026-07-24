@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.spring;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.citrusframework.CitrusContext;
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.api.container.AfterSuite;
 import org.citrusframework.api.container.BeforeSuite;

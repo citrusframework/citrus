@@ -16,7 +16,7 @@
 
 package org.citrusframework.spring.functions;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.spring.UnitTestSupport;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.spring.functions.core.EnvironmentPropertyFunction;
 import org.springframework.beans.factory.annotation.Autowired;

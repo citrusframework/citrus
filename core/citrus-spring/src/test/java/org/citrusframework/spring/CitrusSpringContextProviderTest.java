@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.spring;
 
+import org.citrusframework.CitrusContextProvider;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

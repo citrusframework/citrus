@@ -33,6 +33,8 @@ import org.citrusframework.junit.CitrusFrameworkMethod;
 import org.citrusframework.junit.JUnit4Helper;
 import org.citrusframework.base.message.DefaultMessageProcessors;
 import org.citrusframework.message.Processors;
+import org.citrusframework.spring.CitrusSpringContext;
+import org.citrusframework.spring.CitrusSpringContextProvider;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;
 import org.citrusframework.variable.DefaultVariableExtractors;

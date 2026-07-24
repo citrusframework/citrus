@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.spring;
 
 import java.util.Collections;
 
+import org.citrusframework.Citrus;
+import org.citrusframework.TestAction;
 import org.citrusframework.api.container.AfterSuite;
 import org.citrusframework.api.container.BeforeSuite;
 import org.citrusframework.container.SequenceAfterSuite;
