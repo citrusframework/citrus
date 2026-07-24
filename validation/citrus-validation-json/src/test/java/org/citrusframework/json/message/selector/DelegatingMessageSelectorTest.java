@@ -15,7 +15,7 @@
  */
 package org.citrusframework.json.message.selector;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.selector.DelegatingMessageSelector;

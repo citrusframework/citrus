@@ -19,7 +19,7 @@ package org.citrusframework.json.actions.dsl;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCase;
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;

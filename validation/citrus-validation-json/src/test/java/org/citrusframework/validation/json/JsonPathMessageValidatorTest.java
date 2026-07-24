@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.context.TestContext;
