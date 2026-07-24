@@ -23,7 +23,7 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.CreateEndpointAction;
 import org.citrusframework.endpoint.EndpointBuilder;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class CreateEndpoint implements TestActionBuilder<CreateEndpointAction> {
 

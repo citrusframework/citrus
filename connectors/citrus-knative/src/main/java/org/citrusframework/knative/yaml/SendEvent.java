@@ -27,7 +27,7 @@ import org.citrusframework.knative.actions.eventing.SendEventAction;
 import org.citrusframework.api.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, SendEvent> implements ReferenceResolverAware {
 

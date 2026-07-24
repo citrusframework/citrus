@@ -24,7 +24,7 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.kubernetes.KubernetesSettings;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 import static org.citrusframework.kubernetes.KubernetesSupport.getNamespace;
 

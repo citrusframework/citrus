@@ -23,7 +23,7 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 @XmlType(name = "", propOrder = {})
 public class DirectEndpointBuilder extends AbstractEndpointBuilder<DirectEndpoint> {

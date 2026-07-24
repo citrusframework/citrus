@@ -23,7 +23,7 @@ import org.citrusframework.TestSourceProvider;
 import org.citrusframework.api.main.CitrusAppConfiguration;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

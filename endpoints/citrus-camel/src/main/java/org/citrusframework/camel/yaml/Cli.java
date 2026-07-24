@@ -37,10 +37,10 @@ import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
-import static org.citrusframework.yaml.SchemaProperty.Kind.GROUP;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.GROUP;
 
 public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Builder<?, ?>> {
 

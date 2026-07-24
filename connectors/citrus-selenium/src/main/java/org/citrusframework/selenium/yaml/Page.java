@@ -26,7 +26,7 @@ import org.citrusframework.api.actions.selenium.PageValidator;
 import org.citrusframework.api.actions.selenium.WebPage;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> implements ReferenceResolverAware {
 

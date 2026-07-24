@@ -24,7 +24,7 @@ import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 @XmlType(name = "", propOrder = {})
 public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyncEndpoint> {

@@ -35,7 +35,7 @@ import org.citrusframework.validation.context.json.JsonPathMessageValidationCont
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.script.ScriptValidationContextBuilder;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 
 public class Receive implements TestActionBuilder<ReceiveMessageAction>, ReferenceResolverAware {

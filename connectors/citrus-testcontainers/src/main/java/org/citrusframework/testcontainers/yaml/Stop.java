@@ -21,7 +21,7 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.citrusframework.testcontainers.actions.StopTestcontainersAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class Stop extends AbstractTestcontainersAction.Builder<StopTestcontainersAction, Stop> implements ReferenceResolverAware {
 

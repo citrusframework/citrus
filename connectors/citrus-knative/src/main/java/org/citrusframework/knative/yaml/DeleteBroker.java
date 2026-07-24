@@ -23,7 +23,7 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.DeleteBrokerAction;
 import org.citrusframework.api.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class DeleteBroker extends AbstractKnativeAction.Builder<DeleteBrokerAction, DeleteBroker> {
 

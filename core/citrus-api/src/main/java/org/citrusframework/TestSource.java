@@ -22,7 +22,7 @@ import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 /**
  * @since 4.0

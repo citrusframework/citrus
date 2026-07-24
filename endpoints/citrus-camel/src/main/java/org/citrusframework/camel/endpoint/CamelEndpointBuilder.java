@@ -24,8 +24,8 @@ import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 @SchemaType(module = "citrus-camel")
 @XmlType(name = "", propOrder = {})

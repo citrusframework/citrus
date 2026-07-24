@@ -17,7 +17,7 @@
 package org.citrusframework.api.main;
 
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 /**
  * @since 2.7.4

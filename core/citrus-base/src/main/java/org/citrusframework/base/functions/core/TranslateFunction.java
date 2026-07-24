@@ -21,7 +21,7 @@ import java.util.List;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 /**
  * Function searches for occurrences of a given character sequence and replaces all

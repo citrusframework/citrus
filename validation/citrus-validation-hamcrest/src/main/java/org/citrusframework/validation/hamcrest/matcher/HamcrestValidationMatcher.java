@@ -41,8 +41,8 @@ import org.citrusframework.validation.matcher.ControlExpressionParser;
 import org.citrusframework.validation.matcher.DefaultControlExpressionParser;
 import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.variable.VariableUtils;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 

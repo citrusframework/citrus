@@ -27,8 +27,8 @@ import org.citrusframework.base.server.AbstractServerBuilder;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * @since 2.5

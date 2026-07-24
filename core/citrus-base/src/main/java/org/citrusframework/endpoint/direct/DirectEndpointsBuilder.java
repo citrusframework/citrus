@@ -26,8 +26,8 @@ import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 @SchemaType(oneOf = { "asynchronous", "synchronous" })
 @XmlType(name = "", propOrder = {})

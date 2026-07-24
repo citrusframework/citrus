@@ -25,7 +25,7 @@ import org.citrusframework.kubernetes.actions.AgentConnectAction;
 import org.citrusframework.kubernetes.actions.AgentDisconnectAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAction, Agent> implements ReferenceResolverAware {
 

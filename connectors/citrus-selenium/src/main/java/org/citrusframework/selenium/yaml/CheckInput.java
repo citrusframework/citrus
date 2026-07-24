@@ -21,7 +21,7 @@ import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.CheckInputAction;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class CheckInput extends AbstractSeleniumAction.Builder<CheckInputAction, CheckInput> implements ElementAware {
 

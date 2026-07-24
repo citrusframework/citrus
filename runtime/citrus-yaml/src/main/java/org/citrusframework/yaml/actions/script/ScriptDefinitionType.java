@@ -15,7 +15,7 @@
  */
 package org.citrusframework.yaml.actions.script;
 
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class ScriptDefinitionType {
 

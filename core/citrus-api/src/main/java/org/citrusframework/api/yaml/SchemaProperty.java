@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.yaml;
+package org.citrusframework.api.yaml;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -22,7 +22,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.json.JsonPathUtils;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 /**
  * @since 2.6.2

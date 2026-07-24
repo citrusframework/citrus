@@ -23,7 +23,7 @@ import org.citrusframework.knative.actions.AbstractKnativeAction;
 import org.citrusframework.knative.actions.eventing.VerifyBrokerAction;
 import org.citrusframework.api.kubernetes.ClusterType;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class VerifyBroker extends AbstractKnativeAction.Builder<VerifyBrokerAction, VerifyBroker> {
 

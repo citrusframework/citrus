@@ -20,7 +20,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.DeleteConfigMapAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class DeleteConfigMap extends AbstractKubernetesAction.Builder<DeleteConfigMapAction, DeleteConfigMap> {
 

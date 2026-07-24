@@ -22,7 +22,7 @@ import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.ServiceDisconnectAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class DisconnectService extends AbstractKubernetesAction.Builder<ServiceDisconnectAction, DisconnectService>
         implements ReferenceResolverAware {

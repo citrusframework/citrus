@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.TraceVariablesAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class TraceVariables implements TestActionBuilder<TraceVariablesAction> {
 

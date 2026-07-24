@@ -19,7 +19,7 @@ package org.citrusframework.camel.yaml;
 import java.util.List;
 
 import org.citrusframework.camel.actions.StopCamelRouteAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class StopRoutes implements CamelActionBuilderWrapper<StopCamelRouteAction.Builder> {
     private final StopCamelRouteAction.Builder builder = new StopCamelRouteAction.Builder();

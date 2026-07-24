@@ -43,8 +43,8 @@ import org.citrusframework.util.json.JsonNodeStringBuilder;
 import org.citrusframework.util.json.JsonStringBuilder;
 import org.citrusframework.message.MessageAwareTestAction;
 import org.citrusframework.message.MessagePayloadUtils;
-import org.citrusframework.yaml.YamlNodeStringBuilder;
-import org.citrusframework.yaml.YamlStringBuilder;
+import org.citrusframework.util.yaml.YamlNodeStringBuilder;
+import org.citrusframework.util.yaml.YamlStringBuilder;
 
 /**
  * Reporter generates a detailed report of executed tests by capturing its test action execution.

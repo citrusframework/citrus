@@ -31,8 +31,8 @@ import org.citrusframework.kafka.message.KafkaMessageConverter;
 import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * @since 2.8

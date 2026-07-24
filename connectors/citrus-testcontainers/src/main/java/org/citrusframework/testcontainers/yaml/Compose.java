@@ -32,11 +32,11 @@ import org.citrusframework.testcontainers.compose.ComposeDownAction;
 import org.citrusframework.testcontainers.compose.ComposeUpAction;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 
 public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestcontainersAction, Compose> implements ReferenceResolverAware {
 

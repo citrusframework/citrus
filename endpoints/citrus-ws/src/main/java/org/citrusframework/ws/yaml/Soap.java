@@ -40,14 +40,14 @@ import org.citrusframework.ws.actions.SoapClientActionBuilder;
 import org.citrusframework.ws.actions.SoapServerActionBuilder;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessageHeaders;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
-import static org.citrusframework.yaml.SchemaProperty.Kind.CONTAINER;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.CONTAINER;
 
 public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 

@@ -23,7 +23,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 

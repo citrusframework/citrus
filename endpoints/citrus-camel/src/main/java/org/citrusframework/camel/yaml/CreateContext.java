@@ -17,7 +17,7 @@
 package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.CreateCamelContextAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class CreateContext implements CamelActionBuilderWrapper<CreateCamelContextAction.Builder> {
     private final CreateCamelContextAction.Builder builder = new CreateCamelContextAction.Builder();

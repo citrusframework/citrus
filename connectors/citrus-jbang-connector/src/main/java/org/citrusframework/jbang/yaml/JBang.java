@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.jbang.actions.JBangAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class JBang implements TestActionBuilder<JBangAction> {
 

@@ -32,7 +32,7 @@ import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.base.server.AbstractServerBuilder;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.eclipse.jetty.ee11.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;

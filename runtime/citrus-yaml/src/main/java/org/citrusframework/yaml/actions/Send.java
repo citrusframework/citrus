@@ -22,7 +22,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class Send implements TestActionBuilder<SendMessageAction>, ReferenceResolverAware {
 

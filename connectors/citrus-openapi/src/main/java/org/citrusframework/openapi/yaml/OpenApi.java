@@ -43,7 +43,7 @@ import org.citrusframework.openapi.actions.OpenApiSpecificationSourceAwareBuilde
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
@@ -51,7 +51,7 @@ import org.citrusframework.yaml.actions.Send;
 import static org.citrusframework.openapi.OpenApiSettings.getOpenApiValidationPolicy;
 import static org.citrusframework.openapi.OpenApiSettings.getRequestAutoFillRandomValues;
 import static org.citrusframework.openapi.OpenApiSettings.getResponseAutoFillRandomValues;
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 
 public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 

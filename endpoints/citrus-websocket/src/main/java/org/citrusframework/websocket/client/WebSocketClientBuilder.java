@@ -22,8 +22,8 @@ import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 
 /**

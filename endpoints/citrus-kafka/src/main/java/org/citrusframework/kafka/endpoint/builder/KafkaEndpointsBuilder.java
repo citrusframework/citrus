@@ -27,8 +27,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kafka.endpoint.KafkaEndpointBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 @SchemaType(oneOf = { "asynchronous", "synchronous" }, module = "citrus-kafka")
 @XmlType(name = "", propOrder = {

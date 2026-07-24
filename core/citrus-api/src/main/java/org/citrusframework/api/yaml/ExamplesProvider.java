@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.yaml;
+package org.citrusframework.api.yaml;
 
 import java.util.Collections;
 import java.util.Set;

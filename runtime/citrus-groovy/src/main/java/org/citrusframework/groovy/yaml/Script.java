@@ -16,7 +16,7 @@
 
 package org.citrusframework.groovy.yaml;
 
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class Script {
 

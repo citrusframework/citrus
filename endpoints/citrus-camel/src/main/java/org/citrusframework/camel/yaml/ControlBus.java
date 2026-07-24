@@ -17,7 +17,7 @@
 package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.CamelControlBusAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class ControlBus implements CamelActionBuilderWrapper<CamelControlBusAction.Builder> {
 

@@ -22,7 +22,7 @@ import org.citrusframework.selenium.actions.StopBrowserAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class StopBrowser extends AbstractSeleniumAction.Builder<StopBrowserAction, StopBrowser> implements ReferenceResolverAware {
 

@@ -24,10 +24,10 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.testcontainers.actions.AbstractTestcontainersAction;
 import org.citrusframework.testcontainers.actions.TestcontainersAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
-import static org.citrusframework.yaml.SchemaProperty.Kind.GROUP;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.GROUP;
 
 public class Testcontainers implements TestActionBuilder<TestcontainersAction>, ReferenceResolverAware {
 

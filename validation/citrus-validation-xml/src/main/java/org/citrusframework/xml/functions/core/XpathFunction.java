@@ -24,8 +24,8 @@ import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.api.xml.namespace.DefaultNamespaceContext;
 import org.citrusframework.xml.xpath.XPathUtils;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * @since 2.6.2

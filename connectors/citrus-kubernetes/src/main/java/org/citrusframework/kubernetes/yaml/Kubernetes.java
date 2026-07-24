@@ -26,9 +26,9 @@ import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.KubernetesAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 
 public class Kubernetes implements TestActionBuilder<KubernetesAction>, ReferenceResolverAware {
 

@@ -17,7 +17,7 @@
 package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.StartCamelContextAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class StartContext implements CamelActionBuilderWrapper<StartCamelContextAction.Builder> {
     private final StartCamelContextAction.Builder builder = new StartCamelContextAction.Builder();

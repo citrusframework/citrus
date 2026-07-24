@@ -25,10 +25,10 @@ import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
-import static org.citrusframework.yaml.SchemaProperty.Kind.GROUP;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.GROUP;
 
 public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 

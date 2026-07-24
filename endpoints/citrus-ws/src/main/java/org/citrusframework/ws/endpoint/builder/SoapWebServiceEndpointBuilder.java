@@ -28,8 +28,8 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.ws.client.WebServiceClientBuilder;
 import org.citrusframework.ws.server.WebServiceServerBuilder;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 @SchemaType(oneOf = { "client", "server" }, module = "citrus-ws")
 @XmlType(name = "", propOrder = {

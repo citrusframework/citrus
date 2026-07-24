@@ -38,13 +38,13 @@ import org.citrusframework.http.actions.HttpServerResponseActionBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 
 public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
