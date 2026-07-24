@@ -23,7 +23,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.base.xml.Jaxb2Marshaller;
 import org.citrusframework.api.xml.Marshaller;
-import org.citrusframework.xml.namespace.CitrusNamespacePrefixMapper;
+import org.citrusframework.generate.xml.namespace.CitrusNamespacePrefixMapper;
 
 /**
  * @since 2.5

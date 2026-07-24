@@ -23,7 +23,7 @@ import java.util.Collections;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.utils.CleanupUtils;
+import org.citrusframework.generate.util.CleanupUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;

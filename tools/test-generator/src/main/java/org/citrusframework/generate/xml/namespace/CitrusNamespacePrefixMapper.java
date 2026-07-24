@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.xml.namespace;
+package org.citrusframework.generate.xml.namespace;
 
 import java.util.HashMap;
 import java.util.Map;

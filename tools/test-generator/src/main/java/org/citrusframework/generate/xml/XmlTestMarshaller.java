@@ -24,7 +24,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.xml.namespace.CitrusNamespacePrefixMapper;
+import org.citrusframework.generate.xml.namespace.CitrusNamespacePrefixMapper;
 import org.glassfish.jaxb.runtime.marshaller.NamespacePrefixMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
