@@ -95,7 +95,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
      * @param element the element containing the locations to be added to the builder
      * @param builder the BeanDefinitionBuilder to add the locations to
      */
-    static void addLocationsToBuilder(Element element, BeanDefinitionBuilder builder) {
+    public static void addLocationsToBuilder(Element element, BeanDefinitionBuilder builder) {
         Element locationsElement = DomUtils.getChildElementByTagName(element, LOCATIONS);
         if (locationsElement != null) {
             List<Element> locationElements = DomUtils.getChildElementsByTagName(locationsElement, LOCATION);
@@ -117,7 +117,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
      * @param builder The builder to add the resulting RuntimeBeanReference to
      * @param parserContext The context to parse the schema elements in
      */
-    static void parseSchemasElement(Element element,
+    public static void parseSchemasElement(Element element,
                                      BeanDefinitionBuilder builder,
                                      ParserContext parserContext) {
         Element schemasElement = DomUtils.getChildElementByTagName(element, SCHEMAS);
@@ -162,7 +162,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
     /**
      * Clears the type cache. Required when dynamically loading additional artifacts to the classpath.
      */
-    static void clearCache() {
+    public static void clearCache() {
         TYPE_RESOLVER.clearCache();
     }
 }

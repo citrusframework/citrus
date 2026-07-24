@@ -1,1 +1,1 @@
-type=org.citrusframework.config.xml.XsdSchemaParser
+type=org.citrusframework.xml.config.xml.XsdSchemaParser

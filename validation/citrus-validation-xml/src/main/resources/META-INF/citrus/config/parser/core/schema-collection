@@ -1,1 +1,1 @@
-type=org.citrusframework.config.xml.SchemaCollectionParser
+type=org.citrusframework.xml.config.xml.SchemaCollectionParser
