@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.integration.actions;
+package org.citrusframework.sql.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
@@ -24,8 +24,8 @@ import org.testng.annotations.Test;
 /**
  * @since 2008
  */
-public class ExecutePLSQLIT extends TestNGCitrusSpringSupport {
+public class ExecuteSQLTransactionIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
-    public void ExecutePLSQLIT() {}
+    public void ExecuteSQLTransactionIT() {}
 }

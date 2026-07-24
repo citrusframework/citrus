@@ -7,7 +7,7 @@ actions:
       dataSource: "dataSource"
       ignoreErrors: true
       statements:
-        - file: "classpath:org/citrusframework/integration/actions/plsql.sql"
+        - file: "classpath:org/citrusframework/sql/integration/plsql.sql"
 
   - plsql:
       dataSource: "dataSource"

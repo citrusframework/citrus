@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.sql.integration;
 
-import org.citrusframework.base.context.TestContextFactory;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.testng.annotations.Test;
 
-public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
-
-    @Override
-    protected TestContextFactory createTestContextFactory() {
-        return TestContextFactory.newInstance();
-    }
+/**
+ * @since 2008
+ */
+public class FinallyBlockIT extends TestNGCitrusSpringSupport {
+    @Test
+    @CitrusTestSource(type = TestLoader.SPRING)
+    public void FinallyBlockIT() {}
 }

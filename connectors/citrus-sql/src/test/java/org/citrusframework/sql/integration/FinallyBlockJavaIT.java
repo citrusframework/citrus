@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.integration.actions;
+package org.citrusframework.sql.integration;
 
 import javax.sql.DataSource;
 
@@ -26,31 +26,28 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
 @Test
-public class QueryDatabaseRetriesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+public class FinallyBlockJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     @Autowired
     @Qualifier("testDataSource")
     private DataSource dataSource;
 
-    @SuppressWarnings("deprecation")
     @CitrusTest
-    public void sqlQueryRetries() {
-        run(sql().dataSource(dataSource)
-                .sqlResource("classpath:org/citrusframework/integration/actions/script.sql"));
+    public void finallyBlock() {
+        variable("orderId", "citrus:randomNumber(5)");
 
-        run(parallel().actions(
-            repeatOnError()
-                .autoSleep(500).index("i").until("i = 10")
-                .actions(query().dataSource(dataSource)
-                    .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
-                    .validate("CUSTOMER_CNT", "0")
-            ),
-
-            sequential().actions(
-                sleep().milliseconds(2000),
-                sql().dataSource(dataSource)
-                    .statement("DELETE FROM CUSTOMERS")
-            )
+        run(doFinally().actions(
+                sql().dataSource(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'"),
+                echo("ORDER deletion time: ${date}")
         ));
+
+        run(sql().dataSource(dataSource)
+            .statement("INSERT INTO ORDERS (ORDER_ID, REQUEST_TAG, CONVERSATION_ID, CREATION_DATE) VALUES (${orderId},1,1,'citrus:currentDate(dd.MM.yyyy)')"));
+
+        run(query().dataSource(dataSource)
+            .statement("SELECT CREATION_DATE FROM ORDERS WHERE ORDER_ID='${orderId}'")
+            .extract("CREATION_DATE", "date"));
+
+        run(echo("ORDER creation time: ${date}"));
     }
 }

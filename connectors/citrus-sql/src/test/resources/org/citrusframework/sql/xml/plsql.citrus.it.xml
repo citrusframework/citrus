@@ -20,7 +20,7 @@
   <description>Sample test in XML</description>
   <actions>
     <plsql datasource="dataSource" ignore-errors="true">
-      <statements file="classpath:org/citrusframework/integration/actions/plsql.sql"/>
+      <statements file="classpath:org/citrusframework/sql/integration/plsql.sql"/>
     </plsql>
 
     <plsql datasource="dataSource" ignore-errors="true">
