@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.spring;
 
+import org.citrusframework.CitrusContext;
+import org.citrusframework.CitrusContextProvider;
 import org.citrusframework.config.CitrusSpringConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

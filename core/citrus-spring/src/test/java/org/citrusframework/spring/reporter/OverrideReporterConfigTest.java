@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework.reporter;
+package org.citrusframework.spring.reporter;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.spring.UnitTestSupport;
 import org.citrusframework.base.report.HtmlReporter;
 import org.citrusframework.base.report.JUnitReporter;
 import org.citrusframework.report.LoggingReporter;

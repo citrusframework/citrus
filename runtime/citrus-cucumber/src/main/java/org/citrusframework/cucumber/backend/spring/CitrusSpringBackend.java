@@ -27,7 +27,7 @@ import io.cucumber.core.resource.ClasspathSupport;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusInstanceProcessor;
-import org.citrusframework.CitrusSpringContext;
+import org.citrusframework.spring.CitrusSpringContext;
 import org.citrusframework.cucumber.backend.CitrusBackend;
 import org.citrusframework.cucumber.container.StepTemplate;
 import org.citrusframework.cucumber.step.xml.XmlStepDefinition;

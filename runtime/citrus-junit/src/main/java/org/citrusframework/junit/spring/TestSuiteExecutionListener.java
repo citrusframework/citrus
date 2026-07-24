@@ -17,7 +17,7 @@
 package org.citrusframework.junit.spring;
 
 import org.citrusframework.Citrus;
-import org.citrusframework.CitrusSpringContextProvider;
+import org.citrusframework.spring.CitrusSpringContextProvider;
 import org.citrusframework.junit.TestSuiteState;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContext;

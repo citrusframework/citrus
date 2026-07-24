@@ -36,6 +36,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.base.message.DefaultMessageProcessors;
 import org.citrusframework.message.Processors;
+import org.citrusframework.spring.CitrusSpringContext;
+import org.citrusframework.spring.CitrusSpringContextProvider;
 import org.citrusframework.testng.TestNGHelper;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.validation.DefaultValidations;

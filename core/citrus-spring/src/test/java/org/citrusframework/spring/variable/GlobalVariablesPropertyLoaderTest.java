@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.spring.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.variable.GlobalVariables;
 import org.testng.Assert;

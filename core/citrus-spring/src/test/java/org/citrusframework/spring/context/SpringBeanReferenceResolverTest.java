@@ -16,7 +16,7 @@
 
 package org.citrusframework.spring.context;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.spring.UnitTestSupport;
 import org.citrusframework.api.xml.Marshaller;
 import org.citrusframework.spring.xml.MarshallerAdapter;
 import org.citrusframework.api.xml.Unmarshaller;

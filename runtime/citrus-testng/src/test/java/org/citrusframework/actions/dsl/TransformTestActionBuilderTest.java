@@ -16,8 +16,6 @@
 
 package org.citrusframework.actions.dsl;
 
-import java.io.IOException;
-
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;

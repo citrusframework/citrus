@@ -17,7 +17,7 @@
 package org.citrusframework.integration;
 
 import org.citrusframework.Citrus;
-import org.citrusframework.CitrusSpringContextProvider;
+import org.citrusframework.spring.CitrusSpringContextProvider;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestActionSupport;
 import org.citrusframework.TestCaseRunner;

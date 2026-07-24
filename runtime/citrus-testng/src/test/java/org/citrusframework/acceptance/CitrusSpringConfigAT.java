@@ -16,7 +16,7 @@
 
 package org.citrusframework.acceptance;
 
-import org.citrusframework.CitrusSpringSettings;
+import org.citrusframework.spring.CitrusSpringSettings;
 import org.citrusframework.base.report.HtmlReporter;
 import org.citrusframework.base.report.JUnitReporter;
 import org.citrusframework.base.report.TestFlowReporter;
