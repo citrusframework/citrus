@@ -20,7 +20,7 @@ import java.time.Duration;
 
 import org.citrusframework.TestActionContainerBuilder;
 
-public interface RepeatOnErrorUntilTrueContainerBuilder<T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>>
+public interface RepeatOnErrorUntilTrueContainerBuilder<T extends IteratingActionContainer, B extends TestActionContainerBuilder<T, B>>
         extends IteratingContainerBuilder<T, B>, TestActionContainerBuilder<T, B> {
 
     /**

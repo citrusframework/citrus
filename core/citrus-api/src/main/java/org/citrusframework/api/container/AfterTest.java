@@ -16,14 +16,5 @@
 
 package org.citrusframework.api.container;
 
-public interface AfterTest extends TestActionContainer {
-
-    /**
-     * Checks if this suite actions should execute according to suite name and included test groups.
-     * @param testName
-     * @param packageName
-     * @param includedGroups
-     * @return
-     */
-    boolean shouldExecute(String testName, String packageName, String[] includedGroups);
+public interface AfterTest extends TestBoundaryActionContainer {
 }

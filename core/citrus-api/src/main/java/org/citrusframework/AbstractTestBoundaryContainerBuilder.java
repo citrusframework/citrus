@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.container.AbstractTestBoundaryActionContainer;
+import org.citrusframework.api.container.TestBoundaryActionContainer;
 
 /**
  * Abstract container builder takes care on calling the container runner when actions are placed in the container.
  */
-public abstract class AbstractTestBoundaryContainerBuilder<T extends AbstractTestBoundaryActionContainer, S extends AbstractTestBoundaryContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
+public abstract class AbstractTestBoundaryContainerBuilder<T extends TestBoundaryActionContainer, S extends AbstractTestBoundaryContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
 
     private String namePattern;
     private String packageNamePattern;

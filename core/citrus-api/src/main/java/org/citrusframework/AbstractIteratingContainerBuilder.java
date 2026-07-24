@@ -18,11 +18,12 @@ package org.citrusframework;
 
 import java.time.Duration;
 
-import org.citrusframework.container.AbstractIteratingActionContainer;
+import org.citrusframework.api.container.IteratingActionContainer;
 import org.citrusframework.api.container.IteratingConditionExpression;
+import org.citrusframework.api.container.IteratingContainerBuilder;
 
-public abstract class AbstractIteratingContainerBuilder<T extends AbstractIteratingActionContainer, S extends AbstractIteratingContainerBuilder<T, S>>
-        extends AbstractTestContainerBuilder<T, S> {
+public abstract class AbstractIteratingContainerBuilder<T extends IteratingActionContainer, S extends AbstractIteratingContainerBuilder<T, S>>
+        extends AbstractTestContainerBuilder<T, S> implements IteratingContainerBuilder<T, S> {
 
     protected String condition;
     protected IteratingConditionExpression conditionExpression;
@@ -31,41 +32,31 @@ public abstract class AbstractIteratingContainerBuilder<T extends AbstractIterat
     protected int index;
     protected int start = 1;
 
-    /**
-     * Adds a condition to this iterate container.
-     */
+    @Override
     public S condition(String condition) {
         this.condition = condition;
         return self;
     }
 
-    /**
-     * Adds a condition expression to this iterate container.
-     */
+    @Override
     public S condition(IteratingConditionExpression condition) {
         this.conditionExpression = condition;
         return self;
     }
 
-    /**
-     * Sets the index variable name.
-     */
+    @Override
     public S index(String name) {
         this.indexName = name;
         return self;
     }
 
-    /**
-     * Sets the timeout.
-     */
+    @Override
     public S timeout(Duration timeout) {
         this.timeout = timeout;
         return self;
     }
 
-    /**
-     * Sets the index start value.
-     */
+    @Override
     public S startsWith(int index) {
         this.start = index;
         return self;

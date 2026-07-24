@@ -21,9 +21,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.time.StopWatch;
 import org.citrusframework.bean.BeanDefinition;
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.container.AbstractActionContainer;
@@ -128,7 +128,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      */
     private long timeout = 10000L;
 
-    private final StopWatch timer = new StopWatch();
+    private final AtomicLong startTimeNanos = new AtomicLong(0L);
+    private final AtomicLong stopTimeNanos = new AtomicLong(0L);
 
     public DefaultTestCase() {
         super("test");
@@ -329,31 +330,37 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             }
 
             afterTest(context);
-            completeTestResultWithDuration();
         } finally {
+            completeTestResultWithDuration();
             context.getTestListeners().onTestFinalization(this);
         }
     }
 
     private void restartTimer() {
-        if (timer.isStopped()) {
-            timer.reset();
-            timer.start();
-        }
+        startTimeNanos.set(System.nanoTime());
+        stopTimeNanos.set(0);
     }
 
     private void completeTestResultWithDuration() {
         gracefullyStopTimer();
 
         if (nonNull(testResult)) {
-            testResult.withDuration(Duration.ofNanos(timer.getNanoTime()));
+            testResult.withDuration(Duration.ofNanos(getTestDuration()));
+        }
+    }
+
+    private long getTestDuration() {
+        if (startTimeNanos.get() == 0) {
+            return 0;
+        } else if (stopTimeNanos.get() == 0) {
+            return System.nanoTime() - startTimeNanos.get();
+        } else {
+            return stopTimeNanos.get() - startTimeNanos.get();
         }
     }
 
     private void gracefullyStopTimer() {
-        if (!timer.isStopped()) {
-            timer.stop();
-        }
+        stopTimeNanos.compareAndSet(0L, System.nanoTime());
     }
 
     /**

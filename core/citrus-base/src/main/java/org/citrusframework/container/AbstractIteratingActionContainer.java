@@ -22,6 +22,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.IteratingActionContainer;
 import org.citrusframework.api.container.IteratingConditionExpression;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.base.context.TestContextFactory;
@@ -35,7 +36,7 @@ import static java.util.Objects.nonNull;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-public abstract class AbstractIteratingActionContainer extends AbstractActionContainer {
+public abstract class AbstractIteratingActionContainer extends AbstractActionContainer implements IteratingActionContainer {
 
     /**
      * Boolean expression string

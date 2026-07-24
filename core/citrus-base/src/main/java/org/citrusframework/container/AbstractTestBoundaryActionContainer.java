@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.TestBoundaryActionContainer;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 2.0
  */
-public abstract class AbstractTestBoundaryActionContainer extends AbstractActionContainer implements ReferenceResolverAware {
+public abstract class AbstractTestBoundaryActionContainer extends AbstractActionContainer implements TestBoundaryActionContainer, ReferenceResolverAware {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(AbstractTestBoundaryActionContainer.class);
@@ -60,13 +61,7 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
         super(name, builder);
     }
 
-    /**
-     * Checks if this suite actions should execute according to suite name and included test groups.
-     * @param testName
-     * @param packageName
-     * @param includedGroups
-     * @return
-     */
+    @Override
     public boolean shouldExecute(String testName, String packageName, String[] includedGroups) {
         String baseErrorMessage = "Skip before test container because of {} restrictions - do not execute container '{}'";
 
@@ -148,86 +143,52 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
         return false;
     }
 
-    /**
-     * Gets the test groups that restrict the container execution.
-     * @return
-     */
+    @Override
     public List<String> getTestGroups() {
         return testGroups;
     }
 
-    /**
-     * Sets the test groups that restrict the container execution.
-     * @param testGroups
-     */
+    @Override
     public void setTestGroups(List<String> testGroups) {
         this.testGroups = testGroups;
     }
 
-    /**
-     * Gets the name pattern.
-     * @return
-     */
+    @Override
     public String getNamePattern() {
         return namePattern;
     }
 
-    /**
-     * Sets the name pattern.
-     * @param namePattern
-     */
+    @Override
     public void setNamePattern(String namePattern) {
         this.namePattern = namePattern;
     }
 
-    /**
-     * Gets the package name pattern.
-     * @return
-     */
+    @Override
     public String getPackageNamePattern() {
         return packageNamePattern;
     }
 
-    /**
-     * Sets the package name pattern.
-     * @param packageNamePattern
-     */
+    @Override
     public void setPackageNamePattern(String packageNamePattern) {
         this.packageNamePattern = packageNamePattern;
     }
 
-    /**
-     * Gets the env.
-     *
-     * @return
-     */
+    @Override
     public Map<String, String> getEnv() {
         return env;
     }
 
-    /**
-     * Sets the env.
-     *
-     * @param env
-     */
+    @Override
     public void setEnv(Map<String, String> env) {
         this.env = env;
     }
 
-    /**
-     * Gets the systemProperties.
-     *
-     * @return
-     */
+    @Override
     public Map<String, String> getSystemProperties() {
         return systemProperties;
     }
 
-    /**
-     * Sets the systemProperties.
-     *
-     * @param systemProperties
-     */
+    @Override
     public void setSystemProperties(Map<String, String> systemProperties) {
         this.systemProperties = systemProperties;
     }

@@ -16,5 +16,5 @@
 
 package org.citrusframework.api.container;
 
-public interface BeforeSuite extends TestSuiteActionContainer {
+public interface IteratingActionContainer extends TestActionContainer{
 }

@@ -18,6 +18,7 @@ package org.citrusframework;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.citrusframework.api.container.TestActionContainer;
@@ -100,6 +101,25 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
      * Static Java DSL container builder using generics.
      */
     public static <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container) {
-        return new DefaultTestActions().container(container);
+        return new AbstractTestContainerBuilder<>() {
+            @Override
+            public T doBuild() {
+                container.setActions(actions.stream()
+                        .map(TestActionBuilder::build)
+                        .collect(Collectors.toList()));
+
+                return container;
+            }
+
+            @Override
+            public T build() {
+                if (!container.getActions().isEmpty()) {
+                    return container;
+                }
+
+                return super.build();
+            }
+        };
     }
+
 }

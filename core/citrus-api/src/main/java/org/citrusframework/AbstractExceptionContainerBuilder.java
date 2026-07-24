@@ -16,9 +16,9 @@
 
 package org.citrusframework;
 
-import org.citrusframework.container.AbstractActionContainer;
+import org.citrusframework.api.container.TestActionContainer;
 
-public abstract class AbstractExceptionContainerBuilder<T extends AbstractActionContainer, S extends AbstractExceptionContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
+public abstract class AbstractExceptionContainerBuilder<T extends TestActionContainer, S extends AbstractExceptionContainerBuilder<T, S>> extends AbstractTestContainerBuilder<T, S> {
 
     /**
      * Fills container with actions.

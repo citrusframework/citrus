@@ -23,10 +23,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.base.message.DefaultMessageProcessors;
+import org.citrusframework.message.DefaultMessageProcessors;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageHeaderType;
-import org.citrusframework.base.message.MessageProcessorSupport;
+import org.citrusframework.message.MessageProcessorSupport;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.ScriptPayloadBuilder;
 import org.citrusframework.base.message.builder.MessageBuilderSupport;

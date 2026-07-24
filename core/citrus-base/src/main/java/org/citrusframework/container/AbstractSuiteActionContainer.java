@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.citrusframework.AbstractTestContainerBuilder;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.container.TestSuiteActionContainer;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ import static org.citrusframework.util.StringUtils.hasText;
  *
  * @since 2.0
  */
-public abstract class AbstractSuiteActionContainer extends AbstractActionContainer implements ReferenceResolverAware {
+public abstract class AbstractSuiteActionContainer extends AbstractActionContainer implements TestSuiteActionContainer, ReferenceResolverAware {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(AbstractSuiteActionContainer.class);
@@ -57,12 +58,7 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
         super(name, builder);
     }
 
-    /**
-     * Checks if this suite actions should execute according to suite name and included test groups.
-     * @param suiteName
-     * @param includedGroups
-     * @return
-     */
+    @Override
     public boolean shouldExecute(String suiteName, String[] includedGroups) {
         String baseErrorMessage = "Skip before/after suite container because of %s restriction - do not execute container '%s'";
 
@@ -120,70 +116,42 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
         return false;
     }
 
-    /**
-     * Gets the test groups that restrict the container execution.
-     * @return
-     */
+    @Override
     public List<String> getTestGroups() {
         return testGroups;
     }
 
-    /**
-     * Sets the test groups that restrict the container execution.
-     * @param testGroups
-     */
+    @Override
     public void setTestGroups(List<String> testGroups) {
         this.testGroups = testGroups;
     }
 
-    /**
-     * Gets the suite names that restrict the container execution.
-     * @return
-     */
+    @Override
     public List<String> getSuiteNames() {
         return suiteNames;
     }
 
-    /**
-     * Sets the suite names that restrict the container execution.
-     * @param suiteNames
-     */
+    @Override
     public void setSuiteNames(List<String> suiteNames) {
         this.suiteNames = suiteNames;
     }
 
-    /**
-     * Gets the env.
-     *
-     * @return
-     */
+    @Override
     public Map<String, String> getEnv() {
         return env;
     }
 
-    /**
-     * Sets the env.
-     *
-     * @param env
-     */
+    @Override
     public void setEnv(Map<String, String> env) {
         this.env = env;
     }
 
-    /**
-     * Gets the systemProperties.
-     *
-     * @return
-     */
+    @Override
     public Map<String, String> getSystemProperties() {
         return systemProperties;
     }
 
-    /**
-     * Sets the systemProperties.
-     *
-     * @param systemProperties
-     */
+    @Override
     public void setSystemProperties(Map<String, String> systemProperties) {
         this.systemProperties = systemProperties;
     }
