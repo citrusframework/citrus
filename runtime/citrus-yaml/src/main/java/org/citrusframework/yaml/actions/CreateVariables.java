@@ -25,7 +25,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.CreateVariablesAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class CreateVariables implements TestActionBuilder<CreateVariablesAction> {
 

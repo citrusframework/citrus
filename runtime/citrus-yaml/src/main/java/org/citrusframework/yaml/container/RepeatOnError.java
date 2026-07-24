@@ -22,7 +22,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.container.RepeatOnErrorUntilTrue;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
 public class RepeatOnError implements TestActionBuilder<RepeatOnErrorUntilTrue>, ReferenceResolverAware {

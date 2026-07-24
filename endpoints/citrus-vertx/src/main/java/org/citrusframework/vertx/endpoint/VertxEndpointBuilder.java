@@ -22,8 +22,8 @@ import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.vertx.factory.VertxInstanceFactory;
 import org.citrusframework.vertx.message.VertxMessageConverter;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * @since 2.5

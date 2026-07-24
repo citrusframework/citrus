@@ -22,8 +22,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import tools.jackson.databind.json.JsonMapper;
 
 /**

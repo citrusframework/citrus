@@ -28,8 +28,8 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.rmi.client.RmiClientBuilder;
 import org.citrusframework.rmi.server.RmiServerBuilder;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * Endpoint builder delegates to either client od server endpoint builder.

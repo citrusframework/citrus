@@ -28,8 +28,8 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.websocket.client.WebSocketClientBuilder;
 import org.citrusframework.websocket.server.WebSocketServerBuilder;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 @SchemaType(oneOf = { "client", "server" }, module = "citrus-websocket")
 @XmlType(name = "", propOrder = {

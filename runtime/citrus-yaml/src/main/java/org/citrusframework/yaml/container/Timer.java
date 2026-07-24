@@ -21,7 +21,7 @@ import java.util.List;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
 public class Timer implements TestActionBuilder<org.citrusframework.container.Timer>, ReferenceResolverAware {

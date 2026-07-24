@@ -24,7 +24,7 @@ import org.citrusframework.kubernetes.actions.KubernetesConnectAction;
 import org.citrusframework.kubernetes.actions.ServiceConnectAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class Connect extends AbstractKubernetesAction.Builder<AbstractKubernetesAction, Connect>
         implements ReferenceResolverAware {

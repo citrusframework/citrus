@@ -21,7 +21,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.DeleteCustomResourceAction;
 import org.citrusframework.util.ClassLoaderHelper;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class DeleteCustomResource extends AbstractKubernetesAction.Builder<DeleteCustomResourceAction, DeleteCustomResource> {
 

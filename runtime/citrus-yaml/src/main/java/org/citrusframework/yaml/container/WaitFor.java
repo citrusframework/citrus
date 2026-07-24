@@ -26,8 +26,8 @@ import org.citrusframework.container.Wait;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.yaml.TestActions;
 
 @SchemaType(oneOf = { "message", "http", "file", "action" })

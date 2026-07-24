@@ -18,7 +18,7 @@ package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.CreateCamelComponentAction;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class CreateComponent implements CamelActionBuilderWrapper<CreateCamelComponentAction.Builder> {
     private final CreateCamelComponentAction.Builder builder = new CreateCamelComponentAction.Builder();

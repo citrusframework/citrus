@@ -20,7 +20,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.NavigateAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class Navigate extends AbstractSeleniumAction.Builder<NavigateAction, Navigate> {
 

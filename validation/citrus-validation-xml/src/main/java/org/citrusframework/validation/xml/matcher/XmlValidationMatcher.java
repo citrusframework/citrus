@@ -27,7 +27,7 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.StringValidationMatcher;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

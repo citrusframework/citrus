@@ -28,10 +28,10 @@ import org.citrusframework.agent.connector.actions.AbstractAgentAction;
 import org.citrusframework.agent.connector.actions.AgentConnectAction;
 import org.citrusframework.agent.connector.actions.AgentRunAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.yaml.TestActions;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 
 public class Agent implements TestActionBuilder<AbstractAgentAction> {
 

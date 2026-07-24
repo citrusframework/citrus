@@ -17,7 +17,7 @@
 package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.StopCamelContextAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class StopContext implements CamelActionBuilderWrapper<StopCamelContextAction.Builder> {
     private final StopCamelContextAction.Builder builder = new StopCamelContextAction.Builder();

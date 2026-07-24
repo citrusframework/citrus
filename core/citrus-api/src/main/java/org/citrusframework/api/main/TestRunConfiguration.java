@@ -27,7 +27,7 @@ import java.util.Set;
 
 import org.citrusframework.TestSource;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

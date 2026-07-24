@@ -21,7 +21,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.VerifyCustomResourceAction;
 import org.citrusframework.util.ClassLoaderHelper;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class VerifyCustomResource extends AbstractKubernetesAction.Builder<VerifyCustomResourceAction, VerifyCustomResource> {
 

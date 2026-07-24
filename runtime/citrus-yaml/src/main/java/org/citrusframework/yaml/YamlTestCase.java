@@ -29,6 +29,7 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.bean.BeanDefinition;
 import org.citrusframework.api.common.Named;
 import org.citrusframework.endpoint.EndpointBuilder;

@@ -23,10 +23,10 @@ import org.citrusframework.camel.actions.infra.CamelRunInfraAction;
 import org.citrusframework.camel.actions.infra.CamelStopInfraAction;
 import org.citrusframework.camel.actions.infra.InfraServiceUtils;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.yaml.ExamplesProvider;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.ExamplesProvider;
+import org.citrusframework.api.yaml.SchemaProperty;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 
 public class Infra implements CamelActionBuilderWrapper<AbstractCamelAction.Builder<?, ?>> {
 

@@ -20,7 +20,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public abstract class AbstractServerBuilder<T extends AbstractServer, B extends AbstractServerBuilder<T, B>> extends AbstractEndpointBuilder<T> {
 

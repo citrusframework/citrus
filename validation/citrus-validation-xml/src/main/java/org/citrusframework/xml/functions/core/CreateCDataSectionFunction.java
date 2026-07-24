@@ -19,7 +19,7 @@ package org.citrusframework.xml.functions.core;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.functions.parameter.StringParameter;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * Adds XML CDATA section tags to parameter value. This is extremely useful when having

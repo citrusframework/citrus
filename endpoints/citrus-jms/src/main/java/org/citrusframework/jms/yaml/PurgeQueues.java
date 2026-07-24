@@ -25,7 +25,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.jms.actions.PurgeJmsQueuesAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 

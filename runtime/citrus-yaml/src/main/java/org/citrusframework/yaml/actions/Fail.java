@@ -18,7 +18,7 @@ package org.citrusframework.yaml.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.FailAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class Fail implements TestActionBuilder<FailAction> {
 

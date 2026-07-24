@@ -33,8 +33,8 @@ import org.citrusframework.selenium.endpoint.SeleniumEndpointBuilder;
 import org.citrusframework.vertx.endpoint.builder.VertxEndpointsBuilder;
 import org.citrusframework.websocket.endpoint.builder.WebSocketEndpointBuilder;
 import org.citrusframework.ws.endpoint.builder.SoapWebServiceEndpointBuilder;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 @SchemaType(oneOf = {
     "http",

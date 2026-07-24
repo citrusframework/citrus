@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.json.JsonStringBuilder;
 import org.citrusframework.message.Message;
-import org.citrusframework.yaml.YamlStringBuilder;
+import org.citrusframework.util.yaml.YamlStringBuilder;
 
 import static java.util.Objects.nonNull;
 

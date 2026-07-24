@@ -18,7 +18,7 @@ package org.citrusframework.camel.yaml;
 
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class CreateRoutes implements CamelActionBuilderWrapper<CreateCamelRouteAction.Builder> {
     private final CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder();

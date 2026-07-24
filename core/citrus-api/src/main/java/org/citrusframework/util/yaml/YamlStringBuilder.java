@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.yaml;
+package org.citrusframework.util.yaml;
 
 import java.util.Arrays;
 import java.util.List;

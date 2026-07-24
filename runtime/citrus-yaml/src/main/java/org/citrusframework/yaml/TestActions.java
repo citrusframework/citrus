@@ -19,6 +19,7 @@ package org.citrusframework.yaml;
 import java.util.function.Supplier;
 
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.yaml.actions.*;
 import org.citrusframework.yaml.container.Assert;
 import org.citrusframework.yaml.container.Async;
@@ -33,8 +34,8 @@ import org.citrusframework.yaml.container.Sequential;
 import org.citrusframework.yaml.container.Timer;
 import org.citrusframework.yaml.container.WaitFor;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
-import static org.citrusframework.yaml.SchemaProperty.Kind.CONTAINER;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.CONTAINER;
 
 public class TestActions implements Supplier<TestActionBuilder<?>> {
 

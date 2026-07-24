@@ -20,7 +20,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.MakeScreenshotAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class MakeScreenshot extends AbstractSeleniumAction.Builder<MakeScreenshotAction, MakeScreenshot> {
 

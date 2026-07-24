@@ -18,7 +18,7 @@ package org.citrusframework.yaml.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.LoadPropertiesAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class LoadProperties implements TestActionBuilder<LoadPropertiesAction> {
 

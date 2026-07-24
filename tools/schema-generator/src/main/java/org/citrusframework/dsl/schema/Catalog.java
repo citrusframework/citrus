@@ -39,14 +39,14 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.base.validation.matcher.DefaultValidationMatcherLibrary;
 import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcher;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import tools.jackson.databind.JsonNode;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
-import static org.citrusframework.yaml.SchemaProperty.Kind.CONTAINER;
-import static org.citrusframework.yaml.SchemaProperty.Kind.GROUP;
-import static org.citrusframework.yaml.SchemaProperty.Kind.PROPERTY;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.CONTAINER;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.GROUP;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.PROPERTY;
 
 public class Catalog {
 

@@ -19,7 +19,7 @@ package org.citrusframework.camel.yaml;
 import java.util.List;
 
 import org.citrusframework.camel.actions.StartCamelRouteAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class StartRoutes implements CamelActionBuilderWrapper<StartCamelRouteAction.Builder> {
     private final StartCamelRouteAction.Builder builder = new StartCamelRouteAction.Builder();

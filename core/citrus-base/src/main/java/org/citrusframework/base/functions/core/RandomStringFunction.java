@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;

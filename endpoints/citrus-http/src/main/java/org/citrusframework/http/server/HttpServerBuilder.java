@@ -17,7 +17,7 @@
 package org.citrusframework.http.server;
 
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * @since 2.5

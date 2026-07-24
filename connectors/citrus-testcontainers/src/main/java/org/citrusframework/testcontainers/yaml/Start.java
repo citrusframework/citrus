@@ -41,9 +41,9 @@ import org.citrusframework.testcontainers.postgresql.StartPostgreSQLAction;
 import org.citrusframework.testcontainers.redpanda.StartRedpandaAction;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
-import static org.citrusframework.yaml.SchemaProperty.Kind.ACTION;
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 
 public class Start extends AbstractTestcontainersAction.Builder<StartTestcontainersAction<?>, Start> implements ReferenceResolverAware {
 

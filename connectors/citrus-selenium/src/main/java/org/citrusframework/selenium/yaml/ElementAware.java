@@ -17,7 +17,7 @@
 package org.citrusframework.selenium.yaml;
 
 import org.citrusframework.selenium.actions.FindElementAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.openqa.selenium.By;
 
 public interface ElementAware {

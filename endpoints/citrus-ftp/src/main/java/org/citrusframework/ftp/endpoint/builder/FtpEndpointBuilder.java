@@ -28,8 +28,8 @@ import org.citrusframework.ftp.client.FtpClientBuilder;
 import org.citrusframework.ftp.server.FtpServerBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 @SchemaType(oneOf = { "client", "server" }, module = "citrus-ftp")
 @XmlType(name = "", propOrder = {

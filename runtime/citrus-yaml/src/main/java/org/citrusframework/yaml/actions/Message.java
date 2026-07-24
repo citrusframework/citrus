@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.yaml.actions.script.ScriptDefinitionType;
 
 public class Message {

@@ -18,7 +18,7 @@ package org.citrusframework.yaml.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.StopTimerAction;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 public class StopTimer implements TestActionBuilder<StopTimerAction> {
 

@@ -21,8 +21,8 @@ import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.CreateCustomResourceAction;
 import org.citrusframework.util.ClassLoaderHelper;
-import org.citrusframework.yaml.SchemaProperty;
-import org.citrusframework.yaml.SchemaType;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 @SchemaType(oneOf = {"data", "file"})
 public class CreateCustomResource extends AbstractKubernetesAction.Builder<CreateCustomResourceAction, CreateCustomResource> {

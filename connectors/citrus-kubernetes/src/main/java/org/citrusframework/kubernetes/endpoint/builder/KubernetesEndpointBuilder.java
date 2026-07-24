@@ -27,7 +27,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.client.KubernetesClientBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 
 @XmlType(name = "", propOrder = {
         "client"

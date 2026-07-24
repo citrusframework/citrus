@@ -19,7 +19,7 @@ package org.citrusframework.dsl.schema;
 import java.util.List;
 
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.yaml.YamlTestCase;
 
 public class Test {

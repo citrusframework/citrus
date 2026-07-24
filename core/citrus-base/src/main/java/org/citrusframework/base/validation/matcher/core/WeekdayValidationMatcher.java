@@ -28,7 +28,7 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ControlExpressionParser;
 import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
-import org.citrusframework.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
