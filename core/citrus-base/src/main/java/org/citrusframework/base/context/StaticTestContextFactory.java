@@ -23,7 +23,7 @@ import org.citrusframework.context.TestContext;
  * Mainly used for unit testing.
  *
  */
-public class StaticTestContextFactory extends TestContextFactory {
+public class StaticTestContextFactory extends DefaultTestContextFactory {
 
     private final TestContext context;
 
@@ -32,6 +32,7 @@ public class StaticTestContextFactory extends TestContextFactory {
      * @param context
      */
     public StaticTestContextFactory(TestContext context) {
+        super();
         this.context = context;
     }
 

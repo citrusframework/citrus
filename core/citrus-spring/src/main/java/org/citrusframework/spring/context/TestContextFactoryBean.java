@@ -19,9 +19,10 @@ package org.citrusframework.spring.context;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.annotation.Nullable;
 import org.citrusframework.api.container.AfterTest;
 import org.citrusframework.api.container.BeforeTest;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.functions.FunctionRegistry;
@@ -50,7 +51,8 @@ import org.springframework.util.CollectionUtils;
  * components coming from Spring application context. In addition to that adds application context reference to the test context when building new instances.
  *
  */
-public class TestContextFactoryBean extends TestContextFactory implements FactoryBean<TestContext>, InitializingBean, ApplicationContextAware {
+public class TestContextFactoryBean implements FactoryBean<TestContext>, TestContextFactory,
+        InitializingBean, ApplicationContextAware {
 
     @Autowired
     private FunctionRegistry functionRegistry;
@@ -195,6 +197,11 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     }
 
     @Override
+    public void setFunctionRegistry(FunctionRegistry functionRegistry) {
+        delegate.setFunctionRegistry(functionRegistry);
+    }
+
+    @Override
     public boolean isSingleton() {
         return false;
     }
@@ -285,8 +292,18 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     }
 
     @Override
+    public void setValidationMatcherRegistry(ValidationMatcherRegistry validationMatcherRegistry) {
+        delegate.setValidationMatcherRegistry(validationMatcherRegistry);
+    }
+
+    @Override
     public ValidationMatcherRegistry getValidationMatcherRegistry() {
         return delegate.getValidationMatcherRegistry();
+    }
+
+    @Override
+    public void setGlobalVariables(GlobalVariables globalVariables) {
+        delegate.setGlobalVariables(globalVariables);
     }
 
     @Override
@@ -300,6 +317,11 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     }
 
     @Override
+    public void setMessageListeners(MessageListeners messageListeners) {
+        delegate.setMessageListeners(messageListeners);
+    }
+
+    @Override
     public TestListeners getTestListeners() {
         return delegate.getTestListeners();
     }
@@ -310,8 +332,18 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     }
 
     @Override
+    public void setTestActionListeners(TestActionListeners testActionListeners) {
+        delegate.setTestActionListeners(testActionListeners);
+    }
+
+    @Override
     public List<BeforeTest> getBeforeTest() {
         return delegate.getBeforeTest();
+    }
+
+    @Override
+    public void setBeforeTest(List<BeforeTest> beforeTest) {
+        delegate.setBeforeTest(beforeTest);
     }
 
     @Override
@@ -320,8 +352,23 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     }
 
     @Override
+    public void setAfterTest(List<AfterTest> afterTest) {
+        delegate.setAfterTest(afterTest);
+    }
+
+    @Override
+    public void setMessageValidatorRegistry(MessageValidatorRegistry messageValidatorRegistry) {
+        delegate.setMessageValidatorRegistry(messageValidatorRegistry);
+    }
+
+    @Override
     public MessageListeners getMessageListeners() {
         return delegate.getMessageListeners();
+    }
+
+    @Override
+    public void setMessageProcessors(MessageProcessors messageProcessors) {
+        delegate.setMessageProcessors(messageProcessors);
     }
 
     @Override
@@ -335,8 +382,18 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     }
 
     @Override
+    public void setEndpointFactory(EndpointFactory endpointFactory) {
+        delegate.setEndpointFactory(endpointFactory);
+    }
+
+    @Override
     public ReferenceResolver getReferenceResolver() {
         return delegate.getReferenceResolver();
+    }
+
+    @Override
+    public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
+        delegate.setNamespaceContextBuilder(namespaceContextBuilder);
     }
 
     @Override
@@ -345,8 +402,18 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     }
 
     @Override
+    public void setTypeConverter(TypeConverter typeConverter) {
+        delegate.setTypeConverter(typeConverter);
+    }
+
+    @Override
     public LogModifier getLogModifier() {
         return delegate.getLogModifier();
+    }
+
+    @Override
+    public void setLogModifier(LogModifier logModifier) {
+        delegate.setLogModifier(logModifier);
     }
 
     @Override
@@ -355,7 +422,22 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     }
 
     @Override
+    public void setTestListeners(TestListeners testListeners) {
+        delegate.setTestListeners(testListeners);
+    }
+
+    @Override
     public SegmentVariableExtractorRegistry getSegmentVariableExtractorRegistry() {
         return delegate.getSegmentVariableExtractorRegistry();
+    }
+
+    @Override
+    public void setSegmentVariableExtractorRegistry(SegmentVariableExtractorRegistry segmentVariableExtractorRegistry) {
+        delegate.setSegmentVariableExtractorRegistry(segmentVariableExtractorRegistry);
+    }
+
+    @Override
+    public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
+        delegate.setReferenceResolver(referenceResolver);
     }
 }

@@ -19,7 +19,7 @@ package org.citrusframework.ws.validation;
 import java.util.Collections;
 import java.util.Optional;
 
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;

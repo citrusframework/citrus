@@ -17,7 +17,7 @@
 package org.citrusframework.testng;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.util.ObjectHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;

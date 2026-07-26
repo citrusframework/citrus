@@ -31,7 +31,7 @@ import jakarta.jms.TopicConnectionFactory;
 import jakarta.jms.TopicSession;
 import jakarta.jms.TopicSubscriber;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.DirectEndpointConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;

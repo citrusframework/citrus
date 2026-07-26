@@ -28,7 +28,7 @@ import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.dictionary.SimpleMappingDictionary;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.message.DefaultMessage;

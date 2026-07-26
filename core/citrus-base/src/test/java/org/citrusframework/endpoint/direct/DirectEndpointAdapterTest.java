@@ -17,7 +17,7 @@
 package org.citrusframework.endpoint.direct;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.Message;

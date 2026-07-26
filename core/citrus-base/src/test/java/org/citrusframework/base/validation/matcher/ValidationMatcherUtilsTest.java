@@ -19,7 +19,7 @@ package org.citrusframework.base.validation.matcher;
 import java.util.Collections;
 
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;

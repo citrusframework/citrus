@@ -21,10 +21,13 @@ import java.util.List;
 
 import org.citrusframework.api.container.AfterTest;
 import org.citrusframework.api.container.BeforeTest;
-import org.citrusframework.context.TestContext;
+import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.citrusframework.base.endpoint.DefaultEndpointFactory;
-import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.base.functions.DefaultFunctionRegistry;
+import org.citrusframework.base.validation.matcher.DefaultValidationMatcherRegistry;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.log.DefaultLogModifier;
 import org.citrusframework.log.LogModifier;
@@ -33,23 +36,20 @@ import org.citrusframework.report.MessageListeners;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.report.TestListeners;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.DefaultMessageValidatorRegistry;
 import org.citrusframework.validation.MessageValidatorRegistry;
-import org.citrusframework.base.validation.matcher.DefaultValidationMatcherRegistry;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
-import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 
 /**
  * Factory bean implementation constructs test context instances. Takes care of adding proper default components
  * to the test context such as {@link FunctionRegistry} or {@link GlobalVariables}.
  *
  */
-public class TestContextFactory implements ReferenceResolverAware {
+public class DefaultTestContextFactory implements TestContextFactory {
 
     private FunctionRegistry functionRegistry;
 
@@ -83,57 +83,25 @@ public class TestContextFactory implements ReferenceResolverAware {
 
     private SegmentVariableExtractorRegistry segmentVariableExtractorRegistry;
 
-    /**
-     * Create new empty instance with default components set.
-     * @return
-     */
-    public static TestContextFactory newInstance() {
-        TestContextFactory factory = new TestContextFactory();
-
-        factory.setFunctionRegistry(new DefaultFunctionRegistry());
-        factory.setValidationMatcherRegistry(new DefaultValidationMatcherRegistry());
-        factory.setGlobalVariables(new GlobalVariables());
-        factory.setMessageValidatorRegistry(new DefaultMessageValidatorRegistry());
-        factory.setTestListeners(new TestListeners());
-        factory.setTestActionListeners(new TestActionListeners());
-        factory.setMessageListeners(new MessageListeners());
-        factory.setMessageProcessors(new MessageProcessors());
-        factory.setEndpointFactory(new DefaultEndpointFactory());
-        factory.setReferenceResolver(new SimpleReferenceResolver());
-        factory.setNamespaceContextBuilder(new NamespaceContextBuilder());
-        factory.setTypeConverter(TypeConverter.lookupDefault());
-        factory.setLogModifier(new DefaultLogModifier());
-        factory.setSegmentVariableExtractorRegistry(new SegmentVariableExtractorRegistry());
-
-        return factory;
-    }
-
-    public static TestContext copyOf(TestContext context) {
-        TestContext result = new TestContext();
-        result.setFunctionRegistry(context.getFunctionRegistry());
-
-        result.setGlobalVariables(new GlobalVariables.Builder()
-                .variables(context.getGlobalVariables())
-                .build());
-        result.getVariables().putAll(context.getVariables());
-
-        result.setMessageStore(context.getMessageStore());
-        result.setMessageValidatorRegistry(context.getMessageValidatorRegistry());
-        result.setValidationMatcherRegistry(context.getValidationMatcherRegistry());
-        result.setTestListeners(context.getTestListeners());
-        result.setMessageListeners(context.getMessageListeners());
-        result.setMessageProcessors(context.getMessageProcessors());
-        result.setEndpointFactory(context.getEndpointFactory());
-        result.setNamespaceContextBuilder(context.getNamespaceContextBuilder());
-        result.setReferenceResolver(context.getReferenceResolver());
-        result.setTypeConverter(context.getTypeConverter());
-        result.setLogModifier(context.getLogModifier());
-        return result;
+    public DefaultTestContextFactory() {
+        this.functionRegistry = new DefaultFunctionRegistry();
+        this.validationMatcherRegistry = new DefaultValidationMatcherRegistry();
+        this.globalVariables = new GlobalVariables();
+        this.messageValidatorRegistry = new DefaultMessageValidatorRegistry();
+        this.testListeners = new TestListeners();
+        this.testActionListeners = new TestActionListeners();
+        this.messageListeners = new MessageListeners();
+        this.messageProcessors = new MessageProcessors();
+        this.endpointFactory = new DefaultEndpointFactory();
+        this.referenceResolver = new SimpleReferenceResolver();
+        this.namespaceContextBuilder = new NamespaceContextBuilder();
+        this.typeConverter = TypeConverter.lookupDefault();
+        this.logModifier = new DefaultLogModifier();
+        this.segmentVariableExtractorRegistry = new SegmentVariableExtractorRegistry();
     }
 
     /**
      * Factory method creates new test context instance and adds all default components in this factory.
-     * @return
      */
     public TestContext getObject() {
         TestContext context = new TestContext();

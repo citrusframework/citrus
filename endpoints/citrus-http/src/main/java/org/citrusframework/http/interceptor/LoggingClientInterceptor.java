@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.message.RawMessage;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.util.FileUtils;
