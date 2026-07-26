@@ -19,7 +19,7 @@ package org.citrusframework.sql.actions;
 import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.sql.UnitTestSupport;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.script.ScriptTypes;

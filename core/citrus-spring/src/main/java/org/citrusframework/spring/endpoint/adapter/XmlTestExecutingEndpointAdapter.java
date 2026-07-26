@@ -20,7 +20,7 @@ import org.citrusframework.TestCase;
 import org.citrusframework.base.endpoint.adapter.RequestDispatchingEndpointAdapter;
 import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.adapter.mapping.BeanNameMappingStrategy;

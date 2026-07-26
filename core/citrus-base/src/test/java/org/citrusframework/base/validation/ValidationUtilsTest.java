@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.ValidationUtils;
 import org.citrusframework.validation.matcher.ValidationMatcher;

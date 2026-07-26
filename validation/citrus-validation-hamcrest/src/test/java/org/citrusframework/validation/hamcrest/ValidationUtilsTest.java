@@ -16,7 +16,7 @@
 
 package org.citrusframework.validation.hamcrest;
 
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.ValidationUtils;

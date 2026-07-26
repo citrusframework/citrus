@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.base.endpoint.adapter.RequestDispatchingEndpointAdapter;
 import org.citrusframework.base.endpoint.adapter.StaticEndpointAdapter;

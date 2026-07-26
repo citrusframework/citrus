@@ -32,7 +32,7 @@ import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.api.container.ApplyTemplateBuilder;
 import org.citrusframework.api.container.TemplateLoader;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.FunctionUtils;
 import org.citrusframework.spi.ReferenceResolver;

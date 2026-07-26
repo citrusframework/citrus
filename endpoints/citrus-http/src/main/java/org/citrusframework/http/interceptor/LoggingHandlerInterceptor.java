@@ -22,7 +22,7 @@ import java.util.Enumeration;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.http.controller.HttpMessageController;
 import org.citrusframework.message.RawMessage;
 import org.citrusframework.report.MessageListeners;

@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.api.kubernetes.ClusterType;

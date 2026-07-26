@@ -25,7 +25,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.api.container.IteratingActionContainer;
 import org.citrusframework.api.container.IteratingConditionExpression;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.BooleanExpressionParser;

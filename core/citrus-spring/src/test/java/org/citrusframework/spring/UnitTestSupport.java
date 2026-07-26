@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import org.citrusframework.Citrus;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.base.report.HtmlReporter;

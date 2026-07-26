@@ -23,7 +23,7 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.base.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.cucumber.CucumberSettings;
 import org.citrusframework.cucumber.VariableNames;
 import org.junit.Test;
