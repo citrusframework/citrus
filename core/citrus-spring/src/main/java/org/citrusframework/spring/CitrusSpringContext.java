@@ -19,11 +19,9 @@ package org.citrusframework.spring;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.citrusframework.CitrusContext;
-import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.api.container.AfterSuite;
 import org.citrusframework.api.container.BeforeSuite;
-import org.citrusframework.spring.context.TestContextFactoryBean;
+import org.citrusframework.base.DefaultCitrusContext;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.log.LogModifier;
 import org.citrusframework.report.MessageListeners;
@@ -32,6 +30,8 @@ import org.citrusframework.report.TestListeners;
 import org.citrusframework.report.TestReporters;
 import org.citrusframework.report.TestSuiteListeners;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
@@ -40,7 +40,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class CitrusSpringContext extends CitrusContext {
+public class CitrusSpringContext extends DefaultCitrusContext {
 
     /** Basic Spring application context */
     private final ApplicationContext applicationContext;
@@ -106,7 +106,7 @@ public class CitrusSpringContext extends CitrusContext {
     /**
      * Spring aware Citrus context builder.
      */
-    public static final class Builder extends CitrusContext.Builder {
+    public static final class Builder extends DefaultCitrusContext.Builder {
 
         private ApplicationContext applicationContext;
 

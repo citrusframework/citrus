@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.base;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,6 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.citrusframework.CitrusContext;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.api.common.ShutdownPhase;
@@ -34,7 +35,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.base.functions.DefaultFunctionRegistry;
 import org.citrusframework.functions.Function;
 import org.citrusframework.functions.FunctionLibrary;
@@ -44,13 +44,10 @@ import org.citrusframework.log.LogModifier;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageProcessors;
 import org.citrusframework.report.*;
-import org.citrusframework.spi.ReferenceRegistry;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.PropertyUtils;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.DefaultMessageValidatorRegistry;
 import org.citrusframework.validation.MessageValidator;
@@ -65,10 +62,8 @@ import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 
 /**
  * Default Citrus context implementation holds basic components used in Citrus.
- *
  */
-public class CitrusContext implements TestListenerAware, TestActionListenerAware,
-        TestSuiteListenerAware, TestReporterAware, MessageListenerAware, ReferenceRegistry {
+public class DefaultCitrusContext implements CitrusContext {
 
     /** Test context factory **/
     private final TestContextFactory testContextFactory;
@@ -94,11 +89,16 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
 
     private final Set<Class<?>> configurationClasses = new HashSet<>();
 
+    public DefaultCitrusContext() {
+        this(Builder.defaultContext()
+                .initializeTestContextFactory());
+    }
+
     /**
      * Protected constructor using given builder to construct this instance.
      * @param builder the instance builder.
      */
-    protected CitrusContext(Builder builder) {
+    protected DefaultCitrusContext(Builder builder) {
         this.testSuiteListeners = builder.testSuiteListeners;
         this.testListeners = builder.testListeners;
         this.testActionListeners = builder.testActionListeners;
@@ -124,30 +124,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         builder.configurationClasses.forEach(this::parseConfiguration);
     }
 
-    /**
-     * Initializing method loads default configuration class and reads component definitions
-     * such as test listeners and test context factory.
-     * @return
-     */
-    public static CitrusContext create() {
-        CitrusContext context = Builder.defaultContext().build();
-
-        if (StringUtils.hasText(CitrusSettings.DEFAULT_CONFIG_CLASS)) {
-            try {
-                Class<?> configClass = Class.forName(CitrusSettings.DEFAULT_CONFIG_CLASS, true, ClassLoaderHelper.getClassLoader());
-                context.parseConfiguration(configClass);
-            } catch (ClassNotFoundException e) {
-                throw new CitrusRuntimeException("Failed to instantiate custom configuration class", e);
-            }
-        }
-
-        return context;
-    }
-
-    /**
-     * Parse given configuration class and bind annotated fields, methods to reference registry.
-     * @param configClass
-     */
+    @Override
     public void parseConfiguration(Class<?> configClass) {
         if (configurationClasses.contains(configClass)) {
             return;
@@ -157,10 +134,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         CitrusAnnotations.parseConfiguration(configClass, this);
     }
 
-    /**
-     * Parse given configuration class and bind annotated fields, methods to reference registry.
-     * @param configuration
-     */
+    @Override
     public void parseConfiguration(Object configuration) {
         if (configurationClasses.contains(configuration.getClass())) {
             return;
@@ -170,10 +144,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         CitrusAnnotations.parseConfiguration(configuration, this);
     }
 
-    /**
-     * Creates a new test context.
-     * @return the new citrus test context.
-     */
+    @Override
     public TestContext createTestContext() {
         return testContextFactory.getObject();
     }
@@ -203,9 +174,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         this.messageListeners.addMessageListener(listener);
     }
 
-    /**
-     * Closes the context and all its components.
-     */
+    @Override
     public void close() {
         endpointFactory.destroy();
         referenceResolver.destroy();
@@ -216,138 +185,87 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
                 .forEach(ShutdownPhase::destroy);
     }
 
-    /**
-     * Gets list of after suite actions in this context.
-     * @return
-     */
+    @Override
     public List<AfterSuite> getAfterSuite() {
         return afterSuite;
     }
 
-    /**
-     * Gets list of before suite actions in this context.
-     * @return
-     */
+    @Override
     public List<BeforeSuite> getBeforeSuite() {
         return beforeSuite;
     }
 
-    /**
-     * Gets test listeners in this context.
-     * @return
-     */
+    @Override
     public TestListeners getTestListeners() {
         return testListeners;
     }
 
-    /**
-     * Gets the test action listeners in this context.
-     * @return
-     */
+    @Override
     public TestActionListeners getTestActionListeners() {
         return testActionListeners;
     }
 
-    /**
-     * Gets test suite listeners in this context.
-     * @return
-     */
+    @Override
     public TestSuiteListeners getTestSuiteListeners() {
         return testSuiteListeners;
     }
 
-    /**
-     * Obtains the functionRegistry.
-     * @return
-     */
+    @Override
     public FunctionRegistry getFunctionRegistry() {
         return functionRegistry;
     }
 
-    /**
-     * Obtains the validationMatcherRegistry.
-     * @return
-     */
+    @Override
     public ValidationMatcherRegistry getValidationMatcherRegistry() {
         return validationMatcherRegistry;
     }
 
-    /**
-     * Obtains the globalVariables.
-     * @return
-     */
+    @Override
     public GlobalVariables getGlobalVariables() {
         return globalVariables;
     }
 
-    /**
-     * Obtains the messageValidatorRegistry.
-     * @return
-     */
+    @Override
     public MessageValidatorRegistry getMessageValidatorRegistry() {
         return messageValidatorRegistry;
     }
 
-    /**
-     * Obtains the messageListeners.
-     * @return
-     */
+    @Override
     public MessageListeners getMessageListeners() {
         return messageListeners;
     }
 
-    /**
-     * Obtains the endpointFactory.
-     * @return
-     */
+    @Override
     public EndpointFactory getEndpointFactory() {
         return endpointFactory;
     }
 
-    /**
-     * Obtains the referenceResolver.
-     * @return
-     */
+    @Override
     public ReferenceResolver getReferenceResolver() {
         return referenceResolver;
     }
 
-    /**
-     * Obtains the messageProcessors.
-     * @return
-     */
+    @Override
     public MessageProcessors getMessageProcessors() {
         return messageProcessors;
     }
 
-    /**
-     * Obtains the namespaceContextBuilder.
-     * @return
-     */
+    @Override
     public NamespaceContextBuilder getNamespaceContextBuilder() {
         return namespaceContextBuilder;
     }
 
-    /**
-     * Obtains the typeConverter.
-     * @return
-     */
+    @Override
     public TypeConverter getTypeConverter() {
         return typeConverter;
     }
 
-    /**
-     * Gets the logModifier.
-     * @return
-     */
+    @Override
     public LogModifier getLogModifier() {
         return logModifier;
     }
 
-    /**
-     * Obtains the testContextFactory.
-     * @return
-     */
+    @Override
     public TestContextFactory getTestContextFactory() {
         return testContextFactory;
     }
@@ -363,16 +281,19 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         }
     }
 
+    @Override
     public TestResults getTestResults() {
         return testReporters.getTestResults();
     }
 
+    @Override
     public void handleTestResults(TestResults testResults) {
         if (!getTestResults().equals(testResults)) {
             testResults.doWithResults(result -> getTestResults().addResult(result));
         }
     }
 
+    @Override
     public void addComponent(String name, Object component) {
         if (component == null) {
             return;
@@ -680,26 +601,31 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
             return this;
         }
 
-        public CitrusContext build() {
+        public DefaultCitrusContext build() {
             if (testContextFactory == null) {
-                testContextFactory = TestContextFactory.newInstance();
-
-                testContextFactory.setFunctionRegistry(this.functionRegistry);
-                testContextFactory.setValidationMatcherRegistry(this.validationMatcherRegistry);
-                testContextFactory.setGlobalVariables(this.globalVariables);
-                testContextFactory.setMessageValidatorRegistry(this.messageValidatorRegistry);
-                testContextFactory.setTestListeners(this.testListeners);
-                testContextFactory.setTestActionListeners(this.testActionListeners);
-                testContextFactory.setMessageListeners(this.messageListeners);
-                testContextFactory.setMessageProcessors(this.messageProcessors);
-                testContextFactory.setEndpointFactory(this.endpointFactory);
-                testContextFactory.setReferenceResolver(this.referenceResolver);
-                testContextFactory.setNamespaceContextBuilder(this.namespaceContextBuilder);
-                testContextFactory.setTypeConverter(this.typeConverter);
-                testContextFactory.setLogModifier(this.logModifier);
+                initializeTestContextFactory();
             }
+            return new DefaultCitrusContext(this);
+        }
 
-            return new CitrusContext(this);
+        public Builder initializeTestContextFactory() {
+            testContextFactory = TestContextFactory.newInstance();
+
+            testContextFactory.setFunctionRegistry(this.functionRegistry);
+            testContextFactory.setValidationMatcherRegistry(this.validationMatcherRegistry);
+            testContextFactory.setGlobalVariables(this.globalVariables);
+            testContextFactory.setMessageValidatorRegistry(this.messageValidatorRegistry);
+            testContextFactory.setTestListeners(this.testListeners);
+            testContextFactory.setTestActionListeners(this.testActionListeners);
+            testContextFactory.setMessageListeners(this.messageListeners);
+            testContextFactory.setMessageProcessors(this.messageProcessors);
+            testContextFactory.setEndpointFactory(this.endpointFactory);
+            testContextFactory.setReferenceResolver(this.referenceResolver);
+            testContextFactory.setNamespaceContextBuilder(this.namespaceContextBuilder);
+            testContextFactory.setTypeConverter(this.typeConverter);
+            testContextFactory.setLogModifier(this.logModifier);
+
+            return this;
         }
     }
 }

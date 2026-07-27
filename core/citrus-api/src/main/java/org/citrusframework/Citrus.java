@@ -49,7 +49,7 @@ public final class Citrus implements TestListenerAware, TestActionListenerAware,
     }
 
     /**
-     * Initializing method creating a Citrus instance with new default CitrusContext and its components
+     * Initializing method creating a Citrus instance with new default DefaultCitrusContext and its components
      * such as test listeners and test context factory.
      * @return
      */
@@ -59,7 +59,7 @@ public final class Citrus implements TestListenerAware, TestActionListenerAware,
 
     /**
      * Initializing method creating a Citrus instance with given Citrus context provider.
-     * Provider creates new CitrusContext and its components such as test listeners and test context factory.
+     * Provider creates new DefaultCitrusContext and its components such as test listeners and test context factory.
      * @return
      */
     public static Citrus newInstance(CitrusContextProvider contextProvider) {

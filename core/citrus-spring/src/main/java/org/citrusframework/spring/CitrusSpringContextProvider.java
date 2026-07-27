@@ -26,8 +26,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * Context provider registered via resource path lookup. When module is on classpath this provider will be used to instantiate
  * Citrus.
  *
- * Provider creates a CitrusContext that is backed with a Spring application context. Provider caches the last application context
- * that has created a context. When very same application context creates another CitrusContext use the cached instance. This
+ * Provider creates a DefaultCitrusContext that is backed with a Spring application context. Provider caches the last application context
+ * that has created a context. When very same application context creates another DefaultCitrusContext use the cached instance. This
  * caching should give us some performance improvements and less instance duplications.
  *
  */

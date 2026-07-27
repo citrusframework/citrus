@@ -17,13 +17,13 @@
 package org.citrusframework.groovy;
 
 import org.citrusframework.Citrus;
-import org.citrusframework.CitrusContext;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.base.DefaultCitrusContext;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -35,7 +35,7 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
     @BeforeMethod
     public void setup() {
-        citrus = Citrus.newInstance(() -> CitrusContext.Builder.defaultContext().referenceResolver(context.getReferenceResolver()).build());
+        citrus = Citrus.newInstance(() -> DefaultCitrusContext.Builder.defaultContext().referenceResolver(context.getReferenceResolver()).build());
     }
 
     @Test

@@ -20,9 +20,9 @@
     <module>docs-generator</module>
     <module>schema-generator</module>
     <module>maven</module>
+    <module>cucumber-steps</module>
     <module>jbang</module>
     <module>agent</module>
-    <module>cucumber-steps</module>
     <module>archetypes</module>
     <module>mcp-server</module>
   </modules>

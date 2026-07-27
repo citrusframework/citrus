@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.base;
 
+import org.citrusframework.CitrusContextProvider;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -24,7 +25,7 @@ public class CitrusContextProviderTest {
     @Test
     public void testLookup() {
         CitrusContextProvider provider = CitrusContextProvider.lookup();
-        Assert.assertEquals(provider.create().getClass(), CitrusContext.class);
+        Assert.assertEquals(provider.create().getClass(), DefaultCitrusContext.class);
     }
 
     @Test
