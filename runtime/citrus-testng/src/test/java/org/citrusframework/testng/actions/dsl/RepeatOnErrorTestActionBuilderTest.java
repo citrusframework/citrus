@@ -16,7 +16,7 @@
 
 package org.citrusframework.testng.actions.dsl;
 
-import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.testng.UnitTestSupport;
 import org.citrusframework.actions.EchoAction;

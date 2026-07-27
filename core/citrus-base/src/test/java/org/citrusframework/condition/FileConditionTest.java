@@ -16,7 +16,7 @@
 
 package org.citrusframework.condition;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;

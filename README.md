@@ -41,7 +41,7 @@ The `init` command creates a new file that represents a Citrus test. The file ex
 The result looks like this:
 
 ```java
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 
@@ -89,7 +89,7 @@ A typical Citrus Java JUnit Jupiter test may look like this:
 
 ```java
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;

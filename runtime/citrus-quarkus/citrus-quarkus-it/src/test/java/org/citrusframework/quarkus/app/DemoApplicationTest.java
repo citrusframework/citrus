@@ -21,7 +21,7 @@ import java.util.Map;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.citrusframework.Citrus;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusFramework;

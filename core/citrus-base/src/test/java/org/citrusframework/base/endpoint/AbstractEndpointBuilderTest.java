@@ -16,7 +16,7 @@
 
 package org.citrusframework.base.endpoint;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusEndpointAnnotations;
 import org.citrusframework.annotations.CitrusEndpointProperty;

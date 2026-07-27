@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.xml.transform.Source;
 
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.xml.UnitTestSupport;
 import org.citrusframework.actions.ReceiveMessageAction;

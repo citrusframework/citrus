@@ -17,8 +17,8 @@
 package org.citrusframework.http.actions.dsl;
 
 import org.apache.hc.core5.http.ContentType;
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;

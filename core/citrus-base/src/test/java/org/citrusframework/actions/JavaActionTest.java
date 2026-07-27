@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.annotations.Test;
 

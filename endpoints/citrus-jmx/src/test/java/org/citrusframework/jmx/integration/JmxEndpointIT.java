@@ -16,7 +16,7 @@
 
 package org.citrusframework.jmx.integration;
 
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.jmx.client.JmxClient;
 import org.citrusframework.jmx.message.JmxMessage;

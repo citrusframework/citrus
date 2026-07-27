@@ -20,7 +20,7 @@ import java.time.Duration;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.log.LogColors;

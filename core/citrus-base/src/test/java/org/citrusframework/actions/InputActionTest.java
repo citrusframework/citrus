@@ -19,7 +19,7 @@ package org.citrusframework.actions;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;

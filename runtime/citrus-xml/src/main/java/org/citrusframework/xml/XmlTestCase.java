@@ -37,7 +37,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.bean.BeanDefinition;

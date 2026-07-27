@@ -19,7 +19,7 @@ package org.citrusframework.actions;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestBehavior;
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;

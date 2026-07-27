@@ -17,7 +17,7 @@
 package org.citrusframework.junit.integration;
 
 import org.citrusframework.Citrus;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusTest;

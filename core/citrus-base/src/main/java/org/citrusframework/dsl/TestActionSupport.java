@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.dsl;
 
-import org.citrusframework.dsl.BaseTestActionSupport;
+import org.citrusframework.TestActionContainers;
+import org.citrusframework.TestActions;
 import org.citrusframework.dsl.agent.AgentTestActionSupport;
 import org.citrusframework.dsl.camel.CamelTestActionSupport;
 import org.citrusframework.dsl.docker.DockerTestActionSupport;

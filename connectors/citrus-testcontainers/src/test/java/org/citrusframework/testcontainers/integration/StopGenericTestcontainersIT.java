@@ -16,7 +16,7 @@
 
 package org.citrusframework.testcontainers.integration;
 
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.testcontainers.containers.GenericContainer;
 import org.testng.Assert;

@@ -19,7 +19,7 @@ package org.citrusframework.kubernetes.integration;
 import java.util.Collections;
 
 import io.fabric8.kubernetes.api.model.Service;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.kubernetes.client.KubernetesClient;

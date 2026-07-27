@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.mockito.Mockito;

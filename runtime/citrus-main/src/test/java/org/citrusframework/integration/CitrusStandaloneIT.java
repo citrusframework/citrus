@@ -18,8 +18,8 @@ package org.citrusframework.integration;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.spring.CitrusSpringContextProvider;
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.spring.config.CitrusSpringConfig;

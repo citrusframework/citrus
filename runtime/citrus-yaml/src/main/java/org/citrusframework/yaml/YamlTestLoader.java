@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestSource;
 import org.citrusframework.common.DefaultTestLoader;

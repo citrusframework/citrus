@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.base;
 
+import org.citrusframework.TestCase;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestCaseRunnerFactory;
+import org.citrusframework.TestCaseRunnerProvider;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.util.ReflectionHelper;
@@ -27,6 +31,8 @@ import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings("unchecked")
 public class TestCaseRunnerFactoryTest {
+
+    private final TestCaseRunnerFactory testCaseRunnerFactory = TestCaseRunnerFactory.instance();
 
     @Test
     public void testDefaultRunnerWithGivenContext()  {
@@ -59,10 +65,10 @@ public class TestCaseRunnerFactoryTest {
         Mockito.doReturn(new CustomTestCaseRunnerProvider()).when(resolverMock).resolve("custom");
         TestContext testContext = new TestContext();
 
-        Object currentResolver = ReflectionHelper.getField(ReflectionHelper.findField(TestCaseRunnerFactory.class, "typeResolver"), TestCaseRunnerFactory.INSTANCE);
+        Object currentResolver = ReflectionHelper.getField(ReflectionHelper.findField(TestCaseRunnerFactory.class, "typeResolver"), testCaseRunnerFactory);
         try {
             ReflectionHelper.setField(ReflectionHelper.findField(TestCaseRunnerFactory.class, "typeResolver"),
-                    TestCaseRunnerFactory.INSTANCE, resolverMock);
+                    testCaseRunnerFactory, resolverMock);
             TestCaseRunner runner = TestCaseRunnerFactory.createRunner(testContext);
 
             assertEquals(runner.getClass(), CustomTestCaseRunner.class);
@@ -71,7 +77,7 @@ public class TestCaseRunnerFactoryTest {
             assertEquals(defaultTestCaseRunner.getContext(), testContext);
         } finally {
             ReflectionHelper.setField(ReflectionHelper.findField(TestCaseRunnerFactory.class, "typeResolver"),
-                    TestCaseRunnerFactory.INSTANCE, currentResolver);
+                    testCaseRunnerFactory, currentResolver);
         }
 
     }
@@ -85,10 +91,10 @@ public class TestCaseRunnerFactoryTest {
         TestContext testContext = new TestContext();
         TestCase testCase = new DefaultTestCase();
 
-        Object currentResolver = ReflectionHelper.getField(ReflectionHelper.findField(TestCaseRunnerFactory.class, "typeResolver"), TestCaseRunnerFactory.INSTANCE);
+        Object currentResolver = ReflectionHelper.getField(ReflectionHelper.findField(TestCaseRunnerFactory.class, "typeResolver"), testCaseRunnerFactory);
         try {
             ReflectionHelper.setField(ReflectionHelper.findField(TestCaseRunnerFactory.class, "typeResolver"),
-                    TestCaseRunnerFactory.INSTANCE, resolverMock);
+                    testCaseRunnerFactory, resolverMock);
             TestCaseRunner runner = TestCaseRunnerFactory.createRunner(testCase, testContext);
 
             assertEquals(runner.getClass(), CustomTestCaseRunner.class);
@@ -98,7 +104,7 @@ public class TestCaseRunnerFactoryTest {
             assertEquals(defaultTestCaseRunner.getTestCase(), testCase);
         } finally {
             ReflectionHelper.setField(ReflectionHelper.findField(TestCaseRunnerFactory.class, "typeResolver"),
-                    TestCaseRunnerFactory.INSTANCE, currentResolver);
+                    testCaseRunnerFactory, currentResolver);
         }
 
     }

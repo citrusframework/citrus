@@ -17,7 +17,7 @@
 package org.citrusframework.junit.jupiter.integration.spring;
 
 import org.citrusframework.TestActionRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.spring.config.CitrusSpringConfig;

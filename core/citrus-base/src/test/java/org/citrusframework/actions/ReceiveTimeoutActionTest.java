@@ -16,7 +16,7 @@
 
 package org.citrusframework.actions;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;

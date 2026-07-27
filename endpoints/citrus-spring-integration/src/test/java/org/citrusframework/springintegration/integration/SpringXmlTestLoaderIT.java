@@ -16,7 +16,7 @@
 
 package org.citrusframework.springintegration.integration;
 
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.annotations.CitrusTestSource;

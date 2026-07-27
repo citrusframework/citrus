@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.dsl;
 
+import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.TestAction;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
 

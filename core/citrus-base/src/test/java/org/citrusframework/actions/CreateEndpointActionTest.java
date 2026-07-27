@@ -16,7 +16,7 @@
 
 package org.citrusframework.actions;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.testng.annotations.Test;
 
 public class CreateEndpointActionTest extends UnitTestSupport {

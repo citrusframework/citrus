@@ -17,7 +17,7 @@
 package org.citrusframework.xml.endpoint.adapter.behavior;
 
 import org.citrusframework.TestActionRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.message.MessageType;
 import org.springframework.stereotype.Component;

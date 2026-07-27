@@ -17,7 +17,7 @@
 package org.citrusframework.container;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;

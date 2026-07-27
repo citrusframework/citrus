@@ -16,7 +16,7 @@
 
 package org.citrusframework.actions;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.api.container.StopTimer;
 import org.citrusframework.context.TestContext;
 import org.mockito.Mockito;

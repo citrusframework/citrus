@@ -31,7 +31,7 @@ See the following example to see the Java domain specific language in action.
 [source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 
@@ -51,7 +51,7 @@ public class HelloServiceIT extends TestNGCitrusSupport implements TestActionSup
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
@@ -76,7 +76,7 @@ public class HelloServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
 import org.junit.Test;
@@ -111,7 +111,7 @@ NOTE: For those of you who are not able to use the `TestActionSupport` or other 
 [source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 
@@ -131,7 +131,7 @@ public class HelloServiceIT extends TestNGCitrusSupport {
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
@@ -158,7 +158,7 @@ public class HelloServiceIT {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
 import org.junit.Test;
@@ -195,7 +195,7 @@ occurs, *then* an outcome should be verified.
 [source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 
@@ -223,7 +223,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
@@ -256,7 +256,7 @@ public class ServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
 import org.junit.Test;
@@ -494,7 +494,7 @@ In general, you are able to mix Citrus Java DSL actions with custom Java code as
 [source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 
@@ -518,7 +518,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
@@ -547,7 +547,7 @@ public class ServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
 import org.junit.Test;
@@ -576,7 +576,7 @@ in Citrus.
 [source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 
@@ -602,7 +602,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
@@ -633,7 +633,7 @@ public class ServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
 import org.junit.Test;
@@ -692,7 +692,7 @@ reference for injection.
 [source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 
@@ -719,7 +719,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
@@ -751,7 +751,7 @@ public class ServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
 import org.junit.Test;
@@ -788,7 +788,7 @@ Methods and fields annotated will automatically register in the CitrusContext re
 [source,java,role="primary"]
 ----
 import org.testng.annotations.Test;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 
@@ -817,7 +817,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
@@ -851,7 +851,7 @@ public class ServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
 import org.junit.Test;
@@ -917,7 +917,7 @@ Each test is able to use the `@CitrusConfiguration` annotation to add registry b
 .TestNG
 [source,java,role="primary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusConfiguration;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
@@ -947,7 +947,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusConfiguration;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -981,7 +981,7 @@ public class ServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusConfiguration;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
@@ -1025,7 +1025,7 @@ annotation in your test class.
 .TestNG
 [source,java,role="primary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
@@ -1047,7 +1047,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 [source,java,role="secondary"]
 ----
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
@@ -1073,7 +1073,7 @@ public class ServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.spring.JUnit4CitrusSupport;
 import org.junit.Test;
@@ -1105,7 +1105,7 @@ The test action runner is the entry to the fluent Java API. You can inject the r
 .TestNG
 [source,java,role="primary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
@@ -1131,7 +1131,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -1158,7 +1158,7 @@ public class ServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -1215,7 +1215,7 @@ In addition to that Citrus provides a resource injection mechanism that allows t
 .TestNG
 [source,java,role="primary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
@@ -1238,7 +1238,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -1262,7 +1262,7 @@ public class ServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -1300,7 +1300,7 @@ with given configuration.
 .TestNG
 [source,java,role="primary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.TestNGCitrusSupport;
@@ -1332,7 +1332,7 @@ public class ServiceIT extends TestNGCitrusSupport implements TestActionSupport 
 .JUnit
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -1365,7 +1365,7 @@ public class ServiceIT implements TestActionSupport {
 .JUnit4
 [source,java,role="secondary"]
 ----
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;

@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.base;
 
 import java.util.Date;
 
+import org.citrusframework.TestAction;
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActionContainers;
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.TestActions;
+import org.citrusframework.TestBehavior;
+import org.citrusframework.TestCase;
+import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestCaseRunnerProvider;
+import org.citrusframework.TestGroupAware;
 import org.citrusframework.actions.ApplyTestBehaviorAction;
 import org.citrusframework.container.FinallySequence;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.dsl.DefaultTestActions;
 import org.citrusframework.message.DefaultMessageProcessors;
 import org.citrusframework.message.Processors;
 import org.citrusframework.spi.ReferenceResolverAware;

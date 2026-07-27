@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
-import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestSource;
 import org.citrusframework.api.xml.StringSource;
 import org.citrusframework.common.DefaultTestLoader;

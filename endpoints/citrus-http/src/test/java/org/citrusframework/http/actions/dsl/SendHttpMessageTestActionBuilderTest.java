@@ -18,8 +18,8 @@ package org.citrusframework.http.actions.dsl;
 
 import jakarta.servlet.http.Cookie;
 import org.apache.hc.core5.http.ContentType;
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;

@@ -17,7 +17,6 @@
 package org.citrusframework.dsl;
 
 import org.citrusframework.AbstractTestContainerBuilder;
-import org.citrusframework.DefaultTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionContainerBuilder;
 import org.citrusframework.TestActionContainers;

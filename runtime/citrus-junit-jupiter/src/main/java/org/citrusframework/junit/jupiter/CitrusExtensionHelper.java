@@ -19,11 +19,11 @@ package org.citrusframework.junit.jupiter;
 import java.lang.reflect.Method;
 
 import org.citrusframework.Citrus;
-import org.citrusframework.DefaultTestActions;
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.dsl.DefaultTestActions;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;

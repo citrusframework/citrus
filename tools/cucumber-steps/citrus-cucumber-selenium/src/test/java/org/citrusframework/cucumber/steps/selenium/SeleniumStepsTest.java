@@ -20,7 +20,7 @@ import java.net.URL;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.DefaultCitrusContextProvider;
-import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.base.annotations.CitrusAnnotations;

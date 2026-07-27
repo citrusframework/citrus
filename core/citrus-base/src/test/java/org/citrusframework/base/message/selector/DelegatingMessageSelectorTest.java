@@ -18,7 +18,7 @@ package org.citrusframework.base.message.selector;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;

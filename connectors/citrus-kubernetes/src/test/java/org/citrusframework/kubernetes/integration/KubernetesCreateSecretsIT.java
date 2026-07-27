@@ -22,7 +22,7 @@ import java.util.Collections;
 
 import io.fabric8.kubernetes.api.model.Secret;
 import org.apache.commons.codec.binary.Base64;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.spi.Resources;

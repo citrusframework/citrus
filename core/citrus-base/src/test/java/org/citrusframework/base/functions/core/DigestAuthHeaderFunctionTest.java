@@ -17,7 +17,7 @@ package org.citrusframework.base.functions.core;
 
 import java.util.Collections;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.FunctionParameterHelper;
 import org.testng.Assert;

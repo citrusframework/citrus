@@ -18,7 +18,7 @@ package org.citrusframework.camel.xml;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;

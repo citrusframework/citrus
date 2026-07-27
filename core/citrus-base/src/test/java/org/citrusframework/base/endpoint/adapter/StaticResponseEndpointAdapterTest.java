@@ -19,7 +19,7 @@ package org.citrusframework.base.endpoint.adapter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.testng.Assert;

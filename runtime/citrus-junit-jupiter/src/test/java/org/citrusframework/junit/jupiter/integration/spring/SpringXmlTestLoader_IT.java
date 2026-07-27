@@ -16,7 +16,7 @@
 
 package org.citrusframework.junit.jupiter.integration.spring;
 
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;

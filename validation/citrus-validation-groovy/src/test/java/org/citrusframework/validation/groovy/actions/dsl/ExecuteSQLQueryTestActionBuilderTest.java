@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.validation.groovy.UnitTestSupport;
 import org.citrusframework.sql.actions.ExecuteSQLQueryAction;

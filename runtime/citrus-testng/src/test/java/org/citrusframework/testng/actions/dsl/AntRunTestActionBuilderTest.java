@@ -18,7 +18,7 @@ package org.citrusframework.testng.actions.dsl;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
-import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.testng.UnitTestSupport;
 import org.citrusframework.actions.AntRunAction;

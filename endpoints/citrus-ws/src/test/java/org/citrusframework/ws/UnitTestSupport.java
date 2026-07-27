@@ -16,7 +16,7 @@
 
 package org.citrusframework.ws;
 
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;

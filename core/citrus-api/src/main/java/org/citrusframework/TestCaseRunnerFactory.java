@@ -52,10 +52,14 @@ public class TestCaseRunnerFactory {
     /** Default Citrus test runner from classpath resource properties. */
     private final ResourcePathTypeResolver typeResolver = new ResourcePathTypeResolver(RESOURCE_PATH);
 
-    static final TestCaseRunnerFactory INSTANCE = new TestCaseRunnerFactory();
+    private static final TestCaseRunnerFactory INSTANCE = new TestCaseRunnerFactory();
 
     private TestCaseRunnerFactory() {
         // Singleton
+    }
+
+    public static TestCaseRunnerFactory instance() {
+        return INSTANCE;
     }
 
     /**

@@ -19,7 +19,7 @@ package org.citrusframework.validation.xml;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.ReceiveMessageAction;

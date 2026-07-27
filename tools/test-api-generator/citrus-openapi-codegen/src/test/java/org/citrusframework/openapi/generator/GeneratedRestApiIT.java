@@ -11,7 +11,7 @@ import java.util.UUID;
 
 import jakarta.servlet.http.Cookie;
 import org.assertj.core.api.Assertions;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.actions.ReceiveMessageAction.ReceiveMessageActionBuilder;

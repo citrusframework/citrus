@@ -19,7 +19,7 @@ package org.citrusframework.http.integration;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;

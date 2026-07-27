@@ -18,8 +18,8 @@ package org.citrusframework.groovy.actions;
 
 import java.io.ByteArrayInputStream;
 
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.groovy.UnitTestSupport;
 import org.citrusframework.spi.Resource;

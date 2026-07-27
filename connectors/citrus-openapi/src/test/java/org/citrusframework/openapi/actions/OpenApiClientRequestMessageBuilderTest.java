@@ -16,7 +16,7 @@
 
 package org.citrusframework.openapi.actions;
 
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.http.message.HttpMessage;

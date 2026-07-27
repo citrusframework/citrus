@@ -18,7 +18,7 @@ package org.citrusframework.cucumber.backend;
 
 import io.cucumber.core.backend.Status;
 import io.cucumber.core.backend.TestCaseState;
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.cucumber.CitrusLifecycleHooks;

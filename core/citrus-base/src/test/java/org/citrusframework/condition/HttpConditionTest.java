@@ -19,7 +19,7 @@ package org.citrusframework.condition;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;

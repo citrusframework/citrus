@@ -16,8 +16,8 @@
 
 package org.citrusframework.validation.hamcrest;
 
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.RepeatUntilTrue;

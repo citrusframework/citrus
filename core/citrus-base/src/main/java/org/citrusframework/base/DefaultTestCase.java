@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.base;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -24,6 +24,15 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.TestAction;
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestCase;
+import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.TestGroupAware;
+import org.citrusframework.TestParameterAware;
+import org.citrusframework.TestResult;
+import org.citrusframework.TestResultInstanceProvider;
 import org.citrusframework.bean.BeanDefinition;
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.container.AbstractActionContainer;

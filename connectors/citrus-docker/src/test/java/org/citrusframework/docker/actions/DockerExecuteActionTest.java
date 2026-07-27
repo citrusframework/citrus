@@ -26,7 +26,7 @@ import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.api.model.WaitResponse;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.command.Info;
 import org.citrusframework.docker.message.DockerMessageHeaders;

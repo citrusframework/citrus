@@ -19,7 +19,7 @@ package org.citrusframework.cucumber.hooks;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.context.TestContext;

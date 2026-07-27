@@ -19,7 +19,7 @@ package org.citrusframework.base.validation;
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.DefaultHeaderValidator;
 import org.citrusframework.validation.context.HeaderValidationContext;

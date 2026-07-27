@@ -15,7 +15,7 @@
  */
 package org.citrusframework.base.message.selector;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;

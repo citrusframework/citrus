@@ -17,8 +17,8 @@
 package org.citrusframework.groovy;
 
 import org.citrusframework.Citrus;
-import org.citrusframework.DefaultTestCase;
-import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.base.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.api.common.TestLoader;

@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.base;
 
-/**
- * Default implementation of Citrus test action builder support.
- * Uses the default implementations of the support interface.
- */
-public class DefaultTestActions implements TestActionSupport {
+import org.testng.annotations.Test;
+
+public class TestMetaInfoTest {
+
+    @Test
+    public void testExcludeDraftTests() {
+        //TODO code this test
+    }
+
+    @Test
+    public void testIncludeDraftTestWhenExecutingSingleTest() {
+        //TODO code this test
+    }
+
+    @Test
+    public void testExcludeDraftTestsEvenIfNoTestAtAllAreRun() {
+        //TODO code this test
+    }
 }

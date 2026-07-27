@@ -17,7 +17,7 @@
 package org.citrusframework.openapi.integration;
 
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.http.client.HttpClient;

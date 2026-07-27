@@ -18,6 +18,7 @@ package org.citrusframework;
 
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.dsl.DefaultTestActionBuilder;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

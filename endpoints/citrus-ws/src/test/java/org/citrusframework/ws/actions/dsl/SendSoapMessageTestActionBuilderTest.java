@@ -17,10 +17,9 @@
 package org.citrusframework.ws.actions.dsl;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 
-import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.container.SequenceAfterTest;
