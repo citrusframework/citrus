@@ -48,7 +48,7 @@ public interface TestContextFactory extends ReferenceResolverAware {
     static TestContextFactory newInstance() {
         // The loader finds first factory registered on the classpath/modulepath
         return ServiceLoader.load(TestContextFactory.class).findFirst()
-                .orElseThrow(() -> new CitrusRuntimeException("No TestContextFactory found"));
+                .orElseThrow(() -> new CitrusRuntimeException("No TestContextFactory registered on the classpath/modulepath"));
     }
 
     static TestContext copyOf(TestContext context) {

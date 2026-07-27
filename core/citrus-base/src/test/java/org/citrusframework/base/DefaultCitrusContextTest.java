@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.base;
 
+import org.citrusframework.CitrusContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.BindToRegistry;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CitrusContextTest {
+public class DefaultCitrusContextTest {
 
     @Test
     public void shouldParseConfiguration() {
