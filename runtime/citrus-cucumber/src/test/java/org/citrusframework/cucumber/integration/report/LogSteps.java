@@ -17,7 +17,7 @@
 package org.citrusframework.cucumber.integration.report;
 
 import io.cucumber.java.en.Then;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 

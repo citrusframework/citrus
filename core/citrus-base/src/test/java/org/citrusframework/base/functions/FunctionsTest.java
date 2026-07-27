@@ -19,7 +19,7 @@ package org.citrusframework.base.functions;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.base.functions.core.RandomStringFunction;
 import org.testng.annotations.Test;
 

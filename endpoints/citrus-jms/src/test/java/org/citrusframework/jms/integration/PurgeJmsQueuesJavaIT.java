@@ -19,7 +19,7 @@ package org.citrusframework.jms.integration;
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Queue;
 
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;

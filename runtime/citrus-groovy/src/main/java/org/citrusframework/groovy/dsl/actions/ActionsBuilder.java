@@ -25,7 +25,7 @@ import groovy.lang.GroovyRuntimeException;
 import groovy.lang.MissingMethodException;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.api.actions.ReceiveActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.api.actions.ReceiveMessageBuilderFactory;

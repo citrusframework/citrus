@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;

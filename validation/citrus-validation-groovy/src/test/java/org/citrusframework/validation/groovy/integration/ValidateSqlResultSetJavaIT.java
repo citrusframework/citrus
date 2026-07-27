@@ -18,7 +18,7 @@ package org.citrusframework.validation.groovy.integration;
 
 import javax.sql.DataSource;
 
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;

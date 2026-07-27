@@ -18,11 +18,11 @@ package org.citrusframework.testng.actions.dsl;
 
 import java.util.List;
 
-import org.citrusframework.DefaultTestCase;
-import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.base.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.TestCase;
 import org.citrusframework.testng.UnitTestSupport;

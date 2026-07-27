@@ -18,7 +18,7 @@ package org.citrusframework.actions;
 
 import java.util.Collections;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.server.Server;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;

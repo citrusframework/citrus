@@ -26,6 +26,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.dsl.TestActionSupport;
 
 /**
  * @since 2.7.4
@@ -55,6 +56,6 @@ public class JavaDslTestGenerator<T extends JavaDslTestGenerator<T>> extends Jav
      * @return TypeName of the support type
      */
     protected TypeName getTestActionSupportType() {
-        return ClassName.get("org.citrusframework", "TestActionSupport");
+        return ClassName.get(TestActionSupport.class.getPackageName(), TestActionSupport.class.getSimpleName());
     }
 }

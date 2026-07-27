@@ -16,8 +16,8 @@
 
 package org.citrusframework.junit.integration;
 
-import org.citrusframework.DefaultTestCase;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.base.DefaultTestCase;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.annotations.CitrusTestSource;

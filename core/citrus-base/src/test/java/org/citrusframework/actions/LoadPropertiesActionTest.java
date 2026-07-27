@@ -19,7 +19,7 @@ package org.citrusframework.actions;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;

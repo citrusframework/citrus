@@ -18,7 +18,7 @@ package org.citrusframework.base.validation.matcher.core;
 
 import java.util.List;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

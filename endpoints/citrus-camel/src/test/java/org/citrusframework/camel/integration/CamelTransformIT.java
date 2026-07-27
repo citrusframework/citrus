@@ -17,7 +17,7 @@
 package org.citrusframework.camel.integration;
 
 import org.apache.camel.CamelContext;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.camel.dsl.CamelSupport;
 import org.citrusframework.message.MessageType;

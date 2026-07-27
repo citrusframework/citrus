@@ -18,7 +18,7 @@ package org.citrusframework.base.functions;
 
 import java.util.Collections;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.exceptions.NoSuchFunctionException;
 import org.citrusframework.exceptions.NoSuchFunctionLibraryException;

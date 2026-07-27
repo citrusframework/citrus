@@ -1,4 +1,4 @@
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.annotations.CitrusResource;
 

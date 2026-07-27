@@ -30,7 +30,7 @@ You can use the Citrus JUnit extension on your test as follows:
 package org.citrusframework.samples;
 
 import org.citrusframework.GherkinTestActionRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
@@ -77,7 +77,7 @@ NOTE: For those of you who are not able to use the `TestActionSupport` or other 
 ----
 package org.citrusframework.samples;
 
-import org.citrusframework.DefaultTestActions;
+import org.citrusframework.dsl.DefaultTestActions;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;

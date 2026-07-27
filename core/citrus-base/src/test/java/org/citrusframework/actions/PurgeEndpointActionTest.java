@@ -18,7 +18,7 @@ package org.citrusframework.actions;
 
 import java.util.Collections;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.ActionTimeoutException;

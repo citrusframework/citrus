@@ -18,7 +18,7 @@ package org.citrusframework.base.validation.interceptor;
 
 import java.nio.charset.StandardCharsets;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageType;

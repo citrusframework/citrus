@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.TimeZone;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.functions.FunctionParameterHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -21,7 +21,7 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
-import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.base.context.StaticTestContextFactory;

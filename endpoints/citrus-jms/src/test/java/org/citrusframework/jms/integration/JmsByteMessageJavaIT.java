@@ -16,9 +16,7 @@
 
 package org.citrusframework.jms.integration;
 
-import java.io.IOException;
-
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageType;

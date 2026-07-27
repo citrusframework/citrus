@@ -16,7 +16,7 @@
 
 package org.citrusframework.base.message;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.direct.DirectEndpoint;

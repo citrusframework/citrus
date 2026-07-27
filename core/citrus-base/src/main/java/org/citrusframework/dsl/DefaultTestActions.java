@@ -14,20 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.groovy.integration.actions;
+package org.citrusframework.dsl;
 
-import org.citrusframework.dsl.TestActionSupport;
-import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
-
-@Test
-public class CreateVariablesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
-
-    @CitrusTest
-    public void createVariablesAction() {
-        variable("myVariable", "12345");
-
-        run(script().groovy("assert ${myVariable} == 12345"));
-    }
+/**
+ * Default implementation of Citrus test action builder support.
+ * Uses the default implementations of the support interface.
+ */
+public class DefaultTestActions implements TestActionSupport {
 }

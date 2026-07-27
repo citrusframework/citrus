@@ -14,24 +14,27 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.base;
 
-import org.testng.annotations.Test;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.context.TestContextFactory;
+import org.testng.annotations.BeforeMethod;
 
-public class TestMetaInfoTest {
+public abstract class UnitTestSupport {
 
-    @Test
-    public void testExcludeDraftTests() {
-        //TODO code this test
+    protected TestContextFactory testContextFactory;
+    protected TestContext context;
+
+    /**
+     * Setup test execution.
+     */
+    @BeforeMethod
+    public void prepareTest() {
+        testContextFactory = createTestContextFactory();
+        context = testContextFactory.getObject();
     }
 
-    @Test
-    public void testIncludeDraftTestWhenExecutingSingleTest() {
-        //TODO code this test
-    }
-
-    @Test
-    public void testExcludeDraftTestsEvenIfNoTestAtAllAreRun() {
-        //TODO code this test
+    protected TestContextFactory createTestContextFactory() {
+        return TestContextFactory.newInstance();
     }
 }

@@ -19,7 +19,7 @@ package org.citrusframework.testng.integration.actions;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.citrusframework.TestActionRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.actions.ApplyTestBehaviorAction;
 import org.citrusframework.actions.EchoAction;

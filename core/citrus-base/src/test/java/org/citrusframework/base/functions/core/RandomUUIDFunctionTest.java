@@ -18,7 +18,7 @@ package org.citrusframework.base.functions.core;
 
 import java.util.Collections;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework;
+package org.citrusframework.base;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,10 +23,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.TestCase;
 import org.citrusframework.actions.AbstractAsyncTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Async;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.base.functions.core.CurrentDateFunction;
@@ -137,7 +140,7 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
 
         testcase.addTestAction(action(context -> {
             Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase");
-            Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
+            Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), DefaultTestCase.class.getPackage().getName());
             Assert.assertEquals(context.getVariable("${name}"), "Citrus");
             Assert.assertEquals(context.getVariable("${framework}"), "Citrus");
             Assert.assertEquals(context.getVariable("${hello}"), "Hello Citrus!");

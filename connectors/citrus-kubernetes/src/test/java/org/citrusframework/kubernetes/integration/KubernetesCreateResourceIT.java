@@ -17,7 +17,7 @@
 package org.citrusframework.kubernetes.integration;
 
 import io.fabric8.kubernetes.api.model.Pod;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.spi.Resources;

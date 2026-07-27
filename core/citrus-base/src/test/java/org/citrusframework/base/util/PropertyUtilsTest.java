@@ -17,7 +17,7 @@
 package org.citrusframework.base.util;
 
 import org.citrusframework.TestActor;
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.util.PropertyUtils;

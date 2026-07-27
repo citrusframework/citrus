@@ -16,7 +16,7 @@
 
 package org.citrusframework.base.message;
 
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.DefaultMessage;

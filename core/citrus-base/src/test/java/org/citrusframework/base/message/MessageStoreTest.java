@@ -18,7 +18,7 @@ package org.citrusframework.base.message;
 
 import java.util.List;
 
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.context.TestContext;

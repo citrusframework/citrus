@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.concurrent.Executors;
 
 import com.sun.net.httpserver.HttpServer;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.testng.integration.common.FileHelper;
 import org.citrusframework.message.MessageType;

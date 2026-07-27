@@ -16,7 +16,7 @@
 
 package org.citrusframework.http.integration;
 
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;

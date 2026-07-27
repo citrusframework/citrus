@@ -19,8 +19,8 @@ package org.citrusframework.xml.actons.dsl;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.xml.UnitTestSupport;
 import org.citrusframework.actions.SendMessageAction;

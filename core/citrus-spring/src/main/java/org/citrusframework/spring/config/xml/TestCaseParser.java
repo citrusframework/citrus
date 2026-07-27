@@ -16,7 +16,7 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 
 /**
  * Bean definition parser for test case.

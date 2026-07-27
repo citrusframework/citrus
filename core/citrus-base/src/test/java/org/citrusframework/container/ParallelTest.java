@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.UnitTestSupport;
+import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.actions.SleepAction;

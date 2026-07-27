@@ -17,8 +17,8 @@
 package org.citrusframework.json.actions.dsl;
 
 import com.networknt.schema.Schema;
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestActionSupport;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.actions.ReceiveMessageAction;

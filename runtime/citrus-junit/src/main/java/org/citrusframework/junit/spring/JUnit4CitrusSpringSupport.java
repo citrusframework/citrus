@@ -26,6 +26,7 @@ import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.api.common.TestSourceAware;
+import org.citrusframework.dsl.DefaultTestActions;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;

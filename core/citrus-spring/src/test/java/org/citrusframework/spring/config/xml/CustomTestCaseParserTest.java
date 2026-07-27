@@ -16,7 +16,7 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;

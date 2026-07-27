@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.citrusframework.CitrusSettings;
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.TestSource;

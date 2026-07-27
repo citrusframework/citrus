@@ -19,7 +19,7 @@ package org.citrusframework.junit;
 import java.util.Date;
 
 import org.citrusframework.Citrus;
-import org.citrusframework.DefaultTestActions;
+import org.citrusframework.dsl.DefaultTestActions;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;

@@ -19,7 +19,7 @@ package org.citrusframework.base.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.DefaultTestCase;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestAction;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.api.container.TestActionContainer;
