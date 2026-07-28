@@ -68,7 +68,6 @@ public class CitrusModule implements Module {
 
     private Predicate<SchemaProperty> ignoreFilter = schema -> false;
     private boolean addMetaData = true;
-    private boolean requireOneOfItem = true;
 
     private final AtomicBoolean blocked = new AtomicBoolean(false);
     private final InlineSchemaModule inlineSchemaModule = new InlineSchemaModule();
@@ -117,13 +116,9 @@ public class CitrusModule implements Module {
                         // remove all properties from old item node, but keep the property as an empty element.
                         // This is required to pass the additionalProperties=false check
                         ((ObjectNode) schemaNode.get(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES))).putObject(oneOfItem);
-                        if (requireOneOfItem) {
-                            itemNode.withArray(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_REQUIRED)).add(oneOfItem);
-                        }
-                    } else {
-                        itemNode.withArray(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_REQUIRED)).add(oneOfItem);
                     }
 
+                    itemNode.withArray(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_REQUIRED)).add(oneOfItem);
                 }
 
                 // Add the inversion of the required oneOf elements, allows users to not specify any of the oneOf listed elements
@@ -401,14 +396,6 @@ public class CitrusModule implements Module {
      */
     public CitrusModule withMetaData(boolean addMetaData) {
         this.addMetaData = addMetaData;
-        return this;
-    }
-
-    /**
-     * Enable/disable adding required information on a one of item.
-     */
-    public CitrusModule withRequireOneOf(boolean require) {
-        this.requireOneOfItem = require;
         return this;
     }
 
