@@ -75,12 +75,18 @@ public class MigrationData {
         List<PackageRename> renames = new ArrayList<>();
 
         // citrus-api: actions, containers, conditions, etc.
-        renames.add(new PackageRename("org.citrusframework.actions.", "org.citrusframework.api.actions.", "citrus-api"));
-        renames.add(new PackageRename("org.citrusframework.container.", "org.citrusframework.api.container.", "citrus-api"));
+        renames.add(new PackageRename("org.citrusframework.actions.", "org.citrusframework.api.actions.", "citrus-api",
+                "Action builder interfaces only; action implementations in citrus-base " +
+                        "(e.g. CreateVariablesAction, SleepAction, ReceiveMessageAction) keep their original packages."));
+        renames.add(new PackageRename("org.citrusframework.container.", "org.citrusframework.api.container.", "citrus-api",
+                "Container interfaces only; implementations in citrus-base " +
+                        "(e.g. SequenceAfterSuite, SequenceBeforeSuite, FinallySequence) keep their original packages."));
         renames.add(new PackageRename("org.citrusframework.condition.", "org.citrusframework.api.condition.", "citrus-api"));
         renames.add(new PackageRename("org.citrusframework.common.", "org.citrusframework.api.common.", "citrus-api"));
         renames.add(new PackageRename("org.citrusframework.agent.", "org.citrusframework.api.agent.", "citrus-api"));
-        renames.add(new PackageRename("org.citrusframework.openapi.", "org.citrusframework.api.openapi.", "citrus-api"));
+        renames.add(new PackageRename("org.citrusframework.openapi.", "org.citrusframework.api.openapi.", "citrus-api",
+                "OpenAPI API types only; connector-level classes in citrus-openapi " +
+                        "(e.g. OpenApiSpecification, OpenApiActionBuilder) keep their original packages."));
         renames.add(new PackageRename("org.citrusframework.kubernetes.", "org.citrusframework.api.kubernetes.", "citrus-api"));
         renames.add(new PackageRename("org.citrusframework.main.", "org.citrusframework.api.main.", "citrus-api"));
         renames.add(new PackageRename("org.citrusframework.xml.namespace.", "org.citrusframework.api.xml.namespace.", "citrus-api"));
@@ -91,12 +97,15 @@ public class MigrationData {
         renames.add(new PackageRename("org.citrusframework.yaml.", "org.citrusframework.api.yaml.", "citrus-api"));
 
         // citrus-api: validation contexts
-        renames.add(new PackageRename("org.citrusframework.validation.json.", "org.citrusframework.validation.context.json.", "citrus-api"));
-        renames.add(new PackageRename("org.citrusframework.validation.xml.", "org.citrusframework.validation.context.xml.", "citrus-api"));
-        renames.add(new PackageRename("org.citrusframework.validation.yaml.", "org.citrusframework.validation.context.yaml.", "citrus-api"));
-        renames.add(new PackageRename("org.citrusframework.validation.script.", "org.citrusframework.validation.context.script.", "citrus-api"));
-        renames.add(new PackageRename("org.citrusframework.validation.ws.", "org.citrusframework.validation.context.ws.", "citrus-api"));
-        renames.add(new PackageRename("org.citrusframework.validation.openapi.", "org.citrusframework.validation.context.openapi.", "citrus-api"));
+        String validationContextNote = "Only validation context classes moved; validators and processors " +
+                "in citrus-validation-* modules (e.g. XmlMarshallingValidationProcessor, " +
+                "JsonMappingValidationProcessor) keep their original packages.";
+        renames.add(new PackageRename("org.citrusframework.validation.json.", "org.citrusframework.validation.context.json.", "citrus-api", validationContextNote));
+        renames.add(new PackageRename("org.citrusframework.validation.xml.", "org.citrusframework.validation.context.xml.", "citrus-api", validationContextNote));
+        renames.add(new PackageRename("org.citrusframework.validation.yaml.", "org.citrusframework.validation.context.yaml.", "citrus-api", validationContextNote));
+        renames.add(new PackageRename("org.citrusframework.validation.script.", "org.citrusframework.validation.context.script.", "citrus-api", validationContextNote));
+        renames.add(new PackageRename("org.citrusframework.validation.ws.", "org.citrusframework.validation.context.ws.", "citrus-api", validationContextNote));
+        renames.add(new PackageRename("org.citrusframework.validation.openapi.", "org.citrusframework.validation.context.openapi.", "citrus-api", validationContextNote));
 
         // citrus-api: utilities
         renames.add(new PackageRename("org.citrusframework.json.", "org.citrusframework.util.json.", "citrus-api"));
@@ -114,7 +123,6 @@ public class MigrationData {
         renames.add(new PackageRename("org.citrusframework.server.", "org.citrusframework.base.server.", "citrus-base"));
         renames.add(new PackageRename("org.citrusframework.context.StaticTestContextFactory", "org.citrusframework.base.context.StaticTestContextFactory", "citrus-base"));
         renames.add(new PackageRename("org.citrusframework.annotations.CitrusAnnotations", "org.citrusframework.base.annotations.CitrusAnnotations", "citrus-base"));
-        renames.add(new PackageRename("org.citrusframework.message.builder.", "org.citrusframework.base.message.builder.", "citrus-base"));
         renames.add(new PackageRename("org.citrusframework.main.AbstractTestEngine", "org.citrusframework.base.main.AbstractTestEngine", "citrus-base"));
         renames.add(new PackageRename("org.citrusframework.main.scan.", "org.citrusframework.base.main.scan.", "citrus-base"));
 
@@ -249,7 +257,11 @@ public class MigrationData {
 
     public record DependencyUpgrade(String dependency, String oldVersion, String newVersion) {}
 
-    public record PackageRename(String oldPackage, String newPackage, String module) {}
+    public record PackageRename(String oldPackage, String newPackage, String module, String note) {
+        public PackageRename(String oldPackage, String newPackage, String module) {
+            this(oldPackage, newPackage, module, null);
+        }
+    }
 
     public record ApiChange(String type, String summary, String details) {}
 

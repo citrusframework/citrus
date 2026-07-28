@@ -77,6 +77,33 @@ class MigrationDataTest {
     }
 
     @Test
+    void shouldContainNotesForBroadPatterns() {
+        MigrationData.MigrationGuide guide = migrationData.getGuide("5.0");
+
+        assertThat(guide.packageRenames()).anyMatch(r ->
+                "org.citrusframework.actions.".equals(r.oldPackage()) &&
+                        r.note() != null && r.note().contains("Action builder interfaces only"));
+        assertThat(guide.packageRenames()).anyMatch(r ->
+                "org.citrusframework.container.".equals(r.oldPackage()) &&
+                        r.note() != null && r.note().contains("Container interfaces only"));
+        assertThat(guide.packageRenames()).anyMatch(r ->
+                "org.citrusframework.openapi.".equals(r.oldPackage()) &&
+                        r.note() != null && r.note().contains("OpenAPI API types only"));
+        assertThat(guide.packageRenames()).anyMatch(r ->
+                "org.citrusframework.validation.json.".equals(r.oldPackage()) &&
+                        r.note() != null && r.note().contains("validation context classes"));
+    }
+
+    @Test
+    void shouldNotContainRemovedBroadMessageBuilderPattern() {
+        MigrationData.MigrationGuide guide = migrationData.getGuide("5.0");
+
+        assertThat(guide.packageRenames()).noneMatch(r ->
+                "org.citrusframework.message.builder.".equals(r.oldPackage()) &&
+                        "org.citrusframework.base.message.builder.".equals(r.newPackage()));
+    }
+
+    @Test
     void shouldContainApiChanges() {
         MigrationData.MigrationGuide guide = migrationData.getGuide("5.0");
 
