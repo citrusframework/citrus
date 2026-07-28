@@ -1,0 +1,212 @@
+[[tools-kaoto]]
+= Kaoto Visual Designer
+
+Kaoto is an open-source visual designer for building integration flows.
+Starting with Kaoto 2.11 the designer includes full Citrus support, allowing you to create, edit, and run Citrus integration tests in a visual, low-code environment — right inside VS Code or in a browser.
+
+image:kaoto/kaoto-logo.png[kaoto-logo.png]
+
+[[tools-kaoto-overview]]
+== Overview
+
+The Kaoto editor renders Citrus YAML tests as visual flows on a canvas.
+Each test action appears as a step with a dedicated icon, making it easy to distinguish action types at a glance.
+You can browse the complete Citrus component catalog, configure endpoints and actions through guided property forms, and run tests directly from the editor.
+
+Kaoto is aware of the complete Citrus component catalog: every test action, every endpoint type, every function and validation matcher is available for selection in the designer.
+
+Key capabilities:
+
+* Visual canvas with dedicated Citrus icons for each action type
+* Full Citrus component catalog with 35+ endpoint types
+* Schema-based property forms with input types, dropdowns, and contextual help
+* Direct test execution from within the editor
+* Tests are saved as standard Citrus YAML — fully portable and compatible with the broader Citrus ecosystem
+
+NOTE: Kaoto currently supports the Citrus YAML DSL.
+XML DSL support is planned for a future release.
+
+[[tools-kaoto-getting-started]]
+== Getting Started
+
+There are two ways to use Kaoto with Citrus: the VS Code extension or the online playground.
+
+[[tools-kaoto-vscode]]
+=== VS Code Extension
+
+Install the Kaoto extension from the VS Code marketplace:
+
+1. Open VS Code
+2. Go to the Extensions view (`Ctrl+Shift+X` / `Cmd+Shift+X`)
+3. Search for *Kaoto* (publisher: Red Hat, extension ID `redhat.vscode-kaoto`)
+4. Click *Install*
+
+Alternatively, install from the command line:
+
+[source,bash]
+----
+code --install-extension redhat.vscode-kaoto
+----
+
+Once installed, create a new file with the `.citrus.yaml` extension and open it with the Kaoto editor.
+VS Code will automatically use Kaoto to render the file as a visual test flow.
+
+[[tools-kaoto-playground]]
+=== Online Playground
+
+If you want to try Kaoto without installing anything, use the online playground at https://kaotoio.github.io/kaoto/.
+
+The playground runs entirely in your browser and supports the same Citrus catalog and visual editing features as the VS Code extension.
+
+[[tools-kaoto-creating-tests]]
+== Creating Tests
+
+To create a new Citrus test in Kaoto:
+
+1. Create a file with the `.citrus.yaml` extension (e.g., `my-test.citrus.yaml`)
+2. Open the file — the Kaoto editor shows an empty canvas
+3. Add test actions from the catalog by clicking the *+* button on the canvas
+4. Configure each action using the property form panel
+
+The resulting YAML file is a standard Citrus test definition that can be executed with the Citrus YAML test runtime, JBang, or any other Citrus-compatible runner.
+
+[[tools-kaoto-catalog]]
+== Component Catalog
+
+The Kaoto editor integrates the full Citrus component catalog.
+When adding a new step to the canvas, you can browse and search for components across the following categories:
+
+=== Test Actions
+
+All core Citrus test actions are available, including:
+
+* *send* / *receive* — send and receive messages on endpoints
+* *echo* / *print* — log messages to the console
+* *sleep* / *delay* — pause test execution
+* *create-variables* — define test variables
+* *assert* / *verify* — assert conditions
+* *transform* — transform message payloads
+
+=== Containers
+
+Test action containers for controlling execution flow:
+
+* *sequential* — run actions in order
+* *parallel* — run actions concurrently
+* *repeat* / *iterate* — loop over actions
+* *conditional* — conditional execution
+* *async* — asynchronous execution
+* *timer* — time-based execution
+
+=== Test Endpoints
+
+Kaoto includes 35+ Citrus endpoint types covering a wide range of protocols and transports:
+
+* *HTTP* — HTTP client and server endpoints
+* *Kafka* — Apache Kafka messaging
+* *JMS* — Java Message Service
+* *SOAP/WS* — SOAP web services
+* *FTP/SFTP* — file transfer
+* *Mail* — email (SMTP/IMAP)
+* *SSH* — secure shell
+* *Kubernetes* — Kubernetes API
+* *Docker* — Docker container management
+* *SQL/JDBC* — database operations
+* *Apache Camel* — Camel endpoint integration
+
+And many more — each with its own guided configuration form.
+
+You can pick the Citrus endpoint from the catalog in Kaoto.
+
+image:kaoto/endpoints.png[endpoints.png]
+
+With the endpoint schema that provides detailed information to all available properties and options Kaoto is able to render the property forms so you can easily configure the endpoint.
+
+image:kaoto/endpoint-forms.png[endpoint-forms.png]
+
+=== Functions and Validation Matchers
+
+The catalog also includes Citrus functions (for generating dynamic test data) and validation matchers (for flexible message validation).
+
+[[tools-kaoto-property-forms]]
+== Schema-Based Property Forms
+
+When you select a component on the canvas, Kaoto renders a tailored configuration form based on the component's JSON schema from the Citrus catalog.
+The forms provide:
+
+* Proper input types for each property (text fields, numbers, booleans, dropdowns)
+* Required field indicators
+* Default values where applicable
+* Contextual help text describing what each property does
+
+This guided approach eliminates the need to scan documentation for property names or value formats — the editor tells you exactly what each component expects.
+
+[[tools-kaoto-running-tests]]
+== Running Tests
+
+You can run Citrus tests directly from the Kaoto interface during development, keeping the feedback loop short.
+The test output is displayed in the editor, so you can immediately see whether your test passes or fails.
+
+Tests built in Kaoto are standard Citrus YAML files, so they can also be executed outside of Kaoto using any Citrus-compatible runner:
+
+[source,bash]
+----
+# Run with JBang Citrus app
+citrus run my-test.citrus.yaml
+
+# Run with Maven (if the project is set up with citrus-yaml runtime)
+./mvnw verify
+----
+
+See link:#runtime-jbang[JBang runtime] and link:#run-yaml-tests[YAML runtime] for more details on running YAML tests.
+
+[[tools-kaoto-example]]
+== Kaoto Example
+
+The following example shows a simple Citrus YAML test that can be visualized and edited in Kaoto.
+It starts a Kafka Testcontainers instance, sends a message to a Kafka topic, and verifies the received message.
+
+[source,yaml]
+----
+name: KafkaMessagingTest
+description: Verify Kafka message send and receive
+actions:
+  - testcontainers:
+      start:
+        kafka: {}
+  - send:
+      endpoint: "kafka:test-topic?server=${kafka.bootstrapServers}"
+      message:
+        body:
+          data: |
+            {"text": "Hello Kafka!"}
+  - receive:
+      endpoint: "kafka:test-topic?server=${kafka.bootstrapServers}"
+      message:
+        body:
+          data: |
+            {"text": "Hello Kafka!"}
+  - echo:
+      message: "Kafka messaging test completed!"
+----
+
+Open this file in Kaoto and each action renders as a visual step on the canvas.
+You can modify properties, add new actions, or rearrange the flow — all changes are reflected in the YAML file.
+
+image:kaoto/test-sample.png[test-sample.png]
+
+Select one of the test action items and see the individual property forms being generated from the test action schema.
+
+image:kaoto/test-action-sample.png[test-action-sample.png]
+
+You can adjust all available test action properties and Kaoto makes sure to render the proper YAML code for you.
+
+image:kaoto/test-action-forms.png[test-action-forms.png]
+
+[[tools-kaoto-resources]]
+== Resources
+
+* Kaoto project: https://kaoto.io/
+* Kaoto VS Code extension: https://marketplace.visualstudio.com/items?itemName=redhat.vscode-kaoto
+* Kaoto online playground: https://kaotoio.github.io/kaoto/
+* Blog post: https://citrusframework.org/news/2026/06/19/kaoto-meets-citrus/
