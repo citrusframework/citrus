@@ -67,8 +67,7 @@ public class Catalog {
                 .sorted(Map.Entry.comparingByKey())
                 .map(entry -> {
                     CatalogItem item = entry.getValue();
-                    CitrusModule module = new CitrusModule()
-                            .withRequireOneOf(false);
+                    CitrusModule module = new CitrusModule();
                     if (item.schema.kind() == GROUP) {
                         module.withIgnoreFilter(schema -> schema.kind() != PROPERTY);
                     }

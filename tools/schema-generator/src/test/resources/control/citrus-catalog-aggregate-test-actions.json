@@ -1984,7 +1984,10 @@
                               "title": "Client",
                               "description": "Sets the Http client endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "client"
+                          ]
                         },
                         {
                           "type": "object",
@@ -2276,7 +2279,10 @@
                               "title": "Server",
                               "description": "Sets the Http server endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "server"
+                          ]
                         },
                         {
                           "not": {
@@ -2300,7 +2306,10 @@
                   "title": "Http",
                   "description": "Http client and server endpoints"
                 }
-              }
+              },
+              "required": [
+                "http"
+              ]
             },
             {
               "type": "object",
@@ -2415,7 +2424,10 @@
                               "title": "Client",
                               "description": "Sets the SOAP WebService client endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "client"
+                          ]
                         },
                         {
                           "type": "object",
@@ -2587,7 +2599,10 @@
                               "title": "Server",
                               "description": "Sets the SOAP WebService server endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "server"
+                          ]
                         },
                         {
                           "not": {
@@ -2611,7 +2626,10 @@
                   "title": "Soap",
                   "description": "SOAP WebService client and server endpoints"
                 }
-              }
+              },
+              "required": [
+                "soap"
+              ]
             },
             {
               "type": "object",
@@ -2679,7 +2697,10 @@
                               "title": "Client",
                               "description": "Sets the WebSocket client endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "client"
+                          ]
                         },
                         {
                           "type": "object",
@@ -2981,7 +3002,10 @@
                               "title": "Server",
                               "description": "Sets the WebSocket server endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "server"
+                          ]
                         },
                         {
                           "not": {
@@ -3005,7 +3029,10 @@
                   "title": "WebSocket",
                   "description": "WebSocket client and server endpoints"
                 }
-              }
+              },
+              "required": [
+                "webSocket"
+              ]
             },
             {
               "type": "object",
@@ -3041,7 +3068,10 @@
                   "title": "Context",
                   "description": "Context endpoint."
                 }
-              }
+              },
+              "required": [
+                "context"
+              ]
             },
             {
               "type": "object",
@@ -3124,7 +3154,10 @@
                               "title": "Client",
                               "description": "Sets the mail client endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "client"
+                          ]
                         },
                         {
                           "type": "object",
@@ -3224,7 +3257,10 @@
                               "title": "Server",
                               "description": "Sets the mail server endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "server"
+                          ]
                         },
                         {
                           "not": {
@@ -3248,7 +3284,10 @@
                   "title": "Mail",
                   "description": "Mail client and server endpoints"
                 }
-              }
+              },
+              "required": [
+                "mail"
+              ]
             },
             {
               "type": "object",
@@ -3335,7 +3374,10 @@
                               "title": "Client",
                               "description": "Sets the ftp client endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "client"
+                          ]
                         },
                         {
                           "type": "object",
@@ -3464,7 +3506,10 @@
                               "title": "Server",
                               "description": "Sets the ftp server endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "server"
+                          ]
                         },
                         {
                           "not": {
@@ -3488,7 +3533,10 @@
                   "title": "Ftp",
                   "description": "Ftp client and server endpoints"
                 }
-              }
+              },
+              "required": [
+                "ftp"
+              ]
             },
             {
               "type": "object",
@@ -3615,7 +3663,10 @@
                               "title": "Client",
                               "description": "Sets the sftp client endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "client"
+                          ]
                         },
                         {
                           "type": "object",
@@ -3745,7 +3796,10 @@
                               "title": "Server",
                               "description": "Sets the sftp server endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "server"
+                          ]
                         },
                         {
                           "not": {
@@ -3769,7 +3823,10 @@
                   "title": "Sftp",
                   "description": "Sftp client and server endpoints"
                 }
-              }
+              },
+              "required": [
+                "sftp"
+              ]
             },
             {
               "type": "object",
@@ -3881,7 +3938,10 @@
                               "title": "Client",
                               "description": "Sets the scp client endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "client"
+                          ]
                         },
                         {
                           "type": "object",
@@ -4011,7 +4071,10 @@
                               "title": "Server",
                               "description": "Sets the sftp server endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "server"
+                          ]
                         },
                         {
                           "not": {
@@ -4035,7 +4098,10 @@
                   "title": "Scp",
                   "description": "Scp client and server endpoint"
                 }
-              }
+              },
+              "required": [
+                "scp"
+              ]
             },
             {
               "type": "object",
@@ -4112,7 +4178,10 @@
                   "title": "Docker",
                   "description": "Docker client"
                 }
-              }
+              },
+              "required": [
+                "docker"
+              ]
             },
             {
               "type": "object",
@@ -4197,7 +4266,10 @@
                   "title": "Kubernetes",
                   "description": "Kubernetes client"
                 }
-              }
+              },
+              "required": [
+                "kubernetes"
+              ]
             },
             {
               "type": "object",
@@ -4306,7 +4378,10 @@
                               "title": "Asynchronous",
                               "description": "Sets the Jms endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "asynchronous"
+                          ]
                         },
                         {
                           "type": "object",
@@ -4398,7 +4473,10 @@
                               "title": "Synchronous",
                               "description": "Sets the synchronous Jms endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "synchronous"
+                          ]
                         },
                         {
                           "not": {
@@ -4422,7 +4500,10 @@
                   "title": "JMS",
                   "description": "JMS endpoint"
                 }
-              }
+              },
+              "required": [
+                "jms"
+              ]
             },
             {
               "type": "object",
@@ -4498,7 +4579,10 @@
                               "title": "Asynchronous",
                               "description": "Sets the Vert.x endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "asynchronous"
+                          ]
                         },
                         {
                           "type": "object",
@@ -4565,7 +4649,10 @@
                               "title": "Synchronous",
                               "description": "Sets the synchronous Vert.x endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "synchronous"
+                          ]
                         },
                         {
                           "not": {
@@ -4589,7 +4676,10 @@
                   "title": "Vert.x",
                   "description": "Vert.x endpoint."
                 }
-              }
+              },
+              "required": [
+                "vertx"
+              ]
             },
             {
               "type": "object",
@@ -4637,7 +4727,10 @@
                               "title": "Asynchronous",
                               "description": "Sets the direct endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "asynchronous"
+                          ]
                         },
                         {
                           "type": "object",
@@ -4681,7 +4774,10 @@
                               "title": "Synchronous",
                               "description": "Sets the synchronous direct endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "synchronous"
+                          ]
                         },
                         {
                           "not": {
@@ -4705,7 +4801,10 @@
                   "title": "Direct",
                   "description": "Direct endpoint."
                 }
-              }
+              },
+              "required": [
+                "direct"
+              ]
             },
             {
               "type": "object",
@@ -4843,7 +4942,10 @@
                               "title": "Asynchronous",
                               "description": "Sets the Kafka endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "asynchronous"
+                          ]
                         },
                         {
                           "type": "object",
@@ -4966,7 +5068,10 @@
                               "title": "Synchronous",
                               "description": "Sets the synchronous Kafka endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "synchronous"
+                          ]
                         },
                         {
                           "not": {
@@ -4990,7 +5095,10 @@
                   "title": "Kafka",
                   "description": "Kafka endpoint."
                 }
-              }
+              },
+              "required": [
+                "kafka"
+              ]
             },
             {
               "type": "object",
@@ -5044,7 +5152,10 @@
                               "title": "Asynchronous",
                               "description": "Sets the Camel endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "asynchronous"
+                          ]
                         },
                         {
                           "type": "object",
@@ -5094,7 +5205,10 @@
                               "title": "Synchronous",
                               "description": "Sets the synchronous Camel endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "synchronous"
+                          ]
                         },
                         {
                           "not": {
@@ -5118,7 +5232,10 @@
                   "title": "Camel",
                   "description": "Camel endpoint."
                 }
-              }
+              },
+              "required": [
+                "camel"
+              ]
             },
             {
               "type": "object",
@@ -5192,7 +5309,10 @@
                               "title": "Asynchronous",
                               "description": "Sets the Spring message channel endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "asynchronous"
+                          ]
                         },
                         {
                           "type": "object",
@@ -5263,7 +5383,10 @@
                               "title": "Synchronous",
                               "description": "Sets the synchronous Spring message channel endpoint."
                             }
-                          }
+                          },
+                          "required": [
+                            "synchronous"
+                          ]
                         },
                         {
                           "not": {
@@ -5287,7 +5410,10 @@
                   "title": "Spring channel",
                   "description": "Spring channel endpoint."
                 }
-              }
+              },
+              "required": [
+                "channel"
+              ]
             },
             {
               "type": "object",
@@ -5369,7 +5495,10 @@
                   "title": "Selenium",
                   "description": "Selenium endpoint."
                 }
-              }
+              },
+              "required": [
+                "selenium"
+              ]
             },
             {
               "not": {
@@ -6227,7 +6356,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -6262,7 +6394,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -6402,7 +6537,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -6511,7 +6649,10 @@
                   "title": "GET",
                   "description": "Http GET request"
                 }
-              }
+              },
+              "required": [
+                "GET"
+              ]
             },
             {
               "type": "object",
@@ -6567,7 +6708,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -6602,7 +6746,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -6742,7 +6889,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -6851,7 +7001,10 @@
                   "title": "POST",
                   "description": "Http POST request"
                 }
-              }
+              },
+              "required": [
+                "POST"
+              ]
             },
             {
               "type": "object",
@@ -6907,7 +7060,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -6942,7 +7098,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -7082,7 +7241,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -7191,7 +7353,10 @@
                   "title": "PUT",
                   "description": "Http PUT request"
                 }
-              }
+              },
+              "required": [
+                "PUT"
+              ]
             },
             {
               "type": "object",
@@ -7247,7 +7412,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -7282,7 +7450,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -7422,7 +7593,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -7531,7 +7705,10 @@
                   "title": "DELETE",
                   "description": "Http DELETE request"
                 }
-              }
+              },
+              "required": [
+                "DELETE"
+              ]
             },
             {
               "type": "object",
@@ -7587,7 +7764,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -7622,7 +7802,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -7762,7 +7945,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -7871,7 +8057,10 @@
                   "title": "HEAD",
                   "description": "Http HEAD request"
                 }
-              }
+              },
+              "required": [
+                "HEAD"
+              ]
             },
             {
               "type": "object",
@@ -7927,7 +8116,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -7962,7 +8154,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -8102,7 +8297,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -8211,7 +8409,10 @@
                   "title": "OPTIONS",
                   "description": "Http OPTIONS request"
                 }
-              }
+              },
+              "required": [
+                "OPTIONS"
+              ]
             },
             {
               "type": "object",
@@ -8267,7 +8468,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -8302,7 +8506,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -8442,7 +8649,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -8551,7 +8761,10 @@
                   "title": "PATCH",
                   "description": "Http PATCH request"
                 }
-              }
+              },
+              "required": [
+                "PATCH"
+              ]
             },
             {
               "type": "object",
@@ -8607,7 +8820,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -8642,7 +8858,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -8782,7 +9001,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -8891,7 +9113,10 @@
                   "title": "TRACE",
                   "description": "Http TRACE request"
                 }
-              }
+              },
+              "required": [
+                "TRACE"
+              ]
             },
             {
               "not": {
@@ -9081,7 +9306,10 @@
                           "title": "Resource",
                           "description": "The message body loaded from a file resource."
                         }
-                      }
+                      },
+                      "required": [
+                        "resource"
+                      ]
                     },
                     {
                       "type": "object",
@@ -9116,7 +9344,10 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
-                      }
+                      },
+                      "required": [
+                        "script"
+                      ]
                     },
                     {
                       "not": {
@@ -9256,7 +9487,10 @@
                             "title": "Resource",
                             "description": "The header data loaded from a file resource."
                           }
-                        }
+                        },
+                        "required": [
+                          "resource"
+                        ]
                       },
                       {
                         "required": [
@@ -9730,7 +9964,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -9765,7 +10002,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -9905,7 +10145,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -10014,7 +10257,10 @@
                   "title": "GET",
                   "description": "Http GET request"
                 }
-              }
+              },
+              "required": [
+                "GET"
+              ]
             },
             {
               "type": "object",
@@ -10070,7 +10316,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -10105,7 +10354,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -10245,7 +10497,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -10354,7 +10609,10 @@
                   "title": "POST",
                   "description": "Http POST request"
                 }
-              }
+              },
+              "required": [
+                "POST"
+              ]
             },
             {
               "type": "object",
@@ -10410,7 +10668,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -10445,7 +10706,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -10585,7 +10849,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -10694,7 +10961,10 @@
                   "title": "PUT",
                   "description": "Http PUT request"
                 }
-              }
+              },
+              "required": [
+                "PUT"
+              ]
             },
             {
               "type": "object",
@@ -10750,7 +11020,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -10785,7 +11058,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -10925,7 +11201,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -11034,7 +11313,10 @@
                   "title": "DELETE",
                   "description": "Http DELETE request"
                 }
-              }
+              },
+              "required": [
+                "DELETE"
+              ]
             },
             {
               "type": "object",
@@ -11090,7 +11372,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -11125,7 +11410,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -11265,7 +11553,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -11374,7 +11665,10 @@
                   "title": "HEAD",
                   "description": "Http HEAD request"
                 }
-              }
+              },
+              "required": [
+                "HEAD"
+              ]
             },
             {
               "type": "object",
@@ -11430,7 +11724,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -11465,7 +11762,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -11605,7 +11905,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -11714,7 +12017,10 @@
                   "title": "OPTIONS",
                   "description": "Http OPTIONS request"
                 }
-              }
+              },
+              "required": [
+                "OPTIONS"
+              ]
             },
             {
               "type": "object",
@@ -11770,7 +12076,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -11805,7 +12114,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -11945,7 +12257,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -12054,7 +12369,10 @@
                   "title": "PATCH",
                   "description": "Http PATCH request"
                 }
-              }
+              },
+              "required": [
+                "PATCH"
+              ]
             },
             {
               "type": "object",
@@ -12110,7 +12428,10 @@
                                   "title": "Resource",
                                   "description": "The message body loaded from a file resource."
                                 }
-                              }
+                              },
+                              "required": [
+                                "resource"
+                              ]
                             },
                             {
                               "type": "object",
@@ -12145,7 +12466,10 @@
                                   "title": "Script",
                                   "description": "The message body set via script."
                                 }
-                              }
+                              },
+                              "required": [
+                                "script"
+                              ]
                             },
                             {
                               "not": {
@@ -12285,7 +12609,10 @@
                                     "title": "Resource",
                                     "description": "The header data loaded from a file resource."
                                   }
-                                }
+                                },
+                                "required": [
+                                  "resource"
+                                ]
                               },
                               {
                                 "required": [
@@ -12394,7 +12721,10 @@
                   "title": "TRACE",
                   "description": "Http TRACE request"
                 }
-              }
+              },
+              "required": [
+                "TRACE"
+              ]
             },
             {
               "not": {
@@ -12572,7 +12902,10 @@
                           "title": "Resource",
                           "description": "The message body loaded from a file resource."
                         }
-                      }
+                      },
+                      "required": [
+                        "resource"
+                      ]
                     },
                     {
                       "type": "object",
@@ -12607,7 +12940,10 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
-                      }
+                      },
+                      "required": [
+                        "script"
+                      ]
                     },
                     {
                       "not": {
@@ -12747,7 +13083,10 @@
                             "title": "Resource",
                             "description": "The header data loaded from a file resource."
                           }
-                        }
+                        },
+                        "required": [
+                          "resource"
+                        ]
                       },
                       {
                         "required": [
@@ -15449,7 +15788,10 @@
                           "title": "Resource",
                           "description": "The message body loaded from a file resource."
                         }
-                      }
+                      },
+                      "required": [
+                        "resource"
+                      ]
                     },
                     {
                       "type": "object",
@@ -15484,7 +15826,10 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
-                      }
+                      },
+                      "required": [
+                        "script"
+                      ]
                     },
                     {
                       "not": {
@@ -15619,7 +15964,10 @@
                             "title": "Resource",
                             "description": "The header data loaded from a file resource."
                           }
-                        }
+                        },
+                        "required": [
+                          "resource"
+                        ]
                       },
                       {
                         "required": [
@@ -17427,7 +17775,10 @@
                           "title": "Resource",
                           "description": "The message body loaded from a file resource."
                         }
-                      }
+                      },
+                      "required": [
+                        "resource"
+                      ]
                     },
                     {
                       "type": "object",
@@ -17462,7 +17813,10 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
-                      }
+                      },
+                      "required": [
+                        "script"
+                      ]
                     },
                     {
                       "not": {
@@ -17597,7 +17951,10 @@
                             "title": "Resource",
                             "description": "The header data loaded from a file resource."
                           }
-                        }
+                        },
+                        "required": [
+                          "resource"
+                        ]
                       },
                       {
                         "required": [
@@ -18300,7 +18657,10 @@
                           "title": "Resource",
                           "description": "The message body loaded from a file resource."
                         }
-                      }
+                      },
+                      "required": [
+                        "resource"
+                      ]
                     },
                     {
                       "type": "object",
@@ -18335,7 +18695,10 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
-                      }
+                      },
+                      "required": [
+                        "script"
+                      ]
                     },
                     {
                       "not": {
@@ -18475,7 +18838,10 @@
                             "title": "Resource",
                             "description": "The header data loaded from a file resource."
                           }
-                        }
+                        },
+                        "required": [
+                          "resource"
+                        ]
                       },
                       {
                         "required": [
@@ -18822,7 +19188,10 @@
                           "title": "Resource",
                           "description": "The message body loaded from a file resource."
                         }
-                      }
+                      },
+                      "required": [
+                        "resource"
+                      ]
                     },
                     {
                       "type": "object",
@@ -18857,7 +19226,10 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
-                      }
+                      },
+                      "required": [
+                        "script"
+                      ]
                     },
                     {
                       "not": {
@@ -18997,7 +19369,10 @@
                             "title": "Resource",
                             "description": "The header data loaded from a file resource."
                           }
-                        }
+                        },
+                        "required": [
+                          "resource"
+                        ]
                       },
                       {
                         "required": [
@@ -19474,7 +19849,10 @@
                           "title": "Resource",
                           "description": "The message body loaded from a file resource."
                         }
-                      }
+                      },
+                      "required": [
+                        "resource"
+                      ]
                     },
                     {
                       "type": "object",
@@ -19509,7 +19887,10 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
-                      }
+                      },
+                      "required": [
+                        "script"
+                      ]
                     },
                     {
                       "not": {
@@ -19690,7 +20071,10 @@
                             "title": "Resource",
                             "description": "The header data loaded from a file resource."
                           }
-                        }
+                        },
+                        "required": [
+                          "resource"
+                        ]
                       },
                       {
                         "required": [
@@ -19959,7 +20343,10 @@
                           "title": "Resource",
                           "description": "The message body loaded from a file resource."
                         }
-                      }
+                      },
+                      "required": [
+                        "resource"
+                      ]
                     },
                     {
                       "type": "object",
@@ -19994,7 +20381,10 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
-                      }
+                      },
+                      "required": [
+                        "script"
+                      ]
                     },
                     {
                       "not": {
@@ -20134,7 +20524,10 @@
                             "title": "Resource",
                             "description": "The header data loaded from a file resource."
                           }
-                        }
+                        },
+                        "required": [
+                          "resource"
+                        ]
                       },
                       {
                         "required": [
@@ -20403,7 +20796,10 @@
                           "title": "Resource",
                           "description": "The message body loaded from a file resource."
                         }
-                      }
+                      },
+                      "required": [
+                        "resource"
+                      ]
                     },
                     {
                       "type": "object",
@@ -20438,7 +20834,10 @@
                           "title": "Script",
                           "description": "The message body set via script."
                         }
-                      }
+                      },
+                      "required": [
+                        "script"
+                      ]
                     },
                     {
                       "not": {
@@ -20578,7 +20977,10 @@
                             "title": "Resource",
                             "description": "The header data loaded from a file resource."
                           }
-                        }
+                        },
+                        "required": [
+                          "resource"
+                        ]
                       },
                       {
                         "required": [
@@ -22334,7 +22736,10 @@
                   "title": "Message",
                   "description": "Wait for given message to exist in message store."
                 }
-              }
+              },
+              "required": [
+                "message"
+              ]
             },
             {
               "type": "object",
@@ -22367,7 +22772,10 @@
                   "title": "Http",
                   "description": "Wait for given Http endpoint to return a proper response code."
                 }
-              }
+              },
+              "required": [
+                "http"
+              ]
             },
             {
               "type": "object",
@@ -22385,7 +22793,10 @@
                   "title": "File",
                   "description": "Wait for given file path to exist."
                 }
-              }
+              },
+              "required": [
+                "file"
+              ]
             },
             {
               "type": "object",
@@ -22395,7 +22806,10 @@
                   "title": "Action",
                   "description": "Waits for the test action to complete."
                 }
-              }
+              },
+              "required": [
+                "action"
+              ]
             },
             {
               "not": {
