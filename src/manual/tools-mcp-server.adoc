@@ -17,6 +17,8 @@ The MCP server exposes Citrus framework capabilities through standardized tools 
 * Documentation tools
     ** **Documentation index**: Query all available documentation files with filter criteria
     ** **Documentation**: Access AsciiDoc documentation for specific Citrus components
+* Migration resources
+    ** **Migration Guides**: Retrieve structured version migration guides with package renames, Maven dependency changes, API changes, and SPI changes
 
 This enables AI assistants to provide context-aware suggestions, validate component usage, and generate syntactically correct Citrus tests.
 
@@ -388,7 +390,7 @@ Retrieves documentation content for a specific component.
 [[citrus-mcp-server-resources]]
 == Resources
 
-Resources provide read-only access to schemas and specifications.
+Resources provide read-only access to schemas, specifications, and documentation.
 
 === YAML DSL Schema
 
@@ -431,6 +433,45 @@ Retrieves the JSON schema for a specific endpoint.
 **MIME Type:** `application/json`
 
 **Example URI:** `citrus://schema/endpoint/kafka`
+
+=== Migration Guide
+
+**URI Template:** `citrus://docs/migration-guide/{version}`
+
+Retrieves the Citrus version migration guide for a given target version in a structured JSON format.
+The guide covers package renames, Maven artifact renames, dependency upgrades, API changes, and SPI changes to assist with automated migration from the previous major version.
+
+**Parameters:**
+* `version`: Target migration version (e.g., 5.0)
+
+**MIME Type:** `application/json`
+
+**Example URI:** `citrus://docs/migration-guide/5.0`
+
+**Response structure:**
+[source,json]
+----
+{
+  "targetVersion": "5.0",
+  "title": "Citrus 4.x to 5.x",
+  "description": "...",
+  "artifactRenames": [
+    { "groupId": "org.citrusframework", "oldArtifactId": "citrus-junit5", "newArtifactId": "citrus-junit-jupiter" }
+  ],
+  "dependencyUpgrades": [
+    { "dependency": "Spring Framework", "oldVersion": "6.x", "newVersion": "7.x" }
+  ],
+  "packageRenames": [
+    { "oldPackage": "org.citrusframework.TestActionSupport", "newPackage": "org.citrusframework.dsl.TestActionSupport", "module": "citrus-base" }
+  ],
+  "apiChanges": [
+    { "type": "interface-extraction", "summary": "CitrusContext is now an interface", "details": "..." }
+  ],
+  "spiChanges": [
+    { "serviceFile": "META-INF/services/org.citrusframework.CitrusContext", "implementation": "...", "changeType": "new" }
+  ]
+}
+----
 
 [[citrus-mcp-server-configuration]]
 == Server Configuration
@@ -497,4 +538,13 @@ Tools can query documentation resources to:
 
 * Display contextual help for components
 * Search documentation by component type and name
+
+=== Version Migration
+
+AI assistants can use the migration guide resource to:
+
+* Read structured package rename mappings and apply them to import statements
+* Identify Maven artifact renames and dependency upgrades required for a version upgrade
+* Detect API changes (interface extractions, deleted classes) that need manual attention
+* Update SPI registrations referencing moved classes
 * Provide code examples from documentation
