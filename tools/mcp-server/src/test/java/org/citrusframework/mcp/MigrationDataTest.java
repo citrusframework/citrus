@@ -104,6 +104,60 @@ class MigrationDataTest {
     }
 
     @Test
+    void shouldContainCamelCliPackageRenames() {
+        MigrationData.MigrationGuide guide = migrationData.getGuide("5.0");
+
+        assertThat(guide.packageRenames()).anyMatch(r ->
+                "org.citrusframework.camel.jbang.CamelJBang".equals(r.oldPackage()) &&
+                        "org.citrusframework.camel.cli.CamelCli".equals(r.newPackage()) &&
+                        "citrus-camel".equals(r.module()));
+        assertThat(guide.packageRenames()).anyMatch(r ->
+                "org.citrusframework.camel.jbang.CamelJBangSettings".equals(r.oldPackage()) &&
+                        "org.citrusframework.camel.cli.CamelCliSettings".equals(r.newPackage()));
+        assertThat(guide.packageRenames()).anyMatch(r ->
+                "org.citrusframework.actions.camel.CamelJBangActionBuilder".equals(r.oldPackage()) &&
+                        "org.citrusframework.actions.camel.CamelCliActionBuilder".equals(r.newPackage()) &&
+                        r.note() != null && r.note().contains("deprecated alias"));
+    }
+
+    @Test
+    void shouldContainDslRenames() {
+        MigrationData.MigrationGuide guide = migrationData.getGuide("5.0");
+
+        assertThat(guide.dslRenames()).isNotEmpty();
+        assertThat(guide.dslRenames()).anyMatch(r ->
+                "java".equals(r.dslType()) &&
+                        "camel().jbang()".equals(r.oldSyntax()) &&
+                        "camel().cli()".equals(r.newSyntax()));
+        assertThat(guide.dslRenames()).anyMatch(r ->
+                "xml".equals(r.dslType()) &&
+                        "<jbang>".equals(r.oldSyntax()) &&
+                        "<cli>".equals(r.newSyntax()));
+        assertThat(guide.dslRenames()).anyMatch(r ->
+                "yaml".equals(r.dslType()) &&
+                        "jbang:".equals(r.oldSyntax()) &&
+                        "cli:".equals(r.newSyntax()));
+    }
+
+    @Test
+    void shouldContainPropertyRenames() {
+        MigrationData.MigrationGuide guide = migrationData.getGuide("5.0");
+
+        assertThat(guide.propertyRenames()).isNotEmpty();
+        assertThat(guide.propertyRenames()).anyMatch(r ->
+                "citrus.camel.jbang.version".equals(r.oldProperty()) &&
+                        "citrus.camel.cli.version".equals(r.newProperty()));
+        assertThat(guide.propertyRenames()).anyMatch(r ->
+                "citrus.camel.jbang.work.dir".equals(r.oldProperty()) &&
+                        "citrus.camel.cli.work.dir".equals(r.newProperty()));
+        assertThat(guide.propertyRenames()).anyMatch(r ->
+                "citrus.camel.jbang.auto.remove.plugins".equals(r.oldProperty()) &&
+                        "citrus.camel.cli.auto.remove.plugins".equals(r.newProperty()));
+        assertThat(guide.propertyRenames()).allMatch(r ->
+                r.note() != null && r.note().contains("fallback"));
+    }
+
+    @Test
     void shouldContainApiChanges() {
         MigrationData.MigrationGuide guide = migrationData.getGuide("5.0");
 

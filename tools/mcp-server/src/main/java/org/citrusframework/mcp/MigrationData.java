@@ -46,10 +46,12 @@ public class MigrationData {
                 "Citrus 4.x to 5.x",
                 "Migration guide for upgrading from Citrus 4.x to 5.0. " +
                         "Covers split package removal, Maven artifact renames, dependency upgrades, " +
-                        "API changes, and SPI changes.",
+                        "Camel JBang to CLI renames, API changes, and SPI changes.",
                 createArtifactRenames5_0(),
                 createDependencyUpgrades5_0(),
                 createPackageRenames5_0(),
+                createDslRenames5_0(),
+                createPropertyRenames5_0(),
                 createApiChanges5_0(),
                 createSpiChanges5_0()
         );
@@ -191,6 +193,55 @@ public class MigrationData {
         // citrus-jbang (tools)
         renames.add(new PackageRename("org.citrusframework.jbang.", "org.citrusframework.jbang.cli.", "citrus-jbang"));
 
+        // citrus-camel: Camel JBang renamed to Camel CLI
+        renames.add(new PackageRename("org.citrusframework.camel.jbang.CamelJBang", "org.citrusframework.camel.cli.CamelCli", "citrus-camel"));
+        renames.add(new PackageRename("org.citrusframework.camel.jbang.CamelJBangSettings", "org.citrusframework.camel.cli.CamelCliSettings", "citrus-camel"));
+        renames.add(new PackageRename("org.citrusframework.camel.jbang.CamelJBangTestActor", "org.citrusframework.camel.cli.CamelCliTestActor", "citrus-camel"));
+        renames.add(new PackageRename("org.citrusframework.camel.actions.AbstractCamelJBangAction", "org.citrusframework.camel.actions.AbstractCamelCliAction", "citrus-camel"));
+
+        // citrus-api: Camel JBang builder interfaces renamed to Camel CLI
+        String camelCliNote = "Camel JBang builder interfaces renamed to Camel CLI. " +
+                "The old jbang() method is kept as a deprecated alias.";
+        renames.add(new PackageRename("org.citrusframework.actions.camel.CamelJBangActionBuilder", "org.citrusframework.actions.camel.CamelCliActionBuilder", "citrus-api", camelCliNote));
+        renames.add(new PackageRename("org.citrusframework.actions.camel.CamelJBangActionBuilderBase", "org.citrusframework.actions.camel.CamelCliActionBuilderBase", "citrus-api", camelCliNote));
+        renames.add(new PackageRename("org.citrusframework.actions.camel.CamelJBangCmdActionBuilder", "org.citrusframework.actions.camel.CamelCliCmdActionBuilder", "citrus-api", camelCliNote));
+        renames.add(new PackageRename("org.citrusframework.actions.camel.CamelJBangCmdReceiveActionBuilder", "org.citrusframework.actions.camel.CamelCliCmdReceiveActionBuilder", "citrus-api", camelCliNote));
+        renames.add(new PackageRename("org.citrusframework.actions.camel.CamelJBangCmdSendActionBuilder", "org.citrusframework.actions.camel.CamelCliCmdSendActionBuilder", "citrus-api", camelCliNote));
+        renames.add(new PackageRename("org.citrusframework.actions.camel.CamelJBangKubernetesActionBuilder", "org.citrusframework.actions.camel.CamelCliKubernetesActionBuilder", "citrus-api", camelCliNote));
+        renames.add(new PackageRename("org.citrusframework.actions.camel.CamelJBangPluginActionBuilder", "org.citrusframework.actions.camel.CamelCliPluginActionBuilder", "citrus-api", camelCliNote));
+        renames.add(new PackageRename("org.citrusframework.actions.camel.CamelJBangPluginAddActionBuilder", "org.citrusframework.actions.camel.CamelCliPluginAddActionBuilder", "citrus-api", camelCliNote));
+        renames.add(new PackageRename("org.citrusframework.actions.camel.CamelJBangPluginDeleteActionBuilder", "org.citrusframework.actions.camel.CamelCliPluginDeleteActionBuilder", "citrus-api", camelCliNote));
+
+        return renames;
+    }
+
+    private static List<DslRename> createDslRenames5_0() {
+        List<DslRename> renames = new ArrayList<>();
+
+        String note = "Following Apache Camel's rename of JBang to CLI. " +
+                "The old jbang syntax is kept as a deprecated alias for backward compatibility.";
+        renames.add(new DslRename("java", "camel().jbang()", "camel().cli()", "citrus-camel", note));
+        renames.add(new DslRename("xml", "<jbang>", "<cli>", "citrus-camel", note));
+        renames.add(new DslRename("yaml", "jbang:", "cli:", "citrus-camel", note));
+
+        return renames;
+    }
+
+    private static List<PropertyRename> createPropertyRenames5_0() {
+        List<PropertyRename> renames = new ArrayList<>();
+
+        String note = "Camel CLI property renames. The old citrus.camel.jbang.* prefix is still supported as a fallback.";
+        renames.add(new PropertyRename("citrus.camel.jbang.version", "citrus.camel.cli.version", note));
+        renames.add(new PropertyRename("citrus.camel.jbang.work.dir", "citrus.camel.cli.work.dir", note));
+        renames.add(new PropertyRename("citrus.camel.jbang.app", "citrus.camel.cli.app", note));
+        renames.add(new PropertyRename("citrus.camel.jbang.kamelets.version", "citrus.camel.cli.kamelets.version", note));
+        renames.add(new PropertyRename("citrus.camel.jbang.trust.url", "citrus.camel.cli.trust.url", note));
+        renames.add(new PropertyRename("citrus.camel.jbang.verbose", "citrus.camel.cli.verbose", note));
+        renames.add(new PropertyRename("citrus.camel.jbang.auto.remove.resources", "citrus.camel.cli.auto.remove.resources", note));
+        renames.add(new PropertyRename("citrus.camel.jbang.auto.remove.plugins", "citrus.camel.cli.auto.remove.plugins", note));
+        renames.add(new PropertyRename("citrus.camel.jbang.dump.integration.output", "citrus.camel.cli.dump.integration.output", note));
+        renames.add(new PropertyRename("citrus.camel.jbang.wait.for.running.state", "citrus.camel.cli.wait.for.running.state", note));
+
         return renames;
     }
 
@@ -249,6 +300,8 @@ public class MigrationData {
             List<ArtifactRename> artifactRenames,
             List<DependencyUpgrade> dependencyUpgrades,
             List<PackageRename> packageRenames,
+            List<DslRename> dslRenames,
+            List<PropertyRename> propertyRenames,
             List<ApiChange> apiChanges,
             List<SpiChange> spiChanges
     ) {}
@@ -262,6 +315,10 @@ public class MigrationData {
             this(oldPackage, newPackage, module, null);
         }
     }
+
+    public record DslRename(String dslType, String oldSyntax, String newSyntax, String module, String note) {}
+
+    public record PropertyRename(String oldProperty, String newProperty, String note) {}
 
     public record ApiChange(String type, String summary, String details) {}
 

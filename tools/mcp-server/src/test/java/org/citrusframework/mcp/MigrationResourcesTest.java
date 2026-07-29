@@ -41,6 +41,8 @@ class MigrationResourcesTest {
         assertThat(result.text()).contains("\"packageRenames\"");
         assertThat(result.text()).contains("\"artifactRenames\"");
         assertThat(result.text()).contains("\"dependencyUpgrades\"");
+        assertThat(result.text()).contains("\"dslRenames\"");
+        assertThat(result.text()).contains("\"propertyRenames\"");
         assertThat(result.text()).contains("\"apiChanges\"");
         assertThat(result.text()).contains("\"spiChanges\"");
     }
@@ -77,5 +79,7 @@ class MigrationResourcesTest {
         assertThat(result.text()).contains("org.citrusframework.TestActionSupport");
         assertThat(result.text()).contains("org.citrusframework.dsl.TestActionSupport");
         assertThat(result.text()).contains("citrus-junit-jupiter");
+        assertThat(result.text()).contains("camel().cli()");
+        assertThat(result.text()).contains("citrus.camel.cli.version");
     }
 }
