@@ -65,10 +65,7 @@
     </receive>
     <camel>
       <infra>
-        <run>
-          <service>kafka</service>
-          <autoRemove>true</autoRemove>
-        </run>
+        <run service="kafka" auto-remove="true"/>
       </infra>
     </camel>
     <iterate condition="i &lt; 10">

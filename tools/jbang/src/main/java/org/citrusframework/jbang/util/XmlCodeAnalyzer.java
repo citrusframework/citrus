@@ -33,7 +33,7 @@ public class XmlCodeAnalyzer implements CodeAnalyzer {
 
     private static final Pattern CAMEL_ENDPOINT_PATTERN = Pattern.compile("^\\s*<(send|receive) endpoint=\"camel:([^\\s:?]+).*$", Pattern.MULTILINE);
 
-    private static final Pattern CAMEL_INFRA_SERVICE_PATTERN = Pattern.compile("<service>([a-zA-Z][a-zA-Z0-9._-]*)</service>", Pattern.MULTILINE);
+    private static final Pattern CAMEL_INFRA_SERVICE_PATTERN = Pattern.compile("<run\\s*service=\"([a-zA-Z][a-zA-Z0-9._-]*)\"", Pattern.MULTILINE);
 
     @Override
     public Set<String> scanModules(String code) {
