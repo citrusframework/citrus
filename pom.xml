@@ -1842,6 +1842,7 @@
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>sonatype-central</publishingServerId>
+              <checksums>required</checksums>
               <excludeArtifacts>
                 <artifact>citrus-utils</artifact>
                 <artifact>citrus-test-support</artifact>
