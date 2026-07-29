@@ -94,6 +94,14 @@ public class GroovyCodeAnalyzer implements CodeAnalyzer {
             boolean allMatch = true;
             for (int i = 0; i < tokens.length && allMatch; i++) {
                 allMatch = code.contains("%s(".formatted(tokens[i]));
+
+                if (!allMatch) {
+                    // check for potential token alias
+                    Optional<String> tokenAlias = getTestActionAliasFor(entry.getKey(), tokens[i]);
+                    if (tokenAlias.isPresent()) {
+                        allMatch = code.contains("%s(".formatted(tokenAlias.get()));
+                    }
+                }
             }
 
             if (allMatch) {
@@ -108,7 +116,7 @@ public class GroovyCodeAnalyzer implements CodeAnalyzer {
                     }
                 }
 
-                if (entry.getKey().contains("-jbang-")) {
+                if (entry.getKey().contains("-jbang-") || entry.getKey().contains("-cli-")) {
                     // add jbang connector as it often is a provided scope dependency
                     modules.add("citrus-jbang-connector");
                 }

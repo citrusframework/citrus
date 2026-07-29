@@ -35,6 +35,11 @@ actions:
         body:
           data: @ignore@ @isNumber()@
   - camel:
+      jbang:
+        run:
+          integration:
+            file: "path/to/some/integration.yaml"
+  - camel:
       infra:
         run:
           service: kafka

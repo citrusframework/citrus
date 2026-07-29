@@ -40,6 +40,7 @@ public class InspectTest extends CommandTest {
                 "citrus-camel",
                 "citrus-testcontainers",
                 "citrus-base",
+                "citrus-jbang-connector",
                 "citrus-jms"
               ],
             """));

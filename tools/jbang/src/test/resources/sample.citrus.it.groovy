@@ -58,6 +58,9 @@ actions {
       .message()
         .body("@ignore@ @isNumber()@"))
 
+    $(camel().cli().run()
+      .integration("path/to/some/integration.yaml"))
+
     $(camel().infra().run()
       .service("kafka")
       .autoRemove(true))

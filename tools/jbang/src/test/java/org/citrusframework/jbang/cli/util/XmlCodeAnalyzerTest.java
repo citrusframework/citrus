@@ -34,14 +34,15 @@ public class XmlCodeAnalyzerTest {
 
         Assert.assertEquals(scanResult.name(), "sample.citrus.it.xml");
 
-        Assert.assertEquals(scanResult.modules().length, 6L);
+        Assert.assertEquals(scanResult.modules().length, 7L);
         String[] foundModules = Arrays.stream(scanResult.modules()).sorted().toArray(String[]::new);
         Assert.assertEquals(foundModules[0], "citrus-base");
         Assert.assertEquals(foundModules[1], "citrus-camel");
         Assert.assertEquals(foundModules[2], "citrus-http");
-        Assert.assertEquals(foundModules[3], "citrus-jms");
-        Assert.assertEquals(foundModules[4], "citrus-kafka");
-        Assert.assertEquals(foundModules[5], "citrus-testcontainers");
+        Assert.assertEquals(foundModules[3], "citrus-jbang-connector");
+        Assert.assertEquals(foundModules[4], "citrus-jms");
+        Assert.assertEquals(foundModules[5], "citrus-kafka");
+        Assert.assertEquals(foundModules[6], "citrus-testcontainers");
 
         Assert.assertEquals(scanResult.dependencies().length, 3L);
         String[] foundDeps = Arrays.stream(scanResult.dependencies()).sorted().toArray(String[]::new);
@@ -49,12 +50,13 @@ public class XmlCodeAnalyzerTest {
         Assert.assertEquals(foundDeps[1], "org.apache.camel:camel-paho-mqtt5:" + CAMEL_VERSION_DEFAULT);
         Assert.assertEquals(foundDeps[2], "org.apache.camel:camel-test-infra-kafka:" + CAMEL_VERSION_DEFAULT);
 
-        Assert.assertEquals(scanResult.actions().length, 4L);
+        Assert.assertEquals(scanResult.actions().length, 5L);
         String[] foundActions = Arrays.stream(scanResult.actions()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundActions[0], "camel-infra-run");
-        Assert.assertEquals(foundActions[1], "print");
-        Assert.assertEquals(foundActions[2], "receive");
-        Assert.assertEquals(foundActions[3], "send");
+        Assert.assertEquals(foundActions[0], "camel-cli-run");
+        Assert.assertEquals(foundActions[1], "camel-infra-run");
+        Assert.assertEquals(foundActions[2], "print");
+        Assert.assertEquals(foundActions[3], "receive");
+        Assert.assertEquals(foundActions[4], "send");
 
         Assert.assertEquals(scanResult.containers().length, 1L);
         Assert.assertEquals(scanResult.containers()[0], "iterate");

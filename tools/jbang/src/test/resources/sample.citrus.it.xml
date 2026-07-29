@@ -69,11 +69,15 @@
       </message>
     </receive>
     <camel>
-      <infra>
+      <cli>
         <run>
-          <service>kafka</service>
-          <autoRemove>true</autoRemove>
+          <integration file="path/to/some/integration.yaml"/>
         </run>
+      </cli>
+    </camel>
+    <camel>
+      <infra>
+        <run service="kafka" auto-remove="true"/>
       </infra>
     </camel>
     <iterate condition="i &lt; 10">

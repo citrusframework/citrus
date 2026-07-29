@@ -33,7 +33,7 @@ public class XmlCodeAnalyzer implements CodeAnalyzer {
 
     private static final Pattern CAMEL_ENDPOINT_PATTERN = Pattern.compile("^\\s*<(send|receive) endpoint=\"camel:([^\\s:?]+).*$", Pattern.MULTILINE);
 
-    private static final Pattern CAMEL_INFRA_SERVICE_PATTERN = Pattern.compile("<service>([a-zA-Z][a-zA-Z0-9._-]*)</service>", Pattern.MULTILINE);
+    private static final Pattern CAMEL_INFRA_SERVICE_PATTERN = Pattern.compile("<run\\s*service=\"([a-zA-Z][a-zA-Z0-9._-]*)\"", Pattern.MULTILINE);
 
     @Override
     public Set<String> scanModules(String code) {
@@ -94,6 +94,14 @@ public class XmlCodeAnalyzer implements CodeAnalyzer {
             boolean allMatch = true;
             for (int i = 0; i < tokens.length && allMatch; i++) {
                 allMatch = code.contains("<%s>".formatted(tokens[i])) || code.contains("<%s ".formatted(tokens[i]));
+
+                if (!allMatch) {
+                    // check for potential token alias
+                    Optional<String> tokenAlias = getTestActionAliasFor(entry.getKey(), tokens[i]);
+                    if (tokenAlias.isPresent()) {
+                        allMatch = code.contains("<%s>".formatted(tokenAlias.get())) || code.contains("<%s ".formatted(tokenAlias.get()));
+                    }
+                }
             }
 
             if (allMatch) {
@@ -108,7 +116,7 @@ public class XmlCodeAnalyzer implements CodeAnalyzer {
                     }
                 }
 
-                if (entry.getKey().contains("-jbang-")) {
+                if (entry.getKey().contains("-jbang-") || entry.getKey().contains("-cli-")) {
                     // add jbang connector as it often is a provided scope dependency
                     modules.add("citrus-jbang-connector");
                 }

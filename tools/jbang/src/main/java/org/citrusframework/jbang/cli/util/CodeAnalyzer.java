@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -225,6 +226,19 @@ public interface CodeAnalyzer {
         }
 
         return group;
+    }
+
+    /**
+     * Retrieve potential alias for given action key and token.
+     * At the moment the only alias that exists is the Camel JBang/CLI test action.
+     * @return optional alias for given token or empty.
+     */
+    default Optional<String> getTestActionAliasFor(String key, String token) {
+        if (key.startsWith("camel-") && token.equals("cli")) {
+            // jbang is an alias for cli in Camel test actions
+            return Optional.of("jbang");
+        }
+        return Optional.empty();
     }
 
     /**
