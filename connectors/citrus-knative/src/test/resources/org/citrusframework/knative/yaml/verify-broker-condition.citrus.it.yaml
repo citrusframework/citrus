@@ -1,0 +1,11 @@
+name: "VerifyBrokerConditionTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in YAML
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      verifyBroker:
+        name: "my-addressable-broker"
+        condition: "Addressable"

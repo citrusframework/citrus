@@ -65,6 +65,43 @@ public class VerifyKnativeBrokerIT extends AbstractKnativeIT implements TestActi
                 .client(knativeClient)
                 .brokers()
                 .verify("my-broker")
+                .isReady()
+                .inNamespace(namespace));
+    }
+
+    @Test
+    @CitrusTest
+    public void shouldVerifyBrokerWithCondition() {
+        given(doFinally().actions(context -> knativeClient.brokers()
+                .inNamespace(namespace)
+                .withName("my-broker")
+                .delete()));
+
+        given(context -> {
+            Broker broker = new BrokerBuilder()
+                    .withNewMetadata()
+                    .withName("my-broker")
+                    .withNamespace(namespace)
+                    .endMetadata()
+                    .withNewStatus()
+                    .withConditions(new ConditionBuilder()
+                            .withType("Addressable")
+                            .withStatus("true")
+                            .build())
+                    .endStatus()
+                    .build();
+
+            knativeClient.brokers()
+                .inNamespace(namespace)
+                .resource(broker)
+                .create();
+        });
+
+        then(knative()
+                .client(knativeClient)
+                .brokers()
+                .verify("my-broker")
+                .condition("Addressable")
                 .inNamespace(namespace));
     }
 

@@ -60,4 +60,37 @@ public class VerifyBrokerTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getTestAction(0).getClass(), VerifyBrokerAction.class);
         Assert.assertTrue(result.getTestResult().isSuccess());
     }
+
+    @Test
+    public void shouldLoadKnativeActionsWithCondition() {
+        String namespace = "test";
+        Broker broker = new BrokerBuilder()
+                .withNewMetadata()
+                .withName("my-addressable-broker")
+                .withNamespace(namespace)
+                .endMetadata()
+                .withNewStatus()
+                .withConditions(new ConditionBuilder()
+                        .withType("Addressable")
+                        .withStatus("true")
+                        .build())
+                .endStatus()
+                .build();
+
+        knativeClient.brokers()
+                .inNamespace(namespace)
+                .resource(broker)
+                .create();
+
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/knative/yaml/verify-broker-condition.citrus.it.yaml");
+
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
+        Assert.assertEquals(result.getName(), "VerifyBrokerConditionTest");
+        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
+        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
+        Assert.assertEquals(result.getActionCount(), 1L);
+        Assert.assertEquals(result.getTestAction(0).getClass(), VerifyBrokerAction.class);
+        Assert.assertTrue(result.getTestResult().isSuccess());
+    }
 }

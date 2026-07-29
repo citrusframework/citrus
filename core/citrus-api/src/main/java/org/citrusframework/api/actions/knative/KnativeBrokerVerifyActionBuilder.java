@@ -22,4 +22,22 @@ public interface KnativeBrokerVerifyActionBuilder<T extends TestAction, B extend
         extends KnativeActionBuilderBase<T, B> {
 
     B broker(String brokerName);
+
+    B condition(String condition);
+
+    B status(String status);
+
+    @SuppressWarnings("unchecked")
+    default B isReady() {
+        return (B) isReady(true);
+    }
+
+    B isReady(boolean status);
+
+    @SuppressWarnings("unchecked")
+    default B isAddressable() {
+        return (B) isAddressable(true);
+    }
+
+    B isAddressable(boolean status);
 }
