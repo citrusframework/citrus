@@ -132,7 +132,10 @@ public void knativeBrokerTest() {
 [[knative-broker-verify]]
 == Verify broker status
 
-The test may also verify that a broker is running and ready on a given Kubernetes namespace.
+The test may also verify that a broker is running and in a given status condition on a Kubernetes namespace.
+By default, the verify action checks that the broker condition `Ready` is set to `True`.
+You can use the `isReady()` convenience method to make this explicit, or specify a custom condition with `condition("Addressable")`.
+The expected status value defaults to `True` but can be changed with `status("False")` to verify that a condition is not met.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -143,6 +146,7 @@ public void knativeBrokerTest() {
             .client(knativeClient)
             .brokers()
             .verify("my-broker")
+            .isReady()
             .inNamespace("my-namespace"));
 }
 ----
@@ -153,7 +157,7 @@ public void knativeBrokerTest() {
 <test name="KnativeBrokerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
         <knative client="knativeClient" namespace="test">
-          <verify-broker name="my-broker"/>
+          <verify-broker name="my-broker" condition="Ready"/>
         </knative>
     </actions>
 </test>
@@ -169,6 +173,59 @@ actions:
       namespace: "test"
       verifyBroker:
         name: "my-broker"
+        condition: "Ready"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+You can verify any status condition on the broker resource and also check for a specific status value.
+
+.Java
+[source,java,indent=0,role="secondary"]
+----
+@CitrusTest
+public void knativeBrokerTest() {
+    given(knative()
+            .client(knativeClient)
+            .brokers()
+            .verify("my-broker")
+            .condition("Addressable")
+            .status("False")
+            .inNamespace("my-namespace"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="KnativeBrokerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <knative client="knativeClient" namespace="test">
+          <verify-broker name="my-broker" condition="Addressable" status="False"/>
+        </knative>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: KnativeBrokerTest
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      verifyBroker:
+        name: "my-broker"
+        condition: "Addressable"
+        status: "False"
 ----
 
 .Spring XML

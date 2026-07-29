@@ -34,6 +34,16 @@ public class VerifyBroker extends AbstractKnativeAction.Builder<VerifyBrokerActi
         this.delegate.broker(name);
     }
 
+    @SchemaProperty
+    public void setCondition(String condition) {
+        this.delegate.condition(condition);
+    }
+
+    @SchemaProperty
+    public void setStatus(String status) {
+        this.delegate.status(status);
+    }
+
     @Override
     public VerifyBroker description(String description) {
         delegate.description(description);

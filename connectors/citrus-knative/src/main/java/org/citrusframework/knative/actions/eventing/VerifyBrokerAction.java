@@ -28,11 +28,15 @@ import org.citrusframework.kubernetes.KubernetesSettings;
 public class VerifyBrokerAction extends AbstractKnativeAction {
 
     private final String brokerName;
+    private final String condition;
+    private final String expectedStatus;
 
     public VerifyBrokerAction(Builder builder) {
         super("verify-broker", builder);
 
         this.brokerName = builder.brokerName;
+        this.condition = builder.condition;
+        this.expectedStatus = builder.expectedStatus;
     }
 
     @Override
@@ -69,11 +73,11 @@ public class VerifyBrokerAction extends AbstractKnativeAction {
             if (broker.getStatus() != null &&
                     broker.getStatus().getConditions() != null &&
                     broker.getStatus().getConditions().stream()
-                            .anyMatch(condition -> condition.getType().equals("Ready") &&
-                                    condition.getStatus().equalsIgnoreCase("True"))) {
-                logger.debug("Knative broker {} is ready", brokerName);
+                            .anyMatch(c -> c.getType().equalsIgnoreCase(condition) &&
+                                    c.getStatus().equalsIgnoreCase(expectedStatus))) {
+                logger.debug("Knative broker '{}' condition '{}={}' is met", brokerName, condition, expectedStatus);
             } else {
-                throw new ValidationException(String.format("Knative broker '%s' is not ready", brokerName));
+                throw new ValidationException(String.format("Knative broker '%s' condition '%s=%s' is not met", brokerName, condition, expectedStatus));
             }
         } catch (KubernetesClientException e) {
             throw new ValidationException(String.format("Failed to validate Knative broker '%s' - " +
@@ -88,11 +92,37 @@ public class VerifyBrokerAction extends AbstractKnativeAction {
             implements KnativeBrokerVerifyActionBuilder<VerifyBrokerAction, Builder> {
 
         private String brokerName;
+        private String condition = "Ready";
+        private String expectedStatus = "True";
 
         @Override
         public Builder broker(String brokerName) {
             this.brokerName = brokerName;
             return this;
+        }
+
+        @Override
+        public Builder condition(String condition) {
+            this.condition = condition;
+            return this;
+        }
+
+        @Override
+        public Builder isReady(boolean status) {
+            condition("Ready");
+            return status(String.valueOf(status));
+        }
+
+        @Override
+        public Builder status(String status) {
+            this.expectedStatus = status;
+            return this;
+        }
+
+        @Override
+        public Builder isAddressable(boolean status) {
+            condition("Addressable");
+            return status(String.valueOf(status));
         }
 
         @Override

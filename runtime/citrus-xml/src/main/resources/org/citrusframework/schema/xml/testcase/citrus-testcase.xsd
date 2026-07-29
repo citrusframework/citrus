@@ -3990,6 +3990,8 @@
         <xs:element name="verify-broker">
           <xs:complexType>
             <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="status" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="create-trigger">
