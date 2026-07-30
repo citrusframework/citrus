@@ -34,6 +34,7 @@ import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.util.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -235,8 +236,8 @@ public class HttpMessage extends DefaultMessage {
                     return keyValue;
                 })
                 .forEach(keyValue -> this.addQueryParam(
-                        keyValue[0].replace("%2C", ","),
-                        keyValue[1].replace("%2C", ",")));
+                        MessageHeaderUtils.decodeQueryParam(keyValue[0]),
+                        MessageHeaderUtils.decodeQueryParam(keyValue[1])));
 
         return this;
     }

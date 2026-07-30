@@ -18,6 +18,7 @@ package org.citrusframework.http.message;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
+import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.message.MessageHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -318,7 +319,7 @@ public class HttpMessageTest {
     public void testServerSideIngestionRoundTrip() {
         //GIVEN - simulate HttpMessageController encoding: encode commas, then replace & with ,
         final String rawQueryString = "$select=Name,Value&$top=10";
-        final String encodedQueryString = rawQueryString.replace(",", "%2C").replace("&", ",");
+        final String encodedQueryString = MessageHeaderUtils.encodeQueryParam(rawQueryString).replace("&", ",");
 
         //WHEN
         final HttpMessage resultMessage = httpMessage.queryParams(encodedQueryString);

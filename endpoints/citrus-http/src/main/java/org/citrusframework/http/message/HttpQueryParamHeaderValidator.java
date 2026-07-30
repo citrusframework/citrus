@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.validation.DefaultHeaderValidator;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
@@ -78,9 +79,9 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
             .map(keyValue -> keyValue.split("="))
             .filter(keyValue -> hasText(keyValue[0]))
             .collect(toMap(
-                keyValue -> keyValue[0].replace("%2C", ","),
+                keyValue -> MessageHeaderUtils.decodeQueryParam(keyValue[0]),
                 keyValue ->
-                     (keyValue.length < 2 ? "" : keyValue[1].replace("%2C", ","))
+                     (keyValue.length < 2 ? "" : MessageHeaderUtils.decodeQueryParam(keyValue[1]))
                 ,
                 (existingValue, newValue) -> {  // Merge function to handle duplicate keys
                     if (existingValue instanceof List<?>) {

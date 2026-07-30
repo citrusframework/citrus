@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -161,7 +162,7 @@ public class HttpMessageController {
                 .uri(pathHelper.getRequestUri(servletRequest))
                 .contextPath(pathHelper.getContextPath(servletRequest))
                 .queryParams(Optional.ofNullable(pathHelper.getOriginatingQueryString(servletRequest))
-                                    .map(queryString -> queryString.replace(",", "%2C").replace("&", ","))
+                                    .map(queryString -> MessageHeaderUtils.encodeQueryParam(queryString).replace("&", ","))
                                     .orElse(""))
                 .version(servletRequest.getProtocol())
                 .method(method);

@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import org.citrusframework.generate.provider.MessageActionProvider;
 import org.citrusframework.http.message.HttpMessage;
+import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.model.testcase.http.ClientRequestType;
 import org.citrusframework.model.testcase.http.ParamType;
@@ -78,8 +79,8 @@ public class SendHttpRequestActionProvider implements MessageActionProvider<Send
                     .map(nameValuePair -> nameValuePair.split("="))
                     .forEach(param -> {
                         ParamType paramType = new ParamType();
-                        paramType.setName(param[0].replace("%2C", ","));
-                        paramType.setValue(param[1].replace("%2C", ","));
+                        paramType.setName(MessageHeaderUtils.decodeQueryParam(param[0]));
+                        paramType.setValue(MessageHeaderUtils.decodeQueryParam(param[1]));
                         requestType.getParams().add(paramType);
                     });
         }

@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import com.squareup.javapoet.CodeBlock;
 import org.citrusframework.generate.provider.MessageCodeProvider;
 import org.citrusframework.http.message.HttpMessage;
+import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -78,8 +79,8 @@ class HttpCodeProvider {
                     .map(nameValuePair -> nameValuePair.split("="))
                     .forEach(param ->
                             code.add(".queryParam($S, $S)\n",
-                                    param[0].replace("%2C", ","),
-                                    param[1].replace("%2C", ","))
+                                    MessageHeaderUtils.decodeQueryParam(param[0]),
+                                    MessageHeaderUtils.decodeQueryParam(param[1]))
                     );
         }
     }

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.message.MessageHeaders;
 
 import static java.util.Collections.emptyMap;
@@ -94,8 +95,8 @@ public final class HttpMessageUtils {
                     if (keyAndValue.length == 0) {
                         throw new IllegalArgumentException("Query parameter must have a key.");
                     }
-                    String key = keyAndValue[0].replace("%2C", ",");
-                    String value = keyAndValue.length > 1 ? keyAndValue[1].replace("%2C", ",") : "";
+                    String key = MessageHeaderUtils.decodeQueryParam(keyAndValue[0]);
+                    String value = keyAndValue.length > 1 ? MessageHeaderUtils.decodeQueryParam(keyAndValue[1]) : "";
                     return Pair.of(key, value);
                 })
                 .collect(groupingBy(Pair::getLeft,mapping(Pair::getRight,toList())));
