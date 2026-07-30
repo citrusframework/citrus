@@ -113,4 +113,21 @@ public final class MessageHeaderUtils {
     public static boolean isInternalMessageHeader(String headerName) {
         return headerName.startsWith(MessageHeaders.PREFIX);
     }
+
+    /**
+     * Encodes reserved characters in a query parameter value so that they do
+     * not conflict with the internal comma-separated query parameter string
+     * representation. Currently, encodes commas as {@code %2C}.
+     */
+    public static String encodeQueryParam(String value) {
+        return value.replace(",", "%2C");
+    }
+
+    /**
+     * Decodes a query parameter value that was previously encoded with
+     * {@link #encodeQueryParam(String)}.
+     */
+    public static String decodeQueryParam(String value) {
+        return value.replace("%2C", ",");
+    }
 }

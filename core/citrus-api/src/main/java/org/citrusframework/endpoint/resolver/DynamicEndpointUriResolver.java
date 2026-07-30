@@ -21,6 +21,7 @@ import java.util.StringTokenizer;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageHeaderUtils;
 
 /**
  * Endpoint uri resolver working on message headers. Resolver is searching for a specific header entry which holds the actual
@@ -107,11 +108,11 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
                 requestUri = requestUri.substring(0, requestUri.length() - 1);
             }
 
-            queryParamBuilder.append("?").append(tok.nextToken().replace("%2C", ","));
+            queryParamBuilder.append("?").append(MessageHeaderUtils.decodeQueryParam(tok.nextToken()));
         }
 
         while (tok.hasMoreTokens()) {
-            queryParamBuilder.append("&").append(tok.nextToken().replace("%2C", ","));
+            queryParamBuilder.append("&").append(MessageHeaderUtils.decodeQueryParam(tok.nextToken()));
         }
 
         return requestUri + queryParamBuilder;
