@@ -290,6 +290,45 @@ public class HttpMessageTest {
     }
 
     @Test
+    public void testQueryParamsWithEncodedCommaInValue() {
+        //GIVEN
+        final String queryParamString = "$select=Name%2CValue,$top=10";
+
+        //WHEN
+        final HttpMessage resultMessage = httpMessage.queryParams(queryParamString);
+
+        //THEN
+        final Map<String, Collection<String>> queryParams = resultMessage.getQueryParams();
+        assertTrue(queryParams.get("$select").contains("Name,Value"));
+        assertTrue(queryParams.get("$top").contains("10"));
+    }
+
+    @Test
+    public void testQueryParamWithCommaInValueStoresCorrectly() {
+        //GIVEN
+
+        //WHEN
+        final HttpMessage resultMessage = httpMessage.queryParam("$select", "Name,Value");
+
+        //THEN
+        assertTrue(resultMessage.getQueryParams().get("$select").contains("Name,Value"));
+    }
+
+    @Test
+    public void testServerSideIngestionRoundTrip() {
+        //GIVEN - simulate HttpMessageController encoding: encode commas, then replace & with ,
+        final String rawQueryString = "$select=Name,Value&$top=10";
+        final String encodedQueryString = rawQueryString.replace(",", "%2C").replace("&", ",");
+
+        //WHEN
+        final HttpMessage resultMessage = httpMessage.queryParams(encodedQueryString);
+
+        //THEN
+        assertTrue(resultMessage.getQueryParams().get("$select").contains("Name,Value"));
+        assertTrue(resultMessage.getQueryParams().get("$top").contains("10"));
+    }
+
+    @Test
     public void testCopyConstructorPreservesIdAndTimestamp() {
         // Given
         httpMessage.setPayload("myPayload");

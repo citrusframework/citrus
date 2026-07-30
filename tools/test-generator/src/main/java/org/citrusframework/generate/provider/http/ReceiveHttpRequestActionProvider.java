@@ -77,8 +77,8 @@ public class ReceiveHttpRequestActionProvider implements MessageActionProvider<R
                     .map(nameValuePair -> nameValuePair.split("="))
                     .forEach(param -> {
                         ParamType paramType = new ParamType();
-                        paramType.setName(param[0]);
-                        paramType.setValue(param[1]);
+                        paramType.setName(param[0].replace("%2C", ","));
+                        paramType.setValue(param[1].replace("%2C", ","));
                         requestType.getParams().add(paramType);
                     });
         }

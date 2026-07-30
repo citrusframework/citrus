@@ -47,6 +47,7 @@ public class HttpQueryParamHeaderValidatorTest extends AbstractTestNGUnitTest {
                 new Object[] { "foo=,bar=barValue", "foo=,bar=barValue" },
                 new Object[] { "foo=1,foo=2,foo=3,bar=barValue", "foo=1,foo=2,foo=3,bar=barValue" },
                 new Object[] { "foo=1,foo=2,foo=3,bar=barValue", "foo=3,foo=2,foo=1,bar=barValue" },
+                new Object[] { "$select=Name%2CValue,$top=10", "$select=Name%2CValue,$top=10" },
                 new Object[] { null, null },
                 new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", "value") },
                 new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", is("value")) }

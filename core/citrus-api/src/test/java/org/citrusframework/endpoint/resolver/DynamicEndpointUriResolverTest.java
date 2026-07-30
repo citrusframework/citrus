@@ -82,6 +82,7 @@ public class DynamicEndpointUriResolverTest {
                 { "http://localhost:8080/request/", "param1=", "http://localhost:8080/request?param1=" },
                 { "http://localhost:8080/request/", "param1=value1,param2=value2,param3=value3", "http://localhost:8080/request?param1=value1&param2=value2&param3=value3" },
                 { "http://localhost:8080/request////", "param1=value1", "http://localhost:8080/request?param1=value1"},
+                { "http://localhost:8080/request", "$select=Name%2CValue,$top=10", "http://localhost:8080/request?$select=Name,Value&$top=10"},
         };
     }
 

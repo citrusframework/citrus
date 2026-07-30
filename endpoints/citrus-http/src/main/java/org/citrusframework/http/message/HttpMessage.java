@@ -215,7 +215,8 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets the Http request query params query String. Query String is a compilation of key-value pairs separated
-     * by comma character e.g. key1=value1[","key2=value2]. Query String can be empty.
+     * by comma character e.g. key1=value1[","key2=value2]. Literal commas in values must be percent-encoded as
+     * {@code %2C} to avoid conflicts with the comma delimiter. Query String can be empty.
      *
      * @param queryParamString The query parameter string to evaluate
      * @return The altered HttpMessage
@@ -233,7 +234,9 @@ public class HttpMessage extends DefaultMessage {
                     }
                     return keyValue;
                 })
-                .forEach(keyValue -> this.addQueryParam(keyValue[0], keyValue[1]));
+                .forEach(keyValue -> this.addQueryParam(
+                        keyValue[0].replace("%2C", ","),
+                        keyValue[1].replace("%2C", ",")));
 
         return this;
     }

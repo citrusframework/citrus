@@ -77,7 +77,9 @@ class HttpCodeProvider {
                     .split(","))
                     .map(nameValuePair -> nameValuePair.split("="))
                     .forEach(param ->
-                            code.add(".queryParam($S, $S)\n", param[0], param[1])
+                            code.add(".queryParam($S, $S)\n",
+                                    param[0].replace("%2C", ","),
+                                    param[1].replace("%2C", ","))
                     );
         }
     }
