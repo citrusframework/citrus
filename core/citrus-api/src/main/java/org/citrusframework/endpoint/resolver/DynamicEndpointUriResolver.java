@@ -85,7 +85,8 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
     }
 
     /**
-     * Appends one to many query param key value paris to request uri. Syntax must be: param1=value1,param2=value2.
+     * Appends one to many query param key value pairs to request uri. Syntax must be: param1=value1,param2=value2.
+     * Literal commas in values must be percent-encoded as {@code %2C} to avoid conflicts with the comma delimiter.
      * Results in parameterized request uri such as http://localhost:8080/test?param1=value1&param2=value2
      * @param uri
      * @param headers
@@ -106,11 +107,11 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
                 requestUri = requestUri.substring(0, requestUri.length() - 1);
             }
 
-            queryParamBuilder.append("?").append(tok.nextToken());
+            queryParamBuilder.append("?").append(tok.nextToken().replace("%2C", ","));
         }
 
         while (tok.hasMoreTokens()) {
-            queryParamBuilder.append("&").append(tok.nextToken());
+            queryParamBuilder.append("&").append(tok.nextToken().replace("%2C", ","));
         }
 
         return requestUri + queryParamBuilder;

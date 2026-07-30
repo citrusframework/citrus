@@ -94,8 +94,8 @@ public final class HttpMessageUtils {
                     if (keyAndValue.length == 0) {
                         throw new IllegalArgumentException("Query parameter must have a key.");
                     }
-                    String key = keyAndValue[0];
-                    String value = keyAndValue.length > 1 ? keyAndValue[1] : "";
+                    String key = keyAndValue[0].replace("%2C", ",");
+                    String value = keyAndValue.length > 1 ? keyAndValue[1].replace("%2C", ",") : "";
                     return Pair.of(key, value);
                 })
                 .collect(groupingBy(Pair::getLeft,mapping(Pair::getRight,toList())));

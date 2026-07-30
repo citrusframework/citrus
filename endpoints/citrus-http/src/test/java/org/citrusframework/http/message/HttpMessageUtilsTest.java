@@ -170,6 +170,20 @@ public class HttpMessageUtilsTest {
     }
 
     @Test
+    public void testGetQueryParameterMapWithEncodedCommaInValue() {
+        HttpMessage httpMessage = new HttpMessage();
+        httpMessage.queryParams("$select=Name%2CValue,$top=10");
+
+        Map<String, List<String>> queryParams = getQueryParameterMap(httpMessage);
+
+        assertEquals(queryParams.size(), 2);
+        List<String> selectValues = queryParams.get("$select");
+        assertTrue(selectValues.contains("Name,Value"));
+        List<String> topValues = queryParams.get("$top");
+        assertTrue(topValues.contains("10"));
+    }
+
+    @Test
     public void testGetQueryParameterMapWithNoValues() {
         HttpMessage httpMessage = new HttpMessage();
 

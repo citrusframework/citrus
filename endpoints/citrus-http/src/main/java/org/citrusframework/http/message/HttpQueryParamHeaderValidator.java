@@ -78,10 +78,9 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
             .map(keyValue -> keyValue.split("="))
             .filter(keyValue -> hasText(keyValue[0]))
             .collect(toMap(
-                keyValue -> keyValue[0],  // Key function
+                keyValue -> keyValue[0].replace("%2C", ","),
                 keyValue ->
-                    // Value function: if no value is present, use an empty string
-                     (keyValue.length < 2 ? "" : keyValue[1])
+                     (keyValue.length < 2 ? "" : keyValue[1].replace("%2C", ","))
                 ,
                 (existingValue, newValue) -> {  // Merge function to handle duplicate keys
                     if (existingValue instanceof List<?>) {

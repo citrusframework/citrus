@@ -161,7 +161,7 @@ public class HttpMessageController {
                 .uri(pathHelper.getRequestUri(servletRequest))
                 .contextPath(pathHelper.getContextPath(servletRequest))
                 .queryParams(Optional.ofNullable(pathHelper.getOriginatingQueryString(servletRequest))
-                                    .map(queryString -> queryString.replaceAll("&", ","))
+                                    .map(queryString -> queryString.replace(",", "%2C").replace("&", ","))
                                     .orElse(""))
                 .version(servletRequest.getProtocol())
                 .method(method);
