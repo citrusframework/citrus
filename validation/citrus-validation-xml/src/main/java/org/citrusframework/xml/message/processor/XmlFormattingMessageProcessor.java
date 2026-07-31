@@ -19,8 +19,10 @@ package org.citrusframework.xml.message.processor;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.xml.support.XMLUtils;
+import org.w3c.dom.Document;
 
 /**
  * @since 2.6.2
@@ -29,7 +31,11 @@ public class XmlFormattingMessageProcessor extends AbstractMessageProcessor {
 
     @Override
     public void processMessage(Message message, TestContext context) {
-        message.setPayload(XMLUtils.prettyPrint(message.getPayload(String.class)));
+        if (message.getPayload() instanceof Document document) {
+            message.setPayload(XMLUtils.serialize(document));
+        } else {
+            message.setPayload(MessagePayloadUtils.prettyPrintXml(message.getPayload(String.class)));
+        }
     }
 
     @Override

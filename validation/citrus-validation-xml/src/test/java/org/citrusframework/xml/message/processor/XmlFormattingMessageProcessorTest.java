@@ -16,12 +16,18 @@
 
 package org.citrusframework.xml.message.processor;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
+import java.io.StringReader;
 
 /**
  * @since 2.6.2
@@ -53,6 +59,25 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         messageProcessor.process(message, context);
 
         Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+    }
+
+    @Test
+    public void testProcessDocumentPayload() throws Exception {
+        String xml = "<root><element attribute='attribute-value'><sub-element>text-value</sub-element></element></root>";
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        Document document = factory.newDocumentBuilder()
+                .parse(new InputSource(new StringReader(xml)));
+
+        Message message = new DefaultMessage(document);
+        message.setType(MessageType.XML.name());
+        messageProcessor.process(message, context);
+
+        Assert.assertTrue(message.getPayload() instanceof String);
+        String result = message.getPayload(String.class);
+        Assert.assertTrue(result.contains("root"), "Expected 'root' in: " + result);
+        Assert.assertTrue(result.contains("sub-element"), "Expected 'sub-element' in: " + result);
+        Assert.assertTrue(result.contains("text-value"), "Expected 'text-value' in: " + result);
     }
 
     @Test
