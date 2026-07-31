@@ -53,7 +53,7 @@ public class CamelMessageProcessorTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getName(), "CamelMessageProcessorTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
+        Assert.assertEquals(result.getActionCount(), 5L);
         Assert.assertEquals(result.getTestAction(0).getClass(), SendMessageAction.class);
 
         Message receivedMessage = messageQueue.receive();
@@ -73,6 +73,11 @@ public class CamelMessageProcessorTest extends AbstractYamlActionTest {
                 aXRy
                 dXMh
                 """);
+
+        receivedMessage = messageQueue.receive();
+        Assert.assertNotNull(receivedMessage);
+        Assert.assertTrue(receivedMessage.getPayload() instanceof InputStream);
+        Assert.assertEquals(FileUtils.readToString(receivedMessage.getPayload(InputStream.class)), "Hello from Citrus!");
 
         receivedMessage = messageQueue.receive();
         Assert.assertNotNull(receivedMessage);

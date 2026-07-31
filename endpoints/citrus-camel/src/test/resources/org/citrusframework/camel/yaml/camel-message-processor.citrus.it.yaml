@@ -30,6 +30,15 @@ actions:
       endpoint: messages
       message:
         body:
+          data: "SGVsbG8gZnJvbSBDaXRydXMh"
+      process:
+        - camel:
+            unmarshal:
+              base64: {}
+  - send:
+      endpoint: messages
+      message:
+        body:
           data: "Hello from Citrus!"
       process:
         - camel:
