@@ -19,10 +19,14 @@ package org.citrusframework.message;
 import org.citrusframework.message.processor.DelegatingVariableExtractorBuilder;
 import org.citrusframework.message.processor.camel.CamelMessageProcessors;
 import org.citrusframework.message.processor.json.JsonMappingValidationProcessorBuilder;
+import org.citrusframework.message.processor.json.JsonMarshallingMessageProcessorBuilder;
 import org.citrusframework.message.processor.json.JsonMessageProcessors;
 import org.citrusframework.message.processor.json.JsonPathMessageProcessorBuilder;
+import org.citrusframework.message.processor.json.JsonUnmarshallingMessageProcessorBuilder;
+import org.citrusframework.message.processor.xml.XmlMarshallingMessageProcessorBuilder;
 import org.citrusframework.message.processor.xml.XmlMarshallingValidationProcessorBuilder;
 import org.citrusframework.message.processor.xml.XmlMessageProcessors;
+import org.citrusframework.message.processor.xml.XmlUnmarshallingMessageProcessorBuilder;
 import org.citrusframework.message.processor.xml.XpathMessageProcessorBuilder;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.GenericValidationProcessor;
@@ -92,6 +96,11 @@ public interface MessageProcessorSupport extends Processors, MessageProcessorLoo
             }
 
             @Override
+            public JsonMarshallingMessageProcessorBuilder<?, ?> marshal() {
+                return lookup("jsonMarshal");
+            }
+
+            @Override
             public MessagePayloadBuilder marshal(Object model) {
                 return lookupPayloadBuilder("jsonMarshal", model);
             }
@@ -99,6 +108,11 @@ public interface MessageProcessorSupport extends Processors, MessageProcessorLoo
             @Override
             public MessagePayloadBuilder marshal(Object model, Object mapper) {
                 return lookupPayloadBuilder("jsonMarshal", model, mapper);
+            }
+
+            @Override
+            public JsonUnmarshallingMessageProcessorBuilder<?, ?> unmarshal() {
+                return lookup("jsonUnmarshal");
             }
         };
     }
@@ -123,6 +137,11 @@ public interface MessageProcessorSupport extends Processors, MessageProcessorLoo
             }
 
             @Override
+            public XmlMarshallingMessageProcessorBuilder<?, ?> marshal() {
+                return lookup("xmlMarshal");
+            }
+
+            @Override
             public MessagePayloadBuilder marshal(Object model) {
                 return lookupPayloadBuilder("xmlMarshal", model);
             }
@@ -130,6 +149,11 @@ public interface MessageProcessorSupport extends Processors, MessageProcessorLoo
             @Override
             public MessagePayloadBuilder marshal(Object model, Object marshaller) {
                 return lookupPayloadBuilder("xmlMarshal", model, marshaller);
+            }
+
+            @Override
+            public XmlUnmarshallingMessageProcessorBuilder<?, ?> unmarshal() {
+                return lookup("xmlUnmarshal");
             }
         };
     }
