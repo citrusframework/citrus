@@ -29,9 +29,13 @@ public interface XmlMessageProcessors extends PayloadBuilderLookupSupport {
 
     <T> XmlMarshallingValidationProcessorBuilder<T, ?, ?> validate(GenericValidationProcessor<T> validationProcessor);
 
+    XmlMarshallingMessageProcessorBuilder<?, ?> marshal();
+
     MessagePayloadBuilder marshal(Object model);
 
     MessagePayloadBuilder marshal(Object model, Object mapper);
+
+    XmlUnmarshallingMessageProcessorBuilder<?, ?> unmarshal();
 
     interface Factory {
 

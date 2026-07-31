@@ -28,9 +28,13 @@ public interface JsonMessageProcessors extends PayloadBuilderLookupSupport {
 
     <T> JsonMappingValidationProcessorBuilder<T, ?, ?> validate(Class<T> type);
 
+    JsonMarshallingMessageProcessorBuilder<?, ?> marshal();
+
     MessagePayloadBuilder marshal(Object model);
 
     MessagePayloadBuilder marshal(Object model, Object mapper);
+
+    JsonUnmarshallingMessageProcessorBuilder<?, ?> unmarshal();
 
     interface Factory {
 
