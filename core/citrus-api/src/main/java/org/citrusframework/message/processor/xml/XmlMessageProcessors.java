@@ -16,16 +16,22 @@
 
 package org.citrusframework.message.processor.xml;
 
+import org.citrusframework.message.MessagePayloadBuilder;
+import org.citrusframework.message.PayloadBuilderLookupSupport;
 import org.citrusframework.validation.GenericValidationProcessor;
 import org.citrusframework.variable.xml.XpathPayloadVariableExtractorBuilder;
 
-public interface XmlMessageProcessors {
+public interface XmlMessageProcessors extends PayloadBuilderLookupSupport {
 
     XpathMessageProcessorBuilder<?, ?> xpath();
 
     XpathPayloadVariableExtractorBuilder<?, ?> extract();
 
     <T> XmlMarshallingValidationProcessorBuilder<T, ?, ?> validate(GenericValidationProcessor<T> validationProcessor);
+
+    MessagePayloadBuilder marshal(Object model);
+
+    MessagePayloadBuilder marshal(Object model, Object mapper);
 
     interface Factory {
 

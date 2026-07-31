@@ -45,6 +45,8 @@ import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessageProcessors;
+import org.citrusframework.message.DefaultPayloadBuilders;
+import org.citrusframework.message.PayloadBuilders;
 import org.citrusframework.message.Processors;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;
@@ -287,6 +289,11 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
     @Override
     public Processors processor() {
         return new DefaultMessageProcessors();
+    }
+
+    @Override
+    public PayloadBuilders buildPayload() {
+        return new DefaultPayloadBuilders();
     }
 
     @Override
