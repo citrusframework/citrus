@@ -18,6 +18,7 @@ package org.citrusframework;
 
 import java.util.List;
 
+import org.citrusframework.message.PayloadBuilders;
 import org.citrusframework.message.Processors;
 import org.citrusframework.validation.Validations;
 import org.citrusframework.variable.VariableExtractors;
@@ -86,6 +87,11 @@ public interface TestActionRunner {
      * Provide access to all available message processors.
      */
     Processors processor();
+
+    /**
+     * Provide access to all available message payload builders.
+     */
+    PayloadBuilders buildPayload();
 
     /**
      * Builds and runs given test action.

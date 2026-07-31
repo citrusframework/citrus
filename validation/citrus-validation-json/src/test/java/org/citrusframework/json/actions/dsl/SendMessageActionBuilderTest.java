@@ -16,19 +16,23 @@
 
 package org.citrusframework.json.actions.dsl;
 
-import org.citrusframework.base.DefaultTestCaseRunner;
-import org.citrusframework.dsl.TestActionSupport;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.citrusframework.TestCase;
-import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.json.JsonSchemaRepository;
+import org.citrusframework.json.UnitTestSupport;
+import org.citrusframework.json.variable.dictionary.JsonMappingDataDictionary;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.json.message.builder.ObjectMappingPayloadBuilder;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
@@ -36,16 +40,11 @@ import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.json.JsonPathMessageProcessor;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.citrusframework.json.variable.dictionary.JsonMappingDataDictionary;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -80,7 +79,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(send(messageEndpoint).message().body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"))));
+        runner.run(send(messageEndpoint).message().body(buildPayload().json().marshal(new TestRequest("Hello Citrus!"))));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -110,7 +109,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(send(messageEndpoint).message().body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), mapper)));
+        runner.run(send(messageEndpoint).message().body(buildPayload().json().marshal(new TestRequest("Hello Citrus!"), mapper)));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -148,7 +147,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(send(messageEndpoint).message().body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
+        runner.run(send(messageEndpoint).message().body(buildPayload().json().marshal(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

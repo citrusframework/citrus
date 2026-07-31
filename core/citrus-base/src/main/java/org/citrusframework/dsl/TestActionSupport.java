@@ -33,6 +33,8 @@ import org.citrusframework.dsl.soap.SoapTestActionSupport;
 import org.citrusframework.dsl.sql.SqlTestActionSupport;
 import org.citrusframework.dsl.testcontainers.TestcontainersTestActionSupport;
 import org.citrusframework.message.DefaultMessageProcessors;
+import org.citrusframework.message.DefaultPayloadBuilders;
+import org.citrusframework.message.PayloadBuilders;
 import org.citrusframework.message.Processors;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;
@@ -77,5 +79,9 @@ public interface TestActionSupport extends TestActions, TestActionContainers,
 
     default Processors processor() {
         return new DefaultMessageProcessors();
+    }
+
+    default PayloadBuilders buildPayload() {
+        return new DefaultPayloadBuilders();
     }
 }

@@ -39,6 +39,8 @@ import org.citrusframework.api.common.TestSourceAware;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessageProcessors;
+import org.citrusframework.message.DefaultPayloadBuilders;
+import org.citrusframework.message.PayloadBuilders;
 import org.citrusframework.message.Processors;
 import org.citrusframework.validation.DefaultValidations;
 import org.citrusframework.validation.Validations;
@@ -152,6 +154,11 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
     @Override
     public Processors processor() {
         return new DefaultMessageProcessors();
+    }
+
+    @Override
+    public PayloadBuilders buildPayload() {
+        return new DefaultPayloadBuilders();
     }
 
     @Override

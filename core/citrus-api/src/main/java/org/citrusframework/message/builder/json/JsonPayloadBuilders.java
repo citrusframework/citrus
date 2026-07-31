@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.message.processor.json;
+package org.citrusframework.message.builder.json;
 
 import org.citrusframework.message.MessagePayloadBuilder;
-import org.citrusframework.message.PayloadBuilderLookupSupport;
-import org.citrusframework.variable.json.JsonPathVariableExtractorBuilder;
 
-public interface JsonMessageProcessors extends PayloadBuilderLookupSupport {
-
-    JsonPathMessageProcessorBuilder<?, ?> jsonPath();
-
-    JsonPathVariableExtractorBuilder<?, ?> extract();
-
-    <T> JsonMappingValidationProcessorBuilder<T, ?, ?> validate(Class<T> type);
+public interface JsonPayloadBuilders {
 
     MessagePayloadBuilder marshal(Object model);
 
@@ -37,10 +29,6 @@ public interface JsonMessageProcessors extends PayloadBuilderLookupSupport {
         /**
          * Fluent API action building entry method used in Java DSL.
          */
-        JsonMessageProcessors json();
-
-        default JsonPathMessageProcessorBuilder<?, ?> jsonPath() {
-            return json().jsonPath();
-        }
+        JsonPayloadBuilders json();
     }
 }

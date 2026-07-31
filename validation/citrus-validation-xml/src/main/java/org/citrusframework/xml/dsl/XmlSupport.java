@@ -16,9 +16,11 @@
 
 package org.citrusframework.xml.dsl;
 
+import org.citrusframework.api.xml.Marshaller;
 import org.citrusframework.validation.GenericValidationProcessor;
 import org.citrusframework.validation.xml.XmlMarshallingValidationProcessor;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
+import org.citrusframework.xml.message.builder.MarshallingPayloadBuilder;
 
 public class XmlSupport {
 
@@ -38,5 +40,24 @@ public class XmlSupport {
      */
     public static <T> XmlMarshallingValidationProcessor.Builder<T> validate(GenericValidationProcessor<T> validationProcessor) {
         return XmlMarshallingValidationProcessor.Builder.validate(validationProcessor);
+    }
+
+    /**
+     * Static builder method constructing a marshalling payload builder.
+     * @param payload
+     * @return
+     */
+    public static MarshallingPayloadBuilder marshal(Object payload) {
+        return new MarshallingPayloadBuilder(payload);
+    }
+
+    /**
+     * Static builder method constructing a marshalling payload builder.
+     * @param payload
+     * @param marshaller
+     * @return
+     */
+    public static MarshallingPayloadBuilder marshal(Object payload, Marshaller marshaller) {
+        return new MarshallingPayloadBuilder(payload, marshaller);
     }
 }

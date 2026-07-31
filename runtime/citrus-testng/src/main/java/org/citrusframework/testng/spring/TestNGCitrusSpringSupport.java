@@ -33,6 +33,8 @@ import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.api.common.TestSourceAware;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.dsl.DefaultTestActions;
+import org.citrusframework.message.DefaultPayloadBuilders;
+import org.citrusframework.message.PayloadBuilders;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -314,6 +316,11 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
     @Override
     public Processors processor() {
         return new DefaultMessageProcessors();
+    }
+
+    @Override
+    public PayloadBuilders buildPayload() {
+        return new DefaultPayloadBuilders();
     }
 
     @Override

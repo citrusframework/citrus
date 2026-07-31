@@ -19,26 +19,25 @@ package org.citrusframework.xml.actons.dsl;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.citrusframework.base.DefaultTestCaseRunner;
-import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
-import org.citrusframework.xml.UnitTestSupport;
 import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.api.xml.Marshaller;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.base.xml.Jaxb2Marshaller;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.xml.message.builder.MarshallingPayloadBuilder;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.xml.XpathMessageProcessor;
 import org.citrusframework.validation.xml.XpathPayloadVariableExtractor;
-import org.citrusframework.base.xml.Jaxb2Marshaller;
-import org.citrusframework.api.xml.Marshaller;
+import org.citrusframework.xml.UnitTestSupport;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
@@ -89,7 +88,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
                 .message()
-                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"))));
+                .body(buildPayload().xml().marshal(new TestRequest("Hello Citrus!"))));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -121,7 +120,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
                 .message()
-                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), marshaller)));
+                .body(buildPayload().xml().marshal(new TestRequest("Hello Citrus!"), marshaller)));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -161,7 +160,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
                 .message()
-                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), "myMarshaller")));
+                .body(buildPayload().xml().marshal(new TestRequest("Hello Citrus!"), "myMarshaller")));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -268,7 +267,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint).message()
                 .schemaValidation(true).schema("fooSchema").schemaRepository("fooRepository")
-                .type(MessageType.JSON).body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), marshaller)));
+                .type(MessageType.JSON).body(buildPayload().xml().marshal(new TestRequest("Hello Citrus!"), marshaller)));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

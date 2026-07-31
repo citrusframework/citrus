@@ -90,6 +90,16 @@ public interface MessageProcessorSupport extends Processors, MessageProcessorLoo
             public <T> JsonMappingValidationProcessorBuilder<T, ?, ?> validate(Class<T> type) {
                 return lookup("jsonValidate", type);
             }
+
+            @Override
+            public MessagePayloadBuilder marshal(Object model) {
+                return lookupPayloadBuilder("jsonMarshal", model);
+            }
+
+            @Override
+            public MessagePayloadBuilder marshal(Object model, Object mapper) {
+                return lookupPayloadBuilder("jsonMarshal", model, mapper);
+            }
         };
     }
 
@@ -110,6 +120,16 @@ public interface MessageProcessorSupport extends Processors, MessageProcessorLoo
             @Override
             public <T> XmlMarshallingValidationProcessorBuilder<T, ?, ?> validate(GenericValidationProcessor<T> validationProcessor) {
                 return lookup("xmlValidate", validationProcessor);
+            }
+
+            @Override
+            public MessagePayloadBuilder marshal(Object model) {
+                return lookupPayloadBuilder("xmlMarshal", model);
+            }
+
+            @Override
+            public MessagePayloadBuilder marshal(Object model, Object marshaller) {
+                return lookupPayloadBuilder("xmlMarshal", model, marshaller);
             }
         };
     }

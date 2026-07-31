@@ -16,10 +16,39 @@
 
 package org.citrusframework.message;
 
+import java.util.Optional;
+
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @FunctionalInterface
 public interface MessagePayloadBuilder {
+
+    Logger logger = LoggerFactory.getLogger(MessagePayloadBuilder.class);
+
+    String RESOURCE_PATH = "META-INF/citrus/message/builder";
+
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    /**
+     * Resolves payload builder from resource path lookup with given resource name. Scans classpath for payload builder
+     * meta information with given name and returns instance. Returns optional instead of throwing exception when no
+     * payload builder could be found.
+     */
+    static Optional<MessagePayloadBuilder> lookup(String builder, Object... args) {
+        try {
+            MessagePayloadBuilder instance = TYPE_RESOLVER.resolve(builder, args);
+            return Optional.of(instance);
+        } catch (CitrusRuntimeException e) {
+            logger.warn("Failed to resolve message payload builder from resource '{}/{}' - caused by: {}", RESOURCE_PATH, builder, e.getMessage());
+        }
+
+        return Optional.empty();
+    }
 
     /**
      * Builds the message payload.

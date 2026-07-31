@@ -16,27 +16,31 @@
 
 package org.citrusframework.json.actions.dsl;
 
+import java.io.ByteArrayInputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.networknt.schema.Schema;
-import org.citrusframework.base.DefaultTestCaseRunner;
-import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
-import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
-import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.exceptions.TestCaseFailedException;
+import org.citrusframework.json.UnitTestSupport;
+import org.citrusframework.json.message.builder.ObjectMappingHeaderDataBuilder;
 import org.citrusframework.json.schema.SimpleJsonSchema;
 import org.citrusframework.message.DefaultMessage;
-import org.citrusframework.json.message.builder.ObjectMappingHeaderDataBuilder;
-import org.citrusframework.json.message.builder.ObjectMappingPayloadBuilder;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
@@ -52,11 +56,6 @@ import org.testng.annotations.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
-import java.io.ByteArrayInputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import static java.util.Collections.emptyList;
 import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.message.MessageType.PLAINTEXT;
@@ -64,11 +63,7 @@ import static org.citrusframework.message.MessageType.XML;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
@@ -102,7 +97,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                 .message()
-                .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"))));
+                .body(buildPayload().json().marshal(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -135,7 +130,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                 .message()
-                .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), mapper)));
+                .body(buildPayload().json().marshal(new TestRequest("Hello Citrus!"), mapper)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -177,7 +172,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                 .message()
-                .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
+                .body(buildPayload().json().marshal(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

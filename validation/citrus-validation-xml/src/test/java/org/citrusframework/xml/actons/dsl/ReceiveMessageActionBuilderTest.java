@@ -23,27 +23,27 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.xml.transform.Source;
 
-import org.citrusframework.base.DefaultTestCaseRunner;
-import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
-import org.citrusframework.xml.UnitTestSupport;
 import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.api.xml.Marshaller;
+import org.citrusframework.api.xml.StringSource;
+import org.citrusframework.base.DefaultTestCaseRunner;
+import org.citrusframework.base.xml.Jaxb2Marshaller;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
-import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.xml.message.builder.MarshallingHeaderDataBuilder;
-import org.citrusframework.xml.message.builder.MarshallingPayloadBuilder;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.Resource;
+import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.validation.AbstractValidationProcessor;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
@@ -54,10 +54,9 @@ import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.validation.xml.XpathPayloadVariableExtractor;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
+import org.citrusframework.xml.UnitTestSupport;
+import org.citrusframework.xml.message.builder.MarshallingHeaderDataBuilder;
 import org.citrusframework.xml.variable.dictionary.NodeMappingDataDictionary;
-import org.citrusframework.base.xml.Jaxb2Marshaller;
-import org.citrusframework.api.xml.Marshaller;
-import org.citrusframework.api.xml.StringSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -170,7 +169,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                 .message()
-                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"))));
+                .body(buildPayload().xml().marshal(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -203,7 +202,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                 .message()
-                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), marshaller)));
+                .body(buildPayload().xml().marshal(new TestRequest("Hello Citrus!"), marshaller)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -244,7 +243,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                 .message()
-                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), "myMarshaller")));
+                .body(buildPayload().xml().marshal(new TestRequest("Hello Citrus!"), "myMarshaller")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
