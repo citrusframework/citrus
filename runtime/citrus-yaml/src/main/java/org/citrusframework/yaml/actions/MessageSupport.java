@@ -243,6 +243,12 @@ public final class MessageSupport {
                         .operation("Marshal"));
             }
 
+            if (camel.getUnmarshal() != null) {
+                builder.process(processors.camel().dataFormat()
+                        .spec(value.getCamel().getUnmarshal())
+                        .operation("Unmarshal"));
+            }
+
             if (camel.getTransform() != null) {
                 builder.process(processors.camel().transform()
                         .spec(value.getCamel().getTransform()));
