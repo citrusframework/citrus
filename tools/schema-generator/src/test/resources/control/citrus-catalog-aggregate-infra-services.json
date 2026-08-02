@@ -377,6 +377,15 @@
     "title": "Infinispan",
     "description": "Infinispan is a distributed in-memory key/value data store"
   },
+  "jaeger": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "jaeger",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-jaeger",
+    "title": "Jaeger",
+    "description": "Jaeger is a distributed tracing backend with OTLP collector and UI"
+  },
   "kafka.strimzi": {
     "kind": "testInfraService",
     "version": "${camel.version}",
