@@ -32,4 +32,43 @@ class PromptDefinitionsTest {
         List<PromptMessage> result = prompts.citrus_write_test("Send and receive messages to/from a direct endpoint", "yaml");
         assertThat(result).isNotEmpty();
     }
+
+    @Test
+    void migrateProjectReturnsNonEmptyMessages() {
+        List<PromptMessage> result = prompts.citrus_migrate_project("4.x", "5.0");
+        assertThat(result).isNotEmpty();
+    }
+
+    @Test
+    void migrateProjectContainsVersions() {
+        List<PromptMessage> result = prompts.citrus_migrate_project("4.x", "5.0");
+        assertThat(result).hasSize(1);
+        PromptMessage message = result.get(0);
+        assertThat(message.content().asText().text())
+                .contains("4.x")
+                .contains("5.0")
+                .contains("migration guide");
+    }
+
+    @Test
+    void migrateProjectContainsAllWorkflowSteps() {
+        List<PromptMessage> result = prompts.citrus_migrate_project("4.x", "5.0");
+        String content = result.get(0).content().asText().text();
+        assertThat(content)
+                .contains("Step 1:")
+                .contains("Step 2:")
+                .contains("Step 3:")
+                .contains("Step 4:")
+                .contains("Step 5:")
+                .contains("Step 6:")
+                .contains("Step 7:")
+                .contains("Step 8:");
+    }
+
+    @Test
+    void migrateProjectReferencesResourceTemplate() {
+        List<PromptMessage> result = prompts.citrus_migrate_project("4.x", "5.0");
+        String content = result.get(0).content().asText().text();
+        assertThat(content).contains("citrus://docs/migration-guide/5.0");
+    }
 }
