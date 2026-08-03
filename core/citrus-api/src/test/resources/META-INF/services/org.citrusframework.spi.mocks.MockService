@@ -1,0 +1,2 @@
+org.citrusframework.spi.mocks.FooService
+org.citrusframework.spi.mocks.BarService

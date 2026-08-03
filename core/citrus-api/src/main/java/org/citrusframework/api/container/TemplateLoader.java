@@ -35,7 +35,7 @@ public interface TemplateLoader<T extends TestAction> extends ReferenceResolverA
     String RESOURCE_PATH = "META-INF/citrus/template/loader";
 
     /** Type resolver to find custom message validators on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, TemplateLoader.class);
 
     /**
      * Resolves template loader from resource path lookup with given resource name. Scans classpath for meta information

@@ -38,7 +38,7 @@ public interface ValidationContext {
     String RESOURCE_PATH = "META-INF/citrus/validation/builder";
 
     /** Default Citrus validation context builders from classpath resource properties */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, ValidationContext.class);
 
     /**
      * Indicates whether this validation context requires a validator.

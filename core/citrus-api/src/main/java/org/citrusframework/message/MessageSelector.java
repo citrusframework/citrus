@@ -35,7 +35,7 @@ public interface MessageSelector {
     String RESOURCE_PATH = "META-INF/citrus/message/selector";
 
     /** Type resolver to find custom message selectors on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, MessageSelector.class);
 
     Map<String, MessageSelectorFactory> factories = new ConcurrentHashMap<>();
 

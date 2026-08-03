@@ -47,7 +47,7 @@ public interface EndpointComponent {
     String RESOURCE_PATH = "META-INF/citrus/endpoint/component";
 
     /** Default Citrus endpoint components from classpath resource properties */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, EndpointComponent.class);
 
     /**
      * Creates proper endpoint instance from endpoint uri.

@@ -41,7 +41,7 @@ public interface SqlResultSetScriptValidator {
     String RESOURCE_PATH = "META-INF/citrus/sql/result-set/validator";
 
     /** Type resolver to find custom SQL result set validators on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, SqlResultSetScriptValidator.class);
 
     /**
      * Resolves all available validators from resource path lookup. Scans classpath for validator meta information

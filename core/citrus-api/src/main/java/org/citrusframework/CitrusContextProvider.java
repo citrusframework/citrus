@@ -35,7 +35,7 @@ public interface CitrusContextProvider {
     String RESOURCE_PATH = "META-INF/citrus/context/provider";
 
     /** Default Citrus context provider from classpath resource properties */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, CitrusContextProvider.class);
 
     String SPRING = "spring";
 

@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,9 @@ public interface TypeConverter {
 
     /** Type converter resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/type/converter";
+
+    /** Type resolver to find custom type converters on classpath via resource path lookup */
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, TypeConverter.class);
 
     Map<String, TypeConverter> converters = new HashMap<>();
 
@@ -46,7 +50,7 @@ public interface TypeConverter {
      */
     static Map<String, TypeConverter> lookup() {
         if (converters.isEmpty()) {
-            converters.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
+            converters.putAll(TYPE_RESOLVER.resolveAll());
 
             if (converters.isEmpty()) {
                 converters.put(DEFAULT, DefaultTypeConverter.INSTANCE);

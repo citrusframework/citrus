@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,9 @@ public interface Function {
     /** Function resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/function";
 
+    /** Type resolver to find custom functions on classpath via resource path lookup */
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, Function.class);
+
     Map<String, Function> functions = new HashMap<>();
 
     /**
@@ -45,7 +49,7 @@ public interface Function {
      */
     static Map<String, Function> lookup() {
         if (functions.isEmpty()) {
-            functions.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
+            functions.putAll(TYPE_RESOLVER.resolveAll());
 
             if (logger.isTraceEnabled()) {
                 functions.forEach((k, v) -> logger.trace("Found function '{}' as {}", k, v.getClass()));

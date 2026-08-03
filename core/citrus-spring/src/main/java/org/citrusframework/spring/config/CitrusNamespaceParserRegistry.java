@@ -76,7 +76,7 @@ public final class CitrusNamespaceParserRegistry {
     private static final String RESOURCE_PATH = "META-INF/citrus/action/parser";
 
     /** Type resolver for dynamic parser lookup via resource path */
-    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, BeanDefinitionParser.class);
 
     /** Parser registry as map */
     private static final Map<String, BeanDefinitionParser> BEAN_PARSER = new ConcurrentHashMap<>();

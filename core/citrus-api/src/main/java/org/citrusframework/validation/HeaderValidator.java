@@ -40,7 +40,7 @@ public interface HeaderValidator {
     String RESOURCE_PATH = "META-INF/citrus/header/validator";
 
     /** Type resolver to find custom message validators on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, HeaderValidator.class);
 
     Map<String, HeaderValidator> validators = new HashMap<>();
 

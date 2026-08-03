@@ -25,11 +25,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -86,6 +88,11 @@ public class ResourcePathTypeResolver implements TypeResolver {
     private final String resourceBasePath;
 
     /**
+     * Optional service type for Java {@link ServiceLoader} fallback.
+     */
+    private final Class<?> serviceType;
+
+    /**
      * Resolver resolves all resources for a given path from classpath
      */
     private final ClasspathResourceResolver classpathResourceResolver = new ClasspathResourceResolver();
@@ -132,11 +139,23 @@ public class ResourcePathTypeResolver implements TypeResolver {
      * Default constructor initializes with given resource path.
      */
     public ResourcePathTypeResolver(String resourceBasePath) {
+        this(resourceBasePath, null);
+    }
+
+    /**
+     * Constructor with resource path and service type for Java {@link ServiceLoader} fallback.
+     * When a service type is provided, the resolver uses {@link ServiceLoader} as a fallback
+     * mechanism when the resource path lookup does not find the requested implementation.
+     * Service implementations discovered via {@link ServiceLoader} must be annotated with
+     * {@link NamedService} to provide a name for lookup.
+     */
+    public ResourcePathTypeResolver(String resourceBasePath, Class<?> serviceType) {
         if (resourceBasePath.endsWith("/")) {
             this.resourceBasePath = resourceBasePath.substring(0, resourceBasePath.length() - 1);
         } else {
             this.resourceBasePath = resourceBasePath;
         }
+        this.serviceType = serviceType;
     }
 
     @Override
@@ -149,12 +168,28 @@ public class ResourcePathTypeResolver implements TypeResolver {
     public <T> T resolve(String resourcePath, String property, Object... initargs) {
         String cacheKey = toCacheKey(resourcePath, property, "NO_KEY_PROPERTY");
 
-        Map<String, String> map = typeCache.computeIfAbsent(
-            cacheKey,
-            key -> singletonMap(key, resolveProperty(resourcePath, property))
-        );
+        try {
+            Map<String, String> map = typeCache.computeIfAbsent(
+                cacheKey,
+                key -> singletonMap(key, resolveProperty(resourcePath, property))
+            );
 
-        return (T) ClassLoaderHelper.instantiateType(map.get(cacheKey), initargs);
+            String type = map.get(cacheKey);
+            if (type != null) {
+                return (T) ClassLoaderHelper.instantiateType(type, initargs);
+            }
+        } catch (Exception e) {
+            logger.trace("Resource path lookup failed for '{}', trying ServiceLoader fallback", resourcePath, e);
+        }
+
+        T result = resolveFromServiceLoader(resourcePath);
+        if (result != null) {
+            return result;
+        }
+
+        throw new org.citrusframework.exceptions.CitrusRuntimeException(
+                String.format("Failed to resolve resource of type '%s' for path '%s'",
+                        serviceType != null ? serviceType.getName() : "unknown", resourcePath));
     }
 
     @Override
@@ -167,6 +202,8 @@ public class ResourcePathTypeResolver implements TypeResolver {
 
         Map<String, T> resources = new HashMap<>();
         typeLookup.forEach((p, type) -> resources.put(p, (T) ClassLoaderHelper.instantiateType(type)));
+
+        resolveAllFromServiceLoader(resources);
 
         return resources;
     }
@@ -290,6 +327,53 @@ public class ResourcePathTypeResolver implements TypeResolver {
             return resourceBasePath + "/" + resourcePath;
         } else {
             return resourcePath;
+        }
+    }
+
+    /**
+     * Attempt to resolve a single service implementation by name via Java {@link ServiceLoader}.
+     * Looks for implementations annotated with {@link NamedService} whose name matches the
+     * given resource path (which is used as the lookup name).
+     */
+    @SuppressWarnings("unchecked")
+    private <T> T resolveFromServiceLoader(String resourcePath) {
+        if (serviceType == null) {
+            return null;
+        }
+
+        String name = resourcePath.contains("/")
+                ? resourcePath.substring(resourcePath.lastIndexOf('/') + 1)
+                : resourcePath;
+
+        ServiceLoader<?> loader = ServiceLoader.load(serviceType);
+        for (Object service : loader) {
+            NamedService annotation = service.getClass().getAnnotation(NamedService.class);
+            if (annotation != null && annotation.name().equals(name)) {
+                logger.debug("Resolved '{}' via ServiceLoader as {}", name, service.getClass());
+                return (T) service;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Discover additional service implementations via Java {@link ServiceLoader} and add them
+     * to the given result map. Only implementations not already present in the map (by name)
+     * are added, preserving resource path lookup precedence.
+     */
+    @SuppressWarnings("unchecked")
+    private <T> void resolveAllFromServiceLoader(Map<String, T> resources) {
+        if (serviceType == null) {
+            return;
+        }
+
+        ServiceLoader<?> loader = ServiceLoader.load(serviceType);
+        for (Object service : loader) {
+            NamedService annotation = service.getClass().getAnnotation(NamedService.class);
+            if (annotation != null) {
+                resources.putIfAbsent(annotation.name(), (T) service);
+            }
         }
     }
 

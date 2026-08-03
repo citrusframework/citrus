@@ -44,7 +44,7 @@ public interface OpenApiSpecificationProcessor {
     /**
      * Type resolver to find OpenAPI processors on classpath via resource path lookup
      */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, OpenApiSpecificationProcessor.class);
 
     /**
      * Resolves all available processors from resource path lookup. Scans classpath for processors meta information

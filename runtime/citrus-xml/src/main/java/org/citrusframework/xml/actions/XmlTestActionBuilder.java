@@ -34,7 +34,7 @@ public interface XmlTestActionBuilder {
     String RESOURCE_PATH = "META-INF/citrus/xml/builder";
 
     /** Default Citrus test action builders from classpath resource properties */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, XmlTestActionBuilder.class);
 
     /**
      * Resolves test action builder from resource path lookup with given resource name. Scans classpath for test action builder meta information

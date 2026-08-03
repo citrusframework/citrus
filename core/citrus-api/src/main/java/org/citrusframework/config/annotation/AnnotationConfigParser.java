@@ -42,7 +42,7 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
     String RESOURCE_PATH = "META-INF/citrus/endpoint/parser";
 
     /** Default Citrus annotation config parsers from classpath resource properties */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, AnnotationConfigParser.class);
 
     Map<String, AnnotationConfigParser<?, ?>> parsers = new HashMap<>();
 

@@ -37,7 +37,7 @@ public interface HamcrestMatcherProvider {
     String RESOURCE_PATH = "META-INF/citrus/hamcrest/matcher/provider";
 
     /** Type resolver to find custom matcher providers on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(HamcrestMatcherProvider.RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(HamcrestMatcherProvider.RESOURCE_PATH, HamcrestMatcherProvider.class);
 
     /**
      * Resolves matcher provider from resource path lookup. Returns optional instead of throwing exception when no matcher
