@@ -38,7 +38,7 @@ public interface MessageProcessor extends MessageTransformer {
     String RESOURCE_PATH = "META-INF/citrus/message/processor";
 
     /** Type resolver to find custom message processors on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, MessageProcessor.class);
 
     /**
      * Resolves processor from resource path lookup with given processor resource name. Scans classpath for processor meta information

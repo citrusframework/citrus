@@ -23,6 +23,7 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
+import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +40,9 @@ public interface ValidationMatcher {
     /** Message validator resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/validation/matcher";
 
+    /** Type resolver to find custom validation matchers on classpath via resource path lookup */
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, ValidationMatcher.class);
+
     Map<String, ValidationMatcher> matcher = new HashMap<>();
 
     /**
@@ -48,7 +52,7 @@ public interface ValidationMatcher {
      */
     static Map<String, ValidationMatcher> lookup() {
         if (matcher.isEmpty()) {
-            matcher.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
+            matcher.putAll(TYPE_RESOLVER.resolveAll());
 
             if (logger.isTraceEnabled()) {
                 matcher.forEach((k, v) -> logger.trace("Found validation matcher '{}' as {}", k, v.getClass()));

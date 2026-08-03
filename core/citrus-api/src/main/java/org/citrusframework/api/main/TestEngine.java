@@ -34,7 +34,7 @@ public interface TestEngine {
     String RESOURCE_PATH = "META-INF/citrus/engine";
 
     /** Default Citrus engine from classpath resource properties */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, TestEngine.class);
 
     /**
      * Runs all tests with the given engine.

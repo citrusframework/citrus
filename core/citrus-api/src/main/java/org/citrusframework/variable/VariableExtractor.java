@@ -42,7 +42,7 @@ public interface VariableExtractor extends MessageProcessor {
     String RESOURCE_PATH = "META-INF/citrus/variable/extractor";
 
     /** Type resolver to find custom variable extractors on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, VariableExtractor.class);
 
     /**
      * Resolves extractor from resource path lookup with given extractor resource name. Scans classpath for extractor meta information

@@ -50,7 +50,7 @@ public interface EndpointBuilder<T extends Endpoint> {
     String RESOURCE_PATH = "META-INF/citrus/endpoint/builder";
 
     /** Default Citrus endpoint builders from classpath resource properties */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, EndpointBuilder.class);
 
     /**
      * Evaluate if this builder supports the given type.

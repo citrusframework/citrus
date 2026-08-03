@@ -46,7 +46,7 @@ public interface MessageValidator<T extends ValidationContext> {
     String RESOURCE_PATH = "META-INF/citrus/message/validator";
 
     /** Type resolver to find custom message validators on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, MessageValidator.class);
 
     /**
      * Resolves all available validators from resource path lookup. Scans classpath for validator meta information

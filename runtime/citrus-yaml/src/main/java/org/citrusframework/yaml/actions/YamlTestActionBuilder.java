@@ -35,7 +35,7 @@ public interface YamlTestActionBuilder {
     String RESOURCE_PATH = "META-INF/citrus/yaml/builder";
 
     /** Default Citrus test action builders from classpath resource properties */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, YamlTestActionBuilder.class);
 
     /**
      * Resolves all available test action builder instances from resource path lookup. Scans classpath for test action builder meta information

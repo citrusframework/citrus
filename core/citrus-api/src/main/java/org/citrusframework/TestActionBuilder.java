@@ -39,7 +39,7 @@ public interface TestActionBuilder<T extends TestAction> {
     String RESOURCE_PATH = "META-INF/citrus/action/builder";
 
     /** Default Citrus test action builders from classpath resource properties */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, TestActionBuilder.class);
 
     /**
      * Builds new test action instance.

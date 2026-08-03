@@ -57,7 +57,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
     private static final String RESOURCE_PATH = "META-INF/citrus/schema-repository/parser";
 
     /** Type resolver for dynamic schema repository parser lookup via resource path */
-    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, BeanDefinitionParser.class);
 
     /** Local cache to hold already looked up parsers */
     private static final Map<String, BeanDefinitionParser> SCHEMA_REPOSITORY_PARSER = new HashMap<>();

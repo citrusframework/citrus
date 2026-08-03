@@ -47,7 +47,7 @@ public class SegmentVariableExtractorRegistry {
     private static final String RESOURCE_PATH = "META-INF/citrus/variable/extractor/segment";
 
     /** Type resolver to find custom segment variable extractors on classpath via resource path lookup */
-    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, SegmentVariableExtractorRegistry.class);
 
     /**
      * Resolves extractor from resource path lookup with given extractor resource name. Scans classpath for extractor meta information

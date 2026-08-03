@@ -36,7 +36,7 @@ public interface ValueMatcher {
     String RESOURCE_PATH = "META-INF/citrus/value/matcher";
 
     /** Type resolver to find custom message validators on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, ValueMatcher.class);
 
     Map<String, ValueMatcher> validators = new ConcurrentHashMap<>();
 

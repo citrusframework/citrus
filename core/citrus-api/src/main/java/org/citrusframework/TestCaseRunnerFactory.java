@@ -50,7 +50,7 @@ public class TestCaseRunnerFactory {
     private static final String RESOURCE_PATH = "META-INF/citrus/test/runner";
 
     /** Default Citrus test runner from classpath resource properties. */
-    private final ResourcePathTypeResolver typeResolver = new ResourcePathTypeResolver(RESOURCE_PATH);
+    private final ResourcePathTypeResolver typeResolver = new ResourcePathTypeResolver(RESOURCE_PATH, TestCaseRunnerFactory.class);
 
     private static final TestCaseRunnerFactory INSTANCE = new TestCaseRunnerFactory();
 

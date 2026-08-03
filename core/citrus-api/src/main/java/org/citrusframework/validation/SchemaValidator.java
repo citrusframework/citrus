@@ -38,7 +38,7 @@ public interface SchemaValidator<T extends SchemaValidationContext> {
     String RESOURCE_PATH = "META-INF/citrus/message/schemaValidator";
 
     /** Type resolver to find custom schema validators on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, SchemaValidator.class);
 
     /**
      * Resolves all available validators from resource path lookup. Scans classpath for validator meta information

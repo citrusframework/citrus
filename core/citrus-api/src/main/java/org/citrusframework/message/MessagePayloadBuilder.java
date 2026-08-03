@@ -32,7 +32,7 @@ public interface MessagePayloadBuilder {
 
     String RESOURCE_PATH = "META-INF/citrus/message/builder";
 
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, MessagePayloadBuilder.class);
 
     /**
      * Resolves payload builder from resource path lookup with given resource name. Scans classpath for payload builder

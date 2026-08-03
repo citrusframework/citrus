@@ -40,7 +40,7 @@ public interface TypeAliasResolver<S, A> {
     String RESOURCE_PATH = "META-INF/citrus/context/resolver";
 
     /** Type resolver to find custom type alias resolvers on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, TypeAliasResolver.class);
 
     Map<String, TypeAliasResolver<?, ?>> resolvers = new HashMap<>();
 

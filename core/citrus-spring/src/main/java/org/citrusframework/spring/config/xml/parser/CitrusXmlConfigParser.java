@@ -34,7 +34,7 @@ public interface CitrusXmlConfigParser {
     String RESOURCE_PATH = "META-INF/citrus/config/parser";
 
     /** Type resolver to find custom message Xml config parsers on classpath via resource path lookup */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, CitrusXmlConfigParser.class);
 
     /**
      * Resolves all available config parsers from resource path lookup. Scans classpath for config parser meta information

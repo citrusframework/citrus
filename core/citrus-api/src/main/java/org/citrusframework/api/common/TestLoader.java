@@ -40,7 +40,7 @@ public interface TestLoader {
     String RESOURCE_PATH = "META-INF/citrus/test/loader";
 
     /** Default Citrus test loader from classpath resource properties */
-    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH, TestLoader.class);
 
     String JAVA = "java";
     String XML = "xml";
