@@ -1,0 +1,144 @@
+[[spi]]
+= Service Provider Interface (SPI)
+
+Citrus uses a Service Provider Interface (SPI) mechanism to discover and load component implementations at runtime. This allows Citrus modules to be decoupled from each other and enables users to add custom implementations simply by placing them on the classpath.
+
+[[spi-resource-path-lookup]]
+== Resource path lookup
+
+The primary SPI mechanism in Citrus is the **resource path lookup**. Each extensible component type defines a resource path under `META-INF/citrus/` where implementations are registered. When Citrus starts, it scans these paths on the classpath to discover available implementations.
+
+A resource file is a simple Java properties file that contains at minimum a `type` property pointing to the fully qualified class name of the implementation:
+
+[source,properties]
+----
+type=org.example.MyCustomValidator
+----
+
+Some resource files also include a `name` property:
+
+[source,properties]
+----
+name=myCustomValidator
+type=org.example.MyCustomValidator
+----
+
+The following table lists the component types that support resource path lookup:
+
+|===
+|Type | Resource Path
+
+|`CitrusContextProvider` | `META-INF/citrus/context/provider`
+|`TestActionBuilder` | `META-INF/citrus/action/builder`
+|`TestLoader` | `META-INF/citrus/test/loader`
+|`TestEngine` | `META-INF/citrus/engine`
+|`EndpointComponent` | `META-INF/citrus/endpoint/component`
+|`EndpointBuilder` | `META-INF/citrus/endpoint/builder`
+|`AnnotationConfigParser` | `META-INF/citrus/endpoint/parser`
+|`MessageValidator` | `META-INF/citrus/message/validator`
+|`SchemaValidator` | `META-INF/citrus/message/schemaValidator`
+|`HeaderValidator` | `META-INF/citrus/header/validator`
+|`ValueMatcher` | `META-INF/citrus/value/matcher`
+|`ValidationMatcher` | `META-INF/citrus/validation/matcher`
+|`ValidationContext` | `META-INF/citrus/validation/builder`
+|`MessageProcessor` | `META-INF/citrus/message/processor`
+|`MessageSelector` | `META-INF/citrus/message/selector`
+|`MessagePayloadBuilder` | `META-INF/citrus/message/builder`
+|`ScriptPayloadBuilder` | `META-INF/citrus/script/message/builder`
+|`VariableExtractor` | `META-INF/citrus/variable/extractor`
+|`TypeConverter` | `META-INF/citrus/type/converter`
+|`TypeAliasResolver` | `META-INF/citrus/context/resolver`
+|`Function` | `META-INF/citrus/function`
+|`SqlResultSetScriptValidator` | `META-INF/citrus/sql/result-set/validator`
+|`HamcrestMatcherProvider` | `META-INF/citrus/hamcrest/matcher/provider`
+|===
+
+=== Adding a custom implementation via resource path
+
+To register a custom implementation, create a properties file at the appropriate resource path on your classpath. For example, to add a custom message validator named `myValidator`:
+
+. Create the file `META-INF/citrus/message/validator/myValidator` in your `src/main/resources` directory.
+. Add the following content:
++
+[source,properties]
+----
+name=myValidator
+type=com.example.MyCustomMessageValidator
+----
+. Ensure your implementation class is available on the classpath.
+
+Citrus will automatically discover and load the implementation when it starts.
+
+[[spi-service-loader]]
+== Java ServiceLoader fallback
+
+In addition to the resource path lookup, Citrus supports standard Java `ServiceLoader` as a fallback mechanism. This allows implementations to be registered using the standard `META-INF/services/` convention defined by the Java platform.
+
+The `ServiceLoader` is used as a **fallback** -- the resource path lookup always takes precedence. If a component cannot be found via resource path lookup, Citrus will attempt to discover it via `ServiceLoader`. When both mechanisms find implementations, resource path results take priority and `ServiceLoader` results fill in any gaps.
+
+[[spi-named-service-annotation]]
+=== The @NamedService annotation
+
+Implementations discovered via `ServiceLoader` must be annotated with `@NamedService` to provide a name for lookup. The `name` attribute serves the same purpose as the resource file name in the resource path lookup -- it identifies the implementation so it can be looked up by name.
+
+[source,java]
+----
+import org.citrusframework.spi.NamedService;
+import org.citrusframework.validation.MessageValidator;
+
+@NamedService(name = "myCustomValidator")
+public class MyCustomMessageValidator implements MessageValidator<ValidationContext> {
+    // implementation
+}
+----
+
+=== Registering via ServiceLoader
+
+To register a component using the standard Java `ServiceLoader` mechanism:
+
+. Annotate your implementation with `@NamedService`:
++
+[source,java]
+----
+import org.citrusframework.spi.NamedService;
+
+@NamedService(name = "custom")
+public class CustomEndpointComponent implements EndpointComponent {
+    // implementation
+}
+----
+. Create the service provider file `META-INF/services/org.citrusframework.endpoint.EndpointComponent` in your `src/main/resources` directory:
++
+[source]
+----
+com.example.CustomEndpointComponent
+----
+
+Citrus will discover the implementation via `ServiceLoader` when the resource path lookup does not find it.
+
+[[spi-precedence]]
+=== Lookup precedence
+
+When both resource path files and `ServiceLoader` implementations exist for the same component type, Citrus follows this precedence:
+
+. **Single lookup** (`lookup(name)`): The resource path is tried first. Only if it fails to find the named implementation does Citrus fall back to `ServiceLoader`.
+. **Bulk lookup** (`lookup()`): Results from both mechanisms are merged. Resource path results take precedence -- a `ServiceLoader` implementation is only added if no resource path result exists with the same name.
+
+This ensures full backward compatibility while allowing new implementations to be registered using either mechanism.
+
+[[spi-choosing-mechanism]]
+=== Choosing the right mechanism
+
+Both mechanisms are fully supported. Choose based on your needs:
+
+|===
+|Criteria | Resource path lookup | Java ServiceLoader
+
+|Standard Java convention | No | Yes
+|Requires `@NamedService` annotation | No | Yes
+|Requires service provider file | No (uses custom properties file) | Yes (`META-INF/services/`)
+|Constructor arguments support | Yes | No
+|IDE/tooling support | Limited | Better (standard SPI)
+|===
+
+For most use cases, the **resource path lookup** remains the recommended approach as it supports constructor arguments and is the established pattern in Citrus. The **ServiceLoader** fallback is useful when you prefer standard Java conventions or when integrating with frameworks that already use `ServiceLoader`.
