@@ -81,6 +81,7 @@ include::reporting.adoc[]
 
 include::configuration.adoc[]
 include::spring-support.adoc[]
+include::spi.adoc[]
 
 include::tools.adoc[]
 
