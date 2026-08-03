@@ -27,6 +27,7 @@ import org.apache.camel.tooling.maven.MavenArtifact;
 import org.apache.camel.tooling.maven.MavenDownloader;
 import org.apache.camel.tooling.maven.MavenDownloaderImpl;
 import org.citrusframework.CitrusVersion;
+import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +59,8 @@ public class MavenDependencyResolver {
      */
     public List<MavenArtifact> resolve(String gav, boolean useSnapshots, boolean transitive) {
         try {
+            gav = resolveGavPlaceholders(gav);
+
             Set<String> extraRepositories = new LinkedHashSet<>(repositories.values());
 
             logger.info("Resolving Maven dependency: {}", gav);
@@ -102,5 +105,20 @@ public class MavenDependencyResolver {
     public MavenDependencyResolver withRepository(String key, String value) {
         repositories.put(key, value);
         return this;
+    }
+
+    /**
+     * Resolves property placeholders in Maven GAV coordinate strings.
+     * Supports ${camel.version} and ${citrus.version} placeholders.
+     */
+    static String resolveGavPlaceholders(String gav) {
+        if (gav == null || !gav.contains("${")) {
+            return gav;
+        }
+
+        gav = gav.replace("${camel.version}", CitrusJBangMain.Settings.getCamelVersion());
+        gav = gav.replace("${citrus.version}", CitrusVersion.version());
+
+        return gav;
     }
 }
