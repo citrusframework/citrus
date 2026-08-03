@@ -19,6 +19,8 @@ The MCP server exposes Citrus framework capabilities through standardized tools 
     ** **Documentation**: Access AsciiDoc documentation for specific Citrus components
 * Migration resources
     ** **Migration Guides**: Retrieve structured version migration guides with package renames, Maven dependency changes, API changes, and SPI changes
+* Settings resources
+    ** **Settings Catalog**: Browse all available Citrus system property and environment variable settings by group or module
 
 This enables AI assistants to provide context-aware suggestions, validate component usage, and generate syntactically correct Citrus tests.
 
@@ -472,6 +474,73 @@ The guide covers package renames, Maven artifact renames, dependency upgrades, A
   ]
 }
 ----
+
+=== Settings Resources
+
+The settings resources provide a catalog of all Citrus system property and environment variable settings.
+Each setting entry includes the system property key, environment variable name, default value, value type, and a description.
+
+==== All Settings
+
+**URI:** `citrus://settings/all`
+
+Retrieves all available Citrus settings grouped by category.
+
+**MIME Type:** `application/json`
+
+**Response structure:**
+[source,json]
+----
+{
+  "core": {
+    "name": "core",
+    "title": "Core Settings",
+    "description": "Core Citrus framework settings from CitrusSettings",
+    "module": "citrus-api",
+    "settings": [
+      {
+        "property": "citrus.default.message.type",
+        "envVariable": "CITRUS_DEFAULT_MESSAGE_TYPE",
+        "defaultValue": "XML",
+        "type": "string",
+        "description": "Default message type for validation"
+      }
+    ]
+  },
+  "logging": { ... },
+  "camel": { ... }
+}
+----
+
+==== Settings by Group
+
+**URI Template:** `citrus://settings/group/{name}`
+
+Retrieves settings for a specific group (e.g., core, logging, camel, kubernetes, testcontainers).
+
+**Parameters:**
+
+* `name`: Group name
+
+**MIME Type:** `application/json`
+
+**Example URI:** `citrus://settings/group/kubernetes`
+
+==== Settings by Module
+
+**URI Template:** `citrus://settings/module/{module}`
+
+Retrieves settings for a specific Citrus module (e.g., citrus-api, citrus-camel, citrus-kubernetes, citrus-testcontainers).
+A module may contain multiple setting groups.
+For example, `citrus-camel` contains the groups `camel`, `camel-cli`, and `camel-infra`.
+
+**Parameters:**
+
+* `module`: Citrus module name
+
+**MIME Type:** `application/json`
+
+**Example URI:** `citrus://settings/module/citrus-camel`
 
 [[citrus-mcp-server-configuration]]
 == Server Configuration
