@@ -37,6 +37,10 @@ public interface XmlMessageProcessors extends PayloadBuilderLookupSupport {
 
     XmlUnmarshallingMessageProcessorBuilder<?, ?> unmarshal();
 
+    XmlFormattingMessageProcessorBuilder<?, ?> prettyPrint();
+
+    SoapMessageProcessors soap();
+
     interface Factory {
 
         /**

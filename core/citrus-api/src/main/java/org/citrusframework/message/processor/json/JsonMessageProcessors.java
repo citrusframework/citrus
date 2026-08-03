@@ -36,6 +36,8 @@ public interface JsonMessageProcessors extends PayloadBuilderLookupSupport {
 
     JsonUnmarshallingMessageProcessorBuilder<?, ?> unmarshal();
 
+    JsonFormattingMessageProcessorBuilder<?, ?> prettyPrint();
+
     interface Factory {
 
         /**

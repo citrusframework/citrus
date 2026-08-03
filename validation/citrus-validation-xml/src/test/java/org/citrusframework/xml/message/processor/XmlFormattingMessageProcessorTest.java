@@ -20,6 +20,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -86,5 +87,28 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.PLAINTEXT.name());
         messageProcessor.process(message, context);
         Assert.assertEquals(message.getPayload(String.class), "This is plaintext");
+    }
+
+    @Test
+    public void testBuilder() {
+        XmlFormattingMessageProcessor processor = new XmlFormattingMessageProcessor.Builder().build();
+
+        Message message = new DefaultMessage("<root>"
+                    + "<element attribute='attribute-value'>"
+                        + "<sub-element>text-value</sub-element>"
+                    + "</element>"
+                + "</root>");
+        processor.process(message, context);
+
+        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+    }
+
+    @Test
+    public void testLookup() {
+        MessageProcessor.Builder<?, ?> builder = MessageProcessor.lookup("xmlPrettyPrint")
+                .orElse(null);
+
+        Assert.assertNotNull(builder);
+        Assert.assertEquals(builder.getClass(), XmlFormattingMessageProcessor.Builder.class);
     }
 }

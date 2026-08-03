@@ -18,6 +18,7 @@ package org.citrusframework.json.message.processor;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -50,5 +51,24 @@ public class JsonFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.PLAINTEXT.name());
         messageProcessor.process(message, context);
         Assert.assertEquals(message.getPayload(String.class), "This is plaintext");
+    }
+
+    @Test
+    public void testBuilder() {
+        JsonFormattingMessageProcessor processor = new JsonFormattingMessageProcessor.Builder().build();
+
+        Message message = new DefaultMessage("{\"name\":\"Citrus\",\"version\":\"4.6\"}");
+        processor.process(message, context);
+
+        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+    }
+
+    @Test
+    public void testLookup() {
+        MessageProcessor.Builder<?, ?> builder = MessageProcessor.lookup("jsonPrettyPrint")
+                .orElse(null);
+
+        Assert.assertNotNull(builder);
+        Assert.assertEquals(builder.getClass(), JsonFormattingMessageProcessor.Builder.class);
     }
 }

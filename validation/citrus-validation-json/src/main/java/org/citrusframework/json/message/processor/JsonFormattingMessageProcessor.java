@@ -21,6 +21,7 @@ import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.message.processor.json.JsonFormattingMessageProcessorBuilder;
 
 /**
  * @since 4.6
@@ -35,5 +36,13 @@ public class JsonFormattingMessageProcessor extends AbstractMessageProcessor {
     @Override
     public boolean supportsMessageType(String messageType) {
         return messageType.equalsIgnoreCase(MessageType.JSON.name());
+    }
+
+    public static class Builder implements JsonFormattingMessageProcessorBuilder<JsonFormattingMessageProcessor, Builder> {
+
+        @Override
+        public JsonFormattingMessageProcessor build() {
+            return new JsonFormattingMessageProcessor();
+        }
     }
 }
