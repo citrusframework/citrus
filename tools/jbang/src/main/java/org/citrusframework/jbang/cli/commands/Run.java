@@ -232,8 +232,9 @@ public class Run extends CitrusCommand {
         // Handle DSL test loaders according to file extensions
         tests.stream().map(FileUtils::getFileExtension).distinct().forEach(ext -> {
             if (StringUtils.hasText(ext)) {
-                if ("feature".equals(ext)) {
-                    // Add Cucumber DSL support modules and a set of default Citrus steps
+                if ("java".equals(ext)) {
+                    // Java DSL is on the classpath by default - no dynamic module needed
+                } else if ("feature".equals(ext)) {
                     allModules.add("citrus-cucumber");
                     allModules.add("citrus-cucumber-core");
                 } else {
