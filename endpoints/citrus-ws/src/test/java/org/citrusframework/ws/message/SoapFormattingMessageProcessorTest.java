@@ -18,6 +18,7 @@ package org.citrusframework.ws.message;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -69,5 +70,30 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
 
         messageProcessor.process(message, context);
         Assert.assertEquals(message.getPayload(String.class), "This is plaintext");
+    }
+
+    @Test
+    public void testBuilder() {
+        SoapFormattingMessageProcessor processor = new SoapFormattingMessageProcessor.Builder().build();
+
+        SoapMessage message = new SoapMessage("<root>"
+                    + "<element attribute='attribute-value'>"
+                        + "<sub-element>text-value</sub-element>"
+                    + "</element>"
+                + "</root>");
+        message.setType(MessageType.XML.name());
+
+        processor.process(message, context);
+
+        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+    }
+
+    @Test
+    public void testLookup() {
+        MessageProcessor.Builder<?, ?> builder = MessageProcessor.lookup("soapPrettyPrint")
+                .orElse(null);
+
+        Assert.assertNotNull(builder);
+        Assert.assertEquals(builder.getClass(), SoapFormattingMessageProcessor.Builder.class);
     }
 }

@@ -21,6 +21,7 @@ import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.message.processor.xml.XmlFormattingMessageProcessorBuilder;
 import org.citrusframework.xml.support.XMLUtils;
 import org.w3c.dom.Document;
 
@@ -41,5 +42,13 @@ public class XmlFormattingMessageProcessor extends AbstractMessageProcessor {
     @Override
     public boolean supportsMessageType(String messageType) {
         return messageType.equalsIgnoreCase(MessageType.XML.name());
+    }
+
+    public static class Builder implements XmlFormattingMessageProcessorBuilder<XmlFormattingMessageProcessor, Builder> {
+
+        @Override
+        public XmlFormattingMessageProcessor build() {
+            return new XmlFormattingMessageProcessor();
+        }
     }
 }

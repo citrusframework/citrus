@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.processor.xml.SoapFormattingMessageProcessorBuilder;
 import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.xml.message.processor.XmlFormattingMessageProcessor;
 
@@ -43,5 +44,13 @@ public class SoapFormattingMessageProcessor extends XmlFormattingMessageProcesso
         }
 
         super.processMessage(message, context);
+    }
+
+    public static class Builder implements SoapFormattingMessageProcessorBuilder<SoapFormattingMessageProcessor, Builder> {
+
+        @Override
+        public SoapFormattingMessageProcessor build() {
+            return new SoapFormattingMessageProcessor();
+        }
     }
 }

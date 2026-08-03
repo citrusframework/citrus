@@ -19,10 +19,14 @@ package org.citrusframework.message;
 import org.citrusframework.message.processor.DelegatingVariableExtractorBuilder;
 import org.citrusframework.message.processor.camel.CamelMessageProcessors;
 import org.citrusframework.message.processor.json.JsonMappingValidationProcessorBuilder;
+import org.citrusframework.message.processor.json.JsonFormattingMessageProcessorBuilder;
 import org.citrusframework.message.processor.json.JsonMarshallingMessageProcessorBuilder;
 import org.citrusframework.message.processor.json.JsonMessageProcessors;
 import org.citrusframework.message.processor.json.JsonPathMessageProcessorBuilder;
 import org.citrusframework.message.processor.json.JsonUnmarshallingMessageProcessorBuilder;
+import org.citrusframework.message.processor.xml.SoapFormattingMessageProcessorBuilder;
+import org.citrusframework.message.processor.xml.SoapMessageProcessors;
+import org.citrusframework.message.processor.xml.XmlFormattingMessageProcessorBuilder;
 import org.citrusframework.message.processor.xml.XmlMarshallingMessageProcessorBuilder;
 import org.citrusframework.message.processor.xml.XmlMarshallingValidationProcessorBuilder;
 import org.citrusframework.message.processor.xml.XmlMessageProcessors;
@@ -114,6 +118,11 @@ public interface MessageProcessorSupport extends Processors, MessageProcessorLoo
             public JsonUnmarshallingMessageProcessorBuilder<?, ?> unmarshal() {
                 return lookup("jsonUnmarshal");
             }
+
+            @Override
+            public JsonFormattingMessageProcessorBuilder<?, ?> prettyPrint() {
+                return lookup("jsonPrettyPrint");
+            }
         };
     }
 
@@ -154,6 +163,21 @@ public interface MessageProcessorSupport extends Processors, MessageProcessorLoo
             @Override
             public XmlUnmarshallingMessageProcessorBuilder<?, ?> unmarshal() {
                 return lookup("xmlUnmarshal");
+            }
+
+            @Override
+            public XmlFormattingMessageProcessorBuilder<?, ?> prettyPrint() {
+                return lookup("xmlPrettyPrint");
+            }
+
+            @Override
+            public SoapMessageProcessors soap() {
+                return new SoapMessageProcessors() {
+                    @Override
+                    public SoapFormattingMessageProcessorBuilder<?, ?> prettyPrint() {
+                        return lookup("soapPrettyPrint");
+                    }
+                };
             }
         };
     }
