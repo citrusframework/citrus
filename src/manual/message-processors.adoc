@@ -1,0 +1,84 @@
+[[message-processors]]
+== Message processors
+
+Message processors allow you to manipulate message payloads before sending or after receiving messages.
+The `processor()` fluent API provides access to various message processors for JSON, XML, and SOAP message formats.
+
+You apply a message processor on a send or receive action using the `.process()` method.
+
+=== JSON pretty print
+
+The JSON formatting message processor pretty-prints a JSON message payload with proper indentation.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void jsonPrettyPrintTest() {
+    $(send("helloService")
+        .message()
+        .type(MessageType.JSON)
+        .body("{\"name\":\"Citrus\",\"version\":\"4.6\"}")
+        .process(processor().json().prettyPrint())
+    );
+}
+----
+
+The processor takes a compact JSON string and formats it with line breaks and indentation before sending. This is useful when you want to ensure that the transmitted JSON payload is human-readable.
+
+You can also apply the pretty print processor on a received message.
+
+.Java
+[source,java,indent=0]
+----
+@CitrusTest
+public void jsonPrettyPrintReceiveTest() {
+    $(receive("helloService")
+        .message()
+        .type(MessageType.JSON)
+        .body("{\"name\":\"Citrus\",\"version\":\"4.6\"}")
+        .process(processor().json().prettyPrint())
+    );
+}
+----
+
+=== XML pretty print
+
+The XML formatting message processor pretty-prints an XML message payload with proper indentation.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void xmlPrettyPrintTest() {
+    $(send("helloService")
+        .message()
+        .type(MessageType.XML)
+        .body("<root><element attribute='value'><sub-element>text</sub-element></element></root>")
+        .process(processor().xml().prettyPrint())
+    );
+}
+----
+
+The processor handles both XML `String` payloads and `org.w3c.dom.Document` object payloads.
+
+=== SOAP pretty print
+
+The SOAP formatting message processor extends the XML formatter with additional SOAP-specific handling.
+It pretty-prints both the SOAP message body and any SOAP fault detail elements.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void soapPrettyPrintTest() {
+    $(send("soapService")
+        .message()
+        .type(MessageType.XML)
+        .body("<root><element>text</element></root>")
+        .process(processor().xml().soap().prettyPrint())
+    );
+}
+----
+
+NOTE: The SOAP pretty print processor requires the `citrus-ws` module on the classpath.
