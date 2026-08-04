@@ -46,9 +46,9 @@ public class MavenDependencyResolverTest {
 
     @Test
     public void shouldKeepGavWithoutPlaceholders() {
-        String gav = "org.apache.camel:camel-aws2-s3:4.21.0";
+        String gav = "org.apache.camel:camel-aws2-s3:999-SNAPSHOT";
         String resolved = MavenDependencyResolver.resolveGavPlaceholders(gav);
-        Assert.assertEquals(resolved, "org.apache.camel:camel-aws2-s3:4.21.0");
+        Assert.assertEquals(resolved, "org.apache.camel:camel-aws2-s3:999-SNAPSHOT");
     }
 
     @Test

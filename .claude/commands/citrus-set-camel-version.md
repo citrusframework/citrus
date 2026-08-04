@@ -57,7 +57,6 @@ Update all **outdated** version properties in the root `pom.xml`. Do NOT touch p
 Search the repository for hardcoded references to the **old** Camel version and update them to the new version. Key locations include:
 
 - **JBang default version**: `tools/jbang/src/main/java/org/citrusframework/jbang/cli/CitrusJBangMain.java` — update the `CAMEL_VERSION_DEFAULT` constant
-- **JBang test resources**: `tools/jbang/src/test/resources/sample.citrus.it.*` (`.yaml`, `.xml`, `.groovy`) — update Camel version in `# deps:` comment lines
 - **Any other files** referencing the old Camel version string directly
 
 ### 7. Sync Camel Test Infrastructure Catalog

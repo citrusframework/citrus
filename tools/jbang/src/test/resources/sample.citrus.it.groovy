@@ -15,7 +15,7 @@
  */
 
 // modules: citrus-camel,citrus-testcontainers
-// deps: org.apache.camel:camel-aws2-s3:4.21.0
+// deps: org.apache.camel:camel-aws2-s3:${camel.version}
 
 name "my-test"
 author "Christoph"

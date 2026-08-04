@@ -46,7 +46,7 @@ public class GroovyCodeAnalyzerTest {
 
         Assert.assertEquals(scanResult.dependencies().length, 3L);
         String[] foundDeps = Arrays.stream(scanResult.dependencies()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundDeps[0], "org.apache.camel:camel-aws2-s3:" + CAMEL_VERSION_DEFAULT);
+        Assert.assertEquals(foundDeps[0], "org.apache.camel:camel-aws2-s3:${camel.version}");
         Assert.assertEquals(foundDeps[1], "org.apache.camel:camel-paho-mqtt5:" + CAMEL_VERSION_DEFAULT);
         Assert.assertEquals(foundDeps[2], "org.apache.camel:camel-test-infra-kafka:" + CAMEL_VERSION_DEFAULT);
 

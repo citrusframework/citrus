@@ -170,7 +170,7 @@
     <maven.gpg.plugin.version>3.2.8</maven.gpg.plugin.version>
     <maven.helper.plugin.version>3.6.1</maven.helper.plugin.version>
     <maven.install.plugin.version>3.1.4</maven.install.plugin.version>
-    <maven.jar.plugin.version>3.5.0</maven.jar.plugin.version>
+    <maven.jar.plugin.version>3.5.1</maven.jar.plugin.version>
     <maven.javadoc.plugin.version>3.12.0</maven.javadoc.plugin.version>
     <maven.plugin.plugin.version>3.15.2</maven.plugin.plugin.version>
     <maven.plugin.annotations.version>3.15.2</maven.plugin.annotations.version>
@@ -189,7 +189,7 @@
     <exec.maven.plugin.version>3.6.3</exec.maven.plugin.version>
     <jaxb.maven.plugin.version>4.1.0</jaxb.maven.plugin.version>
 
-    <apache.artemis.version>2.54.0</apache.artemis.version>
+    <apache.artemis.version>2.55.0</apache.artemis.version>
     <angus-activation.version>2.0.3</angus-activation.version>
     <angus-mail.version>2.0.5</angus-mail.version>
     <apache.ant.version>1.10.17</apache.ant.version>
@@ -198,12 +198,12 @@
     <ascii-table-version>1.12.1</ascii-table-version>
     <assertj.version>3.27.7</assertj.version>
     <awaitility.version>4.3.0</awaitility.version>
-    <aws-java-sdk2.version>2.46.17</aws-java-sdk2.version>
-    <bouncycastle.version>1.84</bouncycastle.version>
-    <byte.buddy.version>1.18.10</byte.buddy.version>
+    <aws-java-sdk2.version>2.50.1</aws-java-sdk2.version>
+    <bouncycastle.version>1.85</bouncycastle.version>
+    <byte.buddy.version>1.18.11</byte.buddy.version>
     <commons.dbcp2.version>2.14.0</commons.dbcp2.version>
     <commons.cli.version>1.11.0</commons.cli.version>
-    <commons.codec.version>1.22.0</commons.codec.version>
+    <commons.codec.version>1.22.1</commons.codec.version>
     <commons.io.version>2.22.0</commons.io.version>
     <commons.lang.version>3.20.0</commons.lang.version>
     <commons.logging.version>1.4.0</commons.logging.version>
@@ -214,10 +214,10 @@
     <floci.version>1.4.0</floci.version>
     <ftpserver.version>1.2.1</ftpserver.version>
     <groovy.version>3.0.25</groovy.version>
-    <greenmail.version>2.1.9</greenmail.version>
+    <greenmail.version>2.1.11</greenmail.version>
     <hamcrest.version>3.0</hamcrest.version>
     <htmlunit.version>4.13.0</htmlunit.version>
-    <httpclient.version>5.6.1</httpclient.version>
+    <httpclient.version>5.6.3</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
     <jackson.version>3.2.1</jackson.version>
     <jackson-databind-nullable.version>0.2.10</jackson-databind-nullable.version>
@@ -236,7 +236,7 @@
     <jansi.version>2.4.3</jansi.version>
     <javapoet.version>1.13.0</javapoet.version>
     <jaxb.version>4.0.9</jaxb.version>
-    <jetty.version>12.1.10</jetty.version>
+    <jetty.version>12.1.11</jetty.version>
     <jetty.websocket-api.version>2.0.0</jetty.websocket-api.version>
     <jsch.version>0.1.55</jsch.version>
     <jsonschema-generator.version>5.0.0</jsonschema-generator.version>
@@ -245,12 +245,12 @@
     <json-schema-validator.version>3.0.4</json-schema-validator.version>
     <json-smart.version>2.6.0</json-smart.version>
     <jtidy.version>r938</jtidy.version>
-    <junit.jupiter.version>6.1.0</junit.jupiter.version>
+    <junit.jupiter.version>6.1.2</junit.jupiter.version>
     <junit.version>4.13.2</junit.version>
     <junixsocket.version>2.10.1</junixsocket.version>
-    <k8s.client.version>7.7.0</k8s.client.version>
+    <k8s.client.version>7.8.0</k8s.client.version>
     <kafka.version>4.3.1</kafka.version>
-    <knative-client.version>7.7.0</knative-client.version>
+    <knative-client.version>7.8.0</knative-client.version>
     <log4j2.version>2.25.4</log4j2.version>
     <mockito.version>5.23.0</mockito.version>
     <mockftpserver.version>3.2.0</mockftpserver.version>
@@ -258,9 +258,9 @@
     <okhttp.version>5.4.0</okhttp.version>
     <org.openapitools.version>7.23.0</org.openapitools.version>
     <picoli-version>4.7.7</picoli-version>
-    <postgresql.version>42.7.12</postgresql.version>
-    <quarkus.platform.version>3.37.0</quarkus.platform.version>
-    <quarkus.mcp-server.version>1.13.0</quarkus.mcp-server.version>
+    <postgresql.version>42.7.13</postgresql.version>
+    <quarkus.platform.version>3.38.0</quarkus.platform.version>
+    <quarkus.mcp-server.version>1.13.1</quarkus.mcp-server.version>
     <saaj.version>3.0.6</saaj.version>
     <selenium.version>4.44.0</selenium.version>
     <slf4j.version>2.0.18</slf4j.version>
@@ -271,7 +271,7 @@
     <spring.ws.version>5.0.2</spring.ws.version>
     <spring.integration.version>7.1.0</spring.integration.version>
     <spring.restdocs.version>4.0.1</spring.restdocs.version>
-    <sshd.version>2.18.0</sshd.version>
+    <sshd.version>2.19.0</sshd.version>
     <swagger.version>2.2.37</swagger.version>
     <swagger.parser.version>2.1.45</swagger.parser.version>
     <swagger-request-validator.version>2.46.1</swagger-request-validator.version>
@@ -279,9 +279,9 @@
     <testcontainers.version>2.0.5</testcontainers.version>
     <testng.version>7.12.0</testng.version>
     <!-- bound to https://mvnrepository.com/artifact/io.fabric8/kubernetes-httpclient-vertx/${k8s.client.version} -->
-    <vertx.version>4.5.28</vertx.version>
+    <vertx.version>4.5.31</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
-    <xbean-spring.version>4.30</xbean-spring.version>
+    <xbean-spring.version>4.31</xbean-spring.version>
     <xmlbeans.version>5.2.1</xmlbeans.version>
     <xmlbeans-xpath.version>2.6.0</xmlbeans-xpath.version>
     <xerces.version>2.12.2</xerces.version>
