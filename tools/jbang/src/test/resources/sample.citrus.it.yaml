@@ -20,12 +20,13 @@ actions:
         body:
           data: Howdy
   - send:
-      endpoint: "camel:paho-mqtt5:${mqtt.topic}?brokerUrl=tcp://localhost:12883&amp;clientId=${mqtt.client.id}"
+      endpoint: >- 
+        camel:paho-mqtt5:${mqtt.topic}?brokerUrl=tcp://localhost:12883&amp;clientId=${mqtt.client.id}
       message:
         body:
           data: Hi
   - send:
-      endpoint: "kafka:my-topic"
+      endpoint: kafka:my-topic
       message:
         body:
           data: Hello ${id}

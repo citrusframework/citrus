@@ -18,9 +18,11 @@ package org.citrusframework.jbang.cli.util;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Set;
 
 import org.citrusframework.spi.Resources;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.jbang.cli.CitrusJBangMain.Settings.CAMEL_VERSION_DEFAULT;
@@ -75,6 +77,70 @@ public class YamlCodeAnalyzerTest {
         String[] foundValidationMatcher = Arrays.stream(scanResult.validationMatcher()).sorted().toArray(String[]::new);
         Assert.assertEquals(foundValidationMatcher[0], "ignore");
         Assert.assertEquals(foundValidationMatcher[1], "isNumber");
+    }
+
+    @DataProvider(name = "multilineEndpointVariants")
+    public Object[][] multilineEndpointVariants() {
+        return new Object[][] {
+                { ">", "folded" },
+                { ">-", "folded strip" },
+                { ">+", "folded keep" },
+                { "|", "literal" },
+                { "|-", "literal strip" },
+                { "|+", "literal keep" },
+        };
+    }
+
+    @Test(dataProvider = "multilineEndpointVariants")
+    public void shouldExtractCamelEndpointFromMultilineScalar(String indicator, String description) {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                actions:
+                  - send:
+                      endpoint: %s
+                        camel:paho-mqtt5:myTopic?brokerUrl=tcp://localhost:12883
+                      message:
+                        body:
+                          data: Hi
+                """.formatted(indicator);
+
+        Set<String> components = analyzer.extractCamelEndpointComponents(code);
+        Assert.assertTrue(components.contains("paho-mqtt5"), "Failed to extract Camel endpoint with %s indicator".formatted(description));
+    }
+
+    @Test
+    public void shouldExtractCamelEndpointFromInlineValue() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                actions:
+                  - send:
+                      endpoint: "camel:direct:news"
+                      message:
+                        body:
+                          data: Hi
+                """;
+
+        Set<String> components = analyzer.extractCamelEndpointComponents(code);
+        Assert.assertTrue(components.contains("direct"));
+    }
+
+    @Test
+    public void shouldExtractCamelEndpointFromUnquotedInlineValue() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                actions:
+                  - send:
+                      endpoint: camel:seda:news
+                      message:
+                        body:
+                          data: Hi
+                """;
+
+        Set<String> components = analyzer.extractCamelEndpointComponents(code);
+        Assert.assertTrue(components.contains("seda"));
     }
 
 }
