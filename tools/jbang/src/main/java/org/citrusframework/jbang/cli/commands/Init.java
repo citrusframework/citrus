@@ -52,14 +52,14 @@ public class Init extends CitrusCommand {
     @Override
     public Integer call() throws Exception {
         String ext = FileUtils.getFileExtension(file);
-        String name = FileUtils.getBaseName(file);
-        String content;
         try (InputStream is = ClassLoaderHelper.getClassLoader().getResourceAsStream("templates/" + ext + ".tmpl")) {
             if (is == null) {
                 printer().println("Error: Unsupported file type '%s' (supported types are: feature, java, yaml, xml, groovy)".formatted(ext));
                 return 1;
             }
-            content = FileUtils.readToString(is, StandardCharsets.UTF_8);
+
+            String content = FileUtils.readToString(is, StandardCharsets.UTF_8);
+            String name = FileUtils.getBaseName(FileUtils.getFileName(file));
 
             String targetDir = resolveTargetDirectory(directory);
             Path currentDir = Paths.get(".");
