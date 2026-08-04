@@ -14,4 +14,18 @@
   <name>Citrus :: Tools :: Archetypes :: Quickstart</name>
   <description>Citrus quickstart project</description>
 
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- Do not deploy this module to Maven central -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>

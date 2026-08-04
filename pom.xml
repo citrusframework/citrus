@@ -1848,6 +1848,10 @@
                 <artifact>citrus-test-support</artifact>
                 <artifact>citrus-quarkus-it</artifact>
                 <artifact>citrus-maven-plugin-integration</artifact>
+                <artifact>citrus-archetypes</artifact>
+                <artifact>citrus-quickstart</artifact>
+                <artifact>citrus-quickstart-jms</artifact>
+                <artifact>citrus-quickstart-soap</artifact>
               </excludeArtifacts>
             </configuration>
           </plugin>
