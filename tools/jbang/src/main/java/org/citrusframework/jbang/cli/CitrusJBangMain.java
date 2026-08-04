@@ -60,7 +60,7 @@ public class CitrusJBangMain implements Callable<Integer> {
                         .addSubcommand("stop", new CommandLine(new AgentStop(this))))
                 .addSubcommand("completion", new CommandLine(new Complete(this)));
 
-        commandLine.getCommandSpec().versionProvider(() -> new String[] { "5.0.0-SNAPSHOT" });
+        commandLine.getCommandSpec().versionProvider(() -> new String[] { "5.1.0-SNAPSHOT" });
 
         return commandLine.execute(args);
     }
