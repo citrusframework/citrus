@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.support.SimpleRegistry;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
@@ -146,9 +147,16 @@ public class CamelEndpointComponentTest {
     public void testCreateEndpointWithBeanReference() {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
+        SimpleRegistry registry = new SimpleRegistry();
+        Object newsProvider = new Object();
+
         reset(referenceResolver);
         when(referenceResolver.resolveAll(CamelContext.class)).thenReturn(Collections.singletonMap("myCamelContext", camelContext));
         when(referenceResolver.resolve(CamelContext.class)).thenReturn(camelContext);
+        when(referenceResolver.isResolvable("newsProvider")).thenReturn(true);
+        when(referenceResolver.resolve("newsProvider")).thenReturn(newsProvider);
+        when(camelContext.getRegistry()).thenReturn(registry);
+
         Endpoint endpoint = component.createEndpoint("camel:direct:news?provider=#newsProvider", context);
 
         Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
@@ -156,6 +164,57 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news?provider=#newsProvider");
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertTrue(registry.containsKey("newsProvider"));
+        Assert.assertEquals(registry.lookupByName("newsProvider"), newsProvider);
+    }
+
+    @Test
+    public void testCreateEndpointWithUnknownBeanReference() {
+        CamelEndpointComponent component = new CamelEndpointComponent();
+
+        SimpleRegistry registry = new SimpleRegistry();
+
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(CamelContext.class)).thenReturn(Collections.singletonMap("myCamelContext", camelContext));
+        when(referenceResolver.resolve(CamelContext.class)).thenReturn(camelContext);
+        when(referenceResolver.isResolvable("newsProvider")).thenReturn(false);
+        when(camelContext.getRegistry()).thenReturn(registry);
+
+        Endpoint endpoint = component.createEndpoint("camel:direct:news?provider=#newsProvider", context);
+
+        Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
+
+        Assert.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news?provider=#newsProvider");
+        Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
+        Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertFalse(registry.containsKey("newsProvider"));
+    }
+
+    @Test
+    public void testCreateEndpointWithBeanReferenceNoOverwrite() {
+        CamelEndpointComponent component = new CamelEndpointComponent();
+
+        Object newsProvider = new Object();
+        Object original = new Object();
+        SimpleRegistry registry = new SimpleRegistry();
+        registry.bind("newsProvider", original);
+
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(CamelContext.class)).thenReturn(Collections.singletonMap("myCamelContext", camelContext));
+        when(referenceResolver.resolve(CamelContext.class)).thenReturn(camelContext);
+        when(referenceResolver.isResolvable("newsProvider")).thenReturn(true);
+        when(referenceResolver.resolve("newsProvider")).thenReturn(newsProvider);
+        when(camelContext.getRegistry()).thenReturn(registry);
+
+        Endpoint endpoint = component.createEndpoint("camel:direct:news?provider=#newsProvider", context);
+
+        Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
+
+        Assert.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news?provider=#newsProvider");
+        Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
+        Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertTrue(registry.containsKey("newsProvider"));
+        Assert.assertEquals(registry.lookupByName("newsProvider"), original);
     }
 
     @Test

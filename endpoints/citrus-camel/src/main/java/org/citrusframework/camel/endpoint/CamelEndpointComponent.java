@@ -18,6 +18,8 @@ package org.citrusframework.camel.endpoint;
 
 import java.util.Map;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.NoSuchBeanException;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpointComponent;
@@ -54,8 +56,31 @@ public class CamelEndpointComponent extends AbstractEndpointComponent {
         }
 
         if (context.getReferenceResolver() != null) {
-            endpoint.getEndpointConfiguration().setCamelContext(
-                    CamelUtils.resolveCamelContext(context.getReferenceResolver(), endpoint.getEndpointConfiguration()));
+            CamelContext camelContext = CamelUtils.resolveCamelContext(context.getReferenceResolver(), endpoint.getEndpointConfiguration());
+            endpoint.getEndpointConfiguration().setCamelContext(camelContext);
+
+            parameters.forEach((key, value) -> {
+                if (value.trim().startsWith("#")) {
+                    // found a bean reference in the Camel endpoint URI, make sure that the Camel context knows this bean
+                    String beanRef = value.trim().substring(1);
+
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Resolving bean reference '#{}' in Camel endpoint uri", beanRef);
+                    }
+
+                    boolean missing;
+                    try {
+                        missing = camelContext.getRegistry().lookupByName(beanRef) == null;
+                    } catch (NoSuchBeanException e) {
+                        missing = true;
+                    }
+
+                    if (missing && context.getReferenceResolver().isResolvable(beanRef)) {
+                        logger.info("Propagating bean reference '{}' to Camel registry", beanRef);
+                        camelContext.getRegistry().bind(beanRef, context.getReferenceResolver().resolve(beanRef));
+                    }
+                }
+            });
         }
 
         enrichEndpointConfiguration(endpoint.getEndpointConfiguration(),

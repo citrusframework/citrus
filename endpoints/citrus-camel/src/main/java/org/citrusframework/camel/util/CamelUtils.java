@@ -86,9 +86,9 @@ public class CamelUtils {
                         URISupport.parseQuery(endpointUri).values().stream()
                                 .filter(Objects::nonNull)
                                 .filter(it -> it instanceof String)
-                                .filter(it -> it.toString().startsWith("#"))
-                                .peek(it -> logger.debug("Resolving bean reference '{}' in Camel endpoint uri", it))
-                                .map(it -> it.toString().substring(1))
+                                .map(it -> it.toString().trim())
+                                .filter(it -> it.startsWith("#"))
+                                .map(it -> it.substring(1))
                                 .forEach(beanRef -> {
                                     boolean missing;
                                     try {
