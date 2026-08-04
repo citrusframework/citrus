@@ -31,6 +31,8 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
     private static final Pattern DEPS_MODELINE_PATTERN = Pattern.compile("^#\\s*deps:\\s*(.+)\\s*$", Pattern.MULTILINE);
     private static final Pattern MODULES_MODELINE_PATTERN = Pattern.compile("^#\\s*modules:\\s*(.+)\\s*$", Pattern.MULTILINE);
 
+    private static final String MULTILINE_ENDPOINT_REGEX = "endpoint:\\s*[|>]-?\\+?\\s*\n";
+
     private static final Pattern CAMEL_ENDPOINT_PATTERN = Pattern.compile("^\\s+endpoint:\\s+\"?'?camel:([^\\s:?]+)\"?'?.*$", Pattern.MULTILINE);
 
     private static final Pattern CAMEL_INFRA_SERVICE_PATTERN = Pattern.compile("^\\s+service:\\s*\"?'?([a-zA-Z][a-zA-Z0-9._-]*)\"?'?\\s*$", Pattern.MULTILINE);
@@ -154,7 +156,7 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
     @Override
     public Set<String> extractCamelEndpointComponents(String code) {
         Set<String> names = new HashSet<>();
-        Matcher matcher = CAMEL_ENDPOINT_PATTERN.matcher(code.replaceAll("endpoint:\\s*[|>]\\s*\n", "endpoint: "));
+        Matcher matcher = CAMEL_ENDPOINT_PATTERN.matcher(code.replaceAll(MULTILINE_ENDPOINT_REGEX, "endpoint: "));
         while (matcher.find()) {
             names.add(matcher.group(1));
         }
@@ -192,13 +194,15 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
             }
         }
 
+        String sanitized = code.replaceAll(MULTILINE_ENDPOINT_REGEX, "endpoint: ")
+                .replaceAll("endpoint:\\s+", "endpoint: ");
         for (Map.Entry<String, ComponentDefinition> entry : components.entrySet()) {
             ComponentDefinition component = components.get(entry.getKey());
             String name = Optional.ofNullable(component.group()).orElse(entry.getKey());
 
-            if (code.contains("endpoint: %s".formatted(name))
-                    || code.contains("endpoint: '%s".formatted(name))
-                    || code.contains("endpoint: \"%s".formatted(name))) {
+            if (sanitized.contains("endpoint: %s".formatted(name))
+                    || sanitized.contains("endpoint: '%s".formatted(name))
+                    || sanitized.contains("endpoint: \"%s".formatted(name))) {
                 items.add(name);
                 if (StringUtils.hasText(component.module())) {
                     modules.add(component.module());
