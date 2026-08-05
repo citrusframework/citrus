@@ -22,7 +22,7 @@
 //DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:5.0.0}
 package main;
 
-import org.citrusframework.jbang.CitrusJBangMain;
+import org.citrusframework.jbang.cli.CitrusJBangMain;
 
 /**
  * Main to run CitrusJBang
