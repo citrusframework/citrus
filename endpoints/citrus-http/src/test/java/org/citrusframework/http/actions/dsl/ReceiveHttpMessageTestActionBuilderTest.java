@@ -34,27 +34,46 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
-    private final SelectiveConsumer messageConsumer = Mockito.mock(SelectiveConsumer.class);
-    private final HttpEndpointConfiguration configuration = Mockito.mock(HttpEndpointConfiguration.class);
-    private final HttpClient httpClient = Mockito.mock(HttpClient.class);
-    private final HttpServer httpServer = Mockito.mock(HttpServer.class);
+    @Mock
+    private SelectiveConsumer messageConsumer;
+    @Mock
+    private HttpEndpointConfiguration configuration;
+    @Mock
+    private HttpClient httpClient;
+    @Mock
+    private HttpServer httpServer;
+
+    private AutoCloseable mockCloseable;
+
+    @Override
+    @BeforeMethod
+    public void prepareTest() {
+        super.prepareTest();
+        mockCloseable = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void closeMocks() throws Exception {
+        mockCloseable.close();
+    }
 
     @Test
     public void testHttpRequestProperties() {
-        reset(httpServer, messageConsumer, configuration);
         when(httpServer.createConsumer()).thenReturn(messageConsumer);
         when(httpServer.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -98,7 +117,6 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport imp
 
     @Test
     public void testMessageObjectOverride() {
-        reset(httpServer, messageConsumer, configuration);
         when(httpServer.createConsumer()).thenReturn(messageConsumer);
         when(httpServer.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -151,7 +169,6 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport imp
 
     @Test
     public void testHttpResponseProperties() {
-        reset(httpClient, messageConsumer, configuration);
         when(httpClient.createConsumer()).thenReturn(messageConsumer);
         when(httpClient.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
