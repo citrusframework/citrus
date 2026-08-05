@@ -69,8 +69,8 @@ public class PostgreSQLSettings {
      * @return
      */
     public static String getImageName() {
-        return TestContainersSettings.getDockerRegistry() + System.getProperty(IMAGE_NAME_PROPERTY,
-                System.getenv(IMAGE_NAME_ENV) != null ? System.getenv(IMAGE_NAME_ENV) : IMAGE_NAME_DEFAULT);
+        return TestContainersSettings.getDockerImageName(System.getProperty(IMAGE_NAME_PROPERTY,
+                System.getenv(IMAGE_NAME_ENV) != null ? System.getenv(IMAGE_NAME_ENV) : IMAGE_NAME_DEFAULT));
     }
 
     /**

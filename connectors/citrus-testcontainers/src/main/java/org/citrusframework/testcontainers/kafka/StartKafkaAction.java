@@ -169,7 +169,7 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
                 if (TestContainersSettings.isRegistryMirrorEnabled()) {
                     // make sure the mirror image is declared as compatible with original image
                     imageName = DockerImageName.parse(image).withTag(kafkaVersion)
-                            .asCompatibleSubstituteFor(DockerImageName.parse(image));
+                            .asCompatibleSubstituteFor(DockerImageName.parse(KafkaSettings.getDefaultImageName(implementation)));
                 } else {
                     imageName = DockerImageName.parse(image).withTag(kafkaVersion);
                 }
