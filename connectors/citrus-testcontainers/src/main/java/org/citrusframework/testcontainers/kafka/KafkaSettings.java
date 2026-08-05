@@ -99,16 +99,29 @@ public class KafkaSettings {
      */
     public static String getImageName(KafkaImplementation implementation) {
         return switch (implementation) {
-            case CONFLUENT -> TestContainersSettings.getDockerRegistry() + System.getProperty(CONFLUENT_IMAGE_NAME_PROPERTY,
-                    System.getenv(CONFLUENT_IMAGE_NAME_ENV) != null ? System.getenv(CONFLUENT_IMAGE_NAME_ENV) : CONFLUENT_IMAGE_NAME_DEFAULT);
-            case APACHE -> TestContainersSettings.getDockerRegistry() + System.getProperty(APACHE_IMAGE_NAME_PROPERTY,
-                    System.getenv(APACHE_IMAGE_NAME_ENV) != null ? System.getenv(APACHE_IMAGE_NAME_ENV) : APACHE_IMAGE_NAME_DEFAULT);
-            case APACHE_NATIVE -> TestContainersSettings.getDockerRegistry() + System.getProperty(APACHE_NATIVE_IMAGE_NAME_PROPERTY,
-                    System.getenv(APACHE_NATIVE_IMAGE_NAME_ENV) != null ? System.getenv(APACHE_NATIVE_IMAGE_NAME_ENV) : APACHE_NATIVE_IMAGE_NAME_DEFAULT);
-            case STRIMZI -> TestContainersSettings.getDockerRegistry() + System.getProperty(STRIMZI_IMAGE_NAME_PROPERTY,
-                    System.getenv(STRIMZI_IMAGE_NAME_ENV) != null ? System.getenv(STRIMZI_IMAGE_NAME_ENV) : STRIMZI_IMAGE_NAME_DEFAULT);
-            case DEFAULT -> TestContainersSettings.getDockerRegistry() + System.getProperty(IMAGE_NAME_PROPERTY,
-                    System.getenv(IMAGE_NAME_ENV) != null ? System.getenv(IMAGE_NAME_ENV) : IMAGE_NAME_DEFAULT);
+            case CONFLUENT -> TestContainersSettings.getDockerImageName(System.getProperty(CONFLUENT_IMAGE_NAME_PROPERTY,
+                    System.getenv(CONFLUENT_IMAGE_NAME_ENV) != null ? System.getenv(CONFLUENT_IMAGE_NAME_ENV) : CONFLUENT_IMAGE_NAME_DEFAULT));
+            case APACHE -> TestContainersSettings.getDockerImageName(System.getProperty(APACHE_IMAGE_NAME_PROPERTY,
+                    System.getenv(APACHE_IMAGE_NAME_ENV) != null ? System.getenv(APACHE_IMAGE_NAME_ENV) : APACHE_IMAGE_NAME_DEFAULT));
+            case APACHE_NATIVE -> TestContainersSettings.getDockerImageName(System.getProperty(APACHE_NATIVE_IMAGE_NAME_PROPERTY,
+                    System.getenv(APACHE_NATIVE_IMAGE_NAME_ENV) != null ? System.getenv(APACHE_NATIVE_IMAGE_NAME_ENV) : APACHE_NATIVE_IMAGE_NAME_DEFAULT));
+            case STRIMZI -> TestContainersSettings.getDockerImageName(System.getProperty(STRIMZI_IMAGE_NAME_PROPERTY,
+                    System.getenv(STRIMZI_IMAGE_NAME_ENV) != null ? System.getenv(STRIMZI_IMAGE_NAME_ENV) : STRIMZI_IMAGE_NAME_DEFAULT));
+            case DEFAULT -> TestContainersSettings.getDockerImageName(System.getProperty(IMAGE_NAME_PROPERTY,
+                    System.getenv(IMAGE_NAME_ENV) != null ? System.getenv(IMAGE_NAME_ENV) : IMAGE_NAME_DEFAULT));
+        };
+    }
+
+    /**
+     * Default Kafka image name without any registry prefix.
+     */
+    public static String getDefaultImageName(KafkaImplementation implementation) {
+        return switch (implementation) {
+            case CONFLUENT -> CONFLUENT_IMAGE_NAME_DEFAULT;
+            case APACHE -> APACHE_IMAGE_NAME_DEFAULT;
+            case APACHE_NATIVE -> APACHE_NATIVE_IMAGE_NAME_DEFAULT;
+            case STRIMZI -> STRIMZI_IMAGE_NAME_DEFAULT;
+            case DEFAULT -> IMAGE_NAME_DEFAULT;
         };
     }
 

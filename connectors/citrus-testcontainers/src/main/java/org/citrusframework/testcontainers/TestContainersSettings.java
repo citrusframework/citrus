@@ -173,4 +173,32 @@ public final class TestContainersSettings {
 
         return registry;
     }
+
+    /**
+     * Applies the Docker registry or mirror prefix to the given image name.
+     * Images from alternative registries (e.g. quay.io, ghcr.io) are returned unchanged
+     * because the mirror only covers Docker Hub images.
+     * @param imageName the Docker image name (e.g. "postgres", "apache/kafka", "quay.io/strimzi/kafka")
+     * @return the image name with registry prefix applied if appropriate
+     */
+    public static String getDockerImageName(String imageName) {
+        if (hasAlternateRegistry(imageName)) {
+            return imageName;
+        }
+        return getDockerRegistry() + imageName;
+    }
+
+    /**
+     * Checks whether the image name references an alternate (non-Docker Hub) registry.
+     * An image has an alternate registry when the first path segment contains a dot or colon
+     * (e.g. "quay.io/strimzi/kafka", "localhost:5000/myimage").
+     */
+    private static boolean hasAlternateRegistry(String imageName) {
+        int slashIndex = imageName.indexOf('/');
+        if (slashIndex < 0) {
+            return false;
+        }
+        String firstSegment = imageName.substring(0, slashIndex);
+        return firstSegment.contains(".") || firstSegment.contains(":");
+    }
 }
