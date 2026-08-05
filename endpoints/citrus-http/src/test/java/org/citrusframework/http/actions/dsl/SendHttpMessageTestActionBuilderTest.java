@@ -34,24 +34,41 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.messaging.Producer;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpMethod;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
-    private final HttpClient httpClient = Mockito.mock(HttpClient.class);
-    private final Producer messageProducer = Mockito.mock(Producer.class);
+    @Mock
+    private HttpClient httpClient;
+    @Mock
+    private Producer messageProducer;
+
+    private AutoCloseable mockCloseable;
+
+    @Override
+    @BeforeMethod
+    public void prepareTest() {
+        super.prepareTest();
+        mockCloseable = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterMethod
+    public void closeMocks() throws Exception {
+        mockCloseable.close();
+    }
 
     @Test
     public void testFork() {
-        reset(httpClient, messageProducer);
         when(httpClient.createProducer()).thenReturn(messageProducer);
         when(httpClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -116,7 +133,6 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
 
     @Test
     public void testMessageObjectOverride() {
-        reset(httpClient, messageProducer);
         when(httpClient.createProducer()).thenReturn(messageProducer);
         when(httpClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -163,7 +179,6 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
 
     @Test
     public void testHttpMethod() {
-        reset(httpClient, messageProducer);
         when(httpClient.createProducer()).thenReturn(messageProducer);
         when(httpClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -198,7 +213,6 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
 
     @Test
     public void testHttpRequestUriAndPath() {
-        reset(httpClient, messageProducer);
         when(httpClient.createProducer()).thenReturn(messageProducer);
         when(httpClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -238,7 +252,6 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
 
     @Test
     public void testHttpRequestUriAndQueryParams() {
-        reset(httpClient, messageProducer);
         when(httpClient.createProducer()).thenReturn(messageProducer);
         when(httpClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
