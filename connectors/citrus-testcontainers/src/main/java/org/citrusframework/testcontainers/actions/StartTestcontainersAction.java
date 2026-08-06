@@ -68,7 +68,7 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
 
         container.start();
 
-        if (containerName != null && !context.getReferenceResolver().isResolvable(containerName)) {
+        if (containerName != null) {
             context.getReferenceResolver().bind(containerName, container);
         }
 

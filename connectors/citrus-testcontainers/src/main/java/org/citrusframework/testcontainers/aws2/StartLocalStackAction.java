@@ -89,14 +89,12 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
                 clientName = context.replaceDynamicContentInString(
                         options.getOrDefault(clientName + "Name", clientName));
 
-                if (context.getReferenceResolver().isResolvable(clientName)) {
-                    logger.debug("Client {} already exists - do not overwrite", clientName);
-                    // client bean with same name already exists - do not overwrite
-                    continue;
-                }
-
                 Optional<ClientFactory<?>> clientFactory = clientFactoryResolver.resolve(context.getReferenceResolver(), service);
                 if (clientFactory.isPresent()) {
+                    if (context.getReferenceResolver().isResolvable(clientName)) {
+                        logger.debug("Overwriting existing client {} with new instance", clientName);
+                    }
+
                     Object client = clientFactory.get().createClient(container, context.resolveDynamicValuesInMap(options));
                     PropertyUtils.configure(clientName, client, context.getReferenceResolver());
                     container.addClient(service, client);

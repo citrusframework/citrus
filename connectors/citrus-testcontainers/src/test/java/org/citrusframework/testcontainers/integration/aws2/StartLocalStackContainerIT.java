@@ -46,6 +46,23 @@ public class StartLocalStackContainerIT extends AbstractTestcontainersIT impleme
         then(this::verifyContainer);
     }
 
+    @Test
+    @CitrusTest
+    public void shouldOverwriteExistingClient() {
+        given(doFinally().actions(testcontainers().stop()
+                .containerName(LocalStackSettings.CONTAINER_NAME_DEFAULT)));
+
+        given((TestContext context) ->
+                context.getReferenceResolver().bind("s3Client", "staleClient"));
+
+        when(testcontainers()
+                .localstack()
+                .start()
+                .withService(AwsService.S3));
+
+        then(this::verifyClientOverwritten);
+    }
+
     private void verifyContainer(TestContext context) {
         try (DockerClient dockerClient = createDockerClient()) {
             InspectContainerResponse response = dockerClient.inspectContainerCmd(context.getVariable("${CITRUS_TESTCONTAINERS_LOCALSTACK_CONTAINER_ID}"))
@@ -59,5 +76,12 @@ public class StartLocalStackContainerIT extends AbstractTestcontainersIT impleme
 
         // verify auto created S3 client
         Assert.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
+    }
+
+    private void verifyClientOverwritten(TestContext context) {
+        Assert.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
+        Object client = context.getReferenceResolver().resolve("s3Client");
+        Assert.assertNotEquals(client, "staleClient",
+                "Expected s3Client to be overwritten with a real client instance");
     }
 }
