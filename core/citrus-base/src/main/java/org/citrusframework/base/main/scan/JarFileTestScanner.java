@@ -56,7 +56,7 @@ public class JarFileTestScanner extends AbstractTestScanner {
                 for (Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements();) {
                     JarEntry entry = entries.nextElement();
                     String className = FileUtils.getBaseName(entry.getName()).replace( "/", "." );
-                    boolean isTestClass = (packageIsEmpty || packageAsPath.startsWith(entry.getName()))
+                    boolean isTestClass = (packageIsEmpty || entry.getName().startsWith(packageAsPath))
                         && entry.getName().endsWith(".class")
                         && isIncluded(className);
                     if (isTestClass) {
