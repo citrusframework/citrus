@@ -16,12 +16,12 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -151,8 +151,24 @@ public class KafkaEndpointTest {
                 .isNotNull()
                 .extracting(KafkaEndpoint::getEndpointConfiguration)
                 .isNotNull()
-                .extracting(KafkaEndpointConfiguration::getServer)
+                .extracting(KafkaEndpointConfiguration::getBootstrapServers)
                 .isEqualTo(server);
+    }
+
+    @Test
+    public void newKafkaEndpoint_acceptsBootstrapServers() {
+        var fixture = KafkaEndpoint.builder()
+                .bootstrapServers("localhost:9094")
+                .build();
+
+        assertThat(fixture)
+                .isNotNull()
+                .extracting(KafkaEndpoint::getEndpointConfiguration)
+                .isNotNull()
+                .satisfies(config -> {
+                    assertThat(config.getBootstrapServers()).isEqualTo("localhost:9094");
+                    assertThat(config.getServer()).isEqualTo("localhost:9094");
+                });
     }
 
     @Test

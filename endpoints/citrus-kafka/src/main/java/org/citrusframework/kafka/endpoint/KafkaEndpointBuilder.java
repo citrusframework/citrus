@@ -70,15 +70,28 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     /**
      * Sets the server property.
      */
-    public KafkaEndpointBuilder server(String server) {
-        endpoint.getEndpointConfiguration().setServer(server);
-        return this;
+    public KafkaEndpointBuilder server(String bootstrapServers) {
+        return bootstrapServers(bootstrapServers);
     }
 
     @SchemaProperty(description = "Sets the Kafka bootstrap server.")
     @XmlAttribute
     public void setServer(String server) {
-        server(server);
+        bootstrapServers(server);
+    }
+
+    /**
+     * Sets the bootstrapServers property.
+     */
+    public KafkaEndpointBuilder bootstrapServers(String bootstrapServers) {
+        endpoint.getEndpointConfiguration().setBootstrapServers(bootstrapServers);
+        return this;
+    }
+
+    @SchemaProperty(description = "Sets the Kafka bootstrap servers.")
+    @XmlAttribute(name = "bootstrap-servers")
+    public void setBootstrapServers(String bootstrapServers) {
+        bootstrapServers(bootstrapServers);
     }
 
     /**

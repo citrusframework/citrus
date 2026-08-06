@@ -16,17 +16,17 @@
 
 package org.citrusframework.kafka.config.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.citrusframework.annotations.CitrusEndpointConfig;
 import org.citrusframework.kafka.message.KafkaMessageHeaders;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 /**
  * @since 2.8
@@ -43,10 +43,16 @@ public @interface KafkaEndpointConfig {
     String topic() default "";
 
     /**
-     * Server connection url.
+     * Server connection url (alias for bootstrapServers).
      * @return
      */
-    String server() default "localhost:9092";
+    String server() default "";
+
+    /**
+     * Bootstrap servers connection url.
+     * @return
+     */
+    String bootstrapServers() default "localhost:9092";
 
     /**
      * Server offset reset.

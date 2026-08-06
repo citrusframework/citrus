@@ -16,6 +16,9 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import java.util.Collections;
+import java.util.concurrent.Future;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -33,9 +36,6 @@ import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
-import java.util.concurrent.Future;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
@@ -112,7 +112,7 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSendMessageTimeout() {
         KafkaEndpoint endpoint = new KafkaEndpoint();
-        endpoint.getEndpointConfiguration().setServer("localhost:" + SocketUtils.findAvailableTcpPort());
+        endpoint.getEndpointConfiguration().setBootstrapServers("localhost:" + SocketUtils.findAvailableTcpPort());
         endpoint.getEndpointConfiguration().setTopic("test");
         endpoint.getEndpointConfiguration().setProducerProperties(Collections.singletonMap(ProducerConfig.MAX_BLOCK_MS_CONFIG, 1000));
 
@@ -131,7 +131,7 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Message is empty - unable to send empty message")
     public void testSendEmptyMessage() {
         KafkaEndpoint endpoint = new KafkaEndpoint();
-        endpoint.getEndpointConfiguration().setServer("localhost:9092");
+        endpoint.getEndpointConfiguration().setBootstrapServers("localhost:9092");
         endpoint.getEndpointConfiguration().setTopic("test");
 
         endpoint.createProducer().send(null, context);

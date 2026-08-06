@@ -77,7 +77,7 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
 
     static KafkaEndpoint newKafkaEndpoint(
             @Nullable Boolean randomConsumerGroup,
-            @Nullable String server,
+            @Nullable String bootstrapServers,
             @Nullable Long timeout,
             @Nullable String topic,
             KafkaMessageSelectorFactory.KafkaMessageSelectorFactories customStrategies,
@@ -89,8 +89,8 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
             kafkaEndpoint.getEndpointConfiguration()
                     .setConsumerGroup(KAFKA_PREFIX + RandomStringUtils.insecure().nextAlphabetic(10).toLowerCase());
         }
-        if (hasText(server)) {
-            kafkaEndpoint.getEndpointConfiguration().setServer(server);
+        if (hasText(bootstrapServers)) {
+            kafkaEndpoint.getEndpointConfiguration().setBootstrapServers(bootstrapServers);
         }
         if (nonNull(timeout)) {
             kafkaEndpoint.getEndpointConfiguration().setTimeout(timeout);
@@ -222,6 +222,11 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
 
         public SimpleKafkaEndpointBuilder server(String server) {
             this.server = server;
+            return this;
+        }
+
+        public SimpleKafkaEndpointBuilder bootstrapServers(String bootstrapServers) {
+            this.server = bootstrapServers;
             return this;
         }
 

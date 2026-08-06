@@ -40,6 +40,10 @@
                                random-consumer-group="true"
                                thread-safe-consumer="true"/>
 
+  <citrus-kafka:endpoint id="kafkaEndpoint5"
+                               bootstrap-servers="localhost:9094"
+                               topic="test"/>
+
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <util:map id="producerProps">

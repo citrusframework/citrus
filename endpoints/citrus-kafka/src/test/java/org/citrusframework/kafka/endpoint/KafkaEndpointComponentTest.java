@@ -40,7 +40,7 @@ public class KafkaEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
 
         Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getServer(), "localhost:9092");
+        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers(), "localhost:9092");
         Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
     }
 
@@ -53,7 +53,7 @@ public class KafkaEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
 
         Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getServer(), "localhost:9091");
+        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
         Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
     }
 
@@ -66,7 +66,21 @@ public class KafkaEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
 
         Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getServer(), "localhost:9091");
+        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
+        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+    }
+
+    @Test
+    public void testCreateEndpointWithBootstrapServersParameter() {
+        KafkaEndpointComponent component = new KafkaEndpointComponent();
+
+        Endpoint endpoint = component.createEndpoint("kafka:test?bootstrapServers=localhost:9091&timeout=10000", context);
+
+        Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
+
+        Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
+        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
+        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
         Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
     }
 
@@ -79,7 +93,7 @@ public class KafkaEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
 
         Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
-        Assert.assertNull(((KafkaEndpoint) endpoint).getEndpointConfiguration().getServer());
+        Assert.assertNull(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers());
     }
 
     @Test

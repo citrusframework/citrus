@@ -44,6 +44,7 @@ public class KafkaEndpointParser extends AbstractEndpointParser {
 
         setPropertyValue(endpointConfiguration, element.getAttribute("client-id"), "clientId");
         setPropertyValue(endpointConfiguration, element.getAttribute("server"), "server");
+        setPropertyValue(endpointConfiguration, element.getAttribute("bootstrap-servers"), "bootstrapServers");
         setPropertyValue(endpointConfiguration, element.getAttribute("topic"), "topic");
         setPropertyValue(endpointConfiguration, element.getAttribute("partition"), "partition");
 

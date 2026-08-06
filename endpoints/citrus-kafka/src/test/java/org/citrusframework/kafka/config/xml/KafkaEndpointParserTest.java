@@ -16,6 +16,8 @@
 
 package org.citrusframework.kafka.config.xml;
 
+import java.util.Map;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
@@ -31,15 +33,9 @@ import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import org.testng.annotations.Test;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -48,13 +44,13 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
         Map<String, KafkaEndpoint> endpoints = beanDefinitionContext.getBeansOfType(KafkaEndpoint.class);
 
         assertThat(endpoints)
-            .hasSize(4);
+            .hasSize(5);
 
         // 1st message receiver
         KafkaEndpoint kafkaEndpoint = endpoints.get("kafkaEndpoint1");
         assertNull(kafkaEndpoint.getEndpointConfiguration().getClientId());
-        assertNotNull(kafkaEndpoint.getEndpointConfiguration().getServer());
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getServer(), "localhost:9091");
+        assertNotNull(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
+        assertEquals(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getHeaderMapper().getClass(), KafkaMessageHeaderMapper.class);
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getMessageConverter().getClass(), KafkaMessageConverter.class);
         assertTrue(kafkaEndpoint.getEndpointConfiguration().isAutoCommit());
@@ -76,8 +72,8 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
         kafkaEndpoint = endpoints.get("kafkaEndpoint2");
         assertNotNull(kafkaEndpoint.getEndpointConfiguration().getClientId());
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getClientId(), "kafkaEndpoint2");
-        assertNotNull(kafkaEndpoint.getEndpointConfiguration().getServer());
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getServer(), "localhost:9092");
+        assertNotNull(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
+        assertEquals(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers(), "localhost:9092");
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getHeaderMapper(), beanDefinitionContext.getBean("headerMapper"));
         assertEquals(kafkaEndpoint.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
         assertFalse(kafkaEndpoint.getEndpointConfiguration().isAutoCommit());
@@ -95,8 +91,8 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
         // 3rd message receiver
         kafkaEndpoint = endpoints.get("kafkaEndpoint3");
-        assertNotNull(kafkaEndpoint.getEndpointConfiguration().getServer());
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getServer(), "localhost:9093");
+        assertNotNull(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
+        assertEquals(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers(), "localhost:9093");
         assertNull(kafkaEndpoint.getEndpointConfiguration().getTopic());
         assertNotNull(kafkaEndpoint.getActor());
         assertEquals(kafkaEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
@@ -113,5 +109,12 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
             .hasSize(23)
             .containsPattern(".*[a-z]{10}$");
         assertEquals(kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer(), true);
+
+        // 5th message receiver (bootstrap-servers alias)
+        kafkaEndpoint = endpoints.get("kafkaEndpoint5");
+        assertNotNull(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
+        assertEquals(kafkaEndpoint.getEndpointConfiguration().getServer(), "localhost:9094");
+        assertEquals(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers(), "localhost:9094");
+        assertEquals(kafkaEndpoint.getEndpointConfiguration().getTopic(), "test");
     }
 }
