@@ -128,7 +128,7 @@ public class KafkaProducer implements Producer {
      */
     private org.apache.kafka.clients.producer.KafkaProducer<Object, Object> createKafkaProducer() {
         Map<String, Object> producerProps = new HashMap<>();
-        producerProps.put(BOOTSTRAP_SERVERS_CONFIG, endpointConfiguration.getServer());
+        producerProps.put(BOOTSTRAP_SERVERS_CONFIG, endpointConfiguration.getBootstrapServers());
         producerProps.put(REQUEST_TIMEOUT_MS_CONFIG, Long.valueOf(endpointConfiguration.getTimeout()).intValue());
         producerProps.put(KEY_SERIALIZER_CLASS_CONFIG, endpointConfiguration.getKeySerializer());
         producerProps.put(VALUE_SERIALIZER_CLASS_CONFIG, endpointConfiguration.getValueSerializer());

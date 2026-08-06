@@ -48,7 +48,7 @@ import static org.mockito.Mockito.when;
 public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint
-    @KafkaEndpointConfig(server="localhost:9091", topic="test")
+    @KafkaEndpointConfig(bootstrapServers="localhost:9091", topic="test")
     private KafkaEndpoint kafkaEndpoint1;
 
     @CitrusEndpoint
@@ -70,12 +70,16 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
     private KafkaEndpoint kafkaEndpoint2;
 
     @CitrusEndpoint
-    @KafkaEndpointConfig(server="localhost:9093",
+    @KafkaEndpointConfig(bootstrapServers="localhost:9093",
             topic="test",
             producerProperties = "producerProps",
             consumerProperties = "consumerProps",
             actor="testActor")
     private KafkaEndpoint kafkaEndpoint3;
+
+    @CitrusEndpoint
+    @KafkaEndpointConfig(server="localhost:9094", topic="test")
+    private KafkaEndpoint kafkaEndpoint4;
 
     @Mock
     private ReferenceResolver referenceResolver;
@@ -105,8 +109,8 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st endpoint
-        Assert.assertNotNull(kafkaEndpoint1.getEndpointConfiguration().getServer());
-        Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getServer(), "localhost:9091");
+        Assert.assertNotNull(kafkaEndpoint1.getEndpointConfiguration().getBootstrapServers());
+        Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
         Assert.assertNull(kafkaEndpoint1.getEndpointConfiguration().getClientId());
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getHeaderMapper().getClass(), KafkaMessageHeaderMapper.class);
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getMessageConverter().getClass(), KafkaMessageConverter.class);
@@ -123,8 +127,8 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getValueDeserializer(), StringDeserializer.class);
 
         // 2nd endpoint
-        Assert.assertNotNull(kafkaEndpoint2.getEndpointConfiguration().getServer());
-        Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getServer(), "localhost:9092");
+        Assert.assertNotNull(kafkaEndpoint2.getEndpointConfiguration().getBootstrapServers());
+        Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getBootstrapServers(), "localhost:9092");
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getClientId(), "kafkaEndpoint2");
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getHeaderMapper(), headerMapper);
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getMessageConverter(), messageConverter);
@@ -143,6 +147,12 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
         // 3rd endpoint
         Assert.assertNotNull(kafkaEndpoint3.getActor());
         Assert.assertEquals(kafkaEndpoint3.getActor(), testActor);
+
+        // 4th endpoint (bootstrapServers alias)
+        Assert.assertNotNull(kafkaEndpoint4.getEndpointConfiguration().getBootstrapServers());
+        Assert.assertEquals(kafkaEndpoint4.getEndpointConfiguration().getServer(), "localhost:9094");
+        Assert.assertEquals(kafkaEndpoint4.getEndpointConfiguration().getBootstrapServers(), "localhost:9094");
+        Assert.assertEquals(kafkaEndpoint4.getEndpointConfiguration().getTopic(), "test");
     }
 
     @Test

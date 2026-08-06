@@ -129,6 +129,11 @@
           "description": "Sets the auto commit interval.",
           "$comment": "group:consume"
         },
+        "bootstrapServers": {
+          "type": "string",
+          "title": "BootstrapServers",
+          "description": "Sets the Kafka bootstrap servers."
+        },
         "clientId": {
           "type": "string",
           "title": "ClientId",
@@ -626,6 +631,11 @@
           "title": "AutoCommitInterval",
           "description": "Sets the auto commit interval.",
           "$comment": "group:consume"
+        },
+        "bootstrapServers": {
+          "type": "string",
+          "title": "BootstrapServers",
+          "description": "Sets the Kafka bootstrap servers."
         },
         "clientId": {
           "type": "string",

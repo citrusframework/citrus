@@ -16,6 +16,9 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jakarta.annotation.Nonnull;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
@@ -26,9 +29,6 @@ import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
 import org.citrusframework.kafka.message.KafkaMessageConverter;
 import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
 import org.citrusframework.kafka.message.KafkaMessageHeaders;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class KafkaEndpointConfiguration extends AbstractPollableEndpointConfiguration {
 
@@ -48,9 +48,9 @@ public class KafkaEndpointConfiguration extends AbstractPollableEndpointConfigur
     private String topic;
 
     /**
-     * List of server to connect with
+     * List of Kafka bootstrap servers to connect with
      */
-    private String server = "localhost:9092";
+    private String bootstrapServers = "localhost:9092";
 
     /**
      * The header mapper
@@ -125,11 +125,19 @@ public class KafkaEndpointConfiguration extends AbstractPollableEndpointConfigur
     }
 
     public String getServer() {
-        return server;
+        return bootstrapServers;
     }
 
     public void setServer(String server) {
-        this.server = server;
+        this.bootstrapServers = server;
+    }
+
+    public String getBootstrapServers() {
+        return bootstrapServers;
+    }
+
+    public void setBootstrapServers(String bootstrapServers) {
+        this.bootstrapServers = bootstrapServers;
     }
 
     public KafkaMessageHeaderMapper getHeaderMapper() {

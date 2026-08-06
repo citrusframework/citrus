@@ -40,12 +40,13 @@ public class KafkaEndpointConfigParser implements AnnotationConfigParser<KafkaEn
         KafkaEndpointBuilder builder = new KafkaEndpointBuilder();
 
         String server = context.replaceDynamicContentInString(annotation.server());
+        String bootstrapServers = StringUtils.hasText(server) ? server : context.replaceDynamicContentInString(annotation.bootstrapServers());
 
-        if (!StringUtils.hasText(server)) {
-            throw new CitrusRuntimeException("Required server is missing for kafka configuration");
+        if (!StringUtils.hasText(bootstrapServers)) {
+            throw new CitrusRuntimeException("Required bootstrapServers property is missing for kafka configuration");
         }
 
-        builder.server(server);
+        builder.bootstrapServers(bootstrapServers);
         builder.topic(context.replaceDynamicContentInString(annotation.topic()));
         builder.partition(annotation.partition());
 

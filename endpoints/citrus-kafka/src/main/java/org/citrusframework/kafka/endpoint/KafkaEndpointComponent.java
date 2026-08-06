@@ -50,6 +50,10 @@ public class KafkaEndpointComponent extends AbstractEndpointComponent {
             endpoint.getEndpointConfiguration().setTopic(parameters.getOrDefault("topic", resourcePath));
         }
 
+        if (parameters.containsKey("server")) {
+            parameters.put("bootstrapServers", parameters.remove("server"));
+        }
+
         enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);
 
         return endpoint;

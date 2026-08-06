@@ -16,27 +16,20 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import static java.util.UUID.randomUUID;
-import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG;
-import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG;
-import static org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG;
-import static org.apache.kafka.clients.consumer.ConsumerConfig.CLIENT_ID_CONFIG;
-import static org.apache.kafka.clients.consumer.ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG;
-import static org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG;
-import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
-import static org.apache.kafka.clients.consumer.ConsumerConfig.MAX_POLL_RECORDS_CONFIG;
-import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
-import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
-
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.util.UUID.randomUUID;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
+import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
 
 public class KafkaConsumer extends AbstractSelectiveMessageConsumer {
 
@@ -106,7 +99,7 @@ public class KafkaConsumer extends AbstractSelectiveMessageConsumer {
         Map<String, Object> consumerProps = new HashMap<>();
         consumerProps.put(CLIENT_ID_CONFIG, Optional.ofNullable(getEndpointConfiguration().getClientId()).orElseGet(() -> KAFKA_PREFIX + "consumer_" + randomUUID()));
         consumerProps.put(GROUP_ID_CONFIG, getEndpointConfiguration().getConsumerGroup());
-        consumerProps.put(BOOTSTRAP_SERVERS_CONFIG, Optional.ofNullable(getEndpointConfiguration().getServer()).orElse("localhost:9092"));
+        consumerProps.put(BOOTSTRAP_SERVERS_CONFIG, Optional.ofNullable(getEndpointConfiguration().getBootstrapServers()).orElse("localhost:9092"));
         consumerProps.put(MAX_POLL_RECORDS_CONFIG, 1);
         consumerProps.put(ENABLE_AUTO_COMMIT_CONFIG, getEndpointConfiguration().isAutoCommit());
         consumerProps.put(AUTO_COMMIT_INTERVAL_MS_CONFIG, getEndpointConfiguration().getAutoCommitInterval());

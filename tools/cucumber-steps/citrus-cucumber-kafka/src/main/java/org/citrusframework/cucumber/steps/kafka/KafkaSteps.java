@@ -101,7 +101,7 @@ public class KafkaSteps {
         String offsetReset = connectionProps.getOrDefault("offsetReset", "earliest");
 
         setTopic(context.replaceDynamicContentInString(topicName));
-        kafkaEndpoint.getEndpointConfiguration().setServer(context.replaceDynamicContentInString(url));
+        kafkaEndpoint.getEndpointConfiguration().setBootstrapServers(context.replaceDynamicContentInString(url));
         kafkaEndpoint.getEndpointConfiguration().setOffsetReset(context.replaceDynamicContentInString(offsetReset));
         kafkaEndpoint.getEndpointConfiguration().setConsumerGroup(context.replaceDynamicContentInString(consumerGroup));
     }
