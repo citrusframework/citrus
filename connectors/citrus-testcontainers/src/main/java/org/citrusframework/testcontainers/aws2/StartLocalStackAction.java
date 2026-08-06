@@ -86,7 +86,8 @@ public class StartLocalStackAction extends StartTestcontainersAction<LocalStackC
         if (autoCreateClients) {
             for (AwsService service : container.getServices()) {
                 String clientName = "%sClient".formatted(service.getServiceName());
-                clientName = options.getOrDefault(clientName + "Name", clientName);
+                clientName = context.replaceDynamicContentInString(
+                        options.getOrDefault(clientName + "Name", clientName));
 
                 if (context.getReferenceResolver().isResolvable(clientName)) {
                     logger.debug("Client {} already exists - do not overwrite", clientName);
