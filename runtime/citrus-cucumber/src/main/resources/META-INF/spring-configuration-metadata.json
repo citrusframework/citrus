@@ -1,0 +1,52 @@
+{
+  "groups": [
+    {
+      "name": "citrus.cucumber",
+      "type": "org.citrusframework.cucumber.CucumberSettings",
+      "description": "Cucumber runtime settings for Citrus"
+    }
+  ],
+  "properties": [
+    {
+      "name": "cluster.wildcard.domain",
+      "type": "java.lang.String",
+      "description": "Cluster wildcard domain for Kubernetes service lookups.",
+      "sourceType": "org.citrusframework.cucumber.CucumberSettings"
+    },
+    {
+      "name": "citrus.namespace",
+      "type": "java.lang.String",
+      "description": "Namespace for Kubernetes/Knative client operations.",
+      "sourceType": "org.citrusframework.cucumber.CucumberSettings",
+      "defaultValue": "default"
+    },
+    {
+      "name": "citrus.namespace",
+      "type": "java.lang.String",
+      "description": "Default operator namespace for Citrus operations.",
+      "sourceType": "org.citrusframework.cucumber.CucumberSettings"
+    },
+    {
+      "name": "citrus.cluster.type",
+      "type": "java.lang.String",
+      "description": "Cluster type that Citrus is running on.",
+      "sourceType": "org.citrusframework.cucumber.CucumberSettings",
+      "defaultValue": "KUBERNETES"
+    },
+    {
+      "name": "citrus.test.id",
+      "type": "java.lang.String",
+      "description": "Test identifier also set as label on the Pod running the test.",
+      "sourceType": "org.citrusframework.cucumber.CucumberSettings",
+      "defaultValue": "citrus-test"
+    },
+    {
+      "name": "citrus.termination.log",
+      "type": "java.lang.String",
+      "description": "File path for the termination log.",
+      "sourceType": "org.citrusframework.cucumber.CucumberSettings",
+      "defaultValue": "target/termination.log"
+    }
+  ],
+  "hints": []
+}

@@ -18,6 +18,10 @@ package org.citrusframework.base.report;
 
 import java.util.Arrays;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.test.flow.report", description = "Test flow report settings")
 public class TestFlowReporterSettings {
 
     private TestFlowReporterSettings() {
@@ -25,10 +29,12 @@ public class TestFlowReporterSettings {
     }
 
     /** Reporter related settings */
+    @CitrusConfigProperty(description = "Report output data format (json, yaml, or comma-separated)", defaultValue = "json")
     private static final String REPORT_OUTPUT_PROPERTY = "citrus.test.flow.report.output";
     private static final String REPORT_OUTPUT_ENV = "CITRUS_TEST_FLOW_REPORT_OUTPUT";
     private static final String REPORT_OUTPUT_DEFAULT = "json";
 
+    @CitrusConfigProperty(description = "Enable or disable the test flow report", type = "java.lang.Boolean", defaultValue = "true")
     private static final String REPORT_ENABLED_PROPERTY = "citrus.test.flow.report.enabled";
     private static final String REPORT_ENABLED_ENV = "CITRUS_TEST_FLOW_REPORT_ENABLED";
     private static final String REPORT_ENABLED_DEFAULT = Boolean.TRUE.toString();

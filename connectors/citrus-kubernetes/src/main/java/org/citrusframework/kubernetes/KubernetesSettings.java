@@ -28,10 +28,13 @@ import io.fabric8.kubernetes.api.model.NamedContext;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import org.citrusframework.api.kubernetes.ClusterType;
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@CitrusConfigProperties(prefix = "citrus.kubernetes", description = "Kubernetes connector settings")
 public class KubernetesSettings {
 
     /** Logger */
@@ -40,74 +43,92 @@ public class KubernetesSettings {
     private static final String KUBERNETES_PROPERTY_PREFIX = "citrus.kubernetes.";
     private static final String KUBERNETES_ENV_PREFIX = "CITRUS_KUBERNETES_";
 
+    @CitrusConfigProperty(description = "Automatically remove Kubernetes resources created during the test.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String AUTO_REMOVE_RESOURCES_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "auto.remove.resources";
     private static final String AUTO_REMOVE_RESOURCES_ENV = KUBERNETES_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
     private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Enable or disable Kubernetes support.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String ENABLED_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "enabled";
     private static final String ENABLED_ENV = KUBERNETES_ENV_PREFIX + "ENABLED";
     private static final String ENABLED_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Use a default test actor for all Kubernetes test actions.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String USE_DEFAULT_ACTOR_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "use.default.actor";
     private static final String USE_DEFAULT_ACTOR_ENV = KUBERNETES_ENV_PREFIX + "USE_DEFAULT_ACTOR";
     private static final String USE_DEFAULT_ACTOR_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Automatically create a local HTTP server binding for each Kubernetes service.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String AUTO_CREATE_SERVER_BINDING_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "auto.create.server.binding";
     private static final String AUTO_CREATE_SERVER_BINDING_ENV = KUBERNETES_ENV_PREFIX + "AUTO_CREATE_SERVER_BINDING";
     private static final String AUTO_CREATE_SERVER_BINDING_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Cluster type that Citrus is running on.", defaultValue = "KUBERNETES")
     private static final String CLUSTER_TYPE_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "cluster.type";
     private static final String CLUSTER_TYPE_ENV = KUBERNETES_ENV_PREFIX + "CLUSTER_TYPE";
     private static final String CLUSTER_TYPE_DEFAULT = ClusterType.KUBERNETES.name();
 
+    @CitrusConfigProperty(description = "Cluster wildcard domain for service resolution.")
     private static final String CLUSTER_WILDCARD_DOMAIN_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "cluster.wildcard.domain";
     private static final String CLUSTER_WILDCARD_DOMAIN_ENV = KUBERNETES_ENV_PREFIX + "CLUSTER_WILDCARD_DOMAIN";
     public static final String DEFAULT_DOMAIN_SUFFIX = "svc.cluster.local";
 
+    @CitrusConfigProperty(description = "Request timeout in milliseconds when receiving cloud events.", type = "java.lang.Long", defaultValue = "2000")
     private static final String SERVICE_TIMEOUT_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "service.timeout";
     private static final String SERVICE_TIMEOUT_ENV = KUBERNETES_ENV_PREFIX + "SERVICE_TIMEOUT";
     private static final String SERVICE_TIMEOUT_DEFAULT = "2000";
 
+    @CitrusConfigProperty(description = "Timeout in milliseconds when connecting to Kubernetes cluster.", type = "java.lang.Long", defaultValue = "5000")
     private static final String CONNECT_TIMEOUT_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "connect.timeout";
     private static final String CONNECT_TIMEOUT_ENV = KUBERNETES_ENV_PREFIX + "CONNECT_TIMEOUT";
     private static final String CONNECT_TIMEOUT_DEFAULT = "5000";
 
+    @CitrusConfigProperty(description = "Namespace for Kubernetes client operations.", defaultValue = "default")
     private static final String NAMESPACE_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "namespace";
     private static final String NAMESPACE_ENV = KUBERNETES_ENV_PREFIX + "NAMESPACE";
     private static final String NAMESPACE_DEFAULT = "default";
 
+    @CitrusConfigProperty(description = "Kubernetes label used to identify test resources.", defaultValue = "citrusframework.org/test-id")
     private static final String TEST_ID_LABEL_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "test.id.label";
     private static final String TEST_ID_LABEL_ENV = KUBERNETES_ENV_PREFIX + "TEST_ID_LABEL";
     private static final String TEST_ID_LABEL_DEFAULT = "citrusframework.org/test-id";
 
+    @CitrusConfigProperty(description = "API version for current Kubernetes installation.", defaultValue = "v1")
     private static final String API_VERSION_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "api.version";
     private static final String API_VERSION_ENV = KUBERNETES_ENV_PREFIX + "API_VERSION";
     private static final String API_VERSION_DEFAULT = "v1";
 
+    @CitrusConfigProperty(description = "Service name for cloud event subscriptions.", defaultValue = "citrus-k8s-service")
     private static final String SERVICE_NAME_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = KUBERNETES_ENV_PREFIX + "SERVICE_NAME";
     private static final String SERVICE_NAME_DEFAULT = "citrus-k8s-service";
 
+    @CitrusConfigProperty(description = "Service port used when consuming cloud events via HTTP.", type = "java.lang.Long", defaultValue = "8080")
     private static final String SERVICE_PORT_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "service.port";
     private static final String SERVICE_PORT_ENV = KUBERNETES_ENV_PREFIX + "SERVICE_PORT";
     private static final String SERVICE_PORT_DEFAULT = "8080";
 
+    @CitrusConfigProperty(description = "Default labels for Kubernetes resources as comma-delimited key=value pairs.", defaultValue = "app=citrus")
     private static final String DEFAULT_LABELS_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "default.labels";
     private static final String DEFAULT_LABELS_ENV = KUBERNETES_ENV_PREFIX + "DEFAULT_LABELS";
     private static final String DEFAULT_LABELS_DEFAULT = "app=citrus";
 
+    @CitrusConfigProperty(description = "Maximum number of attempts when polling for running state and log messages.", type = "java.lang.Long", defaultValue = "150")
     private static final String MAX_ATTEMPTS_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "max.attempts";
     private static final String MAX_ATTEMPTS_ENV = KUBERNETES_ENV_PREFIX + "MAX_ATTEMPTS";
     private static final String MAX_ATTEMPTS_DEFAULT = "150";
 
+    @CitrusConfigProperty(description = "Delay in milliseconds between polling attempts.", type = "java.lang.Long", defaultValue = "2000")
     private static final String DELAY_BETWEEN_ATTEMPTS_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "delay.between.attempts";
     private static final String DELAY_BETWEEN_ATTEMPTS_ENV = KUBERNETES_ENV_PREFIX + "DELAY_BETWEEN_ATTEMPTS";
     private static final String DELAY_BETWEEN_ATTEMPTS_DEFAULT = "2000";
 
+    @CitrusConfigProperty(description = "Enable printing pod logs while waiting for a pod log message.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String PRINT_POD_LOGS_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "print.pod.logs";
     private static final String PRINT_POD_LOGS_ENV = KUBERNETES_ENV_PREFIX + "PRINT_POD_LOGS";
     private static final String PRINT_POD_LOGS_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Duration in milliseconds to watch pod logs.", type = "java.lang.Long", defaultValue = "60000")
     private static final String WATCH_LOGS_TIMEOUT_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "watch.logs.timeout";
     private static final String WATCH_LOGS_TIMEOUT_ENV = KUBERNETES_ENV_PREFIX + "WATCH_LOGS_TIMEOUT";
     private static final String WATCH_LOGS_TIMEOUT_DEFAULT = "60000";

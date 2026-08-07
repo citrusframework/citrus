@@ -1,0 +1,79 @@
+{
+  "groups": [
+    {
+      "name": "citrus.jbang",
+      "type": "org.citrusframework.jbang.JBangSettings",
+      "description": "JBang connector settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.jbang.trust.urls",
+      "type": "java.lang.String",
+      "description": "Comma-separated list of JBang trust URLs.",
+      "sourceType": "org.citrusframework.jbang.JBangSettings"
+    },
+    {
+      "name": "citrus.jbang.auto.download",
+      "type": "java.lang.Boolean",
+      "description": "Automatically download JBang binary when not present on host.",
+      "sourceType": "org.citrusframework.jbang.JBangSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.jbang.download.url",
+      "type": "java.lang.String",
+      "description": "URL for downloading the JBang binary.",
+      "sourceType": "org.citrusframework.jbang.JBangSettings",
+      "defaultValue": "https://jbang.dev/releases/latest/download/jbang.zip"
+    },
+    {
+      "name": "citrus.jbang.auto.trust",
+      "type": "java.lang.Boolean",
+      "description": "Automatically add Citrus JBang URL to the set of trust URLs.",
+      "sourceType": "org.citrusframework.jbang.JBangSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.jbang.trust.url",
+      "type": "java.lang.String",
+      "description": "Citrus JBang trust URL.",
+      "sourceType": "org.citrusframework.jbang.JBangSettings",
+      "defaultValue": "https://github.com/citrusframework/citrus/"
+    },
+    {
+      "name": "citrus.jbang.work.dir",
+      "type": "java.lang.String",
+      "description": "JBang local work directory.",
+      "sourceType": "org.citrusframework.jbang.JBangSettings",
+      "defaultValue": ".citrus-jbang"
+    },
+    {
+      "name": "citrus.jbang.dump.process.output",
+      "type": "java.lang.Boolean",
+      "description": "Redirect JBang process output to a file in the current working directory.",
+      "sourceType": "org.citrusframework.jbang.JBangSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.jbang.app",
+      "type": "java.lang.String",
+      "description": "Citrus JBang app name.",
+      "sourceType": "org.citrusframework.jbang.JBangSettings",
+      "defaultValue": "citrus@citrusframework/citrus"
+    },
+    {
+      "name": "citrus.jbang.args",
+      "type": "java.lang.String",
+      "description": "JBang command arguments as comma-delimited key=value pairs.",
+      "sourceType": "org.citrusframework.jbang.JBangSettings"
+    },
+    {
+      "name": "citrus.jbang.executable",
+      "type": "java.lang.String",
+      "description": "Path to the JBang executable.",
+      "sourceType": "org.citrusframework.jbang.JBangSettings"
+    }
+  ],
+  "hints": []
+}

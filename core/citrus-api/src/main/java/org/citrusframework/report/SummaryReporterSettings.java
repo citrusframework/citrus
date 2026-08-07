@@ -16,6 +16,10 @@
 
 package org.citrusframework.report;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.summary.report", description = "Citrus summary report settings.")
 public class SummaryReporterSettings {
 
     private SummaryReporterSettings() {
@@ -23,14 +27,17 @@ public class SummaryReporterSettings {
     }
 
     /** Reporter related settings */
+    @CitrusConfigProperty(description = "Path to the summary report template file.", defaultValue = "classpath:org/citrusframework/report/summary-report.xml")
     private static final String REPORT_TEMPLATE_PROPERTY = "citrus.summary.report.template";
     private static final String REPORT_TEMPLATE_ENV = "CITRUS_SUMMARY_REPORT_TEMPLATE";
     private static final String REPORT_TEMPLATE_DEFAULT = "classpath:org/citrusframework/report/summary-report.xml";
 
+    @CitrusConfigProperty(description = "Target output file name of the summary report.", defaultValue = "citrus-summary.xml")
     private static final String REPORT_FILE_PROPERTY = "citrus.summary.report.file";
     private static final String REPORT_FILE_ENV = "CITRUS_SUMMARY_REPORT_FILE";
     private static final String REPORT_FILE_DEFAULT = "citrus-summary.xml";
 
+    @CitrusConfigProperty(description = "Enable the summary report generation.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String REPORT_ENABLED_PROPERTY = "citrus.summary.report.enabled";
     private static final String REPORT_ENABLED_ENV = "CITRUS_SUMMARY_REPORT_ENABLED";
 

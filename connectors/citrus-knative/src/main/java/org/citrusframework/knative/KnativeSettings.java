@@ -21,62 +21,79 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.util.StringUtils;
 
+@CitrusConfigProperties(prefix = "citrus.knative", description = "Knative connector settings")
 public class KnativeSettings {
 
     private static final String KNATIVE_PROPERTY_PREFIX = "citrus.knative.";
     private static final String KNATIVE_ENV_PREFIX = "CITRUS_KNATIVE_";
 
+    @CitrusConfigProperty(description = "Request timeout in milliseconds when sending cloud events.", type = "java.lang.Long", defaultValue = "2000")
     private static final String EVENT_PRODUCER_TIMEOUT_PROPERTY = KNATIVE_PROPERTY_PREFIX + "event.producer.timeout";
     private static final String EVENT_PRODUCER_TIMEOUT_ENV = KNATIVE_ENV_PREFIX + "EVENT_PRODUCER_TIMEOUT";
     private static final String EVENT_PRODUCER_TIMEOUT_DEFAULT = "2000";
 
+    @CitrusConfigProperty(description = "Request timeout in milliseconds when receiving cloud events.", type = "java.lang.Long", defaultValue = "2000")
     private static final String EVENT_CONSUMER_TIMEOUT_PROPERTY = KNATIVE_PROPERTY_PREFIX + "event.consumer.timeout";
     private static final String EVENT_CONSUMER_TIMEOUT_ENV = KNATIVE_ENV_PREFIX + "EVENT_CONSUMER_TIMEOUT";
     private static final String EVENT_CONSUMER_TIMEOUT_DEFAULT = "2000";
 
+    @CitrusConfigProperty(description = "Namespace for Knative client operations.")
     private static final String NAMESPACE_PROPERTY = KNATIVE_PROPERTY_PREFIX + "namespace";
     private static final String NAMESPACE_ENV = KNATIVE_ENV_PREFIX + "NAMESPACE";
 
+    @CitrusConfigProperty(description = "API version for current Knative installation.", defaultValue = "v1")
     private static final String API_VERSION_PROPERTY = KNATIVE_PROPERTY_PREFIX + "api.version";
     private static final String API_VERSION_ENV = KNATIVE_ENV_PREFIX + "API_VERSION";
     private static final String API_VERSION_DEFAULT = "v1";
 
+    @CitrusConfigProperty(description = "Broker host used as HTTP header when creating cloud events.")
     private static final String BROKER_HOST_PROPERTY = KNATIVE_PROPERTY_PREFIX + "broker.host";
     private static final String BROKER_HOST_ENV = KNATIVE_ENV_PREFIX + "BROKER_HOST";
     private static final String BROKER_HOST_DEFAULT = String.format("broker-ingress.knative-eventing.%s", KubernetesSettings.DEFAULT_DOMAIN_SUFFIX);
 
+    @CitrusConfigProperty(description = "Broker name for producing and consuming cloud events.", defaultValue = "default")
     private static final String BROKER_NAME_PROPERTY = KNATIVE_PROPERTY_PREFIX + "broker.name";
     private static final String BROKER_NAME_ENV = KNATIVE_ENV_PREFIX + "BROKER_NAME";
     private static final String BROKER_NAME_DEFAULT = "default";
 
+    @CitrusConfigProperty(description = "Broker port for producing and consuming cloud events in local environment.", defaultValue = "8080")
     private static final String BROKER_PORT_PROPERTY = KNATIVE_PROPERTY_PREFIX + "broker.port";
     private static final String BROKER_PORT_ENV = KNATIVE_ENV_PREFIX + "BROKER_PORT";
     private static final String BROKER_PORT_DEFAULT = "8080";
 
+    @CitrusConfigProperty(description = "Broker URL for producing and consuming cloud events.")
     private static final String BROKER_URL_PROPERTY = KNATIVE_PROPERTY_PREFIX + "broker.url";
     private static final String BROKER_URL_ENV = KNATIVE_ENV_PREFIX + "BROKER_URL";
 
+    @CitrusConfigProperty(description = "Service name for cloud event subscriptions.", defaultValue = "citrus-knative-service")
     private static final String SERVICE_NAME_PROPERTY = KNATIVE_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = KNATIVE_ENV_PREFIX + "SERVICE_NAME";
     private static final String SERVICE_NAME_DEFAULT = "citrus-knative-service";
 
+    @CitrusConfigProperty(description = "Service port used when consuming cloud events via HTTP.", type = "java.lang.Long")
     private static final String SERVICE_PORT_PROPERTY = KNATIVE_PROPERTY_PREFIX + "service.port";
     private static final String SERVICE_PORT_ENV = KNATIVE_ENV_PREFIX + "SERVICE_PORT";
 
+    @CitrusConfigProperty(description = "Automatically remove Knative resources created during the test.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String AUTO_REMOVE_RESOURCES_PROPERTY = KNATIVE_PROPERTY_PREFIX + "auto.remove.resources";
     private static final String AUTO_REMOVE_RESOURCES_ENV = KNATIVE_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
     private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Enable verification of broker responses.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String VERIFY_BROKER_RESPONSE_PROPERTY = KNATIVE_PROPERTY_PREFIX + "verify.broker.resources";
     private static final String VERIFY_BROKER_RESPONSE_ENV = KNATIVE_ENV_PREFIX + "VERIFY_BROKER_RESPONSE";
     private static final String VERIFY_BROKER_RESPONSE_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Expected broker response HTTP status code.", type = "java.lang.Long")
     private static final String BROKER_RESPONSE_STATUS_PROPERTY = KNATIVE_PROPERTY_PREFIX + "broker.response";
     private static final String BROKER_RESPONSE_STATUS_ENV = KNATIVE_ENV_PREFIX + "BROKER_RESPONSE_STATUS";
 
+    @CitrusConfigProperty(description = "Default labels for Knative resources as comma-delimited key=value pairs.")
     private static final String DEFAULT_LABELS_PROPERTY = KNATIVE_PROPERTY_PREFIX + "default.labels";
     private static final String DEFAULT_LABELS_ENV = KNATIVE_ENV_PREFIX + "DEFAULT_LABELS";
 

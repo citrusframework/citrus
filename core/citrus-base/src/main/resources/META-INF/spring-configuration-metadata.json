@@ -1,0 +1,126 @@
+{
+  "groups": [
+    {
+      "name": "citrus.html.report",
+      "type": "org.citrusframework.base.report.HtmlReporterSettings",
+      "description": "HTML test report settings"
+    },
+    {
+      "name": "citrus.junit.report",
+      "type": "org.citrusframework.base.report.JUnitReporterSettings",
+      "description": "JUnit test report settings"
+    },
+    {
+      "name": "citrus.test.flow.report",
+      "type": "org.citrusframework.base.report.TestFlowReporterSettings",
+      "description": "Test flow report settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.html.report.template",
+      "type": "java.lang.String",
+      "description": "Path to the HTML report template file",
+      "sourceType": "org.citrusframework.base.report.HtmlReporterSettings",
+      "defaultValue": "classpath:org/citrusframework/base/report/test-report.html"
+    },
+    {
+      "name": "citrus.html.report.detail.template",
+      "type": "java.lang.String",
+      "description": "Path to the HTML report detail template file",
+      "sourceType": "org.citrusframework.base.report.HtmlReporterSettings",
+      "defaultValue": "classpath:org/citrusframework/base/report/test-detail.html"
+    },
+    {
+      "name": "citrus.html.report.directory",
+      "type": "java.lang.String",
+      "description": "Target directory for HTML report output",
+      "sourceType": "org.citrusframework.base.report.HtmlReporterSettings"
+    },
+    {
+      "name": "citrus.html.report.file",
+      "type": "java.lang.String",
+      "description": "Output file name for the HTML report",
+      "sourceType": "org.citrusframework.base.report.HtmlReporterSettings",
+      "defaultValue": "citrus-test-results.html"
+    },
+    {
+      "name": "citrus.html.report.logo",
+      "type": "java.lang.String",
+      "description": "Logo image source for the HTML report",
+      "sourceType": "org.citrusframework.base.report.HtmlReporterSettings",
+      "defaultValue": "classpath:org/citrusframework/base/report/citrus_logo.png"
+    },
+    {
+      "name": "citrus.html.report.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable the HTML report",
+      "sourceType": "org.citrusframework.base.report.HtmlReporterSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.junit.report.template",
+      "type": "java.lang.String",
+      "description": "Path to the JUnit report template file",
+      "sourceType": "org.citrusframework.base.report.JUnitReporterSettings",
+      "defaultValue": "classpath:org/citrusframework/base/report/junit-report.xml"
+    },
+    {
+      "name": "citrus.junit.report.success.template",
+      "type": "java.lang.String",
+      "description": "Path to the JUnit success test template file",
+      "sourceType": "org.citrusframework.base.report.JUnitReporterSettings",
+      "defaultValue": "classpath:org/citrusframework/base/report/junit-test.xml"
+    },
+    {
+      "name": "citrus.junit.report.failed.template",
+      "type": "java.lang.String",
+      "description": "Path to the JUnit failed test template file",
+      "sourceType": "org.citrusframework.base.report.JUnitReporterSettings",
+      "defaultValue": "classpath:org/citrusframework/base/report/junit-test-failed.xml"
+    },
+    {
+      "name": "citrus.junit.report.directory",
+      "type": "java.lang.String",
+      "description": "Target directory for JUnit report output",
+      "sourceType": "org.citrusframework.base.report.JUnitReporterSettings",
+      "defaultValue": "junitreports"
+    },
+    {
+      "name": "citrus.junit.report.file.pattern",
+      "type": "java.lang.String",
+      "description": "File name pattern for JUnit report files",
+      "sourceType": "org.citrusframework.base.report.JUnitReporterSettings",
+      "defaultValue": "TEST-%s.xml"
+    },
+    {
+      "name": "citrus.junit.report.suite.name",
+      "type": "java.lang.String",
+      "description": "Name of the JUnit test suite",
+      "sourceType": "org.citrusframework.base.report.JUnitReporterSettings",
+      "defaultValue": "TestSuite"
+    },
+    {
+      "name": "citrus.junit.report.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable the JUnit report",
+      "sourceType": "org.citrusframework.base.report.JUnitReporterSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.test.flow.report.output",
+      "type": "java.lang.String",
+      "description": "Report output data format (json, yaml, or comma-separated)",
+      "sourceType": "org.citrusframework.base.report.TestFlowReporterSettings",
+      "defaultValue": "json"
+    },
+    {
+      "name": "citrus.test.flow.report.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable the test flow report",
+      "sourceType": "org.citrusframework.base.report.TestFlowReporterSettings",
+      "defaultValue": true
+    }
+  ],
+  "hints": []
+}

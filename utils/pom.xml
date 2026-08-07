@@ -29,6 +29,7 @@
 
   <modules>
     <module>citrus-test-support</module>
+    <module>metadata-processor</module>
   </modules>
 
 </project>

@@ -18,16 +18,21 @@ package org.citrusframework.testcontainers.compose;
 
 import java.util.Optional;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.testcontainers.TestContainersSettings;
 
+@CitrusConfigProperties(prefix = "citrus.testcontainers.compose", description = "Docker Compose Testcontainers settings")
 public class ComposeContainerSettings {
 
     private static final String COMPOSE_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "compose.";
     private static final String COMPOSE_ENV_PREFIX = TestContainersSettings.TESTCONTAINERS_ENV_PREFIX + "COMPOSE_";
 
+    @CitrusConfigProperty(description = "Docker Compose container name.")
     private static final String CONTAINER_NAME_PROPERTY = COMPOSE_PROPERTY_PREFIX + "container.name";
     private static final String CONTAINER_NAME_ENV = COMPOSE_ENV_PREFIX + "CONTAINER_NAME";
 
+    @CitrusConfigProperty(description = "Time in seconds to wait for the container to startup.", type = "java.lang.Long")
     private static final String STARTUP_TIMEOUT_PROPERTY = COMPOSE_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = COMPOSE_ENV_PREFIX + "STARTUP_TIMEOUT";
 

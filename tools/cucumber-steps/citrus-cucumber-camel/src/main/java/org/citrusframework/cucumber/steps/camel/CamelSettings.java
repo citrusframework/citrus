@@ -19,34 +19,45 @@ package org.citrusframework.cucumber.steps.camel;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.camel", description = "Camel integration cucumber steps settings")
 public final class CamelSettings {
 
     private static final String CAMEL_PROPERTY_PREFIX = "citrus.camel.";
     private static final String CAMEL_ENV_PREFIX = "CITRUS_CAMEL_";
 
+    @CitrusConfigProperty(description = "Automatically remove Camel resources created during the test.", type = "java.lang.Boolean", defaultValue = "false")
     static final String AUTO_REMOVE_RESOURCES_PROPERTY = CAMEL_PROPERTY_PREFIX + "auto.remove.resources";
     static final String AUTO_REMOVE_RESOURCES_ENV = CAMEL_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
     static final String AUTO_REMOVE_RESOURCES_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Default Camel context name for creating routes.", defaultValue = "citrus-camel-context")
     private static final String CONTEXT_NAME_PROPERTY = CAMEL_PROPERTY_PREFIX + "context.name";
     private static final String CONTEXT_NAME_ENV = CAMEL_ENV_PREFIX + "CONTEXT_NAME";
     private static final String CONTEXT_NAME_DEFAULT = "citrus-camel-context";
 
+    @CitrusConfigProperty(description = "Request timeout in milliseconds when receiving messages.", type = "java.lang.Long", defaultValue = "60000")
     private static final String TIMEOUT_PROPERTY = CAMEL_PROPERTY_PREFIX + "timeout";
     private static final String TIMEOUT_ENV = CAMEL_ENV_PREFIX + "TIMEOUT";
 
+    @CitrusConfigProperty(description = "Maximum number of attempts when polling for running state.", type = "java.lang.Integer", defaultValue = "10")
     private static final String MAX_ATTEMPTS_PROPERTY = CAMEL_PROPERTY_PREFIX + "max.attempts";
     private static final String MAX_ATTEMPTS_ENV = CAMEL_ENV_PREFIX + "MAX_ATTEMPTS";
     private static final String MAX_ATTEMPTS_DEFAULT = "10";
 
+    @CitrusConfigProperty(description = "Delay in milliseconds between polling attempts.", type = "java.lang.Long", defaultValue = "2000")
     private static final String DELAY_BETWEEN_ATTEMPTS_PROPERTY = CAMEL_PROPERTY_PREFIX + "delay.between.attempts";
     private static final String DELAY_BETWEEN_ATTEMPTS_ENV = CAMEL_ENV_PREFIX + "DELAY_BETWEEN_ATTEMPTS";
     private static final String DELAY_BETWEEN_ATTEMPTS_DEFAULT = "2000";
 
+    @CitrusConfigProperty(description = "Stop integration verification when integration is in error state.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String STOP_ON_ERROR_STATUS_PROPERTY = CAMEL_PROPERTY_PREFIX + "stop.on.error.status";
     private static final String STOP_ON_ERROR_STATUS_ENV = CAMEL_ENV_PREFIX + "STOP_ON_ERROR_STATUS";
     private static final String STOP_ON_ERROR_STATUS_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Print pod logs while waiting for log messages.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String PRINT_POD_LOGS_PROPERTY = CAMEL_PROPERTY_PREFIX + "print.pod.logs";
     private static final String PRINT_POD_LOGS_ENV = CAMEL_ENV_PREFIX + "PRINT_POD_LOGS";
     private static final String PRINT_POD_LOGS_DEFAULT = "true";

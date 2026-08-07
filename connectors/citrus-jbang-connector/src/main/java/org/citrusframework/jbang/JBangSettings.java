@@ -26,45 +26,59 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.jbang", description = "JBang connector settings")
 public final class JBangSettings {
 
     private static final String JBANG_PROPERTY_PREFIX = "citrus.jbang.";
     private static final String JBANG_ENV_PREFIX = "CITRUS_JBANG_";
 
+    @CitrusConfigProperty(description = "Comma-separated list of JBang trust URLs.")
     private static final String TRUST_URLS_PROPERTY = JBANG_PROPERTY_PREFIX + "trust.urls";
     private static final String TRUST_URLS_ENV = JBANG_ENV_PREFIX + "TRUST_URLS";
 
+    @CitrusConfigProperty(description = "Automatically download JBang binary when not present on host.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String JBANG_AUTO_DOWNLOAD_PROPERTY = JBANG_PROPERTY_PREFIX + "auto.download";
     private static final String JBANG_AUTO_DOWNLOAD_ENV = JBANG_ENV_PREFIX + "AUTO_DOWNLOAD";
     private static final String JBANG_AUTO_DOWNLOAD_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "URL for downloading the JBang binary.", defaultValue = "https://jbang.dev/releases/latest/download/jbang.zip")
     private static final String JBANG_DOWNLOAD_URL_PROPERTY = JBANG_PROPERTY_PREFIX + "download.url";
     private static final String JBANG_DOWNLOAD_URL_ENV = JBANG_ENV_PREFIX + "DOWNLOAD_URL";
     private static final String JBANG_DOWNLOAD_URL_DEFAULT = "https://jbang.dev/releases/latest/download/jbang.zip";
 
+    @CitrusConfigProperty(description = "Automatically add Citrus JBang URL to the set of trust URLs.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String JBANG_AUTO_TRUST_PROPERTY = JBANG_PROPERTY_PREFIX + "auto.trust";
     private static final String JBANG_AUTO_TRUST_ENV = JBANG_ENV_PREFIX + "AUTO_TRUST";
     private static final String JBANG_AUTO_TRUST_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Citrus JBang trust URL.", defaultValue = "https://github.com/citrusframework/citrus/")
     private static final String JBANG_CITRUS_TRUST_URL_PROPERTY = JBANG_PROPERTY_PREFIX + "trust.url";
     private static final String JBANG_CITRUS_TRUST_URL_ENV = JBANG_ENV_PREFIX + "TRUST_URL";
     private static final String JBANG_CITRUS_TRUST_URL_DEFAULT = "https://github.com/citrusframework/citrus/";
 
+    @CitrusConfigProperty(description = "JBang local work directory.", defaultValue = ".citrus-jbang")
     private static final String WORK_DIR_PROPERTY = JBANG_PROPERTY_PREFIX + "work.dir";
     private static final String WORK_DIR_ENV = JBANG_ENV_PREFIX + "WORK_DIR";
     private static final String WORK_DIR_DEFAULT = ".citrus-jbang"; // must be in sync with CitrusJBangMain.Settings in citrus-jbang module
 
+    @CitrusConfigProperty(description = "Redirect JBang process output to a file in the current working directory.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String DUMP_PROCESS_OUTPUT_PROPERTY = JBANG_PROPERTY_PREFIX + "dump.process.output";
     private static final String DUMP_PROCESS_OUTPUT_ENV = JBANG_ENV_PREFIX + "DUMP_PROCESS_OUTPUT";
     private static final String DUMP_PROCESS_OUTPUT_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Citrus JBang app name.", defaultValue = "citrus@citrusframework/citrus")
     private static final String APP_PROPERTY = JBANG_PROPERTY_PREFIX + "app";
     private static final String APP_ENV = JBANG_ENV_PREFIX + "APP";
     private static final String APP_DEFAULT = "citrus@citrusframework/citrus";
 
+    @CitrusConfigProperty(description = "JBang command arguments as comma-delimited key=value pairs.")
     private static final String ARGS_PROPERTY = JBANG_PROPERTY_PREFIX + "args";
     private static final String ARGS_ENV = JBANG_ENV_PREFIX + "ARGS";
 
+    @CitrusConfigProperty(description = "Path to the JBang executable.")
     private static final String JBANG_EXECUTABLE_PROPERTY = JBANG_PROPERTY_PREFIX + "executable";
     private static final String JBANG_EXECUTABLE_ENV = JBANG_ENV_PREFIX + "EXECUTABLE";
     private static final String JBANG_EXECUTABLE_DEFAULT = "";

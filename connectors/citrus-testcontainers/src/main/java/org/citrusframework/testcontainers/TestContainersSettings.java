@@ -18,6 +18,10 @@ package org.citrusframework.testcontainers;
 
 import java.util.Optional;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.testcontainers", description = "Testcontainers settings")
 public final class TestContainersSettings {
 
     public static final String TESTCONTAINERS_VARIABLE_PREFIX = "CITRUS_TESTCONTAINERS_";
@@ -25,43 +29,53 @@ public final class TestContainersSettings {
     public static final String TESTCONTAINERS_PROPERTY_PREFIX = "citrus.testcontainers.";
     public static final String TESTCONTAINERS_ENV_PREFIX = "CITRUS_TESTCONTAINERS_";
 
+    @CitrusConfigProperty(description = "Enable or disable Testcontainers support.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String ENABLED_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "enabled";
     private static final String ENABLED_ENV = TESTCONTAINERS_ENV_PREFIX + "ENABLED";
     private static final String ENABLED_DEFAULT = "true";
 
     public static final String DOCKER_REGISTRY = "docker.io";
+    @CitrusConfigProperty(description = "Docker registry for pulling container images.", defaultValue = "docker.io")
     private static final String REGISTRY_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "registry";
     private static final String REGISTRY_ENV = TESTCONTAINERS_ENV_PREFIX + "REGISTRY";
     private static final String REGISTRY_DEFAULT = DOCKER_REGISTRY;
 
+    @CitrusConfigProperty(description = "Enable Docker registry mirror.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String REGISTRY_MIRROR_ENABLED_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "registry.mirror.enabled";
     private static final String REGISTRY_MIRROR_ENABLED_ENV = TESTCONTAINERS_ENV_PREFIX + "REGISTRY_MIRROR_ENABLED";
     private static final String REGISTRY_MIRROR_ENABLED_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Docker registry mirror URL.", defaultValue = "mirror.gcr.io")
     private static final String REGISTRY_MIRROR_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "registry.mirror";
     private static final String REGISTRY_MIRROR_ENV = TESTCONTAINERS_ENV_PREFIX + "REGISTRY_MIRROR";
     private static final String REGISTRY_MIRROR_DEFAULT = "mirror.gcr.io";
 
+    @CitrusConfigProperty(description = "Automatically remove container resources created during the test.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String AUTO_REMOVE_RESOURCES_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "auto.remove.resources";
     private static final String AUTO_REMOVE_RESOURCES_ENV = TESTCONTAINERS_ENV_PREFIX + "AUTO_REMOVE_RESOURCES";
     private static final String AUTO_REMOVE_RESOURCES_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Enable KubeDock services.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String KUBEDOCK_ENABLED_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "kubedock.enabled";
     private static final String KUBEDOCK_ENABLED_ENV = TESTCONTAINERS_ENV_PREFIX + "KUBEDOCK_ENABLED";
     private static final String KUBEDOCK_ENABLED_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Current test ID used as label on the Pod running the test.", defaultValue = "citrus-test")
     private static final String TEST_ID_PROPERTY = "citrus.test.id";
     private static final String TEST_ID_ENV = "CITRUS_TEST_ID";
     private static final String TEST_ID_DEFAULT = "citrus-test";
 
+    @CitrusConfigProperty(description = "Current test name.", defaultValue = "citrus")
     private static final String TEST_NAME_PROPERTY = "citrus.test.name";
     private static final String TEST_NAME_ENV = "CITRUS_TEST_NAME";
     private static final String TEST_NAME_DEFAULT = "citrus";
 
+    @CitrusConfigProperty(description = "Time in seconds to wait for the container to startup and accept connections.", type = "java.lang.Long", defaultValue = "180")
     private static final String STARTUP_TIMEOUT_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = TESTCONTAINERS_ENV_PREFIX + "STARTUP_TIMEOUT";
     private static final String STARTUP_TIMEOUT_DEFAULT = "180";
 
+    @CitrusConfigProperty(description = "Timeout in milliseconds when connecting to Docker.", type = "java.lang.Long", defaultValue = "5000")
     private static final String CONNECT_TIMEOUT_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "connect.timeout";
     private static final String CONNECT_TIMEOUT_ENV = TESTCONTAINERS_ENV_PREFIX + "CONNECT_TIMEOUT";
     private static final String CONNECT_TIMEOUT_DEFAULT = "5000";

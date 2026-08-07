@@ -1,0 +1,25 @@
+{
+  "groups": [
+    {
+      "name": "citrus.spring",
+      "type": "org.citrusframework.spring.CitrusSpringSettings",
+      "description": "Citrus Spring integration settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.spring.application.context",
+      "type": "java.lang.String",
+      "description": "Path to the Spring application context XML configuration",
+      "sourceType": "org.citrusframework.spring.CitrusSpringSettings",
+      "defaultValue": "classpath*:citrus-context.xml"
+    },
+    {
+      "name": "citrus.spring.java.config",
+      "type": "java.lang.String",
+      "description": "Java configuration class for the Spring application context",
+      "sourceType": "org.citrusframework.spring.CitrusSpringSettings"
+    }
+  ],
+  "hints": []
+}

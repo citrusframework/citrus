@@ -1,0 +1,61 @@
+{
+  "groups": [
+    {
+      "name": "citrus.openapi",
+      "type": "org.citrusframework.openapi.OpenApiSettings",
+      "description": "OpenAPI request and response validation settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.openapi.generate.optional.fields",
+      "type": "java.lang.Boolean",
+      "description": "Enable generation of optional fields in OpenAPI messages.",
+      "sourceType": "org.citrusframework.openapi.OpenApiSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.openapi.validation.enabled.request",
+      "type": "java.lang.Boolean",
+      "description": "Enable OpenAPI request validation.",
+      "sourceType": "org.citrusframework.openapi.OpenApiSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.openapi.validation.enabled.response",
+      "type": "java.lang.Boolean",
+      "description": "Enable OpenAPI response validation.",
+      "sourceType": "org.citrusframework.openapi.OpenApiSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.openapi.neglect.base.path",
+      "type": "java.lang.Boolean",
+      "description": "Enable neglecting the OpenAPI base path.",
+      "sourceType": "org.citrusframework.openapi.OpenApiSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.openapi.request.fill.random.values",
+      "type": "java.lang.String",
+      "description": "Auto-fill strategy for random request values.",
+      "sourceType": "org.citrusframework.openapi.OpenApiSettings",
+      "defaultValue": "REQUIRED"
+    },
+    {
+      "name": "citrus.openapi.response.fill.random.values",
+      "type": "java.lang.String",
+      "description": "Auto-fill strategy for random response values.",
+      "sourceType": "org.citrusframework.openapi.OpenApiSettings",
+      "defaultValue": "REQUIRED"
+    },
+    {
+      "name": "citrus.openapi.validation.policy",
+      "type": "java.lang.String",
+      "description": "Validation policy for OpenAPI specifications.",
+      "sourceType": "org.citrusframework.openapi.OpenApiSettings",
+      "defaultValue": "REPORT"
+    }
+  ],
+  "hints": []
+}

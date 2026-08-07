@@ -16,27 +16,36 @@
 
 package org.citrusframework.cucumber.steps.openapi;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.openapi", description = "OpenAPI cucumber steps settings")
 public class OpenApiSettings {
 
     private static final String OPENAPI_PROPERTY_PREFIX = "citrus.openapi.";
     private static final String OPENAPI_ENV_PREFIX = "CITRUS_OPENAPI_";
 
+    @CitrusConfigProperty(description = "Request timeout in milliseconds when receiving messages.", type = "java.lang.Long", defaultValue = "2000")
     private static final String TIMEOUT_PROPERTY = OPENAPI_PROPERTY_PREFIX + ".timeout";
     private static final String TIMEOUT_ENV = OPENAPI_ENV_PREFIX + "_TIMEOUT";
     private static final String TIMEOUT_DEFAULT = "2000";
 
+    @CitrusConfigProperty(description = "Include optional fields when generating request/response test data.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String GENERATE_OPTIONAL_FIELDS_PROPERTY = OPENAPI_PROPERTY_PREFIX + "generate.optional.fields";
     private static final String GENERATE_OPTIONAL_FIELDS_ENV = OPENAPI_ENV_PREFIX + "GENERATE_OPTIONAL_FIELDS";
     private static final String GENERATE_OPTIONAL_FIELDS_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Include optional fields when validating request/response test data.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String VALIDATE_OPTIONAL_FIELDS_PROPERTY = OPENAPI_PROPERTY_PREFIX + "validate.optional.fields";
     private static final String VALIDATE_OPTIONAL_FIELDS_ENV = OPENAPI_ENV_PREFIX + "VALIDATE_OPTIONAL_FIELDS";
     private static final String VALIDATE_OPTIONAL_FIELDS_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Service name for the OpenAPI HTTP server.", defaultValue = "citrus-openapi-service")
     private static final String SERVICE_NAME_PROPERTY = OPENAPI_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = OPENAPI_ENV_PREFIX + "SERVICE_NAME";
     private static final String SERVICE_NAME_DEFAULT = "citrus-openapi-service";
 
+    @CitrusConfigProperty(description = "Service port for the OpenAPI HTTP server.", defaultValue = "8080")
     private static final String SERVICE_PORT_PROPERTY = OPENAPI_PROPERTY_PREFIX + "service.port";
     private static final String SERVICE_PORT_ENV = OPENAPI_ENV_PREFIX + "SERVICE_PORT";
     private static final String SERVICE_PORT_DEFAULT = "8080";

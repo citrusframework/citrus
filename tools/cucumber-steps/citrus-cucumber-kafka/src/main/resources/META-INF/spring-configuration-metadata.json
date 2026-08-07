@@ -1,0 +1,39 @@
+{
+  "groups": [
+    {
+      "name": "citrus.kafka",
+      "type": "org.citrusframework.cucumber.steps.kafka.KafkaSettings",
+      "description": "Kafka cucumber steps settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.kafka.timeout",
+      "type": "java.lang.Long",
+      "description": "Timeout in milliseconds when receiving Kafka messages.",
+      "sourceType": "org.citrusframework.cucumber.steps.kafka.KafkaSettings",
+      "defaultValue": 60000
+    },
+    {
+      "name": "citrus.kafka.endpoint.name",
+      "type": "java.lang.String",
+      "description": "Default Kafka endpoint name.",
+      "sourceType": "org.citrusframework.cucumber.steps.kafka.KafkaSettings",
+      "defaultValue": "citrus-kafka-endpoint"
+    },
+    {
+      "name": "citrus.kafka.api.version",
+      "type": "java.lang.String",
+      "description": "Kafka Strimzi API version.",
+      "sourceType": "org.citrusframework.cucumber.steps.kafka.KafkaSettings",
+      "defaultValue": "v1beta1"
+    },
+    {
+      "name": "citrus.kafka.namespace",
+      "type": "java.lang.String",
+      "description": "Namespace for Kafka client operations.",
+      "sourceType": "org.citrusframework.cucumber.steps.kafka.KafkaSettings"
+    }
+  ],
+  "hints": []
+}

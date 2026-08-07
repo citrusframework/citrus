@@ -1,0 +1,198 @@
+{
+  "groups": [
+    {
+      "name": "citrus.camel",
+      "type": "org.citrusframework.camel.CamelSettings",
+      "description": "Apache Camel integration settings"
+    },
+    {
+      "name": "citrus.camel.infra",
+      "type": "org.citrusframework.camel.actions.infra.CamelInfraSettings",
+      "description": "Camel infrastructure service settings"
+    },
+    {
+      "name": "citrus.camel.cli",
+      "type": "org.citrusframework.camel.cli.CamelCliSettings",
+      "description": "Camel CLI integration settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.camel.context.name",
+      "type": "java.lang.String",
+      "description": "Default Camel context name to use when creating routes.",
+      "sourceType": "org.citrusframework.camel.CamelSettings",
+      "defaultValue": "camelContext"
+    },
+    {
+      "name": "citrus.camel.timeout",
+      "type": "java.lang.Long",
+      "description": "Request timeout in milliseconds when receiving messages.",
+      "sourceType": "org.citrusframework.camel.CamelSettings",
+      "defaultValue": 5000
+    },
+    {
+      "name": "citrus.camel.max.attempts",
+      "type": "java.lang.Integer",
+      "description": "Maximum number of attempts when polling for running state and log messages.",
+      "sourceType": "org.citrusframework.camel.CamelSettings",
+      "defaultValue": 60
+    },
+    {
+      "name": "citrus.camel.delay.between.attempts",
+      "type": "java.lang.Long",
+      "description": "Delay in milliseconds to wait after each polling attempt.",
+      "sourceType": "org.citrusframework.camel.CamelSettings",
+      "defaultValue": 2000
+    },
+    {
+      "name": "citrus.camel.print.logs",
+      "type": "java.lang.Boolean",
+      "description": "When set to true test will print Camel CLI route logs.",
+      "sourceType": "org.citrusframework.camel.CamelSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.camel.filter.internal.headers",
+      "type": "java.lang.Boolean",
+      "description": "When enabled the Camel message converter will filter Citrus internal message headers.",
+      "sourceType": "org.citrusframework.camel.CamelSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.camel.infra.auto.remove.services",
+      "type": "java.lang.Boolean",
+      "description": "When set to true test will automatically stop and remove Camel infra services.",
+      "sourceType": "org.citrusframework.camel.actions.infra.CamelInfraSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.camel.infra.dump.service.output",
+      "type": "java.lang.Boolean",
+      "description": "When set to true infra service output will be redirected to a file.",
+      "sourceType": "org.citrusframework.camel.actions.infra.CamelInfraSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.camel.infra.port",
+      "type": "java.lang.Integer",
+      "description": "Fixed port for infra services.",
+      "sourceType": "org.citrusframework.camel.actions.infra.CamelInfraSettings",
+      "defaultValue": -1
+    },
+    {
+      "name": "citrus.camel.infra.%s.port",
+      "type": "java.lang.Integer",
+      "description": "Service-specific port template for a named infra service.",
+      "sourceType": "org.citrusframework.camel.actions.infra.CamelInfraSettings",
+      "defaultValue": -1
+    },
+    {
+      "name": "citrus.camel.infra.fixedPort",
+      "type": "java.lang.Boolean",
+      "description": "When set to true infra services use fixed ports instead of random ports.",
+      "sourceType": "org.citrusframework.camel.actions.infra.CamelInfraSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "camel.infra.port",
+      "type": "java.lang.Integer",
+      "description": "Camel runtime infra port property.",
+      "sourceType": "org.citrusframework.camel.actions.infra.CamelInfraSettings"
+    },
+    {
+      "name": "camel.infra.fixedPort",
+      "type": "java.lang.Boolean",
+      "description": "Camel runtime infra fixed port property.",
+      "sourceType": "org.citrusframework.camel.actions.infra.CamelInfraSettings"
+    },
+    {
+      "name": "citrus.camel.cli.work.dir",
+      "type": "java.lang.String",
+      "description": "Camel CLI local work directory.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings"
+    },
+    {
+      "name": "citrus.camel.cli.app",
+      "type": "java.lang.String",
+      "description": "Camel CLI app name.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": "camel@apache/camel"
+    },
+    {
+      "name": "citrus.camel.cli.version",
+      "type": "java.lang.String",
+      "description": "Camel CLI version.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": "latest"
+    },
+    {
+      "name": "citrus.camel.cli.kamelets.version",
+      "type": "java.lang.String",
+      "description": "Kamelets version used by the Camel CLI runtime.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings"
+    },
+    {
+      "name": "citrus.camel.cli.kamelets.local.dir",
+      "type": "java.lang.String",
+      "description": "Camel CLI local Kamelets directory.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings"
+    },
+    {
+      "name": "citrus.camel.cli.trust.url",
+      "type": "java.lang.String",
+      "description": "Camel CLI trust URLs.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": "https://github.com/apache/camel/"
+    },
+    {
+      "name": "citrus.camel.cli.dump.integration.output",
+      "type": "java.lang.Boolean",
+      "description": "When set to true Camel CLI process output for integrations will be redirected to a file.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.camel.cli.verbose",
+      "type": "java.lang.Boolean",
+      "description": "When set to true Camel CLI will print detailed messages.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.camel.cli.auto.remove.resources",
+      "type": "java.lang.Boolean",
+      "description": "When set to true Camel CLI resources created during the test are automatically removed.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.camel.cli.auto.remove.plugins",
+      "type": "java.lang.Boolean",
+      "description": "When set to true Camel CLI plugins added during the test are automatically removed.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.camel.cli.wait.for.running.state",
+      "type": "java.lang.Boolean",
+      "description": "When set to true Camel CLI will automatically wait for each integration to be in running state.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.camel.cli.type",
+      "type": "java.lang.String",
+      "description": "Camel CLI launcher type.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": "jbang"
+    },
+    {
+      "name": "citrus.camel.cli.launcher.jar.path",
+      "type": "java.lang.String",
+      "description": "Path to the Camel Launcher jar file.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings"
+    }
+  ],
+  "hints": []
+}

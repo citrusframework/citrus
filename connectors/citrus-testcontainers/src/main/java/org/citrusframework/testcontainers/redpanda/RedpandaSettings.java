@@ -16,6 +16,8 @@
 
 package org.citrusframework.testcontainers.redpanda;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
@@ -23,6 +25,7 @@ import org.testcontainers.redpanda.RedpandaContainer;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
+@CitrusConfigProperties(prefix = "citrus.testcontainers.redpanda", description = "Redpanda Testcontainers settings")
 public class RedpandaSettings {
 
     private static final String REDPANDA_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "redpanda.";
@@ -30,22 +33,27 @@ public class RedpandaSettings {
 
     public static final int REDPANDA_PORT = 9092;
 
+    @CitrusConfigProperty(description = "Redpanda version.", defaultValue = "v25.3.2")
     private static final String VERSION_PROPERTY = REDPANDA_PROPERTY_PREFIX + "version";
     private static final String VERSION_ENV = REDPANDA_ENV_PREFIX + "VERSION";
     private static final String VERSION_DEFAULT = "v25.3.2";
 
+    @CitrusConfigProperty(description = "Redpanda service name.", defaultValue = "citrus-redpanda")
     private static final String SERVICE_NAME_PROPERTY = REDPANDA_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = REDPANDA_ENV_PREFIX + "SERVICE_NAME";
     public static final String SERVICE_NAME_DEFAULT = "citrus-redpanda";
 
+    @CitrusConfigProperty(description = "Redpanda container name.", defaultValue = "redpandaContainer")
     private static final String CONTAINER_NAME_PROPERTY = REDPANDA_PROPERTY_PREFIX + "container.name";
     private static final String CONTAINER_NAME_ENV = REDPANDA_ENV_PREFIX + "CONTAINER_NAME";
     public static final String CONTAINER_NAME_DEFAULT = "redpandaContainer";
 
+    @CitrusConfigProperty(description = "Redpanda Docker image name.", defaultValue = "redpandadata/redpanda")
     private static final String IMAGE_NAME_PROPERTY = REDPANDA_PROPERTY_PREFIX + "image.name";
     private static final String IMAGE_NAME_ENV = REDPANDA_ENV_PREFIX + "IMAGE_NAME";
     protected static final String IMAGE_NAME_DEFAULT = "redpandadata/redpanda";
 
+    @CitrusConfigProperty(description = "Time in seconds to wait for the Redpanda container to startup.", type = "java.lang.Long", defaultValue = "180")
     private static final String STARTUP_TIMEOUT_PROPERTY = REDPANDA_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = REDPANDA_ENV_PREFIX + "STARTUP_TIMEOUT";
     private static final String STARTUP_TIMEOUT_DEFAULT = "180";

@@ -16,15 +16,21 @@
 
 package org.citrusframework.agent.connector;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.agent", description = "Citrus agent connector settings")
 public final class CitrusAgentSettings {
 
     private static final String AGENT_PROPERTY_PREFIX = "citrus.agent.";
     private static final String AGENT_ENV_PREFIX = "CITRUS_AGENT_";
 
+    @CitrusConfigProperty(description = "Citrus agent name.", defaultValue = "citrus-agent")
     private static final String AGENT_NAME_PROPERTY = AGENT_PROPERTY_PREFIX + "name";
     private static final String AGENT_NAME_ENV = AGENT_ENV_PREFIX + "NAME";
     private static final String AGENT_NAME_DEFAULT = "citrus-agent";
 
+    @CitrusConfigProperty(description = "Citrus agent server port.", type = "java.lang.Long", defaultValue = "4567")
     private static final String AGENT_SERVER_PORT_PROPERTY = AGENT_PROPERTY_PREFIX + "server.port";
     private static final String AGENT_SERVER_PORT_ENV = AGENT_ENV_PREFIX + "SERVER_PORT";
     private static final String AGENT_SERVER_PORT_DEFAULT = "4567";

@@ -16,6 +16,10 @@
 
 package org.citrusframework.base.report;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.html.report", description = "HTML test report settings")
 public class HtmlReporterSettings {
 
     private HtmlReporterSettings() {
@@ -23,25 +27,31 @@ public class HtmlReporterSettings {
     }
 
     /** Reporter related settings */
+    @CitrusConfigProperty(description = "Path to the HTML report template file", defaultValue = "classpath:org/citrusframework/base/report/test-report.html")
     private static final String REPORT_TEMPLATE_PROPERTY = "citrus.html.report.template";
     private static final String REPORT_TEMPLATE_ENV = "CITRUS_HTML_REPORT_TEMPLATE";
     private static final String REPORT_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/test-report.html";
 
+    @CitrusConfigProperty(description = "Path to the HTML report detail template file", defaultValue = "classpath:org/citrusframework/base/report/test-detail.html")
     private static final String REPORT_DETAIL_TEMPLATE_PROPERTY = "citrus.html.report.detail.template";
     private static final String REPORT_DETAIL_TEMPLATE_ENV = "CITRUS_HTML_REPORT_DETAIL_TEMPLATE";
     private static final String REPORT_DETAIL_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/test-detail.html";
 
+    @CitrusConfigProperty(description = "Target directory for HTML report output")
     private static final String REPORT_DIRECTORY_PROPERTY = "citrus.html.report.directory";
     private static final String REPORT_DIRECTORY_ENV = "CITRUS_HTML_REPORT_DIRECTORY";
 
+    @CitrusConfigProperty(description = "Output file name for the HTML report", defaultValue = "citrus-test-results.html")
     private static final String REPORT_FILE_PROPERTY = "citrus.html.report.file";
     private static final String REPORT_FILE_ENV = "CITRUS_HTML_REPORT_FILE";
     private static final String REPORT_FILE_DEFAULT = "citrus-test-results.html";
 
+    @CitrusConfigProperty(description = "Logo image source for the HTML report", defaultValue = "classpath:org/citrusframework/base/report/citrus_logo.png")
     private static final String REPORT_LOGO_PROPERTY = "citrus.html.report.logo";
     private static final String REPORT_LOGO_ENV = "CITRUS_HTML_REPORT_LOGO";
     private static final String REPORT_LOGO_DEFAULT = "classpath:org/citrusframework/base/report/citrus_logo.png";
 
+    @CitrusConfigProperty(description = "Enable or disable the HTML report", type = "java.lang.Boolean", defaultValue = "true")
     private static final String REPORT_ENABLED_PROPERTY = "citrus.html.report.enabled";
     private static final String REPORT_ENABLED_ENV = "CITRUS_HTML_REPORT_ENABLED";
 

@@ -16,13 +16,17 @@
 
 package org.citrusframework.ftp;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.message.MessageType;
 
+@CitrusConfigProperties(prefix = "citrus.ftp", description = "FTP endpoint settings")
 public class FtpSettings {
 
     private static final String FTP_PROPERTY_PREFIX = "citrus.ftp.";
     private static final String FTP_ENV_PREFIX = "CITRUS_FTP";
 
+    @CitrusConfigProperty(description = "Default marshaller type for FTP data format.", defaultValue = "XML")
     private static final String MARSHALLER_TYPE_PROPERTY = FTP_PROPERTY_PREFIX + "marshaller.type";
     private static final String MARSHALLER_TYPE_ENV = FTP_ENV_PREFIX + "MARSHALLER_TYPE";
     private static final String MARSHALLER_TYPE_DEFAULT = MessageType.XML.name();

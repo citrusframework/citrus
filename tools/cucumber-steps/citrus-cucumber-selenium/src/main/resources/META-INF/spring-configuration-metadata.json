@@ -1,0 +1,33 @@
+{
+  "groups": [
+    {
+      "name": "citrus.selenium",
+      "type": "org.citrusframework.cucumber.steps.selenium.SeleniumSettings",
+      "description": "Selenium cucumber steps settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.selenium.browser.name",
+      "type": "java.lang.String",
+      "description": "Browser component name used for context lookups.",
+      "sourceType": "org.citrusframework.cucumber.steps.selenium.SeleniumSettings",
+      "defaultValue": "seleniumBrowser"
+    },
+    {
+      "name": "citrus.selenium.browser.type",
+      "type": "java.lang.String",
+      "description": "Browser type for creating new browser instances.",
+      "sourceType": "org.citrusframework.cucumber.steps.selenium.SeleniumSettings",
+      "defaultValue": "htmlunit"
+    },
+    {
+      "name": "citrus.selenium.browser.remote.server.url",
+      "type": "java.lang.String",
+      "description": "Remote WebDriver server URL.",
+      "sourceType": "org.citrusframework.cucumber.steps.selenium.SeleniumSettings",
+      "defaultValue": "http://localhost:4444/wd/hub"
+    }
+  ],
+  "hints": []
+}

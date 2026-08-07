@@ -1,0 +1,26 @@
+{
+  "groups": [
+    {
+      "name": "citrus",
+      "type": "org.citrusframework.cucumber.steps.CucumberStepsSettings",
+      "description": "Cucumber steps general settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.namespace",
+      "type": "java.lang.String",
+      "description": "Namespace for Kubernetes/Knative client operations.",
+      "sourceType": "org.citrusframework.cucumber.steps.CucumberStepsSettings",
+      "defaultValue": "default"
+    },
+    {
+      "name": "citrus.cluster.type",
+      "type": "java.lang.String",
+      "description": "Cluster type that Citrus is running on.",
+      "sourceType": "org.citrusframework.cucumber.steps.CucumberStepsSettings",
+      "defaultValue": "KUBERNETES"
+    }
+  ],
+  "hints": []
+}

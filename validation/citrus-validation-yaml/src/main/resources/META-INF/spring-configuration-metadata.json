@@ -1,0 +1,19 @@
+{
+  "groups": [
+    {
+      "name": "citrus.yaml",
+      "type": "org.citrusframework.validation.yaml.YamlSettings",
+      "description": "YAML message validation settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.yaml.message.validation.strict",
+      "type": "java.lang.Boolean",
+      "description": "Enable strict YAML message validation.",
+      "sourceType": "org.citrusframework.validation.yaml.YamlSettings",
+      "defaultValue": true
+    }
+  ],
+  "hints": []
+}

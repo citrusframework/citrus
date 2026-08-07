@@ -16,6 +16,8 @@
 
 package org.citrusframework.testcontainers.kafka;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
@@ -25,6 +27,7 @@ import org.testcontainers.kafka.KafkaContainer;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
+@CitrusConfigProperties(prefix = "citrus.testcontainers.kafka", description = "Kafka Testcontainers settings")
 public class KafkaSettings {
 
     private static final String KAFKA_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "kafka.";
@@ -34,58 +37,72 @@ public class KafkaSettings {
     public static final int KAFKA_PORT = 9092;
     public static final int CONTROLLER_PORT = 9093;
 
+    @CitrusConfigProperty(description = "Kafka service name.", defaultValue = "citrus-kafka")
     private static final String SERVICE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = KAFKA_ENV_PREFIX + "SERVICE_NAME";
     public static final String SERVICE_NAME_DEFAULT = "citrus-kafka";
 
+    @CitrusConfigProperty(description = "Kafka implementation to use.", defaultValue = "CONFLUENT")
     private static final String IMPLEMENTATION_PROPERTY = KAFKA_PROPERTY_PREFIX + "implementation";
     private static final String IMPLEMENTATION_ENV = KAFKA_ENV_PREFIX + "IMPLEMENTATION";
     public static final String IMPLEMENTATION_DEFAULT = KafkaImplementation.CONFLUENT.name();
 
+    @CitrusConfigProperty(description = "Kafka container name.", defaultValue = "kafkaContainer")
     private static final String CONTAINER_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "container.name";
     private static final String CONTAINER_NAME_ENV = KAFKA_ENV_PREFIX + "CONTAINER_NAME";
     public static final String CONTAINER_NAME_DEFAULT = "kafkaContainer";
 
+    @CitrusConfigProperty(description = "Time in seconds to wait for the Kafka container to startup.", type = "java.lang.Long", defaultValue = "180")
     private static final String STARTUP_TIMEOUT_PROPERTY = KAFKA_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = KAFKA_ENV_PREFIX + "STARTUP_TIMEOUT";
     private static final String STARTUP_TIMEOUT_DEFAULT = "180";
 
+    @CitrusConfigProperty(description = "Apache Kafka Docker image name.", defaultValue = "apache/kafka")
     private static final String APACHE_IMAGE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "apache.image.name";
     private static final String APACHE_IMAGE_NAME_ENV = KAFKA_ENV_PREFIX + "APACHE_IMAGE_NAME";
     protected static final String APACHE_IMAGE_NAME_DEFAULT = "apache/kafka";
 
+    @CitrusConfigProperty(description = "Apache Kafka version.", defaultValue = "4.2.1")
     private static final String APACHE_VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "apache.version";
     private static final String APACHE_VERSION_ENV = KAFKA_ENV_PREFIX + "APACHE_VERSION";
     private static final String APACHE_VERSION_DEFAULT = "4.2.1";
 
+    @CitrusConfigProperty(description = "Apache Kafka native Docker image name.", defaultValue = "apache/kafka-native")
     private static final String APACHE_NATIVE_IMAGE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "apache.native.image.name";
     private static final String APACHE_NATIVE_IMAGE_NAME_ENV = KAFKA_ENV_PREFIX + "APACHE_NATIVE_IMAGE_NAME";
     protected static final String APACHE_NATIVE_IMAGE_NAME_DEFAULT = "apache/kafka-native";
 
+    @CitrusConfigProperty(description = "Apache Kafka native version.", defaultValue = "4.2.1")
     private static final String APACHE_NATIVE_VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "apache.native.version";
     private static final String APACHE_NATIVE_VERSION_ENV = KAFKA_ENV_PREFIX + "APACHE_NATIVE_VERSION";
     private static final String APACHE_NATIVE_VERSION_DEFAULT = APACHE_VERSION_DEFAULT;
 
+    @CitrusConfigProperty(description = "Strimzi Kafka Docker image name.", defaultValue = "quay.io/strimzi/kafka")
     private static final String STRIMZI_IMAGE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "strimzi.image.name";
     private static final String STRIMZI_IMAGE_NAME_ENV = KAFKA_ENV_PREFIX + "STRIMZI_IMAGE_NAME";
     protected static final String STRIMZI_IMAGE_NAME_DEFAULT = "quay.io/strimzi/kafka";
 
+    @CitrusConfigProperty(description = "Strimzi Kafka version.", defaultValue = "0.51.0-kafka-4.2.0")
     private static final String STRIMZI_VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "strimzi.version";
     private static final String STRIMZI_VERSION_ENV = KAFKA_ENV_PREFIX + "STRIMZI_VERSION";
     private static final String STRIMZI_VERSION_DEFAULT = "0.51.0-kafka-4.2.0";
 
+    @CitrusConfigProperty(description = "Confluent Kafka Docker image name.", defaultValue = "confluentinc/cp-kafka")
     private static final String CONFLUENT_IMAGE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "confluent.image.name";
     private static final String CONFLUENT_IMAGE_NAME_ENV = KAFKA_ENV_PREFIX + "CONFLUENT_IMAGE_NAME";
     private static final String CONFLUENT_IMAGE_NAME_DEFAULT = "confluentinc/cp-kafka";
 
+    @CitrusConfigProperty(description = "Confluent Kafka version.", defaultValue = "7.9.5")
     private static final String CONFLUENT_VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "confluent.version";
     private static final String CONFLUENT_VERSION_ENV = KAFKA_ENV_PREFIX + "CONFLUENT_VERSION";
     private static final String CONFLUENT_VERSION_DEFAULT = "7.9.5";
 
+    @CitrusConfigProperty(description = "Default Kafka Docker image name.", defaultValue = "confluentinc/cp-kafka")
     private static final String IMAGE_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "image.name";
     private static final String IMAGE_NAME_ENV = KAFKA_ENV_PREFIX + "IMAGE_NAME";
     private static final String IMAGE_NAME_DEFAULT = CONFLUENT_IMAGE_NAME_DEFAULT;
 
+    @CitrusConfigProperty(description = "Default Kafka version.", defaultValue = "7.9.5")
     private static final String VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "version";
     private static final String VERSION_ENV = KAFKA_ENV_PREFIX + "VERSION";
     private static final String VERSION_DEFAULT = CONFLUENT_VERSION_DEFAULT;

@@ -16,15 +16,21 @@
 
 package org.citrusframework.http.server;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.http.server", description = "HTTP server settings")
 public class HttpServerSettings {
 
     private static final String HTTP_SERVER_PROPERTY_PREFIX = "citrus.http.server.";
     private static final String HTTP_SERVER_ENV_PREFIX = "CITRUS_HTTP_SERVER_";
 
+    @CitrusConfigProperty(description = "Server response cache size for message tracing.", type = "java.lang.Integer", defaultValue = "100")
     private static final String RESPONSE_CACHE_SIZE_PROPERTY = HTTP_SERVER_PROPERTY_PREFIX + "response.cache.size";
     private static final String RESPONSE_CACHE_SIZE_ENV = HTTP_SERVER_ENV_PREFIX + "RESPONSE_CACHE_SIZE";
     private static final String RESPONSE_CACHE_SIZE_DEFAULT = "100";
 
+    @CitrusConfigProperty(description = "When enabled the server uses default servlet filters on the servlet context.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String USE_DEFAULT_FILTERS_PROPERTY = HTTP_SERVER_PROPERTY_PREFIX + "use.default.filters";
     private static final String USE_DEFAULT_FILTERS_ENV = HTTP_SERVER_ENV_PREFIX + "USE_DEFAULT_FILTERS";
     private static final String USE_DEFAULT_FILTERS_DEFAULT = "true";

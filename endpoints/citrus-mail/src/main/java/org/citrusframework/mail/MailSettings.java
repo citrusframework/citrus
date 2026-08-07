@@ -16,13 +16,17 @@
 
 package org.citrusframework.mail;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.message.MessageType;
 
+@CitrusConfigProperties(prefix = "citrus.mail", description = "Mail endpoint settings")
 public class MailSettings {
 
     private static final String MAIL_PROPERTY_PREFIX = "citrus.mail.";
     private static final String MAIL_ENV_PREFIX = "CITRUS_MAIL";
 
+    @CitrusConfigProperty(description = "Default marshaller type for mail data format.", defaultValue = "XML")
     private static final String MARSHALLER_TYPE_PROPERTY = MAIL_PROPERTY_PREFIX + "marshaller.type";
     private static final String MARSHALLER_TYPE_ENV = MAIL_ENV_PREFIX + "MARSHALLER_TYPE";
     private static final String MARSHALLER_TYPE_DEFAULT = MessageType.XML.name();

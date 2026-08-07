@@ -1,0 +1,26 @@
+{
+  "groups": [
+    {
+      "name": "citrus.jdbc",
+      "type": "org.citrusframework.cucumber.steps.jdbc.JdbcSettings",
+      "description": "JDBC cucumber steps settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.jdbc.max.attempts",
+      "type": "java.lang.Integer",
+      "description": "Maximum number of attempts when querying for result sets.",
+      "sourceType": "org.citrusframework.cucumber.steps.jdbc.JdbcSettings",
+      "defaultValue": 0
+    },
+    {
+      "name": "citrus.jdbc.delay.between.attempts",
+      "type": "java.lang.Long",
+      "description": "Delay in milliseconds between query attempts.",
+      "sourceType": "org.citrusframework.cucumber.steps.jdbc.JdbcSettings",
+      "defaultValue": 2000
+    }
+  ],
+  "hints": []
+}

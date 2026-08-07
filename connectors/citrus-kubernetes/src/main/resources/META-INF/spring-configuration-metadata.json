@@ -1,0 +1,184 @@
+{
+  "groups": [
+    {
+      "name": "citrus.agent",
+      "type": "org.citrusframework.kubernetes.CitrusAgentSettings",
+      "description": "Citrus agent settings for Kubernetes deployment"
+    },
+    {
+      "name": "citrus.kubernetes",
+      "type": "org.citrusframework.kubernetes.KubernetesSettings",
+      "description": "Kubernetes connector settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.agent.name",
+      "type": "java.lang.String",
+      "description": "Citrus agent name.",
+      "sourceType": "org.citrusframework.kubernetes.CitrusAgentSettings",
+      "defaultValue": "citrus-agent"
+    },
+    {
+      "name": "citrus.agent.image",
+      "type": "java.lang.String",
+      "description": "Citrus agent container image.",
+      "sourceType": "org.citrusframework.kubernetes.CitrusAgentSettings",
+      "defaultValue": "citrusframework/citrus-agent"
+    },
+    {
+      "name": "citrus.agent.image.registry",
+      "type": "java.lang.String",
+      "description": "Citrus agent container image registry.",
+      "sourceType": "org.citrusframework.kubernetes.CitrusAgentSettings",
+      "defaultValue": "quay.io"
+    },
+    {
+      "name": "citrus.agent.server.port",
+      "type": "java.lang.Long",
+      "description": "Citrus agent service port.",
+      "sourceType": "org.citrusframework.kubernetes.CitrusAgentSettings",
+      "defaultValue": 4567
+    },
+    {
+      "name": "citrus.agent.version",
+      "type": "java.lang.String",
+      "description": "Citrus agent container image version.",
+      "sourceType": "org.citrusframework.kubernetes.CitrusAgentSettings",
+      "defaultValue": "latest"
+    },
+    {
+      "name": "citrus.agent.wait.for.running.state",
+      "type": "java.lang.Boolean",
+      "description": "Automatically wait for the agent service to be in running state.",
+      "sourceType": "org.citrusframework.kubernetes.CitrusAgentSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.kubernetes.auto.remove.resources",
+      "type": "java.lang.Boolean",
+      "description": "Automatically remove Kubernetes resources created during the test.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.kubernetes.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable Kubernetes support.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.kubernetes.use.default.actor",
+      "type": "java.lang.Boolean",
+      "description": "Use a default test actor for all Kubernetes test actions.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.kubernetes.auto.create.server.binding",
+      "type": "java.lang.Boolean",
+      "description": "Automatically create a local HTTP server binding for each Kubernetes service.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.kubernetes.cluster.type",
+      "type": "java.lang.String",
+      "description": "Cluster type that Citrus is running on.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": "KUBERNETES"
+    },
+    {
+      "name": "citrus.kubernetes.cluster.wildcard.domain",
+      "type": "java.lang.String",
+      "description": "Cluster wildcard domain for service resolution.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings"
+    },
+    {
+      "name": "citrus.kubernetes.service.timeout",
+      "type": "java.lang.Long",
+      "description": "Request timeout in milliseconds when receiving cloud events.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": 2000
+    },
+    {
+      "name": "citrus.kubernetes.connect.timeout",
+      "type": "java.lang.Long",
+      "description": "Timeout in milliseconds when connecting to Kubernetes cluster.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": 5000
+    },
+    {
+      "name": "citrus.kubernetes.namespace",
+      "type": "java.lang.String",
+      "description": "Namespace for Kubernetes client operations.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": "default"
+    },
+    {
+      "name": "citrus.kubernetes.test.id.label",
+      "type": "java.lang.String",
+      "description": "Kubernetes label used to identify test resources.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": "citrusframework.org/test-id"
+    },
+    {
+      "name": "citrus.kubernetes.api.version",
+      "type": "java.lang.String",
+      "description": "API version for current Kubernetes installation.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": "v1"
+    },
+    {
+      "name": "citrus.kubernetes.service.name",
+      "type": "java.lang.String",
+      "description": "Service name for cloud event subscriptions.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": "citrus-k8s-service"
+    },
+    {
+      "name": "citrus.kubernetes.service.port",
+      "type": "java.lang.Long",
+      "description": "Service port used when consuming cloud events via HTTP.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": 8080
+    },
+    {
+      "name": "citrus.kubernetes.default.labels",
+      "type": "java.lang.String",
+      "description": "Default labels for Kubernetes resources as comma-delimited key=value pairs.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": "app=citrus"
+    },
+    {
+      "name": "citrus.kubernetes.max.attempts",
+      "type": "java.lang.Long",
+      "description": "Maximum number of attempts when polling for running state and log messages.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": 150
+    },
+    {
+      "name": "citrus.kubernetes.delay.between.attempts",
+      "type": "java.lang.Long",
+      "description": "Delay in milliseconds between polling attempts.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": 2000
+    },
+    {
+      "name": "citrus.kubernetes.print.pod.logs",
+      "type": "java.lang.Boolean",
+      "description": "Enable printing pod logs while waiting for a pod log message.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.kubernetes.watch.logs.timeout",
+      "type": "java.lang.Long",
+      "description": "Duration in milliseconds to watch pod logs.",
+      "sourceType": "org.citrusframework.kubernetes.KubernetesSettings",
+      "defaultValue": 60000
+    }
+  ],
+  "hints": []
+}

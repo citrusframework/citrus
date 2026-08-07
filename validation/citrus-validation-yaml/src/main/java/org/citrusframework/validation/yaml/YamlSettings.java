@@ -18,8 +18,13 @@ package org.citrusframework.validation.yaml;
 
 import static java.lang.Boolean.parseBoolean;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.yaml", description = "YAML message validation settings")
 public final class YamlSettings {
 
+    @CitrusConfigProperty(description = "Enable strict YAML message validation.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String MESSAGE_VALIDATION_STRICT_PROPERTY = "citrus.yaml.message.validation.strict";
     private static final String MESSAGE_VALIDATION_STRICT_ENV = "CITRUS_YAML_MESSAGE_VALIDATION_STRICT";
     private static final String MESSAGE_VALIDATION_STRICT_DEFAULT = "true";

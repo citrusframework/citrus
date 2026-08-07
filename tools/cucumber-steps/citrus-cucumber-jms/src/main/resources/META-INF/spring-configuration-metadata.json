@@ -1,0 +1,26 @@
+{
+  "groups": [
+    {
+      "name": "citrus.jms",
+      "type": "org.citrusframework.cucumber.steps.jms.JmsSettings",
+      "description": "JMS cucumber steps settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.jms.endpoint.name",
+      "type": "java.lang.String",
+      "description": "Default JMS endpoint name.",
+      "sourceType": "org.citrusframework.cucumber.steps.jms.JmsSettings",
+      "defaultValue": "citrus-jms-endpoint"
+    },
+    {
+      "name": "citrus.jms.timeout",
+      "type": "java.lang.Long",
+      "description": "Request timeout in milliseconds when receiving messages.",
+      "sourceType": "org.citrusframework.cucumber.steps.jms.JmsSettings",
+      "defaultValue": 60000
+    }
+  ],
+  "hints": []
+}

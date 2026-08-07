@@ -16,6 +16,10 @@
 
 package org.citrusframework.report;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.report", description = "Citrus test report settings.")
 public final class TestReporterSettings {
 
     private TestReporterSettings() {
@@ -23,12 +27,15 @@ public final class TestReporterSettings {
     }
 
     /** Report related settings */
+    @CitrusConfigProperty(description = "Automatically clear all test results after finishing the test suite.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String REPORT_AUTO_CLEAR_PROPERTY = "citrus.report.auto.clear";
     private static final String REPORT_AUTO_CLEAR_ENV = "CITRUS_REPORT_AUTO_CLEAR";
 
+    @CitrusConfigProperty(description = "Ignore errors during report generation.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String REPORT_IGNORE_ERRORS_PROPERTY = "citrus.report.ignore.errors";
     private static final String REPORT_IGNORE_ERRORS_ENV = "CITRUS_REPORT_IGNORE_ERRORS";
 
+    @CitrusConfigProperty(description = "Target report directory where report files are created.", defaultValue = "target/citrus-reports")
     private static final String REPORT_DIRECTORY_PROPERTY = "citrus.report.directory";
     private static final String REPORT_DIRECTORY_ENV = "CITRUS_REPORT_DIRECTORY";
     private static final String REPORT_DIRECTORY_DEFAULT = "target/citrus-reports";

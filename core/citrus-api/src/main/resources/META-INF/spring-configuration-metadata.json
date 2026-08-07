@@ -1,0 +1,527 @@
+{
+  "groups": [
+    {
+      "name": "citrus",
+      "type": "org.citrusframework.CitrusSettings",
+      "description": "Core Citrus framework settings."
+    },
+    {
+      "name": "citrus.agent",
+      "type": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "description": "Citrus agent settings for remote test execution."
+    },
+    {
+      "name": "citrus.logger",
+      "type": "org.citrusframework.log.CitrusLogSettings",
+      "description": "Citrus logger and log masking settings."
+    },
+    {
+      "name": "citrus.summary.report",
+      "type": "org.citrusframework.report.SummaryReporterSettings",
+      "description": "Citrus summary report settings."
+    },
+    {
+      "name": "citrus.report",
+      "type": "org.citrusframework.report.TestReporterSettings",
+      "description": "Citrus test report settings."
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.application.properties",
+      "type": "java.lang.String",
+      "description": "Path to the optional Citrus application properties file.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": "citrus-application.properties"
+    },
+    {
+      "name": "citrus.validation.outbound.schema.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable outbound schema validation.",
+      "sourceType": "org.citrusframework.CitrusSettings"
+    },
+    {
+      "name": "citrus.validation.outbound.json.schema.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable outbound JSON schema validation.",
+      "sourceType": "org.citrusframework.CitrusSettings"
+    },
+    {
+      "name": "citrus.validation.outbound.xml.schema.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable outbound XML schema validation.",
+      "sourceType": "org.citrusframework.CitrusSettings"
+    },
+    {
+      "name": "citrus.test.name.variable",
+      "type": "java.lang.String",
+      "description": "Name of the test name variable.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": "citrus.test.name"
+    },
+    {
+      "name": "citrus.test.package.variable",
+      "type": "java.lang.String",
+      "description": "Name of the test package variable.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": "citrus.test.package"
+    },
+    {
+      "name": "citrus.file.encoding",
+      "type": "java.lang.String",
+      "description": "File encoding used by Citrus.",
+      "sourceType": "org.citrusframework.CitrusSettings"
+    },
+    {
+      "name": "citrus.java.config",
+      "type": "java.lang.String",
+      "description": "Default application context configuration class.",
+      "sourceType": "org.citrusframework.CitrusSettings"
+    },
+    {
+      "name": "citrus.default.src.directory",
+      "type": "java.lang.String",
+      "description": "Default test source directory.",
+      "sourceType": "org.citrusframework.CitrusSettings"
+    },
+    {
+      "name": "citrus.groovy.file.name.pattern",
+      "type": "java.lang.String",
+      "description": "Comma-separated file name patterns for Groovy test files.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": ".*\\.citrus\\.groovy,.*\\.citrus\\.test\\.groovy,.*\\.citrus\\.it\\.groovy,.*\\.citrus-test\\.groovy,.*\\.citrus-it\\.groovy"
+    },
+    {
+      "name": "citrus.yaml.file.name.pattern",
+      "type": "java.lang.String",
+      "description": "Comma-separated file name patterns for YAML test files.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": ".*\\.citrus\\.yaml,.*\\.citrus\\.test\\.yaml,.*\\.citrus\\.it\\.yaml,.*\\.citrus-test\\.yaml,.*\\.citrus-it\\.yaml"
+    },
+    {
+      "name": "citrus.xml.file.name.pattern",
+      "type": "java.lang.String",
+      "description": "Comma-separated file name patterns for XML test files.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": ".*Test\\.xml,.*IT\\.xml,.*\\.citrus\\.xml,.*\\.citrus\\.test\\.xml,.*\\.citrus\\.it\\.xml,.*\\.citrus-test\\.xml,.*\\.citrus-it\\.xml"
+    },
+    {
+      "name": "citrus.java.file.name.pattern",
+      "type": "java.lang.String",
+      "description": "Comma-separated file name patterns for Java test files.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": ".*Test\\.java,.*IT\\.java"
+    },
+    {
+      "name": "citrus.default.message.type",
+      "type": "java.lang.String",
+      "description": "Default message type used in message validation.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": "XML"
+    },
+    {
+      "name": "citrus.http.message.builder.force.citrus.header.update.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable forced Citrus header update in HTTP message builder.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.env.var.property.binding.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable environment variable based endpoint and component configuration.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.component.property.binding.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable environment variable based component configuration.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.endpoint.property.binding.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable environment variable based endpoint configuration.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.message.trace.directory",
+      "type": "java.lang.String",
+      "description": "Directory for message trace output files.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": "target/citrus-logs/trace/messages"
+    },
+    {
+      "name": "citrus.type.converter",
+      "type": "java.lang.String",
+      "description": "Default type converter to use.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": "default"
+    },
+    {
+      "name": "citrus.perform.default.validation",
+      "type": "java.lang.Boolean",
+      "description": "Enable fallback to default text equals validation.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.custom.validator.strategy",
+      "type": "java.lang.String",
+      "description": "Strategy for custom validator resolution.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": "EXCLUSIVE"
+    },
+    {
+      "name": "citrus.message.cache.input.stream",
+      "type": "java.lang.Boolean",
+      "description": "Enable input stream caching for messages.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.message.pretty.print",
+      "type": "java.lang.Boolean",
+      "description": "Enable message payload pretty printing.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.file.path.charset.parameter",
+      "type": "java.lang.String",
+      "description": "Charset parameter appended to file paths.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": "; charset="
+    },
+    {
+      "name": "citrus.resources.workdir",
+      "type": "java.lang.String",
+      "description": "Work directory for loading file resources.",
+      "sourceType": "org.citrusframework.CitrusSettings"
+    },
+    {
+      "name": "citrus.groovy.static.imports",
+      "type": "java.lang.String",
+      "description": "Comma-separated static imports for Groovy test action scripts.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": "print,sleep"
+    },
+    {
+      "name": "citrus.default.logging.reporter.print-stack-traces",
+      "type": "java.lang.Boolean",
+      "description": "Enable stack trace output in default logging reporter.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.dynamic.endpoints.auto.close",
+      "type": "java.lang.Boolean",
+      "description": "Enable auto close of dynamic endpoints after tests.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.dynamic.endpoints.auto.remove",
+      "type": "java.lang.Boolean",
+      "description": "Enable auto removal of dynamic endpoints after tests.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.print.banner",
+      "type": "java.lang.Boolean",
+      "description": "Enable Citrus banner output at test suite start.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.allow.function.override",
+      "type": "java.lang.Boolean",
+      "description": "Allow override of default functions with custom instances.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.allow.validation.matcher.override",
+      "type": "java.lang.Boolean",
+      "description": "Allow override of default validation matchers with custom instances.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.agent.name",
+      "type": "java.lang.String",
+      "description": "Name of the Citrus agent.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": "citrus-agent"
+    },
+    {
+      "name": "citrus.agent.test.engine",
+      "type": "java.lang.String",
+      "description": "Test engine to use for running tests.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": "junit-jupiter"
+    },
+    {
+      "name": "citrus.agent.work.directory",
+      "type": "java.lang.String",
+      "description": "Work directory for the agent.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings"
+    },
+    {
+      "name": "citrus.agent.server.port",
+      "type": "java.lang.Long",
+      "description": "HTTP server port for the agent.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": 4567
+    },
+    {
+      "name": "citrus.agent.time.to.live",
+      "type": "java.lang.Long",
+      "description": "Time to live for the agent in milliseconds (-1 for unlimited).",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": -1
+    },
+    {
+      "name": "citrus.agent.system.exit",
+      "type": "java.lang.Boolean",
+      "description": "Enable System.exit call when agent stops.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.agent.skip.tests",
+      "type": "java.lang.Boolean",
+      "description": "Skip test execution on the agent.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.agent.verbose",
+      "type": "java.lang.Boolean",
+      "description": "Enable verbose output for the agent.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.agent.reset",
+      "type": "java.lang.Boolean",
+      "description": "Reset the agent context between test runs.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.agent.includes",
+      "type": "java.lang.String",
+      "description": "Regex patterns for test class name includes.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": "^.*IT$,^.*ITCase$,^IT.*$"
+    },
+    {
+      "name": "citrus.agent.packages",
+      "type": "java.lang.String",
+      "description": "Comma-separated list of packages to scan for test classes.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings"
+    },
+    {
+      "name": "citrus.agent.default.properties",
+      "type": "java.lang.String",
+      "description": "Default properties as comma-separated key=value pairs.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings"
+    },
+    {
+      "name": "citrus.agent.test.sources",
+      "type": "java.lang.String",
+      "description": "Comma-separated list of test source file paths.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings"
+    },
+    {
+      "name": "citrus.agent.config.class",
+      "type": "java.lang.String",
+      "description": "Java configuration class for the agent context.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings"
+    },
+    {
+      "name": "citrus.agent.test.jar",
+      "type": "java.lang.String",
+      "description": "Path to the test JAR file.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": "classpath:citrus-agent-tests.jar"
+    },
+    {
+      "name": "citrus.agent.cors.allowed.origin",
+      "type": "java.lang.String",
+      "description": "Regex pattern for allowed CORS origins.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": "https?://localhost:\\d+"
+    },
+    {
+      "name": "citrus.agent.modules",
+      "type": "java.lang.String",
+      "description": "Citrus modules to load as additional dependencies.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings"
+    },
+    {
+      "name": "citrus.agent.dependencies",
+      "type": "java.lang.String",
+      "description": "Additional Maven GAV dependencies to add to the classpath.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings"
+    },
+    {
+      "name": "citrus.agent.offline",
+      "type": "java.lang.Boolean",
+      "description": "Enable offline mode for the agent.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.agent.inspect.code",
+      "type": "java.lang.Boolean",
+      "description": "Enable code inspection on the agent.",
+      "sourceType": "org.citrusframework.api.agent.CitrusAgentSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.logger.mask.keywords",
+      "type": "java.lang.String",
+      "description": "Comma-separated keywords to mask in log output.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": "password,secret,secretKey"
+    },
+    {
+      "name": "citrus.logger.modifier",
+      "type": "java.lang.Boolean",
+      "description": "Enable the logger modifier for masking sensitive data.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.logger.mask.value",
+      "type": "java.lang.String",
+      "description": "Replacement value used for masked keywords in log output.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": "****"
+    },
+    {
+      "name": "citrus.logger.mask.xml",
+      "type": "java.lang.Boolean",
+      "description": "Enable log masking for XML payload.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.logger.mask.json",
+      "type": "java.lang.Boolean",
+      "description": "Enable log masking for JSON payload.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.logger.mask.yaml",
+      "type": "java.lang.Boolean",
+      "description": "Enable log masking for YAML payload.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.logger.mask.key.value",
+      "type": "java.lang.Boolean",
+      "description": "Enable log masking for key-value pairs payload.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.logger.mask.form.url.encoded",
+      "type": "java.lang.Boolean",
+      "description": "Enable log masking for form URL encoded payload.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.logger.print.message.content",
+      "type": "java.lang.Boolean",
+      "description": "Enable message content (headers and body) in log output.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.logger.print.inbound.message.content",
+      "type": "java.lang.Boolean",
+      "description": "Enable inbound message content (headers and body) in log output.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings"
+    },
+    {
+      "name": "citrus.logger.print.outbound.message.content",
+      "type": "java.lang.Boolean",
+      "description": "Enable outbound message content (headers and body) in log output.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings"
+    },
+    {
+      "name": "citrus.logger.print.message.layout",
+      "type": "java.lang.String",
+      "description": "Layout mode for message content in log output (summary, verbose, compact, body).",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": "verbose"
+    },
+    {
+      "name": "citrus.logger.message.payload.max.length",
+      "type": "java.lang.Long",
+      "description": "Maximum length of message body in log output before truncation.",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": 2048
+    },
+    {
+      "name": "citrus.logger.color",
+      "type": "java.lang.String",
+      "description": "ANSI color mode for log output (auto, always, never).",
+      "sourceType": "org.citrusframework.log.CitrusLogSettings",
+      "defaultValue": "auto"
+    },
+    {
+      "name": "citrus.summary.report.template",
+      "type": "java.lang.String",
+      "description": "Path to the summary report template file.",
+      "sourceType": "org.citrusframework.report.SummaryReporterSettings",
+      "defaultValue": "classpath:org/citrusframework/report/summary-report.xml"
+    },
+    {
+      "name": "citrus.summary.report.file",
+      "type": "java.lang.String",
+      "description": "Target output file name of the summary report.",
+      "sourceType": "org.citrusframework.report.SummaryReporterSettings",
+      "defaultValue": "citrus-summary.xml"
+    },
+    {
+      "name": "citrus.summary.report.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable the summary report generation.",
+      "sourceType": "org.citrusframework.report.SummaryReporterSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.report.auto.clear",
+      "type": "java.lang.Boolean",
+      "description": "Automatically clear all test results after finishing the test suite.",
+      "sourceType": "org.citrusframework.report.TestReporterSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.report.ignore.errors",
+      "type": "java.lang.Boolean",
+      "description": "Ignore errors during report generation.",
+      "sourceType": "org.citrusframework.report.TestReporterSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.report.directory",
+      "type": "java.lang.String",
+      "description": "Target report directory where report files are created.",
+      "sourceType": "org.citrusframework.report.TestReporterSettings",
+      "defaultValue": "target/citrus-reports"
+    }
+  ],
+  "hints": []
+}

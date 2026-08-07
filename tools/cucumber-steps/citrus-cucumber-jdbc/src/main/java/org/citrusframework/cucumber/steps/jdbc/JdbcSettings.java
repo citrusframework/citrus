@@ -16,15 +16,21 @@
 
 package org.citrusframework.cucumber.steps.jdbc;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.jdbc", description = "JDBC cucumber steps settings")
 public class JdbcSettings {
 
     private static final String JDBC_PROPERTY_PREFIX = "citrus.jdbc.";
     private static final String JDBC_ENV_PREFIX = "CITRUS_JDBC_";
 
+    @CitrusConfigProperty(description = "Maximum number of attempts when querying for result sets.", type = "java.lang.Integer", defaultValue = "0")
     private static final String MAX_ATTEMPTS_PROPERTY = JDBC_PROPERTY_PREFIX + "max.attempts";
     private static final String MAX_ATTEMPTS_ENV = JDBC_ENV_PREFIX + "MAX_ATTEMPTS";
     private static final String MAX_ATTEMPTS_DEFAULT = "0";
 
+    @CitrusConfigProperty(description = "Delay in milliseconds between query attempts.", type = "java.lang.Long", defaultValue = "2000")
     private static final String DELAY_BETWEEN_ATTEMPTS_PROPERTY = JDBC_PROPERTY_PREFIX + "delay.between.attempts";
     private static final String DELAY_BETWEEN_ATTEMPTS_ENV = JDBC_ENV_PREFIX + "DELAY_BETWEEN_ATTEMPTS";
     private static final String DELAY_BETWEEN_ATTEMPTS_DEFAULT = "2000";

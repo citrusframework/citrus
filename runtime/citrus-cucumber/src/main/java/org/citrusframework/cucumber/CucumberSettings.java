@@ -25,9 +25,12 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.citrusframework.api.kubernetes.ClusterType;
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@CitrusConfigProperties(prefix = "citrus.cucumber", description = "Cucumber runtime settings for Citrus")
 public class CucumberSettings {
 
     /** Logger */
@@ -36,25 +39,31 @@ public class CucumberSettings {
     private static final String CITRUS_PROPERTY_PREFIX = "citrus.";
     private static final String CITRUS_ENV_PREFIX = "CITRUS_";
 
+    @CitrusConfigProperty(description = "Cluster wildcard domain for Kubernetes service lookups.")
     private static final String CLUSTER_WILDCARD_DOMAIN_PROPERTY = "cluster.wildcard.domain";
     private static final String CLUSTER_WILDCARD_DOMAIN_ENV = "CLUSTER_WILDCARD_DOMAIN";
     public static final String DEFAULT_DOMAIN_SUFFIX = "svc.cluster.local";
 
+    @CitrusConfigProperty(description = "Namespace for Kubernetes/Knative client operations.", defaultValue = "default")
     private static final String NAMESPACE_PROPERTY = CITRUS_PROPERTY_PREFIX + "namespace";
     private static final String NAMESPACE_ENV = CITRUS_ENV_PREFIX + "NAMESPACE";
     private static final String NAMESPACE_DEFAULT = "default";
 
+    @CitrusConfigProperty(description = "Default operator namespace for Citrus operations.")
     private static final String OPERATOR_NAMESPACE_PROPERTY = CITRUS_PROPERTY_PREFIX + "namespace";
     private static final String OPERATOR_NAMESPACE_ENV = CITRUS_ENV_PREFIX + "NAMESPACE";
 
+    @CitrusConfigProperty(description = "Cluster type that Citrus is running on.", defaultValue = "KUBERNETES")
     private static final String CLUSTER_TYPE_PROPERTY = CITRUS_PROPERTY_PREFIX + "cluster.type";
     private static final String CLUSTER_TYPE_ENV = CITRUS_ENV_PREFIX + "CLUSTER_TYPE";
     private static final String CLUSTER_TYPE_DEFAULT = ClusterType.KUBERNETES.name();
 
+    @CitrusConfigProperty(description = "Test identifier also set as label on the Pod running the test.", defaultValue = "citrus-test")
     private static final String TEST_ID_PROPERTY = CITRUS_PROPERTY_PREFIX + "test.id";
     private static final String TEST_ID_ENV = CITRUS_ENV_PREFIX + "TEST_ID";
     private static final String TEST_ID_DEFAULT = "citrus-test";
 
+    @CitrusConfigProperty(description = "File path for the termination log.", defaultValue = "target/termination.log")
     private static final String TERMINATION_LOG_PROPERTY = CITRUS_PROPERTY_PREFIX + "termination.log";
     private static final String TERMINATION_LOG_ENV = CITRUS_ENV_PREFIX + "TERMINATION_LOG";
     private static final String TERMINATION_LOG_DEFAULT = "target/termination.log";
