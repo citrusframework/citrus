@@ -58,6 +58,7 @@ public class JarFileTestScanner extends AbstractTestScanner {
                     String className = FileUtils.getBaseName(entry.getName()).replace( "/", "." );
                     boolean isTestClass = (packageIsEmpty || entry.getName().startsWith(packageAsPath))
                         && entry.getName().endsWith(".class")
+                        && !entry.getName().startsWith("META-INF")
                         && isIncluded(className);
                     if (isTestClass) {
                         logger.info("Found test class candidate in test jar file: {}",  entry.getName());
