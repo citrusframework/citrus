@@ -1,0 +1,26 @@
+{
+  "groups": [
+    {
+      "name": "citrus.http.server",
+      "type": "org.citrusframework.http.server.HttpServerSettings",
+      "description": "HTTP server settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.http.server.response.cache.size",
+      "type": "java.lang.Integer",
+      "description": "Server response cache size for message tracing.",
+      "sourceType": "org.citrusframework.http.server.HttpServerSettings",
+      "defaultValue": 100
+    },
+    {
+      "name": "citrus.http.server.use.default.filters",
+      "type": "java.lang.Boolean",
+      "description": "When enabled the server uses default servlet filters on the servlet context.",
+      "sourceType": "org.citrusframework.http.server.HttpServerSettings",
+      "defaultValue": true
+    }
+  ],
+  "hints": []
+}

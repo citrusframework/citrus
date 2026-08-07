@@ -16,6 +16,10 @@
 
 package org.citrusframework.base.report;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.junit.report", description = "JUnit test report settings")
 public class JUnitReporterSettings {
 
     private JUnitReporterSettings() {
@@ -23,30 +27,37 @@ public class JUnitReporterSettings {
     }
 
     /** Reporter related settings */
+    @CitrusConfigProperty(description = "Path to the JUnit report template file", defaultValue = "classpath:org/citrusframework/base/report/junit-report.xml")
     private static final String REPORT_TEMPLATE_PROPERTY = "citrus.junit.report.template";
     private static final String REPORT_TEMPLATE_ENV = "CITRUS_JUNIT_REPORT_TEMPLATE";
     private static final String REPORT_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/junit-report.xml";
 
+    @CitrusConfigProperty(description = "Path to the JUnit success test template file", defaultValue = "classpath:org/citrusframework/base/report/junit-test.xml")
     private static final String REPORT_SUCCESS_TEMPLATE_PROPERTY = "citrus.junit.report.success.template";
     private static final String REPORT_SUCCESS_TEMPLATE_ENV = "CITRUS_JUNIT_REPORT_SUCCESS_TEMPLATE";
     private static final String REPORT_SUCCESS_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/junit-test.xml";
 
+    @CitrusConfigProperty(description = "Path to the JUnit failed test template file", defaultValue = "classpath:org/citrusframework/base/report/junit-test-failed.xml")
     private static final String REPORT_FAILED_TEMPLATE_PROPERTY = "citrus.junit.report.failed.template";
     private static final String REPORT_FAILED_TEMPLATE_ENV = "CITRUS_JUNIT_REPORT_FAILED_TEMPLATE";
     private static final String REPORT_FAILED_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/junit-test-failed.xml";
 
+    @CitrusConfigProperty(description = "Target directory for JUnit report output", defaultValue = "junitreports")
     private static final String REPORT_DIRECTORY_PROPERTY = "citrus.junit.report.directory";
     private static final String REPORT_DIRECTORY_ENV = "CITRUS_JUNIT_REPORT_DIRECTORY";
     private static final String REPORT_DIRECTORY_DEFAULT = "junitreports";
 
+    @CitrusConfigProperty(description = "File name pattern for JUnit report files", defaultValue = "TEST-%s.xml")
     private static final String REPORT_FILE_PATTERN_PROPERTY = "citrus.junit.report.file.pattern";
     private static final String REPORT_FILE_PATTERN_ENV = "CITRUS_JUNIT_REPORT_FILE_PATTERN";
     private static final String REPORT_FILE_PATTERN_DEFAULT = "TEST-%s.xml";
 
+    @CitrusConfigProperty(description = "Name of the JUnit test suite", defaultValue = "TestSuite")
     private static final String REPORT_SUITE_NAME_PROPERTY = "citrus.junit.report.suite.name";
     private static final String REPORT_SUITE_NAME_ENV = "CITRUS_JUNIT_REPORT_SUITE_NAME";
     private static final String REPORT_SUITE_NAME_DEFAULT = "TestSuite";
 
+    @CitrusConfigProperty(description = "Enable or disable the JUnit report", type = "java.lang.Boolean", defaultValue = "true")
     private static final String REPORT_ENABLED_PROPERTY = "citrus.junit.report.enabled";
     private static final String REPORT_ENABLED_ENV = "CITRUS_JUNIT_REPORT_ENABLED";
 

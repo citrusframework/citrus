@@ -19,15 +19,21 @@ package org.citrusframework.cucumber.steps.jms;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.jms", description = "JMS cucumber steps settings")
 public class JmsSettings {
 
     private static final String JMS_PROPERTY_PREFIX = "citrus.jms.";
     private static final String JMS_ENV_PREFIX = "CITRUS_JMS_";
 
+    @CitrusConfigProperty(description = "Default JMS endpoint name.", defaultValue = "citrus-jms-endpoint")
     private static final String ENDPOINT_NAME_PROPERTY = JMS_PROPERTY_PREFIX + "endpoint.name";
     private static final String ENDPOINT_NAME_ENV = JMS_ENV_PREFIX + "ENDPOINT_NAME";
     private static final String ENDPOINT_NAME_DEFAULT = "citrus-jms-endpoint";
 
+    @CitrusConfigProperty(description = "Request timeout in milliseconds when receiving messages.", type = "java.lang.Long", defaultValue = "60000")
     private static final String TIMEOUT_PROPERTY = JMS_PROPERTY_PREFIX + "timeout";
     private static final String TIMEOUT_ENV = JMS_ENV_PREFIX + "TIMEOUT";
 

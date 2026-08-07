@@ -16,105 +16,135 @@
 
 package org.citrusframework.cucumber.steps.http;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.http", description = "HTTP cucumber steps settings")
 public class HttpSettings {
 
     private static final String HTTP_PROPERTY_PREFIX = "citrus.http.";
     private static final String HTTP_ENV_PREFIX = "CITRUS_HTTP_";
 
+    @CitrusConfigProperty(description = "Request timeout in milliseconds when receiving messages.", type = "java.lang.Long", defaultValue = "2000")
     private static final String TIMEOUT_PROPERTY = HTTP_PROPERTY_PREFIX + "timeout";
     private static final String TIMEOUT_ENV = HTTP_ENV_PREFIX + "TIMEOUT";
     private static final String TIMEOUT_DEFAULT = "2000";
 
+    @CitrusConfigProperty(description = "Server authentication path pattern.", defaultValue = "/secure/*")
     private static final String SERVER_AUTH_PATH_PROPERTY = HTTP_PROPERTY_PREFIX + "server.auth.path";
     private static final String SERVER_AUTH_PATH_ENV = HTTP_ENV_PREFIX + "SERVER_AUTH_PATH";
     private static final String SERVER_AUTH_PATH_DEFAULT = "/secure/*";
 
+    @CitrusConfigProperty(description = "Comma-separated user roles for server authentication.", defaultValue = "citrus")
     private static final String SERVER_AUTH_USER_ROLES_PROPERTY = HTTP_PROPERTY_PREFIX + "server.auth.user.roles";
     private static final String SERVER_AUTH_USER_ROLES_ENV = HTTP_ENV_PREFIX + "SERVER_AUTH_USER_ROLES";
     private static final String SERVER_AUTH_USER_ROLES_DEFAULT = "citrus";
 
+    @CitrusConfigProperty(description = "Default authentication method for HTTP communication.", defaultValue = "none")
     private static final String AUTH_METHOD_PROPERTY = HTTP_PROPERTY_PREFIX + "auth.method";
     private static final String AUTH_METHOD_ENV = HTTP_ENV_PREFIX + "AUTH_METHOD";
     private static final String AUTH_METHOD_DEFAULT = "none";
 
+    @CitrusConfigProperty(description = "Authentication method for the HTTP server.")
     private static final String SERVER_AUTH_METHOD_PROPERTY = HTTP_PROPERTY_PREFIX + "server.auth.method";
     private static final String SERVER_AUTH_METHOD_ENV = HTTP_ENV_PREFIX + "SERVER_AUTH_METHOD";
 
+    @CitrusConfigProperty(description = "Authentication method for the HTTP client.")
     private static final String CLIENT_AUTH_METHOD_PROPERTY = HTTP_PROPERTY_PREFIX + "client.auth.method";
     private static final String CLIENT_AUTH_METHOD_ENV = HTTP_ENV_PREFIX + "CLIENT_AUTH_METHOD";
 
+    @CitrusConfigProperty(description = "Default authentication username.", defaultValue = "citrus")
     private static final String AUTH_USER_PROPERTY = HTTP_PROPERTY_PREFIX + "auth.user";
     private static final String AUTH_USER_ENV = HTTP_ENV_PREFIX + "AUTH_USER";
     private static final String AUTH_USER_DEFAULT = "citrus";
 
+    @CitrusConfigProperty(description = "Authentication username for the HTTP server.")
     private static final String SERVER_AUTH_USER_PROPERTY = HTTP_PROPERTY_PREFIX + "server.auth.user";
     private static final String SERVER_AUTH_USER_ENV = HTTP_ENV_PREFIX + "SERVER_AUTH_USER";
 
+    @CitrusConfigProperty(description = "Authentication username for the HTTP client.")
     private static final String CLIENT_AUTH_USER_PROPERTY = HTTP_PROPERTY_PREFIX + "client.auth.user";
     private static final String CLIENT_AUTH_USER_ENV = HTTP_ENV_PREFIX + "CLIENT_AUTH_USER";
 
+    @CitrusConfigProperty(description = "Default authentication password.", defaultValue = "secr3t")
     private static final String AUTH_PASSWORD_PROPERTY = HTTP_PROPERTY_PREFIX + "auth.password";
     private static final String AUTH_PASSWORD_ENV = HTTP_ENV_PREFIX + "AUTH_PASSWORD";
     private static final String AUTH_PASSWORD_DEFAULT = "secr3t";
 
+    @CitrusConfigProperty(description = "Authentication password for the HTTP server.")
     private static final String SERVER_AUTH_PASSWORD_PROPERTY = HTTP_PROPERTY_PREFIX + "server.auth.password";
     private static final String SERVER_AUTH_PASSWORD_ENV = HTTP_ENV_PREFIX + "SERVER_AUTH_PASSWORD";
 
+    @CitrusConfigProperty(description = "Authentication password for the HTTP client.")
     private static final String CLIENT_AUTH_PASSWORD_PROPERTY = HTTP_PROPERTY_PREFIX + "client.auth.password";
     private static final String CLIENT_AUTH_PASSWORD_ENV = HTTP_ENV_PREFIX + "CLIENT_AUTH_PASSWORD";
 
+    @CitrusConfigProperty(description = "Enable fork mode when sending HTTP messages.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String FORK_MODE_PROPERTY = HTTP_PROPERTY_PREFIX + "fork.mode";
     private static final String FORK_MODE_ENV = HTTP_ENV_PREFIX + "FORK_MODE";
     private static final String FORK_MODE_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "HTTP server component name.", defaultValue = "citrus-http-server")
     private static final String SERVER_NAME_PROPERTY = HTTP_PROPERTY_PREFIX + "server.name";
     private static final String SERVER_NAME_ENV = HTTP_ENV_PREFIX + "SERVER_NAME";
     private static final String SERVER_NAME_DEFAULT = "citrus-http-server";
 
+    @CitrusConfigProperty(description = "Port for the HTTP server.", type = "java.lang.Integer", defaultValue = "8080")
     private static final String SERVER_PORT_PROPERTY = HTTP_PROPERTY_PREFIX + "server.port";
     private static final String SERVER_PORT_ENV = HTTP_ENV_PREFIX + "SERVER_PORT";
     private static final String SERVER_PORT_DEFAULT = "8080";
 
+    @CitrusConfigProperty(description = "Secure HTTPS port.", type = "java.lang.Integer", defaultValue = "8443")
     private static final String SECURE_PORT_PROPERTY = HTTP_PROPERTY_PREFIX + "secure.port";
     private static final String SECURE_PORT_ENV = HTTP_ENV_PREFIX + "SECURE_PORT";
     private static final String SECURE_PORT_DEFAULT = "8443";
 
+    @CitrusConfigProperty(description = "SSL truststore file path.", defaultValue = "classpath:keystore/truststore.jks")
     private static final String TRUSTSTORE_PATH_PROPERTY = HTTP_PROPERTY_PREFIX + "truststore.path";
     private static final String TRUSTSTORE_PATH_ENV = HTTP_ENV_PREFIX + "TRUSTSTORE_PATH";
     static final String TRUSTSTORE_PATH_DEFAULT = "classpath:keystore/truststore.jks";
 
+    @CitrusConfigProperty(description = "SSL truststore password.", defaultValue = "secr3t")
     private static final String TRUSTSTORE_PASSWORD_PROPERTY = HTTP_PROPERTY_PREFIX + "truststore.password";
     private static final String TRUSTSTORE_PASSWORD_ENV = HTTP_ENV_PREFIX + "TRUSTSTORE_PASSWORD";
     private static final String TRUSTSTORE_PASSWORD_DEFAULT = "secr3t";
 
+    @CitrusConfigProperty(description = "Server SSL keystore file path.", defaultValue = "classpath:keystore/server.jks")
     private static final String SERVER_KEYSTORE_PATH_PROPERTY = HTTP_PROPERTY_PREFIX + "server.keystore.path";
     private static final String SERVER_KEYSTORE_PATH_ENV = HTTP_ENV_PREFIX + "SERVER_KEYSTORE_PATH";
     static final String SERVER_KEYSTORE_PATH_DEFAULT = "classpath:keystore/server.jks";
 
+    @CitrusConfigProperty(description = "Server SSL keystore password.", defaultValue = "secr3t")
     private static final String SERVER_KEYSTORE_PASSWORD_PROPERTY = HTTP_PROPERTY_PREFIX + "server.keystore.password";
     private static final String SERVER_KEYSTORE_PASSWORD_ENV = HTTP_ENV_PREFIX + "SERVER_KEYSTORE_PASSWORD";
     private static final String SERVER_KEYSTORE_PASSWORD_DEFAULT = "secr3t";
 
+    @CitrusConfigProperty(description = "Client SSL keystore file path.", defaultValue = "classpath:keystore/client.jks")
     private static final String CLIENT_KEYSTORE_PATH_PROPERTY = HTTP_PROPERTY_PREFIX + "client.keystore.path";
     private static final String CLIENT_KEYSTORE_PATH_ENV = HTTP_ENV_PREFIX + "CLIENT_KEYSTORE_PATH";
     static final String CLIENT_KEYSTORE_PATH_DEFAULT = "classpath:keystore/client.jks";
 
+    @CitrusConfigProperty(description = "Client SSL keystore password.", defaultValue = "secr3t")
     private static final String CLIENT_KEYSTORE_PASSWORD_PROPERTY = HTTP_PROPERTY_PREFIX + "client.keystore.password";
     private static final String CLIENT_KEYSTORE_PASSWORD_ENV = HTTP_ENV_PREFIX + "CLIENT_KEYSTORE_PASSWORD";
     private static final String CLIENT_KEYSTORE_PASSWORD_DEFAULT = "secr3t";
 
+    @CitrusConfigProperty(description = "Enable secure SSL connector for the HTTP server.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String USE_SECURE_CONNECTOR_PROPERTY = HTTP_PROPERTY_PREFIX + "use.secure.connector";
     private static final String USE_SECURE_CONNECTOR_ENV = HTTP_ENV_PREFIX + "USE_SECURE_CONNECTOR";
     private static final String USE_SECURE_CONNECTOR_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Enable SSL keystore usage.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String USE_SECURE_KEYSTORE_PROPERTY = HTTP_PROPERTY_PREFIX + "use.secure.keystore";
     private static final String USE_SECURE_KEYSTORE_ENV = HTTP_ENV_PREFIX + "USE_SECURE_KEYSTORE";
     private static final String USE_SECURE_KEYSTORE_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Enable SSL truststore usage.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String USE_SECURE_TRUSTSTORE_PROPERTY = HTTP_PROPERTY_PREFIX + "use.secure.truststore";
     private static final String USE_SECURE_TRUSTSTORE_ENV = HTTP_ENV_PREFIX + "USE_SECURE_TRUSTSTORE";
     private static final String USE_SECURE_TRUSTSTORE_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Ignore case when comparing HTTP header names.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String HEADER_NAME_IGNORE_CASE_PROPERTY = HTTP_PROPERTY_PREFIX + "header.name.ignore.case";
     private static final String HEADER_NAME_IGNORE_CASE_ENV = HTTP_ENV_PREFIX + "HEADER_NAME_IGNORE_CASE";
     private static final String HEADER_NAME_IGNORE_CASE_DEFAULT = "false";

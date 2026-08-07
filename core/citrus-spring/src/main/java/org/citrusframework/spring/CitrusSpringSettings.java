@@ -17,7 +17,10 @@
 package org.citrusframework.spring;
 
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 
+@CitrusConfigProperties(prefix = "citrus.spring", description = "Citrus Spring integration settings")
 public class CitrusSpringSettings {
 
     /**
@@ -28,12 +31,14 @@ public class CitrusSpringSettings {
     }
 
     /** Default application context name */
+    @CitrusConfigProperty(description = "Path to the Spring application context XML configuration", defaultValue = "classpath*:citrus-context.xml")
     public static final String DEFAULT_APPLICATION_CONTEXT_PROPERTY = "citrus.spring.application.context";
     public static final String DEFAULT_APPLICATION_CONTEXT_ENV = "CITRUS_SPRING_APPLICATION_CONTEXT";
     public static final String DEFAULT_APPLICATION_CONTEXT = System.getProperty(DEFAULT_APPLICATION_CONTEXT_PROPERTY, System.getenv(DEFAULT_APPLICATION_CONTEXT_ENV) != null ?
             System.getenv(DEFAULT_APPLICATION_CONTEXT_ENV) : "classpath*:citrus-context.xml");
 
     /** Default application context class */
+    @CitrusConfigProperty(description = "Java configuration class for the Spring application context")
     public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY = "citrus.spring.java.config";
     public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_ENV = "CITRUS_SPRING_JAVA_CONFIG";
     public static final String DEFAULT_APPLICATION_CONTEXT_CLASS = System.getProperty(DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY,

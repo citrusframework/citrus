@@ -16,31 +16,41 @@
 
 package org.citrusframework.kubernetes;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.agent", description = "Citrus agent settings for Kubernetes deployment")
 public final class CitrusAgentSettings {
 
     private static final String AGENT_PROPERTY_PREFIX = "citrus.agent.";
     private static final String AGENT_ENV_PREFIX = "CITRUS_AGENT_";
 
+    @CitrusConfigProperty(description = "Citrus agent name.", defaultValue = "citrus-agent")
     private static final String AGENT_NAME_PROPERTY = AGENT_PROPERTY_PREFIX + "name";
     private static final String AGENT_NAME_ENV = AGENT_ENV_PREFIX + "NAME";
     private static final String AGENT_NAME_DEFAULT = "citrus-agent";
 
+    @CitrusConfigProperty(description = "Citrus agent container image.", defaultValue = "citrusframework/citrus-agent")
     private static final String AGENT_IMAGE_PROPERTY = AGENT_PROPERTY_PREFIX + "image";
     private static final String AGENT_IMAGE_ENV = AGENT_ENV_PREFIX + "IMAGE";
     private static final String AGENT_IMAGE_DEFAULT = "citrusframework/citrus-agent";
 
+    @CitrusConfigProperty(description = "Citrus agent container image registry.", defaultValue = "quay.io")
     private static final String AGENT_IMAGE_REGISTRY_PROPERTY = AGENT_PROPERTY_PREFIX + "image.registry";
     private static final String AGENT_IMAGE_REGISTRY_ENV = AGENT_ENV_PREFIX + "IMAGE_REGISTRY";
     private static final String AGENT_IMAGE_REGISTRY_DEFAULT = "quay.io";
 
+    @CitrusConfigProperty(description = "Citrus agent service port.", type = "java.lang.Long", defaultValue = "4567")
     private static final String AGENT_SERVER_PORT_PROPERTY = AGENT_PROPERTY_PREFIX + "server.port";
     private static final String AGENT_SERVER_PORT_ENV = AGENT_ENV_PREFIX + "SERVER_PORT";
     private static final String AGENT_SERVER_PORT_DEFAULT = "4567";
 
+    @CitrusConfigProperty(description = "Citrus agent container image version.", defaultValue = "latest")
     private static final String AGENT_VERSION_PROPERTY = AGENT_PROPERTY_PREFIX + "version";
     private static final String AGENT_VERSION_ENV = AGENT_ENV_PREFIX + "VERSION";
     private static final String AGENT_VERSION_DEFAULT = "latest";
 
+    @CitrusConfigProperty(description = "Automatically wait for the agent service to be in running state.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String WAIT_FOR_RUNNING_STATE_PROPERTY = AGENT_PROPERTY_PREFIX + "wait.for.running.state";
     private static final String WAIT_FOR_RUNNING_STATE_ENV = AGENT_ENV_PREFIX + "WAIT_FOR_RUNNING_STATE";
     private static final String WAIT_FOR_RUNNING_STATE_DEFAULT = "true";

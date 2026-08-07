@@ -1,0 +1,188 @@
+{
+  "groups": [
+    {
+      "name": "citrus.http",
+      "type": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "description": "HTTP cucumber steps settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.http.timeout",
+      "type": "java.lang.Long",
+      "description": "Request timeout in milliseconds when receiving messages.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": 2000
+    },
+    {
+      "name": "citrus.http.server.auth.path",
+      "type": "java.lang.String",
+      "description": "Server authentication path pattern.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "/secure/*"
+    },
+    {
+      "name": "citrus.http.server.auth.user.roles",
+      "type": "java.lang.String",
+      "description": "Comma-separated user roles for server authentication.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "citrus"
+    },
+    {
+      "name": "citrus.http.auth.method",
+      "type": "java.lang.String",
+      "description": "Default authentication method for HTTP communication.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "none"
+    },
+    {
+      "name": "citrus.http.server.auth.method",
+      "type": "java.lang.String",
+      "description": "Authentication method for the HTTP server.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings"
+    },
+    {
+      "name": "citrus.http.client.auth.method",
+      "type": "java.lang.String",
+      "description": "Authentication method for the HTTP client.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings"
+    },
+    {
+      "name": "citrus.http.auth.user",
+      "type": "java.lang.String",
+      "description": "Default authentication username.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "citrus"
+    },
+    {
+      "name": "citrus.http.server.auth.user",
+      "type": "java.lang.String",
+      "description": "Authentication username for the HTTP server.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings"
+    },
+    {
+      "name": "citrus.http.client.auth.user",
+      "type": "java.lang.String",
+      "description": "Authentication username for the HTTP client.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings"
+    },
+    {
+      "name": "citrus.http.auth.password",
+      "type": "java.lang.String",
+      "description": "Default authentication password.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "secr3t"
+    },
+    {
+      "name": "citrus.http.server.auth.password",
+      "type": "java.lang.String",
+      "description": "Authentication password for the HTTP server.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings"
+    },
+    {
+      "name": "citrus.http.client.auth.password",
+      "type": "java.lang.String",
+      "description": "Authentication password for the HTTP client.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings"
+    },
+    {
+      "name": "citrus.http.fork.mode",
+      "type": "java.lang.Boolean",
+      "description": "Enable fork mode when sending HTTP messages.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.http.server.name",
+      "type": "java.lang.String",
+      "description": "HTTP server component name.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "citrus-http-server"
+    },
+    {
+      "name": "citrus.http.server.port",
+      "type": "java.lang.Integer",
+      "description": "Port for the HTTP server.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": 8080
+    },
+    {
+      "name": "citrus.http.secure.port",
+      "type": "java.lang.Integer",
+      "description": "Secure HTTPS port.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": 8443
+    },
+    {
+      "name": "citrus.http.truststore.path",
+      "type": "java.lang.String",
+      "description": "SSL truststore file path.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "classpath:keystore/truststore.jks"
+    },
+    {
+      "name": "citrus.http.truststore.password",
+      "type": "java.lang.String",
+      "description": "SSL truststore password.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "secr3t"
+    },
+    {
+      "name": "citrus.http.server.keystore.path",
+      "type": "java.lang.String",
+      "description": "Server SSL keystore file path.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "classpath:keystore/server.jks"
+    },
+    {
+      "name": "citrus.http.server.keystore.password",
+      "type": "java.lang.String",
+      "description": "Server SSL keystore password.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "secr3t"
+    },
+    {
+      "name": "citrus.http.client.keystore.path",
+      "type": "java.lang.String",
+      "description": "Client SSL keystore file path.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "classpath:keystore/client.jks"
+    },
+    {
+      "name": "citrus.http.client.keystore.password",
+      "type": "java.lang.String",
+      "description": "Client SSL keystore password.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": "secr3t"
+    },
+    {
+      "name": "citrus.http.use.secure.connector",
+      "type": "java.lang.Boolean",
+      "description": "Enable secure SSL connector for the HTTP server.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.http.use.secure.keystore",
+      "type": "java.lang.Boolean",
+      "description": "Enable SSL keystore usage.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.http.use.secure.truststore",
+      "type": "java.lang.Boolean",
+      "description": "Enable SSL truststore usage.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.http.header.name.ignore.case",
+      "type": "java.lang.Boolean",
+      "description": "Ignore case when comparing HTTP header names.",
+      "sourceType": "org.citrusframework.cucumber.steps.http.HttpSettings",
+      "defaultValue": false
+    }
+  ],
+  "hints": []
+}

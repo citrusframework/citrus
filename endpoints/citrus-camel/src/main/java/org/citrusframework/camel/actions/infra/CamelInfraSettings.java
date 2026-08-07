@@ -16,31 +16,42 @@
 
 package org.citrusframework.camel.actions.infra;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.camel.infra", description = "Camel infrastructure service settings")
 public final class CamelInfraSettings {
 
     static final String CAMEL_INFRA_PROPERTY_PREFIX = "citrus.camel.infra.";
     static final String CAMEL_INFRA_ENV_PREFIX = "CITRUS_CAMEL_INFRA_";
 
+    @CitrusConfigProperty(description = "When set to true test will automatically stop and remove Camel infra services.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String AUTO_REMOVE_SERVICES_PROPERTY = CAMEL_INFRA_PROPERTY_PREFIX + "auto.remove.services";
     private static final String AUTO_REMOVE_SERVICES_ENV = CAMEL_INFRA_ENV_PREFIX + "AUTO_REMOVE_SERVICES";
     private static final String AUTO_REMOVE_SERVICES_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "When set to true infra service output will be redirected to a file.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String CAMEL_DUMP_SERVICE_OUTPUT_PROPERTY = CAMEL_INFRA_PROPERTY_PREFIX + "dump.service.output";
     private static final String CAMEL_DUMP_SERVICE_OUTPUT_ENV = CAMEL_INFRA_ENV_PREFIX + "DUMP_SERVICE_OUTPUT";
     private static final String CAMEL_DUMP_SERVICE_OUTPUT_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Fixed port for infra services.", type = "java.lang.Integer", defaultValue = "-1")
     private static final String PORT_PROPERTY = CAMEL_INFRA_PROPERTY_PREFIX + "port";
     private static final String PORT_ENV = CAMEL_INFRA_ENV_PREFIX + "PORT";
     private static final String PORT_DEFAULT = "-1";
 
+    @CitrusConfigProperty(description = "Service-specific port template for a named infra service.", type = "java.lang.Integer", defaultValue = "-1")
     private static final String SERVICE_PORT_PROPERTY = CAMEL_INFRA_PROPERTY_PREFIX + "%s.port";
     private static final String SERVICE_PORT_ENV = CAMEL_INFRA_ENV_PREFIX + "%s_PORT";
 
+    @CitrusConfigProperty(description = "When set to true infra services use fixed ports instead of random ports.", type = "java.lang.Boolean", defaultValue = "false")
     private static final String FIXED_PORT_PROPERTY = CAMEL_INFRA_PROPERTY_PREFIX + "fixedPort";
     private static final String FIXED_PORT_ENV = CAMEL_INFRA_ENV_PREFIX + "FIXED_PORT";
     private static final String FIXED_PORT_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Camel runtime infra port property.", type = "java.lang.Integer")
     public static final String CAMEL_INFRA_PORT_PROPERTY = "camel.infra.port";
+    @CitrusConfigProperty(description = "Camel runtime infra fixed port property.", type = "java.lang.Boolean")
     public static final String CAMEL_INFRA_FIXED_PORT_PROPERTY = "camel.infra.fixedPort";
 
     private CamelInfraSettings() {

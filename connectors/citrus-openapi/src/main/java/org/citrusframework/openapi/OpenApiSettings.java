@@ -18,6 +18,8 @@ package org.citrusframework.openapi;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.citrusframework.api.openapi.AutoFillType;
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
 import org.citrusframework.util.SystemProvider;
 
@@ -34,32 +36,40 @@ import static org.citrusframework.util.SystemProvider.SYSTEM_PROVIDER;
  * OpenAPI request and response validation globally. The settings can be controlled through system
  * properties or environment variables.
  */
+@CitrusConfigProperties(prefix = "citrus.openapi", description = "OpenAPI request and response validation settings")
 public class OpenApiSettings {
 
+    @CitrusConfigProperty(description = "Enable generation of optional fields in OpenAPI messages.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String GENERATE_OPTIONAL_FIELDS_ENABLED_PROPERTY = "citrus.openapi.generate.optional.fields";
     public static final String GENERATE_OPTIONAL_FIELDS_ENABLED_ENV = transformPropertyToEnv(
         GENERATE_OPTIONAL_FIELDS_ENABLED_PROPERTY);
 
+    @CitrusConfigProperty(description = "Enable OpenAPI request validation.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String REQUEST_VALIDATION_ENABLED_PROPERTY = "citrus.openapi.validation.enabled.request";
     public static final String REQUEST_VALIDATION_ENABLED_ENV = transformPropertyToEnv(
         REQUEST_VALIDATION_ENABLED_PROPERTY);
 
+    @CitrusConfigProperty(description = "Enable OpenAPI response validation.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String RESPONSE_VALIDATION_ENABLED_PROPERTY = "citrus.openapi.validation.enabled.response";
     public static final String RESPONSE_VALIDATION_ENABLED_ENV = transformPropertyToEnv(
         RESPONSE_VALIDATION_ENABLED_PROPERTY);
 
+    @CitrusConfigProperty(description = "Enable neglecting the OpenAPI base path.", type = "java.lang.Boolean", defaultValue = "false")
     public static final String NEGLECT_OPEN_API_BASE_PATH_ENABLED_PROPERTY = "citrus.openapi.neglect.base.path";
     public static final String NEGLECT_OPEN_API_BASE_PATH_ENABLED_ENV = transformPropertyToEnv(
         NEGLECT_OPEN_API_BASE_PATH_ENABLED_PROPERTY);
 
+    @CitrusConfigProperty(description = "Auto-fill strategy for random request values.", defaultValue = "REQUIRED")
     public static final String REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY = "citrus.openapi.request.fill.random.values";
     public static final String REQUEST_AUTO_FILL_RANDOM_VALUES_ENV = transformPropertyToEnv(
         REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY);
 
+    @CitrusConfigProperty(description = "Auto-fill strategy for random response values.", defaultValue = "REQUIRED")
     public static final String RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY = "citrus.openapi.response.fill.random.values";
     public static final String RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV = transformPropertyToEnv(
         RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY);
 
+    @CitrusConfigProperty(description = "Validation policy for OpenAPI specifications.", defaultValue = "REPORT")
     public static final String OPEN_API_VALIDATION_POLICY_PROPERTY = "citrus.openapi.validation.policy";
     public static final String OPEN_API_VALIDATION_POLICY_ENV = transformPropertyToEnv(
         OPEN_API_VALIDATION_POLICY_PROPERTY);

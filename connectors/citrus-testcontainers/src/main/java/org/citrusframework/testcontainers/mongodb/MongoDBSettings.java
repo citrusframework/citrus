@@ -16,6 +16,8 @@
 
 package org.citrusframework.testcontainers.mongodb;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
@@ -23,27 +25,33 @@ import org.testcontainers.containers.MongoDBContainer;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
+@CitrusConfigProperties(prefix = "citrus.testcontainers.mongodb", description = "MongoDB Testcontainers settings")
 public class MongoDBSettings {
 
     private static final String MONGODB_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "mongodb.";
     private static final String MONGODB_ENV_PREFIX = TestContainersSettings.TESTCONTAINERS_ENV_PREFIX + "MONGODB_";
 
+    @CitrusConfigProperty(description = "MongoDB Docker image name.", defaultValue = "mongo")
     private static final String IMAGE_NAME_PROPERTY = MONGODB_PROPERTY_PREFIX + "image.name";
     private static final String IMAGE_NAME_ENV = MONGODB_ENV_PREFIX + "IMAGE_NAME";
     private static final String IMAGE_NAME_DEFAULT = "mongo";
 
+    @CitrusConfigProperty(description = "MongoDB version.", defaultValue = "8.2.2")
     private static final String VERSION_PROPERTY = MONGODB_PROPERTY_PREFIX + "version";
     private static final String VERSION_ENV = MONGODB_ENV_PREFIX + "VERSION";
     private static final String VERSION_DEFAULT = "8.2.2";
 
+    @CitrusConfigProperty(description = "MongoDB service name.", defaultValue = "citrus-mongodb")
     private static final String SERVICE_NAME_PROPERTY = MONGODB_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = MONGODB_ENV_PREFIX + "SERVICE_NAME";
     public static final String SERVICE_NAME_DEFAULT = "citrus-mongodb";
 
+    @CitrusConfigProperty(description = "MongoDB container name.", defaultValue = "mongoDBContainer")
     private static final String CONTAINER_NAME_PROPERTY = MONGODB_PROPERTY_PREFIX + "container.name";
     private static final String CONTAINER_NAME_ENV = MONGODB_ENV_PREFIX + "CONTAINER_NAME";
     public static final String CONTAINER_NAME_DEFAULT = "mongoDBContainer";
 
+    @CitrusConfigProperty(description = "Time in seconds to wait for the MongoDB container to startup.", type = "java.lang.Long", defaultValue = "180")
     private static final String STARTUP_TIMEOUT_PROPERTY = MONGODB_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = MONGODB_ENV_PREFIX + "STARTUP_TIMEOUT";
     private static final String STARTUP_TIMEOUT_DEFAULT = "180";

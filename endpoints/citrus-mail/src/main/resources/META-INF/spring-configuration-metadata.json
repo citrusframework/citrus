@@ -1,0 +1,19 @@
+{
+  "groups": [
+    {
+      "name": "citrus.mail",
+      "type": "org.citrusframework.mail.MailSettings",
+      "description": "Mail endpoint settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.mail.marshaller.type",
+      "type": "java.lang.String",
+      "description": "Default marshaller type for mail data format.",
+      "sourceType": "org.citrusframework.mail.MailSettings",
+      "defaultValue": "XML"
+    }
+  ],
+  "hints": []
+}

@@ -16,6 +16,8 @@
 
 package org.citrusframework.testcontainers.postgresql;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
@@ -23,39 +25,48 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
+@CitrusConfigProperties(prefix = "citrus.testcontainers.postgresql", description = "PostgreSQL Testcontainers settings")
 public class PostgreSQLSettings {
 
     private static final String POSTGRESQL_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "postgresql.";
     private static final String POSTGRESQL_ENV_PREFIX = TestContainersSettings.TESTCONTAINERS_ENV_PREFIX + "POSTGRESQL_";
 
+    @CitrusConfigProperty(description = "PostgreSQL Docker image name.", defaultValue = "postgres")
     private static final String IMAGE_NAME_PROPERTY = POSTGRESQL_PROPERTY_PREFIX + "image.name";
     private static final String IMAGE_NAME_ENV = POSTGRESQL_ENV_PREFIX + "IMAGE_NAME";
     private static final String IMAGE_NAME_DEFAULT = "postgres";
 
+    @CitrusConfigProperty(description = "PostgreSQL version.")
     private static final String POSTGRESQL_VERSION_PROPERTY = POSTGRESQL_PROPERTY_PREFIX + "version";
     private static final String POSTGRESQL_VERSION_ENV = POSTGRESQL_ENV_PREFIX + "POSTGRESQL_VERSION";
     private static final String POSTGRESQL_VERSION_DEFAULT = PostgreSQLContainer.DEFAULT_TAG;
 
+    @CitrusConfigProperty(description = "PostgreSQL service name.", defaultValue = "citrus-postgresql")
     private static final String SERVICE_NAME_PROPERTY = POSTGRESQL_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = POSTGRESQL_ENV_PREFIX + "SERVICE_NAME";
     public static final String SERVICE_NAME_DEFAULT = "citrus-postgresql";
 
+    @CitrusConfigProperty(description = "PostgreSQL container name.", defaultValue = "postgreSQLContainer")
     private static final String CONTAINER_NAME_PROPERTY = POSTGRESQL_PROPERTY_PREFIX + "container.name";
     private static final String CONTAINER_NAME_ENV = POSTGRESQL_ENV_PREFIX + "CONTAINER_NAME";
     public static final String CONTAINER_NAME_DEFAULT = "postgreSQLContainer";
 
+    @CitrusConfigProperty(description = "PostgreSQL database name.", defaultValue = "test")
     private static final String DATABASE_NAME_PROPERTY = POSTGRESQL_PROPERTY_PREFIX + "db.name";
     private static final String DATABASE_NAME_ENV = POSTGRESQL_ENV_PREFIX + "DB_NAME";
     private static final String DATABASE_NAME_DEFAULT = "test";
 
+    @CitrusConfigProperty(description = "PostgreSQL user name.", defaultValue = "test")
     private static final String USERNAME_PROPERTY = POSTGRESQL_PROPERTY_PREFIX + "username";
     private static final String USERNAME_ENV = POSTGRESQL_ENV_PREFIX + "USERNAME";
     private static final String USERNAME_DEFAULT = "test";
 
+    @CitrusConfigProperty(description = "PostgreSQL password.", defaultValue = "test")
     private static final String PASSWORD_PROPERTY = POSTGRESQL_PROPERTY_PREFIX + "password";
     private static final String PASSWORD_ENV = POSTGRESQL_ENV_PREFIX + "PASSWORD";
     private static final String PASSWORD_DEFAULT = "test";
 
+    @CitrusConfigProperty(description = "Time in seconds to wait for the PostgreSQL container to startup.", type = "java.lang.Long", defaultValue = "180")
     private static final String STARTUP_TIMEOUT_PROPERTY = POSTGRESQL_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = POSTGRESQL_ENV_PREFIX + "STARTUP_TIMEOUT";
     private static final String STARTUP_TIMEOUT_DEFAULT = "180";

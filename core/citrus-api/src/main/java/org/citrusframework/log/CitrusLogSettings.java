@@ -20,10 +20,13 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.util.stream.Collectors.toSet;
 
+@CitrusConfigProperties(prefix = "citrus.logger", description = "Citrus logger and log masking settings.")
 public final class CitrusLogSettings {
 
     private static final String CITRUS_LOGGER_PROPERTY_PREFIX = "citrus.logger.";
@@ -32,6 +35,7 @@ public final class CitrusLogSettings {
     /**
      * Default logger modifier keywords
      */
+    @CitrusConfigProperty(description = "Comma-separated keywords to mask in log output.", defaultValue = "password,secret,secretKey")
     public static final String LOG_MASK_KEYWORDS_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "mask.keywords";
     public static final String LOG_MASK_KEYWORDS_ENV = CITRUS_LOGGER_ENV_PREFIX + "MASK_KEYWORDS";
     public static final String LOG_MASK_KEYWORDS_DEFAULT = "password,secret,secretKey";
@@ -39,6 +43,7 @@ public final class CitrusLogSettings {
     /**
      * Flag to enable/disable logger modifier
      */
+    @CitrusConfigProperty(description = "Enable the logger modifier for masking sensitive data.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String LOG_MODIFIER_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "modifier";
     public static final String LOG_MODIFIER_ENV = CITRUS_LOGGER_ENV_PREFIX + "MODIFIER";
     public static final String LOG_MODIFIER_DEFAULT = Boolean.TRUE.toString();
@@ -46,6 +51,7 @@ public final class CitrusLogSettings {
     /**
      * Default logger modifier mask value
      */
+    @CitrusConfigProperty(description = "Replacement value used for masked keywords in log output.", defaultValue = "****")
     public static final String LOG_MASK_VALUE_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "mask.value";
     public static final String LOG_MASK_VALUE_ENV = CITRUS_LOGGER_ENV_PREFIX + "MASK_VALUE";
     public static final String LOG_MASK_VALUE_DEFAULT = "****";
@@ -53,6 +59,7 @@ public final class CitrusLogSettings {
     /**
      * Flag to enable/disable log mask for XML payload
      */
+    @CitrusConfigProperty(description = "Enable log masking for XML payload.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String LOG_MASK_XML_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "mask.xml";
     public static final String LOG_MASK_XML_ENV = CITRUS_LOGGER_ENV_PREFIX + "MASK_XML";
     public static final String LOG_MASK_XML_DEFAULT = Boolean.TRUE.toString();
@@ -60,6 +67,7 @@ public final class CitrusLogSettings {
     /**
      * Flag to enable/disable log mask for Json payload
      */
+    @CitrusConfigProperty(description = "Enable log masking for JSON payload.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String LOG_MASK_JSON_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "mask.json";
     public static final String LOG_MASK_JSON_ENV = CITRUS_LOGGER_ENV_PREFIX + "MASK_JSON";
     public static final String LOG_MASK_JSON_DEFAULT = Boolean.TRUE.toString();
@@ -67,6 +75,7 @@ public final class CitrusLogSettings {
     /**
      * Flag to enable/disable log mask for YAML payload
      */
+    @CitrusConfigProperty(description = "Enable log masking for YAML payload.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String LOG_MASK_YAML_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "mask.yaml";
     public static final String LOG_MASK_YAML_ENV = CITRUS_LOGGER_ENV_PREFIX + "MASK_YAML";
     public static final String LOG_MASK_YAML_DEFAULT = Boolean.TRUE.toString();
@@ -74,6 +83,7 @@ public final class CitrusLogSettings {
     /**
      * Flag to enable/disable log mask for key value pairs payload
      */
+    @CitrusConfigProperty(description = "Enable log masking for key-value pairs payload.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String LOG_MASK_KEY_VALUE_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "mask.key.value";
     public static final String LOG_MASK_KEY_VALUE_ENV = CITRUS_LOGGER_ENV_PREFIX + "MASK_KEY_VALUE";
     public static final String LOG_MASK_KEY_VALUE_DEFAULT = Boolean.TRUE.toString();
@@ -81,6 +91,7 @@ public final class CitrusLogSettings {
     /**
      * Flag to enable/disable log mask for form url encoded payload
      */
+    @CitrusConfigProperty(description = "Enable log masking for form URL encoded payload.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String LOG_MASK_FORM_URL_ENCODED_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "mask.form.url.encoded";
     public static final String LOG_MASK_FORM_URL_ENCODED_ENV = CITRUS_LOGGER_ENV_PREFIX + "MASK_FORM_URL_ENCODED";
     public static final String LOG_MASK_FORM_URL_ENCODED_DEFAULT = Boolean.TRUE.toString();
@@ -88,6 +99,7 @@ public final class CitrusLogSettings {
     /**
      * Flag to enable/disable message content (headers + body) in log output
      */
+    @CitrusConfigProperty(description = "Enable message content (headers and body) in log output.", type = "java.lang.Boolean", defaultValue = "false")
     public static final String LOG_PRINT_MESSAGE_CONTENT_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "print.message.content";
     public static final String LOG_PRINT_MESSAGE_CONTENT_ENV = CITRUS_LOGGER_ENV_PREFIX + "PRINT_MESSAGE_CONTENT";
     public static final String LOG_PRINT_MESSAGE_CONTENT_DEFAULT = Boolean.FALSE.toString();
@@ -95,18 +107,21 @@ public final class CitrusLogSettings {
     /**
      * Flag to enable/disable inbound message content (headers + body) in log output
      */
+    @CitrusConfigProperty(description = "Enable inbound message content (headers and body) in log output.", type = "java.lang.Boolean")
     public static final String LOG_PRINT_INBOUND_MESSAGE_CONTENT_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "print.inbound.message.content";
     public static final String LOG_PRINT_INBOUND_MESSAGE_CONTENT_ENV = CITRUS_LOGGER_ENV_PREFIX + "PRINT_INBOUND_MESSAGE_CONTENT";
 
     /**
      * Flag to enable/disable outbound message content (headers + body) in log output
      */
+    @CitrusConfigProperty(description = "Enable outbound message content (headers and body) in log output.", type = "java.lang.Boolean")
     public static final String LOG_PRINT_OUTBOUND_MESSAGE_CONTENT_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "print.outbound.message.content";
     public static final String LOG_PRINT_OUTBOUND_MESSAGE_CONTENT_ENV = CITRUS_LOGGER_ENV_PREFIX + "PRINT_OUTBOUND_MESSAGE_CONTENT";
 
     /**
      * Layout mode defines how message content gets printed to the log output (summary, verbose, compact, body)
      */
+    @CitrusConfigProperty(description = "Layout mode for message content in log output (summary, verbose, compact, body).", defaultValue = "verbose")
     public static final String LOG_PRINT_MESSAGE_LAYOUT_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "print.message.layout";
     public static final String LOG_PRINT_MESSAGE_LAYOUT_ENV = CITRUS_LOGGER_ENV_PREFIX + "PRINT_MESSAGE_LAYOUT";
     public static final String LOG_PRINT_MESSAGE_LAYOUT_DEFAULT = "verbose";
@@ -114,6 +129,7 @@ public final class CitrusLogSettings {
     /**
      * Maximum length of message body in log output before truncation
      */
+    @CitrusConfigProperty(description = "Maximum length of message body in log output before truncation.", type = "java.lang.Long", defaultValue = "2048")
     public static final String LOG_MESSAGE_PAYLOAD_MAX_LENGTH_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "message.payload.max.length";
     public static final String LOG_MESSAGE_PAYLOAD_MAX_LENGTH_ENV = CITRUS_LOGGER_ENV_PREFIX + "MESSAGE_PAYLOAD_MAX_LENGTH";
     public static final String LOG_MESSAGE_PAYLOAD_MAX_LENGTH_DEFAULT = "2048";
@@ -121,6 +137,7 @@ public final class CitrusLogSettings {
     /**
      * ANSI color mode for log output: auto, always, never
      */
+    @CitrusConfigProperty(description = "ANSI color mode for log output (auto, always, never).", defaultValue = "auto")
     public static final String LOG_COLOR_PROPERTY = CITRUS_LOGGER_PROPERTY_PREFIX + "color";
     public static final String LOG_COLOR_ENV = CITRUS_LOGGER_ENV_PREFIX + "COLOR";
     public static final String LOG_COLOR_DEFAULT = "auto";

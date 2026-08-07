@@ -16,25 +16,32 @@
 
 package org.citrusframework.cucumber.steps.kafka;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.cucumber.steps.CucumberStepsSettings;
 
+@CitrusConfigProperties(prefix = "citrus.kafka", description = "Kafka cucumber steps settings")
 public class KafkaSettings {
 
     private static final String KAFKA_PROPERTY_PREFIX = "citrus.kafka.";
     private static final String KAFKA_ENV_PREFIX = "CITRUS_KAFKA_";
 
+    @CitrusConfigProperty(description = "Timeout in milliseconds when receiving Kafka messages.", type = "java.lang.Long", defaultValue = "60000")
     private static final String CONSUMER_TIMEOUT_PROPERTY = KAFKA_PROPERTY_PREFIX + "timeout";
     private static final String CONSUMER_TIMEOUT_ENV = KAFKA_ENV_PREFIX + "TIMEOUT";
     private static final String CONSUMER_TIMEOUT_DEFAULT = "60000";
 
+    @CitrusConfigProperty(description = "Default Kafka endpoint name.", defaultValue = "citrus-kafka-endpoint")
     private static final String ENDPOINT_NAME_PROPERTY = KAFKA_PROPERTY_PREFIX + "endpoint.name";
     private static final String ENDPOINT_NAME_ENV = KAFKA_ENV_PREFIX + "ENDPOINT_NAME";
     private static final String ENDPOINT_NAME_DEFAULT = "citrus-kafka-endpoint";
 
+    @CitrusConfigProperty(description = "Kafka Strimzi API version.", defaultValue = "v1beta1")
     private static final String API_VERSION_PROPERTY = KAFKA_PROPERTY_PREFIX + "api.version";
     private static final String API_VERSION_ENV = KAFKA_ENV_PREFIX + "API_VERSION";
     private static final String API_VERSION_DEFAULT = "v1beta1";
 
+    @CitrusConfigProperty(description = "Namespace for Kafka client operations.")
     static final String NAMESPACE_PROPERTY = KAFKA_PROPERTY_PREFIX + "namespace";
     static final String NAMESPACE_ENV = KAFKA_ENV_PREFIX + "NAMESPACE";
 

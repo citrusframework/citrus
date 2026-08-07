@@ -1,0 +1,61 @@
+{
+  "groups": [
+    {
+      "name": "citrus.camel",
+      "type": "org.citrusframework.cucumber.steps.camel.CamelSettings",
+      "description": "Camel integration cucumber steps settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.camel.auto.remove.resources",
+      "type": "java.lang.Boolean",
+      "description": "Automatically remove Camel resources created during the test.",
+      "sourceType": "org.citrusframework.cucumber.steps.camel.CamelSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.camel.context.name",
+      "type": "java.lang.String",
+      "description": "Default Camel context name for creating routes.",
+      "sourceType": "org.citrusframework.cucumber.steps.camel.CamelSettings",
+      "defaultValue": "citrus-camel-context"
+    },
+    {
+      "name": "citrus.camel.timeout",
+      "type": "java.lang.Long",
+      "description": "Request timeout in milliseconds when receiving messages.",
+      "sourceType": "org.citrusframework.cucumber.steps.camel.CamelSettings",
+      "defaultValue": 60000
+    },
+    {
+      "name": "citrus.camel.max.attempts",
+      "type": "java.lang.Integer",
+      "description": "Maximum number of attempts when polling for running state.",
+      "sourceType": "org.citrusframework.cucumber.steps.camel.CamelSettings",
+      "defaultValue": 10
+    },
+    {
+      "name": "citrus.camel.delay.between.attempts",
+      "type": "java.lang.Long",
+      "description": "Delay in milliseconds between polling attempts.",
+      "sourceType": "org.citrusframework.cucumber.steps.camel.CamelSettings",
+      "defaultValue": 2000
+    },
+    {
+      "name": "citrus.camel.stop.on.error.status",
+      "type": "java.lang.Boolean",
+      "description": "Stop integration verification when integration is in error state.",
+      "sourceType": "org.citrusframework.cucumber.steps.camel.CamelSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.camel.print.pod.logs",
+      "type": "java.lang.Boolean",
+      "description": "Print pod logs while waiting for log messages.",
+      "sourceType": "org.citrusframework.cucumber.steps.camel.CamelSettings",
+      "defaultValue": true
+    }
+  ],
+  "hints": []
+}

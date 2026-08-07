@@ -1,0 +1,482 @@
+{
+  "groups": [
+    {
+      "name": "citrus.testcontainers",
+      "type": "org.citrusframework.testcontainers.TestContainersSettings",
+      "description": "Testcontainers settings"
+    },
+    {
+      "name": "citrus.testcontainers.floci",
+      "type": "org.citrusframework.testcontainers.aws2.FlociSettings",
+      "description": "Floci Testcontainers settings"
+    },
+    {
+      "name": "citrus.testcontainers.localstack",
+      "type": "org.citrusframework.testcontainers.aws2.LocalStackSettings",
+      "description": "LocalStack Testcontainers settings"
+    },
+    {
+      "name": "citrus.testcontainers.compose",
+      "type": "org.citrusframework.testcontainers.compose.ComposeContainerSettings",
+      "description": "Docker Compose Testcontainers settings"
+    },
+    {
+      "name": "citrus.testcontainers.kafka",
+      "type": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "description": "Kafka Testcontainers settings"
+    },
+    {
+      "name": "citrus.testcontainers.mongodb",
+      "type": "org.citrusframework.testcontainers.mongodb.MongoDBSettings",
+      "description": "MongoDB Testcontainers settings"
+    },
+    {
+      "name": "citrus.testcontainers.postgresql",
+      "type": "org.citrusframework.testcontainers.postgresql.PostgreSQLSettings",
+      "description": "PostgreSQL Testcontainers settings"
+    },
+    {
+      "name": "citrus.testcontainers.redpanda",
+      "type": "org.citrusframework.testcontainers.redpanda.RedpandaSettings",
+      "description": "Redpanda Testcontainers settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.testcontainers.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable Testcontainers support.",
+      "sourceType": "org.citrusframework.testcontainers.TestContainersSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.testcontainers.registry",
+      "type": "java.lang.String",
+      "description": "Docker registry for pulling container images.",
+      "sourceType": "org.citrusframework.testcontainers.TestContainersSettings",
+      "defaultValue": "docker.io"
+    },
+    {
+      "name": "citrus.testcontainers.registry.mirror.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable Docker registry mirror.",
+      "sourceType": "org.citrusframework.testcontainers.TestContainersSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.testcontainers.registry.mirror",
+      "type": "java.lang.String",
+      "description": "Docker registry mirror URL.",
+      "sourceType": "org.citrusframework.testcontainers.TestContainersSettings",
+      "defaultValue": "mirror.gcr.io"
+    },
+    {
+      "name": "citrus.testcontainers.auto.remove.resources",
+      "type": "java.lang.Boolean",
+      "description": "Automatically remove container resources created during the test.",
+      "sourceType": "org.citrusframework.testcontainers.TestContainersSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.testcontainers.kubedock.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable KubeDock services.",
+      "sourceType": "org.citrusframework.testcontainers.TestContainersSettings",
+      "defaultValue": false
+    },
+    {
+      "name": "citrus.test.id",
+      "type": "java.lang.String",
+      "description": "Current test ID used as label on the Pod running the test.",
+      "sourceType": "org.citrusframework.testcontainers.TestContainersSettings",
+      "defaultValue": "citrus-test"
+    },
+    {
+      "name": "citrus.test.name",
+      "type": "java.lang.String",
+      "description": "Current test name.",
+      "sourceType": "org.citrusframework.testcontainers.TestContainersSettings",
+      "defaultValue": "citrus"
+    },
+    {
+      "name": "citrus.testcontainers.startup.timeout",
+      "type": "java.lang.Long",
+      "description": "Time in seconds to wait for the container to startup and accept connections.",
+      "sourceType": "org.citrusframework.testcontainers.TestContainersSettings",
+      "defaultValue": 180
+    },
+    {
+      "name": "citrus.testcontainers.connect.timeout",
+      "type": "java.lang.Long",
+      "description": "Timeout in milliseconds when connecting to Docker.",
+      "sourceType": "org.citrusframework.testcontainers.TestContainersSettings",
+      "defaultValue": 5000
+    },
+    {
+      "name": "citrus.testcontainers.floci.version",
+      "type": "java.lang.String",
+      "description": "Floci Docker image version.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.FlociSettings",
+      "defaultValue": "latest"
+    },
+    {
+      "name": "citrus.testcontainers.floci.image.name",
+      "type": "java.lang.String",
+      "description": "Floci Docker image name.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.FlociSettings",
+      "defaultValue": "floci/floci"
+    },
+    {
+      "name": "citrus.testcontainers.floci.service.name",
+      "type": "java.lang.String",
+      "description": "Floci service name.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.FlociSettings",
+      "defaultValue": "citrus-floci"
+    },
+    {
+      "name": "citrus.testcontainers.floci.container.name",
+      "type": "java.lang.String",
+      "description": "Floci container name.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.FlociSettings",
+      "defaultValue": "aws2Container"
+    },
+    {
+      "name": "citrus.testcontainers.floci.auto.create.clients",
+      "type": "java.lang.Boolean",
+      "description": "Auto create AWS clients for enabled services and add them as beans to the Citrus registry.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.FlociSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.testcontainers.floci.account.id",
+      "type": "java.lang.String",
+      "description": "AWS account ID for Floci.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.FlociSettings",
+      "defaultValue": "000000000000"
+    },
+    {
+      "name": "citrus.testcontainers.floci.availability.zone",
+      "type": "java.lang.String",
+      "description": "AWS availability zone for Floci.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.FlociSettings",
+      "defaultValue": "us-east-1a"
+    },
+    {
+      "name": "citrus.testcontainers.floci.region",
+      "type": "java.lang.String",
+      "description": "AWS region for Floci.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.FlociSettings",
+      "defaultValue": "us-east-1"
+    },
+    {
+      "name": "citrus.testcontainers.floci.startup.timeout",
+      "type": "java.lang.Long",
+      "description": "Time in seconds to wait for the Floci container to startup.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.FlociSettings"
+    },
+    {
+      "name": "citrus.testcontainers.localstack.version",
+      "type": "java.lang.String",
+      "description": "LocalStack Docker image version.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.LocalStackSettings",
+      "defaultValue": "4.14.0"
+    },
+    {
+      "name": "citrus.testcontainers.localstack.image.name",
+      "type": "java.lang.String",
+      "description": "LocalStack Docker image name.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.LocalStackSettings",
+      "defaultValue": "localstack/localstack"
+    },
+    {
+      "name": "citrus.testcontainers.localstack.service.name",
+      "type": "java.lang.String",
+      "description": "LocalStack service name.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.LocalStackSettings",
+      "defaultValue": "citrus-localstack"
+    },
+    {
+      "name": "citrus.testcontainers.localstack.container.name",
+      "type": "java.lang.String",
+      "description": "LocalStack container name.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.LocalStackSettings",
+      "defaultValue": "aws2Container"
+    },
+    {
+      "name": "citrus.testcontainers.localstack.auto.create.clients",
+      "type": "java.lang.Boolean",
+      "description": "Auto create AWS clients for enabled services and add them as beans to the Citrus registry.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.LocalStackSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.testcontainers.localstack.auth.token",
+      "type": "java.lang.String",
+      "description": "LocalStack auth token.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.LocalStackSettings"
+    },
+    {
+      "name": "citrus.testcontainers.localstack.secret.key",
+      "type": "java.lang.String",
+      "description": "AWS secret key for LocalStack.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.LocalStackSettings",
+      "defaultValue": "secretkey"
+    },
+    {
+      "name": "citrus.testcontainers.localstack.access.key",
+      "type": "java.lang.String",
+      "description": "AWS access key for LocalStack.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.LocalStackSettings",
+      "defaultValue": "accesskey"
+    },
+    {
+      "name": "citrus.testcontainers.localstack.region",
+      "type": "java.lang.String",
+      "description": "AWS region for LocalStack.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.LocalStackSettings",
+      "defaultValue": "us-east-1"
+    },
+    {
+      "name": "citrus.testcontainers.localstack.startup.timeout",
+      "type": "java.lang.Long",
+      "description": "Time in seconds to wait for the LocalStack container to startup.",
+      "sourceType": "org.citrusframework.testcontainers.aws2.LocalStackSettings"
+    },
+    {
+      "name": "citrus.testcontainers.compose.container.name",
+      "type": "java.lang.String",
+      "description": "Docker Compose container name.",
+      "sourceType": "org.citrusframework.testcontainers.compose.ComposeContainerSettings"
+    },
+    {
+      "name": "citrus.testcontainers.compose.startup.timeout",
+      "type": "java.lang.Long",
+      "description": "Time in seconds to wait for the container to startup.",
+      "sourceType": "org.citrusframework.testcontainers.compose.ComposeContainerSettings"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.service.name",
+      "type": "java.lang.String",
+      "description": "Kafka service name.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "citrus-kafka"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.implementation",
+      "type": "java.lang.String",
+      "description": "Kafka implementation to use.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "CONFLUENT"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.container.name",
+      "type": "java.lang.String",
+      "description": "Kafka container name.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "kafkaContainer"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.startup.timeout",
+      "type": "java.lang.Long",
+      "description": "Time in seconds to wait for the Kafka container to startup.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": 180
+    },
+    {
+      "name": "citrus.testcontainers.kafka.apache.image.name",
+      "type": "java.lang.String",
+      "description": "Apache Kafka Docker image name.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "apache/kafka"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.apache.version",
+      "type": "java.lang.String",
+      "description": "Apache Kafka version.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "4.2.1"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.apache.native.image.name",
+      "type": "java.lang.String",
+      "description": "Apache Kafka native Docker image name.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "apache/kafka-native"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.apache.native.version",
+      "type": "java.lang.String",
+      "description": "Apache Kafka native version.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "4.2.1"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.strimzi.image.name",
+      "type": "java.lang.String",
+      "description": "Strimzi Kafka Docker image name.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "quay.io/strimzi/kafka"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.strimzi.version",
+      "type": "java.lang.String",
+      "description": "Strimzi Kafka version.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "0.51.0-kafka-4.2.0"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.confluent.image.name",
+      "type": "java.lang.String",
+      "description": "Confluent Kafka Docker image name.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "confluentinc/cp-kafka"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.confluent.version",
+      "type": "java.lang.String",
+      "description": "Confluent Kafka version.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "7.9.5"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.image.name",
+      "type": "java.lang.String",
+      "description": "Default Kafka Docker image name.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "confluentinc/cp-kafka"
+    },
+    {
+      "name": "citrus.testcontainers.kafka.version",
+      "type": "java.lang.String",
+      "description": "Default Kafka version.",
+      "sourceType": "org.citrusframework.testcontainers.kafka.KafkaSettings",
+      "defaultValue": "7.9.5"
+    },
+    {
+      "name": "citrus.testcontainers.mongodb.image.name",
+      "type": "java.lang.String",
+      "description": "MongoDB Docker image name.",
+      "sourceType": "org.citrusframework.testcontainers.mongodb.MongoDBSettings",
+      "defaultValue": "mongo"
+    },
+    {
+      "name": "citrus.testcontainers.mongodb.version",
+      "type": "java.lang.String",
+      "description": "MongoDB version.",
+      "sourceType": "org.citrusframework.testcontainers.mongodb.MongoDBSettings",
+      "defaultValue": "8.2.2"
+    },
+    {
+      "name": "citrus.testcontainers.mongodb.service.name",
+      "type": "java.lang.String",
+      "description": "MongoDB service name.",
+      "sourceType": "org.citrusframework.testcontainers.mongodb.MongoDBSettings",
+      "defaultValue": "citrus-mongodb"
+    },
+    {
+      "name": "citrus.testcontainers.mongodb.container.name",
+      "type": "java.lang.String",
+      "description": "MongoDB container name.",
+      "sourceType": "org.citrusframework.testcontainers.mongodb.MongoDBSettings",
+      "defaultValue": "mongoDBContainer"
+    },
+    {
+      "name": "citrus.testcontainers.mongodb.startup.timeout",
+      "type": "java.lang.Long",
+      "description": "Time in seconds to wait for the MongoDB container to startup.",
+      "sourceType": "org.citrusframework.testcontainers.mongodb.MongoDBSettings",
+      "defaultValue": 180
+    },
+    {
+      "name": "citrus.testcontainers.postgresql.image.name",
+      "type": "java.lang.String",
+      "description": "PostgreSQL Docker image name.",
+      "sourceType": "org.citrusframework.testcontainers.postgresql.PostgreSQLSettings",
+      "defaultValue": "postgres"
+    },
+    {
+      "name": "citrus.testcontainers.postgresql.version",
+      "type": "java.lang.String",
+      "description": "PostgreSQL version.",
+      "sourceType": "org.citrusframework.testcontainers.postgresql.PostgreSQLSettings"
+    },
+    {
+      "name": "citrus.testcontainers.postgresql.service.name",
+      "type": "java.lang.String",
+      "description": "PostgreSQL service name.",
+      "sourceType": "org.citrusframework.testcontainers.postgresql.PostgreSQLSettings",
+      "defaultValue": "citrus-postgresql"
+    },
+    {
+      "name": "citrus.testcontainers.postgresql.container.name",
+      "type": "java.lang.String",
+      "description": "PostgreSQL container name.",
+      "sourceType": "org.citrusframework.testcontainers.postgresql.PostgreSQLSettings",
+      "defaultValue": "postgreSQLContainer"
+    },
+    {
+      "name": "citrus.testcontainers.postgresql.db.name",
+      "type": "java.lang.String",
+      "description": "PostgreSQL database name.",
+      "sourceType": "org.citrusframework.testcontainers.postgresql.PostgreSQLSettings",
+      "defaultValue": "test"
+    },
+    {
+      "name": "citrus.testcontainers.postgresql.username",
+      "type": "java.lang.String",
+      "description": "PostgreSQL user name.",
+      "sourceType": "org.citrusframework.testcontainers.postgresql.PostgreSQLSettings",
+      "defaultValue": "test"
+    },
+    {
+      "name": "citrus.testcontainers.postgresql.password",
+      "type": "java.lang.String",
+      "description": "PostgreSQL password.",
+      "sourceType": "org.citrusframework.testcontainers.postgresql.PostgreSQLSettings",
+      "defaultValue": "test"
+    },
+    {
+      "name": "citrus.testcontainers.postgresql.startup.timeout",
+      "type": "java.lang.Long",
+      "description": "Time in seconds to wait for the PostgreSQL container to startup.",
+      "sourceType": "org.citrusframework.testcontainers.postgresql.PostgreSQLSettings",
+      "defaultValue": 180
+    },
+    {
+      "name": "citrus.testcontainers.redpanda.version",
+      "type": "java.lang.String",
+      "description": "Redpanda version.",
+      "sourceType": "org.citrusframework.testcontainers.redpanda.RedpandaSettings",
+      "defaultValue": "v25.3.2"
+    },
+    {
+      "name": "citrus.testcontainers.redpanda.service.name",
+      "type": "java.lang.String",
+      "description": "Redpanda service name.",
+      "sourceType": "org.citrusframework.testcontainers.redpanda.RedpandaSettings",
+      "defaultValue": "citrus-redpanda"
+    },
+    {
+      "name": "citrus.testcontainers.redpanda.container.name",
+      "type": "java.lang.String",
+      "description": "Redpanda container name.",
+      "sourceType": "org.citrusframework.testcontainers.redpanda.RedpandaSettings",
+      "defaultValue": "redpandaContainer"
+    },
+    {
+      "name": "citrus.testcontainers.redpanda.image.name",
+      "type": "java.lang.String",
+      "description": "Redpanda Docker image name.",
+      "sourceType": "org.citrusframework.testcontainers.redpanda.RedpandaSettings",
+      "defaultValue": "redpandadata/redpanda"
+    },
+    {
+      "name": "citrus.testcontainers.redpanda.startup.timeout",
+      "type": "java.lang.Long",
+      "description": "Time in seconds to wait for the Redpanda container to startup.",
+      "sourceType": "org.citrusframework.testcontainers.redpanda.RedpandaSettings",
+      "defaultValue": 180
+    }
+  ],
+  "hints": []
+}

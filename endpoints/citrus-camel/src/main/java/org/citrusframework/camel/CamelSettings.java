@@ -19,31 +19,41 @@ package org.citrusframework.camel;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.camel", description = "Apache Camel integration settings")
 public final class CamelSettings {
 
     private static final String CAMEL_PROPERTY_PREFIX = "citrus.camel.";
     private static final String CAMEL_ENV_PREFIX = "CITRUS_CAMEL_";
 
+    @CitrusConfigProperty(description = "Default Camel context name to use when creating routes.", defaultValue = "camelContext")
     private static final String CONTEXT_NAME_PROPERTY = CAMEL_PROPERTY_PREFIX + "context.name";
     private static final String CONTEXT_NAME_ENV = CAMEL_ENV_PREFIX + "CONTEXT_NAME";
     private static final String CONTEXT_NAME_DEFAULT = "camelContext";
 
+    @CitrusConfigProperty(description = "Request timeout in milliseconds when receiving messages.", type = "java.lang.Long", defaultValue = "5000")
     private static final String TIMEOUT_PROPERTY = CAMEL_PROPERTY_PREFIX + "timeout";
     private static final String TIMEOUT_ENV = CAMEL_ENV_PREFIX + "TIMEOUT";
     private static final long TIMEOUT_DEFAULT = TimeUnit.SECONDS.toMillis(5);
 
+    @CitrusConfigProperty(description = "Maximum number of attempts when polling for running state and log messages.", type = "java.lang.Integer", defaultValue = "60")
     private static final String MAX_ATTEMPTS_PROPERTY = CAMEL_PROPERTY_PREFIX + "max.attempts";
     private static final String MAX_ATTEMPTS_ENV = CAMEL_ENV_PREFIX + "MAX_ATTEMPTS";
     private static final String MAX_ATTEMPTS_DEFAULT = "60";
 
+    @CitrusConfigProperty(description = "Delay in milliseconds to wait after each polling attempt.", type = "java.lang.Long", defaultValue = "2000")
     private static final String DELAY_BETWEEN_ATTEMPTS_PROPERTY = CAMEL_PROPERTY_PREFIX + "delay.between.attempts";
     private static final String DELAY_BETWEEN_ATTEMPTS_ENV = CAMEL_ENV_PREFIX + "DELAY_BETWEEN_ATTEMPTS";
     private static final String DELAY_BETWEEN_ATTEMPTS_DEFAULT = "2000";
 
+    @CitrusConfigProperty(description = "When set to true test will print Camel CLI route logs.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String PRINT_LOGS_PROPERTY = CAMEL_PROPERTY_PREFIX + "print.logs";
     private static final String PRINT_LOGS_ENV = CAMEL_ENV_PREFIX + "PRINT_LOGS";
     private static final String PRINT_LOGS_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "When enabled the Camel message converter will filter Citrus internal message headers.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String FILTER_INTERNAL_HEADERS_PROPERTY = CAMEL_PROPERTY_PREFIX + "filter.internal.headers";
     private static final String FILTER_INTERNAL_HEADERS_ENV = CAMEL_ENV_PREFIX + "FILTER_INTERNAL_HEADERS";
     private static final String FILTER_INTERNAL_HEADERS_DEFAULT = "true";

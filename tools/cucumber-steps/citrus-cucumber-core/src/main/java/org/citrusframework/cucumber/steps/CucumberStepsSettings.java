@@ -22,9 +22,12 @@ import java.nio.file.Files;
 import java.util.Locale;
 
 import org.citrusframework.api.kubernetes.ClusterType;
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@CitrusConfigProperties(prefix = "citrus", description = "Cucumber steps general settings")
 public class CucumberStepsSettings {
 
     /** Logger */
@@ -33,10 +36,12 @@ public class CucumberStepsSettings {
     private static final String CITRUS_PROPERTY_PREFIX = "citrus.";
     private static final String CITRUS_ENV_PREFIX = "CITRUS_";
 
+    @CitrusConfigProperty(description = "Namespace for Kubernetes/Knative client operations.", defaultValue = "default")
     private static final String NAMESPACE_PROPERTY = CITRUS_PROPERTY_PREFIX + "namespace";
     private static final String NAMESPACE_ENV = CITRUS_ENV_PREFIX + "NAMESPACE";
     private static final String NAMESPACE_DEFAULT = "default";
 
+    @CitrusConfigProperty(description = "Cluster type that Citrus is running on.", defaultValue = "KUBERNETES")
     private static final String CLUSTER_TYPE_PROPERTY = CITRUS_PROPERTY_PREFIX + "cluster.type";
     private static final String CLUSTER_TYPE_ENV = CITRUS_ENV_PREFIX + "CLUSTER_TYPE";
     private static final String CLUSTER_TYPE_DEFAULT = ClusterType.KUBERNETES.name();

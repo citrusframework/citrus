@@ -1,0 +1,47 @@
+{
+  "groups": [
+    {
+      "name": "citrus.openapi",
+      "type": "org.citrusframework.cucumber.steps.openapi.OpenApiSettings",
+      "description": "OpenAPI cucumber steps settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.openapi..timeout",
+      "type": "java.lang.Long",
+      "description": "Request timeout in milliseconds when receiving messages.",
+      "sourceType": "org.citrusframework.cucumber.steps.openapi.OpenApiSettings",
+      "defaultValue": 2000
+    },
+    {
+      "name": "citrus.openapi.generate.optional.fields",
+      "type": "java.lang.Boolean",
+      "description": "Include optional fields when generating request/response test data.",
+      "sourceType": "org.citrusframework.cucumber.steps.openapi.OpenApiSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.openapi.validate.optional.fields",
+      "type": "java.lang.Boolean",
+      "description": "Include optional fields when validating request/response test data.",
+      "sourceType": "org.citrusframework.cucumber.steps.openapi.OpenApiSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.openapi.service.name",
+      "type": "java.lang.String",
+      "description": "Service name for the OpenAPI HTTP server.",
+      "sourceType": "org.citrusframework.cucumber.steps.openapi.OpenApiSettings",
+      "defaultValue": "citrus-openapi-service"
+    },
+    {
+      "name": "citrus.openapi.service.port",
+      "type": "java.lang.String",
+      "description": "Service port for the OpenAPI HTTP server.",
+      "sourceType": "org.citrusframework.cucumber.steps.openapi.OpenApiSettings",
+      "defaultValue": "8080"
+    }
+  ],
+  "hints": []
+}

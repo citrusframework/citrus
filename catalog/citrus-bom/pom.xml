@@ -391,7 +391,6 @@
         <artifactId>citrus-maven-plugin</artifactId>
         <version>5.1.0-SNAPSHOT</version>
       </dependency>
-
       <!-- Catalog -->
       <dependency>
         <groupId>org.citrusframework</groupId>

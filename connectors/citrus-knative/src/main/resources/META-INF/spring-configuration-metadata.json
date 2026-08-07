@@ -1,0 +1,104 @@
+{
+  "groups": [
+    {
+      "name": "citrus.knative",
+      "type": "org.citrusframework.knative.KnativeSettings",
+      "description": "Knative connector settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.knative.event.producer.timeout",
+      "type": "java.lang.Long",
+      "description": "Request timeout in milliseconds when sending cloud events.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings",
+      "defaultValue": 2000
+    },
+    {
+      "name": "citrus.knative.event.consumer.timeout",
+      "type": "java.lang.Long",
+      "description": "Request timeout in milliseconds when receiving cloud events.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings",
+      "defaultValue": 2000
+    },
+    {
+      "name": "citrus.knative.namespace",
+      "type": "java.lang.String",
+      "description": "Namespace for Knative client operations.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings"
+    },
+    {
+      "name": "citrus.knative.api.version",
+      "type": "java.lang.String",
+      "description": "API version for current Knative installation.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings",
+      "defaultValue": "v1"
+    },
+    {
+      "name": "citrus.knative.broker.host",
+      "type": "java.lang.String",
+      "description": "Broker host used as HTTP header when creating cloud events.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings"
+    },
+    {
+      "name": "citrus.knative.broker.name",
+      "type": "java.lang.String",
+      "description": "Broker name for producing and consuming cloud events.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings",
+      "defaultValue": "default"
+    },
+    {
+      "name": "citrus.knative.broker.port",
+      "type": "java.lang.String",
+      "description": "Broker port for producing and consuming cloud events in local environment.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings",
+      "defaultValue": "8080"
+    },
+    {
+      "name": "citrus.knative.broker.url",
+      "type": "java.lang.String",
+      "description": "Broker URL for producing and consuming cloud events.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings"
+    },
+    {
+      "name": "citrus.knative.service.name",
+      "type": "java.lang.String",
+      "description": "Service name for cloud event subscriptions.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings",
+      "defaultValue": "citrus-knative-service"
+    },
+    {
+      "name": "citrus.knative.service.port",
+      "type": "java.lang.Long",
+      "description": "Service port used when consuming cloud events via HTTP.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings"
+    },
+    {
+      "name": "citrus.knative.auto.remove.resources",
+      "type": "java.lang.Boolean",
+      "description": "Automatically remove Knative resources created during the test.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.knative.verify.broker.resources",
+      "type": "java.lang.Boolean",
+      "description": "Enable verification of broker responses.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.knative.broker.response",
+      "type": "java.lang.Long",
+      "description": "Expected broker response HTTP status code.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings"
+    },
+    {
+      "name": "citrus.knative.default.labels",
+      "type": "java.lang.String",
+      "description": "Default labels for Knative resources as comma-delimited key=value pairs.",
+      "sourceType": "org.citrusframework.knative.KnativeSettings"
+    }
+  ],
+  "hints": []
+}

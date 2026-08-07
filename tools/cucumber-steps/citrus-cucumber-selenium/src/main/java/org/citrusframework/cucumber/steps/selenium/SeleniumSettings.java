@@ -16,21 +16,27 @@
 
 package org.citrusframework.cucumber.steps.selenium;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.openqa.selenium.remote.Browser;
 
+@CitrusConfigProperties(prefix = "citrus.selenium", description = "Selenium cucumber steps settings")
 public class SeleniumSettings {
 
     private static final String SELENIUM_PROPERTY_PREFIX = "citrus.selenium.";
     private static final String SELENIUM_ENV_PREFIX = "CITRUS_SELENIUM_";
 
+    @CitrusConfigProperty(description = "Browser component name used for context lookups.", defaultValue = "seleniumBrowser")
     private static final String BROWSER_NAME_PROPERTY = SELENIUM_PROPERTY_PREFIX + "browser.name";
     private static final String BROWSER_NAME_ENV = SELENIUM_ENV_PREFIX + "BROWSER_NAME";
     private static final String BROWSER_NAME_DEFAULT = "seleniumBrowser";
 
+    @CitrusConfigProperty(description = "Browser type for creating new browser instances.", defaultValue = "htmlunit")
     private static final String BROWSER_TYPE_PROPERTY = SELENIUM_PROPERTY_PREFIX + "browser.type";
     private static final String BROWSER_TYPE_ENV = SELENIUM_ENV_PREFIX + "BROWSER_TYPE";
     private static final String BROWSER_TYPE_DEFAULT = Browser.HTMLUNIT.browserName();
 
+    @CitrusConfigProperty(description = "Remote WebDriver server URL.", defaultValue = "http://localhost:4444/wd/hub")
     private static final String BROWSER_REMOTE_SERVER_URL_PROPERTY = SELENIUM_PROPERTY_PREFIX + "browser.remote.server.url";
     private static final String BROWSER_REMOTE_SERVER_URL_ENV = SELENIUM_ENV_PREFIX + "BROWSER_REMOTE_SERVER_URL";
     private static final String BROWSER_REMOTE_SERVER_URL_DEFAULT = "http://localhost:4444/wd/hub";

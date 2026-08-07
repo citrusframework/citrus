@@ -25,6 +25,8 @@ import java.util.Set;
 
 import io.floci.testcontainers.FlociContainer;
 import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
@@ -32,43 +34,53 @@ import software.amazon.awssdk.regions.Region;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
+@CitrusConfigProperties(prefix = "citrus.testcontainers.floci", description = "Floci Testcontainers settings")
 public class FlociSettings {
 
     private static final String FLOCI_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "floci.";
     private static final String FLOCI_ENV_PREFIX = TestContainersSettings.TESTCONTAINERS_ENV_PREFIX + "FLOCI_";
 
+    @CitrusConfigProperty(description = "Floci Docker image version.", defaultValue = "latest")
     private static final String VERSION_PROPERTY = FLOCI_PROPERTY_PREFIX + "version";
     private static final String VERSION_ENV = FLOCI_ENV_PREFIX + "VERSION";
     public static final String VERSION_DEFAULT = "latest";
 
+    @CitrusConfigProperty(description = "Floci Docker image name.", defaultValue = "floci/floci")
     private static final String IMAGE_NAME_PROPERTY = FLOCI_PROPERTY_PREFIX + "image.name";
     private static final String IMAGE_NAME_ENV = FLOCI_ENV_PREFIX + "IMAGE_NAME";
     private static final String IMAGE_NAME_DEFAULT = "floci/floci";
 
+    @CitrusConfigProperty(description = "Floci service name.", defaultValue = "citrus-floci")
     private static final String SERVICE_NAME_PROPERTY = FLOCI_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = FLOCI_ENV_PREFIX + "SERVICE_NAME";
     public static final String SERVICE_NAME_DEFAULT = "citrus-floci";
 
+    @CitrusConfigProperty(description = "Floci container name.", defaultValue = "aws2Container")
     private static final String CONTAINER_NAME_PROPERTY = FLOCI_PROPERTY_PREFIX + "container.name";
     private static final String CONTAINER_NAME_ENV = FLOCI_ENV_PREFIX + "CONTAINER_NAME";
     public static final String CONTAINER_NAME_DEFAULT = "aws2Container";
 
+    @CitrusConfigProperty(description = "Auto create AWS clients for enabled services and add them as beans to the Citrus registry.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String AUTO_CREATE_CLIENTS_PROPERTY = FLOCI_PROPERTY_PREFIX + "auto.create.clients";
     private static final String AUTO_CREATE_CLIENTS_ENV = FLOCI_ENV_PREFIX + "AUTO_CREATE_CLIENTS";
     public static final String AUTO_CREATE_CLIENTS_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "AWS account ID for Floci.", defaultValue = "000000000000")
     private static final String ACCOUNT_ID_PROPERTY = FLOCI_PROPERTY_PREFIX + "account.id";
     private static final String ACCOUNT_ID_ENV = FLOCI_ENV_PREFIX + "ACCOUNT_ID";
     public static final String ACCOUNT_ID_DEFAULT = "000000000000";
 
+    @CitrusConfigProperty(description = "AWS availability zone for Floci.", defaultValue = "us-east-1a")
     private static final String AVAILABILITY_ZONE_PROPERTY = FLOCI_PROPERTY_PREFIX + "availability.zone";
     private static final String AVAILABILITY_ZONE_ENV = FLOCI_ENV_PREFIX + "AVAILABILITY_ZONE";
     public static final String AVAILABILITY_ZONE_DEFAULT = "us-east-1a";
 
+    @CitrusConfigProperty(description = "AWS region for Floci.", defaultValue = "us-east-1")
     private static final String REGION_PROPERTY = FLOCI_PROPERTY_PREFIX + "region";
     private static final String REGION_ENV = FLOCI_ENV_PREFIX + "REGION";
     public static final String REGION_DEFAULT = Region.US_EAST_1.id();
 
+    @CitrusConfigProperty(description = "Time in seconds to wait for the Floci container to startup.", type = "java.lang.Long")
     private static final String STARTUP_TIMEOUT_PROPERTY = FLOCI_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = FLOCI_ENV_PREFIX + "STARTUP_TIMEOUT";
 

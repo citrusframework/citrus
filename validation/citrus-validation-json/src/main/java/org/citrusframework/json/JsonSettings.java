@@ -23,12 +23,18 @@ import static net.minidev.json.parser.JSONParser.MODE_PERMISSIVE;
 import static net.minidev.json.parser.JSONParser.MODE_RFC4627;
 import static net.minidev.json.parser.JSONParser.MODE_STRICTEST;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus.json", description = "JSON message validation settings")
 public final class JsonSettings {
 
+    @CitrusConfigProperty(description = "Enable strict JSON message validation.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String MESSAGE_VALIDATION_STRICT_PROPERTY = "citrus.json.message.validation.strict";
     private static final String MESSAGE_VALIDATION_STRICT_ENV = "CITRUS_JSON_MESSAGE_VALIDATION_STRICT";
     private static final String MESSAGE_VALIDATION_STRICT_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "Permissive mode for the JSON parser.", type = "java.lang.Integer")
     private static final String PERMISSIVE_MODE_PROPERTY = "citrus.json.permissive.mode";
     private static final String PERMISSIVE_MODE_ENV = "CITRUS_JSON_PERMISSIVE_MODE";
     private static final String PERMISSIVE_MODE_DEFAULT = String.valueOf(MODE_JSON_SIMPLE);

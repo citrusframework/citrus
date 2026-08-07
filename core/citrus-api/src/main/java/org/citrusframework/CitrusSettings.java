@@ -45,6 +45,10 @@ import static org.citrusframework.api.common.TestLoader.SPRING;
 import static org.citrusframework.api.common.TestLoader.YAML;
 import static org.citrusframework.message.MessageType.XML;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
+
+@CitrusConfigProperties(prefix = "citrus", description = "Core Citrus framework settings.")
 public final class CitrusSettings {
 
     private static final Logger logger = LoggerFactory.getLogger(CitrusSettings.class);
@@ -56,6 +60,7 @@ public final class CitrusSettings {
     /**
      * Optional application property file
      */
+    @CitrusConfigProperty(description = "Path to the optional Citrus application properties file.", defaultValue = "citrus-application.properties")
     private static final String APPLICATION_PROPERTY_FILE_PROPERTY = "citrus.application.properties";
     private static final String APPLICATION_PROPERTY_FILE_ENV = "CITRUS_APPLICATION_PROPERTIES";
     private static final String APPLICATION_PROPERTY_FILE = getPropertyEnvOrDefault(
@@ -63,12 +68,15 @@ public final class CitrusSettings {
             APPLICATION_PROPERTY_FILE_ENV,
             "citrus-application.properties");
 
+    @CitrusConfigProperty(description = "Enable outbound schema validation.", type = "java.lang.Boolean")
     public static final String OUTBOUND_SCHEMA_VALIDATION_ENABLED_PROPERTY = "citrus.validation.outbound.schema.enabled";
     public static final String OUTBOUND_SCHEMA_VALIDATION_ENABLED_ENV = "CITRUS_VALIDATION_OUTBOUND_SCHEMA_ENABLED";
 
+    @CitrusConfigProperty(description = "Enable outbound JSON schema validation.", type = "java.lang.Boolean")
     public static final String OUTBOUND_JSON_SCHEMA_VALIDATION_ENABLED_PROPERTY = "citrus.validation.outbound.json.schema.enabled";
     public static final String OUTBOUND_JSON_SCHEMA_VALIDATION_ENABLED_ENV = "CITRUS_VALIDATION_OUTBOUND_JSON_SCHEMA_ENABLED";
 
+    @CitrusConfigProperty(description = "Enable outbound XML schema validation.", type = "java.lang.Boolean")
     public static final String OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_PROPERTY = "citrus.validation.outbound.xml.schema.enabled";
     public static final String OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_ENV = "CITRUS_VALIDATION_OUTBOUND_XML_SCHEMA_ENABLED";
 
@@ -115,6 +123,7 @@ public final class CitrusSettings {
     /**
      * Default variable names
      */
+    @CitrusConfigProperty(description = "Name of the test name variable.", defaultValue = "citrus.test.name")
     public static final String TEST_NAME_VARIABLE_PROPERTY = "citrus.test.name.variable";
     public static final String TEST_NAME_VARIABLE_ENV = "CITRUS_TEST_NAME_VARIABLE";
     public static final String TEST_NAME_VARIABLE = getPropertyEnvOrDefault(
@@ -122,6 +131,7 @@ public final class CitrusSettings {
             TEST_NAME_VARIABLE_ENV,
             "citrus.test.name");
 
+    @CitrusConfigProperty(description = "Name of the test package variable.", defaultValue = "citrus.test.package")
     public static final String TEST_PACKAGE_VARIABLE_PROPERTY = "citrus.test.package.variable";
     public static final String TEST_PACKAGE_VARIABLE_ENV = "CITRUS_TEST_PACKAGE_VARIABLE";
     public static final String TEST_PACKAGE_VARIABLE = getPropertyEnvOrDefault(
@@ -132,6 +142,7 @@ public final class CitrusSettings {
     /**
      * File encoding system property
      */
+    @CitrusConfigProperty(description = "File encoding used by Citrus.")
     public static final String CITRUS_FILE_ENCODING_PROPERTY = "citrus.file.encoding";
     public static final String CITRUS_FILE_ENCODING_ENV = "CITRUS_FILE_ENCODING";
     public static final String CITRUS_FILE_ENCODING = getPropertyEnvOrDefault(
@@ -149,6 +160,7 @@ public final class CitrusSettings {
     /**
      * Default application context class
      */
+    @CitrusConfigProperty(description = "Default application context configuration class.")
     public static final String DEFAULT_CONFIG_CLASS_PROPERTY = "citrus.java.config";
     public static final String DEFAULT_CONFIG_CLASS_ENV = "CITRUS_JAVA_CONFIG";
     public static final String DEFAULT_CONFIG_CLASS = getPropertyEnvOrDefault(
@@ -159,6 +171,7 @@ public final class CitrusSettings {
     /**
      * Default test directories
      */
+    @CitrusConfigProperty(description = "Default test source directory.")
     public static final String DEFAULT_TEST_SRC_DIRECTORY_PROPERTY = "citrus.default.src.directory";
     public static final String DEFAULT_TEST_SRC_DIRECTORY_ENV = "CITRUS_DEFAULT_SRC_DIRECTORY";
     public static final String DEFAULT_TEST_SRC_DIRECTORY = getPropertyEnvOrDefault(
@@ -177,6 +190,7 @@ public final class CitrusSettings {
     public static final String VALIDATION_MATCHER_PREFIX = "@";
     public static final String VALIDATION_MATCHER_SUFFIX = "@";
 
+    @CitrusConfigProperty(description = "Comma-separated file name patterns for Groovy test files.", defaultValue = ".*\\.citrus\\.groovy,.*\\.citrus\\.test\\.groovy,.*\\.citrus\\.it\\.groovy,.*\\.citrus-test\\.groovy,.*\\.citrus-it\\.groovy")
     public static final String GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.groovy.file.name.pattern";
     public static final String GROOVY_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_GROOVY_FILE_NAME_PATTERN";
     public static final String GROOVY_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
@@ -184,6 +198,7 @@ public final class CitrusSettings {
             GROOVY_TEST_FILE_NAME_PATTERN_ENV,
             ".*\\.citrus\\.groovy,.*\\.citrus\\.test\\.groovy,.*\\.citrus\\.it\\.groovy,.*\\.citrus-test\\.groovy,.*\\.citrus-it\\.groovy");
 
+    @CitrusConfigProperty(description = "Comma-separated file name patterns for YAML test files.", defaultValue = ".*\\.citrus\\.yaml,.*\\.citrus\\.test\\.yaml,.*\\.citrus\\.it\\.yaml,.*\\.citrus-test\\.yaml,.*\\.citrus-it\\.yaml")
     public static final String YAML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.yaml.file.name.pattern";
     public static final String YAML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_YAML_FILE_NAME_PATTERN";
     public static final String YAML_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
@@ -191,6 +206,7 @@ public final class CitrusSettings {
             YAML_TEST_FILE_NAME_PATTERN_ENV,
             ".*\\.citrus\\.yaml,.*\\.citrus\\.test\\.yaml,.*\\.citrus\\.it\\.yaml,.*\\.citrus-test\\.yaml,.*\\.citrus-it\\.yaml");
 
+    @CitrusConfigProperty(description = "Comma-separated file name patterns for XML test files.", defaultValue = ".*Test\\.xml,.*IT\\.xml,.*\\.citrus\\.xml,.*\\.citrus\\.test\\.xml,.*\\.citrus\\.it\\.xml,.*\\.citrus-test\\.xml,.*\\.citrus-it\\.xml")
     public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
     public static final String XML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_XML_FILE_NAME_PATTERN";
     public static final String XML_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
@@ -198,6 +214,7 @@ public final class CitrusSettings {
             XML_TEST_FILE_NAME_PATTERN_ENV,
             ".*Test\\.xml,.*IT\\.xml,.*\\.citrus\\.xml,.*\\.citrus\\.test\\.xml,.*\\.citrus\\.it\\.xml,.*\\.citrus-test\\.xml,.*\\.citrus-it\\.xml");
 
+    @CitrusConfigProperty(description = "Comma-separated file name patterns for Java test files.", defaultValue = ".*Test\\.java,.*IT\\.java")
     public static final String JAVA_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.java.file.name.pattern";
     public static final String JAVA_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_JAVA_FILE_NAME_PATTERN";
     public static final String JAVA_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
@@ -208,6 +225,7 @@ public final class CitrusSettings {
     /**
      * Default message type used in message validation mechanism
      */
+    @CitrusConfigProperty(description = "Default message type used in message validation.", defaultValue = "XML")
     public static final String DEFAULT_MESSAGE_TYPE_PROPERTY = "citrus.default.message.type";
     public static final String DEFAULT_MESSAGE_TYPE_ENV = "CITRUS_DEFAULT_MESSAGE_TYPE";
     public static final String DEFAULT_MESSAGE_TYPE = getPropertyEnvOrDefault(
@@ -218,6 +236,7 @@ public final class CitrusSettings {
     /**
      * Flag to allow deactivation of the http message builder citrus header update. See <a href="https://github.com/citrusframework/citrus/issues/1143">ISSUE-1143</a> for details.
      */
+    @CitrusConfigProperty(description = "Enable forced Citrus header update in HTTP message builder.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_PROPERTY = "citrus.http.message.builder.force.citrus.header.update.enabled";
     public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_ENV = "CITRUS_HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED";
     public static final String HTTP_MESSAGE_BUILDER_FORCE_CITRUS_HEADER_UPDATE_ENABLED_DEFAULT = TRUE.toString();
@@ -225,6 +244,7 @@ public final class CitrusSettings {
     /**
      * Flag to enable/disable environment variable based endpoint and component configuration.
      */
+    @CitrusConfigProperty(description = "Enable environment variable based endpoint and component configuration.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String ENV_VAR_PROPERTY_BINDING_ENABLED_PROPERTY = "citrus.env.var.property.binding.enabled";
     public static final String ENV_VAR_PROPERTY_BINDING_ENABLED_ENV = "CITRUS_ENV_VAR_PROPERTY_BINDING_ENABLED";
     public static final String ENV_VAR_PROPERTY_BINDING_ENABLED_DEFAULT = TRUE.toString();
@@ -232,6 +252,7 @@ public final class CitrusSettings {
     /**
      * Flag to enable/disable environment variable based endpoint and component configuration.
      */
+    @CitrusConfigProperty(description = "Enable environment variable based component configuration.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String COMPONENT_PROPERTY_BINDING_ENABLED_PROPERTY = "citrus.component.property.binding.enabled";
     public static final String COMPONENT_PROPERTY_BINDING_ENABLED_ENV = "CITRUS_COMPONENT_PROPERTY_BINDING_ENABLED";
     public static final String COMPONENT_PROPERTY_BINDING_ENABLED_DEFAULT = getPropertyEnvOrDefault(
@@ -242,6 +263,7 @@ public final class CitrusSettings {
     /**
      * Flag to enable/disable environment variable based endpoint and component configuration.
      */
+    @CitrusConfigProperty(description = "Enable environment variable based endpoint configuration.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_PROPERTY = "citrus.endpoint.property.binding.enabled";
     public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_ENV = "CITRUS_ENDPOINT_PROPERTY_BINDING_ENABLED";
     public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_DEFAULT = getPropertyEnvOrDefault(
@@ -252,6 +274,7 @@ public final class CitrusSettings {
     /**
      * Default message trace output directory
      */
+    @CitrusConfigProperty(description = "Directory for message trace output files.", defaultValue = "target/citrus-logs/trace/messages")
     public static final String MESSAGE_TRACE_DIRECTORY_PROPERTY = "citrus.message.trace.directory";
     public static final String MESSAGE_TRACE_DIRECTORY_ENV = "CITRUS_MESSAGE_TRACE_DIRECTORY";
     public static final String MESSAGE_TRACE_DIRECTORY_DEFAULT = "target/citrus-logs/trace/messages";
@@ -259,6 +282,7 @@ public final class CitrusSettings {
     /**
      * Default type converter
      */
+    @CitrusConfigProperty(description = "Default type converter to use.", defaultValue = "default")
     public static final String TYPE_CONVERTER_PROPERTY = "citrus.type.converter";
     public static final String TYPE_CONVERTER_ENV = "CITRUS_TYPE_CONVERTER";
     public static final String TYPE_CONVERTER_DEFAULT = "default";
@@ -266,10 +290,12 @@ public final class CitrusSettings {
     /**
      * Flag to enable/disable fallback to default text equals validation
      */
+    @CitrusConfigProperty(description = "Enable fallback to default text equals validation.", type = "java.lang.Boolean", defaultValue = "false")
     public static final String PERFORM_DEFAULT_VALIDATION_PROPERTY = "citrus.perform.default.validation";
     public static final String PERFORM_DEFAULT_VALIDATION_ENV = "CITRUS_PERFORM_DEFAULT_VALIDATION";
     public static final String PERFORM_DEFAULT_VALIDATION_DEFAULT = Boolean.FALSE.toString();
 
+    @CitrusConfigProperty(description = "Strategy for custom validator resolution.", defaultValue = "EXCLUSIVE")
     public static final String CUSTOM_VALIDATOR_STRATEGY_PROPERTY = "citrus.custom.validator.strategy";
     public static final String CUSTOM_VALIDATOR_STRATEGY_ENV = "CITRUS_CUSTOM_VALIDATOR_STRATEGY";
     public static final CustomValidatorStrategy CUSTOM_VALIDATOR_STRATEGY_DEFAULT = CustomValidatorStrategy.EXCLUSIVE;
@@ -277,6 +303,7 @@ public final class CitrusSettings {
     /**
      * Flag to enable/disable input stream caching
      */
+    @CitrusConfigProperty(description = "Enable input stream caching for messages.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String CACHE_INPUT_STREAM_PROPERTY = "citrus.message.cache.input.stream";
     public static final String CACHE_INPUT_STREAM_ENV = "CITRUS_MESSAGE_CACHE_INPUT_STREAM";
     public static final String CACHE_INPUT_STREAM_DEFAULT = TRUE.toString();
@@ -284,6 +311,7 @@ public final class CitrusSettings {
     /**
      * Flag to enable/disable message pretty print
      */
+    @CitrusConfigProperty(description = "Enable message payload pretty printing.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String PRETTY_PRINT_PROPERTY = "citrus.message.pretty.print";
     public static final String PRETTY_PRINT_ENV = "CITRUS_MESSAGE_PRETTY_PRINT";
     public static final String PRETTY_PRINT_DEFAULT = TRUE.toString();
@@ -291,6 +319,7 @@ public final class CitrusSettings {
     /**
      * File path charset parameter
      */
+    @CitrusConfigProperty(description = "Charset parameter appended to file paths.", defaultValue = "; charset=")
     public static final String FILE_PATH_CHARSET_PARAMETER_PROPERTY = "citrus.file.path.charset.parameter";
     public static final String FILE_PATH_CHARSET_PARAMETER_ENV = "CITRUS_FILE_PATH_CHARSET_PARAMETER";
     public static final String FILE_PATH_CHARSET_PARAMETER_DEFAULT = "; charset=";
@@ -298,6 +327,7 @@ public final class CitrusSettings {
     /**
      * File path charset parameter
      */
+    @CitrusConfigProperty(description = "Work directory for loading file resources.")
     public static final String RESOURCES_WORKDIR_PROPERTY = "citrus.resources.workdir";
     public static final String RESOURCES_WORKDIR_ENV = "CITRUS_RESOURCES_WORKDIR";
     public static final String RESOURCES_WORKDIR_DEFAULT = "";
@@ -305,6 +335,7 @@ public final class CitrusSettings {
     /**
      * List of static imports for Groovy test action scripts.
      */
+    @CitrusConfigProperty(description = "Comma-separated static imports for Groovy test action scripts.", defaultValue = "print,sleep")
     public static final String GROOVY_STATIC_IMPORTS_PROPERTY = "citrus.groovy.static.imports";
     public static final String GROOVY_STATIC_IMPORTS_ENV = "CITRUS_GROOVY_STATIC_IMPORTS";
     public static final String GROOVY_STATIC_IMPORTS_DEFAULT = "print,sleep";
@@ -312,6 +343,7 @@ public final class CitrusSettings {
     /**
      * Flag to enable/disable stack trace output in default logging reporter.
      */
+    @CitrusConfigProperty(description = "Enable stack trace output in default logging reporter.", type = "java.lang.Boolean", defaultValue = "false")
     public static final String DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_PROPERTY = "citrus.default.logging.reporter.print-stack-traces";
     public static final String DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_ENV = "CITRUS_DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES";
     public static final String DEFAULT_LOGGING_REPORTER_PRINT_STACK_TRACES_DEFAULT = FALSE.toString();
@@ -319,6 +351,7 @@ public final class CitrusSettings {
     /**
      * Flag to enable/disable auto close of dynamic endpoints.
      */
+    @CitrusConfigProperty(description = "Enable auto close of dynamic endpoints after tests.", type = "java.lang.Boolean", defaultValue = "false")
     public static final String AUTO_CLOSE_DYNAMIC_ENDPOINTS_PROPERTY = "citrus.dynamic.endpoints.auto.close";
     public static final String AUTO_CLOSE_DYNAMIC_ENDPOINTS_ENV = "CITRUS_DYNAMIC_ENDPOINTS_AUTO_CLOSE";
     public static final String AUTO_CLOSE_DYNAMIC_ENDPOINTS_DEFAULT = FALSE.toString();
@@ -326,6 +359,7 @@ public final class CitrusSettings {
     /**
      * Flag to enable/disable auto removal of dynamic endpoints.
      */
+    @CitrusConfigProperty(description = "Enable auto removal of dynamic endpoints after tests.", type = "java.lang.Boolean", defaultValue = "false")
     public static final String AUTO_REMOVE_DYNAMIC_ENDPOINTS_PROPERTY = "citrus.dynamic.endpoints.auto.remove";
     public static final String AUTO_REMOVE_DYNAMIC_ENDPOINTS_ENV = "CITRUS_DYNAMIC_ENDPOINTS_AUTO_REMOVE";
     public static final String AUTO_REMOVE_DYNAMIC_ENDPOINTS_DEFAULT = FALSE.toString();
@@ -333,6 +367,7 @@ public final class CitrusSettings {
     /**
      * Flag to enable/disable Citrus banner.
      */
+    @CitrusConfigProperty(description = "Enable Citrus banner output at test suite start.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String PRINT_BANNER_PROPERTY = "citrus.print.banner";
     public static final String PRINT_BANNER_ENV = "CITRUS_PRINT_BANNER";
     public static final String PRINT_BANNER_DEFAULT = TRUE.toString();
@@ -340,6 +375,7 @@ public final class CitrusSettings {
     /**
      * Flag to allow override of default functions in library.
      */
+    @CitrusConfigProperty(description = "Allow override of default functions with custom instances.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String ALLOW_FUNCTION_OVERRIDE_PROPERTY = "citrus.allow.function.override";
     public static final String ALLOW_FUNCTION_OVERRIDE_ENV = "CITRUS_ALLOW_FUNCTION_OVERRIDE";
     public static final String ALLOW_FUNCTION_OVERRIDE_DEFAULT = TRUE.toString();
@@ -347,6 +383,7 @@ public final class CitrusSettings {
     /**
      * Flag to allow override of default validation matcher in library.
      */
+    @CitrusConfigProperty(description = "Allow override of default validation matchers with custom instances.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String ALLOW_VALIDATION_MATCHER_OVERRIDE_PROPERTY = "citrus.allow.validation.matcher.override";
     public static final String ALLOW_VALIDATION_MATCHER_OVERRIDE_ENV = "CITRUS_ALLOW_VALIDATION_MATCHER_OVERRIDE";
     public static final String ALLOW_VALIDATION_MATCHER_OVERRIDE_DEFAULT = TRUE.toString();

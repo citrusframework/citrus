@@ -1,0 +1,25 @@
+{
+  "groups": [
+    {
+      "name": "citrus.json",
+      "type": "org.citrusframework.json.JsonSettings",
+      "description": "JSON message validation settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.json.message.validation.strict",
+      "type": "java.lang.Boolean",
+      "description": "Enable strict JSON message validation.",
+      "sourceType": "org.citrusframework.json.JsonSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.json.permissive.mode",
+      "type": "java.lang.Integer",
+      "description": "Permissive mode for the JSON parser.",
+      "sourceType": "org.citrusframework.json.JsonSettings"
+    }
+  ],
+  "hints": []
+}

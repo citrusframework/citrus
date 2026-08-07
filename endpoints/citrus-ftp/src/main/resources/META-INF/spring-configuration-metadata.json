@@ -1,0 +1,19 @@
+{
+  "groups": [
+    {
+      "name": "citrus.ftp",
+      "type": "org.citrusframework.ftp.FtpSettings",
+      "description": "FTP endpoint settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.ftp.marshaller.type",
+      "type": "java.lang.String",
+      "description": "Default marshaller type for FTP data format.",
+      "sourceType": "org.citrusframework.ftp.FtpSettings",
+      "defaultValue": "XML"
+    }
+  ],
+  "hints": []
+}

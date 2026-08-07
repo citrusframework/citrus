@@ -1846,6 +1846,7 @@
               <excludeArtifacts>
                 <artifact>citrus-utils</artifact>
                 <artifact>citrus-test-support</artifact>
+                <artifact>citrus-metadata-processor</artifact>
                 <artifact>citrus-quarkus-it</artifact>
                 <artifact>citrus-maven-plugin-integration</artifact>
                 <artifact>citrus-archetypes</artifact>
@@ -2076,6 +2077,32 @@
             </configuration>
           </plugin>
         </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>generate-metadata</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <annotationProcessorPaths>
+                  <path>
+                    <groupId>org.citrusframework</groupId>
+                    <artifactId>citrus-metadata-processor</artifactId>
+                    <version>${project.version}</version>
+                  </path>
+                </annotationProcessorPaths>
+                <compilerArgs combine.children="append">
+                  <arg>-Acitrus.metadata.outputDir=${project.basedir}/src/main/resources</arg>
+                </compilerArgs>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
       </build>
     </profile>
 

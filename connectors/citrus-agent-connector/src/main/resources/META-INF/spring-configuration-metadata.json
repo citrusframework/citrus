@@ -1,0 +1,26 @@
+{
+  "groups": [
+    {
+      "name": "citrus.agent",
+      "type": "org.citrusframework.agent.connector.CitrusAgentSettings",
+      "description": "Citrus agent connector settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.agent.name",
+      "type": "java.lang.String",
+      "description": "Citrus agent name.",
+      "sourceType": "org.citrusframework.agent.connector.CitrusAgentSettings",
+      "defaultValue": "citrus-agent"
+    },
+    {
+      "name": "citrus.agent.server.port",
+      "type": "java.lang.Long",
+      "description": "Citrus agent server port.",
+      "sourceType": "org.citrusframework.agent.connector.CitrusAgentSettings",
+      "defaultValue": 4567
+    }
+  ],
+  "hints": []
+}

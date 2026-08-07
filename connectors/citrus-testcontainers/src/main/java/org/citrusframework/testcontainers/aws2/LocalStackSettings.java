@@ -23,6 +23,8 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Stream;
 
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
@@ -30,46 +32,57 @@ import software.amazon.awssdk.regions.Region;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
+@CitrusConfigProperties(prefix = "citrus.testcontainers.localstack", description = "LocalStack Testcontainers settings")
 public class LocalStackSettings {
 
     private static final String LOCALSTACK_PROPERTY_PREFIX = TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX + "localstack.";
     private static final String LOCALSTACK_ENV_PREFIX = TestContainersSettings.TESTCONTAINERS_ENV_PREFIX + "LOCALSTACK_";
 
+    @CitrusConfigProperty(description = "LocalStack Docker image version.", defaultValue = "4.14.0")
     private static final String VERSION_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "version";
     private static final String VERSION_ENV = LOCALSTACK_ENV_PREFIX + "VERSION";
     public static final String VERSION_DEFAULT = "4.14.0";
 
+    @CitrusConfigProperty(description = "LocalStack Docker image name.", defaultValue = "localstack/localstack")
     private static final String IMAGE_NAME_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "image.name";
     private static final String IMAGE_NAME_ENV = LOCALSTACK_ENV_PREFIX + "IMAGE_NAME";
     private static final String IMAGE_NAME_DEFAULT = "localstack/localstack";
 
+    @CitrusConfigProperty(description = "LocalStack service name.", defaultValue = "citrus-localstack")
     private static final String SERVICE_NAME_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "service.name";
     private static final String SERVICE_NAME_ENV = LOCALSTACK_ENV_PREFIX + "SERVICE_NAME";
     public static final String SERVICE_NAME_DEFAULT = "citrus-localstack";
 
+    @CitrusConfigProperty(description = "LocalStack container name.", defaultValue = "aws2Container")
     private static final String CONTAINER_NAME_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "container.name";
     private static final String CONTAINER_NAME_ENV = LOCALSTACK_ENV_PREFIX + "CONTAINER_NAME";
     public static final String CONTAINER_NAME_DEFAULT = "aws2Container";
 
+    @CitrusConfigProperty(description = "Auto create AWS clients for enabled services and add them as beans to the Citrus registry.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String AUTO_CREATE_CLIENTS_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "auto.create.clients";
     private static final String AUTO_CREATE_CLIENTS_ENV = LOCALSTACK_ENV_PREFIX + "AUTO_CREATE_CLIENTS";
     public static final String AUTO_CREATE_CLIENTS_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "LocalStack auth token.")
     private static final String AUTH_TOKEN_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "auth.token";
     private static final String AUTH_TOKEN_ENV = LOCALSTACK_ENV_PREFIX + "AUTH_TOKEN";
 
+    @CitrusConfigProperty(description = "AWS secret key for LocalStack.", defaultValue = "secretkey")
     private static final String SECRET_KEY_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "secret.key";
     private static final String SECRET_KEY_ENV = LOCALSTACK_ENV_PREFIX + "SECRET_KEY";
     public static final String SECRET_KEY_DEFAULT = "secretkey";
 
+    @CitrusConfigProperty(description = "AWS access key for LocalStack.", defaultValue = "accesskey")
     private static final String ACCESS_KEY_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "access.key";
     private static final String ACCESS_KEY_ENV = LOCALSTACK_ENV_PREFIX + "ACCESS_KEY";
     public static final String ACCESS_KEY_DEFAULT = "accesskey";
 
+    @CitrusConfigProperty(description = "AWS region for LocalStack.", defaultValue = "us-east-1")
     private static final String REGION_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "region";
     private static final String REGION_ENV = LOCALSTACK_ENV_PREFIX + "REGION";
     public static final String REGION_DEFAULT = Region.US_EAST_1.id();
 
+    @CitrusConfigProperty(description = "Time in seconds to wait for the LocalStack container to startup.", type = "java.lang.Long")
     private static final String STARTUP_TIMEOUT_PROPERTY = LOCALSTACK_PROPERTY_PREFIX + "startup.timeout";
     private static final String STARTUP_TIMEOUT_ENV = LOCALSTACK_ENV_PREFIX + "STARTUP_TIMEOUT";
 
