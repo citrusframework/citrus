@@ -84,6 +84,7 @@ public class HttpCondition extends AbstractCondition {
         try {
             httpURLConnection = openConnection(contextUrl);
             httpURLConnection.setConnectTimeout(getTimeout(context));
+            httpURLConnection.setReadTimeout(getTimeout(context));
             httpURLConnection.setRequestMethod(context.resolveDynamicValue(method));
 
             responseCode = httpURLConnection.getResponseCode();

@@ -61,6 +61,7 @@ public class HttpConditionTest extends UnitTestSupport {
         Assert.assertTrue(testling.isSatisfied(context));
 
         verify(connection).setConnectTimeout(3000);
+        verify(connection).setReadTimeout(3000);
         verify(connection).setRequestMethod("HEAD");
         verify(connection).disconnect();
     }
@@ -91,6 +92,7 @@ public class HttpConditionTest extends UnitTestSupport {
         Assert.assertTrue(testling.isSatisfied(context));
 
         verify(connection).setConnectTimeout(3000);
+        verify(connection).setReadTimeout(3000);
         verify(connection).setRequestMethod("HEAD");
         verify(connection).disconnect();
     }

@@ -159,6 +159,7 @@ public class CitrusConfigMetadataProcessorTest {
 
         JavaCompiler.CompilationTask task = compiler.getTask(
                 null, fileManager, diagnostics, options, null, List.of(sourceFile));
+        task.setProcessors(List.of(new CitrusConfigMetadataProcessor()));
 
         boolean success = task.call();
         if (!success) {
