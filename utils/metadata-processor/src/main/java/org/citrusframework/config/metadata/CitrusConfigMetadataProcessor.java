@@ -19,7 +19,6 @@ package org.citrusframework.config.metadata;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -46,7 +45,6 @@ import org.citrusframework.config.CitrusConfigProperty;
         "org.citrusframework.config.CitrusConfigProperties",
         "org.citrusframework.config.CitrusConfigProperty"
 })
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class CitrusConfigMetadataProcessor extends AbstractProcessor {
 
     private static final String METADATA_PATH = "META-INF/spring-configuration-metadata.json";
@@ -122,6 +120,11 @@ public class CitrusConfigMetadataProcessor extends AbstractProcessor {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
                     "Failed to write " + METADATA_PATH + ": " + e.getMessage());
         }
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latest();
     }
 
     @Override

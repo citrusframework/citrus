@@ -43,7 +43,10 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport implements TestActionS
     @BeforeClass
     public void startHttpServer() throws IOException {
         server = HttpServer.create(new InetSocketAddress("localhost", serverPort), 0);
-        server.createContext("/test", httpExchange -> httpExchange.sendResponseHeaders(200, 0));
+        server.createContext("/test", httpExchange -> {
+            httpExchange.sendResponseHeaders(200, -1);
+            httpExchange.close();
+        });
         server.setExecutor(Executors.newSingleThreadExecutor());
         server.start();
     }

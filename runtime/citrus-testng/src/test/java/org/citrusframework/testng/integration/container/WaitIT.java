@@ -43,7 +43,10 @@ public class WaitIT extends TestNGCitrusSpringSupport {
         }
 
         server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
-        server.createContext("/test", httpExchange -> httpExchange.sendResponseHeaders(200, 0));
+        server.createContext("/test", httpExchange -> {
+            httpExchange.sendResponseHeaders(200, -1);
+            httpExchange.close();
+        });
         server.setExecutor(Executors.newSingleThreadExecutor());
         server.start();
     }
