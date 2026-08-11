@@ -407,11 +407,66 @@ This is how Citrus is able to start Testcontainers instances as part of a Quarku
 The application properties supplier as well as the container lifecycle listener interfaces allow us to connect the Quarkus application with the Testcontainers instance.
 The test is able to use the services on the Testcontainers instance to trigger some test data that is consumed by the application under test.
 
+[[runtime-quarkus-compose-container]]
+=== Docker Compose support
+
+Citrus provides a `@ComposeContainerSupport` annotation that allows you to start a Docker Compose environment as part of your Quarkus test.
+This is useful when your application under test depends on multiple services that are defined in a Docker Compose file.
+
+.ComposeContainerTest
+[source,java]
+----
+@QuarkusTest
+@CitrusSupport
+@ComposeContainerSupport(
+    composeFile = "compose.yaml",
+    exposedServices = {
+        @ComposeContainerSupport.ExposedService(name = "db", port = 5432),
+        @ComposeContainerSupport.ExposedService(name = "broker", port = 9092)
+    },
+    containerLifecycleListener = ComposeContainerTest.class
+)
+public class ComposeContainerTest implements TestActionSupport, ContainerLifecycleListener<ComposeContainer> {
+
+    @CitrusResource
+    private TestCaseRunner tc;
+
+    @CitrusResource
+    private ComposeContainer composeContainer;
+
+    @Test
+    public void shouldTestWithComposeServices() {
+        // test logic using the compose services
+    }
+
+    @Override
+    public Map<String, String> started(ComposeContainer container) {
+        Map<String, String> conf = new HashMap<>();
+        conf.put("my.app.db.port",
+            String.valueOf(container.getServicePort("db", 5432)));
+        conf.put("my.app.db.host",
+            container.getServiceHost("db", 5432));
+        return conf;
+    }
+}
+----
+
+The `@ComposeContainerSupport` annotation accepts the following attributes:
+
+* `composeFile` - Path to the Docker Compose file. Defaults to `compose.yaml` on the classpath when not set.
+* `exposedServices` - Services and ports to expose from the compose environment. Each exposed service is defined with a `name` (as defined in the compose file) and a `port`.
+* `startupTimeout` - Startup timeout in seconds. Uses the default from `ComposeContainerSettings` when set to `-1`.
+* `containerLifecycleListener` - Container lifecycle listener classes to handle post-start and pre-stop events.
+
+The test can inject the `ComposeContainer` instance using the `@CitrusResource` annotation to interact with the compose environment directly.
+As with other Testcontainers annotations in Citrus the `ContainerLifecycleListener` interface allows you to react to container lifecycle events and return application properties that get set for the Quarkus application under test.
+
 Please also have a look into the other provided Testcontainers annotations in Citrus:
 
 * @LocalStackContainerSupport
-* @KakfaContainerSupport
+* @KafkaContainerSupport
 * @RedpandaContainerSupport
+* @ComposeContainerSupport
 * @TestcontainersSupport
 
 All of these annotations allow you to start Testcontainers instances as part of your Quarkus test and provides the opportunity to participate in the container lifecycle to access managed ports and connectivity settings for instance.
