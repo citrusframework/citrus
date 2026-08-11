@@ -58,6 +58,7 @@ public class SettingsData {
         GROUPS.put("jbang", createJBangSettings());
         GROUPS.put("kubernetes", createKubernetesSettings());
         GROUPS.put("knative", createKnativeSettings());
+        GROUPS.put("kafka", createKafkaEndpointSettings());
         GROUPS.put("testcontainers", createTestContainersSettings());
         GROUPS.put("testcontainers-kafka", createKafkaSettings());
         GROUPS.put("testcontainers-localstack", createLocalStackSettings());
@@ -708,6 +709,17 @@ public class SettingsData {
 
         return new SettingsGroup("knative", "Knative Settings",
                 "Knative connector settings from KnativeSettings", "citrus-knative", settings);
+    }
+
+    private static SettingsGroup createKafkaEndpointSettings() {
+        List<SettingEntry> settings = new ArrayList<>();
+
+        settings.add(new SettingEntry("citrus.kafka.dynamic.consumer.group", "CITRUS_KAFKA_DYNAMIC_CONSUMER_GROUP",
+                "true", BOOLEAN,
+                "When enabled, dynamic Kafka endpoint URIs automatically use a unique consumer group for each endpoint"));
+
+        return new SettingsGroup("kafka", "Kafka Endpoint Settings",
+                "Kafka endpoint settings from KafkaSettings", "citrus-kafka", settings);
     }
 
     private static SettingsGroup createTestContainersSettings() {

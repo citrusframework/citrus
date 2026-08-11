@@ -37,6 +37,7 @@ class SettingsDataTest {
                 "http", "ftp", "mail", "openapi",
                 "json", "yaml-validation",
                 "jbang", "kubernetes", "knative",
+                "kafka",
                 "testcontainers", "testcontainers-kafka",
                 "testcontainers-localstack", "testcontainers-postgresql",
                 "testcontainers-mongodb", "testcontainers-redpanda");
@@ -123,7 +124,7 @@ class SettingsDataTest {
 
         assertThat(moduleNames).contains(
                 "citrus-api", "citrus-spring", "citrus-camel",
-                "citrus-http", "citrus-kubernetes", "citrus-testcontainers");
+                "citrus-http", "citrus-kafka", "citrus-kubernetes", "citrus-testcontainers");
     }
 
     @Test
