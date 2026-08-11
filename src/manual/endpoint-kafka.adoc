@@ -650,6 +650,15 @@ A larger window might find older messages but could impact performance.
 As we have seen before the topic name can be overwritten in each send and receive operation by specifying the `citrus_kafka_topic`
 message header. In addition to that you can make use of completely dynamic Kafka endpoints, too.
 
+By default, dynamic Kafka endpoints automatically use a unique consumer group for each endpoint created via the `kafka:` URI scheme.
+This prevents multiple dynamic endpoints from sharing the same consumer group and accidentally stealing messages from each other (point-to-point semantics).
+The consumer group name follows the pattern `citrus_kafka_group_{index}` where `{index}` is an auto-incrementing counter.
+
+You can disable this behavior by setting the `citrus.kafka.dynamic.consumer.group` property to `false` (see <<kafka-settings>>).
+When disabled, dynamic endpoints fall back to the default consumer group `citrus_kafka_group`.
+You can always override the consumer group on a per-endpoint basis by specifying the `consumerGroup` parameter in the endpoint URI
+(e.g. `kafka:my-topic?consumerGroup=my-group`).
+
 The dynamic endpoint is created on the fly with respective settings. So you can use the `kafka` endpoint component in your
 test as follows:
 
@@ -763,5 +772,23 @@ The embedded server component provides following properties to set:
 | auto-delete-logs
 | java.lang.Boolean
 | Auto delete server log directories on exit. Default is true.
+
+|===
+
+[[kafka-settings]]
+== Kafka Settings
+
+Citrus provides global settings for the Kafka endpoint module. These settings can be configured via Java system properties or environment variables.
+
+[cols="3,3,2,5a"]
+|===
+| System Property | Environment Variable | Default | Description
+
+| `citrus.kafka.dynamic.consumer.group`
+| `CITRUS_KAFKA_DYNAMIC_CONSUMER_GROUP`
+| `true`
+| When enabled, dynamic Kafka endpoint URIs (e.g. `kafka:my-topic`) automatically use a unique consumer group for each endpoint.
+  This ensures each consumer independently receives all messages from its subscribed topic.
+  When disabled, dynamic endpoints share the default consumer group `citrus_kafka_group`.
 
 |===

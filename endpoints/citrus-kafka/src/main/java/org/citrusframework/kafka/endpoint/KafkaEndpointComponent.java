@@ -17,10 +17,12 @@
 package org.citrusframework.kafka.endpoint;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpointComponent;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.kafka.message.KafkaMessageHeaders;
 
 /**
  * Kafka endpoint component is able to create kafka endpoint from endpoint uri with parameters. Depending on uri creates a
@@ -31,6 +33,8 @@ import org.citrusframework.endpoint.Endpoint;
  * @since 2.8
  */
 public class KafkaEndpointComponent extends AbstractEndpointComponent {
+
+    private static final AtomicInteger CONSUMER_GROUP_INDEX = new AtomicInteger(1);
 
     /**
      * Default constructor using the name for this component.
@@ -52,6 +56,11 @@ public class KafkaEndpointComponent extends AbstractEndpointComponent {
 
         if (parameters.containsKey("server")) {
             parameters.put("bootstrapServers", parameters.remove("server"));
+        }
+
+        if (!parameters.containsKey("consumerGroup") && KafkaSettings.isDynamicConsumerGroup()) {
+            endpoint.getEndpointConfiguration().setConsumerGroup(
+                    KafkaMessageHeaders.KAFKA_PREFIX + "group_" + CONSUMER_GROUP_INDEX.getAndIncrement());
         }
 
         enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);

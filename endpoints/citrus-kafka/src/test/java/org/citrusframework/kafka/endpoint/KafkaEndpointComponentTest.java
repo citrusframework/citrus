@@ -97,6 +97,49 @@ public class KafkaEndpointComponentTest {
     }
 
     @Test
+    public void testCreateEndpointWithDynamicConsumerGroup() {
+        KafkaEndpointComponent component = new KafkaEndpointComponent();
+
+        Endpoint endpoint1 = component.createEndpoint("kafka:topic-1", context);
+        Endpoint endpoint2 = component.createEndpoint("kafka:topic-2", context);
+
+        String group1 = ((KafkaEndpoint) endpoint1).getEndpointConfiguration().getConsumerGroup();
+        String group2 = ((KafkaEndpoint) endpoint2).getEndpointConfiguration().getConsumerGroup();
+
+        Assert.assertTrue(group1.startsWith("citrus_kafka_group_"), "Consumer group should start with 'citrus_kafka_group_' but was: " + group1);
+        Assert.assertTrue(group2.startsWith("citrus_kafka_group_"), "Consumer group should start with 'citrus_kafka_group_' but was: " + group2);
+        Assert.assertNotEquals(group1, group2, "Dynamic endpoints should have different consumer groups");
+    }
+
+    @Test
+    public void testCreateEndpointWithExplicitConsumerGroup() {
+        KafkaEndpointComponent component = new KafkaEndpointComponent();
+
+        Endpoint endpoint = component.createEndpoint("kafka:topic-1?consumerGroup=my-custom-group", context);
+
+        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getConsumerGroup(), "my-custom-group");
+    }
+
+    @Test
+    public void testCreateEndpointWithDynamicConsumerGroupDisabled() {
+        System.setProperty("citrus.kafka.dynamic.consumer.group", "false");
+        try {
+            KafkaEndpointComponent component = new KafkaEndpointComponent();
+
+            Endpoint endpoint1 = component.createEndpoint("kafka:topic-1", context);
+            Endpoint endpoint2 = component.createEndpoint("kafka:topic-2", context);
+
+            String group1 = ((KafkaEndpoint) endpoint1).getEndpointConfiguration().getConsumerGroup();
+            String group2 = ((KafkaEndpoint) endpoint2).getEndpointConfiguration().getConsumerGroup();
+
+            Assert.assertEquals(group1, "citrus_kafka_group");
+            Assert.assertEquals(group2, "citrus_kafka_group");
+        } finally {
+            System.clearProperty("citrus.kafka.dynamic.consumer.group");
+        }
+    }
+
+    @Test
     public void testInvalidEndpointUri() {
         KafkaEndpointComponent component = new KafkaEndpointComponent();
         try {
