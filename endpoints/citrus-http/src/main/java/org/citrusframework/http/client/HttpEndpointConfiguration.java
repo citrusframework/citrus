@@ -234,7 +234,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      * Gets the restTemplate.
      * @return the restTemplate
      */
-    public RestTemplate getRestTemplate() {
+    public synchronized RestTemplate getRestTemplate() {
         if (restTemplate == null) {
             restTemplate = new RestTemplate();
             restTemplate.setInterceptors(new ArrayList<>(clientInterceptors));
