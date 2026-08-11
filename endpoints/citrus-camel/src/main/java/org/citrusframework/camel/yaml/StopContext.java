@@ -27,6 +27,18 @@ public class StopContext implements CamelActionBuilderWrapper<StopCamelContextAc
         builder.contextName(contextName);
     }
 
+    @SchemaProperty(description = "The shutdown timeout in seconds.")
+    public void setTimeout(long timeout) {
+        builder.timeout(timeout);
+    }
+
+    @SchemaProperty(description = "Enable immediate shutdown without waiting for in-flight exchanges.")
+    public void setImmediate(boolean immediate) {
+        if (immediate) {
+            builder.immediate();
+        }
+    }
+
     @Override
     public StopCamelContextAction.Builder getBuilder() {
         return builder;

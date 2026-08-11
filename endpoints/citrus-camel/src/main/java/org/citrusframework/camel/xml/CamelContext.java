@@ -30,6 +30,12 @@ public class CamelContext {
     @XmlAttribute
     protected boolean autoStart = true;
 
+    @XmlAttribute
+    protected Long timeout;
+
+    @XmlAttribute
+    protected Boolean immediate;
+
     public String getName() {
         return name;
     }
@@ -44,5 +50,21 @@ public class CamelContext {
 
     public void setAutoStart(boolean autoStart) {
         this.autoStart = autoStart;
+    }
+
+    public Long getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Long timeout) {
+        this.timeout = timeout;
+    }
+
+    public Boolean isImmediate() {
+        return immediate;
+    }
+
+    public void setImmediate(Boolean immediate) {
+        this.immediate = immediate;
     }
 }

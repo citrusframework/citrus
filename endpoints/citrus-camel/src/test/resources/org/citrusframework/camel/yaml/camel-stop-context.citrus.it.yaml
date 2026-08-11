@@ -1,0 +1,17 @@
+name: "CamelStopContextTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      stopContext:
+        name: "defaultContext"
+
+  - camel:
+      stopContext:
+        name: "timeoutContext"
+        timeout: 60
+
+  - camel:
+      stopContext:
+        name: "immediateContext"
+        immediate: true

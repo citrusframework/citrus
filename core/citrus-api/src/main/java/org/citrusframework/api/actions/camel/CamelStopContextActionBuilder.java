@@ -23,4 +23,8 @@ public interface CamelStopContextActionBuilder<T extends TestAction, B extends C
 
     B contextName(String name);
 
+    B timeout(long timeout);
+
+    B immediate();
+
 }
