@@ -1676,6 +1676,16 @@
           "type": "string",
           "title": "Name",
           "description": "The Camel context name."
+        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The shutdown timeout in seconds."
+        },
+        "immediate": {
+          "type": "boolean",
+          "title": "Immediate",
+          "description": "Enable immediate shutdown without waiting for in-flight exchanges."
         }
       },
       "additionalProperties": false    }

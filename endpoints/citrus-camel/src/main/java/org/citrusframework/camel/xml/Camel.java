@@ -120,6 +120,12 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         StopCamelContextAction.Builder builder = new StopCamelContextAction.Builder();
         builder.contextName(stopContext.getName());
 
+        if (Boolean.TRUE.equals(stopContext.isImmediate())) {
+            builder.immediate();
+        } else if (stopContext.getTimeout() != null) {
+            builder.timeout(stopContext.getTimeout());
+        }
+
         this.builder = builder;
     }
 

@@ -16,6 +16,8 @@
 
 package org.citrusframework.camel.actions;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apache.camel.CamelContext;
 import org.citrusframework.api.actions.camel.CamelStopContextActionBuilder;
 import org.citrusframework.camel.CamelSettings;
@@ -27,17 +29,17 @@ import org.slf4j.LoggerFactory;
 public class StopCamelContextAction extends AbstractCamelAction {
 
     private final String contextName;
+    private final long timeout;
+    private final boolean immediate;
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(StopCamelContextAction.class);
 
-    /**
-     * Default constructor.
-     */
     public StopCamelContextAction(Builder builder) {
         super("stop-context", builder);
 
         this.contextName = builder.contextName;
+        this.timeout = builder.timeout;
+        this.immediate = builder.immediate;
     }
 
     @Override
@@ -52,12 +54,33 @@ public class StopCamelContextAction extends AbstractCamelAction {
         }
 
         try {
+            if (immediate) {
+                camelContext.getShutdownStrategy().setShutdownNowOnTimeout(true);
+                camelContext.getShutdownStrategy().setTimeout(1);
+                camelContext.getShutdownStrategy().setTimeUnit(TimeUnit.SECONDS);
+            } else if (timeout > 0) {
+                camelContext.getShutdownStrategy().setTimeout(timeout);
+                camelContext.getShutdownStrategy().setTimeUnit(TimeUnit.SECONDS);
+            }
+
             camelContext.stop();
         } catch (Exception e) {
             throw new IllegalStateException("Failed to stop Camel context '%s'".formatted(contextName), e);
         }
 
         logger.info("Stopped Camel context '%s'".formatted(contextName));
+    }
+
+    public String getContextName() {
+        return contextName;
+    }
+
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public boolean isImmediate() {
+        return immediate;
     }
 
     /**
@@ -67,10 +90,24 @@ public class StopCamelContextAction extends AbstractCamelAction {
             implements CamelStopContextActionBuilder<StopCamelContextAction, Builder> {
 
         private String contextName = CamelSettings.getContextName();
+        private long timeout = -1;
+        private boolean immediate = false;
 
         @Override
         public Builder contextName(String name) {
             this.contextName = name;
+            return this;
+        }
+
+        @Override
+        public Builder timeout(long timeout) {
+            this.timeout = timeout;
+            return this;
+        }
+
+        @Override
+        public Builder immediate() {
+            this.immediate = true;
             return this;
         }
 
