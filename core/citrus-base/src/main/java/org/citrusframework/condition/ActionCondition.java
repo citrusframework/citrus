@@ -69,6 +69,7 @@ public class ActionCondition extends AbstractCondition {
             return false;
         }
 
+        this.caughtException = null;
         return true;
     }
 

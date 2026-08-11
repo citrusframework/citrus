@@ -16,11 +16,15 @@
 
 package org.citrusframework.actions;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.citrusframework.api.condition.Condition;
+import org.citrusframework.condition.ActionCondition;
 import org.citrusframework.container.Wait;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.mockito.Mockito;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
@@ -140,6 +144,100 @@ public class WaitTest {
         stopTimer();
 
         assertConditionExecutedWithinSeconds(seconds);
+    }
+
+    @Test
+    public void shouldRetryActionConditionAndSucceed() {
+        AtomicInteger executionCount = new AtomicInteger();
+
+        ActionCondition actionCondition = new ActionCondition(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                if (executionCount.incrementAndGet() <= 2) {
+                    throw new CitrusRuntimeException("Not ready yet");
+                }
+            }
+        });
+
+        Wait testling = new Wait.Builder<>()
+                .condition(actionCondition)
+                .milliseconds(5000L)
+                .interval(200L)
+                .build();
+
+        reset(contextMock);
+        when(contextMock.replaceDynamicContentInString("5000")).thenReturn("5000");
+        when(contextMock.replaceDynamicContentInString("200")).thenReturn("200");
+
+        startTimer();
+        testling.execute(contextMock);
+        stopTimer();
+
+        Assert.assertTrue(executionCount.get() >= 3, "Action should have been executed at least 3 times");
+        Assert.assertNull(actionCondition.getCaughtException());
+    }
+
+    @Test
+    public void shouldTimeoutWhenActionConditionNeverSucceeds() {
+        AtomicInteger executionCount = new AtomicInteger();
+
+        ActionCondition actionCondition = new ActionCondition(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                executionCount.incrementAndGet();
+                throw new CitrusRuntimeException("Always failing");
+            }
+        });
+
+        Wait testling = new Wait.Builder<>()
+                .condition(actionCondition)
+                .milliseconds(1000L)
+                .interval(200L)
+                .build();
+
+        reset(contextMock);
+        when(contextMock.replaceDynamicContentInString("1000")).thenReturn("1000");
+        when(contextMock.replaceDynamicContentInString("200")).thenReturn("200");
+
+        startTimer();
+        try {
+            testling.execute(contextMock);
+            fail("Was expecting CitrusRuntimeException to be thrown");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("did not perform as expected"));
+        }
+        stopTimer();
+
+        Assert.assertTrue(executionCount.get() > 1, "Action should have been retried multiple times");
+        assertConditionExecutedWithinSeconds("2");
+    }
+
+    @Test
+    public void shouldReExecuteActionOnEachWaitInterval() {
+        AtomicInteger executionCount = new AtomicInteger();
+
+        ActionCondition actionCondition = new ActionCondition(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                if (executionCount.incrementAndGet() <= 3) {
+                    throw new CitrusRuntimeException("Attempt " + executionCount.get());
+                }
+            }
+        });
+
+        Wait testling = new Wait.Builder<>()
+                .condition(actionCondition)
+                .milliseconds(5000L)
+                .interval(100L)
+                .build();
+
+        reset(contextMock);
+        when(contextMock.replaceDynamicContentInString("5000")).thenReturn("5000");
+        when(contextMock.replaceDynamicContentInString("100")).thenReturn("100");
+
+        testling.execute(contextMock);
+
+        Assert.assertEquals(executionCount.get(), 4, "Action should have been executed exactly 4 times (3 failures + 1 success)");
     }
 
     private void prepareContextMock(String waitTime, String interval) {
