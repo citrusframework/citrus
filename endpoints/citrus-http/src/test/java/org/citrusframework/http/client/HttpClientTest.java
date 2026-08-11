@@ -529,7 +529,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
     public void testConcurrentGetRestTemplate() throws Exception {
         HttpEndpointConfiguration endpointConfiguration = new HttpEndpointConfiguration();
 
-        int threadCount = 10;
+        int threadCount = 32;
         CyclicBarrier barrier = new CyclicBarrier(threadCount);
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         try {
@@ -541,12 +541,18 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
                 }));
             }
 
+            RestTemplate first = null;
             for (Future<RestTemplate> future : futures) {
                 RestTemplate template = future.get();
                 Assert.assertNotNull(template);
                 Assert.assertFalse(template.getInterceptors().isEmpty());
                 Assert.assertTrue(template.getInterceptors().stream()
                         .anyMatch(LoggingClientInterceptor.class::isInstance));
+                if (first == null) {
+                    first = template;
+                } else {
+                    Assert.assertSame(first, template);
+                }
             }
         } finally {
             executor.shutdown();

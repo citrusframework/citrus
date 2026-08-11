@@ -152,7 +152,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      * Sets the restTemplate.
      * @param restTemplate the restTemplate to set
      */
-    public void setRestTemplate(RestTemplate restTemplate) {
+    public synchronized void setRestTemplate(RestTemplate restTemplate) {
         clientInterceptors.addAll(restTemplate.getInterceptors());
         restTemplate.setInterceptors(new ArrayList<>(clientInterceptors));
         this.restTemplate = restTemplate;
@@ -234,7 +234,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      * Gets the restTemplate.
      * @return the restTemplate
      */
-    public RestTemplate getRestTemplate() {
+    public synchronized RestTemplate getRestTemplate() {
         if (restTemplate == null) {
             restTemplate = new RestTemplate();
             restTemplate.setInterceptors(new ArrayList<>(clientInterceptors));
@@ -281,7 +281,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      * Sets the clientInterceptors on this implementation's rest template.
      * @param clientInterceptors the clientInterceptors to set
      */
-    public void setClientInterceptors(List<ClientHttpRequestInterceptor> clientInterceptors) {
+    public synchronized void setClientInterceptors(List<ClientHttpRequestInterceptor> clientInterceptors) {
         this.clientInterceptors = clientInterceptors;
 
         if (restTemplate == null) {
