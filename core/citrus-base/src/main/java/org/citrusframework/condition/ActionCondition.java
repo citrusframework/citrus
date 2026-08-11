@@ -18,6 +18,7 @@ package org.citrusframework.condition;
 
 import java.util.Optional;
 
+import org.citrusframework.Completable;
 import org.citrusframework.TestAction;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
@@ -36,6 +37,9 @@ public class ActionCondition extends AbstractCondition {
 
     /** Optional exception caught during action */
     private Exception caughtException;
+
+    /** Tracks whether the action has already been executed successfully */
+    private boolean executed;
 
     /**
      * Default constructor.
@@ -58,19 +62,43 @@ public class ActionCondition extends AbstractCondition {
             return false;
         }
 
+        if (!doExecute(context)) {
+            return false;
+        }
+
+        if (action instanceof Completable completable) {
+            return completable.isDone(context);
+        }
+
+        return true;
+    }
+
+    /**
+     * Executes test action only once and checks for success (no exceptions).
+     * Returns boolean flag representing success/failure execution state.
+     * Saves caught exception for further usage.
+     * When execution is successful saves execute state so subsequent calls return the cached success state.
+     * @param context the test context.
+     * @return flag marking action execution success=true (no exceptions)
+     */
+    private boolean doExecute(TestContext context) {
+        if (executed) {
+            return true;
+        }
+
         try {
             action.execute(context);
+            caughtException = null;
+            executed = true;
+            return true;
         } catch (Exception e) {
-            this.caughtException = e;
+            caughtException = e;
             logger.warn("Nested action did not perform as expected - {}",
                     Optional.ofNullable(e.getMessage())
                             .map(msg -> e.getClass().getName() + ": " + msg)
                             .orElseGet(() -> e.getClass().getName()));
             return false;
         }
-
-        this.caughtException = null;
-        return true;
     }
 
     @Override

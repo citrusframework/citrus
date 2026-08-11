@@ -16,8 +16,10 @@
 
 package org.citrusframework.condition;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.citrusframework.Completable;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.FailAction;
@@ -158,16 +160,98 @@ public class ActionConditionTest {
             @Override
             public void doExecute(TestContext context) {
                 executionCount.incrementAndGet();
+                if (executionCount.get() < 3) {
+                    throw new CitrusRuntimeException("Action not ready");
+                }
             }
         });
+
+        Assert.assertFalse(testling.isSatisfied(context));
+        Assert.assertEquals(executionCount.get(), 1);
+
+        Assert.assertFalse(testling.isSatisfied(context));
+        Assert.assertEquals(executionCount.get(), 2);
+
+        Assert.assertTrue(testling.isSatisfied(context));
+        Assert.assertEquals(executionCount.get(), 3);
+
+        Assert.assertTrue(testling.isSatisfied(context));
+        Assert.assertEquals(executionCount.get(), 3);
+    }
+
+    @Test
+    public void shouldExecuteCompletableActionOnceAndCheckIsDone() {
+        AtomicInteger executionCount = new AtomicInteger();
+        AtomicBoolean done = new AtomicBoolean(false);
+
+        ActionCondition testling = new ActionCondition(new CompletableTestAction(executionCount, done));
+
+        Assert.assertFalse(testling.isSatisfied(context));
+        Assert.assertEquals(executionCount.get(), 1);
+
+        Assert.assertFalse(testling.isSatisfied(context));
+        Assert.assertEquals(executionCount.get(), 1);
+
+        done.set(true);
+        Assert.assertTrue(testling.isSatisfied(context));
+        Assert.assertEquals(executionCount.get(), 1);
+    }
+
+    @Test
+    public void shouldSatisfyCompletableActionWhenDoneImmediately() {
+        AtomicInteger executionCount = new AtomicInteger();
+        AtomicBoolean done = new AtomicBoolean(true);
+
+        ActionCondition testling = new ActionCondition(new CompletableTestAction(executionCount, done));
 
         Assert.assertTrue(testling.isSatisfied(context));
         Assert.assertEquals(executionCount.get(), 1);
 
         Assert.assertTrue(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 2);
+        Assert.assertEquals(executionCount.get(), 1);
+    }
 
-        Assert.assertTrue(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 3);
+    @Test
+    public void shouldHandleCompletableActionExecutionFailure() {
+        ActionCondition testling = new ActionCondition(new FailingCompletableTestAction());
+
+        Assert.assertFalse(testling.isSatisfied(context));
+        Assert.assertNotNull(testling.getCaughtException());
+        Assert.assertTrue(testling.getCaughtException().getMessage().contains("Execution failed"));
+
+        Assert.assertFalse(testling.isSatisfied(context));
+        Assert.assertNotNull(testling.getCaughtException());
+    }
+
+    private static class FailingCompletableTestAction extends AbstractTestAction implements Completable {
+        @Override
+        public void doExecute(TestContext context) {
+            throw new CitrusRuntimeException("Execution failed");
+        }
+
+        @Override
+        public boolean isDone(TestContext context) {
+            return false;
+        }
+    }
+
+    private static class CompletableTestAction extends AbstractTestAction implements Completable {
+        private final AtomicInteger executionCount;
+        private final AtomicBoolean done;
+
+        CompletableTestAction(AtomicInteger executionCount, AtomicBoolean done) {
+            this.executionCount = executionCount;
+            this.done = done;
+        }
+
+        @Override
+        public void doExecute(TestContext context) {
+            executionCount.incrementAndGet();
+        }
+
+        @Override
+        public boolean isDone(TestContext context) {
+            return done.get();
+        }
     }
 }
