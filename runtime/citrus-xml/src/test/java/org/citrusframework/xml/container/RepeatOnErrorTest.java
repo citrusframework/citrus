@@ -19,6 +19,7 @@ package org.citrusframework.xml.container;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.EchoAction;
+import org.citrusframework.api.container.IterationCountConditionExpression;
 import org.citrusframework.container.RepeatOnErrorUntilTrue;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.AbstractXmlActionTest;
@@ -37,7 +38,7 @@ public class RepeatOnErrorTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getName(), "RepeatOnErrorTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
+        Assert.assertEquals(result.getActionCount(), 5L);
 
         Assert.assertEquals(result.getTestAction(0).getClass(), RepeatOnErrorUntilTrue.class);
 
@@ -71,6 +72,15 @@ public class RepeatOnErrorTest extends AbstractXmlActionTest {
         Assert.assertEquals(action.getIndexName(), "i");
         Assert.assertEquals(action.getStart(), 1);
         Assert.assertEquals(action.getAutoSleep(), Long.valueOf(250L));
+        Assert.assertEquals(action.getActionCount(), 1);
+        Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
+
+        action = (RepeatOnErrorUntilTrue) result.getTestAction(4);
+        Assert.assertNull(action.getCondition());
+        Assert.assertTrue(action.getConditionExpression() instanceof IterationCountConditionExpression);
+        Assert.assertEquals(((IterationCountConditionExpression) action.getConditionExpression()).getNumberOfIterations(), 5);
+        Assert.assertEquals(action.getIndexName(), "i");
+        Assert.assertEquals(action.getStart(), 1);
         Assert.assertEquals(action.getActionCount(), 1);
         Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
     }

@@ -54,6 +54,11 @@ public class RepeatOnError implements TestActionBuilder<RepeatOnErrorUntilTrue>,
         builder.until(condition);
     }
 
+    @SchemaProperty(description = "Number of iterations to execute.")
+    public void setTimes(int times) {
+        builder.times(times);
+    }
+
     @SuppressWarnings("deprecation")
     @SchemaProperty(description = "Automatically sleep the time in milliseconds with each attempt.")
     public void setAutoSleep(long milliseconds) {

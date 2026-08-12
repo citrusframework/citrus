@@ -131,4 +131,31 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
 
         verify(action, times(4)).execute(context);
     }
+
+    @Test
+    public void testRepeatOnErrorSuccessOnFirstIterationTimes() {
+        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
+                .times(5)
+                .index("i")
+                .actions(() -> action)
+                .build();
+
+        repeat.execute(context);
+
+        verify(action).execute(context);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class)
+    public void testRepeatOnErrorNoSuccessTimes() {
+        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
+                .times(5)
+                .index("i")
+                .autoSleep(Duration.ofMillis(0))
+                .actions(() -> action, new FailAction.Builder())
+                .build();
+
+        repeat.execute(context);
+
+        verify(action, times(5)).execute(context);
+    }
 }

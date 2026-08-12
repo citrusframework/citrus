@@ -149,4 +149,21 @@ public class IterateTest extends UnitTestSupport {
 
         verify(action, times(5)).execute(context);
     }
+
+    @Test
+    public void testIterationTimes() {
+        reset(action);
+
+        Iterate iterate = new Iterate.Builder()
+                .times(5)
+                .index("i")
+                .actions(() -> action)
+                .build();
+        iterate.execute(context);
+
+        Assert.assertNotNull(context.getVariable("${i}"));
+        Assert.assertEquals(context.getVariable("${i}"), "5");
+
+        verify(action, times(5)).execute(context);
+    }
 }

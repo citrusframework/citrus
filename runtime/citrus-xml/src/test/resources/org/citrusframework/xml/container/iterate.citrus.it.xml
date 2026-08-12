@@ -37,5 +37,11 @@
         <echo><message>Hello You!</message></echo>
       </actions>
     </iterate>
+
+    <iterate times="5">
+      <actions>
+        <echo><message>Hello Citrus!</message></echo>
+      </actions>
+    </iterate>
   </actions>
 </test>

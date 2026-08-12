@@ -254,11 +254,15 @@
           "description": "The step added to the index for each iteration.",
           "default": 1,
           "$comment": "group:advanced"
+        },
+        "times": {
+          "type": "integer",
+          "title": "Times",
+          "description": "Number of iterations to execute."
         }
       },
       "required": [
-        "actions",
-        "condition"
+        "actions"
       ],
       "additionalProperties": false    }
   },
@@ -333,6 +337,11 @@
           "default": 1,
           "$comment": "group:advanced"
         },
+        "times": {
+          "type": "integer",
+          "title": "Times",
+          "description": "Number of iterations to execute."
+        },
         "until": {
           "type": "string",
           "title": "Until",
@@ -387,6 +396,11 @@
           "description": "Index starts with this value.",
           "default": 1,
           "$comment": "group:advanced"
+        },
+        "times": {
+          "type": "integer",
+          "title": "Times",
+          "description": "Number of iterations to execute."
         },
         "until": {
           "type": "string",

@@ -89,4 +89,21 @@ public class RepeatUntilTrueTest extends UnitTestSupport {
 
         verify(action, times(4)).execute(context);
     }
+
+    @Test
+    public void testRepeatTimes() {
+        reset(action);
+
+        RepeatUntilTrue repeatUntilTrue = new RepeatUntilTrue.Builder()
+                .times(5)
+                .index("i")
+                .actions(() -> action)
+                .build();
+        repeatUntilTrue.execute(context);
+
+        Assert.assertNotNull(context.getVariable("${i}"));
+        Assert.assertEquals(context.getVariable("${i}"), "5");
+
+        verify(action, times(5)).execute(context);
+    }
 }

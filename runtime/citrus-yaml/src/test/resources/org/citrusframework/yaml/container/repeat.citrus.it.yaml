@@ -22,3 +22,8 @@ actions:
             message: Hello Citrus!
         - echo:
             message: Hello You!
+  - repeat:
+      times: 5
+      actions:
+        - echo:
+            message: Hello Citrus!
