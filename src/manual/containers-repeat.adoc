@@ -66,6 +66,57 @@ actions:
 
 As you can see the repeat container is only executed when the iterating condition expression evaluates to *false* . By the time the condition is *true* execution is discontinued. You can use basic logical operators such as *and*, *or* and so on.
 
+=== Fixed number of iterations
+
+When you simply want to repeat the actions a fixed number of times you can use the `times` option as a shortcut instead of writing a condition expression.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void repeatTimesTest() {
+    $(repeat().times(5)
+        .actions(
+            echo("index is: ${i}")
+        )
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="RepeatTimesTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <repeat times="5">
+            <actions>
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </actions>
+        </repeat>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: RepeatTimesTest
+actions:
+  - repeat:
+      times: 5
+      actions:
+        - echo:
+            message: "index is: ${i}"
+----
+
+The `times` option automatically creates the proper condition expression to execute the loop exactly the given number of times. This is equivalent to setting `until("i gt 5")` but is more concise and readable.
+
+NOTE: The `times` option is an alternative to the `until` condition expression. You should use one or the other, not both.
+
+=== Hamcrest matcher conditions
+
 A more powerful way is given by Hamcrest matchers that are directly supported in condition expressions.
 
 .Java
