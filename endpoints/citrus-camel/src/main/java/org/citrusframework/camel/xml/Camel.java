@@ -537,6 +537,18 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         this.builder = builder;
     }
 
+    @XmlElement(name = "verify-route")
+    public void setVerifyRoute(VerifyRoute verifyRoute) {
+        CamelVerifyRouteAction.Builder builder = new CamelVerifyRouteAction.Builder()
+                .route(verifyRoute.getRoute());
+
+        if (verifyRoute.getStatus() != null) {
+            builder.status(verifyRoute.getStatus());
+        }
+
+        this.builder = builder;
+    }
+
     @XmlElement(name = "remove-routes")
     public void setRemoveRoutes(Routes removeRoutes) {
         RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder();
