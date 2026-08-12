@@ -757,6 +757,54 @@ Starting and stopping Camel routes at runtime is important when temporarily Citr
 We can stop a route, use a Citrus camel endpoint instead for validation and start the route after the test is done.
 This way we can also simulate errors and failure scenarios in a Camel route interaction.
 
+[camel-route-verify]
+=== Verify route
+
+You can verify that a Camel route exists in the context and optionally assert its current status (e.g. `Started`, `Stopped`).
+This is useful when you need to wait for or assert that a route has reached a certain state before continuing with the test.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
+
+    @Autowired
+    private CamelContext camelContext;
+
+    @Test
+    @CitrusTest
+    public void verifyRouteStatus() {
+        $(camel().camelContext(camelContext)
+            .route()
+            .verify("route_1")
+            .status(ServiceStatus.Started));
+    }
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="CamelRouteIT">
+  <actions>
+      <camel:verify-route route="route_1" status="Started"/>
+  </actions>
+</testcase>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+actions:
+  - camel:
+      verifyRoute:
+        route: "route_1"
+        status: "Started"
+----
+
+When no `status` is given, the action only verifies that the route exists in the Camel context.
+The action throws an exception when the route does not exist or when the actual status does not match the expected value.
+
 [[camel-controlbus-actions]]
 == Camel controlbus actions
 

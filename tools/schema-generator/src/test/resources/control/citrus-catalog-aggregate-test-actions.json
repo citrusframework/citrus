@@ -1715,6 +1715,31 @@
       },
       "additionalProperties": false    }
   },
+  "camel-verifyRoute": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-verifyRoute",
+    "group": "camel",
+    "module": "citrus-camel",
+    "title": "VerifyRoute",
+    "description": "Verify a Camel route existence and status.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "route": {
+          "type": "string",
+          "title": "Route",
+          "description": "The Camel route id to verify."
+        },
+        "status": {
+          "type": "string",
+          "title": "Status",
+          "description": "The expected route status (e.g. Started, Stopped)."
+        }
+      },
+      "additionalProperties": false    }
+  },
   "createEndpoint": {
     "kind": "testAction",
     "version": "${citrus.version}",

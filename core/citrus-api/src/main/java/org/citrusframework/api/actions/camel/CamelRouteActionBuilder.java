@@ -61,4 +61,9 @@ public interface CamelRouteActionBuilder<T extends TestAction, B extends CamelRo
      * Remove these Camel routes.
      */
     CamelRemoveRouteActionBuilder<?, ?> remove(String... routes);
+
+    /**
+     * Verify a Camel route existence and status.
+     */
+    CamelVerifyRouteActionBuilder<?, ?> verify(String routeId);
 }
