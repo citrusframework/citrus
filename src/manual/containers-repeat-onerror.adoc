@@ -69,6 +69,59 @@ actions:
 
 In the code example the error-loop continues four times as the <fail> action definitely fails the test. During the fifth iteration the condition "i=5" evaluates to true and the loop breaks its processing leading to a final failure as the test actions were not successful.
 
+=== Fixed number of retries
+
+When you simply want to retry the actions a fixed number of times on error you can use the `times` option as a shortcut instead of writing a condition expression.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void repeatOnErrorTimesTest() {
+    $(repeatOnError().times(5)
+        .actions(
+            echo().message("index is: ${i}"),
+            fail().message("Force loop to fail!")
+        )
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="RepeatOnErrorTimesTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <repeat-on-error times="5">
+            <actions>
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+                <fail message="Force loop to fail!"/>
+            </actions>
+        </repeat-on-error>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: RepeatOnErrorTimesTest
+actions:
+  - repeat-on-error:
+      times: 5
+      actions:
+        - echo:
+            message: "index is: ${i}"
+        - fail:
+            message: "Force loop to fail!"
+----
+
+The `times` option automatically creates the proper condition expression to retry the loop at most the given number of times. This is equivalent to setting `until("i gt 5")` but is more concise and readable.
+
+NOTE: The `times` option is an alternative to the `until` condition expression. You should use one or the other, not both.
+
 NOTE: The overall success of the test case depends on the error situation inside the repeat-onerror-until-true container. In case the loop breaks because of failing actions and the loop will discontinue its work the whole test case is failing too. The error loop processing is successful in case all embedded actions were not raising any errors during an iteration.
 
 The repeat-on-error container also offers an automatic sleep mechanism. This auto-sleep property will force the container to wait a given amount of time before executing the next iteration. We used this mechanism a lot when validating database entries. Let's say we want to check the existence of an order entry in the database. Unfortunately the system under test is not very well performing and may need some time to store the new order. This amount of time is not predictable, especially when dealing with different hardware on our test environments (local testing vs. server testing). Following from that our test case may fail unpredictably only because of runtime conditions.

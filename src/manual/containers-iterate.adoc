@@ -64,7 +64,58 @@ actions:
 
 The attribute "index" automatically defines a new variable that holds the actual loop index starting at "1". This index variable is available as a normal variable inside the iterate container. Therefore it is possible to print out the actual loop index in the echo action as shown in the above example.
 
-The condition string is mandatory and describes the actual end of the loop.
+=== Fixed number of iterations
+
+When you simply want to execute the actions a fixed number of times you can use the `times` option as a shortcut instead of writing a condition expression.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void iterateTimesTest() {
+    $(iterate().times(5)
+        .actions(
+            echo().message("index is: ${i}")
+        )
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="IterateTimesTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <iterate times="5">
+            <actions>
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </actions>
+        </iterate>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: IterateTimesTest
+actions:
+  - iterate:
+      times: 5
+      actions:
+        - echo:
+            message: "index is: ${i}"
+----
+
+The `times` option automatically creates the proper condition expression to execute the loop exactly the given number of times. This is equivalent to setting `condition("i lt= 5")` but is more concise and readable.
+
+NOTE: The `times` option is an alternative to the `condition` expression. You should use one or the other, not both.
+
+=== Condition expression
+
+The condition string describes the actual end of the loop.
 In iterate containers the loop will break in case the condition evaluates to *_false_*.
 
 The condition string can be any Boolean expression and supports several operators:
