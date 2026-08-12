@@ -18,6 +18,7 @@ package org.citrusframework.container;
 
 import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.api.container.IterateContainerBuilder;
+import org.citrusframework.api.container.IterationCountConditionExpression;
 import org.citrusframework.context.TestContext;
 
 /**
@@ -73,6 +74,12 @@ public class Iterate extends AbstractIteratingActionContainer {
         @Override
         public Builder step(int step) {
             this.step = step;
+            return this;
+        }
+
+        @Override
+        public Builder times(int numberOfIterations) {
+            this.conditionExpression = IterationCountConditionExpression.whileCount(numberOfIterations);
             return this;
         }
 

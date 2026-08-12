@@ -1819,10 +1819,11 @@
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
     </xs:sequence>
-    <xs:attribute name="condition" type="xs:string" use="required"/>
+    <xs:attribute name="condition" type="xs:string"/>
     <xs:attribute name="index" type="xs:string"/>
     <xs:attribute name="startsWith" type="xs:int"/>
     <xs:attribute name="step" type="xs:int"/>
+    <xs:attribute name="times" type="xs:int"/>
   </xs:complexType>
 
   <xs:complexType name="Sequential">
@@ -1853,7 +1854,8 @@
     </xs:sequence>
     <xs:attribute name="index" type="xs:string"/>
     <xs:attribute name="startsWith" type="xs:int"/>
-    <xs:attribute name="until" type="xs:string" use="required"/>
+    <xs:attribute name="times" type="xs:int"/>
+    <xs:attribute name="until" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="RepeatOnError">
@@ -1865,7 +1867,8 @@
     <xs:attribute name="auto-sleep" type="xs:long"/>
     <xs:attribute name="index" type="xs:string"/>
     <xs:attribute name="startsWith" type="xs:int"/>
-    <xs:attribute name="until" type="xs:string" use="required"/>
+    <xs:attribute name="times" type="xs:int"/>
+    <xs:attribute name="until" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="Conditional">

@@ -23,3 +23,8 @@ actions:
             message: Hello Citrus!
         - echo:
             message: Hello You!
+  - iterate:
+      times: 5
+      actions:
+        - echo:
+            message: Hello Citrus!

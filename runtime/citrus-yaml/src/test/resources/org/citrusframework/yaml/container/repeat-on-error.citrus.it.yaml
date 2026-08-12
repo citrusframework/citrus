@@ -29,3 +29,8 @@ actions:
       actions:
         - echo:
             message: Hello Citrus!
+  - repeatOnError:
+      times: 5
+      actions:
+        - echo:
+            message: Hello Citrus!

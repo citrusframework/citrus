@@ -54,6 +54,11 @@ public class Repeat implements TestActionBuilder<RepeatUntilTrue>, ReferenceReso
         builder.until(condition);
     }
 
+    @SchemaProperty(description = "Number of iterations to execute.")
+    public void setTimes(int times) {
+        builder.times(times);
+    }
+
     @SchemaProperty(advanced = true, description = "Test variable holding the current iteration index.")
     public void setIndex(String index) {
         builder.index(index);

@@ -46,9 +46,14 @@ public class RepeatOnError implements TestActionBuilder<org.citrusframework.cont
         builder.description(value);
     }
 
-    @XmlAttribute(required = true)
+    @XmlAttribute
     public void setUntil(String condition) {
         builder.until(condition);
+    }
+
+    @XmlAttribute
+    public void setTimes(int times) {
+        builder.times(times);
     }
 
     @SuppressWarnings("deprecation")

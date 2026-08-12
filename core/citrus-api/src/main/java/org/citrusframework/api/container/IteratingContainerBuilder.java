@@ -49,4 +49,9 @@ public interface IteratingContainerBuilder<T extends IteratingActionContainer, B
      */
     B startsWith(int index);
 
+    /**
+     * Sets the number of iterations to execute.
+     */
+    B times(int numberOfIterations);
+
 }

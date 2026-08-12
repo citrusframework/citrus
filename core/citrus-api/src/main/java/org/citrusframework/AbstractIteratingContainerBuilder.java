@@ -21,6 +21,7 @@ import java.time.Duration;
 import org.citrusframework.api.container.IteratingActionContainer;
 import org.citrusframework.api.container.IteratingConditionExpression;
 import org.citrusframework.api.container.IteratingContainerBuilder;
+import org.citrusframework.api.container.IterationCountConditionExpression;
 
 public abstract class AbstractIteratingContainerBuilder<T extends IteratingActionContainer, S extends AbstractIteratingContainerBuilder<T, S>>
         extends AbstractTestContainerBuilder<T, S> implements IteratingContainerBuilder<T, S> {
@@ -59,6 +60,12 @@ public abstract class AbstractIteratingContainerBuilder<T extends IteratingActio
     @Override
     public S startsWith(int index) {
         this.start = index;
+        return self;
+    }
+
+    @Override
+    public S times(int numberOfIterations) {
+        this.conditionExpression = IterationCountConditionExpression.untilCount(numberOfIterations);
         return self;
     }
 

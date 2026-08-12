@@ -43,5 +43,11 @@
         <echo><message>Hello Citrus!</message></echo>
       </actions>
     </repeat-on-error>
+
+    <repeat-on-error times="5">
+      <actions>
+        <echo><message>Hello Citrus!</message></echo>
+      </actions>
+    </repeat-on-error>
   </actions>
 </test>

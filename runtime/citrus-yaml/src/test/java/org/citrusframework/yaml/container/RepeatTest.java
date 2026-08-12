@@ -19,6 +19,7 @@ package org.citrusframework.yaml.container;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.EchoAction;
+import org.citrusframework.api.container.IterationCountConditionExpression;
 import org.citrusframework.container.RepeatUntilTrue;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.AbstractYamlActionTest;
@@ -36,7 +37,7 @@ public class RepeatTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getName(), "RepeatTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
+        Assert.assertEquals(result.getActionCount(), 4L);
 
         Assert.assertEquals(result.getTestAction(0).getClass(), RepeatUntilTrue.class);
 
@@ -61,5 +62,14 @@ public class RepeatTest extends AbstractYamlActionTest {
         Assert.assertEquals(action.getActionCount(), 2);
         Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
         Assert.assertEquals(action.getTestAction(1).getClass(), EchoAction.class);
+
+        action = (RepeatUntilTrue) result.getTestAction(3);
+        Assert.assertNull(action.getCondition());
+        Assert.assertTrue(action.getConditionExpression() instanceof IterationCountConditionExpression);
+        Assert.assertEquals(((IterationCountConditionExpression) action.getConditionExpression()).getNumberOfIterations(), 5);
+        Assert.assertEquals(action.getIndexName(), "i");
+        Assert.assertEquals(action.getStart(), 1);
+        Assert.assertEquals(action.getActionCount(), 1);
+        Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
     }
 }

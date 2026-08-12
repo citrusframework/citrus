@@ -46,9 +46,14 @@ public class Iterate implements TestActionBuilder<org.citrusframework.container.
         builder.description(value);
     }
 
-    @XmlAttribute(name = "condition", required = true)
+    @XmlAttribute(name = "condition")
     public void setCondition(String condition) {
         builder.condition(condition);
+    }
+
+    @XmlAttribute
+    public void setTimes(int times) {
+        builder.times(times);
     }
 
     @XmlAttribute

@@ -44,9 +44,14 @@ public class Iterate implements TestActionBuilder<org.citrusframework.container.
         builder.description(value);
     }
 
-    @SchemaProperty(required = true, description = "Condition that keeps the iteration running.")
+    @SchemaProperty(description = "Condition that keeps the iteration running.")
     public void setCondition(String condition) {
         builder.condition(condition);
+    }
+
+    @SchemaProperty(description = "Number of iterations to execute.")
+    public void setTimes(int times) {
+        builder.times(times);
     }
 
     @SchemaProperty(advanced = true, description = "Test variable holding the current iteration index.")

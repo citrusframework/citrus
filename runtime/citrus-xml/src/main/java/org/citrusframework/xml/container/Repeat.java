@@ -46,9 +46,14 @@ public class Repeat implements TestActionBuilder<org.citrusframework.container.R
         builder.description(value);
     }
 
-    @XmlAttribute(name = "until", required = true)
+    @XmlAttribute(name = "until")
     public void setUntil(String condition) {
         builder.until(condition);
+    }
+
+    @XmlAttribute
+    public void setTimes(int times) {
+        builder.times(times);
     }
 
     @XmlAttribute
