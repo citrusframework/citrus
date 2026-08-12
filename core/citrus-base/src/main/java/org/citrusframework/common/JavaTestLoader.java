@@ -18,13 +18,14 @@ package org.citrusframework.common;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
@@ -50,38 +51,48 @@ public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware
 
     @Override
     public void doLoad() {
+        Path outputDirectory = null;
         try {
             Resource javaSource = getSource().getSourceFile();
-            // Compile source file.
+            // Compile into a temporary directory so .class files never land next to
+            // sources under target/test-classes (default-package sources would otherwise
+            // produce stale classes that Surefire mis-scans on subsequent builds).
+            outputDirectory = Files.createTempDirectory("citrus-java-test-");
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            int success = compiler.run(null, null, null, javaSource.file().getAbsolutePath());
+            int success = compiler.run(null, null, null,
+                    "-d", outputDirectory.toAbsolutePath().toString(),
+                    javaSource.file().getAbsolutePath());
             if (success != 0) {
                 throw new CitrusRuntimeException("Failed to compile Java source file: %s".formatted(javaSource.file().getAbsolutePath()));
             }
 
-            String packageName = extractPackageName(javaSource);
-            String qualifiedClassName = StringUtils.hasText(packageName) ? packageName + "." + getClassName() : getClassName();
+            String sourcePackageName = extractPackageName(javaSource);
+            String qualifiedClassName = StringUtils.hasText(sourcePackageName) ? sourcePackageName + "." + getClassName() : getClassName();
 
-            // Load and instantiate compiled class.
-            URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { getClassLoaderBaseURL(packageName, javaSource) }, ClassLoaderHelper.getClassLoader());
-            Class<?> cls = Class.forName(qualifiedClassName, true, classLoader);
-            Object instance = cls.getDeclaredConstructor().newInstance();
+            // Load and instantiate compiled class from the dedicated output directory.
+            try (URLClassLoader classLoader = URLClassLoader.newInstance(
+                    new URL[] { outputDirectory.toUri().toURL() }, ClassLoaderHelper.getClassLoader())) {
+                Class<?> cls = Class.forName(qualifiedClassName, true, classLoader);
+                Object instance = cls.getDeclaredConstructor().newInstance();
 
-            CitrusAnnotations.injectAll(instance, citrus, context);
-            CitrusAnnotations.injectTestRunner(instance, runner);
+                CitrusAnnotations.injectAll(instance, citrus, context);
+                CitrusAnnotations.injectTestRunner(instance, runner);
 
-            doWithTestCase(tc -> {
-                try {
-                    ReflectionHelper.invokeMethod(instance.getClass().getDeclaredMethod("run"), instance);
-                } catch (NoSuchMethodException e) {
-                    throw new CitrusRuntimeException("Failed to run Java test method 'run()' on class: %s".formatted(instance.getClass()), e);
-                }
-            });
+                doWithTestCase(tc -> {
+                    try {
+                        ReflectionHelper.invokeMethod(instance.getClass().getDeclaredMethod("run"), instance);
+                    } catch (NoSuchMethodException e) {
+                        throw new CitrusRuntimeException("Failed to run Java test method 'run()' on class: %s".formatted(instance.getClass()), e);
+                    }
+                });
 
-            super.doLoad();
+                super.doLoad();
+            }
         } catch (IOException | ClassNotFoundException | NoSuchMethodException | InstantiationException |
                  IllegalAccessException | InvocationTargetException e) {
             throw context.handleError(testName, packageName, "Failed to load Java test with name '" + testName + "'", e);
+        } finally {
+            deleteRecursively(outputDirectory);
         }
     }
 
@@ -132,24 +143,22 @@ public class JavaTestLoader extends DefaultTestLoader implements TestSourceAware
         return "";
     }
 
-    /**
-     * Get Class loader base URL for given Java file resource path.
-     * The package name of the class must be taken into account when walking the parent tree of the folder structure upwards.
-     * @param packageName
-     * @param javaSource
-     * @return
-     * @throws MalformedURLException
-     */
-    private static URL getClassLoaderBaseURL(String packageName, Resource javaSource) throws MalformedURLException {
-        Path clBase = Paths.get(javaSource.getURI()).getParent();
-
-        if (StringUtils.hasText(packageName)) {
-            for (int i = 0; i < packageName.split("\\.").length; i++) {
-                clBase = clBase.getParent();
-            }
+    private static void deleteRecursively(Path directory) {
+        if (directory == null || !Files.exists(directory)) {
+            return;
         }
 
-        return clBase.toUri().toURL();
+        try (Stream<Path> walk = Files.walk(directory)) {
+            walk.sorted(Comparator.reverseOrder()).forEach(path -> {
+                try {
+                    Files.deleteIfExists(path);
+                } catch (IOException e) {
+                    // Best-effort cleanup of temporary compile output
+                }
+            });
+        } catch (IOException e) {
+            // Best-effort cleanup of temporary compile output
+        }
     }
 
     /**
