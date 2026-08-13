@@ -34,6 +34,7 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
+import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByKeySelector.kafkaKeyEquals;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
 import static org.citrusframework.util.StringUtils.hasText;
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -183,6 +184,17 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
                         KafkaMessageFilter.kafkaMessageFilter()
                                 .eventLookbackWindow(lookbackWindow)
                                 .kafkaMessageSelector(kafkaHeaderEquals(key, value))
+                                .build()
+                )
+                .message();
+    }
+
+    public ReceiveMessageBuilderFactory<?, ?> findKafkaEventKeyEquals(Duration lookbackWindow, String key) {
+        return new DefaultTestActions().receive(this)
+                .selector(
+                        KafkaMessageFilter.kafkaMessageFilter()
+                                .eventLookbackWindow(lookbackWindow)
+                                .kafkaMessageSelector(kafkaKeyEquals(key))
                                 .build()
                 )
                 .message();

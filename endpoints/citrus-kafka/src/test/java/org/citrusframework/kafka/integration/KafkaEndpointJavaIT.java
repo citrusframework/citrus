@@ -39,6 +39,7 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSe
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.STARTS_WITH;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderContains;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
+import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByKeySelector.kafkaKeyEquals;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory.KafkaMessageSelectorFactories.factoryWithKafkaMessageSelector;
 import static org.citrusframework.kafka.integration.KafkaEndpointJavaIT.KafkaMessageByKeySelector.MESSAGE_KEY_FILTER_KEY;
 
@@ -328,6 +329,47 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
         then(
                 kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, value)
+                        .body(body)
+        );
+    }
+
+    @Test
+    @CitrusTest
+    public void findKafkaEvent_keyEquals_citrus_DSL() {
+        var messageKey = "built-in-key-selector";
+        var body = "findKafkaEvent_keyEquals_citrus_DSL";
+
+        when(
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).messageKey(messageKey))
+        );
+
+        then(
+                receive(kafkaWithRandomConsumerGroupEndpoint)
+                        .selector(
+                                kafkaMessageFilter()
+                                        .eventLookbackWindow(Duration.ofSeconds(1L))
+                                        .kafkaMessageSelector(kafkaKeyEquals(messageKey))
+                                        .build()
+                        )
+                        .message()
+                        .body(body)
+        );
+    }
+
+    @Test
+    @CitrusTest
+    public void findKafkaEvent_keyEquals_java_DSL() {
+        var messageKey = "built-in-key-selector-java";
+        var body = "findKafkaEvent_keyEquals_java_DSL";
+
+        when(
+                send(kafkaWithRandomConsumerGroupEndpoint)
+                        .message(new KafkaMessage(body).messageKey(messageKey))
+        );
+
+        then(
+                kafkaWithRandomConsumerGroupEndpoint.findKafkaEventKeyEquals(Duration.ofSeconds(1L), messageKey)
                         .body(body)
         );
     }
