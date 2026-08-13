@@ -319,7 +319,7 @@ public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunctio
         }
     }
 
-    public static class Parameters implements FunctionParameters {
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
         private String source;
         private final List<PatchOperation> operations = new ArrayList<>();
 

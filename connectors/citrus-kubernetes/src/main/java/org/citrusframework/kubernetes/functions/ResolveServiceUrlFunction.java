@@ -62,7 +62,7 @@ public class ResolveServiceUrlFunction implements ParameterizedFunction<ResolveS
         return new Parameters();
     }
 
-    public static class Parameters implements FunctionParameters {
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
         private String serviceName;
         private int servicePort = 0;
         private boolean secure = false;

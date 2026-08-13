@@ -92,7 +92,7 @@ public class ChangeDateFunction implements ParameterizedFunction<ChangeDateFunct
         }
     }
 
-    public static class Parameters implements FunctionParameters {
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
         private String value;
         private String offset;
         private String dateFormat;

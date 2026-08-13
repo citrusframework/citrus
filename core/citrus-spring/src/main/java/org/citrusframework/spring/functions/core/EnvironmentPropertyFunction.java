@@ -65,7 +65,7 @@ public class EnvironmentPropertyFunction implements EnvironmentAware,
         return new Parameters();
     }
 
-    public static class Parameters implements FunctionParameters {
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
         private String propertyName;
         private String defaultValue;
 

@@ -53,7 +53,7 @@ public class SubstringFunction implements ParameterizedFunction<SubstringFunctio
         return new Parameters();
     }
 
-    public static class Parameters implements FunctionParameters {
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
 
         private String value;
         private int beginIndex;

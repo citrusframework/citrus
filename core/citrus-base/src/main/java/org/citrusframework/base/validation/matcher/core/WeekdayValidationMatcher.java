@@ -119,7 +119,7 @@ public class WeekdayValidationMatcher implements ParameterizedValidationMatcher<
         return new Parameters();
     }
 
-    public static class Parameters implements ControlParameters {
+    public static class Parameters implements ParameterizedValidationMatcher.ControlParameters {
         private Weekday weekday;
         private String dateFormat = "dd.MM.yyyy";
 

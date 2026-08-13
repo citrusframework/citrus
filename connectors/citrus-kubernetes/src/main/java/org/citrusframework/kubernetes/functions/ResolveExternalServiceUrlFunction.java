@@ -126,7 +126,7 @@ public class ResolveExternalServiceUrlFunction implements ParameterizedFunction<
         return new Parameters();
     }
 
-    public static class Parameters implements FunctionParameters {
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
         private String serviceName;
         private String namespace;
 

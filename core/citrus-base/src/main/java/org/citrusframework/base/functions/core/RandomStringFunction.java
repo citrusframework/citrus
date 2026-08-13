@@ -115,7 +115,7 @@ public class RandomStringFunction implements ParameterizedFunction<RandomStringF
         MIXED, UPPERCASE, LOWERCASE
     }
 
-    public static class Parameters implements FunctionParameters {
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
 
         private int length;
         private NotationMethod notationMethod = NotationMethod.MIXED;
