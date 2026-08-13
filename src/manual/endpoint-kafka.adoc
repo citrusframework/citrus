@@ -648,8 +648,11 @@ then(
 
 .Custom Selector Strategy
 
+Header-based and record-key selectors are built into Citrus and live side by side under <<kafka-message-selector-types,Selector Types>>.
+Use `kafkaHeaderEquals` / `kafkaHeaderContains` or `kafkaKeyEquals` / `kafkaKeyContains` for those cases.
+A custom strategy is only needed when you want a predicate those built-ins do not cover.
+
 In addition to the default Kafka message selection strategies in Citrus, it additionally allows you to define custom message selectors.
-This is especially useful when you want to select messages based on predicates Citrus does not (yet) support.
 
 A custom selector strategy consists of two parts:
 
@@ -665,32 +668,32 @@ kafkaWithRandomConsumerGroupEndpoint.getEndpointConfiguration()
     .getKafkaMessageSelectorFactory()
     .setCustomStrategies(
         factoryWithKafkaMessageSelector(
-            messageSelectors -> messageSelectors.containsKey(MESSAGE_KEY_FILTER_KEY),
-            messageSelectors -> new KafkaMessageByKeySelector(
-                (String) messageSelectors.get(MESSAGE_KEY_FILTER_KEY)
+            messageSelectors -> messageSelectors.containsKey(TOPIC_FILTER_KEY),
+            messageSelectors -> new KafkaMessageByTopicSelector(
+                (String) messageSelectors.get(TOPIC_FILTER_KEY)
             )
         )
     );
 ----
 
-Here, the `MESSAGE_KEY_FILTER_KEY` is a custom key used to recognize and extract the expected Kafka message key from the selector.
+Here, the `TOPIC_FILTER_KEY` is a custom key used to recognize and extract the expected Kafka topic from the selector.
 
-The `KafkaMessageByKeySelector` is an implementation of `KafkaMessageSelector` and matches messages by key:
+The `KafkaMessageByTopicSelector` is an implementation of `KafkaMessageSelector` and matches messages by topic name:
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-record KafkaMessageByKeySelector(String key) implements KafkaMessageSelector<String> {
-    static final String MESSAGE_KEY_FILTER_KEY = "message-key";
+record KafkaMessageByTopicSelector(String topic) implements KafkaMessageSelector<String> {
+    static final String TOPIC_FILTER_KEY = "topic-filter";
 
     @Override
     public boolean matches(ConsumerRecord<Object, Object> consumerRecord) {
-        return nonNull(consumerRecord.key()) && consumerRecord.key().equals(key);
+        return nonNull(consumerRecord.topic()) && consumerRecord.topic().equals(topic);
     }
 
     @Override
     public Map<String, String> asSelector() {
-        return Map.of(MESSAGE_KEY_FILTER_KEY, key);
+        return Map.of(TOPIC_FILTER_KEY, topic);
     }
 }
 ----
