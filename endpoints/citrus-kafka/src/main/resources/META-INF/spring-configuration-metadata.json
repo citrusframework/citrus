@@ -1,0 +1,19 @@
+{
+  "groups": [
+    {
+      "name": "citrus.kafka",
+      "type": "org.citrusframework.kafka.endpoint.KafkaSettings",
+      "description": "Kafka endpoint settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.kafka.dynamic.consumer.group",
+      "type": "java.lang.Boolean",
+      "description": "When enabled, dynamic Kafka endpoint URIs automatically use a unique consumer group so that each consumer independently receives all messages from its subscribed topic.",
+      "sourceType": "org.citrusframework.kafka.endpoint.KafkaSettings",
+      "defaultValue": true
+    }
+  ],
+  "hints": []
+}
