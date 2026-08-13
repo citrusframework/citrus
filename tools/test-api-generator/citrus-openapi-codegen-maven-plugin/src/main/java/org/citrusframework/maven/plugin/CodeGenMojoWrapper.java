@@ -61,9 +61,9 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
         resource.addInclude("**/*");  // Include all files by default
         resource.setFiltering(false);  // Ensure no filtering of resources
 
-        if (getPrivateField("addCompileSourceRoot")) {
+        if ((Boolean) getPrivateField("addCompileSourceRoot")) {
             localMavenProject.addResource(resource);
-        } else if (getPrivateField("addTestCompileSourceRoot")) {
+        } else if ((Boolean) getPrivateField("addTestCompileSourceRoot")) {
             localMavenProject.addTestResource(resource);
         }
     }

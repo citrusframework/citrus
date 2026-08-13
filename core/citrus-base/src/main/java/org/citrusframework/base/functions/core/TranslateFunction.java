@@ -39,7 +39,7 @@ public class TranslateFunction implements ParameterizedFunction<TranslateFunctio
         return new Parameters();
     }
 
-    public static class Parameters implements FunctionParameters {
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
         private String value;
         private String regex;
         private String replacement;

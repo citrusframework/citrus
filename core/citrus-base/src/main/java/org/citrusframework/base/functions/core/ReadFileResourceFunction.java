@@ -77,7 +77,7 @@ public class ReadFileResourceFunction implements ParameterizedFunction<ReadFileR
         return replace ? context.replaceDynamicContentInString(content) : content;
     }
 
-    public static class Parameters implements FunctionParameters {
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
 
         private String filePath;
         private boolean base64;

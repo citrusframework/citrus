@@ -123,7 +123,7 @@ public class RandomNumberFunction implements ParameterizedFunction<RandomNumberF
         return new Parameters();
     }
 
-    public static class Parameters implements FunctionParameters {
+    public static class Parameters implements ParameterizedFunction.FunctionParameters {
 
         private int length;
         private boolean paddingOn = true;
