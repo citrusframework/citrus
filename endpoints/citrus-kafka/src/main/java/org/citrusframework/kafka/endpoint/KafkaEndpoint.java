@@ -246,7 +246,7 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         }
 
         public SimpleKafkaEndpointBuilder withCustomStrategy(
-                Predicate<Map<String, Object>> selector, Function<Map<String, Object>, KafkaMessageSelector> initializer
+                Predicate<Map<String, Object>> selector, Function<Map<String, Object>, KafkaMessageSelector<?>> initializer
         ) {
             this.customStrategies.put(selector, initializer);
             return this;

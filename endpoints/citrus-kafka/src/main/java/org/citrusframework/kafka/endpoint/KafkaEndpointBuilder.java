@@ -249,7 +249,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     /**
      * Sets the key serializer property.
      */
-    public KafkaEndpointBuilder keySerializer(Class<? extends Serializer> serializer) {
+    public KafkaEndpointBuilder keySerializer(Class<? extends Serializer<?>> serializer) {
         endpoint.getEndpointConfiguration().setKeySerializer(serializer);
         return this;
     }
@@ -261,7 +261,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SuppressWarnings("unchecked")
     public void setKeySerializer(String serializerType) {
         try {
-            keySerializer((Class<? extends Serializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
+            keySerializer((Class<? extends Serializer<?>>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
         } catch (ClassNotFoundException e) {
             throw new CitrusRuntimeException("Failed to set key serializer type", e);
         }
@@ -270,7 +270,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     /**
      * Sets the value serializer property.
      */
-    public KafkaEndpointBuilder valueSerializer(Class<? extends Serializer> serializer) {
+    public KafkaEndpointBuilder valueSerializer(Class<? extends Serializer<?>> serializer) {
         endpoint.getEndpointConfiguration().setValueSerializer(serializer);
         return this;
     }
@@ -282,7 +282,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SuppressWarnings("unchecked")
     public void setValueSerializer(String serializerType) {
         try {
-            valueSerializer((Class<? extends Serializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
+            valueSerializer((Class<? extends Serializer<?>>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
         } catch (ClassNotFoundException e) {
             throw new CitrusRuntimeException("Failed to set value serializer type", e);
         }
@@ -291,7 +291,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     /**
      * Sets the key deserializer property.
      */
-    public KafkaEndpointBuilder keyDeserializer(Class<? extends Deserializer> deserializer) {
+    public KafkaEndpointBuilder keyDeserializer(Class<? extends Deserializer<?>> deserializer) {
         endpoint.getEndpointConfiguration().setKeyDeserializer(deserializer);
         return this;
     }
@@ -303,7 +303,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SuppressWarnings("unchecked")
     public void setKeyDeserializer(String serializerType) {
         try {
-            keyDeserializer((Class<? extends Deserializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
+            keyDeserializer((Class<? extends Deserializer<?>>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
         } catch (ClassNotFoundException e) {
             throw new CitrusRuntimeException("Failed to set key deserializer type", e);
         }
@@ -312,7 +312,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     /**
      * Sets the value deserializer property.
      */
-    public KafkaEndpointBuilder valueDeserializer(Class<? extends Deserializer> deserializer) {
+    public KafkaEndpointBuilder valueDeserializer(Class<? extends Deserializer<?>> deserializer) {
         endpoint.getEndpointConfiguration().setValueDeserializer(deserializer);
         return this;
     }
@@ -324,7 +324,7 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     @SuppressWarnings("unchecked")
     public void setValueDeserializer(String serializerType) {
         try {
-            valueDeserializer((Class<? extends Deserializer>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
+            valueDeserializer((Class<? extends Deserializer<?>>) Class.forName(serializerType, true, ClassLoaderHelper.getClassLoader()));
         } catch (ClassNotFoundException e) {
             throw new CitrusRuntimeException("Failed to set value deserializer type", e);
         }

@@ -16,6 +16,17 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
+
 import jakarta.annotation.Nullable;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -27,17 +38,6 @@ import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeoutException;
-import java.util.function.Function;
 
 import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
@@ -63,7 +63,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  *
  * @see KafkaMessageSelector
  */
-class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
+public class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
 
     private static final Logger logger = getLogger(KafkaMessageFilteringConsumer.class);
 
@@ -80,7 +80,7 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
             org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer,
             @Nullable Duration eventLookbackWindow,
             @Nullable Duration pollTimeout,
-            @Nullable KafkaMessageSelector kafkaMessageSelector
+            @Nullable KafkaMessageSelector<?> kafkaMessageSelector
     ) {
         super(KafkaMessageSingleConsumer.class.getSimpleName(), endpointConfiguration);
 
@@ -267,7 +267,7 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
         private org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer;
         private Duration eventLookbackWindow;
         private Duration pollTimeout;
-        private KafkaMessageSelector kafkaMessageSelector;
+        private KafkaMessageSelector<?> kafkaMessageSelector;
 
         public KafkaMessageFilteringConsumerBuilder endpointConfiguration(KafkaEndpointConfiguration endpointConfiguration) {
             this.endpointConfiguration = endpointConfiguration;
@@ -289,7 +289,7 @@ class KafkaMessageFilteringConsumer extends AbstractSelectiveMessageConsumer {
             return this;
         }
 
-        public KafkaMessageFilteringConsumerBuilder kafkaMessageSelector(KafkaMessageSelector kafkaMessageSelector) {
+        public KafkaMessageFilteringConsumerBuilder kafkaMessageSelector(KafkaMessageSelector<?> kafkaMessageSelector) {
             this.kafkaMessageSelector = kafkaMessageSelector;
             return this;
         }

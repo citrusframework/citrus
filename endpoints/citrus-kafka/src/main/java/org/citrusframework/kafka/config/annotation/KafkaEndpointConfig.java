@@ -94,25 +94,25 @@ public @interface KafkaEndpointConfig {
      * Key serializer reference.
      * @return
      */
-    Class<? extends Serializer> keySerializer() default StringSerializer.class;
+    Class<? extends Serializer<?>> keySerializer() default StringSerializer.class;
 
     /**
      * Key deserializer reference.
      * @return
      */
-    Class<? extends Deserializer> keyDeserializer() default StringDeserializer.class;
+    Class<? extends Deserializer<?>> keyDeserializer() default StringDeserializer.class;
 
     /**
      * Value serializer reference.
      * @return
      */
-    Class<? extends Serializer> valueSerializer() default StringSerializer.class;
+    Class<? extends Serializer<?>> valueSerializer() default StringSerializer.class;
 
     /**
      * Value deserializer reference.
      * @return
      */
-    Class<? extends Deserializer> valueDeserializer() default StringDeserializer.class;
+    Class<? extends Deserializer<?>> valueDeserializer() default StringDeserializer.class;
 
     /**
      * Producer properties reference.

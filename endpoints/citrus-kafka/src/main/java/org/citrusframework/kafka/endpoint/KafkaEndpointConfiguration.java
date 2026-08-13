@@ -65,14 +65,14 @@ public class KafkaEndpointConfiguration extends AbstractPollableEndpointConfigur
     /**
      * Key and value serializer types
      */
-    private Class<? extends Serializer> keySerializer = StringSerializer.class;
-    private Class<? extends Serializer> valueSerializer = StringSerializer.class;
+    private Class<? extends Serializer<?>> keySerializer = StringSerializer.class;
+    private Class<? extends Serializer<?>> valueSerializer = StringSerializer.class;
 
     /**
      * Key and value deserializer types
      */
-    private Class<? extends Deserializer> keyDeserializer = StringDeserializer.class;
-    private Class<? extends Deserializer> valueDeserializer = StringDeserializer.class;
+    private Class<? extends Deserializer<?>> keyDeserializer = StringDeserializer.class;
+    private Class<? extends Deserializer<?>> valueDeserializer = StringDeserializer.class;
 
     /**
      * Consumer/producer properties
@@ -156,35 +156,35 @@ public class KafkaEndpointConfiguration extends AbstractPollableEndpointConfigur
         this.messageConverter = messageConverter;
     }
 
-    public Class<? extends Serializer> getKeySerializer() {
+    public Class<? extends Serializer<?>> getKeySerializer() {
         return keySerializer;
     }
 
-    public void setKeySerializer(Class<? extends Serializer> keySerializer) {
+    public void setKeySerializer(Class<? extends Serializer<?>> keySerializer) {
         this.keySerializer = keySerializer;
     }
 
-    public Class<? extends Serializer> getValueSerializer() {
+    public Class<? extends Serializer<?>> getValueSerializer() {
         return valueSerializer;
     }
 
-    public void setValueSerializer(Class<? extends Serializer> valueSerializer) {
+    public void setValueSerializer(Class<? extends Serializer<?>> valueSerializer) {
         this.valueSerializer = valueSerializer;
     }
 
-    public Class<? extends Deserializer> getKeyDeserializer() {
+    public Class<? extends Deserializer<?>> getKeyDeserializer() {
         return keyDeserializer;
     }
 
-    public void setKeyDeserializer(Class<? extends Deserializer> keyDeserializer) {
+    public void setKeyDeserializer(Class<? extends Deserializer<?>> keyDeserializer) {
         this.keyDeserializer = keyDeserializer;
     }
 
-    public Class<? extends Deserializer> getValueDeserializer() {
+    public Class<? extends Deserializer<?>> getValueDeserializer() {
         return valueDeserializer;
     }
 
-    public void setValueDeserializer(Class<? extends Deserializer> valueDeserializer) {
+    public void setValueDeserializer(Class<? extends Deserializer<?>> valueDeserializer) {
         this.valueDeserializer = valueDeserializer;
     }
 

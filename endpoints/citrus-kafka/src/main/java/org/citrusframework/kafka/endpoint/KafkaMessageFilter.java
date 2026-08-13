@@ -16,15 +16,15 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
-import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
-import org.citrusframework.message.MessageSelectorBuilder;
-
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
+import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
+import org.citrusframework.message.MessageSelectorBuilder;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -58,7 +58,7 @@ public final class KafkaMessageFilter {
     /**
      * See {@link KafkaMessageFilterBuilder#kafkaMessageSelector(KafkaMessageSelector)} for documentation.
      */
-    private KafkaMessageSelector kafkaMessageSelector;
+    private KafkaMessageSelector<?> kafkaMessageSelector;
 
     static KafkaMessageFilterBuilder builder() {
         return new KafkaMessageFilterBuilder();
@@ -76,7 +76,7 @@ public final class KafkaMessageFilter {
                 .fromSelectorString(selector);
     }
 
-    private KafkaMessageFilter(KafkaMessageSelectorFactory kafkaMessageSelectorFactory, Duration eventLookbackWindow, Duration pollTimeout, KafkaMessageSelector kafkaMessageSelector) {
+    private KafkaMessageFilter(KafkaMessageSelectorFactory kafkaMessageSelectorFactory, Duration eventLookbackWindow, Duration pollTimeout, KafkaMessageSelector<?> kafkaMessageSelector) {
         this.kafkaMessageSelectorFactory = kafkaMessageSelectorFactory;
         this.eventLookbackWindow = eventLookbackWindow;
         this.pollTimeout = pollTimeout;
@@ -99,7 +99,7 @@ public final class KafkaMessageFilter {
         this.pollTimeout = pollTimeout;
     }
 
-    KafkaMessageSelector getKafkaMessageSelector() {
+    KafkaMessageSelector<?> getKafkaMessageSelector() {
         return kafkaMessageSelector;
     }
 
@@ -128,11 +128,14 @@ public final class KafkaMessageFilter {
         if (nonNull(eventLookbackWindow)) {
             selector.put(EVENT_LOOKBACK_WINDOW, (T) eventLookbackWindow.toString());
         }
+
         if (nonNull(pollTimeout)) {
             selector.put(POLL_TIMEOUT, (T) pollTimeout.toString());
         }
+
         if (nonNull(kafkaMessageSelector)) {
-            selector.putAll(kafkaMessageSelector.asSelector());
+            kafkaMessageSelector.asSelector()
+                    .forEach((key, value) -> selector.put(key, (T) value));
         }
 
         return selector;
@@ -163,7 +166,7 @@ public final class KafkaMessageFilter {
         private KafkaMessageSelectorFactory kafkaMessageSelectorFactory;
         private Duration eventLookbackWindow;
         private Duration pollTimeout = Duration.ofMillis(100);
-        private KafkaMessageSelector kafkaMessageSelector;
+        private KafkaMessageSelector<?> kafkaMessageSelector;
 
         KafkaMessageFilterBuilder kafkaMessageSelectorFactory(KafkaMessageSelectorFactory kafkaMessageSelectorFactory) {
             this.kafkaMessageSelectorFactory = kafkaMessageSelectorFactory;
@@ -199,7 +202,7 @@ public final class KafkaMessageFilter {
          * A custom matcher implementing {@link KafkaMessageSelector}. This matcher is used to determine whether a
          * consumed record meets specific criteria defined by the user.
          */
-        public KafkaMessageFilterBuilder kafkaMessageSelector(KafkaMessageSelector kafkaMessageSelector) {
+        public KafkaMessageFilterBuilder kafkaMessageSelector(KafkaMessageSelector<?> kafkaMessageSelector) {
             this.kafkaMessageSelector = kafkaMessageSelector;
             return this;
         }

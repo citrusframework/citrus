@@ -16,13 +16,13 @@
 
 package org.citrusframework.kafka.endpoint.selector;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import org.citrusframework.exceptions.CitrusRuntimeException;
 
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.HEADER_FILTER_KEY;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.HEADER_FILTER_VALUE;
@@ -42,7 +42,7 @@ public class KafkaMessageSelectorFactory {
     }
 
     @SuppressWarnings({"unchecked"})
-    public <T> KafkaMessageSelector parseFromSelector(Map<String, T> messageSelectors) {
+    public <T> KafkaMessageSelector<?> parseFromSelector(Map<String, T> messageSelectors) {
         return Stream.concat(
                         strategies.entrySet().stream(),
                         customStrategies.entrySet().stream()
@@ -54,10 +54,10 @@ public class KafkaMessageSelectorFactory {
                 .orElseThrow(() -> new CitrusRuntimeException("Cannot instantiate Kafka matcher from selectors: " + messageSelectors));
     }
 
-    public static final class KafkaMessageSelectorFactories extends HashMap<Predicate<Map<String, Object>>, Function<Map<String, Object>, KafkaMessageSelector>> {
+    public static final class KafkaMessageSelectorFactories extends HashMap<Predicate<Map<String, Object>>, Function<Map<String, Object>, KafkaMessageSelector<?>>> {
 
         public static KafkaMessageSelectorFactories factoryWithKafkaMessageSelector(
-                Predicate<Map<String, Object>> selector, Function<Map<String, Object>, KafkaMessageSelector> initializer
+                Predicate<Map<String, Object>> selector, Function<Map<String, Object>, KafkaMessageSelector<?>> initializer
         ) {
             var kafkaMessageSelectorFactories = new KafkaMessageSelectorFactories();
             kafkaMessageSelectorFactories.put(selector, initializer);
