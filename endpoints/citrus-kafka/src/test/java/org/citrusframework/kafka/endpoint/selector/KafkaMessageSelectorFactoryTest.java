@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.HEADER_FILTER_KEY;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.HEADER_FILTER_VALUE;
+import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByKeySelector.KEY_FILTER_VALUE;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory.KafkaMessageSelectorFactories.factoryWithKafkaMessageSelector;
 import static org.mockito.Mockito.mock;
 
@@ -68,6 +69,17 @@ public class KafkaMessageSelectorFactoryTest {
 
         assertThat(result)
                 .isInstanceOf(KafkaMessageByHeaderSelector.class)
+                .isNotNull();
+    }
+
+    @Test
+    public void parseFromSelector_returnsKafkaMessageByKeySelector_ifKeyFilterValueIsPresent() {
+        var messageSelectors = Map.of(KEY_FILTER_VALUE, "order-42");
+
+        var result = fixture.parseFromSelector(messageSelectors);
+
+        assertThat(result)
+                .isInstanceOf(KafkaMessageByKeySelector.class)
                 .isNotNull();
     }
 

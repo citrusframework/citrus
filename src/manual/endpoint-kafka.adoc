@@ -449,7 +449,7 @@ Additionally, when receiving messages, you might want to use <<kafka-message-sel
 == Kafka Message Selector
 
 The Kafka Message Selector feature allows you to selectively receive messages from a Kafka topic based on specific criteria.
-This powerful functionality enables you to filter Kafka messages by different criteria, e.g. <<kafka-message-selector-types,based on headers>>.
+This powerful functionality enables you to filter Kafka messages by different criteria, e.g. <<kafka-message-selector-types,based on headers or record keys>>.
 Additionally, the defined time window for message retrieval significantly improves the performance.
 Imagine a large Kafka topic with thousands of events.
 Looking through all of these would require an immense amount of resources and time.
@@ -579,6 +579,68 @@ If the `value` is `null` however, all headers with the exact `key` match.
 | `valueMatchingStrategy`
 | `header-filter-comparator`
 | Specifies how the `value` is being matched.
+  Must be one of `EQUALS`, `CONTAINS`, `STARTS_WITH` or `ENDS_WITH`.
+  It defaults to `EQUALS`, if not specified.
+
+|===
+
+.Message Key
+
+The framework also provides selectors that filter on the Kafka record `key()`.
+From within the Java DSL, these can be invoked using statically provided methods:
+
+1. `kafkaKeyEquals`: Matches messages where the record key exactly equals the given value.
+2. `kafkaKeyContains`: Matches messages where the record key contains the given value as a substring.
+
+More advanced users might want to do pre- or suffix matching.
+That is also possible.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+then(
+    receive(kafkaEndpoint)
+        .selector(
+            kafkaMessageFilter()
+                .eventLookbackWindow(Duration.ofSeconds(1L))
+                .kafkaMessageSelector(kafkaKeyEquals("order-42"))
+                .build()
+        )
+);
+----
+
+.Java 2
+[source,java,indent=0,role="secondary"]
+----
+then(
+    kafkaEndpoint.findKafkaEventKeyEquals(Duration.ofSeconds(1L), "order-42")
+);
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="helloKafkaEndpoint">
+    <description>Receive Kafka message by record key</description>
+    <selector>
+      <element name="key-filter-value" value="order-42"/>
+      <element name="event-lookback-window" value="PT1S"/>
+    </selector>
+</receive>
+----
+
+[cols="2,2,2"]
+|===
+| Java DSL | XML DSL | Description
+
+| `key`
+| `key-filter-value`
+| Value-filter being applied to the Kafka record key.
+  Compared against `String.valueOf(record.key())`.
+
+| `valueMatchingStrategy`
+| `key-filter-comparator`
+| Specifies how the record key is being matched.
   Must be one of `EQUALS`, `CONTAINS`, `STARTS_WITH` or `ENDS_WITH`.
   It defaults to `EQUALS`, if not specified.
 
