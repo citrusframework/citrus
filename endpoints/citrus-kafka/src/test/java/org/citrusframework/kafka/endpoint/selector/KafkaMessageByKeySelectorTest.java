@@ -35,6 +35,7 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByKeySelec
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByKeySelector.KEY_FILTER_VALUE;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByKeySelector.kafkaKeyContains;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByKeySelector.kafkaKeyEquals;
+import static org.citrusframework.kafka.message.KafkaMessageHeaders.MESSAGE_KEY;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -106,6 +107,19 @@ public class KafkaMessageByKeySelectorTest {
                 .satisfies(
                         m -> assertThat(m.getKey()).isEqualTo(key),
                         m -> assertThat(m.getValueMatchingStrategy()).isEqualTo(STARTS_WITH)
+                );
+    }
+
+    @Test
+    public void fromSelector_createsSelectorFromMessageKeyHeader() {
+        var key = "order-42";
+
+        var result = KafkaMessageByKeySelector.fromSelector(Map.of(MESSAGE_KEY, key));
+
+        assertThat(result)
+                .satisfies(
+                        m -> assertThat(m.getKey()).isEqualTo(key),
+                        m -> assertThat(m.getValueMatchingStrategy()).isEqualTo(EQUALS)
                 );
     }
 

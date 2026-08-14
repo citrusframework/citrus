@@ -29,6 +29,7 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSe
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.HEADER_FILTER_VALUE;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByKeySelector.KEY_FILTER_VALUE;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory.KafkaMessageSelectorFactories.factoryWithKafkaMessageSelector;
+import static org.citrusframework.kafka.message.KafkaMessageHeaders.MESSAGE_KEY;
 import static org.mockito.Mockito.mock;
 
 public class KafkaMessageSelectorFactoryTest {
@@ -75,6 +76,17 @@ public class KafkaMessageSelectorFactoryTest {
     @Test
     public void parseFromSelector_returnsKafkaMessageByKeySelector_ifKeyFilterValueIsPresent() {
         var messageSelectors = Map.of(KEY_FILTER_VALUE, "order-42");
+
+        var result = fixture.parseFromSelector(messageSelectors);
+
+        assertThat(result)
+                .isInstanceOf(KafkaMessageByKeySelector.class)
+                .isNotNull();
+    }
+
+    @Test
+    public void parseFromSelector_returnsKafkaMessageByKeySelector_ifMessageKeyHeaderIsPresent() {
+        var messageSelectors = Map.of(MESSAGE_KEY, "order-42");
 
         var result = fixture.parseFromSelector(messageSelectors);
 

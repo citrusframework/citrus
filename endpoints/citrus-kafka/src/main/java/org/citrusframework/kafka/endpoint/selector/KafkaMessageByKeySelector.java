@@ -20,6 +20,7 @@ import jakarta.annotation.Nullable;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy;
+import org.citrusframework.kafka.message.KafkaMessageHeaders;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -109,7 +110,10 @@ public class KafkaMessageByKeySelector implements KafkaMessageSelector<String> {
     }
 
     static <T> KafkaMessageByKeySelector fromSelector(Map<String, T> messageSelectors) {
-        var keyFilter = Optional.ofNullable(messageSelectors.get(KEY_FILTER_VALUE)).map(Objects::toString).orElse(null);
+        var keyFilter = Optional.ofNullable(messageSelectors.get(KEY_FILTER_VALUE))
+                .or(() -> Optional.ofNullable(messageSelectors.get(KafkaMessageHeaders.MESSAGE_KEY)))
+                .map(Objects::toString)
+                .orElse(null);
         var comparator = Optional.ofNullable(messageSelectors.get(KEY_FILTER_COMPARATOR)).map(Object::toString).orElse(EQUALS.toString());
 
         if (isEmpty(keyFilter)) {
