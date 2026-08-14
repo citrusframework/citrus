@@ -42,6 +42,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.LocalPortForward;
 import org.apache.hc.core5.http.ClassicHttpRequest;
@@ -359,6 +360,7 @@ public class RunTestMojo extends AbstractAgentMojo {
                     .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE)
                     .enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES)
                     .addMixIn(Resource.class, IgnoreTypeMixIn.class)
+                    .addModule(new JavaTimeModule())
                     .build()
                     .setDefaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY));
         }
