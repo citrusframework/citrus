@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.kafka.message.KafkaMessageHeaders;
 
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.HEADER_FILTER_KEY;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.HEADER_FILTER_VALUE;
@@ -34,7 +35,7 @@ public class KafkaMessageSelectorFactory {
 
     static {
         strategies.put(messageSelectors -> messageSelectors.containsKey(HEADER_FILTER_KEY) || messageSelectors.containsKey(HEADER_FILTER_VALUE), KafkaMessageByHeaderSelector::fromSelector);
-        strategies.put(messageSelectors -> messageSelectors.containsKey(KEY_FILTER_VALUE), KafkaMessageByKeySelector::fromSelector);
+        strategies.put(messageSelectors -> messageSelectors.containsKey(KEY_FILTER_VALUE) || messageSelectors.containsKey(KafkaMessageHeaders.MESSAGE_KEY), KafkaMessageByKeySelector::fromSelector);
     }
 
     private final KafkaMessageSelectorFactories customStrategies = new KafkaMessageSelectorFactories();

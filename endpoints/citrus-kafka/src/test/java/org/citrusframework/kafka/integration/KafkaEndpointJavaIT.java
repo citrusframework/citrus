@@ -41,7 +41,7 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSe
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByKeySelector.kafkaKeyEquals;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory.KafkaMessageSelectorFactories.factoryWithKafkaMessageSelector;
-import static org.citrusframework.kafka.integration.KafkaEndpointJavaIT.KafkaMessageByKeySelector.MESSAGE_KEY_FILTER_KEY;
+import static org.citrusframework.kafka.integration.KafkaEndpointJavaIT.KafkaMessageByTopicSelector.TOPIC_FILTER_KEY;
 
 @Test(singleThreaded = true)
 public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
@@ -139,16 +139,16 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_customSelector_byKey_citrus_DSL() {
+    public void findKafkaEvent_customSelector_byTopic_citrus_DSL() {
         var messageKey = "important random key";
-        var body = "findKafkaEvent_customSelector_byKey_citrus_DSL";
+        var body = "findKafkaEvent_customSelector_byTopic_citrus_DSL";
 
         kafkaWithRandomConsumerGroupEndpoint.getEndpointConfiguration()
                 .getKafkaMessageSelectorFactory()
                 .setCustomStrategies(
                         factoryWithKafkaMessageSelector(
-                                messageSelectors -> messageSelectors.containsKey(MESSAGE_KEY_FILTER_KEY),
-                                messageSelectors -> new KafkaMessageByKeySelector((String) messageSelectors.get(MESSAGE_KEY_FILTER_KEY))
+                                messageSelectors -> messageSelectors.containsKey(TOPIC_FILTER_KEY),
+                                messageSelectors -> new KafkaMessageByTopicSelector((String) messageSelectors.get(TOPIC_FILTER_KEY))
                         )
                 );
 
@@ -163,7 +163,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
                                 kafkaMessageFilter()
                                         .eventLookbackWindow(Duration.ofSeconds(1L))
                                         .kafkaMessageSelector(
-                                                new KafkaMessageByKeySelector(messageKey)
+                                                new KafkaMessageByTopicSelector(messageKey)
                                         )
                                         .build()
                         )
@@ -172,17 +172,17 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
         );
     }
 
-    record KafkaMessageByKeySelector(String key) implements KafkaMessageSelector<String> {
-        static final String MESSAGE_KEY_FILTER_KEY = "message-key";
+    record KafkaMessageByTopicSelector(String topic) implements KafkaMessageSelector<String> {
+        static final String TOPIC_FILTER_KEY = "topic-filter";
 
         @Override
         public boolean matches(ConsumerRecord<Object, Object> consumerRecord) {
-            return nonNull(consumerRecord.key()) && consumerRecord.key().equals(key);
+            return nonNull(consumerRecord.key()) && consumerRecord.key().equals(topic);
         }
 
         @Override
         public Map<String, String> asSelector() {
-            return Map.of(MESSAGE_KEY_FILTER_KEY, key);
+            return Map.of(TOPIC_FILTER_KEY, topic);
         }
     }
 

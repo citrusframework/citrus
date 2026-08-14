@@ -629,14 +629,28 @@ then(
 </receive>
 ----
 
+`citrus_kafka_messageKey` is accepted as a shorthand for `key-filter-value` and defaults to `EQUALS` matching:
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="helloKafkaEndpoint">
+    <selector>
+      <element name="citrus_kafka_messageKey" value="order-42"/>
+      <element name="event-lookback-window" value="PT1S"/>
+    </selector>
+</receive>
+----
+
 [cols="2,2,2"]
 |===
 | Java DSL | XML DSL | Description
 
-| `key`
-| `key-filter-value`
-| Value-filter being applied to the Kafka record key.
+|| `key`
+|| `key-filter-value` or `citrus_kafka_messageKey`
+|| Value-filter being applied to the Kafka record key.
   Compared against `String.valueOf(record.key())`.
+  `citrus_kafka_messageKey` is a shorthand and always uses `EQUALS`.
 
 | `valueMatchingStrategy`
 | `key-filter-comparator`
