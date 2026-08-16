@@ -350,6 +350,18 @@ public class HttpMessageConverterTest {
     }
 
     @Test
+    public void testCorrelationIdHeaderIsCopiedOnOutbound() {
+        // GIVEN
+        message.setHeader("correlationId", "my-correlation-id");
+
+        // WHEN
+        final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
+
+        // THEN
+        assertEquals("my-correlation-id", httpEntity.getHeaders().getFirst("correlationId"));
+    }
+
+    @Test
     public void testCitrusDefaultHeaderAreSetOnInbound() {
         // WHEN
         final HttpMessage httpMessage = messageConverter.convertInbound(HttpEntity.EMPTY, endpointConfiguration, testContext);

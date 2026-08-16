@@ -132,4 +132,43 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
 
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testValidateCorrelationIdHeaderMismatch() {
+        Message receivedMessage = new DefaultMessage("Hello World!")
+                .setHeader("correlationId", "my-correlation-id");
+        Message controlMessage = new DefaultMessage("Hello World!")
+                .setHeader("correlationId", "NOT-my-correlation-id");
+
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
+
+    @Test
+    public void testValidateCorrelationIdHeaderMatch() {
+        Message receivedMessage = new DefaultMessage("Hello World!")
+                .setHeader("correlationId", "my-correlation-id");
+        Message controlMessage = new DefaultMessage("Hello World!")
+                .setHeader("correlationId", "my-correlation-id");
+
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testValidateCorrelationIdHeaderMissing() {
+        Message receivedMessage = new DefaultMessage("Hello World!");
+        Message controlMessage = new DefaultMessage("Hello World!")
+                .setHeader("correlationId", "my-correlation-id");
+
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
+
+    @Test
+    public void testValidateIgnoresSpringIdAndTimestampHeaders() {
+        Message receivedMessage = new DefaultMessage("Hello World!");
+        Message controlMessage = new DefaultMessage("Hello World!")
+                .setHeader("id", "control-id")
+                .setHeader("timestamp", "1");
+
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
 }

@@ -38,6 +38,8 @@ public final class MessageHeaderUtils {
      * <p>
      * This is given if header name starts with internal header prefix or
      * matches one of Spring's internal header names.
+     * {@code correlationId} is excluded so an explicitly set application header
+     * can be transported and validated (for example over HTTP).
      */
     public static boolean isSpringInternalHeader(String headerName) {
         // "springintegration_" makes Citrus work with Spring Integration 1.x release
@@ -54,8 +56,6 @@ public final class MessageHeaderUtils {
         } else if (headerName.equals("contentType")) {
             return true;
         } else if (headerName.equals(PRIORITY)) {
-            return true;
-        } else if (headerName.equals("correlationId")) {
             return true;
         } else if (headerName.equals("routingSlip")) {
             return true;
