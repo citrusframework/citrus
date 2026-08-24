@@ -1,0 +1,230 @@
+[[playwright]]
+= Playwright support
+
+https://playwright.dev/java/[Playwright] enables reliable end-to-end testing for modern web applications. Citrus integrates with the Playwright Java API in order to drive real browsers (Chromium, Firefox, WebKit) from Citrus tests: contexts and pages, locators, dialogs and downloads, storage state, tracing, and console/network capture.
+
+NOTE: The Playwright connector in Citrus is kept in a separate Maven module. If not already done, you have to include the module as Maven dependency to your project
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-playwright</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+The connector is Spring-free and only requires `citrus-api`, `citrus-base` and the Playwright driver.
+
+[[playwright-browser]]
+== Playwright browser
+
+The `PlaywrightBrowser` endpoint manages the Playwright runtime, browser launch, default context and observability settings. You can configure it as a Citrus bean.
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public PlaywrightBrowser playwrightBrowser() {
+    return PlaywrightEndpoints.playwright()
+            .browserType("chromium")
+            .headless(true)
+            .baseUrl("http://localhost:8080")
+            .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public PlaywrightBrowser playwrightBrowser() {
+    return PlaywrightEndpoints.playwright()
+            .browserType("chromium")
+            .headless(true)
+            .baseUrl("http://localhost:8080")
+            .build();
+}
+----
+
+Remote browsers are supported via WebSocket or CDP endpoints (`connectWsEndpoint(...)` / `connectOverCdpEndpoint(...)`), and extra secret name/value patterns can be supplied with `secretPatterns(...)` so diagnostics redact sensitive values.
+
+[[playwright-annotation]]
+== Browser annotation config
+
+When using `@CitrusEndpoint` annotations on test fields the browser is configured with `@PlaywrightBrowserConfig`:
+
+[source,java]
+----
+@CitrusEndpoint
+@PlaywrightBrowserConfig(browserType = "firefox", headless = false)
+private PlaywrightBrowser browser;
+----
+
+[[playwright-actions]]
+== Playwright actions
+
+All actions live behind a single Java DSL entry point:
+
+[source,java]
+----
+import static org.citrusframework.playwright.actions.PlaywrightActionBuilder.playwright;
+----
+
+Start a browser once and it becomes the ambient target of the current test thread — no `.browser(...)` repetition:
+
+[source,java]
+----
+$(playwright().start().browserType("chromium"));            // starts and binds
+
+$(playwright().open().url("http://localhost:8080"));
+$(playwright().extract().pageCount().variable("pageCount"));
+
+$(playwright().stop());                                     // unbinds and closes
+----
+
+The browser for an action resolves in this order; the first match wins and an ambiguous or missing browser fails fast with a report of all attempted strategies:
+
+1. explicit `.browser(...)` binding on the action
+2. the ambient browser bound to the current thread by `start()`
+3. Citrus variable `citrus_playwright_browser` (endpoint name)
+4. a unique `PlaywrightBrowser` bean in the application context
+
+[[playwright-interaction]]
+== Interaction actions
+
+[source,java]
+----
+$(playwright().click().locator("#save"));
+$(playwright().doubleClick().locator(LocatorSpec.css("#row").nth(0)));
+$(playwright().hover().locator("#menu"));
+$(playwright().fill().locator("#username").value("${username}"));
+$(playwright().press().locator("#username").value("Enter"));
+$(playwright().select().locator("#gender").values("male", "female"));
+$(playwright().check().locator("#agree"));
+$(playwright().upload().locator("#avatar").file("uploads/avatar.png"));
+
+$(playwright().navigate().back());
+$(playwright().waitFor().locator("#dialog").hidden());
+$(playwright().waitFor().networkIdle());
+----
+
+Locators accept CSS selectors by default and richer variants via locator specs:
+
+[source,java]
+----
+$(playwright().click().locator(LocatorSpec.text("Save")));
+$(playwright().click().locator(LocatorSpec.role("button").name("Submit")));
+$(playwright().click().locator(LocatorSpec.testId("submit-button").last()));
+----
+
+[[playwright-verification]]
+== Verify and extract
+
+Verify page, element, storage, console, network or download state — checks fail fast with sanitized expected/actual values:
+
+[source,java]
+----
+$(playwright().verify().locator("#message").text("Citrus:ready"));
+$(playwright().verify().url("http://localhost:8080/home"));
+$(playwright().verify().storageLocal("theme", "dark"));
+$(playwright().verify().consoleContains("Started"));
+----
+
+Extract values into test variables:
+
+[source,java]
+----
+$(playwright().extract().locator("#message").text().variable("message"));
+$(playwright().extract().title().variable("pageTitle"));
+$(playwright().extract().cookie("session").variable("sessionCookie"));
+----
+
+[[playwright-javascript]]
+== JavaScript and screenshots
+
+[source,java]
+----
+$(playwright().javascript().script("window.title").variable("jsResult"));
+$(playwright().screenshot().path("target/playwright/screen.png").variable("screenshotPath"));
+----
+
+[[playwright-dsl]]
+== XML and YAML DSL
+
+The connector registers a `playwright` action namespace so declarative test cases can use the same features. Loading requires the standard `citrus-yaml` / `citrus-xml` modules on the classpath.
+
+.YAML
+[source,yaml,indent=0]
+----
+actions:
+  - playwright:
+      browser: "playwrightBrowser"
+      start:
+        browser-type: "chromium"
+
+  - playwright:
+      open:
+        url: "index.html"
+
+  - playwright:
+      fill:
+        element:
+          css: "#username"
+        value: "${username}"
+
+  - playwright:
+      verify:
+        element:
+          text: "Welcome"
+        check: "hidden"
+
+  - playwright:
+      stop: {}
+----
+
+.XML
+[source,xml,indent=0]
+----
+<playwright browser="playwrightBrowser">
+  <open url="index.html"/>
+</playwright>
+
+<playwright>
+  <fill value="${username}">
+    <element css="#username"/>
+  </fill>
+</playwright>
+
+<playwright>
+  <verify check="text" expected="Welcome">
+    <element css="#welcome"/>
+  </verify>
+</playwright>
+----
+
+Supported action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`) or `test-id`, narrowed by `nth`, `first` or `last`.
+
+[[playwright-failure-evidence]]
+== Failure evidence
+
+On test failure the endpoint can persist diagnostic artifacts to `target/playwright/`: screenshot (`failure.png`), page source (`page.html`), trace (`trace.zip`), console messages (`console.log`), network log (`network.log`) and a Markdown summary (`failure-summary.md`). Enable them per endpoint:
+
+[source,java]
+----
+PlaywrightEndpoints.playwright()
+        .captureFailureScreenshot(true)
+        .captureFailurePageSource(true)
+        .captureFailureTrace(true)
+        .build();
+----
+
+[[playwright-runtimes]]
+== Browser runtimes
+
+Integration tests that drive a real browser require the Playwright browser binaries. They skip gracefully when Chromium is unavailable, so normal builds stay hermetic. To install the runtime locally use the Maven profile:
+
+[source,bash]
+----
+mvn generate-test-resources -pl connectors/citrus-playwright -Pplaywright-runtimes
+----
