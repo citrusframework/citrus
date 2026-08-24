@@ -25,6 +25,7 @@ import static org.testng.Assert.assertTrue;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowserConfiguration;
+import org.citrusframework.playwright.endpoint.PlaywrightBrowserType;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
 import org.citrusframework.playwright.support.StubStartedBrowser;
 import org.testng.annotations.AfterMethod;
@@ -93,6 +94,18 @@ class StartStopBrowserActionTest {
         assertEquals(7_500L, configuration.getDefaultNavigationTimeout());
         assertEquals(25, configuration.getConsoleMessageLimit());
         assertEquals(50, configuration.getNetworkRecordLimit());
+    }
+
+    @Test
+    void shouldAcceptBrowserTypeEnum() {
+        PlaywrightBrowserConfiguration configuration =
+                new StartBrowserAction.Builder()
+                        .browserType(PlaywrightBrowserType.WEBKIT)
+                        .build()
+                        .getBrowser()
+                        .getEndpointConfiguration();
+
+        assertEquals("webkit", configuration.getBrowserType());
     }
 
     @Test

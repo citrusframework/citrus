@@ -49,6 +49,16 @@ public class PlaywrightEndpointBuilder extends AbstractEndpointBuilder<Playwrigh
     }
 
     /**
+     * Selects the Playwright browser engine.
+     *
+     * @param browserType supported browser engine
+     * @return this builder
+     */
+    public PlaywrightEndpointBuilder browserType(PlaywrightBrowserType browserType) {
+        return browserType(browserType.getType());
+    }
+
+    /**
      * Configures whether the browser launches in headless mode.
      *
      * @param headless true for headless mode

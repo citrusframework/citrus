@@ -76,6 +76,7 @@ Start a browser once and it becomes the ambient target of the current test threa
 [source,java]
 ----
 $(playwright().start().browserType("chromium"));            // starts and binds
+$(playwright().start().browserType(PlaywrightBrowserType.FIREFOX)); // or via enum
 
 $(playwright().open().url("http://localhost:8080"));
 $(playwright().extract().pageCount().variable("pageCount"));
@@ -89,6 +90,19 @@ The browser for an action resolves in this order; the first match wins and an am
 2. the ambient browser bound to the current thread by `start()`
 3. Citrus variable `citrus_playwright_browser` (endpoint name)
 4. a unique `PlaywrightBrowser` bean in the application context
+
+[[playwright-engines]]
+== Browser engines
+
+The engine can be given as a raw string (`"chromium"`, `"firefox"`, `"webkit"`) or as the type-safe `PlaywrightBrowserType` enum — on both the endpoint builder and the `start()` action:
+
+[source,java]
+----
+PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
+        .browser()
+        .browserType(PlaywrightBrowserType.WEBKIT)
+        .build();
+----
 
 [[playwright-interaction]]
 == Interaction actions

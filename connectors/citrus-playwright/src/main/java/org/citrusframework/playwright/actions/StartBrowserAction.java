@@ -20,6 +20,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowserConfiguration;
+import org.citrusframework.playwright.endpoint.PlaywrightBrowserType;
 import org.citrusframework.playwright.endpoint.PlaywrightHeaders;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
 
@@ -87,6 +88,16 @@ public class StartBrowserAction extends AbstractPlaywrightAction {
         public Builder browserType(String browserType) {
             defaultEndpoint().getEndpointConfiguration().setBrowserType(browserType);
             return this;
+        }
+
+        /**
+         * Configures the browser engine of a lazily created default endpoint.
+         *
+         * @param browserType Playwright browser engine
+         * @return this builder
+         */
+        public Builder browserType(PlaywrightBrowserType browserType) {
+            return browserType(browserType.getType());
         }
 
         /**

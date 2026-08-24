@@ -60,6 +60,16 @@ class PlaywrightEndpointBuilderTest {
     }
 
     @Test
+    void shouldAcceptBrowserTypeEnum() {
+        PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
+                .browser()
+                .browserType(PlaywrightBrowserType.CHROMIUM)
+                .build();
+
+        assertEquals("chromium", browser.getEndpointConfiguration().getBrowserType());
+    }
+
+    @Test
     void shouldDiscoverActionAndEndpointSpi() {
         Map<String, TestActionBuilder<?>> actionBuilders = TestActionBuilder.lookup();
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
