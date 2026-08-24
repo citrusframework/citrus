@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Phase 3 Fixture</title>
+  <style>
+    #card {
+      display: block;
+      width: 160px;
+      height: 40px;
+      padding: 0;
+      border: 0;
+    }
+
+    .primary {
+      color: rgb(1, 2, 3);
+    }
+  </style>
+</head>
+<body>
+<main id="main" aria-label="Phase 3 main">
+  <div id="card" class="primary selected"><span>Inner secret-token</span></div>
+  <ul id="rows">
+    <li class="row">One</li>
+    <li class="row">Two</li>
+  </ul>
+  <select id="status">
+    <option value="waiting">Waiting</option>
+    <option value="ready" selected>Ready</option>
+  </select>
+  <button id="launch">Launch</button>
+  <a id="download" href="/phase3.txt" download="phase3.txt">Download</a>
+  <iframe id="phase3-frame"
+          srcdoc="<!doctype html><html><body><div id='frame-label'>Frame Ready</div></body></html>"></iframe>
+</main>
+<script>
+  localStorage.setItem('phase3', 'local-ready');
+  sessionStorage.setItem('phase3-session', 'session-ready');
+  console.log('phase-3-ready');
+  fetch('/phase3-api.json?token=secret-token').catch(() => {});
+</script>
+</body>
+</html>
