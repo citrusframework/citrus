@@ -48,8 +48,8 @@ class StructuredStateReaderTest {
         assertEquals(new BoundingBoxResult(10, 20, 30, 40), reader.boundingBox(locator));
         assertEquals(List.of("One", "Two"), reader.allTextContents(locator));
         assertEquals(List.of("Inner One", "Inner Two"), reader.allInnerTexts(locator));
-        assertEquals("<span class=\"***\">Value</span>", reader.innerHtml(locator));
-        assertEquals(List.of("btn", "primary", "***"), reader.cssClasses(locator));
+        assertEquals("<span class=\"" + SecretPatternRedactor.MASK + "\">Value</span>", reader.innerHtml(locator));
+        assertEquals(List.of("btn", "primary", SecretPatternRedactor.MASK), reader.cssClasses(locator));
         assertEquals("- button \"Submit\"", reader.ariaSnapshot(locator));
     }
 

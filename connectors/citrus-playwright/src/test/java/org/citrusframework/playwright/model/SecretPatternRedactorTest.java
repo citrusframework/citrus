@@ -22,6 +22,7 @@ import static org.testng.Assert.assertFalse;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.log.CitrusLogSettings;
 import org.testng.annotations.Test;
 
 class SecretPatternRedactorTest {
@@ -29,12 +30,13 @@ class SecretPatternRedactorTest {
     @Test
     void shouldMaskBuiltInAndConfiguredSecretNames() {
         SecretPatternRedactor redactor = new SecretPatternRedactor(List.of("tenant-secret", "clientid"));
+        String mask = SecretPatternRedactor.MASK;
 
-        assertEquals("https://api.example.test/orders?token=***&tenant-secret=***&safe=value",
+        assertEquals("https://api.example.test/orders?token=" + mask + "&tenant-secret=" + mask + "&safe=value",
                 redactor.sanitizeUrl("https://api.example.test/orders?token=abc&tenant-secret=hidden&safe=value"));
         assertEquals(Map.of(
-                        "Authorization", "Bearer ***",
-                        "X-ClientId", "***",
+                        "Authorization", "Bearer " + mask,
+                        "X-ClientId", mask,
                         "Accept", "application/json"),
                 redactor.sanitizeHeaders(Map.of(
                         "Authorization", "Bearer secret-token",
@@ -51,6 +53,17 @@ class SecretPatternRedactorTest {
 
         String sanitized = redactor.sanitizeText("cookie=session=abc123; token=secret; visible=value");
 
-        assertEquals("cookie=***; token=***; visible=value", sanitized);
+        assertEquals("cookie=" + SecretPatternRedactor.MASK + "; token="
+                + SecretPatternRedactor.MASK + "; visible=value", sanitized);
+    }
+
+    @Test
+    void shouldHonorCitrusLogMaskConfiguration() {
+        assertEquals(CitrusLogSettings.getLogMaskValue(), SecretPatternRedactor.MASK);
+
+        // secretKey is a citrus.logger default keyword but not a connector built-in
+        SecretPatternRedactor redactor = new SecretPatternRedactor();
+        assertEquals("secretkey=" + SecretPatternRedactor.MASK + "; visible=value",
+                redactor.sanitizeText("secretkey=hunter2; visible=value"));
     }
 }

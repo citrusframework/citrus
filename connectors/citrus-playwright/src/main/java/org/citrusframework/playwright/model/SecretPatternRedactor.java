@@ -25,16 +25,34 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.citrusframework.log.CitrusLogSettings;
+
 /**
  * Redacts obvious and user-configured secret values from diagnostics.
+ *
+ * <p>Built-in name patterns are aligned with the Citrus-wide log masking
+ * configuration ({@code citrus.logger.mask.keywords}) so secrets configured for
+ * log output are honored here as well. The mask value mirrors {@code
+ * citrus.logger.mask.value}. Endpoint-specific patterns extend the defaults per
+ * browser.</p>
  */
 public class SecretPatternRedactor {
 
-    public static final String MASK = "***";
+    public static final String MASK = CitrusLogSettings.getLogMaskValue();
 
-    private static final List<String> DEFAULT_PATTERNS = List.of(
+    private static final List<String> BUILT_IN_PATTERNS = List.of(
             "authorization", "x-api-key", "api-key", "password", "token", "api_key",
             "apikey", "secret", "auth", "cookie");
+
+    private static List<String> defaultPatterns() {
+        List<String> patterns = new ArrayList<>(BUILT_IN_PATTERNS);
+        for (String keyword : CitrusLogSettings.getLogMaskKeywords()) {
+            if (keyword != null && !keyword.isBlank() && !patterns.contains(keyword.toLowerCase(Locale.ROOT))) {
+                patterns.add(keyword.toLowerCase(Locale.ROOT));
+            }
+        }
+        return List.copyOf(patterns);
+    }
 
     private final List<String> patterns;
     private final List<Pattern> assignmentPatterns;
@@ -53,7 +71,7 @@ public class SecretPatternRedactor {
      * @param additionalPatterns extra case-insensitive name fragments
      */
     public SecretPatternRedactor(Collection<String> additionalPatterns) {
-        List<String> values = new ArrayList<>(DEFAULT_PATTERNS);
+        List<String> values = new ArrayList<>(defaultPatterns());
         List<String> literals = new ArrayList<>();
         if (additionalPatterns != null) {
             additionalPatterns.stream()

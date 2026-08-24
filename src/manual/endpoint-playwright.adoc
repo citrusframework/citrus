@@ -47,6 +47,8 @@ public PlaywrightBrowser playwrightBrowser() {
 }
 ----
 
+Redaction aligns with the Citrus-wide log masking settings: built-in patterns are unioned with `citrus.logger.mask.keywords` and the mask value follows `citrus.logger.mask.value`. Endpoint-specific `secretPatterns(...)` extend the defaults per browser and additionally scrub their literal occurrences from free text.
+
 Remote browsers are supported via WebSocket or CDP endpoints (`connectWsEndpoint(...)` / `connectOverCdpEndpoint(...)`), and extra secret name/value patterns can be supplied with `secretPatterns(...)` so diagnostics redact sensitive values.
 
 [[playwright-annotation]]

@@ -43,6 +43,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.builder.PlaywrightEndpoints;
+import org.citrusframework.playwright.model.SecretPatternRedactor;
 import org.citrusframework.playwright.model.BoundingBoxResult;
 import org.citrusframework.playwright.model.ConsoleMessageRecord;
 import org.citrusframework.playwright.model.CookieSpec;
@@ -269,7 +270,7 @@ class PlaywrightBrowserIT {
             assertEquals("block", context.getVariableObject("display"));
             assertTrue(String.valueOf(context.getVariableObject("innerHtml")).contains("Inner"));
             assertTrue(!String.valueOf(context.getVariableObject("innerHtml")).contains("secret-token"));
-            assertTrue(String.valueOf(context.getVariableObject("innerHtml")).contains("***"));
+            assertTrue(String.valueOf(context.getVariableObject("innerHtml")).contains(SecretPatternRedactor.MASK));
             assertTrue(String.valueOf(context.getVariableObject("outerHtml")).contains("primary"));
             assertEquals(List.of("Waiting", "Ready"), context.getVariableObject("optionTexts"));
             assertEquals("Ready", context.getVariableObject("selectedText"));
@@ -279,20 +280,20 @@ class PlaywrightBrowserIT {
             assertTrue(String.valueOf(context.getVariableObject("frame")).contains("Frame Ready"));
             assertEquals("local-ready", context.getVariableObject("localStorage"));
             assertEquals("session-ready", context.getVariableObject("sessionStorage"));
-            assertEquals("***", context.getVariableObject("cookie"));
+            assertEquals(SecretPatternRedactor.MASK, context.getVariableObject("cookie"));
 
             List<ConsoleMessageRecord> consoleMessages = (List<ConsoleMessageRecord>) context.getVariableObject("console");
             assertTrue(consoleMessages.stream().anyMatch(message -> message.text().contains("phase-3-verify")));
             List<NetworkRecord> networkRecords = (List<NetworkRecord>) context.getVariableObject("network");
             String networkReport = networkRecords.stream().map(NetworkRecord::format).collect(Collectors.joining("\n"));
             assertTrue(networkReport.contains("phase3-api.json"));
-            assertTrue(networkReport.contains("token=***"));
+            assertTrue(networkReport.contains("token=" + SecretPatternRedactor.MASK + ""));
             assertTrue(!networkReport.contains("secret-token"));
             NetworkResponseResult mockResponse = (NetworkResponseResult) context.getVariableObject("mockResponse");
             assertEquals(200, mockResponse.status());
             assertTrue(mockResponse.ok());
-            assertTrue(mockResponse.url().contains("token=***"));
-            assertTrue(mockResponse.body().contains("***"));
+            assertTrue(mockResponse.url().contains("token=" + SecretPatternRedactor.MASK + ""));
+            assertTrue(mockResponse.body().contains(SecretPatternRedactor.MASK));
             assertTrue(!mockResponse.body().contains("secret-token"));
 
             DownloadMetadata metadata = (DownloadMetadata) context.getVariableObject("download");
@@ -447,9 +448,9 @@ class PlaywrightBrowserIT {
             assertTrue(Files.exists(evidenceDirectory.resolve("failure-summary.md")));
             assertTrue(Files.exists(evidenceDirectory.resolve("trace.zip")));
             String summary = Files.readString(evidenceDirectory.resolve("failure-summary.md"));
-            assertTrue(summary.contains("evidence-error token=***"));
+            assertTrue(summary.contains("evidence-error token=" + SecretPatternRedactor.MASK + ""));
             assertTrue(summary.contains("Failed Or Error Network Records"));
-            assertTrue(summary.contains("token=***"));
+            assertTrue(summary.contains("token=" + SecretPatternRedactor.MASK + ""));
             assertTrue(!summary.contains("secret-token"));
         } finally {
             browser.stop();
