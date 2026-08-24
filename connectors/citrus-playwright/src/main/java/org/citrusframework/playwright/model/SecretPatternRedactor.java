@@ -28,30 +28,24 @@ import java.util.regex.Pattern;
 import org.citrusframework.log.CitrusLogSettings;
 
 /**
- * Redacts obvious and user-configured secret values from diagnostics.
+ * Redacts secret values from diagnostics.
  *
- * <p>Built-in name patterns are aligned with the Citrus-wide log masking
- * configuration ({@code citrus.logger.mask.keywords}) so secrets configured for
- * log output are honored here as well. The mask value mirrors {@code
+ * <p>Default name patterns come exclusively from the Citrus-wide log masking
+ * configuration ({@code citrus.logger.mask.keywords}, default {@code
+ * password,secret,secretKey}) and the mask value mirrors {@code
  * citrus.logger.mask.value}. Endpoint-specific patterns extend the defaults per
- * browser.</p>
+ * browser and additionally scrub their literal occurrences from free text.</p>
  */
 public class SecretPatternRedactor {
 
     public static final String MASK = CitrusLogSettings.getLogMaskValue();
 
-    private static final List<String> BUILT_IN_PATTERNS = List.of(
-            "authorization", "x-api-key", "api-key", "password", "token", "api_key",
-            "apikey", "secret", "auth", "cookie");
-
     private static List<String> defaultPatterns() {
-        List<String> patterns = new ArrayList<>(BUILT_IN_PATTERNS);
-        for (String keyword : CitrusLogSettings.getLogMaskKeywords()) {
-            if (keyword != null && !keyword.isBlank() && !patterns.contains(keyword.toLowerCase(Locale.ROOT))) {
-                patterns.add(keyword.toLowerCase(Locale.ROOT));
-            }
-        }
-        return List.copyOf(patterns);
+        return CitrusLogSettings.getLogMaskKeywords().stream()
+                .filter(keyword -> keyword != null && !keyword.isBlank())
+                .map(keyword -> keyword.toLowerCase(Locale.ROOT))
+                .distinct()
+                .toList();
     }
 
     private final List<String> patterns;
@@ -59,14 +53,14 @@ public class SecretPatternRedactor {
     private final List<Pattern> literalValuePatterns;
 
     /**
-     * Creates a redactor with built-in patterns only.
+     * Creates a redactor with the citrus.logger mask keywords only.
      */
     public SecretPatternRedactor() {
         this(List.of());
     }
 
     /**
-     * Creates a redactor with built-in and additional name patterns.
+     * Creates a redactor with the configured mask keywords and additional name patterns.
      *
      * @param additionalPatterns extra case-insensitive name fragments
      */

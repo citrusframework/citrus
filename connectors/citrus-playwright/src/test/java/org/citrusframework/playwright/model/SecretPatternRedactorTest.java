@@ -18,6 +18,7 @@ package org.citrusframework.playwright.model;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,9 @@ import org.testng.annotations.Test;
 class SecretPatternRedactorTest {
 
     @Test
-    void shouldMaskBuiltInAndConfiguredSecretNames() {
-        SecretPatternRedactor redactor = new SecretPatternRedactor(List.of("tenant-secret", "clientid"));
+    void shouldMaskConfiguredSecretNames() {
+        SecretPatternRedactor redactor =
+                new SecretPatternRedactor(List.of("token", "authorization", "tenant-secret", "clientid"));
         String mask = SecretPatternRedactor.MASK;
 
         assertEquals("https://api.example.test/orders?token=" + mask + "&tenant-secret=" + mask + "&safe=value",
@@ -53,17 +55,41 @@ class SecretPatternRedactorTest {
 
         String sanitized = redactor.sanitizeText("cookie=session=abc123; token=secret; visible=value");
 
-        assertEquals("cookie=" + SecretPatternRedactor.MASK + "; token="
-                + SecretPatternRedactor.MASK + "; visible=value", sanitized);
+        // the assignment pass masks the value, the literal pass additionally
+        // scrubs the pattern occurrence from the key - safe over-masking
+        assertEquals("cookie=" + SecretPatternRedactor.MASK + "=" + SecretPatternRedactor.MASK
+                + "; token=secret; visible=value", sanitized);
     }
 
     @Test
-    void shouldHonorCitrusLogMaskConfiguration() {
+    void shouldDefaultToCitrusLogMaskKeywords() {
         assertEquals(CitrusLogSettings.getLogMaskValue(), SecretPatternRedactor.MASK);
 
-        // secretKey is a citrus.logger default keyword but not a connector built-in
+        // secretKey is a citrus.logger default keyword but nothing else is hard-coded
         SecretPatternRedactor redactor = new SecretPatternRedactor();
+        assertTrue(redactor.isSecretName("secretKey"));
+        assertFalse(redactor.isSecretName("Authorization"));
         assertEquals("secretkey=" + SecretPatternRedactor.MASK + "; visible=value",
                 redactor.sanitizeText("secretkey=hunter2; visible=value"));
+    }
+
+    @Test
+    void shouldFollowCitrusLogMaskKeywordProperty() {
+        String original = System.getProperty("citrus.logger.mask.keywords");
+        System.setProperty("citrus.logger.mask.keywords", "session-id");
+        try {
+            SecretPatternRedactor redactor = new SecretPatternRedactor();
+
+            assertTrue(redactor.isSecretName("X-Session-Id"));
+            assertFalse(redactor.isSecretName("password"));
+            assertEquals("x-session-id=" + SecretPatternRedactor.MASK,
+                    redactor.sanitizeText("x-session-id=abc123"));
+        } finally {
+            if (original == null) {
+                System.clearProperty("citrus.logger.mask.keywords");
+            } else {
+                System.setProperty("citrus.logger.mask.keywords", original);
+            }
+        }
     }
 }

@@ -54,9 +54,29 @@ import org.citrusframework.playwright.model.PlaywrightTarget;
 import org.citrusframework.playwright.support.FailureEvidenceListener;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.testng.SkipException;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 class PlaywrightBrowserIT {
+
+    private static String originalMaskKeywords;
+
+    @BeforeClass
+    public void configureMaskKeywords() {
+        originalMaskKeywords = System.getProperty("citrus.logger.mask.keywords");
+        System.setProperty("citrus.logger.mask.keywords",
+                "authorization,x-api-key,api-key,password,token,api_key,apikey,secret,auth,cookie");
+    }
+
+    @AfterClass
+    public void restoreMaskKeywords() {
+        if (originalMaskKeywords == null) {
+            System.clearProperty("citrus.logger.mask.keywords");
+        } else {
+            System.setProperty("citrus.logger.mask.keywords", originalMaskKeywords);
+        }
+    }
 
     @Test
     void shouldDriveChromiumAgainstLocalFixture() throws Exception {

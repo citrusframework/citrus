@@ -22,6 +22,8 @@ import static org.testng.Assert.assertTrue;
 import com.microsoft.playwright.Request;
 
 import java.lang.reflect.Proxy;
+
+import java.util.List;
 import java.util.Map;
 
 import org.testng.annotations.Test;
@@ -37,13 +39,14 @@ class NetworkRecordTest {
                         "X-Api-Key", "secret-key",
                         "Accept", "application/json"));
 
-        String report = NetworkRecord.request(request).format();
+        String report = NetworkRecord.request(request, new SecretPatternRedactor(
+                List.of("authorization", "x-api-key", "api-key", "password", "token"))).format();
 
-        assertTrue(report.contains("password=***"));
-        assertTrue(report.contains("token=***"));
+        assertTrue(report.contains("password=" + SecretPatternRedactor.MASK));
+        assertTrue(report.contains("token=" + SecretPatternRedactor.MASK));
         assertTrue(report.contains("safe=value"));
-        assertTrue(report.contains("Authorization=Bearer ***"));
-        assertTrue(report.contains("X-Api-Key=***"));
+        assertTrue(report.contains("Authorization=Bearer " + SecretPatternRedactor.MASK));
+        assertTrue(report.contains("X-Api-Key=" + SecretPatternRedactor.MASK));
         assertTrue(report.contains("Accept=application/json"));
         assertFalse(report.contains("secret123"));
         assertFalse(report.contains("secret-token"));
