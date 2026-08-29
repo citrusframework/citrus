@@ -159,9 +159,11 @@ public class InfraServiceUtilsTest {
              azure.storage-queue
              cassandra
              chat-script
+             clickhouse
              consul
              couchbase
              couchdb
+             cyberark.conjur
              docling
              elasticsearch
              fhir
@@ -189,8 +191,10 @@ public class InfraServiceUtilsTest {
              mosquitto
              nats
              neo4j
+             observability
              ollama
              openldap
+             opensearch
              pgvector
              pinecone
              postgres

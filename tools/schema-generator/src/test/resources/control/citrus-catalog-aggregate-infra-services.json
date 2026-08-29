@@ -215,6 +215,15 @@
     "title": "Chat-script",
     "description": "ChatScript is an open source chatbot engine"
   },
+  "clickhouse": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "clickhouse",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-clickhouse",
+    "title": "Clickhouse",
+    "description": "ClickHouse is a high-performance columnar OLAP database"
+  },
   "consul": {
     "kind": "testInfraService",
     "version": "${camel.version}",
@@ -241,6 +250,15 @@
     "module": "org.apache.camel:camel-test-infra-couchdb",
     "title": "Couchdb",
     "description": "Apache CouchDB is an open source NoSQL document database"
+  },
+  "cyberark.conjur": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "cyberark.conjur",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-cyberark-vault",
+    "title": "Cyberark Conjur",
+    "description": "CyberArk Conjur is an open source secrets management solution"
   },
   "docling": {
     "kind": "testInfraService",
@@ -494,6 +512,15 @@
     "title": "Neo4j",
     "description": "Neo4j is a graph database management system"
   },
+  "observability": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "observability",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-observability",
+    "title": "Observability",
+    "description": "Local observability stack (Prometheus + VictoriaTraces + VictoriaLogs + Perses)"
+  },
   "ollama": {
     "kind": "testInfraService",
     "version": "${camel.version}",
@@ -511,6 +538,15 @@
     "module": "org.apache.camel:camel-test-infra-openldap",
     "title": "Openldap",
     "description": "OpenLDAP is an implementation of the Lightweight Directory Access Protocol"
+  },
+  "opensearch": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "opensearch",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-opensearch",
+    "title": "Opensearch",
+    "description": "OpenSearch is a distributed search and analytics engine"
   },
   "pinecone": {
     "kind": "testInfraService",

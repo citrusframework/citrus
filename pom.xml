@@ -193,12 +193,12 @@
     <angus-activation.version>2.0.3</angus-activation.version>
     <angus-mail.version>2.0.5</angus-mail.version>
     <apache.ant.version>1.10.17</apache.ant.version>
-    <apache.camel.version>4.21.0</apache.camel.version>
+    <apache.camel.version>4.22.0</apache.camel.version>
     <apicurio.data-models.version>1.1.33</apicurio.data-models.version>
     <ascii-table-version>1.12.1</ascii-table-version>
     <assertj.version>3.27.7</assertj.version>
     <awaitility.version>4.3.0</awaitility.version>
-    <aws-java-sdk2.version>2.50.1</aws-java-sdk2.version>
+    <aws-java-sdk2.version>2.50.2</aws-java-sdk2.version>
     <bouncycastle.version>1.85</bouncycastle.version>
     <byte.buddy.version>1.18.11</byte.buddy.version>
     <commons.dbcp2.version>2.14.0</commons.dbcp2.version>
