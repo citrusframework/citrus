@@ -92,6 +92,7 @@ To address this, Citrus introduces a configurable validator strategy with two mo
 * **`EXCLUSIVE` (default)**
   - Only the custom validator(s) are executed.
   - Default validators and body assertions are not applied.
+  - The same substitution applies when a validation processor (callback) is set on the receive action.
 
 * **`COMBINED`**
   - Both custom validators and the default Citrus validators run.
@@ -128,6 +129,8 @@ receive(bookResponseEndpoint)
         }
     });
 ----
+
+IMPORTANT: With the default `EXCLUSIVE` custom validator strategy, a validation processor (callback) *replaces* the usual receive validation. Control-message comparison, HTTP status checks, and other `MessageValidator` steps on that receive action are not run. Only the callback runs. Set `citrus.custom.validator.strategy` / `CITRUS_CUSTOM_VALIDATOR_STRATEGY` to `COMBINED` if those default steps should still apply. See link:#validation-custom-validator-strategy[custom validator strategy].
 
 By default, the validation processor needs some XML unmarshaller implementation for transforming the XML payload to a Java
 object. Citrus will automatically search for the unmarshaller bean in your Spring application context if nothing specific
