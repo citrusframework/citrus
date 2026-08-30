@@ -982,6 +982,11 @@
       </dependency>
       <dependency>
         <groupId>org.apache.camel</groupId>
+        <artifactId>camel-management</artifactId>
+        <version>${apache.camel.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
         <artifactId>camel-tooling-maven</artifactId>
         <version>${apache.camel.version}</version>
       </dependency>

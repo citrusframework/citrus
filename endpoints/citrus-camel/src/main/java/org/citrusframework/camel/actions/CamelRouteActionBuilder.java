@@ -151,6 +151,16 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
     }
 
     @Override
+    public CamelVerifyRouteStatsAction.Builder verifyRouteStats(String routeId) {
+        CamelVerifyRouteStatsAction.Builder builder = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route(routeId);
+
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public RemoveCamelRouteAction.Builder remove(String... routes) {
         RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder()
                 .context(camelContext)

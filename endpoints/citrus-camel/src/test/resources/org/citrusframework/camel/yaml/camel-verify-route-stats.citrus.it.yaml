@@ -1,0 +1,15 @@
+name: "CamelVerifyRouteStatsTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      verifyRouteStats:
+        route: "route_1"
+        completed: 0
+
+  - camel:
+      camelContext: "camelContext"
+      verifyRouteStats:
+        route: "route_1"
+        completed: 0
+        failed: 0
