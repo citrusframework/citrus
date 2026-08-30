@@ -4,7 +4,7 @@
       "command": "jbang",
       "args": [
         "--quiet",
-        "org.citrusframework:citrus-mcp-server:5.0.0:runner"
+        "org.citrusframework:citrus-mcp-server:5.0.1:runner"
       ]
     }
   }
