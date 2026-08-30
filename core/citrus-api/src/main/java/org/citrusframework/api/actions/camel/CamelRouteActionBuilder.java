@@ -66,4 +66,9 @@ public interface CamelRouteActionBuilder<T extends TestAction, B extends CamelRo
      * Verify a Camel route existence and status.
      */
     CamelVerifyRouteActionBuilder<?, ?> verify(String routeId);
+
+    /**
+     * Verify Camel route statistics such as completed exchanges.
+     */
+    CamelVerifyRouteStatsActionBuilder<?, ?> verifyRouteStats(String routeId);
 }

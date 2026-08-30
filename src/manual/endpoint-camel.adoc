@@ -805,6 +805,109 @@ actions:
 When no `status` is given, the action only verifies that the route exists in the Camel context.
 The action throws an exception when the route does not exist or when the actual status does not match the expected value.
 
+[[camel-route-verify-stats]]
+== Camel route statistics verification
+
+The verify route stats action accesses Camel route management statistics using the `camel-management` dependency (`ManagedCamelContext`).
+You can verify individual route metrics like completed and failed exchange counts, or compare the full route statistics JSON returned by `dumpStatsAsJSon()`.
+
+NOTE: The `camel-management` dependency must be on the classpath to use this action.
+For JSON stats comparison, `citrus-validation-json` is also required.
+
+=== Verifying individual metrics
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+public class CamelRouteStatsIT extends TestNGCitrusSpringSupport {
+
+    @Autowired
+    private CamelContext camelContext;
+
+    @Test
+    @CitrusTest
+    public void verifyRouteStats() {
+        $(camel().camelContext(camelContext)
+            .route()
+            .verifyRouteStats("route_1")
+            .completed(5)
+            .failed(0));
+    }
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="CamelRouteStatsIT">
+  <actions>
+      <camel:verify-route-stats route="route_1" completed="5" failed="0"/>
+  </actions>
+</testcase>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+actions:
+  - camel:
+      verifyRouteStats:
+        route: "route_1"
+        completed: 5
+        failed: 0
+----
+
+The action verifies the number of completed and/or failed exchanges on the given route.
+Both `completed` and `failed` are optional - you can verify one or both.
+
+=== Verifying route statistics JSON
+
+You can also verify the full route statistics JSON using the Citrus JSON message validator.
+The expected JSON supports partial matching - you only need to specify the fields you want to verify.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+public class CamelRouteStatsJsonIT extends TestNGCitrusSpringSupport {
+
+    @Autowired
+    private CamelContext camelContext;
+
+    @Test
+    @CitrusTest
+    public void verifyRouteStatsJson() {
+        $(camel().camelContext(camelContext)
+            .route()
+            .verifyRouteStats("route_1")
+            .stats("{\"exchangesCompleted\": 5, \"exchangesFailed\": 0}"));
+    }
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="CamelRouteStatsJsonIT">
+  <actions>
+      <camel:verify-route-stats route="route_1">
+          <stats>{"exchangesCompleted": 5, "exchangesFailed": 0}</stats>
+      </camel:verify-route-stats>
+  </actions>
+</testcase>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+actions:
+  - camel:
+      verifyRouteStats:
+        route: "route_1"
+        stats: '{"exchangesCompleted": 5, "exchangesFailed": 0}'
+----
+
+You can combine individual metric checks with JSON stats comparison in a single action.
+
 [[camel-controlbus-actions]]
 == Camel controlbus actions
 

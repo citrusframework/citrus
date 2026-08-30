@@ -77,7 +77,12 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<MessageVa
             throw new ValidationException("Validation failed - expected message contents, but received empty message!");
         }
 
-        elementValidatorProvider.getValidator(strict, context, validationContext)
+        boolean effectiveStrict = strict;
+        if (validationContext instanceof JsonMessageValidationContext jsonContext) {
+            effectiveStrict = jsonContext.isStrict().orElse(strict);
+        }
+
+        elementValidatorProvider.getValidator(effectiveStrict, context, validationContext)
             .validate(parseJson(permissiveMode, receivedJsonText, controlJsonText));
 
         logger.debug("JSON message validation successful: All values OK");

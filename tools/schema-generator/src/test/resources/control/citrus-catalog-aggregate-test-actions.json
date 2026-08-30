@@ -1744,6 +1744,41 @@
       },
       "additionalProperties": false    }
   },
+  "camel-verifyRouteStats": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "camel-verifyRouteStats",
+    "group": "camel",
+    "module": "citrus-camel",
+    "title": "VerifyRouteStats",
+    "description": "Verify Camel route statistics such as completed or failed exchanges.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "route": {
+          "type": "string",
+          "title": "Route",
+          "description": "The Camel route id to verify statistics for."
+        },
+        "completed": {
+          "type": "integer",
+          "title": "Completed",
+          "description": "The expected number of completed exchanges."
+        },
+        "failed": {
+          "type": "integer",
+          "title": "Failed",
+          "description": "The expected number of failed exchanges."
+        },
+        "stats": {
+          "type": "string",
+          "title": "Stats",
+          "description": "Expected route statistics as JSON for comparison with the actual stats dump."
+        }
+      },
+      "additionalProperties": false    }
+  },
   "createEndpoint": {
     "kind": "testAction",
     "version": "${citrus.version}",

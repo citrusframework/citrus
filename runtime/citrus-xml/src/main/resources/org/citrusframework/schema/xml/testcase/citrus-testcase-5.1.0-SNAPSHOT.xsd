@@ -3223,6 +3223,28 @@
             <xs:attribute name="kamelets-version" type="xs:string"/>
           </xs:complexType>
         </xs:element>
+        <xs:element name="verify-route">
+          <xs:annotation>
+            <xs:documentation>Verify a Camel route existence and status</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="route" type="xs:string" use="required"/>
+            <xs:attribute name="status" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="verify-route-stats">
+          <xs:annotation>
+            <xs:documentation>Verify Camel route statistics such as completed or failed exchanges</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="stats" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="route" type="xs:string" use="required"/>
+            <xs:attribute name="completed" type="xs:long"/>
+            <xs:attribute name="failed" type="xs:long"/>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="actor" type="xs:string"/>

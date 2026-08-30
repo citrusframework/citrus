@@ -28,6 +28,8 @@ import org.citrusframework.validation.context.MessageValidationContext;
  */
 public class JsonMessageValidationContext extends DefaultMessageValidationContext {
 
+    private final Boolean strict;
+
     /**
      * Default constructor.
      */
@@ -41,6 +43,11 @@ public class JsonMessageValidationContext extends DefaultMessageValidationContex
      */
     public JsonMessageValidationContext(Builder builder) {
         super(builder);
+        this.strict = builder.strict;
+    }
+
+    public Optional<Boolean> isStrict() {
+        return Optional.ofNullable(strict);
     }
 
     @Override
@@ -54,8 +61,15 @@ public class JsonMessageValidationContext extends DefaultMessageValidationContex
     public static final class Builder extends MessageValidationContext.Builder<JsonMessageValidationContext, Builder>
             implements JsonMessageValidationContextBuilder<JsonMessageValidationContext, Builder> {
 
+        private Boolean strict;
+
         public static Builder json() {
             return new Builder();
+        }
+
+        public Builder strict(boolean strict) {
+            this.strict = strict;
+            return self;
         }
 
         @Override
