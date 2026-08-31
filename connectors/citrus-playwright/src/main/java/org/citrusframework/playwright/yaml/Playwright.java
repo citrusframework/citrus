@@ -37,6 +37,7 @@ import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 public class Playwright implements TestActionBuilder<PlaywrightAction>, ReferenceResolverAware {
 
     private static final String PLAYWRIGHT_GROUP = "playwright";
+    private static final String PLAYWRIGHT_MODULE = "citrus-playwright";
 
     private AbstractPlaywrightAction.Builder<?, ?> builder;
 
@@ -65,112 +66,112 @@ public class Playwright implements TestActionBuilder<PlaywrightAction>, Referenc
         this.browserName = browser;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setStart(Start builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setStop(Stop builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setOpen(Open builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setNavigate(Navigate builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setClick(Click builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setDoubleClick(DoubleClick builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setRightClick(RightClick builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setHover(Hover builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setFocus(Focus builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setTap(Tap builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setFill(Fill builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setClear(Clear builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setPress(Press builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setCheck(Check builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setUncheck(Uncheck builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setSelect(Select builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setUpload(Upload builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setWait(Wait builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setScreenshot(Screenshot builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setJavaScript(JavaScript builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setVerify(Verify builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setExtract(Extract builder) {
         this.builder = builder;
     }

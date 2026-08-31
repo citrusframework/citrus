@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 
 /**
@@ -33,6 +34,7 @@ import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
  * context defaults, observability limits, and failure-evidence artifact
  * settings before producing a {@link PlaywrightBrowser} endpoint.</p>
  */
+@SchemaType(module = "citrus-playwright")
 public class PlaywrightEndpointBuilder extends AbstractEndpointBuilder<PlaywrightBrowser> {
 
     private final PlaywrightBrowser endpoint = new PlaywrightBrowser();
