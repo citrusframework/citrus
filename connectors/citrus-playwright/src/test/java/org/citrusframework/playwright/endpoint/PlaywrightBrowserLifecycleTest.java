@@ -22,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.expectThrows;
 import static org.testng.Assert.assertTrue;
@@ -44,10 +45,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.support.FailureEvidenceWriter;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
+import org.citrusframework.playwright.support.StubStartedBrowser;
 import org.testng.annotations.Test;
 
 class PlaywrightBrowserLifecycleTest {
@@ -243,6 +246,52 @@ class PlaywrightBrowserLifecycleTest {
         browser.stopTracing(Path.of("target", "playwright", "trace.zip"));
 
         verify(tracing).stop(any(Tracing.StopOptions.class));
+    }
+
+    @Test
+    void shouldPinTheBrowserToTheFirstActionThread() throws Exception {
+        StubStartedBrowser browser = new StubStartedBrowser();
+        browser.start();
+
+        browser.assertActionThread();
+        browser.assertActionThread();
+
+        Throwable failure = runOnOtherThread(browser::assertActionThread);
+
+        assertTrue(failure instanceof CitrusRuntimeException,
+                "expected a Citrus failure but got " + failure);
+        assertTrue(failure.getMessage().contains("already used by thread " + Thread.currentThread().getId()),
+                failure.getMessage());
+        assertTrue(failure.getMessage().contains("one PlaywrightBrowser endpoint per parallel test thread"),
+                failure.getMessage());
+    }
+
+    @Test
+    void shouldReleaseTheThreadPinOnStop() throws Exception {
+        StubStartedBrowser browser = new StubStartedBrowser();
+        browser.start();
+        browser.assertActionThread();
+
+        browser.stop();
+
+        assertNull(runOnOtherThread(browser::assertActionThread),
+                "a stopped endpoint is free for the next test thread to claim");
+    }
+
+    private Throwable runOnOtherThread(Runnable task) throws Exception {
+        AtomicReference<Throwable> failure = new AtomicReference<>();
+        Thread thread = new Thread(() -> {
+            try {
+                task.run();
+            } catch (Throwable t) {
+                failure.set(t);
+            }
+        });
+
+        thread.start();
+        thread.join(5000);
+        assertFalse(thread.isAlive(), "worker thread did not finish in time");
+        return failure.get();
     }
 
     private void runConcurrently(Runnable task) throws Exception {
