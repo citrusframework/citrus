@@ -21,6 +21,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActionContainerBuilder;
 import org.citrusframework.TestActor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
@@ -179,6 +180,16 @@ public class Playwright implements TestActionBuilder<TestAction>, ReferenceResol
     public PlaywrightAction build() {
         if (builder == null) {
             throw new CitrusRuntimeException("Missing Playwright action - please provide proper action details");
+        }
+
+        if (builder instanceof TestActionContainerBuilder<?, ?> containerBuilder) {
+            containerBuilder.getActions().stream()
+                    .filter(ReferenceResolverAware.class::isInstance)
+                    .forEach(action -> ((ReferenceResolverAware) action).setReferenceResolver(referenceResolver));
+        }
+
+        if (builder instanceof ReferenceResolverAware referenceResolverAware) {
+            referenceResolverAware.setReferenceResolver(referenceResolver);
         }
 
         builder.description(description);
