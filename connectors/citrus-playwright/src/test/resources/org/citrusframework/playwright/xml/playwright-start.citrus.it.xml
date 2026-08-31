@@ -1,0 +1,7 @@
+<test name="PlaywrightStartDslTest" author="Citrus" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <actions>
+    <playwright browser="playwrightBrowser">
+      <start allow-already-started="false" browser-type="firefox"/>
+    </playwright>
+  </actions>
+</test>

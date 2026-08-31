@@ -1,0 +1,2 @@
+type=org.citrusframework.playwright.endpoint.PlaywrightEndpointBuilder
+browser=org.citrusframework.playwright.endpoint.PlaywrightEndpointBuilder

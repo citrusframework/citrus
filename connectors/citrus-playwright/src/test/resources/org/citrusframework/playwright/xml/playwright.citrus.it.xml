@@ -1,0 +1,62 @@
+<test name="PlaywrightDslTest" author="Citrus" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <description>Sample test loading Playwright actions from XML</description>
+  <actions>
+    <playwright browser="playwrightBrowser">
+      <start browser-type="chromium"/>
+    </playwright>
+
+    <playwright>
+      <open url="index.html"/>
+    </playwright>
+
+    <playwright>
+      <double-click>
+        <element css="#save"/>
+      </double-click>
+    </playwright>
+
+    <playwright>
+      <fill value="${username}">
+        <element css="#username"/>
+      </fill>
+    </playwright>
+
+    <playwright>
+      <upload file="uploads/avatar.png">
+        <element css="#avatar"/>
+      </upload>
+    </playwright>
+
+    <playwright>
+      <wait condition="hidden">
+        <element css="#dialog"/>
+      </wait>
+    </playwright>
+
+    <playwright>
+      <verify check="absent">
+        <element css="#welcome"/>
+      </verify>
+    </playwright>
+
+    <playwright>
+      <extract value="url" variable="pageUrl"/>
+    </playwright>
+
+    <playwright>
+      <navigate direction="reload"/>
+    </playwright>
+
+    <playwright>
+      <screenshot path="target/playwright/screen.png"/>
+    </playwright>
+
+    <playwright>
+      <javascript script="window.title" variable="jsResult"/>
+    </playwright>
+
+    <playwright>
+      <stop/>
+    </playwright>
+  </actions>
+</test>

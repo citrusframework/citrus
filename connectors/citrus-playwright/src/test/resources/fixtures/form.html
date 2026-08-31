@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Citrus Playwright Fixture</title>
+</head>
+<body>
+<label for="name">Name</label>
+<input id="name" value="">
+<select id="status">
+    <option value="draft">Draft</option>
+    <option value="ready">Ready</option>
+</select>
+<button id="submit" type="button">Submit</button>
+<div id="message" hidden></div>
+<script>
+    document.getElementById('submit').addEventListener('click', () => {
+        const name = document.getElementById('name').value;
+        const status = document.getElementById('status').value;
+        const message = document.getElementById('message');
+        message.hidden = false;
+        message.textContent = `${name}:${status}`;
+        message.setAttribute('data-state', status);
+    });
+</script>
+</body>
+</html>

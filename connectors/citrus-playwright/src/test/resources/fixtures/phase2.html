@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Citrus Playwright Phase 2</title>
+</head>
+<body>
+  <h1 id="title">Phase 2 Fixture</h1>
+  <button id="dialog" onclick="alert('phase-2-dialog')">Dialog</button>
+  <a id="download" download="phase2.txt" href="data:text/plain;charset=utf-8,phase-2-download">Download</a>
+  <div id="page-object-target">pending</div>
+  <iframe id="details-frame" srcdoc="
+    <!doctype html>
+    <html lang='en'>
+    <body>
+      <label id='frame-label' for='frame-input'>Frame Ready</label>
+      <input id='frame-input'>
+    </body>
+    </html>"></iframe>
+</body>
+</html>

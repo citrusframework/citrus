@@ -1,0 +1,12 @@
+name: "PlaywrightStartDslTest"
+author: "Citrus"
+status: "FINAL"
+actions:
+  - playwright:
+      browser: "playwrightBrowser"
+      start:
+        allow-already-started: false
+        browser-type: "firefox"
+        headless: false
+        base-url: "http://localhost:8080"
+        default-timeout: 5000

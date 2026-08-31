@@ -1,0 +1,71 @@
+name: "PlaywrightDslTest"
+author: "Citrus"
+status: "FINAL"
+description: "Sample test loading Playwright actions from YAML"
+actions:
+  - playwright:
+      browser: "playwrightBrowser"
+      start:
+        browser-type: "chromium"
+
+  - playwright:
+      open:
+        url: "index.html"
+
+  - playwright:
+      click:
+        element:
+          css: "#save"
+
+  - playwright:
+      fill:
+        element:
+          css: "#username"
+        value: "${username}"
+
+  - playwright:
+      press:
+        element:
+          css: "#username"
+        key: "Enter"
+
+  - playwright:
+      select:
+        element:
+          css: "#gender"
+        values:
+          - "male"
+
+  - playwright:
+      wait:
+        condition: "network-idle"
+
+  - playwright:
+      verify:
+        element:
+          text: "Welcome"
+        check: "hidden"
+
+  - playwright:
+      extract:
+        element:
+          css: "#title"
+        value: "count"
+        variable: "titleCount"
+
+  - playwright:
+      navigate:
+        direction: "back"
+
+  - playwright:
+      screenshot:
+        path: "target/playwright/screen.png"
+        variable: "screenshotPath"
+
+  - playwright:
+      javaScript:
+        script: "window.title"
+        variable: "jsResult"
+
+  - playwright:
+      stop: {}

@@ -1,0 +1,1 @@
+browser=org.citrusframework.playwright.config.annotation.PlaywrightBrowserConfigParser
