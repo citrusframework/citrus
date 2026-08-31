@@ -44,10 +44,10 @@ public class ScreenshotAction extends AbstractPlaywrightAction {
     @Override
     protected void execute(PlaywrightBrowser browser, TestContext context) {
         String resolvedPath = LocatorResolver.resolve(path, context);
-        byte[] bytes = browser.getCurrentPage().screenshot(new com.microsoft.playwright.Page.ScreenshotOptions()
+        browser.getCurrentPage().screenshot(new com.microsoft.playwright.Page.ScreenshotOptions()
                 .setPath(Path.of(resolvedPath)));
         if (variable != null) {
-            context.setVariable(variable, resolvedPath != null ? resolvedPath : bytes);
+            context.setVariable(variable, resolvedPath);
         }
     }
 
