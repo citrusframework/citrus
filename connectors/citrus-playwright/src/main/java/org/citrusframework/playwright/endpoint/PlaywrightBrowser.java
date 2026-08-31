@@ -72,6 +72,7 @@ public class PlaywrightBrowser extends AbstractEndpoint implements Producer, Shu
     private final NetworkCaptureRegistry networkCaptureRegistry = new NetworkCaptureRegistry();
     private DownloadMetadata latestDownloadMetadata;
     private Long actionOwnerThreadId;
+    private boolean tracingStopped;
 
     public PlaywrightBrowser() {
         this(new PlaywrightBrowserConfiguration());
@@ -151,6 +152,7 @@ public class PlaywrightBrowser extends AbstractEndpoint implements Producer, Shu
             registerPage(DEFAULT_ALIAS, currentPage);
 
             if (config.isTracingEnabled()) {
+                tracingStopped = false;
                 currentContext.tracing().start(new Tracing.StartOptions().setScreenshots(true).setSnapshots(true));
             }
 
@@ -165,6 +167,26 @@ public class PlaywrightBrowser extends AbstractEndpoint implements Producer, Shu
     }
 
     /**
+     * Stops tracing on the current browser context and writes the trace archive
+     * to the given path.
+     *
+     * <p>Playwright allows tracing to be stopped only once per context. Failure
+     * evidence capture and browser teardown both want the trace, so the first
+     * caller wins and later calls are no-ops - otherwise the teardown would
+     * overwrite the failure trace with an empty archive.</p>
+     *
+     * @param tracePath target file for the trace archive
+     */
+    public synchronized void stopTracing(Path tracePath) {
+        if (currentContext == null || tracingStopped) {
+            return;
+        }
+
+        tracingStopped = true;
+        currentContext.tracing().stop(new Tracing.StopOptions().setPath(tracePath));
+    }
+
+    /**
      * Stops tracing when enabled, closes pages, contexts, browser, and
      * Playwright resources, and unregisters the endpoint from failure evidence.
      */
@@ -174,7 +196,7 @@ public class PlaywrightBrowser extends AbstractEndpoint implements Producer, Shu
             try {
                 Path tracePath = Path.of("target", "playwright", "trace.zip");
                 Files.createDirectories(tracePath.getParent());
-                currentContext.tracing().stop(new Tracing.StopOptions().setPath(tracePath));
+                stopTracing(tracePath);
             } catch (Exception ignored) {
                 // Browser teardown must continue even if trace persistence fails.
             }

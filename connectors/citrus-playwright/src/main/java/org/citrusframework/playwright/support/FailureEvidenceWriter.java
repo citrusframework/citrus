@@ -18,7 +18,6 @@ package org.citrusframework.playwright.support;
 
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Tracing;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -85,7 +84,7 @@ public class FailureEvidenceWriter {
             writeText(directory.resolve("failure-summary.md"), summary(browser, page));
         }
         if (configuration.isCaptureFailureTrace()) {
-            context.tracing().stop(new Tracing.StopOptions().setPath(directory.resolve("trace.zip")));
+            browser.stopTracing(directory.resolve("trace.zip"));
         }
     }
 

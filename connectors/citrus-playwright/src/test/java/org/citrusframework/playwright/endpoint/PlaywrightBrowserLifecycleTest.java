@@ -16,6 +16,10 @@
 
 package org.citrusframework.playwright.endpoint;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertSame;
@@ -27,6 +31,7 @@ import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.Tracing;
 
 import java.lang.reflect.Proxy;
 import java.nio.file.Path;
@@ -42,6 +47,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.support.FailureEvidenceWriter;
+import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.testng.annotations.Test;
 
 class PlaywrightBrowserLifecycleTest {
@@ -223,6 +229,20 @@ class PlaywrightBrowserLifecycleTest {
         assertEquals(0, browser.cdpConnects.get());
         assertEquals(0, browser.launches.get());
         assertEquals(1, browser.playwrightClosed.get());
+    }
+
+    @Test
+    void shouldStopTracingOnlyOnce() {
+        MockPlaywrightBrowser browser = new MockPlaywrightBrowser();
+        browser.start();
+
+        Tracing tracing = mock(Tracing.class);
+        when(browser.context().tracing()).thenReturn(tracing);
+
+        browser.stopTracing(Path.of("target", "playwright", "failure", "trace.zip"));
+        browser.stopTracing(Path.of("target", "playwright", "trace.zip"));
+
+        verify(tracing).stop(any(Tracing.StopOptions.class));
     }
 
     private void runConcurrently(Runnable task) throws Exception {
