@@ -61,16 +61,26 @@ import org.testng.annotations.Test;
 class PlaywrightBrowserIT {
 
     private static String originalMaskKeywords;
+    private static boolean maskKeywordsConfigured;
 
     @BeforeClass
     public void configureMaskKeywords() {
+        if (!chromiumAvailable()) {
+            throw new SkipException("Chromium is not installed for Playwright - install it with -Pplaywright-runtimes");
+        }
+
         originalMaskKeywords = System.getProperty("citrus.logger.mask.keywords");
+        maskKeywordsConfigured = true;
         System.setProperty("citrus.logger.mask.keywords",
                 "authorization,x-api-key,api-key,password,token,api_key,apikey,secret,auth,cookie");
     }
 
     @AfterClass
     public void restoreMaskKeywords() {
+        if (!maskKeywordsConfigured) {
+            return;
+        }
+
         if (originalMaskKeywords == null) {
             System.clearProperty("citrus.logger.mask.keywords");
         } else {
@@ -80,10 +90,6 @@ class PlaywrightBrowserIT {
 
     @Test
     void shouldDriveChromiumAgainstLocalFixture() throws Exception {
-        if (!chromiumAvailable()) {
-            throw new SkipException("Chromium is not installed for Playwright");
-        }
-
         URL fixture = getClass().getResource("/fixtures/form.html");
         Path screenshot = Path.of("target", "playwright-browser-it.png");
         Files.deleteIfExists(screenshot);
@@ -122,10 +128,6 @@ class PlaywrightBrowserIT {
 
     @Test
     void shouldUsePhaseTwoBrowserNativeActionsAgainstLocalFixture() throws Exception {
-        if (!chromiumAvailable()) {
-            throw new SkipException("Chromium is not installed for Playwright");
-        }
-
         Path download = Path.of("target", "playwright", "phase2.txt");
         Path trace = Path.of("target", "playwright", "phase2-trace.zip");
         Path pdf = Path.of("target", "playwright", "phase2.pdf");
@@ -196,10 +198,6 @@ class PlaywrightBrowserIT {
     @Test
     @SuppressWarnings("unchecked")
     void shouldUsePhaseThreeHardeningActionsAgainstLocalFixture() throws Exception {
-        if (!chromiumAvailable()) {
-            throw new SkipException("Chromium is not installed for Playwright");
-        }
-
         Path download = Path.of("target", "playwright", "phase3.txt");
         Files.deleteIfExists(download);
 
@@ -328,10 +326,6 @@ class PlaywrightBrowserIT {
     @Test
     @SuppressWarnings("unchecked")
     void shouldResolveBrowserImplicitlyThroughAmbientScope() throws Exception {
-        if (!chromiumAvailable()) {
-            throw new SkipException("Chromium is not installed for Playwright");
-        }
-
         TestContext context = new TestContext();
         try (FixtureServer server = FixtureServer.start()) {
             String fixtureUrl = server.url("/phase3.html");
@@ -380,10 +374,6 @@ class PlaywrightBrowserIT {
 
     @Test
     void shouldSupportNamedEndpointBindingAndScopedBlock() throws Exception {
-        if (!chromiumAvailable()) {
-            throw new SkipException("Chromium is not installed for Playwright");
-        }
-
         PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
                 .browser()
                 .browserType("chromium")
@@ -420,10 +410,6 @@ class PlaywrightBrowserIT {
 
     @Test
     void shouldCaptureFailureEvidenceForActiveBrowser() throws Exception {
-        if (!chromiumAvailable()) {
-            throw new SkipException("Chromium is not installed for Playwright");
-        }
-
         Path artifactDirectory = Path.of("target", "playwright", "evidence-it");
 
         PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
