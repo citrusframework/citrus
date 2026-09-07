@@ -37,6 +37,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Browsers come from the playwright-runtimes profile only, so a missing
+      # runtime surfaces as skipped tests instead of an implicit full download.
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
     steps:
       - name: Set up JDK
         uses: actions/setup-java@v5
@@ -51,6 +55,12 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pom.xml') }}
+          restore-keys: ${{ runner.os }}-playwright
       - name: Info
         run: |
           java -version
@@ -65,25 +75,5 @@ jobs:
           
           jbang --version
           
-          ./mvnw --no-transfer-progress install
+          ./mvnw --no-transfer-progress install -Pplaywright-runtimes
 
-  playwright-tests:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      - name: Checkout code
-        uses: actions/checkout@v6
-      - name: Cache Maven cache
-        uses: actions/cache@v5
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Run Playwright integration tests
-        run: |
-          ./mvnw --no-transfer-progress verify -pl connectors/citrus-playwright -am -Pplaywright-runtimes
