@@ -78,11 +78,17 @@
                 <id>install-playwright-browsers</id>
                 <phase>generate-test-resources</phase>
                 <goals>
-                  <goal>java</goal>
+                  <goal>exec</goal>
                 </goals>
                 <configuration>
-                  <mainClass>com.microsoft.playwright.CLI</mainClass>
+                  <!-- Forked JVM on purpose: the Playwright CLI ends with System.exit(),
+                       which would terminate the Maven JVM when run via exec:java. -->
+                  <executable>${java.home}/bin/java</executable>
+                  <classpathScope>test</classpathScope>
                   <arguments>
+                    <argument>-classpath</argument>
+                    <classpath/>
+                    <argument>com.microsoft.playwright.CLI</argument>
                     <argument>install</argument>
                     <argument>${playwright.browser}</argument>
                   </arguments>
