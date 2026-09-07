@@ -245,7 +245,7 @@ Integration tests that drive a real browser require the Playwright browser binar
 mvn verify -pl connectors/citrus-playwright -Pplaywright-runtimes
 ----
 
-Be aware that the Playwright Java bindings download the *full* browser set themselves on the first `Playwright.create()` call whenever no binaries are present. A build without the profile therefore still pulls Chromium, Firefox and WebKit instead of skipping. Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` to forbid that implicit download; the browser tests then skip when the runtime is missing and the build stays hermetic:
+Be aware that the Playwright Java bindings install browsers themselves on the first `Playwright.create()` call. They check the *whole* registered set and fetch whatever is missing, so Chromium, Firefox and WebKit are pulled even when the profile has already installed Chromium - and the download runs inside the test. Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` to forbid that implicit install. The profile is then the only source of binaries, and the browser tests skip when the runtime is missing instead of downloading it:
 
 [source,bash]
 ----
