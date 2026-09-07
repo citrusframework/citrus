@@ -238,9 +238,18 @@ PlaywrightEndpoints.playwright()
 [[playwright-runtimes]]
 == Browser runtimes
 
-Integration tests that drive a real browser require the Playwright browser binaries. They skip gracefully when Chromium is unavailable, so normal builds stay hermetic. To install the runtime locally use the Maven profile:
+Integration tests that drive a real browser require the Playwright browser binaries. Install them with the `playwright-runtimes` Maven profile, which fetches just the engine under test (`chromium` by default, selectable with `-Dplaywright.browser=firefox|webkit`):
 
 [source,bash]
 ----
-mvn generate-test-resources -pl connectors/citrus-playwright -Pplaywright-runtimes
+mvn verify -pl connectors/citrus-playwright -Pplaywright-runtimes
 ----
+
+Be aware that the Playwright Java bindings download the *full* browser set themselves on the first `Playwright.create()` call whenever no binaries are present. A build without the profile therefore still pulls Chromium, Firefox and WebKit instead of skipping. Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` to forbid that implicit download; the browser tests then skip when the runtime is missing and the build stays hermetic:
+
+[source,bash]
+----
+PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 mvn verify -pl connectors/citrus-playwright
+----
+
+The CI build combines the two: it pins `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` and activates `playwright-runtimes`, so the browser binaries are always explicit and cached.
