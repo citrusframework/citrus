@@ -18,6 +18,9 @@ package org.citrusframework.sql.actions;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,9 +44,14 @@ import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
@@ -144,23 +152,49 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         }
 
         for (String statement : statements) {
-            validateSqlStatement(statement);
+            String trimmed = statement.trim();
+            validateSqlStatement(trimmed);
 
-            final String toExecute;
-            if (statement.trim().endsWith(";")) {
-                toExecute = context.replaceDynamicContentInString(statement.trim().substring(0, statement.trim().length() - 1));
-            } else {
-                toExecute = context.replaceDynamicContentInString(statement.trim());
+            if (trimmed.endsWith(";")) {
+                trimmed = trimmed.substring(0, trimmed.length() - 1);
             }
+            final String toExecute = context.replaceDynamicContentInString(trimmed);
 
             logger.debug("Executing SQL query: {}", toExecute);
 
-            List<Map<String, Object>> results = getJdbcTemplate().queryForList(toExecute);
+            getJdbcTemplate().query(toExecute, new ResultSetExtractor<Void>() {
+
+                private final RowMapper<Map<String, @Nullable Object>> rowMapper = new ColumnMapRowMapper();
+
+                @Override
+                public Void extractData(ResultSet rs) throws SQLException, DataAccessException {
+                    ResultSetMetaData rsmd = rs.getMetaData();
+                    int columnCount = rsmd.getColumnCount();
+                    for (int i = 1; i <= columnCount; i++) {
+                        String columnName = JdbcUtils.lookupColumnName(rsmd, i);
+                        columnValuesMap.computeIfAbsent(columnName, k -> new ArrayList<>());
+                    }
+                    int rowNum = 0;
+                    while (rs.next()) {
+                        var row = rowMapper.mapRow(rs, rowNum++);
+                        allResultRows.add(row);
+                        for (var column : row.entrySet()) {
+                            String columnName = column.getKey();
+                            Object columnValue = column.getValue();
+                            String stringValue;
+                            if (columnValue instanceof byte[] bytes) {
+                                stringValue = Base64.encodeBase64String(bytes);
+                            } else {
+                                stringValue = columnValue == null ? null : columnValue.toString();
+                            }
+                            columnValuesMap.get(columnName).add(stringValue);
+                        }
+                    }
+                    return null;
+                }
+            });
 
             logger.debug("SQL query execution successful");
-
-            allResultRows.addAll(results);
-            fillColumnValuesMap(results, columnValuesMap);
         }
     }
 
@@ -181,32 +215,6 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             } else {
                 throw new CitrusRuntimeException("Failed to create variables from database values! " +
                         "Unable to find column '" + columnName + "' in database result set");
-            }
-        }
-    }
-
-    /**
-     * Form a Map object which contains all columns of the result as keys
-     * and a List of row values as values of the Map
-     * @param results result map from last jdbc query execution
-     * @param columnValuesMap map holding all result columns and corresponding values
-     */
-    private void fillColumnValuesMap(List<Map<String, Object>> results, Map<String, List<String>> columnValuesMap) {
-        for (Map<String, Object> row : results) {
-            for (Entry<String, Object> column : row.entrySet()) {
-                String columnValue;
-                String columnName = column.getKey();
-                if (!columnValuesMap.containsKey(columnName)) {
-                    columnValuesMap.put(columnName, new ArrayList<>());
-                }
-
-                if (column.getValue() instanceof byte[]) {
-                    columnValue = Base64.encodeBase64String((byte[]) column.getValue());
-                } else {
-                    columnValue = column.getValue() == null ? null : column.getValue().toString();
-                }
-
-                columnValuesMap.get(columnName).add((columnValue));
             }
         }
     }
@@ -334,9 +342,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * @param statement The statement which is to be validated.
      */
     protected void validateSqlStatement(String statement) {
-        String trimmedStatement = statement.toLowerCase().trim();
-        if (!(trimmedStatement.startsWith("select") || trimmedStatement.startsWith("with"))) {
-            throw new CitrusRuntimeException("Missing SELECT or WITH keyword in statement: " + trimmedStatement);
+        String statementLowerCase = statement.toLowerCase();
+        if (!(statementLowerCase.startsWith("select") || statementLowerCase.startsWith("with"))) {
+            throw new CitrusRuntimeException("Missing SELECT or WITH keyword in statement: " + statement);
         }
     }
 
