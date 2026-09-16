@@ -24,6 +24,8 @@ import java.util.Optional;
 import org.citrusframework.TestResult;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 
+import jakarta.annotation.Nullable;
+
 /**
  * Test result that is able to serialize/deserialize from Json objects.
  */
@@ -42,7 +44,7 @@ public class RemoteResult {
     private Duration duration;
 
     /** Failure cause */
-    private String cause;
+    private @Nullable Throwable cause;
 
     /** Failure message */
     private String errorMessage;
@@ -73,7 +75,7 @@ public class RemoteResult {
 
         if (testResult.isFailed()) {
             Optional.ofNullable(testResult.getCause()).ifPresent(cause -> {
-                remoteResult.setCause(cause.getClass().getName());
+                remoteResult.setCause(cause);
                 remoteResult.setErrorMessage(cause.getMessage());
 
                 StringWriter stackWriter = new StringWriter();
@@ -101,8 +103,7 @@ public class RemoteResult {
                     .failed(
                             remoteResult.getTestName(),
                             remoteResult.getClassName(),
-                            remoteResult.getErrorMessage())
-                    .withFailureType(remoteResult.getCause());
+                            remoteResult.getCause());
         } else {
             throw new CitrusRuntimeException(
                     "Unexpected test result state " + remoteResult.getTestName());
@@ -142,11 +143,11 @@ public class RemoteResult {
         this.duration = duration;
     }
 
-    public String getCause() {
+    public @Nullable Throwable getCause() {
         return cause;
     }
 
-    public void setCause(String cause) {
+    public void setCause(@Nullable Throwable cause) {
         this.cause = cause;
     }
 
