@@ -17,7 +17,6 @@
 package org.citrusframework.agent.util;
 
 import java.time.Duration;
-import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -40,7 +39,6 @@ import tools.jackson.databind.ValueDeserializer;
 import tools.jackson.databind.cfg.EnumFeature;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.module.SimpleModule;
-import tools.jackson.databind.module.SimpleSerializers;
 import tools.jackson.databind.node.ObjectNode;
 import tools.jackson.databind.ser.std.StdSerializer;
 
@@ -49,7 +47,7 @@ public final class JsonSupport {
     private static final ObjectMapper OBJECT_MAPPER;
 
     static {
-        JsonMapper.Builder builder = JsonMapper.builder()
+        OBJECT_MAPPER = JsonMapper.builder()
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .enable(EnumFeature.READ_ENUMS_USING_TO_STRING)
                 .enable(EnumFeature.WRITE_ENUMS_USING_TO_STRING)
@@ -57,12 +55,8 @@ public final class JsonSupport {
                 .disable(StreamReadFeature.AUTO_CLOSE_SOURCE)
                 .addModule(new AgentModule())
                 .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_EMPTY))
-                .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_EMPTY));
-
-        builder.serializerFactory()
-                .withAdditionalSerializers(new SimpleSerializers(List.of(new DurationSerializer(), new ThrowableSerializer())));
-
-        OBJECT_MAPPER = builder.build();
+                .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_EMPTY))
+                .build();
     }
 
     private JsonSupport() {
@@ -117,6 +111,9 @@ public final class JsonSupport {
     private static class AgentModule extends SimpleModule {
 
         public AgentModule() {
+            addSerializer(new DurationSerializer());
+            addSerializer(new ThrowableSerializer());
+
             addDeserializer(TestSource.class, new ValueDeserializer<>() {
                 @Override
                 public TestSource deserialize(JsonParser parser, DeserializationContext deserializationContext) {
