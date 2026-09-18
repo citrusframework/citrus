@@ -39,7 +39,7 @@ public class RemoteResult {
     private String className;
 
     /** Duration of the test run */
-    private Duration duration;
+    private Long duration;
 
     /** Failure cause */
     private String cause;
@@ -66,7 +66,8 @@ public class RemoteResult {
         remoteResult.setClassName(testResult.getClassName());
         remoteResult.setDuration(Optional.of(testResult)
                 .map(TestResult::getDuration)
-                .orElse(Duration.ZERO));
+                .orElse(Duration.ZERO)
+                .toMillis());
         remoteResult.setSuccess(testResult.isSuccess());
         remoteResult.setFailed(testResult.isFailed());
         remoteResult.setSkipped(testResult.isSkipped());
@@ -107,7 +108,7 @@ public class RemoteResult {
             throw new CitrusRuntimeException(
                     "Unexpected test result state " + remoteResult.getTestName());
         }
-        return result.withDuration(remoteResult.getDuration());
+        return result.withDuration(Duration.ofMillis(remoteResult.getDuration()));
     }
 
     public String getResult() {
@@ -134,11 +135,11 @@ public class RemoteResult {
         this.className = className;
     }
 
-    public Duration getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(Duration duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
