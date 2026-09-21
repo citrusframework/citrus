@@ -65,6 +65,11 @@ actions {
       .service("kafka")
       .autoRemove(true))
 
+    $(camel().infra().run()
+      .service("aws")
+      .implementation("sqs")
+      .fixedPort(true))
+
     $(iterate()
       .condition("i < 10")
       .actions(
