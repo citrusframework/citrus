@@ -16,6 +16,9 @@
 
 package org.citrusframework.playwright.actions;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+
 import com.microsoft.playwright.Dialog;
 
 import org.citrusframework.context.TestContext;
@@ -34,7 +37,8 @@ public class DialogAction extends AbstractPlaywrightAction {
 
     public enum Command {
         ACCEPT,
-        DISMISS
+        DISMISS,
+        VERIFY_CLOSED
     }
 
     private final Command command;
@@ -42,6 +46,7 @@ public class DialogAction extends AbstractPlaywrightAction {
     private final String expectedMessage;
     private final String expectedType;
     private final String triggerScript;
+    private final AtomicBoolean closed = new AtomicBoolean();
 
     public DialogAction(Builder builder) {
         super("dialog", builder);
@@ -54,9 +59,48 @@ public class DialogAction extends AbstractPlaywrightAction {
 
     @Override
     protected void execute(PlaywrightBrowser browser, TestContext context) {
+        if (command == Command.VERIFY_CLOSED) {
+            executeVerifyClosed(browser, context);
+            return;
+        }
+
         browser.getCurrentPage().onceDialog(dialog -> handleDialog(dialog, context));
         if (triggerScript != null) {
             browser.getCurrentPage().evaluate(LocatorResolver.resolve(triggerScript, context));
+        }
+    }
+
+    /**
+     * Observes dialog close events on the action thread. The listener is always removed again so
+     * it cannot leak into a following action.
+     *
+     * @param browser resolved browser endpoint
+     * @param context test context used for variable substitution
+     */
+    private void executeVerifyClosed(PlaywrightBrowser browser, TestContext context) {
+        closed.set(false);
+        Consumer<Dialog> listener = dialog -> closed.set(true);
+        browser.getCurrentPage().onDialogClosed(listener);
+
+        try {
+            if (triggerScript != null) {
+                browser.getCurrentPage().evaluate(LocatorResolver.resolve(triggerScript, context));
+            }
+        } finally {
+            if (triggerScript != null) {
+                browser.getCurrentPage().offDialogClosed(listener);
+            }
+        }
+    }
+
+    /**
+     * Asserts that a dialog close event was observed while this action was active.
+     *
+     * @throws ValidationException when no dialog was closed
+     */
+    public void assertClosed() {
+        if (!closed.get()) {
+            throw new ValidationException("Expected a Playwright dialog to be closed but none was observed");
         }
     }
 
@@ -95,6 +139,16 @@ public class DialogAction extends AbstractPlaywrightAction {
          *
          * @return this builder
          */
+        /**
+         * Verifies that a dialog was accepted, dismissed or closed by the user.
+         *
+         * @return this builder
+         */
+        public Builder verifyClosed() {
+            this.command = Command.VERIFY_CLOSED;
+            return this;
+        }
+
         public Builder accept() {
             this.command = Command.ACCEPT;
             return this;
