@@ -773,6 +773,9 @@ public class PlaywrightBrowser extends AbstractEndpoint implements Producer, Shu
         if (StringUtils.hasText(config.getBaseUrl()) && options.baseURL == null) {
             options.setBaseURL(config.getBaseUrl());
         }
+        if (!config.getHttpCredentials().isEmpty() && options.httpCredentials == null) {
+            options.setHttpCredentials(config.getHttpCredentials());
+        }
         return options;
     }
 
