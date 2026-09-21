@@ -18,6 +18,8 @@ package org.citrusframework.playwright.actions;
 
 import static org.testng.Assert.expectThrows;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -170,5 +172,23 @@ class VerifyActionTest {
     void shouldFailFastWhenLocatorMissing() {
         expectThrows(CitrusRuntimeException.class,
                 () -> new VerifyAction.Builder().visible().build());
+    }
+
+    @Test
+    void shouldRegisterAriaSnapshotMatchesCheck() {
+        VerifyAction action = new VerifyAction.Builder().locator("#panel")
+                .ariaSnapshotMatches("- heading \"Title\"").build();
+
+        assertEquals(VerifyAction.Check.ARIA_SNAPSHOT_MATCHES, action.getCheck());
+    }
+
+    @Test
+    void shouldRedactSecretsInAriaSnapshotMismatch() {
+        ValidationException exception = VerifyAction.ariaSnapshotFailure(
+                new AssertionError("expected token=s3cret-value"),
+                text -> text.replace("s3cret-value", "****"));
+
+        assertTrue(exception.getMessage().contains("****"), exception.getMessage());
+        assertFalse(exception.getMessage().contains("s3cret-value"), exception.getMessage());
     }
 }

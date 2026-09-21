@@ -16,10 +16,13 @@
 
 package org.citrusframework.playwright.actions;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -84,6 +87,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
         BOUNDING_BOX,
         BOUNDS,
         ARIA_SNAPSHOT_CONTAINS,
+        ARIA_SNAPSHOT_MATCHES,
         URL,
         TITLE,
         PAGE_COUNT,
@@ -217,6 +221,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
             case BOUNDS -> assertBounds(browser, locatorReader.boundingBox(element));
             case ARIA_SNAPSHOT_CONTAINS -> assertContains(browser, "locator ARIA snapshot", resolve(expected, context),
                     locatorReader.ariaSnapshot(element));
+            case ARIA_SNAPSHOT_MATCHES -> assertAriaSnapshotMatches(element, resolve(expected, context), locatorReader);
             case URL -> assertEquals(browser, "page URL", resolve(expected, context), page.url());
             case TITLE -> assertEquals(browser, "page title", resolve(expected, context), page.title());
             case PAGE_COUNT -> assertEquals(browser, "page count", count, pageReader.pageCount(browser));
@@ -265,6 +270,37 @@ public class VerifyAction extends AbstractPlaywrightAction {
         if (!Objects.equals(expectedValue, actualValue)) {
             fail(browser, label, expectedValue, actualValue, secretName);
         }
+    }
+
+    /**
+     * Matches the locator against an expected ARIA snapshot using Playwright's own matcher.
+     *
+     * <p>The driver raises an {@link AssertionError} carrying a diff of the actual snapshot,
+     * which can contain page content. It is converted into a Citrus {@link ValidationException}
+     * with the configured secret patterns redacted first.</p>
+     *
+     * @param element resolved locator
+     * @param expectedSnapshot expected ARIA snapshot
+     * @param locatorReader reader supplying the configured secret redaction
+     */
+    private void assertAriaSnapshotMatches(Locator element, String expectedSnapshot, LocatorStateReader locatorReader) {
+        try {
+            assertThat(element).matchesAriaSnapshot(expectedSnapshot);
+        } catch (AssertionError e) {
+            throw ariaSnapshotFailure(e, locatorReader::sanitizeText);
+        }
+    }
+
+    /**
+     * Converts a driver ARIA snapshot assertion failure into a redacted Citrus validation error.
+     *
+     * @param failure assertion error raised by the driver
+     * @param redactor redaction function applied to the message
+     * @return validation exception carrying the redacted message
+     */
+    static ValidationException ariaSnapshotFailure(AssertionError failure, UnaryOperator<String> redactor) {
+        String message = failure.getMessage() == null ? "ARIA snapshot did not match" : failure.getMessage();
+        return new ValidationException(redactor.apply(message));
     }
 
     private void assertContains(PlaywrightBrowser browser, String label, String expectedValue, String actualValue) {
@@ -734,6 +770,20 @@ public class VerifyAction extends AbstractPlaywrightAction {
          */
         public Builder ariaSnapshotContains(String expected) {
             this.check = Check.ARIA_SNAPSHOT_CONTAINS;
+            this.expected = expected;
+            return this;
+        }
+
+        /**
+         * Verifies the locator against an expected ARIA snapshot using Playwright's own
+         * snapshot matcher. Unlike {@link #ariaSnapshotContains(String)} this performs a
+         * structural match rather than a substring comparison.
+         *
+         * @param expected expected ARIA snapshot in Playwright's YAML-like syntax
+         * @return this builder
+         */
+        public Builder ariaSnapshotMatches(String expected) {
+            this.check = Check.ARIA_SNAPSHOT_MATCHES;
             this.expected = expected;
             return this;
         }
