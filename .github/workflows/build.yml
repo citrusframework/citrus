@@ -49,6 +49,13 @@ jobs:
           distribution: 'temurin'
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          # gitflow-incremental-builder diffs this branch against origin/main,
+          # so it needs real history rather than the default shallow clone.
+          fetch-depth: 0
+      - name: Fetch main for incremental build
+        if: github.event_name == 'pull_request'
+        run: git fetch --no-tags origin main:refs/remotes/origin/main
       - name: Cache Maven cache
         uses: actions/cache@v5
         with:
@@ -75,5 +82,12 @@ jobs:
           
           jbang --version
           
-          ./mvnw --no-transfer-progress install -Pplaywright-runtimes
+          # On a pull request, build only the modules this branch touched plus
+          # everything downstream of them. Pushes to main always build in full.
+          ./mvnw --no-transfer-progress install -P${MAVEN_PROFILES}
+        env:
+          MAVEN_PROFILES: ${{ github.event_name == 'pull_request' && 'playwright-runtimes,gib' || 'playwright-runtimes' }}
 
+      - name: Show modules selected by the incremental build
+        if: always() && github.event_name == 'pull_request'
+        run: cat target/gib-impacted-modules.log || echo "no impacted-modules log (full build or nothing selected)"
