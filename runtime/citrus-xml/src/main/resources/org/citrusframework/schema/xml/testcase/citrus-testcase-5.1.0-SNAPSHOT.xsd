@@ -3245,6 +3245,14 @@
             <xs:attribute name="failed" type="xs:long"/>
           </xs:complexType>
         </xs:element>
+        <xs:element name="reset-route-stats">
+          <xs:annotation>
+            <xs:documentation>Reset Camel route statistics</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="route" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="actor" type="xs:string"/>
