@@ -523,4 +523,90 @@ class PlaywrightBrowserIT {
             return false;
         }
     }
+    @Test
+    void shouldDriveUpliftCapabilitiesAgainstLocalFixture() throws Exception {
+        URL fixture = getClass().getResource("/fixtures/uplift.html");
+        Path screenshot = Path.of("target", "playwright-uplift-it.webp");
+        Path har = Path.of("target", "playwright", "uplift-it.har");
+        Path video = Path.of("target", "playwright", "uplift-it.webm");
+        Files.deleteIfExists(screenshot);
+        Files.deleteIfExists(har);
+
+        PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
+                .browser()
+                .browserType("chromium")
+                .headless(true)
+                .defaultTimeout(5000)
+                .build();
+
+        TestContext context = new TestContext();
+        try {
+            playwright().browser(browser).start().build().execute(context);
+
+            // HAR and screencast recording bracket the run.
+            playwright().browser(browser).tracing().startHar(har.toString()).build().execute(context);
+            playwright().browser(browser).screencast().start(video.toString()).build().execute(context);
+
+            playwright().browser(browser).open().url(fixture.toExternalForm()).build().execute(context);
+
+            // G5 - a plain ".action" locator is ambiguous; visible() disambiguates it.
+            playwright().browser(browser).click()
+                    .locator(org.citrusframework.playwright.model.LocatorSpec.css(".action").visible())
+                    .build().execute(context);
+            playwright().browser(browser).verify().locator("#saved").text("visible-save-clicked")
+                    .build().execute(context);
+
+            // G2 - acting without scrolling the element into view.
+            playwright().browser(browser).click()
+                    .locator(org.citrusframework.playwright.model.LocatorSpec.css(".action").visible())
+                    .scroll("none").build().execute(context);
+
+            // G3 - wait until the grid has grown, using a predicate on the element.
+            playwright().browser(browser).waitFor().locator("#grid")
+                    .function("el => el.children.length >= 5").build().execute(context);
+
+            // G4 - reach into the nested frame without naming the iframe.
+            playwright().browser(browser).frame().click("#framed").build().execute(context);
+            playwright().browser(browser).frame().verifyText("#framed-result", "framed-clicked")
+                    .build().execute(context);
+
+            // G12 - synthetic drag and drop of clipboard data onto the upload zone.
+            playwright().browser(browser).drop().locator("#dropzone")
+                    .data("text/plain", "dropped-payload").build().execute(context);
+            playwright().browser(browser).verify().locator("#dropped").text("dropped-payload")
+                    .build().execute(context);
+
+            // G1 - WebP screenshot inferred from the file extension.
+            playwright().browser(browser).screenshot().path(screenshot.toString()).quality(60)
+                    .build().execute(context);
+
+            playwright().browser(browser).screencast().stop().build().execute(context);
+            playwright().browser(browser).tracing().stopHar().build().execute(context);
+
+            assertTrue(Files.exists(screenshot), "expected a WebP screenshot at " + screenshot);
+            assertTrue(Files.size(screenshot) > 0, "expected a non-empty WebP screenshot");
+            assertTrue(isWebp(screenshot), "expected WebP magic bytes in " + screenshot);
+            assertTrue(Files.exists(har), "expected a HAR recording at " + har);
+        } finally {
+            playwright().browser(browser).stop().build().execute(context);
+        }
+    }
+
+    /**
+     * Checks the RIFF/WEBP container signature so the assertion proves the format, not just that
+     * some bytes were written.
+     *
+     * @param file screenshot file to inspect
+     * @return true when the file carries WebP magic bytes
+     * @throws IOException when the file cannot be read
+     */
+    private static boolean isWebp(Path file) throws IOException {
+        byte[] header = Files.readAllBytes(file);
+        if (header.length < 12) {
+            return false;
+        }
+        return header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F'
+                && header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P';
+    }
+
 }

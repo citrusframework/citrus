@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Citrus Playwright Uplift Fixture</title>
+</head>
+<body>
+<!-- Two elements share a class; only the second is visible, so a plain locator is ambiguous. -->
+<button class="action" style="display:none" id="hidden-save">Save</button>
+<button class="action" id="visible-save">Save</button>
+<div id="saved" hidden></div>
+
+<!-- Drop target reporting what was dropped on it. -->
+<div id="dropzone" style="width:200px;height:80px;border:1px solid #333">Drop here</div>
+<div id="dropped"></div>
+
+<!-- Nested frame holding a button, reachable without naming the iframe. -->
+<iframe id="inner" srcdoc="&lt;button id=&quot;framed&quot;&gt;Framed&lt;/button&gt;&lt;div id=&quot;framed-result&quot;&gt;&lt;/div&gt;&lt;script&gt;document.getElementById('framed').addEventListener('click',()=&gt;{document.getElementById('framed-result').textContent='framed-clicked';});&lt;/script&gt;"></iframe>
+
+<!-- Grid that grows over time, for predicate based waiting. -->
+<div id="grid"></div>
+
+<script>
+    document.getElementById('visible-save').addEventListener('click', () => {
+        const saved = document.getElementById('saved');
+        saved.hidden = false;
+        saved.textContent = 'visible-save-clicked';
+    });
+
+    const dropzone = document.getElementById('dropzone');
+    dropzone.addEventListener('dragover', event => event.preventDefault());
+    dropzone.addEventListener('drop', event => {
+        event.preventDefault();
+        const text = event.dataTransfer.getData('text/plain');
+        const files = Array.from(event.dataTransfer.files || []).map(file => file.name);
+        document.getElementById('dropped').textContent = files.length ? files.join(',') : text;
+    });
+
+    const grid = document.getElementById('grid');
+    let rows = 0;
+    const timer = setInterval(() => {
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.textContent = 'row ' + rows;
+        grid.appendChild(row);
+        if (++rows >= 5) {
+            clearInterval(timer);
+        }
+    }, 50);
+</script>
+</body>
+</html>
