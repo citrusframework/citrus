@@ -157,6 +157,11 @@ public class Playwright implements TestActionBuilder<TestAction>, ReferenceResol
     }
 
     @XmlElement
+    public void setDrop(Drop builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
     public void setScreenshot(Screenshot builder) {
         this.builder = builder;
     }

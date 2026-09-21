@@ -301,6 +301,17 @@ public class PlaywrightActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     /**
+     * Simulates an external drag and drop of files or clipboard data onto an element.
+     *
+     * @return drop action builder
+     */
+    public DropAction.Builder drop() {
+        DropAction.Builder builder = new DropAction.Builder().browser(browser);
+        register(builder);
+        return builder;
+    }
+
+    /**
      * Captures a screenshot of the current page.
      *
      * @return screenshot action builder
