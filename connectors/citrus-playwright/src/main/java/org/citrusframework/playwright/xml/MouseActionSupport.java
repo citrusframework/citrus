@@ -16,6 +16,7 @@
 
 package org.citrusframework.playwright.xml;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import org.citrusframework.TestActor;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
@@ -36,6 +37,11 @@ abstract class MouseActionSupport<B extends MouseActionSupport<B>> extends Abstr
     @XmlElement
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
+    }
+
+    @XmlAttribute
+    public void setScroll(String scroll) {
+        delegate.scroll(scroll);
     }
 
     @Override

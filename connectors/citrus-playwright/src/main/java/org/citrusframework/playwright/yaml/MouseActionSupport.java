@@ -38,6 +38,11 @@ abstract class MouseActionSupport<B extends MouseActionSupport<B>> extends Abstr
         delegate.locator(element.toLocatorSpec());
     }
 
+    @SchemaProperty
+    public void setScroll(String scroll) {
+        delegate.scroll(scroll);
+    }
+
     @Override
     public B description(String description) {
         delegate.description(description);
