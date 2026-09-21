@@ -1474,5 +1474,18 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
             assertThat(fixture.getMessageType()).isEqualTo(xhtmlMessageType);
         }
+
+        @Test(dataProvider = "jsonPayload")
+        void shouldNotOverrideExplicitMessageType(String jsonPayload) {
+            doReturn(jsonPayload).when(messageMock).getPayload(String.class);
+
+            setField(fixture, "messageType", PLAINTEXT.name());
+            setField(fixture, "isExplicitMessageType", true);
+            assertThat(fixture.getMessageType()).isEqualTo(PLAINTEXT.name());
+
+            fixture.validateMessage(messageMock, contextMock);
+
+            assertThat(fixture.getMessageType()).isEqualTo(PLAINTEXT.name());
+        }
     }
 }
