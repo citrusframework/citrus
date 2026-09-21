@@ -154,6 +154,13 @@
     <project.docs.version>${project.version}</project.docs.version>
     <java.version>17</java.version>
 
+    <!--
+      gitflow-incremental-builder (registered in .mvn/extensions.xml) is off
+      unless the `gib` profile activates it. Kept here rather than only in the
+      profile so that a build without -Pgib always covers the full reactor.
+    -->
+    <gib.disable>true</gib.disable>
+
     <maven.version>3.9.16</maven.version>
     <maven.compiler.version>3.14.1</maven.compiler.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
@@ -2135,5 +2142,35 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <!--
+        Incremental build: restrict the reactor to the modules changed on this
+        branch plus everything downstream of them. Used by the pull request CI
+        job (`./mvnw ... -Pgib`); pushes to main, release builds and local
+        builds keep building the full reactor.
+      -->
+      <id>gib</id>
+      <properties>
+        <gib.disable>false</gib.disable>
+        <gib.referenceBranch>refs/remotes/origin/main</gib.referenceBranch>
+        <gib.fetchReferenceBranch>false</gib.fetchReferenceBranch>
+        <gib.compareToMergeBase>true</gib.compareToMergeBase>
+        <!-- Downstream is what keeps this correct: a changed module always drags its dependents in. -->
+        <gib.buildDownstream>true</gib.buildDownstream>
+        <!-- Upstream modules are rebuilt (not taken from a possibly stale cached SNAPSHOT) but not re-tested. -->
+        <gib.buildUpstream>true</gib.buildUpstream>
+        <gib.buildUpstreamMode>changed</gib.buildUpstreamMode>
+        <gib.skipTestsForUpstreamModules>true</gib.skipTestsForUpstreamModules>
+        <!--
+          Documentation lives at the repository root, so without this every doc
+          edit maps onto the root module and drags the whole reactor in.
+        -->
+        <gib.excludePathsMatching>^src/manual/.*|.*\.adoc$|.*\.md$</gib.excludePathsMatching>
+        <gib.buildAllIfNoChanges>false</gib.buildAllIfNoChanges>
+        <gib.logImpactedTo>target/gib-impacted-modules.log</gib.logImpactedTo>
+      </properties>
+    </profile>
+
   </profiles>
+
 </project>
