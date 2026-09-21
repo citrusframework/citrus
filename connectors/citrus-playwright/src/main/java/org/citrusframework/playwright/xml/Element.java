@@ -57,6 +57,9 @@ public class Element {
     @XmlAttribute
     private Boolean last;
 
+    @XmlAttribute
+    private Boolean visible;
+
     public void setCss(String css) {
         this.css = css;
     }
@@ -129,6 +132,14 @@ public class Element {
         return last;
     }
 
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
     /**
      * Converts the element properties into a {@link LocatorSpec}.
      * @return locator specification derived from this element.
@@ -152,6 +163,9 @@ public class Element {
             throw new CitrusRuntimeException("Missing Playwright locator selector - please provide one of css, xpath, text, role, or test-id");
         }
 
+        if (Boolean.TRUE.equals(visible)) {
+            spec.visible();
+        }
         if (nth != null) {
             spec.nth(nth);
         }

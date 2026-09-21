@@ -39,6 +39,7 @@ public class LocatorSpec {
     private Integer nth;
     private boolean first;
     private boolean last;
+    private boolean visible;
     private Function<Page, Locator> rawLocator;
 
     private LocatorSpec(Type type, String selector) {
@@ -96,6 +97,18 @@ public class LocatorSpec {
         return this;
     }
 
+    /**
+     * Narrows the locator to visible elements only. Unlike {@link #first()}, {@link #last()} and
+     * {@link #nth(int)} this is a filter rather than a positional selection, so it combines with
+     * all of them and is applied first.
+     *
+     * @return this spec for chaining
+     */
+    public LocatorSpec visible() {
+        this.visible = true;
+        return this;
+    }
+
     public Type getType() {
         return type;
     }
@@ -118,6 +131,10 @@ public class LocatorSpec {
 
     public boolean isLast() {
         return last;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 
     public Function<Page, Locator> getRawLocator() {

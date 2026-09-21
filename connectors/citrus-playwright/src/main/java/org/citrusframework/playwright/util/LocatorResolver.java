@@ -61,24 +61,27 @@ public final class LocatorResolver {
     }
 
     /**
-     * Applies the positional modifiers declared on the locator spec. Shared by the page and frame
-     * resolution paths so both stay in sync.
+     * Applies the modifiers declared on the locator spec. Shared by the page and frame resolution
+     * paths so both stay in sync. The visibility filter narrows the match set first, so any
+     * positional modifier then selects within the visible elements only.
      *
      * @param locator resolved base locator
      * @param spec locator spec holding the modifiers
      * @return narrowed locator
      */
     private static Locator applyModifiers(Locator locator, LocatorSpec spec) {
+        Locator resolved = spec.isVisible() ? locator.visible() : locator;
+
         if (spec.getNth() != null) {
-            return locator.nth(spec.getNth());
+            return resolved.nth(spec.getNth());
         }
         if (spec.isFirst()) {
-            return locator.first();
+            return resolved.first();
         }
         if (spec.isLast()) {
-            return locator.last();
+            return resolved.last();
         }
-        return locator;
+        return resolved;
     }
 
     private static AriaRole resolveRole(String role, TestContext context) {
