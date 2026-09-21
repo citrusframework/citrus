@@ -16,6 +16,8 @@
 
 package org.citrusframework.playwright.actions;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.expectThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -32,6 +34,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.options.ScrollMode;
+import org.mockito.ArgumentCaptor;
 
 class MouseActionTest {
 
@@ -63,6 +67,33 @@ class MouseActionTest {
         new MouseAction.Builder(Command.CLICK).locator("#save").build().execute(context);
 
         verify(element).click();
+    }
+
+    @Test
+    void shouldClickWithoutScrollingIntoView() {
+        Locator element = browser.page().locator("#save");
+
+        new MouseAction.Builder(Command.CLICK).locator("#save").scroll("none").build().execute(context);
+
+        ArgumentCaptor<Locator.ClickOptions> options = ArgumentCaptor.forClass(Locator.ClickOptions.class);
+        verify(element).click(options.capture());
+        assertEquals(ScrollMode.NONE, options.getValue().scroll);
+    }
+
+    @Test
+    void shouldRejectUnsupportedScrollMode() {
+        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+                () -> new MouseAction.Builder(Command.CLICK).locator("#save").scroll("maybe").build());
+
+        assertTrue(exception.getMessage().contains("maybe"), exception.getMessage());
+    }
+
+    @Test
+    void shouldRejectScrollOnCommandThatCannotHonourIt() {
+        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+                () -> new MouseAction.Builder(Command.FOCUS).locator("#save").scroll("none").build());
+
+        assertTrue(exception.getMessage().contains("FOCUS"), exception.getMessage());
     }
 
     @Test

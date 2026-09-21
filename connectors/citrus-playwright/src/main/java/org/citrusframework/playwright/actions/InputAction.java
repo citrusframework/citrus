@@ -17,14 +17,18 @@
 package org.citrusframework.playwright.actions;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.options.ScrollMode;
 
 import java.nio.file.Path;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.util.LocatorResolver;
+import org.citrusframework.playwright.util.ScrollModes;
 import org.citrusframework.util.StringUtils;
 
 public class InputAction extends AbstractPlaywrightAction {
@@ -43,6 +47,7 @@ public class InputAction extends AbstractPlaywrightAction {
     private final org.citrusframework.playwright.model.LocatorSpec locator;
     private final String value;
     private final List<String> values;
+    private final ScrollMode scroll;
 
     public InputAction(Builder builder) {
         super(builder.command.name().toLowerCase(), builder);
@@ -50,6 +55,7 @@ public class InputAction extends AbstractPlaywrightAction {
         this.locator = builder.locator;
         this.value = builder.value;
         this.values = builder.values;
+        this.scroll = builder.scroll;
     }
 
     @Override
@@ -59,8 +65,20 @@ public class InputAction extends AbstractPlaywrightAction {
             case FILL -> element.fill(LocatorResolver.resolve(value, context));
             case CLEAR -> element.clear();
             case PRESS -> element.press(LocatorResolver.resolve(value, context));
-            case CHECK -> element.check();
-            case UNCHECK -> element.uncheck();
+            case CHECK -> {
+                if (scroll == ScrollMode.NONE) {
+                    element.check(new Locator.CheckOptions().setScroll(scroll));
+                } else {
+                    element.check();
+                }
+            }
+            case UNCHECK -> {
+                if (scroll == ScrollMode.NONE) {
+                    element.uncheck(new Locator.UncheckOptions().setScroll(scroll));
+                } else {
+                    element.uncheck();
+                }
+            }
             case SELECT -> element.selectOption(resolveValues(context));
             case UPLOAD -> element.setInputFiles(Path.of(LocatorResolver.resolve(value, context)));
         }
@@ -84,9 +102,12 @@ public class InputAction extends AbstractPlaywrightAction {
     }
 
     public static class Builder extends ElementActionBuilder<InputAction, Builder> {
+        private static final Set<Command> SCROLL_AWARE = EnumSet.of(Command.CHECK, Command.UNCHECK);
+
         private final Command command;
         private String value;
         private List<String> values;
+        private ScrollMode scroll = ScrollMode.AUTO;
 
         public Builder(Command command) {
             this.command = command;
@@ -110,9 +131,25 @@ public class InputAction extends AbstractPlaywrightAction {
             return this;
         }
 
+        /**
+         * Controls whether Playwright scrolls the element into view before acting on it.
+         * Only the check and uncheck commands support this option.
+         *
+         * @param mode scroll mode name, {@code auto} or {@code none}
+         * @return this builder
+         */
+        public Builder scroll(String mode) {
+            this.scroll = ScrollModes.parse(mode);
+            return this;
+        }
+
         @Override
         public InputAction build() {
             requireLocator();
+            if (scroll != ScrollMode.AUTO && !SCROLL_AWARE.contains(command)) {
+                throw new CitrusRuntimeException(
+                        "Playwright command %s does not support the scroll option".formatted(command));
+            }
             if ((command == Command.FILL || command == Command.PRESS || command == Command.UPLOAD)
                     && !StringUtils.hasText(value)) {
                 throw new CitrusRuntimeException("Missing Playwright input value - call value(...), key(...), or file(...) before building action");

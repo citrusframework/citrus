@@ -42,6 +42,11 @@ abstract class InputActionSupport<B extends InputActionSupport<B>> extends Abstr
     }
 
     @XmlAttribute
+    public void setScroll(String scroll) {
+        delegate.scroll(scroll);
+    }
+
+    @XmlAttribute
     public void setValue(String value) {
         delegate.value(value);
     }
