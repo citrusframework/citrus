@@ -157,6 +157,11 @@ public class Playwright implements TestActionBuilder<PlaywrightAction>, Referenc
     }
 
     @SchemaProperty
+    public void setCredentials(Credentials builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty
     public void setDrop(Drop builder) {
         this.builder = builder;
     }
