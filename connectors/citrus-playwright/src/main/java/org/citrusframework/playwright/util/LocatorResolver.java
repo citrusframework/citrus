@@ -43,16 +43,7 @@ public final class LocatorResolver {
             case RAW -> spec.getRawLocator().apply(page);
         };
 
-        if (spec.getNth() != null) {
-            return locator.nth(spec.getNth());
-        }
-        if (spec.isFirst()) {
-            return locator.first();
-        }
-        if (spec.isLast()) {
-            return locator.last();
-        }
-        return locator;
+        return applyModifiers(locator, spec);
     }
 
     public static Locator resolve(FrameLocator frame, LocatorSpec spec, TestContext context) {
@@ -66,6 +57,18 @@ public final class LocatorResolver {
             case RAW -> throw new CitrusRuntimeException("Raw page locators are not supported inside Playwright frame actions");
         };
 
+        return applyModifiers(locator, spec);
+    }
+
+    /**
+     * Applies the positional modifiers declared on the locator spec. Shared by the page and frame
+     * resolution paths so both stay in sync.
+     *
+     * @param locator resolved base locator
+     * @param spec locator spec holding the modifiers
+     * @return narrowed locator
+     */
+    private static Locator applyModifiers(Locator locator, LocatorSpec spec) {
         if (spec.getNth() != null) {
             return locator.nth(spec.getNth());
         }
