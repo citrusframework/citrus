@@ -136,4 +136,27 @@ class DialogActionTest {
                 () -> captor.getValue().accept(dialog));
         assertTrue(exception.getMessage().contains("Confirm?"));
     }
+
+    @Test
+    void shouldVerifyDialogWasClosed() {
+        new DialogAction.Builder().verifyClosed().build().execute(context);
+
+        verify(browser.page()).onDialogClosed(any());
+    }
+
+    @Test
+    void shouldDeregisterClosedListenerAfterAction() {
+        new DialogAction.Builder().verifyClosed().triggerScript("alert(1)").build().execute(context);
+
+        verify(browser.page()).offDialogClosed(any());
+    }
+
+    @Test
+    void shouldFailWhenNoDialogWasClosed() {
+        DialogAction action = new DialogAction.Builder().verifyClosed().build();
+        action.execute(context);
+
+        ValidationException exception = expectThrows(ValidationException.class, action::assertClosed);
+        assertTrue(exception.getMessage().toLowerCase().contains("dialog"), exception.getMessage());
+    }
 }
