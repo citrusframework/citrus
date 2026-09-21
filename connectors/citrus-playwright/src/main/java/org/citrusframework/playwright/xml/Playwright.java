@@ -157,6 +157,11 @@ public class Playwright implements TestActionBuilder<TestAction>, ReferenceResol
     }
 
     @XmlElement
+    public void setScreencast(Screencast builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
     public void setCredentials(Credentials builder) {
         this.builder = builder;
     }

@@ -301,6 +301,17 @@ public class PlaywrightActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     /**
+     * Records the current page as a video and annotates the recording.
+     *
+     * @return screencast action builder
+     */
+    public ScreencastAction.Builder screencast() {
+        ScreencastAction.Builder builder = new ScreencastAction.Builder().browser(browser);
+        register(builder);
+        return builder;
+    }
+
+    /**
      * Manages the WebAuthn virtual authenticator for passkey flows.
      *
      * @return credentials action builder
