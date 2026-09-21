@@ -301,6 +301,17 @@ public class PlaywrightActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     /**
+     * Manages the WebAuthn virtual authenticator for passkey flows.
+     *
+     * @return credentials action builder
+     */
+    public CredentialsAction.Builder credentials() {
+        CredentialsAction.Builder builder = new CredentialsAction.Builder().browser(browser);
+        register(builder);
+        return builder;
+    }
+
+    /**
      * Simulates an external drag and drop of files or clipboard data onto an element.
      *
      * @return drop action builder
