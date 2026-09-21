@@ -56,6 +56,7 @@ public class StorageAction extends AbstractPlaywrightAction {
     private final String value;
     private final String variable;
     private final String path;
+    private final Boolean opfs;
 
     public StorageAction(Builder builder) {
         super("storage", builder);
@@ -65,6 +66,7 @@ public class StorageAction extends AbstractPlaywrightAction {
         this.value = builder.value;
         this.variable = builder.variable;
         this.path = builder.path;
+        this.opfs = builder.opfs;
     }
 
     @Override
@@ -82,11 +84,21 @@ public class StorageAction extends AbstractPlaywrightAction {
             }
             case REMOVE -> storage(browser).removeItem(LocatorResolver.resolve(key, context));
             case CLEAR -> storage(browser).clear();
-            case SAVE_STATE -> browser.getCurrentContext()
-                    .storageState(new com.microsoft.playwright.BrowserContext.StorageStateOptions()
-                            .setPath(Path.of(LocatorResolver.resolve(path, context))));
+            case SAVE_STATE -> browser.getCurrentContext().storageState(storageStateOptions(context));
             case RESTORE_STATE -> browser.getCurrentContext().setStorageState(Path.of(LocatorResolver.resolve(path, context)));
         }
+    }
+
+    private com.microsoft.playwright.BrowserContext.StorageStateOptions storageStateOptions(TestContext context) {
+        com.microsoft.playwright.BrowserContext.StorageStateOptions options =
+                new com.microsoft.playwright.BrowserContext.StorageStateOptions()
+                        .setPath(Path.of(LocatorResolver.resolve(path, context)));
+
+        if (opfs != null) {
+            options.setOpfs(opfs);
+        }
+
+        return options;
     }
 
     private WebStorage storage(PlaywrightBrowser browser) {
@@ -103,6 +115,7 @@ public class StorageAction extends AbstractPlaywrightAction {
         private String value;
         private String variable;
         private String path;
+        private Boolean opfs;
 
         /**
          * Targets local storage.
@@ -207,6 +220,18 @@ public class StorageAction extends AbstractPlaywrightAction {
         public Builder restoreState(String path) {
             this.command = Command.RESTORE_STATE;
             this.path = path;
+            return this;
+        }
+
+        /**
+         * Includes the origin private file system in the saved storage state so it can be
+         * restored into a later browser context.
+         *
+         * @param opfs true to include the origin private file system
+         * @return this builder
+         */
+        public Builder opfs(boolean opfs) {
+            this.opfs = opfs;
             return this;
         }
 
