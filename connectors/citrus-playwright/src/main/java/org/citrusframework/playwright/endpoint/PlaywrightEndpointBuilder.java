@@ -24,6 +24,10 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
+import java.util.List;
+
+import com.microsoft.playwright.options.HttpCredentials;
+
 import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 
@@ -101,6 +105,18 @@ public class PlaywrightEndpointBuilder extends AbstractEndpointBuilder<Playwrigh
      */
     public PlaywrightEndpointBuilder baseUrl(String baseUrl) {
         endpoint.getEndpointConfiguration().setBaseUrl(baseUrl);
+        return this;
+    }
+
+    /**
+     * Sets origin scoped HTTP basic auth credentials. The first entry matching a request origin
+     * is used; an entry without an origin matches any request.
+     *
+     * @param httpCredentials credentials to apply to new browser contexts
+     * @return this builder
+     */
+    public PlaywrightEndpointBuilder httpCredentials(List<HttpCredentials> httpCredentials) {
+        endpoint.getEndpointConfiguration().setHttpCredentials(httpCredentials);
         return this;
     }
 

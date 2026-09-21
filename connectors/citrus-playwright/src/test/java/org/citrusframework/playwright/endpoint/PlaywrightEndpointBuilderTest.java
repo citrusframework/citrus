@@ -17,6 +17,7 @@
 package org.citrusframework.playwright.endpoint;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -28,6 +29,9 @@ import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.playwright.actions.PlaywrightActionBuilder;
 import org.citrusframework.playwright.endpoint.builder.PlaywrightEndpoints;
+import java.util.List;
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.options.HttpCredentials;
 import org.testng.annotations.Test;
 
 class PlaywrightEndpointBuilderTest {
@@ -78,5 +82,44 @@ class PlaywrightEndpointBuilderTest {
         assertEquals(actionBuilders.get("playwright").getClass(), PlaywrightActionBuilder.class);
         assertEquals(endpointBuilders.get("playwright").getClass(), PlaywrightEndpointBuilder.class);
         assertEquals(endpointComponents.get("playwright").getClass(), PlaywrightEndpointComponent.class);
+    }
+
+    @Test
+    void shouldConfigureOriginScopedHttpCredentials() {
+        HttpCredentials api = new HttpCredentials("api-user", "api-pass").setOrigin("https://api.example.com");
+        HttpCredentials fallback = new HttpCredentials("any-user", "any-pass");
+
+        PlaywrightBrowser browser = new PlaywrightEndpointBuilder()
+                .httpCredentials(List.of(api, fallback))
+                .build();
+
+        List<HttpCredentials> configured = browser.getEndpointConfiguration().getHttpCredentials();
+        assertEquals(2, configured.size());
+        assertEquals("https://api.example.com", configured.get(0).origin);
+        assertNull(configured.get(1).origin);
+    }
+
+    @Test
+    void shouldDefaultToNoHttpCredentials() {
+        PlaywrightBrowser browser = new PlaywrightEndpointBuilder().build();
+
+        assertTrue(browser.getEndpointConfiguration().getHttpCredentials().isEmpty());
+    }
+
+    @Test
+    void shouldLetExplicitContextOptionsOverrideConfiguredCredentials() {
+        HttpCredentials configured = new HttpCredentials("config-user", "config-pass");
+        HttpCredentials explicit = new HttpCredentials("explicit-user", "explicit-pass");
+
+        PlaywrightBrowser browser = new PlaywrightEndpointBuilder()
+                .httpCredentials(List.of(configured))
+                .build();
+        browser.getEndpointConfiguration().setContextOptions(
+                new Browser.NewContextOptions().setHttpCredentials(explicit));
+
+        Browser.NewContextOptions resolved =
+                browser.resolveContextOptions(browser.getEndpointConfiguration());
+
+        assertEquals(explicit, resolved.httpCredentials);
     }
 }

@@ -16,6 +16,10 @@
 
 package org.citrusframework.playwright.config.annotation;
 
+import java.util.Arrays;
+
+import com.microsoft.playwright.options.HttpCredentials;
+
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
@@ -59,6 +63,24 @@ public class PlaywrightBrowserConfigParser implements AnnotationConfigParser<Pla
         builder.defaultNavigationTimeout(annotation.defaultNavigationTimeout());
         builder.tracingEnabled(annotation.tracingEnabled());
 
+        if (annotation.httpCredentials().length > 0) {
+            builder.httpCredentials(Arrays.stream(annotation.httpCredentials())
+                    .map(credential -> toHttpCredentials(credential, context))
+                    .toList());
+        }
+
         return builder.build();
+    }
+
+    private static HttpCredentials toHttpCredentials(HttpCredential credential, TestContext context) {
+        HttpCredentials resolved = new HttpCredentials(
+                context.replaceDynamicContentInString(credential.username()),
+                context.replaceDynamicContentInString(credential.password()));
+
+        if (StringUtils.hasText(credential.origin())) {
+            resolved.setOrigin(context.replaceDynamicContentInString(credential.origin()));
+        }
+
+        return resolved;
     }
 }
