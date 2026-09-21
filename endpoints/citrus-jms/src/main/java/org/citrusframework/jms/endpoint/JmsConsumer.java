@@ -51,13 +51,13 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         jakarta.jms.Message receivedJmsMessage;
 
         if (endpointConfiguration.getDestination() != null) {
-            receivedJmsMessage = receive(endpointConfiguration.getDestination(), selector);
+            receivedJmsMessage = receive(endpointConfiguration.getDestination(), selector, timeout);
         } else if (StringUtils.hasText(endpointConfiguration.getDestinationName())) {
-            receivedJmsMessage = receive(context.replaceDynamicContentInString(endpointConfiguration.getDestinationName()), selector);
+            receivedJmsMessage = receive(context.replaceDynamicContentInString(endpointConfiguration.getDestinationName()), selector, timeout);
         } else if (endpointConfiguration.getJmsTemplate().getDefaultDestination() != null) {
-            receivedJmsMessage = receive(endpointConfiguration.getJmsTemplate().getDefaultDestination(), selector);
+            receivedJmsMessage = receive(endpointConfiguration.getJmsTemplate().getDefaultDestination(), selector, timeout);
         } else if (StringUtils.hasText(endpointConfiguration.getJmsTemplate().getDefaultDestinationName())) {
-            receivedJmsMessage = receive(context.replaceDynamicContentInString(endpointConfiguration.getJmsTemplate().getDefaultDestinationName()), selector);
+            receivedJmsMessage = receive(context.replaceDynamicContentInString(endpointConfiguration.getJmsTemplate().getDefaultDestinationName()), selector, timeout);
         } else {
             throw new CitrusRuntimeException("Unable to receive message - JMS destination not set");
         }
@@ -71,7 +71,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     /**
      * Receive message from destination name.
      */
-    private jakarta.jms.Message receive(String destinationName, String selector) {
+    private jakarta.jms.Message receive(String destinationName, String selector, long timeout) {
         jakarta.jms.Message receivedJmsMessage;
 
         if (logger.isDebugEnabled()) {
@@ -85,7 +85,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         }
 
         if (receivedJmsMessage == null) {
-            throw new MessageTimeoutException(endpointConfiguration.getTimeout(), getDestinationNameWithSelector(destinationName, selector));
+            throw new MessageTimeoutException(timeout, getDestinationNameWithSelector(destinationName, selector));
         }
 
         logger.debug("Received JMS message on destination: '{}'", getDestinationNameWithSelector(destinationName, selector));
@@ -96,7 +96,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     /**
      * Receive message from destination.
      */
-    private jakarta.jms.Message receive(Destination destination, String selector) {
+    private jakarta.jms.Message receive(Destination destination, String selector, long timeout) {
         jakarta.jms.Message receivedJmsMessage;
 
         if (logger.isDebugEnabled()) {
@@ -110,7 +110,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         }
 
         if (receivedJmsMessage == null) {
-            throw new MessageTimeoutException(endpointConfiguration.getTimeout(), getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector));
+            throw new MessageTimeoutException(timeout, getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector));
         }
 
         logger.debug("Received JMS message on destination: '{}'", getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector));
