@@ -132,7 +132,47 @@ Locators accept CSS selectors by default and richer variants via locator specs:
 $(playwright().click().locator(LocatorSpec.text("Save")));
 $(playwright().click().locator(LocatorSpec.role("button").name("Submit")));
 $(playwright().click().locator(LocatorSpec.testId("submit-button").last()));
+$(playwright().click().locator(LocatorSpec.css("button.action").visible()));
 ----
+
+`visible()` narrows a locator to visible elements only. It is the recommended replacement for the
+`:visible` CSS pseudo-class. Unlike `first()`, `last()` and `nth(...)` it is a *filter* rather
+than a positional selection, so it combines with them and is applied first — `.visible().nth(1)`
+selects the second *visible* match.
+
+Pointer actions can opt out of Playwright's automatic scroll-into-view:
+
+[source,java]
+----
+$(playwright().click().locator("#save").scroll("none"));
+$(playwright().check().locator("#agree").scroll("none"));
+----
+
+`scroll` accepts `auto` (the default) and `none`, and is supported by `click`, `doubleClick`,
+`rightClick`, `hover`, `tap`, `check` and `uncheck`. Setting it on any other command fails at
+build time, because the underlying Playwright option does not exist for them.
+
+Waiting can also be driven by a predicate evaluated against the matched element:
+
+[source,java]
+----
+$(playwright().waitFor().locator("#grid").function("el => el.children.length > 10"));
+----
+
+[[playwright-frames]]
+== Frames
+
+A frame selector targets one iframe. Omitting it searches every frame in the page subtree, which
+avoids chaining through nested iframes:
+
+[source,java]
+----
+$(playwright().frame().frame("#checkout").click("#submit"));
+$(playwright().frame().click("#submit"));
+----
+
+Without a selector the inner locator must match in exactly one frame; an ambiguous match fails
+with an error naming the locator and the scope that was searched.
 
 [[playwright-verification]]
 == Verify and extract
@@ -146,6 +186,21 @@ $(playwright().verify().url("http://localhost:8080/home"));
 $(playwright().verify().storageLocal("theme", "dark"));
 $(playwright().verify().consoleContains("Started"));
 ----
+
+Two ARIA snapshot checks are available and they differ in kind. `ariaSnapshotContains` compares a
+substring of the rendered snapshot; `ariaSnapshotMatches` uses Playwright's own structural
+matcher:
+
+[source,java]
+----
+$(playwright().verify().locator("#panel").ariaSnapshotContains("heading"));
+$(playwright().verify().locator("#panel").ariaSnapshotMatches("""
+    - heading "Title"
+    - button "Save"
+    """));
+----
+
+Both route their failure message through the configured secret redaction before it is reported.
 
 Extract values into test variables:
 
@@ -164,6 +219,139 @@ $(playwright().extract().cookie("session").variable("sessionCookie"));
 $(playwright().javascript().script("window.title").variable("jsResult"));
 $(playwright().screenshot().path("target/playwright/screen.png").variable("screenshotPath"));
 ----
+
+Screenshots support PNG, JPEG and WebP. The format is taken from the file extension unless `type`
+is set explicitly, in which case the explicit value wins. `quality` applies to the lossy formats
+only — 100 is lossless for WebP — and setting it for a PNG fails at build time:
+
+[source,java]
+----
+$(playwright().screenshot().path("target/playwright/screen.webp").quality(50));
+$(playwright().screenshot().path("target/playwright/full.png").fullPage(true));
+$(playwright().screenshot().path("target/playwright/shot.bin").type("webp"));
+----
+
+[[playwright-drop]]
+== Drag and drop
+
+`drop` dispatches `dragenter`, `dragover` and `drop` with a synthetic data transfer, so upload
+zones can be exercised without a real file manager. Supply either a file or clipboard-like data,
+not both:
+
+[source,java]
+----
+$(playwright().drop().locator("#dropzone").file("note.txt", "text/plain", "hello"));
+$(playwright().drop().locator("#dropzone")
+        .data("text/plain", "hello world")
+        .data("text/uri-list", "https://example.com"));
+----
+
+[[playwright-tracing]]
+== Tracing, HAR and screencast
+
+Tracing can additionally capture an aria snapshot and a screenshot on *every* action. Both are
+off by default because they add a capture to each step and make traces substantially larger —
+turn them on for a failing scenario rather than for a whole suite:
+
+[source,java]
+----
+$(playwright().tracing().start().screenshots(true).snapshots(true)
+        .ariaSnapshots(true).screenSnapshots(true));
+$(playwright().tracing().stop().path("target/playwright/trace.zip"));
+----
+
+HAR recording is a first-class tracing command. Response bodies are **omitted by default** so
+that credentials and payloads are not written into the artifact; widening that is deliberate:
+
+[source,java]
+----
+$(playwright().tracing().startHar("target/playwright/session.har").harUrlFilter("**/api/**"));
+$(playwright().tracing().stopHar());
+$(playwright().tracing().startHar("target/playwright/full.har").harContent("embed"));
+----
+
+A screencast records the page as a video and can annotate it as a walkthrough. Nothing is
+recorded until the action starts it:
+
+[source,java]
+----
+$(playwright().screencast().start("target/playwright/run.webm"));
+$(playwright().screencast().showActions().position("top-right").fontSize(18));
+$(playwright().screencast().showChapter("Checkout").chapterDescription("Applies the coupon"));
+$(playwright().screencast().stop());
+----
+
+NOTE: The chapter text is set with `chapterDescription(...)`, not `description(...)`. The latter
+is the standard Citrus action description shared by every action builder.
+
+Recording is expensive. Keep it to the scenarios whose output you intend to review. The real-time
+frame callback is Java DSL only, because a callback has no declarative representation:
+
+[source,java]
+----
+$(playwright().screencast().start("target/playwright/run.webm")
+        .onFrame(frame -> sendToVisionModel(frame.data())));
+----
+
+[[playwright-storage-state]]
+== Storage state
+
+Saved storage state can include the origin private file system so it can be restored into a later
+browser context:
+
+[source,java]
+----
+$(playwright().storage().saveState("target/state.json").opfs(true));
+$(playwright().storage().restoreState("target/state.json"));
+----
+
+[[playwright-dialogs]]
+== Dialogs
+
+Besides accepting and dismissing a dialog, a test can assert that one was closed:
+
+[source,java]
+----
+$(playwright().dialog().accept().triggerScript("window.confirm('Delete?')"));
+$(playwright().dialog().verifyClosed().triggerScript("window.alert('Saved')"));
+----
+
+[[playwright-credentials]]
+== HTTP credentials and passkeys
+
+A browser endpoint can carry several origin-scoped HTTP credentials. The first entry matching the
+request origin is used, and an entry without an origin matches any request:
+
+[source,java]
+----
+@CitrusEndpoint
+@PlaywrightBrowserConfig(
+    browserType = "chromium",
+    httpCredentials = {
+        @HttpCredential(origin = "https://api.example.com", username = "api", password = "${apiPassword}"),
+        @HttpCredential(username = "fallback", password = "${fallbackPassword}")
+    })
+private PlaywrightBrowser browser;
+----
+
+An explicitly configured `contextOptions` still wins, so the raw driver escape hatch keeps working
+unchanged.
+
+WebAuthn passkeys are driven through a virtual authenticator, so passkey login flows need no
+hardware:
+
+[source,java]
+----
+$(playwright().credentials().create("example.com")
+        .id("${credentialId}").userHandle("${userHandle}")
+        .privateKey("${privateKey}").publicKey("${publicKey}"));
+$(playwright().credentials().install());
+$(playwright().credentials().read("storedCredential"));
+$(playwright().credentials().delete("example.com"));
+----
+
+Only the credential id is written to the test variable. Private key material never reaches the
+test context, the logs, or the failure evidence.
 
 [[playwright-dsl]]
 == XML and YAML DSL
@@ -196,6 +384,34 @@ actions:
         check: "hidden"
 
   - playwright:
+      click:
+        element:
+          css: ".action"
+          visible: true
+        scroll: "none"
+
+  - playwright:
+      screenshot:
+        path: "target/playwright/screen.webp"
+        quality: 50
+
+  - playwright:
+      drop:
+        element:
+          css: "#dropzone"
+        content-type: "text/plain"
+        value: "hello world"
+
+  - playwright:
+      screencast:
+        command: "start"
+        path: "target/playwright/run.webm"
+
+  - playwright:
+      credentials:
+        command: "install"
+
+  - playwright:
       stop: {}
 ----
 
@@ -220,6 +436,41 @@ actions:
 ----
 
 Supported action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`) or `test-id`, narrowed by `nth`, `first` or `last`.
+
+The same applies to XML:
+
+[source,xml,indent=0]
+----
+<playwright>
+  <click scroll="none">
+    <element css=".action" visible="true"/>
+  </click>
+</playwright>
+
+<playwright>
+  <screenshot path="target/playwright/screen.webp" quality="50"/>
+</playwright>
+
+<playwright>
+  <drop content-type="text/plain" value="hello world">
+    <element css="#dropzone"/>
+  </drop>
+</playwright>
+
+<playwright>
+  <screencast command="start" path="target/playwright/run.webm"/>
+</playwright>
+
+<playwright>
+  <credentials command="install"/>
+</playwright>
+----
+
+NOTE: Not every Java DSL action has a declarative element. `context`, `page`, `frame`, `dialog`,
+`download`, `cookies`, `storage`, `permissions`, `emulate`, `console`, `network`, `tracing`,
+`pdf` and `pageObject` are Java DSL only. Options added to those actions — HAR recording, aria
+and screen snapshots, storage `opfs`, dialog close verification — are therefore also Java DSL
+only.
 
 [[playwright-failure-evidence]]
 == Failure evidence
