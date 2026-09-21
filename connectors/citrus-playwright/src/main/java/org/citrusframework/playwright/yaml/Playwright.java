@@ -156,6 +156,11 @@ public class Playwright implements TestActionBuilder<PlaywrightAction>, Referenc
         this.builder = builder;
     }
 
+    @SchemaProperty
+    public void setDrop(Drop builder) {
+        this.builder = builder;
+    }
+
     @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setScreenshot(Screenshot builder) {
         this.builder = builder;
