@@ -155,6 +155,8 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
      */
     private String messageType;
 
+    private final boolean isExplicitMessageType;
+
     /** Allows access to the received message for later reference */
     private Message processedMessage;
 
@@ -178,6 +180,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
         this.dataDictionary = builder.getMessageBuilderSupport().getDataDictionary();
         this.controlMessageProcessors = builder.getMessageBuilderSupport().getControlMessageProcessors();
         this.messageType = builder.getMessageBuilderSupport().getMessageType();
+        this.isExplicitMessageType = builder.getMessageBuilderSupport().isExplicitMessageType();
     }
 
     /**
@@ -351,6 +354,11 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
     }
 
     private void assumeMessageType(Message message) {
+        if (isExplicitMessageType) {
+            logger.debug("Message type '{}' explicitly set by user - skipping payload-based type detection", getMessageType());
+            return;
+        }
+
         Object contentType = message.getHeaders().get("Content-Type");
         if (contentType instanceof String contentTypeString) {
             Object encoding = message.getHeaders().get("Content-Transfer-Encoding");
