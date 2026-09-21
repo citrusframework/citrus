@@ -55,6 +55,33 @@ class WaitForActionTest {
     }
 
     @Test
+    void shouldWaitForPredicateOnElement() {
+        Locator element = browser.page().locator("#ready");
+
+        new WaitForAction.Builder().locator("#ready").function("el => el.children.length > 10")
+                .build().execute(context);
+
+        verify(element).waitForFunction("el => el.children.length > 10");
+    }
+
+    @Test
+    void shouldResolveVariablesInsidePredicate() {
+        Locator element = browser.page().locator("#ready");
+        context.setVariable("rows", "10");
+
+        new WaitForAction.Builder().locator("#ready").function("el => el.children.length > ${rows}")
+                .build().execute(context);
+
+        verify(element).waitForFunction("el => el.children.length > 10");
+    }
+
+    @Test
+    void shouldFailFastWhenPredicateHasNoLocator() {
+        expectThrows(CitrusRuntimeException.class,
+                () -> new WaitForAction.Builder().function("el => true").build());
+    }
+
+    @Test
     void shouldDefaultToVisible() {
         assertEquals(Condition.VISIBLE, new WaitForAction.Builder().locator("#ready").build().getCondition());
     }

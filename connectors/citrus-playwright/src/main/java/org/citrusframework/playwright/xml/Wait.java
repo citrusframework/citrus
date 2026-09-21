@@ -55,6 +55,11 @@ public class Wait extends AbstractPlaywrightAction.Builder<WaitForAction, Wait> 
         delegate.locator(element.toLocatorSpec());
     }
 
+    @XmlAttribute
+    public void setFunction(String expression) {
+        delegate.function(expression);
+    }
+
     @Override
     public Wait description(String description) {
         delegate.description(description);
