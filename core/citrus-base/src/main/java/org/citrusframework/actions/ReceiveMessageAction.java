@@ -826,6 +826,16 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
         }
 
         private void injectMessageValidationContext() {
+            // When the user explicitly set a message type, create a validation context matching that type
+            // instead of sniffing the payload content.
+            if (messageBuilderSupport != null && messageBuilderSupport.isExplicitMessageType()) {
+                MessageType type = getMessageType(messageBuilderSupport);
+                if (type != null) {
+                    validate(createValidationContextForType(type));
+                    return;
+                }
+            }
+
             // If we have a non-empty payload (in control message), we need a respective context for validating it.
             ValidationContext validationContext = null;
             Optional<String> payload = getMessagePayload();
@@ -859,19 +869,25 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
             // message. In that case add a context for the respective type.
             if (validationContext == null && messageBuilderSupport != null) {
                 MessageType type = getMessageType(messageBuilderSupport);
-                if (type == MessageType.XML || type == MessageType.XHTML) {
-                    validationContext = new XmlMessageValidationContext();
-                } else if (type == MessageType.JSON) {
-                    validationContext = new JsonMessageValidationContext();
-                } else if (type == MessageType.YAML) {
-                    validationContext = new YamlMessageValidationContext();
-                } else if (type == MessageType.PLAINTEXT) {
-                    validationContext = new DefaultMessageValidationContext();
+                if (type != null) {
+                    validationContext = createValidationContextForType(type);
                 }
             }
 
             if (validationContext != null) {
                 validate(validationContext);
+            }
+        }
+
+        private static ValidationContext createValidationContextForType(MessageType type) {
+            if (type == MessageType.XML || type == MessageType.XHTML) {
+                return new XmlMessageValidationContext();
+            } else if (type == MessageType.JSON) {
+                return new JsonMessageValidationContext();
+            } else if (type == MessageType.YAML) {
+                return new YamlMessageValidationContext();
+            } else {
+                return new DefaultMessageValidationContext();
             }
         }
 
