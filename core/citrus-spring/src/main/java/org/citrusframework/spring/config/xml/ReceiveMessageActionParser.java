@@ -92,9 +92,11 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
     protected List<ValidationContext.Builder<?, ?>> parseValidationContexts(Element messageElement, BeanDefinitionBuilder builder) {
         List<ValidationContext.Builder<?, ?>> validationContexts = new ArrayList<>();
         if (messageElement != null) {
-            String messageType = messageElement.getAttribute("type");
-            if (hasText(messageType)) {
-                builder.addPropertyValue("messageType", messageType);
+            if (messageElement.getAttributeNode("type") != null) {
+                String messageType = messageElement.getAttribute("type");
+                if (hasText(messageType)) {
+                    builder.addPropertyValue("messageType", messageType);
+                }
             }
 
             addHeaderValidationContext(messageElement, validationContexts);
