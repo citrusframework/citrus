@@ -152,6 +152,13 @@ class DialogActionTest {
     }
 
     @Test
+    void shouldDeregisterClosedListenerWithoutTriggerScript() {
+        new DialogAction.Builder().verifyClosed().build().execute(context);
+
+        verify(browser.page()).offDialogClosed(any());
+    }
+
+    @Test
     void shouldFailWhenNoDialogWasClosed() {
         DialogAction action = new DialogAction.Builder().verifyClosed().build();
         action.execute(context);
