@@ -54,6 +54,14 @@ public class PermissionAction extends AbstractPlaywrightAction {
         }
     }
 
+    public Command getCommand() {
+        return command;
+    }
+
+    public List<String> getPermissions() {
+        return permissions;
+    }
+
     /**
      * Fluent builder for permission commands.
      */

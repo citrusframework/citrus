@@ -191,6 +191,81 @@ public class Playwright implements TestActionBuilder<TestAction>, ReferenceResol
         this.builder = builder;
     }
 
+    @XmlElement
+    public void setConsole(Console builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setContext(Context builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setCookies(Cookies builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setDialog(Dialog builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setDownload(Download builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setEmulate(Emulate builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setEnter(Fill builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setFrame(Frame builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setNetwork(Network builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setPage(Page builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement(name = "page-object")
+    public void setPageObject(PageObject builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setPdf(Pdf builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setPermissions(Permissions builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setStorage(Storage builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement
+    public void setTracing(Tracing builder) {
+        this.builder = builder;
+    }
+
     @Override
     public PlaywrightAction build() {
         if (builder == null) {

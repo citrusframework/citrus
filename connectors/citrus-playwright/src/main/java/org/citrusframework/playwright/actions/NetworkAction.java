@@ -190,6 +190,78 @@ public class NetworkAction extends AbstractPlaywrightAction {
         return LocatorResolver.resolve(value, context);
     }
 
+    public Command getCommand() {
+        return command;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getVariable() {
+        return variable;
+    }
+
+    public String getUrlPattern() {
+        return urlPattern;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public String getHeaderName() {
+        return headerName;
+    }
+
+    public String getHeaderValue() {
+        return headerValue;
+    }
+
+    public String getResponseUrl() {
+        return responseUrl;
+    }
+
+    public String getResponseUrlContains() {
+        return responseUrlContains;
+    }
+
+    public String getResponseUrlRegex() {
+        return responseUrlRegex;
+    }
+
+    public Integer getResponseStatus() {
+        return responseStatus;
+    }
+
+    public Double getTimeoutMs() {
+        return timeoutMs;
+    }
+
+    public LocatorSpec getTriggerLocator() {
+        return triggerLocator;
+    }
+
+    public String getTriggerScript() {
+        return triggerScript;
+    }
+
+    public boolean isIncludeBody() {
+        return includeBody;
+    }
+
     /**
      * Fluent builder for network capture, report, and verification commands.
      */

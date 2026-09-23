@@ -122,6 +122,26 @@ public class DialogAction extends AbstractPlaywrightAction {
         }
     }
 
+    public Command getCommand() {
+        return command;
+    }
+
+    public String getPromptText() {
+        return promptText;
+    }
+
+    public String getExpectedMessage() {
+        return expectedMessage;
+    }
+
+    public String getExpectedType() {
+        return expectedType;
+    }
+
+    public String getTriggerScript() {
+        return triggerScript;
+    }
+
     /**
      * Fluent builder for dialog handling commands.
      */

@@ -93,6 +93,26 @@ public class CookieAction extends AbstractPlaywrightAction {
         return cookie.orElseThrow(() -> new CitrusRuntimeException("No Playwright cookie found with name: " + resolvedName));
     }
 
+    public Command getCommand() {
+        return command;
+    }
+
+    public CookieSpec getCookie() {
+        return cookie;
+    }
+
+    public String getCookieName() {
+        return name;
+    }
+
+    public String getExpectedValue() {
+        return expectedValue;
+    }
+
+    public String getVariable() {
+        return variable;
+    }
+
     /**
      * Fluent builder for cookie add, clear, read, and verification commands.
      */

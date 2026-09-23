@@ -74,6 +74,22 @@ public class PageObjectAction extends AbstractPlaywrightAction {
         }
     }
 
+    public Class<?> getPageType() {
+        return pageType;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public String[] getArguments() {
+        return arguments;
+    }
+
+    public Class<? extends PlaywrightPageValidator<?>> getValidatorType() {
+        return validatorType;
+    }
+
     /**
      * Fluent builder for page-object execution and validation.
      */

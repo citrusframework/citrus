@@ -105,6 +105,34 @@ public class StorageAction extends AbstractPlaywrightAction {
         return scope == Scope.SESSION ? browser.getCurrentPage().sessionStorage() : browser.getCurrentPage().localStorage();
     }
 
+    public Scope getScope() {
+        return scope;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public String getVariable() {
+        return variable;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public Boolean getOpfs() {
+        return opfs;
+    }
+
     /**
      * Fluent builder for local/session storage and storage-state commands.
      */

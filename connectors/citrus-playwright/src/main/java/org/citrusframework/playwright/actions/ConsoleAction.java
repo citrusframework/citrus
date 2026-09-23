@@ -80,6 +80,18 @@ public class ConsoleAction extends AbstractPlaywrightAction {
         return messages.stream().map(ConsoleMessageRecord::format).collect(Collectors.joining(System.lineSeparator()));
     }
 
+    public Command getCommand() {
+        return command;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getVariable() {
+        return variable;
+    }
+
     /**
      * Fluent builder for console capture, report, and verification commands.
      */
