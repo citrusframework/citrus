@@ -114,7 +114,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
          * @throws IllegalArgumentException when the name matches no check
          */
         public static Check fromName(String name) {
-            String normalized = name.trim().toUpperCase(Locale.ENGLISH).replace('-', '_');
+            String normalized = name.trim().toUpperCase(Locale.ROOT).replace('-', '_');
             Check alias = ALIASES.get(normalized);
             if (alias != null) {
                 return alias;
