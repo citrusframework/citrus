@@ -98,6 +98,22 @@ public class FrameAction extends AbstractPlaywrightAction {
         return "frame '%s'".formatted(LocatorResolver.resolve(frameSelector, context));
     }
 
+    public String getFrameSelector() {
+        return frameSelector;
+    }
+
+    public LocatorSpec getLocator() {
+        return locator;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
     /**
      * Fluent builder for frame-scoped locator commands.
      */
@@ -127,8 +143,17 @@ public class FrameAction extends AbstractPlaywrightAction {
          * @return this builder
          */
         public Builder fill(String locator) {
+            return fill(LocatorSpec.css(locator));
+        }
+
+        /**
+         * Fill the element described by the given locator inside the frame.
+         * @param locator element locator
+         * @return this builder
+         */
+        public Builder fill(LocatorSpec locator) {
             this.command = Command.FILL;
-            this.locator = LocatorSpec.css(locator);
+            this.locator = locator;
             return this;
         }
 
@@ -139,8 +164,17 @@ public class FrameAction extends AbstractPlaywrightAction {
          * @return this builder
          */
         public Builder click(String locator) {
+            return click(LocatorSpec.css(locator));
+        }
+
+        /**
+         * Click the element described by the given locator inside the frame.
+         * @param locator element locator
+         * @return this builder
+         */
+        public Builder click(LocatorSpec locator) {
             this.command = Command.CLICK;
-            this.locator = LocatorSpec.css(locator);
+            this.locator = locator;
             return this;
         }
 
@@ -152,8 +186,18 @@ public class FrameAction extends AbstractPlaywrightAction {
          * @return this builder
          */
         public Builder verifyText(String locator, String text) {
+            return verifyText(LocatorSpec.css(locator), text);
+        }
+
+        /**
+         * Verify the text of the element described by the given locator inside the frame.
+         * @param locator element locator
+         * @param text expected text
+         * @return this builder
+         */
+        public Builder verifyText(LocatorSpec locator, String text) {
             this.command = Command.VERIFY_TEXT;
-            this.locator = LocatorSpec.css(locator);
+            this.locator = locator;
             this.value = text;
             return this;
         }

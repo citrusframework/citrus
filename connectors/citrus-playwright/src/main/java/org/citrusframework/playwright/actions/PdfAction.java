@@ -62,6 +62,18 @@ public class PdfAction extends AbstractPlaywrightAction {
         }
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public String getVariable() {
+        return variable;
+    }
+
+    public boolean isPrintBackground() {
+        return printBackground;
+    }
+
     /**
      * Fluent builder for PDF export settings.
      */

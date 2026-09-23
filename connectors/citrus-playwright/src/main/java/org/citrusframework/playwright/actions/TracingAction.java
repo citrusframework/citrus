@@ -143,6 +143,54 @@ public class TracingAction extends AbstractPlaywrightAction {
         }
     }
 
+    public Command getCommand() {
+        return command;
+    }
+
+    public Boolean getScreenshots() {
+        return screenshots;
+    }
+
+    public Boolean getSnapshots() {
+        return snapshots;
+    }
+
+    public Boolean getSources() {
+        return sources;
+    }
+
+    public Boolean getAriaSnapshots() {
+        return ariaSnapshots;
+    }
+
+    public Boolean getScreenSnapshots() {
+        return screenSnapshots;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getVariable() {
+        return variable;
+    }
+
+    public String getHarPath() {
+        return harPath;
+    }
+
+    public HarContentPolicy getHarContent() {
+        return harContent;
+    }
+
+    public HarMode getHarMode() {
+        return harMode;
+    }
+
+    public String getHarUrlFilter() {
+        return harUrlFilter;
+    }
+
     /**
      * Fluent builder for Playwright tracing commands.
      */

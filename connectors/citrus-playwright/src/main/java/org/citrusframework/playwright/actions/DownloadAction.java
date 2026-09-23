@@ -92,6 +92,26 @@ public class DownloadAction extends AbstractPlaywrightAction {
         }
     }
 
+    public LocatorSpec getTriggerLocator() {
+        return triggerLocator;
+    }
+
+    public String getTriggerScript() {
+        return triggerScript;
+    }
+
+    public String getSaveAs() {
+        return saveAs;
+    }
+
+    public String getPathVariable() {
+        return pathVariable;
+    }
+
+    public String getFilenameVariable() {
+        return filenameVariable;
+    }
+
     /**
      * Fluent builder for download trigger and artifact settings.
      */
@@ -109,7 +129,16 @@ public class DownloadAction extends AbstractPlaywrightAction {
          * @return this builder
          */
         public Builder click(String locator) {
-            this.triggerLocator = LocatorSpec.css(locator);
+            return click(LocatorSpec.css(locator));
+        }
+
+        /**
+         * Trigger the download by clicking the element described by the given locator.
+         * @param locator element locator
+         * @return this builder
+         */
+        public Builder click(LocatorSpec locator) {
+            this.triggerLocator = locator;
             return this;
         }
 

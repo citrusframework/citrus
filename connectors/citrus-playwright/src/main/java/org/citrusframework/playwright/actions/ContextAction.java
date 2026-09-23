@@ -61,6 +61,18 @@ public class ContextAction extends AbstractPlaywrightAction {
         }
     }
 
+    public Command getCommand() {
+        return command;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public Browser.NewContextOptions getOptions() {
+        return options;
+    }
+
     /**
      * Fluent builder for context create, switch, and close commands.
      */
