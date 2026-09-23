@@ -87,9 +87,7 @@ public class DialogAction extends AbstractPlaywrightAction {
                 browser.getCurrentPage().evaluate(LocatorResolver.resolve(triggerScript, context));
             }
         } finally {
-            if (triggerScript != null) {
-                browser.getCurrentPage().offDialogClosed(listener);
-            }
+            browser.getCurrentPage().offDialogClosed(listener);
         }
     }
 
@@ -139,6 +137,11 @@ public class DialogAction extends AbstractPlaywrightAction {
          *
          * @return this builder
          */
+        public Builder accept() {
+            this.command = Command.ACCEPT;
+            return this;
+        }
+
         /**
          * Verifies that a dialog was accepted, dismissed or closed by the user.
          *
@@ -146,11 +149,6 @@ public class DialogAction extends AbstractPlaywrightAction {
          */
         public Builder verifyClosed() {
             this.command = Command.VERIFY_CLOSED;
-            return this;
-        }
-
-        public Builder accept() {
-            this.command = Command.ACCEPT;
             return this;
         }
 

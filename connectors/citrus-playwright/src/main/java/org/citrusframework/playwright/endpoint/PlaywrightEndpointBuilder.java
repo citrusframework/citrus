@@ -19,14 +19,11 @@ package org.citrusframework.playwright.endpoint;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.options.HttpCredentials;
 
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-
-import java.util.List;
-
-import com.microsoft.playwright.options.HttpCredentials;
 
 import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;

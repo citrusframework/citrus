@@ -51,7 +51,7 @@ public class Screencast extends AbstractPlaywrightAction.Builder<ScreencastActio
 
     @XmlAttribute
     public void setCommand(String command) {
-        switch (command.trim().toLowerCase(java.util.Locale.ENGLISH).replace('_', '-')) {
+        switch (command.trim().toLowerCase(java.util.Locale.ROOT).replace('_', '-')) {
             case "start" -> delegate.start(path);
             case "stop" -> delegate.stop();
             case "show-actions" -> delegate.showActions();
