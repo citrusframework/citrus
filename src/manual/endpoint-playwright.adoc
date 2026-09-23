@@ -435,7 +435,7 @@ actions:
 </playwright>
 ----
 
-Supported action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`) or `test-id`, narrowed by `nth`, `first` or `last`.
+Supported element action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `screencast`, `credentials`, `drop`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`) or `test-id`, narrowed by `nth`, `first` or `last`.
 
 The same applies to XML:
 
@@ -466,11 +466,100 @@ The same applies to XML:
 </playwright>
 ----
 
-NOTE: Not every Java DSL action has a declarative element. `context`, `page`, `frame`, `dialog`,
-`download`, `cookies`, `storage`, `permissions`, `emulate`, `console`, `network`, `tracing`,
-`pdf` and `pageObject` are Java DSL only. Options added to those actions — HAR recording, aria
-and screen snapshots, storage `opfs`, dialog close verification — are therefore also Java DSL
-only.
+Browser context, page, network and diagnostics actions are available declaratively as well.
+Actions with several modes take a `command`; commands and option values are case-insensitive and
+accept `_` in place of `-`. The attribute or key names are the same in XML and YAML:
+
+[cols="1,2,3",options="header"]
+|===
+|Key |Commands |Options
+
+|`console` |`capture`, `clear`, `report`, `verify-contains` |`text`, `variable`
+|`context` |`create`, `switch`, `close` |`alias`, `storage-state`
+|`cookies` |`add`, `clear`, `read`, `verify` |`name`, `value`, `url`, `domain`, `path`, `expires`, `http-only`, `secure`, `same-site`, `variable`
+|`dialog` |`accept`, `dismiss`, `verify-closed` |`prompt-text`, `message`, `type`, `trigger-script`
+|`download` |— |`element`, `trigger-script`, `save-as`, `path-variable`, `filename-variable`
+|`emulate` |— |`width` + `height`, `latitude` + `longitude`, `accuracy`, `color-scheme`, `locale`, `timezone`, `user-agent`, `context`
+|`enter` |— |Alias of `fill`
+|`frame` |`fill`, `click`, `verify-text` |`selector`, `element`, `value`
+|`network` |`capture`, `clear`, `report`, `verify-url-contains`, `route-abort`, `route-fulfill`, `route-continue-header`, `unroute`, `wait-for-response` |`pattern`, `text`, `body`, `content-type`, `status`, `header` (XML) / `headers` (YAML), `header-name`, `header-value`, `url`, `url-contains`, `url-matches`, `timeout`, `element`, `trigger-script`, `include-body`, `variable`
+|`page` |`create`, `switch`, `close` |`alias`, `context`, `index`, `title`, `url-contains`
+|`page-object` |— |`type`, `method`, `arguments`, `validator`
+|`pdf` |— |`path`, `print-background`, `variable`
+|`permissions` |`grant`, `clear` |`permissions`
+|`storage` |`set`, `read`, `verify`, `remove`, `clear`, `save-state`, `restore-state` |`scope` (`local`, `session`), `key`, `value`, `path`, `opfs`, `variable`
+|`tracing` |`start`, `stop`, `start-har`, `stop-har` |`path`, `screenshots`, `snapshots`, `sources`, `aria-snapshots`, `screen-snapshots`, `har-content`, `har-mode`, `har-url-filter`, `variable`
+|===
+
+`page` with `command="switch"` selects by `index`, `title` or `url-contains` when one is given, and
+by `alias` otherwise. For `tracing`, `path` is the trace archive written on `stop` and the HAR file
+written on `start-har`. On `network`, `status` is the fulfilled response status for
+`route-fulfill` and the expected response status for `wait-for-response`.
+
+.YAML
+[source,yaml,indent=0]
+----
+actions:
+  - playwright:
+      network:
+        command: "route-fulfill"
+        pattern: "**/api/users"
+        body: "[]"
+        content-type: "application/json"
+        headers:
+          - name: "X-Test"
+            value: "1"
+
+  - playwright:
+      tracing:
+        command: "start-har"
+        path: "target/playwright/session.har"
+        har-url-filter: "**/api/**"
+
+  - playwright:
+      permissions:
+        command: "grant"
+        permissions:
+          - "geolocation"
+          - "clipboard-read"
+
+  - playwright:
+      page-object:
+        type: "com.example.LoginPage"
+        method: "login"
+        arguments:
+          - "${username}"
+----
+
+.XML
+[source,xml,indent=0]
+----
+<playwright>
+  <network command="route-fulfill" pattern="**/api/users" body="[]" content-type="application/json">
+    <header name="X-Test" value="1"/>
+  </network>
+</playwright>
+
+<playwright>
+  <frame command="click" selector="#checkout">
+    <element role="button" name="Pay"/>
+  </frame>
+</playwright>
+
+<playwright>
+  <storage command="save-state" path="target/state.json" opfs="true"/>
+</playwright>
+
+<playwright>
+  <permissions command="grant" permissions="geolocation clipboard-read"/>
+</playwright>
+----
+
+In XML, list values such as `permissions` and `page-object` `arguments` are separated by
+whitespace or commas. Page-object and validator types are fully qualified class names.
+
+NOTE: Options that take a Java object or a callback stay Java DSL only: `context().options(...)`
+with a `Browser.NewContextOptions`, raw function locators, and the screencast frame callback.
 
 [[playwright-failure-evidence]]
 == Failure evidence
