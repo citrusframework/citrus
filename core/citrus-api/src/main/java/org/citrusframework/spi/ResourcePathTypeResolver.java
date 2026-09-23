@@ -129,7 +129,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
     static boolean isNonCitrusApiJarUrl(String url) {
         return url.startsWith("file:")
                 && url.matches(".*jar(!/)?")
-                && !(url.replace("\\", "/").matches(".*/citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar"));
+                && !(url.replace("\\", "/").matches(".*/citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar(!/)?"));
     }
 
     /**
