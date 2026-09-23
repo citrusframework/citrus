@@ -48,7 +48,7 @@ import static org.testng.Assert.assertTrue;
  */
 public final class PlaywrightActionsAssertions {
 
-    public static final long ACTION_COUNT = 21L;
+    public static final long ACTION_COUNT = 22L;
 
     private PlaywrightActionsAssertions() {
     }
@@ -171,5 +171,9 @@ public final class PlaywrightActionsAssertions {
         assertEquals(stop.getPath(), "target/playwright/trace.zip");
         assertEquals(stop.getVariable(), "tracePath");
         assertTrue(stop.getHarPath() == null);
+
+        InputAction select = (InputAction) result.getTestAction(21);
+        assertEquals(select.getCommand(), InputAction.Command.SELECT);
+        assertEquals(select.getValues(), List.of("male", "female", "other"));
     }
 }

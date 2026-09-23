@@ -94,5 +94,11 @@
     <playwright>
       <tracing command="stop" path="target/playwright/trace.zip" variable="tracePath"/>
     </playwright>
+
+    <playwright>
+      <select values="male, female other">
+        <element css="#gender"/>
+      </select>
+    </playwright>
   </actions>
 </test>

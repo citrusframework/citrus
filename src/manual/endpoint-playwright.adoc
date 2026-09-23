@@ -555,8 +555,8 @@ actions:
 </playwright>
 ----
 
-In XML, list values such as `permissions` and `page-object` `arguments` are separated by
-whitespace or commas. Page-object and validator types are fully qualified class names.
+In XML, list values such as `select` and `upload` `values`, `permissions` and `page-object`
+`arguments` are separated by whitespace or commas. Page-object and validator types are fully qualified class names.
 
 NOTE: Options that take a Java object or a callback stay Java DSL only: `context().options(...)`
 with a `Browser.NewContextOptions`, raw function locators, and the screencast frame callback.

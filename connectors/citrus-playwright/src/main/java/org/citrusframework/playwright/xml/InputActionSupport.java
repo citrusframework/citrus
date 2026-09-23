@@ -18,11 +18,11 @@ package org.citrusframework.playwright.xml;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
-import java.util.List;
 import org.citrusframework.TestActor;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.InputAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
+import org.citrusframework.playwright.util.DslCommands;
 
 /**
  * Base class for XML input action wrappers sharing the element, value, and
@@ -51,9 +51,12 @@ abstract class InputActionSupport<B extends InputActionSupport<B>> extends Abstr
         delegate.value(value);
     }
 
+    /**
+     * Values separated by whitespace or commas.
+     */
     @XmlAttribute
-    public void setValues(List<String> values) {
-        delegate.values(values.toArray(String[]::new));
+    public void setValues(String values) {
+        delegate.values(DslCommands.split(values));
     }
 
     @Override
