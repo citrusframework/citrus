@@ -42,7 +42,7 @@ public class Permissions extends AbstractPlaywrightAction.Builder<PermissionActi
     }
 
     /**
-     * Permissions to grant, separated by whitespace or commas.
+     * Permissions to grant, separated by commas.
      */
     @XmlAttribute
     public void setPermissions(String permissions) {

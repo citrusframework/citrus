@@ -20,10 +20,10 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.citrusframework.TestActor;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.ScreencastAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
+import org.citrusframework.playwright.util.DslCommands;
 
 /**
  * Records and annotates a screencast of the current page.
@@ -36,6 +36,7 @@ public class Screencast extends AbstractPlaywrightAction.Builder<ScreencastActio
 
     private final ScreencastAction.Builder delegate = new ScreencastAction.Builder();
 
+    private String command;
     private String path;
     private String title;
 
@@ -51,14 +52,7 @@ public class Screencast extends AbstractPlaywrightAction.Builder<ScreencastActio
 
     @XmlAttribute
     public void setCommand(String command) {
-        switch (command.trim().toLowerCase(java.util.Locale.ROOT).replace('_', '-')) {
-            case "start" -> delegate.start(path);
-            case "stop" -> delegate.stop();
-            case "show-actions" -> delegate.showActions();
-            case "hide-actions" -> delegate.hideActions();
-            case "show-chapter" -> delegate.showChapter(title);
-            default -> throw new CitrusRuntimeException("Unsupported Playwright screencast command: " + command);
-        }
+        this.command = command;
     }
 
     @XmlAttribute(name = "chapter-description")
@@ -111,6 +105,14 @@ public class Screencast extends AbstractPlaywrightAction.Builder<ScreencastActio
 
     @Override
     public ScreencastAction build() {
+        switch (DslCommands.normalize(command)) {
+            case "start" -> delegate.start(path);
+            case "stop" -> delegate.stop();
+            case "show-actions" -> delegate.showActions();
+            case "hide-actions" -> delegate.hideActions();
+            case "show-chapter" -> delegate.showChapter(title);
+            default -> throw DslCommands.unsupported("screencast", command);
+        }
         return delegate.build();
     }
 }

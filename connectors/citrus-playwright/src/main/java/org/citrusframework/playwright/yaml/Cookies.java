@@ -16,8 +16,6 @@
 
 package org.citrusframework.playwright.yaml;
 
-import java.util.Locale;
-
 import com.microsoft.playwright.options.SameSiteAttribute;
 
 import org.citrusframework.TestActor;
@@ -127,7 +125,7 @@ public class Cookies extends AbstractPlaywrightAction.Builder<CookieAction, Cook
             cookie.secure(secure);
         }
         if (sameSite != null) {
-            cookie.sameSite(SameSiteAttribute.valueOf(DslCommands.normalize(sameSite).toUpperCase(Locale.ROOT)));
+            cookie.sameSite(DslCommands.option(SameSiteAttribute.class, "cookie same-site", sameSite));
         }
         return cookie;
     }
