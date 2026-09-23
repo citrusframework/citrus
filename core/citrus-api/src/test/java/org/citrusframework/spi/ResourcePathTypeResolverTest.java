@@ -56,7 +56,9 @@ public class ResourcePathTypeResolverTest {
     @Test
     public void testIsNonCitrusApiJarUrlExcludesCitrusApiJar() {
         Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1.jar"));
+        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1.jar!/"));
         Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1-SNAPSHOT.jar"));
+        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1-SNAPSHOT.jar!/"));
     }
 
     @Test
