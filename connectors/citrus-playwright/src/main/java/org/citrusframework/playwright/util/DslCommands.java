@@ -16,6 +16,7 @@
 
 package org.citrusframework.playwright.util;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -39,7 +40,8 @@ public final class DslCommands {
     }
 
     /**
-     * Splits a declarative list attribute on whitespace and commas.
+     * Splits a declarative list attribute on commas. Each entry is trimmed and blank entries are
+     * dropped, so values may contain spaces.
      *
      * @param values raw attribute value, may be {@code null}
      * @return individual values, empty when the value is {@code null} or blank
@@ -48,7 +50,26 @@ public final class DslCommands {
         if (values == null || values.isBlank()) {
             return new String[0];
         }
-        return values.trim().split("[\\s,]+");
+        return Arrays.stream(values.split(","))
+                .map(String::trim)
+                .filter(value -> !value.isEmpty())
+                .toArray(String[]::new);
+    }
+
+    /**
+     * Resolves a declarative enum option value, failing with a Playwright scoped message.
+     *
+     * @param type enum type
+     * @param option option name used in the error message
+     * @param value option value as given in the test
+     * @return matching enum constant
+     */
+    public static <T extends Enum<T>> T option(Class<T> type, String option, String value) {
+        try {
+            return Enum.valueOf(type, normalize(value).replace('-', '_').toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            throw new CitrusRuntimeException("Unsupported Playwright %s: %s".formatted(option, value), e);
+        }
     }
 
     /**

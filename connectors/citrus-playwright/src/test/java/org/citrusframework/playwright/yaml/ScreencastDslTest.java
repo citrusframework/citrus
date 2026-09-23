@@ -43,6 +43,15 @@ class ScreencastDslTest {
     }
 
     @Test
+    void shouldStartRecordingWhateverTheDeclarationOrder() {
+        Screencast screencast = new Screencast();
+        screencast.setCommand("start");
+        screencast.setPath("target/playwright/run.webm");
+
+        assertEquals(screencast.build().getCommand(), ScreencastAction.Command.START);
+    }
+
+    @Test
     void shouldShowChapterFromDeclaredTitle() {
         Screencast screencast = new Screencast();
         screencast.setTitle("Checkout");
@@ -64,7 +73,9 @@ class ScreencastDslTest {
     void shouldRejectUnsupportedCommand() {
         Screencast screencast = new Screencast();
 
-        expectThrows(CitrusRuntimeException.class, () -> screencast.setCommand("rewind"));
+        screencast.setCommand("rewind");
+
+        expectThrows(CitrusRuntimeException.class, screencast::build);
     }
 
     @Test

@@ -16,6 +16,7 @@
 package org.citrusframework.playwright.xml;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.playwright.actions.CredentialsAction;
 import org.citrusframework.playwright.actions.NetworkAction;
 import org.citrusframework.playwright.dsl.PageObjectFixtures;
 import org.testng.annotations.Test;
@@ -102,9 +103,77 @@ class ActionWrapperTest {
         PageObject pageObject = new PageObject();
         pageObject.setType(PageObjectFixtures.FixturePage.class.getName());
         pageObject.setMethod("open");
-        pageObject.setArguments("first, second third");
+        pageObject.setArguments(",first, second third");
 
-        assertEquals(pageObject.build().getArguments(), new String[] { "first", "second", "third" });
+        assertEquals(pageObject.build().getArguments(), new String[] { "first", "second third" });
+    }
+
+    @Test
+    void shouldRejectUnknownSameSite() {
+        Cookies cookies = new Cookies();
+        cookies.setCommand("add");
+        cookies.setName("session");
+        cookies.setValue("abc");
+        cookies.setSameSite("lenient");
+
+        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, cookies::build);
+
+        assertEquals(exception.getMessage(), "Unsupported Playwright cookie same-site: lenient");
+    }
+
+    @Test
+    void shouldRejectAmbiguousPageSwitch() {
+        Page page = new Page();
+        page.setCommand("switch");
+        page.setAlias("popup");
+        page.setIndex(0);
+
+        expectThrows(CitrusRuntimeException.class, page::build);
+    }
+
+    @Test
+    void shouldRejectTracePathOnStart() {
+        Tracing tracing = new Tracing();
+        tracing.setCommand("start");
+        tracing.setPath("target/trace.zip");
+
+        expectThrows(CitrusRuntimeException.class, tracing::build);
+    }
+
+    @Test
+    void shouldRejectStorageStateOutsideCreate() {
+        Context context = new Context();
+        context.setCommand("switch");
+        context.setAlias("admin");
+        context.setStorageState("target/state.json");
+
+        expectThrows(CitrusRuntimeException.class, context::build);
+    }
+
+    @Test
+    void shouldCreateCredentialWhateverTheDeclarationOrder() {
+        Credentials credentials = new Credentials();
+        credentials.setCommand("create");
+        credentials.setOrigin("example.com");
+        credentials.setId("id");
+        credentials.setUserHandle("user");
+        credentials.setPrivateKey("private");
+        credentials.setPublicKey("public");
+
+        assertEquals(credentials.build().getCommand(), CredentialsAction.Command.CREATE);
+    }
+
+    @Test
+    void shouldApplyDropPayloadWhateverTheDeclarationOrder() {
+        Drop drop = new Drop();
+        drop.setValue("hello");
+        drop.setFile("note.txt");
+        drop.setContentType("text/plain");
+        Element element = new Element();
+        element.setCss("#dropzone");
+        drop.setElement(element);
+
+        assertEquals(drop.build().getFileName(), "note.txt");
     }
 
     @Test

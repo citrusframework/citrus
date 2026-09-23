@@ -18,6 +18,8 @@ package org.citrusframework.playwright.xml;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import java.util.List;
 import org.citrusframework.TestActor;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.InputAction;
@@ -52,11 +54,19 @@ abstract class InputActionSupport<B extends InputActionSupport<B>> extends Abstr
     }
 
     /**
-     * Values separated by whitespace or commas.
+     * Values separated by commas.
      */
     @XmlAttribute
     public void setValues(String values) {
         delegate.values(DslCommands.split(values));
+    }
+
+    /**
+     * Programmatic variant kept for Java callers; XML uses the comma separated attribute.
+     */
+    @XmlTransient
+    public void setValues(List<String> values) {
+        delegate.values(values.toArray(String[]::new));
     }
 
     @Override

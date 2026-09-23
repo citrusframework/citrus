@@ -76,7 +76,7 @@
     </playwright>
 
     <playwright>
-      <permissions command="grant" permissions="geolocation clipboard-read"/>
+      <permissions command="grant" permissions="geolocation, clipboard-read"/>
     </playwright>
 
     <playwright>
@@ -96,7 +96,7 @@
     </playwright>
 
     <playwright>
-      <select values="male, female other">
+      <select values="male, , female,New York">
         <element css="#gender"/>
       </select>
     </playwright>

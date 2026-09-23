@@ -18,6 +18,7 @@ package org.citrusframework.playwright.yaml;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.TracingAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
@@ -109,7 +110,12 @@ public class Tracing extends AbstractPlaywrightAction.Builder<TracingAction, Tra
     @Override
     public TracingAction build() {
         switch (DslCommands.normalize(command)) {
-            case "start" -> delegate.start();
+            case "start" -> {
+                if (path != null) {
+                    throw new CitrusRuntimeException("Playwright tracing path applies to stop or start-har, not start");
+                }
+                delegate.start();
+            }
             case "stop" -> {
                 delegate.stop();
                 if (path != null) {

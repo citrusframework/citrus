@@ -16,8 +16,6 @@
 
 package org.citrusframework.playwright.xml;
 
-import java.util.Locale;
-
 import com.microsoft.playwright.options.SameSiteAttribute;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -129,7 +127,7 @@ public class Cookies extends AbstractPlaywrightAction.Builder<CookieAction, Cook
             cookie.secure(secure);
         }
         if (sameSite != null) {
-            cookie.sameSite(SameSiteAttribute.valueOf(DslCommands.normalize(sameSite).toUpperCase(Locale.ROOT)));
+            cookie.sameSite(DslCommands.option(SameSiteAttribute.class, "cookie same-site", sameSite));
         }
         return cookie;
     }

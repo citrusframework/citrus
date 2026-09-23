@@ -551,12 +551,13 @@ actions:
 </playwright>
 
 <playwright>
-  <permissions command="grant" permissions="geolocation clipboard-read"/>
+  <permissions command="grant" permissions="geolocation, clipboard-read"/>
 </playwright>
 ----
 
 In XML, list values such as `select` and `upload` `values`, `permissions` and `page-object`
-`arguments` are separated by whitespace or commas. Page-object and validator types are fully qualified class names.
+`arguments` are separated by commas; each entry is trimmed, so values may contain spaces.
+Page-object and validator types are fully qualified class names.
 
 NOTE: Options that take a Java object or a callback stay Java DSL only: `context().options(...)`
 with a `Browser.NewContextOptions`, raw function locators, and the screencast frame callback.

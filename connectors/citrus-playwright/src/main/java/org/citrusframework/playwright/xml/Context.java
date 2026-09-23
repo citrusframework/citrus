@@ -20,6 +20,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.citrusframework.TestActor;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.ContextAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
@@ -38,6 +39,7 @@ public class Context extends AbstractPlaywrightAction.Builder<ContextAction, Con
 
     private String command;
     private String alias;
+    private String storageState;
 
     @XmlAttribute
     public void setCommand(String command) {
@@ -51,7 +53,7 @@ public class Context extends AbstractPlaywrightAction.Builder<ContextAction, Con
 
     @XmlAttribute(name = "storage-state")
     public void setStorageState(String path) {
-        delegate.storageState(path);
+        this.storageState = path;
     }
 
     @Override
@@ -74,8 +76,17 @@ public class Context extends AbstractPlaywrightAction.Builder<ContextAction, Con
 
     @Override
     public ContextAction build() {
+        if (storageState != null && !"create".equals(DslCommands.normalize(command))) {
+            throw new CitrusRuntimeException("Playwright context storage-state applies to create only");
+        }
+
         switch (DslCommands.normalize(command)) {
-            case "create" -> delegate.newContext(alias);
+            case "create" -> {
+                delegate.newContext(alias);
+                if (storageState != null) {
+                    delegate.storageState(storageState);
+                }
+            }
             case "switch" -> delegate.switchTo(alias);
             case "close" -> delegate.close(alias);
             default -> throw DslCommands.unsupported("context", command);

@@ -47,7 +47,7 @@ public class PageObject extends AbstractPlaywrightAction.Builder<PageObjectActio
     }
 
     /**
-     * Method arguments, separated by whitespace or commas.
+     * Method arguments, separated by commas.
      */
     @XmlAttribute
     public void setArguments(String arguments) {

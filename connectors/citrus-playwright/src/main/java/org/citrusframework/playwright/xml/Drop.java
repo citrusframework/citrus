@@ -34,6 +34,7 @@ public class Drop extends AbstractPlaywrightAction.Builder<DropAction, Drop> {
 
     private String fileName;
     private String fileMimeType;
+    private String value;
 
     @XmlElement
     public void setElement(Element element) {
@@ -52,11 +53,7 @@ public class Drop extends AbstractPlaywrightAction.Builder<DropAction, Drop> {
 
     @XmlAttribute
     public void setValue(String value) {
-        if (fileName != null) {
-            delegate.file(fileName, fileMimeType, value);
-        } else {
-            delegate.data(fileMimeType, value);
-        }
+        this.value = value;
     }
 
     @Override
@@ -79,6 +76,13 @@ public class Drop extends AbstractPlaywrightAction.Builder<DropAction, Drop> {
 
     @Override
     public DropAction build() {
+        if (value != null) {
+            if (fileName != null) {
+                delegate.file(fileName, fileMimeType, value);
+            } else {
+                delegate.data(fileMimeType, value);
+            }
+        }
         return delegate.build();
     }
 }

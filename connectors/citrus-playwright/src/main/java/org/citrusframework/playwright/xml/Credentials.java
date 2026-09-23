@@ -20,10 +20,10 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.citrusframework.TestActor;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.CredentialsAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
+import org.citrusframework.playwright.util.DslCommands;
 
 /**
  * Manages virtual WebAuthn credentials on the current browser context.
@@ -33,6 +33,7 @@ public class Credentials extends AbstractPlaywrightAction.Builder<CredentialsAct
 
     private final CredentialsAction.Builder delegate = new CredentialsAction.Builder();
 
+    private String command;
     private String origin;
     private String variable;
 
@@ -48,13 +49,7 @@ public class Credentials extends AbstractPlaywrightAction.Builder<CredentialsAct
 
     @XmlAttribute
     public void setCommand(String command) {
-        switch (command.trim().toLowerCase(java.util.Locale.ROOT)) {
-            case "create" -> delegate.create(origin);
-            case "install" -> delegate.install();
-            case "read" -> delegate.read(variable);
-            case "delete" -> delegate.delete(origin);
-            default -> throw new CitrusRuntimeException("Unsupported Playwright credentials command: " + command);
-        }
+        this.command = command;
     }
 
     @XmlAttribute
@@ -97,6 +92,13 @@ public class Credentials extends AbstractPlaywrightAction.Builder<CredentialsAct
 
     @Override
     public CredentialsAction build() {
+        switch (DslCommands.normalize(command)) {
+            case "create" -> delegate.create(origin);
+            case "install" -> delegate.install();
+            case "read" -> delegate.read(variable);
+            case "delete" -> delegate.delete(origin);
+            default -> throw DslCommands.unsupported("credentials", command);
+        }
         return delegate.build();
     }
 }

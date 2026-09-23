@@ -16,8 +16,12 @@
 
 package org.citrusframework.playwright.yaml;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import org.citrusframework.TestActor;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.PageAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
@@ -89,6 +93,10 @@ public class Page extends AbstractPlaywrightAction.Builder<PageAction, Page> {
         switch (DslCommands.normalize(command)) {
             case "create" -> delegate.newPage(alias);
             case "switch" -> {
+                long selectors = Stream.of(alias, index, title, urlContains).filter(Objects::nonNull).count();
+                if (selectors > 1) {
+                    throw new CitrusRuntimeException("Ambiguous Playwright page switch - use only one of alias, index, title or url-contains");
+                }
                 if (index != null) {
                     delegate.switchToIndex(index);
                 } else if (title != null) {

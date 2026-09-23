@@ -40,7 +40,7 @@ import org.citrusframework.playwright.actions.TracingAction;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertNull;
 
 /**
  * Assertions shared by the XML and YAML loader tests for {@code playwright-actions.citrus.it}, so
@@ -170,10 +170,10 @@ public final class PlaywrightActionsAssertions {
         assertEquals(stop.getCommand(), TracingAction.Command.STOP);
         assertEquals(stop.getPath(), "target/playwright/trace.zip");
         assertEquals(stop.getVariable(), "tracePath");
-        assertTrue(stop.getHarPath() == null);
+        assertNull(stop.getHarPath());
 
         InputAction select = (InputAction) result.getTestAction(21);
         assertEquals(select.getCommand(), InputAction.Command.SELECT);
-        assertEquals(select.getValues(), List.of("male", "female", "other"));
+        assertEquals(select.getValues(), List.of("male", "female", "New York"));
     }
 }
