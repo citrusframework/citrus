@@ -88,10 +88,6 @@ public class ConsoleAction extends AbstractPlaywrightAction {
         return text;
     }
 
-    public String getVariable() {
-        return variable;
-    }
-
     /**
      * Fluent builder for console capture, report, and verification commands.
      */

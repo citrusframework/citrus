@@ -68,7 +68,7 @@ public final class PlaywrightActionsAssertions {
         ContextAction context = (ContextAction) result.getTestAction(2);
         assertEquals(context.getCommand(), ContextAction.Command.CREATE);
         assertEquals(context.getAlias(), "admin");
-        assertEquals(context.getOptions().storageStatePath.toString(), "target/state.json");
+        assertEquals(context.getStorageStatePath(), "target/state.json");
 
         CookieAction add = (CookieAction) result.getTestAction(3);
         assertEquals(add.getCommand(), CookieAction.Command.ADD);

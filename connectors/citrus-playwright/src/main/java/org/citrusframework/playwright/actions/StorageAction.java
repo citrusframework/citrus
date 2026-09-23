@@ -113,18 +113,6 @@ public class StorageAction extends AbstractPlaywrightAction {
         return command;
     }
 
-    public String getKey() {
-        return key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public String getVariable() {
-        return variable;
-    }
-
     public String getPath() {
         return path;
     }

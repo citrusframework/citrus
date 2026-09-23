@@ -66,10 +66,6 @@ public class PdfAction extends AbstractPlaywrightAction {
         return path;
     }
 
-    public String getVariable() {
-        return variable;
-    }
-
     public boolean isPrintBackground() {
         return printBackground;
     }
