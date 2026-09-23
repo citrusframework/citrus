@@ -143,3 +143,12 @@ actions:
         command: "stop"
         path: "target/playwright/trace.zip"
         variable: "tracePath"
+
+  - playwright:
+      select:
+        element:
+          css: "#gender"
+        values:
+          - "male"
+          - "female"
+          - "other"
