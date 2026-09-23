@@ -1,0 +1,98 @@
+<test name="PlaywrightActionsDslTest" author="Citrus" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <description>Loads the context, page, network and diagnostics Playwright actions from XML</description>
+  <actions>
+    <playwright browser="playwrightBrowser">
+      <console command="capture"/>
+    </playwright>
+
+    <playwright>
+      <console command="verify-contains" text="Started"/>
+    </playwright>
+
+    <playwright>
+      <context command="create" alias="admin" storage-state="target/state.json"/>
+    </playwright>
+
+    <playwright>
+      <cookies command="add" name="session" value="abc" url="http://localhost:8080" http-only="true" same-site="lax"/>
+    </playwright>
+
+    <playwright>
+      <cookies command="read" name="session" variable="sessionCookie"/>
+    </playwright>
+
+    <playwright>
+      <dialog command="verify-closed" trigger-script="window.alert('Saved')"/>
+    </playwright>
+
+    <playwright>
+      <download save-as="target/playwright/report.csv" path-variable="downloadPath">
+        <element css="#export"/>
+      </download>
+    </playwright>
+
+    <playwright>
+      <emulate width="1280" height="720" latitude="52.52" longitude="13.40" color-scheme="dark" locale="de-DE"/>
+    </playwright>
+
+    <playwright>
+      <enter value="${username}">
+        <element css="#username"/>
+      </enter>
+    </playwright>
+
+    <playwright>
+      <frame command="fill" selector="#checkout" value="4111">
+        <element css="#card"/>
+      </frame>
+    </playwright>
+
+    <playwright>
+      <network command="route-fulfill" pattern="**/api/users" body="[]" content-type="application/json" status="201">
+        <header name="X-Test" value="1"/>
+      </network>
+    </playwright>
+
+    <playwright>
+      <network command="wait-for-response" url-contains="/api/users" status="200" variable="response">
+        <element css="#load"/>
+      </network>
+    </playwright>
+
+    <playwright>
+      <page command="create" alias="popup" context="admin"/>
+    </playwright>
+
+    <playwright>
+      <page command="switch" index="1"/>
+    </playwright>
+
+    <playwright>
+      <page-object type="org.citrusframework.playwright.dsl.PageObjectFixtures$FixturePage" method="open" validator="org.citrusframework.playwright.dsl.PageObjectFixtures$FixtureValidator"/>
+    </playwright>
+
+    <playwright>
+      <pdf path="target/playwright/page.pdf" print-background="false"/>
+    </playwright>
+
+    <playwright>
+      <permissions command="grant" permissions="geolocation clipboard-read"/>
+    </playwright>
+
+    <playwright>
+      <storage scope="session" command="save-state" path="target/state.json" opfs="true"/>
+    </playwright>
+
+    <playwright>
+      <tracing command="start" aria-snapshots="true" screen-snapshots="true"/>
+    </playwright>
+
+    <playwright>
+      <tracing command="start-har" path="target/playwright/session.har" har-content="embed" har-url-filter="**/api/**"/>
+    </playwright>
+
+    <playwright>
+      <tracing command="stop" path="target/playwright/trace.zip" variable="tracePath"/>
+    </playwright>
+  </actions>
+</test>
