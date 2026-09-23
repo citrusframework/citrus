@@ -194,10 +194,6 @@ public class NetworkAction extends AbstractPlaywrightAction {
         return command;
     }
 
-    public String getText() {
-        return text;
-    }
-
     public String getVariable() {
         return variable;
     }
@@ -222,44 +218,16 @@ public class NetworkAction extends AbstractPlaywrightAction {
         return headers;
     }
 
-    public String getHeaderName() {
-        return headerName;
-    }
-
-    public String getHeaderValue() {
-        return headerValue;
-    }
-
-    public String getResponseUrl() {
-        return responseUrl;
-    }
-
     public String getResponseUrlContains() {
         return responseUrlContains;
-    }
-
-    public String getResponseUrlRegex() {
-        return responseUrlRegex;
     }
 
     public Integer getResponseStatus() {
         return responseStatus;
     }
 
-    public Double getTimeoutMs() {
-        return timeoutMs;
-    }
-
     public LocatorSpec getTriggerLocator() {
         return triggerLocator;
-    }
-
-    public String getTriggerScript() {
-        return triggerScript;
-    }
-
-    public boolean isIncludeBody() {
-        return includeBody;
     }
 
     /**

@@ -108,28 +108,12 @@ public class EmulationAction extends AbstractPlaywrightAction {
         return longitude;
     }
 
-    public Double getAccuracy() {
-        return accuracy;
-    }
-
     public String getColorScheme() {
         return colorScheme;
     }
 
     public String getLocale() {
         return locale;
-    }
-
-    public String getTimezone() {
-        return timezone;
-    }
-
-    public String getUserAgent() {
-        return userAgent;
-    }
-
-    public String getContextAlias() {
-        return contextAlias;
     }
 
     /**

@@ -105,10 +105,6 @@ public class CookieAction extends AbstractPlaywrightAction {
         return name;
     }
 
-    public String getExpectedValue() {
-        return expectedValue;
-    }
-
     public String getVariable() {
         return variable;
     }

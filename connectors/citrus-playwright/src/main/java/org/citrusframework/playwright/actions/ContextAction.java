@@ -69,8 +69,8 @@ public class ContextAction extends AbstractPlaywrightAction {
         return alias;
     }
 
-    public Browser.NewContextOptions getOptions() {
-        return options;
+    public String getStorageStatePath() {
+        return options == null || options.storageStatePath == null ? null : options.storageStatePath.toString();
     }
 
     /**

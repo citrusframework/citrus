@@ -96,20 +96,12 @@ public class DownloadAction extends AbstractPlaywrightAction {
         return triggerLocator;
     }
 
-    public String getTriggerScript() {
-        return triggerScript;
-    }
-
     public String getSaveAs() {
         return saveAs;
     }
 
     public String getPathVariable() {
         return pathVariable;
-    }
-
-    public String getFilenameVariable() {
-        return filenameVariable;
     }
 
     /**

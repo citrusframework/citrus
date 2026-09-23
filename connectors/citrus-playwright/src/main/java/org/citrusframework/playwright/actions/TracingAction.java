@@ -147,18 +147,6 @@ public class TracingAction extends AbstractPlaywrightAction {
         return command;
     }
 
-    public Boolean getScreenshots() {
-        return screenshots;
-    }
-
-    public Boolean getSnapshots() {
-        return snapshots;
-    }
-
-    public Boolean getSources() {
-        return sources;
-    }
-
     public Boolean getAriaSnapshots() {
         return ariaSnapshots;
     }
@@ -181,10 +169,6 @@ public class TracingAction extends AbstractPlaywrightAction {
 
     public HarContentPolicy getHarContent() {
         return harContent;
-    }
-
-    public HarMode getHarMode() {
-        return harMode;
     }
 
     public String getHarUrlFilter() {
