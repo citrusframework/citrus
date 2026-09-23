@@ -123,9 +123,13 @@ public class ResourcePathTypeResolver implements TypeResolver {
     }
 
     private static boolean rootIsNotCitrusApiJar() {
-        return nonNull(ROOT)
-                && ROOT.toString().matches(".*jar(!/)?")
-                && !(ROOT.toString().replace("\\", "/").matches(".*/citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar"));
+        return nonNull(ROOT) && isNonCitrusApiJarUrl(ROOT.toString());
+    }
+
+    static boolean isNonCitrusApiJarUrl(String url) {
+        return url.startsWith("file:")
+                && url.matches(".*jar(!/)?")
+                && !(url.replace("\\", "/").matches(".*/citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar"));
     }
 
     /**

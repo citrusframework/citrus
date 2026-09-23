@@ -48,6 +48,39 @@ public class ResourcePathTypeResolverTest {
     }
 
     @Test
+    public void testIsNonCitrusApiJarUrl() {
+        Assert.assertTrue(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/some-library-1.0.0.jar"));
+        Assert.assertTrue(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/some-library-1.0.0.jar!/"));
+    }
+
+    @Test
+    public void testIsNonCitrusApiJarUrlExcludesCitrusApiJar() {
+        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1.jar"));
+        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1-SNAPSHOT.jar"));
+    }
+
+    @Test
+    public void testIsNonCitrusApiJarUrlExcludesNestedJarUrls() {
+        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl(
+                "jar:nested:/path/to/fat.jar/!BOOT-INF/lib/citrus-api-5.0.1.jar!/"));
+        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl(
+                "jar:nested:/path/to/fat.jar/!BOOT-INF/lib/some-library-1.0.0.jar!/"));
+    }
+
+    @Test
+    public void testIsNonCitrusApiJarUrlExcludesNonFileUrls() {
+        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl(
+                "jar:file:/path/to/fat.jar!/BOOT-INF/lib/some-library-1.0.0.jar!/"));
+        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("http://example.com/some.jar"));
+    }
+
+    @Test
+    public void testIsNonCitrusApiJarUrlExcludesNonJarFiles() {
+        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/classes/"));
+        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/some-file.txt"));
+    }
+
+    @Test
     public void testResolveAll() {
         Map<String, Object> resolved = new ResourcePathTypeResolver().resolveAll("mocks");
         Assert.assertEquals(resolved.size(), 3L);
