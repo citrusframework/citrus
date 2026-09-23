@@ -306,7 +306,11 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             } else if (columnValuesMap.containsKey(columnName.toUpperCase())) {
                 columnName = columnName.toUpperCase();
             } else if (!columnValuesMap.containsKey(columnName)) {
-                throw new CitrusRuntimeException("Could not find column '" + columnName + "' in SQL result set");
+                if (controlEntry.getValue().isEmpty()) {
+                    continue;
+                }
+                throw new CitrusRuntimeException("Validation failed for column: '" + columnName + "' " +
+                        "expected rows count: " + controlEntry.getValue().size() + " but was 0");
             }
 
             List<String> resultColumnValues = columnValuesMap.get(columnName);

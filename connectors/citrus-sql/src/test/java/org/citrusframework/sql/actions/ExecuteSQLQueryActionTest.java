@@ -705,6 +705,46 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
     }
 
     @Test
+    public void testResultSetValidationZeroRows() {
+        String sql = "select 1 as SOME_COL from SOME_TABLE fetch first row only";
+        reset(jdbcTemplate);
+
+        when(jdbcTemplate.queryForList(sql)).thenReturn(Collections.emptyList());
+
+        executeSQLQueryAction.statements(Collections.singletonList(sql));
+        executeSQLQueryAction.validate("SOME_COL");
+        executeSQLQueryAction.build().execute(context);
+    }
+
+    @Test
+    public void testResultSetValidationZeroRowsMultipleColumns() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID = 999";
+        reset(jdbcTemplate);
+
+        when(jdbcTemplate.queryForList(sql)).thenReturn(Collections.emptyList());
+
+        executeSQLQueryAction.statements(Collections.singletonList(sql));
+        executeSQLQueryAction.validate("ORDERTYPE");
+        executeSQLQueryAction.validate("STATUS");
+        executeSQLQueryAction.build().execute(context);
+    }
+
+    @Test
+    public void testResultSetValidationExpectedRowsButGotZero() {
+        String sql = "select ORDERTYPE from orders where ID = 5";
+        reset(jdbcTemplate);
+
+        when(jdbcTemplate.queryForList(sql)).thenReturn(Collections.emptyList());
+
+        executeSQLQueryAction.statements(Collections.singletonList(sql));
+        executeSQLQueryAction.validate("ORDERTYPE", "small");
+
+        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class,
+                () -> executeSQLQueryAction.build().execute(context));
+        Assert.assertTrue(exception.getMessage().contains("expected rows count: 1 but was 0"));
+    }
+
+    @Test
     public void testNoJdbcTemplateConfigured() {
         // Special ExecuteSQLQueryAction without a JdbcTemplate
         executeSQLQueryAction = new ExecuteSQLQueryAction.Builder().jdbcTemplate(null);
