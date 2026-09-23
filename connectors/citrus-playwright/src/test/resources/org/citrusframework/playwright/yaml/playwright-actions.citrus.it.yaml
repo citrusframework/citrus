@@ -1,0 +1,145 @@
+name: "PlaywrightActionsDslTest"
+author: "Citrus"
+status: "FINAL"
+description: "Loads the context, page, network and diagnostics Playwright actions from YAML"
+actions:
+  - playwright:
+      browser: "playwrightBrowser"
+      console:
+        command: "capture"
+
+  - playwright:
+      console:
+        command: "verify-contains"
+        text: "Started"
+
+  - playwright:
+      context:
+        command: "create"
+        alias: "admin"
+        storage-state: "target/state.json"
+
+  - playwright:
+      cookies:
+        command: "add"
+        name: "session"
+        value: "abc"
+        url: "http://localhost:8080"
+        http-only: true
+        same-site: "lax"
+
+  - playwright:
+      cookies:
+        command: "read"
+        name: "session"
+        variable: "sessionCookie"
+
+  - playwright:
+      dialog:
+        command: "verify-closed"
+        trigger-script: "window.alert('Saved')"
+
+  - playwright:
+      download:
+        element:
+          css: "#export"
+        save-as: "target/playwright/report.csv"
+        path-variable: "downloadPath"
+
+  - playwright:
+      emulate:
+        width: 1280
+        height: 720
+        latitude: 52.52
+        longitude: 13.40
+        color-scheme: "dark"
+        locale: "de-DE"
+
+  - playwright:
+      enter:
+        element:
+          css: "#username"
+        value: "${username}"
+
+  - playwright:
+      frame:
+        command: "fill"
+        selector: "#checkout"
+        element:
+          css: "#card"
+        value: "4111"
+
+  - playwright:
+      network:
+        command: "route-fulfill"
+        pattern: "**/api/users"
+        body: "[]"
+        content-type: "application/json"
+        status: 201
+        headers:
+          - name: "X-Test"
+            value: "1"
+
+  - playwright:
+      network:
+        command: "wait-for-response"
+        url-contains: "/api/users"
+        status: 200
+        element:
+          css: "#load"
+        variable: "response"
+
+  - playwright:
+      page:
+        command: "create"
+        alias: "popup"
+        context: "admin"
+
+  - playwright:
+      page:
+        command: "switch"
+        index: 1
+
+  - playwright:
+      page-object:
+        type: "org.citrusframework.playwright.dsl.PageObjectFixtures$FixturePage"
+        method: "open"
+        validator: "org.citrusframework.playwright.dsl.PageObjectFixtures$FixtureValidator"
+
+  - playwright:
+      pdf:
+        path: "target/playwright/page.pdf"
+        print-background: false
+
+  - playwright:
+      permissions:
+        command: "grant"
+        permissions:
+          - "geolocation"
+          - "clipboard-read"
+
+  - playwright:
+      storage:
+        scope: "session"
+        command: "save-state"
+        path: "target/state.json"
+        opfs: true
+
+  - playwright:
+      tracing:
+        command: "start"
+        aria-snapshots: true
+        screen-snapshots: true
+
+  - playwright:
+      tracing:
+        command: "start-har"
+        path: "target/playwright/session.har"
+        har-content: "embed"
+        har-url-filter: "**/api/**"
+
+  - playwright:
+      tracing:
+        command: "stop"
+        path: "target/playwright/trace.zip"
+        variable: "tracePath"
