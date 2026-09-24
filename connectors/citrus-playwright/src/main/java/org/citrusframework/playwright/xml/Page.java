@@ -97,6 +97,9 @@ public class Page extends AbstractPlaywrightAction.Builder<PageAction, Page> {
             case "create" -> delegate.newPage(alias);
             case "switch" -> {
                 long selectors = Stream.of(alias, index, title, urlContains).filter(Objects::nonNull).count();
+                if (selectors == 0) {
+                    throw new CitrusRuntimeException("Missing Playwright page switch selector - use one of alias, index, title or url-contains");
+                }
                 if (selectors > 1) {
                     throw new CitrusRuntimeException("Ambiguous Playwright page switch - use only one of alias, index, title or url-contains");
                 }

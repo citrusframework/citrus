@@ -171,6 +171,9 @@ public class Network extends AbstractPlaywrightAction.Builder<NetworkAction, Net
         if (contentType != null) {
             delegate.contentType(contentType);
         }
+        // One status attribute, two meanings: the fulfilled response status on route-fulfill and the
+        // expected response status on wait-for-response. NetworkAction.Builder#status(int) picks by
+        // the current command, so it must run after the command has been applied above.
         if (status != null) {
             delegate.status(status);
         }

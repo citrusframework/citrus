@@ -491,8 +491,7 @@ accept `_` in place of `-`. The attribute or key names are the same in XML and Y
 |`tracing` |`start`, `stop`, `start-har`, `stop-har` |`path`, `screenshots`, `snapshots`, `sources`, `aria-snapshots`, `screen-snapshots`, `har-content`, `har-mode`, `har-url-filter`, `variable`
 |===
 
-`page` with `command="switch"` selects by `index`, `title` or `url-contains` when one is given, and
-by `alias` otherwise. For `tracing`, `path` is the trace archive written on `stop` and the HAR file
+`page` with `command="switch"` takes exactly one of `alias`, `index`, `title` or `url-contains`. For `tracing`, `path` is the trace archive written on `stop` and the HAR file
 written on `start-har`. On `network`, `status` is the fulfilled response status for
 `route-fulfill` and the expected response status for `wait-for-response`.
 
