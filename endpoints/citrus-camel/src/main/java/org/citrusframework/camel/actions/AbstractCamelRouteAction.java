@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.citrusframework.api.actions.camel.CamelRouteActionBuilderBase;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
  * @since 2.4
@@ -46,6 +47,18 @@ public abstract class AbstractCamelRouteAction extends AbstractCamelAction {
     }
 
     /**
+     * Gets a single Camel route id from the list.
+     * @return the first route id
+     * @throws CitrusRuntimeException if no route id is set
+     */
+    public String getRouteId() {
+        if (routeIds.isEmpty()) {
+            throw new CitrusRuntimeException("Missing route id for Camel route action");
+        }
+        return routeIds.get(0);
+    }
+
+    /**
      * Gets the Camel routes.
      * @return
      */
@@ -60,6 +73,12 @@ public abstract class AbstractCamelRouteAction extends AbstractCamelAction {
             implements CamelRouteActionBuilderBase<T, B> {
 
         protected List<String> routeIds = new ArrayList<>();
+
+        @Override
+        public B route(String routeId) {
+            this.routeIds.add(routeId);
+            return self;
+        }
 
         @Override
         public B routes(String... routeIds) {

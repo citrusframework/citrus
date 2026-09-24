@@ -28,17 +28,13 @@ public class CamelResetRouteStatsAction extends AbstractCamelRouteAction {
 
     private static final Logger logger = LoggerFactory.getLogger(CamelResetRouteStatsAction.class);
 
-    private final String routeId;
-
     public CamelResetRouteStatsAction(Builder builder) {
         super("reset-route-stats", builder);
-
-        this.routeId = builder.routeId;
     }
 
     @Override
     public void doExecute(TestContext context) {
-        String resolvedRouteId = context.replaceDynamicContentInString(routeId);
+        String resolvedRouteId = context.replaceDynamicContentInString(getRouteId());
 
         ManagedCamelContext managedContext = camelContext.getCamelContextExtension()
                 .getContextPlugin(ManagedCamelContext.class);
@@ -66,20 +62,8 @@ public class CamelResetRouteStatsAction extends AbstractCamelRouteAction {
         }
     }
 
-    public String getRouteId() {
-        return routeId;
-    }
-
     public static final class Builder extends AbstractCamelRouteAction.Builder<CamelResetRouteStatsAction, Builder>
             implements CamelResetRouteStatsActionBuilder<CamelResetRouteStatsAction, Builder> {
-
-        private String routeId;
-
-        @Override
-        public Builder route(String routeId) {
-            this.routeId = routeId;
-            return this;
-        }
 
         @Override
         public CamelResetRouteStatsAction doBuild() {
