@@ -745,6 +745,27 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
     }
 
     @Test
+    public void testResultSetValidationMisspelledColumnWithRows() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID = 5";
+        reset(jdbcTemplate);
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        Map<String, Object> resultRow = new HashMap<>();
+        resultRow.put("ORDERTYPE", "small");
+        resultRow.put("STATUS", "in_progress");
+        resultList.add(resultRow);
+
+        when(jdbcTemplate.queryForList(sql)).thenReturn(resultList);
+
+        executeSQLQueryAction.statements(Collections.singletonList(sql));
+        executeSQLQueryAction.validate("ORDRETYPE");
+
+        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class,
+                () -> executeSQLQueryAction.build().execute(context));
+        Assert.assertTrue(exception.getMessage().contains("Could not find column 'ORDRETYPE' in SQL result set"));
+    }
+
+    @Test
     public void testNoJdbcTemplateConfigured() {
         // Special ExecuteSQLQueryAction without a JdbcTemplate
         executeSQLQueryAction = new ExecuteSQLQueryAction.Builder().jdbcTemplate(null);
