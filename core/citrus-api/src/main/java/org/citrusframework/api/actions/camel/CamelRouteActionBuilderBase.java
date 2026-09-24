@@ -25,6 +25,11 @@ public interface CamelRouteActionBuilderBase<T extends TestAction, B extends Tes
         extends CamelActionBuilderBase<T, B> {
 
     /**
+     * Adds a single route id.
+     */
+    B route(String routeId);
+
+    /**
      * Adds route ids.
      */
     B routes(String... routeIds);

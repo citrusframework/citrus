@@ -38,7 +38,6 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
 
     private static final Logger logger = LoggerFactory.getLogger(CamelVerifyRouteStatsAction.class);
 
-    private final String routeId;
     private final Long completed;
     private final Long failed;
     private final String expectedStatsJson;
@@ -46,7 +45,6 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
     public CamelVerifyRouteStatsAction(Builder builder) {
         super("verify-route-stats", builder);
 
-        this.routeId = builder.routeId;
         this.completed = builder.completed;
         this.failed = builder.failed;
         this.expectedStatsJson = builder.expectedStatsJson;
@@ -54,7 +52,7 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
 
     @Override
     public void doExecute(TestContext context) {
-        String resolvedRouteId = context.replaceDynamicContentInString(routeId);
+        String resolvedRouteId = context.replaceDynamicContentInString(getRouteId());
 
         ManagedCamelContext managedContext = camelContext.getCamelContextExtension()
                 .getContextPlugin(ManagedCamelContext.class);
@@ -125,10 +123,6 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
         }
     }
 
-    public String getRouteId() {
-        return routeId;
-    }
-
     public Long getCompleted() {
         return completed;
     }
@@ -144,16 +138,9 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
     public static final class Builder extends AbstractCamelRouteAction.Builder<CamelVerifyRouteStatsAction, Builder>
             implements CamelVerifyRouteStatsActionBuilder<CamelVerifyRouteStatsAction, Builder> {
 
-        private String routeId;
         private Long completed;
         private Long failed;
         private String expectedStatsJson;
-
-        @Override
-        public Builder route(String routeId) {
-            this.routeId = routeId;
-            return this;
-        }
 
         @Override
         public Builder completed(long completed) {
