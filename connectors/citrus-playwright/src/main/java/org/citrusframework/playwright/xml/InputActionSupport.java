@@ -55,9 +55,12 @@ abstract class InputActionSupport<B extends InputActionSupport<B>> extends Abstr
 
     /**
      * Values separated by commas.
+     *
+     * <p>Deliberately not an overload of {@link #setValues(List)}: JAXB picks between overloaded
+     * setters by reflection order, which is unspecified, so the attribute could be dropped.</p>
      */
-    @XmlAttribute
-    public void setValues(String values) {
+    @XmlAttribute(name = "values")
+    public void setValueList(String values) {
         delegate.values(DslCommands.split(values));
     }
 
