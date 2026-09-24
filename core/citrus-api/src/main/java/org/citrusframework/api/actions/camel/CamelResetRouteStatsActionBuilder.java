@@ -21,5 +21,4 @@ import org.citrusframework.TestAction;
 public interface CamelResetRouteStatsActionBuilder<T extends TestAction, B extends CamelResetRouteStatsActionBuilder<T, B>>
         extends CamelRouteActionBuilderBase<T, B> {
 
-    B route(String routeId);
 }

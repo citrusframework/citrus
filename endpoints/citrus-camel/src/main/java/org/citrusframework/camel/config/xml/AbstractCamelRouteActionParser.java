@@ -18,62 +18,26 @@ package org.citrusframework.camel.config.xml;
 
 import java.util.List;
 
-import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.AbstractCamelRouteAction;
-import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
-import org.citrusframework.spring.config.xml.AbstractTestActionFactoryBean;
-import org.citrusframework.spring.config.xml.DescriptionElementParser;
-import org.apache.camel.CamelContext;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
  * @since 2.4
  */
-public abstract class AbstractCamelRouteActionParser implements BeanDefinitionParser {
+public abstract class AbstractCamelRouteActionParser extends AbstractCamelActionParser {
 
     @Override
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(getBeanDefinitionClass());
-
-        DescriptionElementParser.doParse(element, beanDefinition);
-
-        BeanDefinitionParserUtils.setPropertyReference(beanDefinition,
-                element.getAttribute("camel-context"), "camelContext", CamelSettings.getContextName());
-        parse(beanDefinition, element, parserContext);
-
-        return beanDefinition.getBeanDefinition();
-    }
-
-    /**
-     * Subclasses provide bean definition class.
-     * @return
-     */
     protected abstract Class<? extends AbstractCamelRouteActionFactoryBean<?, ?>> getBeanDefinitionClass();
 
-    /**
-     * Subclass parsing logic.
-     * @param beanDefinition
-     * @param element
-     * @param parserContext
-     */
+    @Override
     protected abstract void parse(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext);
 
     /**
      * Test action factory bean.
      */
-    public static abstract class AbstractCamelRouteActionFactoryBean<T extends AbstractCamelRouteAction, B extends AbstractCamelRouteAction.Builder<?, ?>> extends AbstractTestActionFactoryBean<T, B> {
-        /**
-         * Sets the target Camel context.
-         * @param camelContext
-         */
-        public void setCamelContext(CamelContext camelContext) {
-            getBuilder().context(camelContext);
-        }
+    public static abstract class AbstractCamelRouteActionFactoryBean<T extends AbstractCamelRouteAction, B extends AbstractCamelRouteAction.Builder<?, ?>> extends AbstractCamelActionFactoryBean<T, B> {
 
         /**
          * Sets the Camel routes.

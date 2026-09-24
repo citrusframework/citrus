@@ -113,11 +113,10 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
 
     @Override
     public CamelControlBusAction.Builder controlBus() {
-        CamelControlBusAction.Builder builder = new CamelControlBusAction.Builder()
-                .context(camelContext);
-
-        this.delegate = builder;
-        return builder;
+        return new CamelControlBusAction.Builder()
+                .context(camelContextName)
+                .context(camelContext)
+                .withReferenceResolver(referenceResolver);
     }
 
     @Override
