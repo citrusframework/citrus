@@ -134,6 +134,17 @@ class ActionWrapperTest {
     }
 
     @Test
+    void shouldRejectPageSwitchWithoutSelector() {
+        Page page = new Page();
+        page.setCommand("switch");
+
+        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, page::build);
+
+        assertEquals(exception.getMessage(),
+                "Missing Playwright page switch selector - use one of alias, index, title or url-contains");
+    }
+
+    @Test
     void shouldRejectTracePathOnStart() {
         Tracing tracing = new Tracing();
         tracing.setCommand("start");
