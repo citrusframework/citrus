@@ -361,13 +361,17 @@ test context, the logs, or the failure evidence.
 A test often needs to call the application's HTTP API *as the user the browser is logged in as*:
 to seed data before a UI step, or to check through the API what the UI claims to have saved. The
 connector provides a Citrus `HttpClient` whose requests travel through a Playwright browser
-context. You write the requests and verify the responses with the standard <<http-rest-client,`http()` actions>>;
-only the client is different.
+context, the same way Playwright's own `APIRequestContext` (`context.request()`) does. You write the
+requests and verify the responses with the standard <<http-rest-client,`http()` actions>>; only the
+client is different.
 
 *When to use which.* Use a browser-session client when the request must carry the browser's
 session, or must hand a session back to the browser (an API login that the UI then continues).
 Use a plain `HttpClient` for everything else. The two are used the same way in a test, and you can
 mix them freely.
+
+[[playwright-api-requests-client]]
+=== Declaring the client
 
 .Citrus Bean
 [source,java,indent=0,role="primary"]
@@ -405,10 +409,46 @@ private HttpClient browserApi;
                     request-factory="browserTransport"/>
 ----
 
-The request URL defaults to the browser endpoint's `baseUrl`; set `requestUrl(...)` to call
-another origin. Building the client fails when neither is set. The other options are `context(...)`,
-`timeout(...)`, `maxRedirects(...)`, `handleCookies(...)` and `errorHandlingStrategy(...)`, and the
-annotation has the same attributes.
+The builder and the annotation offer the same options, except where the table shows no attribute.
+Building the client fails when no browser
+is bound, when a browser name cannot be resolved, or when there is neither a request URL nor a
+browser `baseUrl`.
+
+[cols="3,2,5",options="header"]
+|===
+|Builder method |Annotation attribute |Effect and default
+
+|`browser(PlaywrightBrowser)` / `browser(String)` |`browser` |The browser endpoint whose context carries the requests. Required; a name is resolved as a bean
+|`context(String)` |`context` |Binds every request to a named browser context. Default: the browser's *current* context at the time each request is sent
+|`requestUrl(String)` |`requestUrl` |Base URL that request paths are appended to. Default: the browser endpoint's `baseUrl`
+|`timeout(long)` |`timeout` |Request timeout in milliseconds, also used as the client timeout. Default: the driver's 30 seconds
+|`maxRedirects(int)` |`maxRedirects` |Redirects to follow. `0` returns the redirect response itself. Default: 20
+|`maxRetries(int)` |`maxRetries` |Retries after a connection reset (`ECONNRESET`), with a backoff starting at 250 ms. Other failures are never retried. Default: 0
+|`ignoreHttpsErrors(boolean)` |`ignoreHttpsErrors` |Accepts invalid TLS certificates for this client. It can only widen the browser context's own `ignoreHTTPSErrors` setting, never narrow it. Default: false
+|`handleCookies(boolean)` |`handleCookies` |Maps `Set-Cookie` response headers to message cookies, as on any Http client. Default: false
+|`errorHandlingStrategy(...)` |— |What a non-2xx response does, as on any Http client. Default: `PROPAGATE`, the response is delivered for the test to verify
+|`name(String)` |the field name |Endpoint name
+|===
+
+For full control over the Http client, plug the transport into the regular builder. The request
+URL is then yours to set:
+
+[source,java]
+----
+HttpClient custom = new HttpClientBuilder()
+        .requestUrl("http://localhost:8080")
+        .requestFactory(new PlaywrightClientHttpRequestFactory(browser)
+                .context("admin")
+                .timeout(10_000)
+                .maxRedirects(0)
+                .maxRetries(2)
+                .ignoreHttpsErrors(true))
+        .defaultAcceptHeader(false)
+        .build();
+----
+
+[[playwright-api-requests-usage]]
+=== Sending requests and verifying responses
 
 Log in through the UI, then call the API as that user:
 
@@ -473,14 +513,35 @@ $(http().client(browserApi)
             {"user":"alice"}
 ----
 
-*What travels with a request.* The browser context's cookies, including HttpOnly ones, go out with
-every request, and a `Set-Cookie` on a response is stored in the context, so the next page
-navigation sends it. The context's extra HTTP headers, user agent and HTTP credentials apply as
-well. Each request goes through the browser's *current* context at the time it is sent; bind a
-client to a named context with `context("admin")` to test several users side by side.
+Form and multipart bodies are encoded by the Http client before they reach the browser, so they
+work exactly as on a plain client:
 
-*What does not.* Web storage is not part of the session. If the application keeps a bearer token
-in `localStorage`, read it and send it yourself:
+[source,java]
+----
+MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+parts.add("name", "citrus");
+parts.add("file", new ClassPathResource("uploads/avatar.png"));
+
+$(http().client(browserApi)
+        .send()
+        .post("/api/upload")
+        .message()
+        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+        .body(parts));
+----
+
+[[playwright-api-requests-session]]
+=== What travels with a request
+
+The browser context's cookies, including HttpOnly ones, go out with every request, and a
+`Set-Cookie` on a response is stored in the context, so the next page navigation sends it. The
+browser context's HTTP settings apply as well: extra HTTP headers, user agent, HTTP credentials,
+proxy, client certificates and `ignoreHTTPSErrors`. Configure them on the browser endpoint
+(`contextOptions(...)`, `httpCredentials(...)`), and they hold for pages and API requests alike.
+Bind a client to a named context with `context("admin")` to test several users side by side.
+
+Web storage is *not* part of the session. If the application keeps a bearer token in
+`localStorage`, read it and send it yourself:
 
 [source,java]
 ----
@@ -496,14 +557,23 @@ A request that sets a `Cookie` header fails before it is sent. The driver would 
 *instead of* the browser's cookies and silently drop the session, so add cookies to the context
 with `playwright().cookies().add(...)` instead.
 
-*Transport details.* Each response carries the server address, TLS details and resource timing the
-driver reports, as headers you can verify like any other. A detail the driver does not report —
-TLS over plain HTTP, the DNS phase for an IP address — is left out.
+Browser-session requests are not part of the page's network traffic. `network().route(...)` stubs
+do not intercept them, network capture and HAR recording do not list them, and the context trace
+does not record them. To stub the backend an API request talks to, use a Citrus
+<<http-rest-server,Http server>>.
+
+[[playwright-api-requests-transport]]
+=== Transport details
+
+Each response carries the details the driver reports as headers you can verify or extract like
+any other. A detail the driver does not report, such as TLS over plain HTTP or the DNS phase for
+an IP address, is left out rather than faked.
 
 [cols="2,3",options="header"]
 |===
 |Header |Value
 
+|`citrus_playwright_api_url` |Final URL of the response, after the redirects the driver followed
 |`citrus_playwright_api_server_ip`, `citrus_playwright_api_server_port` |Address of the server that answered
 |`citrus_playwright_api_tls_protocol`, `_tls_subject_name`, `_tls_issuer` |TLS details of the connection
 |`citrus_playwright_api_tls_valid_from`, `_tls_valid_to` |Certificate validity, in epoch seconds
@@ -517,25 +587,71 @@ $(http().client(browserApi)
         .receive()
         .response(HttpStatus.OK)
         .message()
-        .header("citrus_playwright_api_timing_response_end", "@lowerThan(500)@"));
+        .header("citrus_playwright_api_tls_protocol", "@startsWith('TLS')@")
+        .header("citrus_playwright_api_timing_response_end", "@lowerThan(500)@")
+        .extract(extractor().fromHeaders().header("citrus_playwright_api_url", "finalUrl")));
 ----
 
-*HTTP client settings.* The client is a regular `HttpClient`, so message conversion, header mapping,
-interceptors, the error handling strategy and `handleCookies` behave exactly as on any other client.
-A non-2xx response is delivered for the test to verify, and repeated response headers arrive
-comma-joined (`Set-Cookie: A=1; Path=/,B=2; Path=/`), or as separate cookies with
-`handleCookies(true)`. Settings of the replaced transport do not apply: the HttpComponents
-`httpClient`, connection pooling and custom `restTemplate`. Replacing the `requestFactory` detaches
-the client from the browser.
+[[playwright-api-requests-mapping]]
+=== Playwright API requests in Citrus
+
+Every capability of Playwright's `APIRequestContext` and `APIResponse` has a Citrus counterpart,
+except where the table says otherwise.
+
+[cols="2,3",options="header"]
+|===
+|Playwright |Citrus browser-session client
+
+2+|*Requests*
+|`get`, `post`, `put`, `patch`, `delete`, `head`, `fetch` with a method |`http().client(browserApi).send().get(...)`, `.post(...)`, `.put(...)`, `.patch(...)`, `.delete(...)`, `.head(...)`, `.options(...)`, `.trace(...)`
+|Request URL and `baseURL` |Client `requestUrl` (default: the browser `baseUrl`) plus the request path; `.uri(...)` sends to another absolute URL
+|`setQueryParam(...)` |`.queryParam(name, value)`
+|`setHeader(...)` |`.message().header(name, value)`, `.contentType(...)`, `.accept(...)`
+|`setData(...)` |`.message().body(...)` with text, a resource or a JSON document
+|`setForm(...)` |`.message().contentType("application/x-www-form-urlencoded").body(multiValueMap)`
+|`setMultipart(...)` |`.message().contentType("multipart/form-data").body(multiValueMap)`
+|`setTimeout(...)` |Client `timeout(...)`
+|`setMaxRedirects(...)` |Client `maxRedirects(...)`
+|`setMaxRetries(...)` |Client `maxRetries(...)`
+|`setIgnoreHTTPSErrors(...)` |Client `ignoreHttpsErrors(true)`, or the browser context's `ignoreHTTPSErrors`
+|`setFailOnStatusCode(true)` |Client `errorHandlingStrategy(ErrorHandlingStrategy.THROWS_EXCEPTION)`
+|`fetch(Request)`, replaying a captured page request |Not supported
+2+|*Session*
+|Cookies of the browser context, in both directions |Automatic
+|Context `extraHTTPHeaders`, `userAgent`, `httpCredentials`, `proxy`, `clientCertificates` |Automatic, from the browser endpoint's context configuration
+|`storageState()` |`playwright().storage().saveState(...)`; it holds the same cookies
+|`Playwright.request().newContext()`, a request without the browser session |A plain `HttpClient`
+2+|*Responses*
+|`status()`, `ok()` |`.response(HttpStatus.CREATED)`, or the `citrus_http_status_code` header
+|`statusText()` |Not available. `citrus_http_reason_phrase` holds the standard reason phrase of the status code, as on any Http client
+|`headers()`, `headersArray()` |Message headers: `.message().header(...)`, `extractor().fromHeaders()`. Repeated headers arrive comma-joined (`Set-Cookie: A=1; Path=/,B=2; Path=/`), or as separate cookies with `handleCookies(true)`
+|`body()`, `text()` |The message body, validated and extracted like any other; binary bodies follow the client's binary media types, as on any Http client
+|`url()` |`citrus_playwright_api_url`
+|`serverAddr()` |`citrus_playwright_api_server_ip`, `citrus_playwright_api_server_port`
+|`securityDetails()` |`citrus_playwright_api_tls_*`
+|`timing()` |`citrus_playwright_api_timing_*`
+|`dispose()` |Automatic after each response
+2+|*Context*
+|`tracing()` |Not supported. The context trace does not record API requests; Citrus message tracing and reports do
+|`dispose()` |Follows the browser endpoint's lifecycle
+|===
+
+[[playwright-api-requests-limits]]
+=== Http client settings, threads and logging
+
+The client is a regular `HttpClient`, so message conversion, header mapping, interceptors, the
+error handling strategy and `handleCookies` behave exactly as on any other client. Settings of the
+replaced transport do not apply: the HttpComponents `httpClient`, connection pooling and a custom
+`restTemplate`. Replacing the `requestFactory` detaches the client from the browser.
 
 NOTE: A browser-session client runs on the browser endpoint's thread, like every Playwright action.
 A forked send (`fork(true)`) runs on another thread and therefore fails.
 
-*Logging.* The cookies and credentials that the browser adds never appear in Citrus logs: the driver
-attaches them after Citrus has logged the request. The rest of the exchange is logged like any HTTP
-exchange, masked by the Citrus-wide `citrus.logger.mask.keywords` (see <<playwright-browser>>), so
-add keywords such as `token` for response bodies that carry credentials. Playwright trace archives
-record API requests too, and they are not redacted.
+The cookies and credentials that the browser adds never appear in Citrus logs: the driver
+attaches them after Citrus has logged the request, and a failed request is reported without the
+driver's call log, which lists them. The rest of the exchange is logged like any Http exchange,
+masked by the Citrus-wide `citrus.logger.mask.keywords` (see <<playwright-browser>>). Add keywords
+such as `token` for response bodies that carry credentials.
 
 [[playwright-dsl]]
 == XML and YAML DSL
