@@ -387,6 +387,9 @@ public HttpClient httpClient() {
 Of course, you can set the *Accept* header on each send operation in order to tell the server what kind of content types
 are supported in response messages.
 
+TIP: For requests that must carry a Playwright browser session (the cookies and HTTP credentials of
+a logged-in browser), use an Http client whose transport is the browser. See <<playwright-api-requests>>.
+
 Now we can send and receive messages as Http client with specific test actions. Now let's move on to the Http server.
 
 [[http-client-interceptors]]
