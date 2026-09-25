@@ -38,14 +38,17 @@ import org.springframework.http.client.ClientHttpResponse;
  * header such as {@code Set-Cookie}.</p>
  *
  * <p>The driver decompresses {@code gzip}, {@code br} and {@code deflate} bodies but reports the
- * server's headers. For such a body the snapshot drops {@code Content-Encoding} and sets
- * {@code Content-Length} to the decoded size, because Spring reads exactly that many bytes.</p>
+ * server's headers. When a delivered body is decoded, or its length disagrees with
+ * {@code Content-Length}, the snapshot describes the body it hands over: no
+ * {@code Content-Encoding} or {@code Transfer-Encoding}, and a {@code Content-Length} of the
+ * decoded size, because Spring reads exactly that many bytes. A response without a body (HEAD,
+ * 204, 304) keeps its headers, which describe the entity rather than a delivered body.</p>
  */
 final class PlaywrightClientHttpResponse implements ClientHttpResponse {
 
     private static final byte[] EMPTY_BODY = new byte[0];
 
-    /** Content codings the driver decodes before it hands out the body. */
+    /** Content codings the driver is known to decode before it hands out the body. */
     private static final Set<String> DECODED_ENCODINGS = Set.of("gzip", "x-gzip", "br", "deflate");
 
     private final HttpStatusCode statusCode;
@@ -75,8 +78,9 @@ final class PlaywrightClientHttpResponse implements ClientHttpResponse {
             TransportDetailHeaders.from(response.url(), response.timing(), response.serverAddr(), response.securityDetails())
                     .forEach(headers::set);
 
-            byte[] body = response.body() == null ? EMPTY_BODY : response.body();
-            describeDecodedBody(headers, body);
+            byte[] fetched = response.body();
+            byte[] body = fetched == null ? EMPTY_BODY : fetched;
+            describeDeliveredBody(headers, body);
             return new PlaywrightClientHttpResponse(statusCode(response.status()), response.statusText(), headers, body);
         } finally {
             response.dispose();
@@ -94,12 +98,23 @@ final class PlaywrightClientHttpResponse implements ClientHttpResponse {
         return HttpStatusCode.valueOf(status);
     }
 
-    private static void describeDecodedBody(HttpHeaders headers, byte[] body) {
-        String encoding = headers.getFirst(HttpHeaders.CONTENT_ENCODING);
-        if (encoding != null && DECODED_ENCODINGS.contains(encoding.trim().toLowerCase(Locale.ROOT))) {
-            headers.remove(HttpHeaders.CONTENT_ENCODING);
-            headers.setContentLength(body.length);
+    private static void describeDeliveredBody(HttpHeaders headers, byte[] body) {
+        if (body.length == 0) {
+            return;
         }
+
+        String encoding = headers.getFirst(HttpHeaders.CONTENT_ENCODING);
+        boolean decoded = encoding != null && DECODED_ENCODINGS.contains(encoding.trim().toLowerCase(Locale.ROOT));
+        long declaredLength = headers.getContentLength();
+        boolean lengthDisagrees = declaredLength >= 0 && declaredLength != body.length;
+        if (!decoded && !lengthDisagrees) {
+            return;
+        }
+
+        // Only a transformation by the driver makes a delivered body disagree with its headers.
+        headers.remove(HttpHeaders.CONTENT_ENCODING);
+        headers.remove(HttpHeaders.TRANSFER_ENCODING);
+        headers.setContentLength(body.length);
     }
 
     @Override
