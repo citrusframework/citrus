@@ -437,6 +437,17 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
     }
 
     @Test
+    void shouldNotBeInterceptedByPageRoutes() {
+        startBrowser(builder -> { });
+        playwright().browser(browser).network().route("**/*").abort().build().execute(context);
+
+        Message response = exchange(browserApi, "/echo");
+
+        assertEquals(String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "200");
+        lastRequest("/echo");
+    }
+
+    @Test
     void shouldRunTheXmlSource() {
         startBrowser(builder -> { });
         context.setVariable("loginUrl", server.url("/login"));
