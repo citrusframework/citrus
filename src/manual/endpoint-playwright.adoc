@@ -27,6 +27,7 @@ The `PlaywrightBrowser` endpoint manages the Playwright runtime, browser launch,
 @BindToRegistry
 public PlaywrightBrowser playwrightBrowser() {
     return PlaywrightEndpoints.playwright()
+            .browser()
             .browserType("chromium")
             .headless(true)
             .baseUrl("http://localhost:8080")
@@ -40,6 +41,7 @@ public PlaywrightBrowser playwrightBrowser() {
 @Bean
 public PlaywrightBrowser playwrightBrowser() {
     return PlaywrightEndpoints.playwright()
+            .browser()
             .browserType("chromium")
             .headless(true)
             .baseUrl("http://localhost:8080")
@@ -569,6 +571,7 @@ On test failure the endpoint can persist diagnostic artifacts to `target/playwri
 [source,java]
 ----
 PlaywrightEndpoints.playwright()
+        .browser()
         .captureFailureScreenshot(true)
         .captureFailurePageSource(true)
         .captureFailureTrace(true)
