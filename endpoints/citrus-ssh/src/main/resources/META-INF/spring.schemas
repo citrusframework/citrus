@@ -69,4 +69,5 @@ http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config-4.9.4.xsd=or
 http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config-5.0.0.xsd=org/citrusframework/schema/citrus-ssh-config-5.0.0.xsd
 http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config-5.0.1.xsd=org/citrusframework/schema/citrus-ssh-config-5.0.1.xsd
 http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config-5.0.2.xsd=org/citrusframework/schema/citrus-ssh-config-5.0.2.xsd
+http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config-5.1.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-ssh-config-5.1.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd=org/citrusframework/schema/citrus-ssh-config.xsd
