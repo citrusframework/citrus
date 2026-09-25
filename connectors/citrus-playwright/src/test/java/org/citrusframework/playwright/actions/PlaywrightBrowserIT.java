@@ -22,8 +22,6 @@ import static org.testng.Assert.expectThrows;
 import static org.testng.Assert.assertTrue;
 
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Playwright;
 
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -49,6 +47,7 @@ import org.citrusframework.playwright.model.NetworkResponseResult;
 import org.citrusframework.playwright.model.PlaywrightTarget;
 import org.citrusframework.playwright.support.FailureEvidenceListener;
 import org.citrusframework.playwright.support.FixtureServer;
+import org.citrusframework.playwright.support.PlaywrightRuntime;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -62,7 +61,7 @@ class PlaywrightBrowserIT {
 
     @BeforeClass
     public void configureMaskKeywords() {
-        if (!chromiumAvailable()) {
+        if (!PlaywrightRuntime.chromiumAvailable()) {
             throw new SkipException("Chromium is not installed for Playwright - install it with -Pplaywright-runtimes");
         }
 
@@ -471,15 +470,6 @@ class PlaywrightBrowserIT {
                 (proxy, method, args) -> "getName".equals(method.getName()) ? name : null);
     }
 
-    private boolean chromiumAvailable() {
-        try (Playwright playwright = Playwright.create()) {
-            try (com.microsoft.playwright.Browser ignored = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true))) {
-                return true;
-            }
-        } catch (RuntimeException e) {
-            return false;
-        }
-    }
     @Test
     void shouldDriveUpliftCapabilitiesAgainstLocalFixture() throws Exception {
         URL fixture = getClass().getResource("/fixtures/uplift.html");
@@ -565,5 +555,4 @@ class PlaywrightBrowserIT {
         return header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F'
                 && header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P';
     }
-
 }

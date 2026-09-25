@@ -115,6 +115,14 @@ class TransportDetailHeadersTest {
     }
 
     @Test
+    void shouldSkipBlankTextDetails() {
+        SecurityDetails security = new SecurityDetails();
+        security.protocol = "   ";
+
+        assertTrue(TransportDetailHeaders.from(" ", null, null, security).isEmpty());
+    }
+
+    @Test
     void shouldReturnNoHeadersWhenTheDriverReportsNothing() {
         assertTrue(TransportDetailHeaders.from(null, null, null, null).isEmpty());
     }

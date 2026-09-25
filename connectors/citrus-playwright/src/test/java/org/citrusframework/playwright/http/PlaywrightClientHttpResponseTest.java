@@ -22,6 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.expectThrows;
 
 import com.microsoft.playwright.APIResponse;
@@ -66,6 +67,32 @@ class PlaywrightClientHttpResponseTest {
 
         assertEquals(snapshot.getHeaders().get("Set-Cookie"), List.of("SID=abc; Path=/", "API_SID=xyz; Path=/"));
         assertEquals(snapshot.getHeaders().getFirst("Content-Type"), "text/plain");
+    }
+
+    @Test
+    void shouldDescribeTheDecodedBodyWhenTheDriverDecompressedIt() throws IOException {
+        String json = "{\"items\":[\"a\",\"b\",\"c\",\"d\"]}";
+        APIResponse response = response(200, "OK", json);
+        when(response.headersArray()).thenReturn(List.of(
+                header("Content-Type", "application/json"),
+                header("Content-Encoding", "gzip"),
+                header("Content-Length", "12")));
+
+        PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
+
+        assertNull(snapshot.getHeaders().getFirst("Content-Encoding"));
+        assertEquals(snapshot.getHeaders().getContentLength(), json.length());
+        assertEquals(snapshot.getHeaders().getFirst("Content-Type"), "application/json");
+    }
+
+    @Test
+    void shouldKeepTheContentLengthOfAnUncompressedResponse() {
+        APIResponse response = response(200, "OK", "");
+        when(response.headersArray()).thenReturn(List.of(header("Content-Length", "900")));
+
+        PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
+
+        assertEquals(snapshot.getHeaders().getContentLength(), 900L);
     }
 
     @Test

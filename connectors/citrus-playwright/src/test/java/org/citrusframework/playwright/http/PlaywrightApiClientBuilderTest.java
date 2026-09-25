@@ -164,6 +164,13 @@ class PlaywrightApiClientBuilderTest {
         assertEquals(browser.get().getClass(), PlaywrightEndpointBuilder.class);
     }
 
+    @Test
+    void shouldNotOfferItselfForPlainHttpClientEndpoints() {
+        // DefaultEndpointFactory takes the first registered builder that supports the field type.
+        assertFalse(new PlaywrightApiClientBuilder().supports(HttpClient.class));
+        assertFalse(EndpointBuilder.lookup("playwright.api-client").orElseThrow().supports(HttpClient.class));
+    }
+
     private static PlaywrightClientHttpRequestFactory factory(HttpClient client) {
         return (PlaywrightClientHttpRequestFactory) client.getEndpointConfiguration().getRequestFactory();
     }

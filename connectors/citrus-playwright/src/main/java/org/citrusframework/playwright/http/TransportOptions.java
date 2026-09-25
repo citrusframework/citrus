@@ -29,4 +29,20 @@ package org.citrusframework.playwright.http;
 record TransportOptions(Double timeout, Integer maxRedirects, Integer maxRetries, boolean ignoreHttpsErrors) {
 
     static final TransportOptions DEFAULTS = new TransportOptions(null, null, null, false);
+
+    TransportOptions withTimeout(double timeout) {
+        return new TransportOptions(timeout, maxRedirects, maxRetries, ignoreHttpsErrors);
+    }
+
+    TransportOptions withMaxRedirects(int maxRedirects) {
+        return new TransportOptions(timeout, maxRedirects, maxRetries, ignoreHttpsErrors);
+    }
+
+    TransportOptions withMaxRetries(int maxRetries) {
+        return new TransportOptions(timeout, maxRedirects, maxRetries, ignoreHttpsErrors);
+    }
+
+    TransportOptions withIgnoreHttpsErrors(boolean ignoreHttpsErrors) {
+        return new TransportOptions(timeout, maxRedirects, maxRetries, ignoreHttpsErrors);
+    }
 }

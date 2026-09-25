@@ -625,7 +625,7 @@ except where the table says otherwise.
 |`status()`, `ok()` |`.response(HttpStatus.CREATED)`, or the `citrus_http_status_code` header
 |`statusText()` |Not available. `citrus_http_reason_phrase` holds the standard reason phrase of the status code, as on any Http client
 |`headers()`, `headersArray()` |Message headers: `.message().header(...)`, `extractor().fromHeaders()`. Repeated headers arrive comma-joined (`Set-Cookie: A=1; Path=/,B=2; Path=/`), or as separate cookies with `handleCookies(true)`
-|`body()`, `text()` |The message body, validated and extracted like any other; binary bodies follow the client's binary media types, as on any Http client
+|`body()`, `text()` |The message body, validated and extracted like any other; binary bodies follow the client's binary media types, as on any Http client. A compressed body arrives decompressed, without `Content-Encoding` and with a `Content-Length` that matches it
 |`url()` |`citrus_playwright_api_url`
 |`serverAddr()` |`citrus_playwright_api_server_ip`, `citrus_playwright_api_server_port`
 |`securityDetails()` |`citrus_playwright_api_tls_*`
@@ -652,6 +652,11 @@ attaches them after Citrus has logged the request, and a failed request is repor
 driver's call log, which lists them. The rest of the exchange is logged like any Http exchange,
 masked by the Citrus-wide `citrus.logger.mask.keywords` (see <<playwright-browser>>). Add keywords
 such as `token` for response bodies that carry credentials.
+
+Request URLs are not secret. As with every Http client, the request URL, query parameters
+included, appears in the request log and in the message of a failed request (Spring's
+`I/O error on GET request for "…"`). Keep secrets out of query parameters and send them in
+headers or bodies instead.
 
 [[playwright-dsl]]
 == XML and YAML DSL

@@ -81,6 +81,11 @@ final class PlaywrightClientHttpRequest extends AbstractBufferingClientHttpReque
      * stack and a call log that lists the request headers it sent, including the browser's
      * cookies, so neither is copied and the driver exception is not chained. Its Java stack trace
      * is kept.
+     *
+     * <p>The URL is sanitized here only for callers that use the factory directly. Behind the
+     * Citrus {@code HttpClient}, {@code RestTemplate} wraps this exception in a
+     * {@code ResourceAccessException} whose message starts with the raw request URL, as it does
+     * for every Http client, so request URLs are not secret in failure messages.</p>
      */
     private IOException failure(SecretPatternRedactor redactor, PlaywrightException e) {
         String reason = reason(e);

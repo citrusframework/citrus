@@ -174,6 +174,21 @@ class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    void shouldReceiveTheWholeBodyOfACompressedResponse() {
+        String json = "{\"user\":\"alice\",\"roles\":[\"admin\",\"editor\",\"viewer\"]}";
+        // The driver decompresses the body but reports the server's compressed length.
+        respond(200, "OK", json, List.of(
+                header("Content-Type", "application/json"),
+                header("Content-Encoding", "gzip"),
+                header("Content-Length", "20")));
+
+        http().client(client).send().get("/api/me").build().execute(context);
+        Message received = client.createConsumer().receive(context, 1000L);
+
+        assertEquals(received.getPayload(String.class), json);
+    }
+
+    @Test
     void shouldVerifyTheResponseStatus() {
         respond(201, "Created", "{}", List.of(header("Content-Type", "application/json")));
 

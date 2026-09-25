@@ -40,10 +40,7 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
 
     private final PlaywrightBrowser browser;
     private String contextAlias;
-    private Double timeout;
-    private Integer maxRedirects;
-    private Integer maxRetries;
-    private boolean ignoreHttpsErrors;
+    private TransportOptions options;
 
     /**
      * Creates a transport bound to a browser endpoint.
@@ -51,10 +48,16 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
      * @param browser browser whose contexts carry the requests
      */
     public PlaywrightClientHttpRequestFactory(PlaywrightBrowser browser) {
+        this(browser, null, TransportOptions.DEFAULTS);
+    }
+
+    PlaywrightClientHttpRequestFactory(PlaywrightBrowser browser, String contextAlias, TransportOptions options) {
         if (browser == null) {
             throw new CitrusRuntimeException("Missing Playwright browser for the browser-session HTTP transport");
         }
         this.browser = browser;
+        this.contextAlias = contextAlias;
+        this.options = options;
     }
 
     /**
@@ -76,7 +79,7 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
      * @return this factory
      */
     public PlaywrightClientHttpRequestFactory timeout(double timeoutMs) {
-        this.timeout = timeoutMs;
+        this.options = options.withTimeout(timeoutMs);
         return this;
     }
 
@@ -87,7 +90,7 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
      * @return this factory
      */
     public PlaywrightClientHttpRequestFactory maxRedirects(int maxRedirects) {
-        this.maxRedirects = maxRedirects;
+        this.options = options.withMaxRedirects(maxRedirects);
         return this;
     }
 
@@ -98,7 +101,7 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
      * @return this factory
      */
     public PlaywrightClientHttpRequestFactory maxRetries(int maxRetries) {
-        this.maxRetries = maxRetries;
+        this.options = options.withMaxRetries(maxRetries);
         return this;
     }
 
@@ -110,7 +113,7 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
      * @return this factory
      */
     public PlaywrightClientHttpRequestFactory ignoreHttpsErrors(boolean ignoreHttpsErrors) {
-        this.ignoreHttpsErrors = ignoreHttpsErrors;
+        this.options = options.withIgnoreHttpsErrors(ignoreHttpsErrors);
         return this;
     }
 
@@ -141,7 +144,7 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
      * @return transport options
      */
     TransportOptions options() {
-        return new TransportOptions(timeout, maxRedirects, maxRetries, ignoreHttpsErrors);
+        return options;
     }
 
     public PlaywrightBrowser getBrowser() {
@@ -153,18 +156,18 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
     }
 
     public Double getTimeout() {
-        return timeout;
+        return options.timeout();
     }
 
     public Integer getMaxRedirects() {
-        return maxRedirects;
+        return options.maxRedirects();
     }
 
     public Integer getMaxRetries() {
-        return maxRetries;
+        return options.maxRetries();
     }
 
     public boolean isIgnoreHttpsErrors() {
-        return ignoreHttpsErrors;
+        return options.ignoreHttpsErrors();
     }
 }

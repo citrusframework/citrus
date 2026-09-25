@@ -36,15 +36,21 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.expectThrows;
 
 import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.HttpCredentials;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.zip.GZIPOutputStream;
 
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.base.annotations.CitrusAnnotations;
@@ -63,6 +69,7 @@ import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.PlaywrightEndpointBuilder;
 import org.citrusframework.playwright.endpoint.builder.PlaywrightEndpoints;
 import org.citrusframework.playwright.support.FixtureServer;
+import org.citrusframework.playwright.support.PlaywrightRuntime;
 import org.citrusframework.playwright.support.FixtureServer.RecordedRequest;
 import org.citrusframework.report.MessageListener;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
@@ -83,6 +90,8 @@ import org.testng.annotations.Test;
 class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
     private static final String API_CLIENT_NAME = "browserApi";
+    /** Repetitive, so gzip shrinks it well below its decoded length. */
+    private static final String GZIP_JSON = "{\"user\":\"alice\",\"roles\":[" + "\"viewer\",".repeat(50) + "\"admin\"]}";
 
     private FixtureServer server;
     private FixtureServer httpsServer;
@@ -91,7 +100,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
     @BeforeClass
     public void requireChromium() {
-        if (!chromiumAvailable()) {
+        if (!PlaywrightRuntime.chromiumAvailable()) {
             throw new SkipException("Chromium is not installed for Playwright - install it with -Pplaywright-runtimes");
         }
     }
@@ -129,6 +138,9 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
                     }
                 })
                 .route("/echo", (request, response) -> response.send(200, "text/plain", "echo"))
+                .route("/api/gzip", (request, response) -> response
+                        .header("Content-Encoding", "gzip")
+                        .send(200, "application/json", gzip(GZIP_JSON)))
                 .route("/redirect", (request, response) -> response.header("Location", "/echo").send(302, null, ""))
                 .route("/slow", (request, response) -> {
                     try {
@@ -289,6 +301,70 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         http().client(browserApi).receive().response(HttpStatus.NOT_FOUND).build().execute(context);
     }
 
+    /**
+     * Raw socket server that resets the first connections with a TCP RST ({@code SO_LINGER} 0),
+     * which the driver reports as {@code ECONNRESET}, then answers {@code 200}.
+     */
+    private static final class ResettingServer implements AutoCloseable {
+
+        private final ServerSocket socket;
+        private final AtomicInteger attempts = new AtomicInteger();
+
+        ResettingServer(int resets) throws IOException {
+            socket = new ServerSocket(0, 50, InetAddress.getLoopbackAddress());
+            Thread acceptor = new Thread(() -> {
+                while (!socket.isClosed()) {
+                    try (Socket connection = socket.accept()) {
+                        int attempt = attempts.incrementAndGet();
+                        readRequestHead(connection.getInputStream());
+                        if (attempt <= resets) {
+                            connection.setSoLinger(true, 0);
+                        } else {
+                            connection.getOutputStream().write(("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n"
+                                    + "Content-Length: 2\r\nConnection: close\r\n\r\nok").getBytes(StandardCharsets.US_ASCII));
+                        }
+                    } catch (IOException e) {
+                        // Closing the server socket ends the loop.
+                    }
+                }
+            }, "resetting-fixture-server");
+            acceptor.setDaemon(true);
+            acceptor.start();
+        }
+
+        String url() {
+            return "http://127.0.0.1:" + socket.getLocalPort();
+        }
+
+        int attempts() {
+            return attempts.get();
+        }
+
+        @Override
+        public void close() throws IOException {
+            socket.close();
+        }
+
+        private static void readRequestHead(InputStream in) throws IOException {
+            int matched = 0;
+            byte[] end = {'\r', '\n', '\r', '\n'};
+            for (int next = in.read(); next >= 0 && matched < end.length; next = in.read()) {
+                matched = next == end[matched] ? matched + 1 : (next == end[0] ? 1 : 0);
+                if (matched == end.length) {
+                    return;
+                }
+            }
+        }
+    }
+
+    private static byte[] gzip(String text) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        try (GZIPOutputStream gzip = new GZIPOutputStream(bytes)) {
+            gzip.write(text.getBytes(StandardCharsets.UTF_8));
+        }
+        return bytes.toByteArray();
+    }
+
     private static String header(Message message, String name) {
         return message.getHeaders().entrySet().stream()
                 .filter(entry -> entry.getKey().equalsIgnoreCase(name))
@@ -437,6 +513,47 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
     }
 
     @Test
+    void shouldReceiveTheWholeBodyOfACompressedResponse() {
+        startBrowser(builder -> { });
+
+        Message response = exchange(browserApi, "/api/gzip");
+
+        assertEquals(response.getPayload(String.class), GZIP_JSON);
+        assertNull(header(response, "Content-Encoding"));
+    }
+
+    @Test
+    void shouldRetryAfterAConnectionReset() throws IOException {
+        startBrowser(builder -> { });
+
+        try (ResettingServer flaky = new ResettingServer(1)) {
+            HttpClient client = PlaywrightEndpoints.playwright().apiClient().browser(browser)
+                    .requestUrl(flaky.url())
+                    .maxRetries(1)
+                    .build();
+
+            Message response = exchange(client, "/flaky");
+
+            assertEquals(String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "200");
+            assertEquals(flaky.attempts(), 2);
+        }
+    }
+
+    @Test
+    void shouldNotRetryAConnectionResetByDefault() throws IOException {
+        startBrowser(builder -> { });
+
+        try (ResettingServer flaky = new ResettingServer(1)) {
+            HttpClient client = PlaywrightEndpoints.playwright().apiClient().browser(browser).requestUrl(flaky.url()).build();
+
+            RuntimeException error = expectThrows(RuntimeException.class, () -> send(client, "/flaky"));
+
+            assertTrue(messages(error).contains("Browser-session request GET " + flaky.url() + "/flaky failed"), messages(error));
+            assertEquals(flaky.attempts(), 1);
+        }
+    }
+
+    @Test
     void shouldNotBeInterceptedByPageRoutes() {
         startBrowser(builder -> { });
         playwright().browser(browser).network().route("**/*").abort().build().execute(context);
@@ -523,15 +640,5 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
             messages.append(current.getMessage()).append(" | ");
         }
         return messages.toString();
-    }
-
-    private static boolean chromiumAvailable() {
-        try (Playwright playwright = Playwright.create()) {
-            try (Browser ignored = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true))) {
-                return true;
-            }
-        } catch (RuntimeException e) {
-            return false;
-        }
     }
 }

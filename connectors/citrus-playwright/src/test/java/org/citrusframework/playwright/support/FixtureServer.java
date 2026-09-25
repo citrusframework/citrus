@@ -243,7 +243,10 @@ public final class FixtureServer implements AutoCloseable {
         }
 
         public void send(int status, String contentType, String body) throws IOException {
-            byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+            send(status, contentType, body.getBytes(StandardCharsets.UTF_8));
+        }
+
+        public void send(int status, String contentType, byte[] bytes) throws IOException {
             if (contentType != null) {
                 exchange.getResponseHeaders().set("Content-Type", contentType);
             }
