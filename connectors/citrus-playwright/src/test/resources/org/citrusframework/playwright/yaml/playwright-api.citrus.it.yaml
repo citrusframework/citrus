@@ -1,0 +1,22 @@
+name: "PlaywrightApiYamlTest"
+author: "Citrus"
+status: "FINAL"
+actions:
+  - playwright:
+      browser: "playwrightBrowser"
+      open:
+        url: "${loginUrl}"
+  - http:
+      client: "browserApi"
+      sendRequest:
+        GET:
+          path: "/api/me"
+  - http:
+      client: "browserApi"
+      receiveResponse:
+        response:
+          status: "200"
+          contentType: "application/json"
+          body:
+            data: |
+              {"user":"alice"}
