@@ -122,6 +122,25 @@ class PlaywrightBrowserLifecycleTest {
     }
 
     @Test
+    void shouldFindContextsByAliasWithoutSwitching() {
+        TestLifecycleBrowser browser = new TestLifecycleBrowser();
+
+        browser.start();
+        BrowserContext defaultContext = browser.getCurrentContext();
+        BrowserContext adminContext = browser.createContext("admin");
+        browser.switchContext("default");
+
+        assertSame(adminContext, browser.findContext("admin").orElseThrow());
+        assertSame(defaultContext, browser.getCurrentContext());
+        assertEquals(Optional.of("default"), browser.getCurrentContextAlias());
+        assertTrue(browser.findContext("missing").isEmpty());
+        assertTrue(browser.findContext(null).isEmpty());
+
+        browser.closeContext("admin");
+        assertTrue(browser.findContext("admin").isEmpty());
+    }
+
+    @Test
     void shouldReleaseCaptureRegistryEntriesWhenPageCloses() {
         TestLifecycleBrowser browser = new TestLifecycleBrowser();
 

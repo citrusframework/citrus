@@ -438,6 +438,16 @@ public class PlaywrightBrowser extends AbstractEndpoint implements Producer, Shu
     }
 
     /**
+     * Finds a registered context by alias without switching to it.
+     *
+     * @param alias context alias
+     * @return optional context
+     */
+    public synchronized Optional<BrowserContext> findContext(String alias) {
+        return Optional.ofNullable(contexts.get(alias));
+    }
+
+    /**
      * Switches the current context by alias and selects the first page owned by
      * that context when one is registered.
      *
