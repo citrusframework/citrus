@@ -62,7 +62,7 @@ final class PlaywrightClientHttpResponse implements ClientHttpResponse {
             for (HttpHeader header : response.headersArray()) {
                 headers.add(header.name, header.value);
             }
-            TransportDetailHeaders.from(response.timing(), response.serverAddr(), response.securityDetails())
+            TransportDetailHeaders.from(response.url(), response.timing(), response.serverAddr(), response.securityDetails())
                     .forEach(headers::set);
 
             byte[] body = response.body();

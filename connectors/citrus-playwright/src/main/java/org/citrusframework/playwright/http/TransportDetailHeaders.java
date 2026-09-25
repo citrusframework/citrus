@@ -32,6 +32,7 @@ import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIG
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_SUBJECT_NAME;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_VALID_FROM;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_VALID_TO;
+import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_URL;
 
 import com.microsoft.playwright.options.SecurityDetails;
 import com.microsoft.playwright.options.ServerAddr;
@@ -42,7 +43,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Turns the transport details the driver reports for an API response into response headers.
+ * Turns the details the driver reports for an API response (final URL, server address, TLS and
+ * resource timing) into response headers.
  *
  * <p>A detail the driver does not report is omitted rather than faked: a {@code null} object or
  * field, and a timing phase of {@code -1}. Numbers are written in plain decimal notation so that
@@ -53,8 +55,10 @@ final class TransportDetailHeaders {
     private TransportDetailHeaders() {
     }
 
-    static Map<String, String> from(Timing timing, ServerAddr serverAddr, SecurityDetails securityDetails) {
+    static Map<String, String> from(String url, Timing timing, ServerAddr serverAddr, SecurityDetails securityDetails) {
         Map<String, String> headers = new LinkedHashMap<>();
+
+        putText(headers, PLAYWRIGHT_API_URL, url);
 
         if (serverAddr != null) {
             putText(headers, PLAYWRIGHT_API_SERVER_IP, serverAddr.ipAddress);

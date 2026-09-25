@@ -47,6 +47,12 @@ public @interface PlaywrightApiClientConfig {
     /** Redirects the driver follows; negative means the driver default. */
     int maxRedirects() default -1;
 
+    /** Retries after a connection reset; negative means the driver default (no retries). */
+    int maxRetries() default -1;
+
+    /** Accepts invalid TLS certificates; false leaves the browser context's setting in charge. */
+    boolean ignoreHttpsErrors() default false;
+
     /** Maps {@code Set-Cookie} response headers to message cookies. */
     boolean handleCookies() default false;
 }

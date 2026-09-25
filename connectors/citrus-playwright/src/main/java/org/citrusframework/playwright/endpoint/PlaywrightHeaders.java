@@ -23,6 +23,9 @@ public final class PlaywrightHeaders {
     /** Prefix of the transport details added to responses of browser-session HTTP requests. */
     public static final String PLAYWRIGHT_API_PREFIX = "citrus_playwright_api_";
 
+    /** Final URL of the response, after any redirects the driver followed. */
+    public static final String PLAYWRIGHT_API_URL = PLAYWRIGHT_API_PREFIX + "url";
+
     public static final String PLAYWRIGHT_API_SERVER_IP = PLAYWRIGHT_API_PREFIX + "server_ip";
     public static final String PLAYWRIGHT_API_SERVER_PORT = PLAYWRIGHT_API_PREFIX + "server_port";
 

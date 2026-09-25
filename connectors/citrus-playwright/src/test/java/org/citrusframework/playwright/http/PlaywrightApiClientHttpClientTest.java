@@ -20,6 +20,7 @@ import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_SERVER_IP;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_SERVER_PORT;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TIMING_RESPONSE_END;
+import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_URL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -63,7 +64,11 @@ import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import jakarta.servlet.http.Cookie;
 import org.mockito.ArgumentCaptor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -73,7 +78,7 @@ import org.testng.annotations.Test;
  * transport, with only the driver mocked. Proves that everything above the transport — URL
  * composition, conversion, error strategy, validation — behaves exactly as for a plain client.
  */
-public class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
+class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
 
     private MockPlaywrightBrowser browser;
     private APIRequestContext api;
@@ -119,6 +124,53 @@ public class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
         @SuppressWarnings("unchecked")
         Map<String, String> headers = (Map<String, String>) field(options.getValue(), "headers");
         assertTrue(headers.get("Content-Type").startsWith("application/json"), String.valueOf(headers));
+    }
+
+    @Test
+    void shouldPassAMultipartBodyThrough() throws Exception {
+        respond(200, "OK", "", List.of());
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+        parts.add("name", "citrus");
+        parts.add("file", new ClassPathResource("fixtures/phase3.txt"));
+
+        HttpClientRequestActionBuilder send = http().client(client).send().post("/api/upload");
+        send.message().contentType(MediaType.MULTIPART_FORM_DATA_VALUE).body(parts);
+        send.build().execute(context);
+
+        RequestOptions options = captureOptions();
+        String contentType = headers(options).get("Content-Type");
+        String data = new String((byte[]) field(options, "data"), StandardCharsets.UTF_8);
+        assertTrue(contentType.startsWith("multipart/form-data;boundary="), contentType);
+        assertTrue(data.contains("name=\"name\""), data);
+        assertTrue(data.contains("citrus"), data);
+        assertTrue(data.contains("filename=\"phase3.txt\""), data);
+    }
+
+    @Test
+    void shouldPassAFormUrlencodedBodyThrough() throws Exception {
+        respond(200, "OK", "", List.of());
+        MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
+        form.add("name", "citrus");
+        form.add("item", "book");
+
+        HttpClientRequestActionBuilder send = http().client(client).send().post("/api/form");
+        send.message().contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE).body(form);
+        send.build().execute(context);
+
+        RequestOptions options = captureOptions();
+        assertTrue(headers(options).get("Content-Type").startsWith(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+        assertEquals(new String((byte[]) field(options, "data"), StandardCharsets.UTF_8), "name=citrus&item=book");
+    }
+
+    @Test
+    void shouldExposeTheFinalUrlAfterRedirects() {
+        APIResponse response = respond(200, "OK", "", List.of());
+        when(response.url()).thenReturn("http://localhost:8080/final");
+
+        http().client(client).send().get("/api/redirect").build().execute(context);
+        HttpClientResponseActionBuilder receive = http().client(client).receive().response(HttpStatus.OK);
+        receive.message().header(PLAYWRIGHT_API_URL, "http://localhost:8080/final");
+        receive.build().execute(context);
     }
 
     @Test
@@ -244,6 +296,17 @@ public class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
         when(response.body()).thenReturn(body.getBytes(StandardCharsets.UTF_8));
         when(api.fetch(anyString(), any(RequestOptions.class))).thenReturn(response);
         return response;
+    }
+
+    private RequestOptions captureOptions() {
+        ArgumentCaptor<RequestOptions> options = ArgumentCaptor.forClass(RequestOptions.class);
+        verify(api).fetch(anyString(), options.capture());
+        return options.getValue();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, String> headers(RequestOptions options) throws ReflectiveOperationException {
+        return (Map<String, String>) field(options, "headers");
     }
 
     private static HttpHeader header(String name, String value) {

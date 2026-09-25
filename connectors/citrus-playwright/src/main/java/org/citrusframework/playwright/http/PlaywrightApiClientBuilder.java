@@ -44,6 +44,8 @@ public class PlaywrightApiClientBuilder extends AbstractEndpointBuilder<HttpClie
     private String requestUrl;
     private Long timeout;
     private Integer maxRedirects;
+    private Integer maxRetries;
+    private boolean ignoreHttpsErrors;
 
     /**
      * Binds the client to a browser endpoint.
@@ -115,6 +117,29 @@ public class PlaywrightApiClientBuilder extends AbstractEndpointBuilder<HttpClie
     }
 
     /**
+     * Retries a request after a connection reset, with the driver's backoff starting at 250 ms.
+     *
+     * @param maxRetries retry limit; 0 disables retries
+     * @return this builder
+     */
+    public PlaywrightApiClientBuilder maxRetries(int maxRetries) {
+        this.maxRetries = maxRetries;
+        return this;
+    }
+
+    /**
+     * Accepts invalid TLS certificates for every request of this client. When false, the browser
+     * context's own {@code ignoreHTTPSErrors} setting decides; this option can only widen it.
+     *
+     * @param ignoreHttpsErrors true to accept invalid certificates
+     * @return this builder
+     */
+    public PlaywrightApiClientBuilder ignoreHttpsErrors(boolean ignoreHttpsErrors) {
+        this.ignoreHttpsErrors = ignoreHttpsErrors;
+        return this;
+    }
+
+    /**
      * Maps {@code Set-Cookie} response headers to message cookies, as on any HTTP client.
      *
      * @param handleCookies true to map response cookies
@@ -148,9 +173,13 @@ public class PlaywrightApiClientBuilder extends AbstractEndpointBuilder<HttpClie
         }
 
         PlaywrightClientHttpRequestFactory factory = new PlaywrightClientHttpRequestFactory(resolvedBrowser)
-                .context(contextAlias);
+                .context(contextAlias)
+                .ignoreHttpsErrors(ignoreHttpsErrors);
         if (maxRedirects != null) {
             factory.maxRedirects(maxRedirects);
+        }
+        if (maxRetries != null) {
+            factory.maxRetries(maxRetries);
         }
 
         HttpEndpointConfiguration configuration = endpoint.getEndpointConfiguration();

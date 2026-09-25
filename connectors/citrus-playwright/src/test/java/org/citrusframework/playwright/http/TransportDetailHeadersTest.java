@@ -33,6 +33,7 @@ import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIG
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_SUBJECT_NAME;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_VALID_FROM;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_VALID_TO;
+import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_URL;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -50,9 +51,10 @@ class TransportDetailHeadersTest {
 
     @Test
     void shouldReportServerAddressAndTimingOverPlainHttp() {
-        Map<String, String> headers = TransportDetailHeaders.from(plainHttpTiming(), serverAddr("127.0.0.1", 8080), null);
+        Map<String, String> headers = TransportDetailHeaders.from("http://127.0.0.1:8080/api/me", plainHttpTiming(), serverAddr("127.0.0.1", 8080), null);
 
         assertEquals(List.copyOf(headers.keySet()), List.of(
+                PLAYWRIGHT_API_URL,
                 PLAYWRIGHT_API_SERVER_IP,
                 PLAYWRIGHT_API_SERVER_PORT,
                 PLAYWRIGHT_API_TIMING_START_TIME,
@@ -61,6 +63,7 @@ class TransportDetailHeadersTest {
                 PLAYWRIGHT_API_TIMING_REQUEST_START,
                 PLAYWRIGHT_API_TIMING_RESPONSE_START,
                 PLAYWRIGHT_API_TIMING_RESPONSE_END));
+        assertEquals(headers.get(PLAYWRIGHT_API_URL), "http://127.0.0.1:8080/api/me");
         assertEquals(headers.get(PLAYWRIGHT_API_SERVER_IP), "127.0.0.1");
         assertEquals(headers.get(PLAYWRIGHT_API_SERVER_PORT), "8080");
         assertEquals(headers.get(PLAYWRIGHT_API_TIMING_CONNECT_START), "0");
@@ -69,7 +72,7 @@ class TransportDetailHeadersTest {
 
     @Test
     void shouldOmitPhasesTheDriverDoesNotReport() {
-        Map<String, String> headers = TransportDetailHeaders.from(plainHttpTiming(), serverAddr("127.0.0.1", 8080), null);
+        Map<String, String> headers = TransportDetailHeaders.from("http://127.0.0.1:8080/api/me", plainHttpTiming(), serverAddr("127.0.0.1", 8080), null);
 
         assertFalse(headers.containsKey(PLAYWRIGHT_API_TIMING_DOMAIN_LOOKUP_START));
         assertFalse(headers.containsKey(PLAYWRIGHT_API_TIMING_DOMAIN_LOOKUP_END));
@@ -86,7 +89,7 @@ class TransportDetailHeadersTest {
         security.validFrom = 1.7e9;
         security.validTo = 1.8e9;
 
-        Map<String, String> headers = TransportDetailHeaders.from(null, null, security);
+        Map<String, String> headers = TransportDetailHeaders.from(null, null, null, security);
 
         assertEquals(headers, Map.of(
                 PLAYWRIGHT_API_TLS_PROTOCOL, "TLS 1.3",
@@ -101,14 +104,19 @@ class TransportDetailHeadersTest {
         SecurityDetails security = new SecurityDetails();
         security.protocol = "TLS 1.2";
 
-        Map<String, String> headers = TransportDetailHeaders.from(null, null, security);
+        Map<String, String> headers = TransportDetailHeaders.from(null, null, null, security);
 
         assertEquals(headers, Map.of(PLAYWRIGHT_API_TLS_PROTOCOL, "TLS 1.2"));
     }
 
     @Test
+    void shouldSkipAnEmptyUrl() {
+        assertFalse(TransportDetailHeaders.from("", null, null, null).containsKey(PLAYWRIGHT_API_URL));
+    }
+
+    @Test
     void shouldReturnNoHeadersWhenTheDriverReportsNothing() {
-        assertTrue(TransportDetailHeaders.from(null, null, null).isEmpty());
+        assertTrue(TransportDetailHeaders.from(null, null, null, null).isEmpty());
     }
 
     @Test
@@ -124,7 +132,7 @@ class TransportDetailHeadersTest {
         timing.responseStart = 5.0;
         timing.responseEnd = -1;
 
-        Map<String, String> headers = TransportDetailHeaders.from(timing, null, null);
+        Map<String, String> headers = TransportDetailHeaders.from(null, timing, null, null);
 
         assertEquals(headers.get(PLAYWRIGHT_API_TIMING_START_TIME), "1790324158581");
         assertEquals(headers.get(PLAYWRIGHT_API_TIMING_REQUEST_START), "1.9209999999999923");

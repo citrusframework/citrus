@@ -22,6 +22,8 @@ import com.microsoft.playwright.PlaywrightException;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.model.SecretPatternRedactor;
@@ -35,6 +37,9 @@ import org.springframework.http.client.ClientHttpResponse;
  * carries the browser's cookies and HTTP settings.
  */
 final class PlaywrightClientHttpRequest extends AbstractBufferingClientHttpRequest {
+
+    /** The reason line of the driver's structured error, e.g. {@code message='Timeout 300ms exceeded.}. */
+    private static final Pattern DRIVER_REASON = Pattern.compile("^\\s*message='(.*)$", Pattern.MULTILINE);
 
     private final PlaywrightClientHttpRequestFactory factory;
     private final URI uri;
@@ -61,27 +66,40 @@ final class PlaywrightClientHttpRequest extends AbstractBufferingClientHttpReque
         PlaywrightBrowser browser = factory.getBrowser();
         browser.assertActionThread();
         BrowserContext context = factory.resolveContext();
-        FetchSpec fetch = FetchSpec.of(method, uri, headers, bufferedOutput, factory.getTimeout(), factory.getMaxRedirects());
+        FetchSpec fetch = FetchSpec.of(method, uri, headers, bufferedOutput, factory.options());
 
-        APIResponse response;
         try {
-            response = context.request().fetch(fetch.url(), fetch.toRequestOptions());
+            APIResponse response = context.request().fetch(fetch.url(), fetch.toRequestOptions());
+            return PlaywrightClientHttpResponse.snapshot(response);
         } catch (PlaywrightException e) {
             throw failure(browser.createRedactor(), e);
         }
-        return PlaywrightClientHttpResponse.snapshot(response);
     }
 
     /**
-     * Reports a driver failure without its call log, which lists the request headers the driver
-     * sent, including the browser's cookies. The driver exception is not chained for the same
-     * reason; its stack trace is kept.
+     * Reports a driver failure with only its reason. The driver message also carries the driver's
+     * stack and a call log that lists the request headers it sent, including the browser's
+     * cookies, so neither is copied and the driver exception is not chained. Its Java stack trace
+     * is kept.
      */
     private IOException failure(SecretPatternRedactor redactor, PlaywrightException e) {
-        String reason = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage().lines().findFirst().orElse("");
+        String reason = reason(e);
         IOException failure = new IOException("Browser-session request %s %s failed: %s"
                 .formatted(method.name(), redactor.sanitizeUrl(uri.toString()), redactor.sanitizeText(reason)));
         failure.setStackTrace(e.getStackTrace());
         return failure;
+    }
+
+    private static String reason(PlaywrightException e) {
+        String message = e.getMessage();
+        if (message == null || message.isBlank()) {
+            return e.getClass().getSimpleName();
+        }
+
+        Matcher structured = DRIVER_REASON.matcher(message);
+        if (structured.find()) {
+            return structured.group(1).trim();
+        }
+        return message.lines().findFirst().orElse("").trim();
     }
 }

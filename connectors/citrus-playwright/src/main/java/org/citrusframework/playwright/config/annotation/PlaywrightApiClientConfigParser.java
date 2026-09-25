@@ -46,6 +46,11 @@ public class PlaywrightApiClientConfigParser implements AnnotationConfigParser<P
             builder.maxRedirects(annotation.maxRedirects());
         }
 
+        if (annotation.maxRetries() >= 0) {
+            builder.maxRetries(annotation.maxRetries());
+        }
+
+        builder.ignoreHttpsErrors(annotation.ignoreHttpsErrors());
         builder.handleCookies(annotation.handleCookies());
         builder.referenceResolver(referenceResolver);
 

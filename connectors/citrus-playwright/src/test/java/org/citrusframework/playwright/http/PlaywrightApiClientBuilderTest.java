@@ -17,6 +17,7 @@
 package org.citrusframework.playwright.http;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
@@ -48,6 +49,8 @@ class PlaywrightApiClientBuilderTest {
         assertNull(factory.getContextAlias());
         assertNull(factory.getTimeout());
         assertNull(factory.getMaxRedirects());
+        assertNull(factory.getMaxRetries());
+        assertFalse(factory.isIgnoreHttpsErrors());
     }
 
     @Test
@@ -121,6 +124,8 @@ class PlaywrightApiClientBuilderTest {
                 .context("admin")
                 .timeout(10_000L)
                 .maxRedirects(0)
+                .maxRetries(2)
+                .ignoreHttpsErrors(true)
                 .handleCookies(true)
                 .errorHandlingStrategy(ErrorHandlingStrategy.THROWS_EXCEPTION)
                 .build();
@@ -129,6 +134,8 @@ class PlaywrightApiClientBuilderTest {
         assertEquals(factory.getContextAlias(), "admin");
         assertEquals(factory.getTimeout(), 10_000.0);
         assertEquals(factory.getMaxRedirects(), Integer.valueOf(0));
+        assertEquals(factory.getMaxRetries(), Integer.valueOf(2));
+        assertTrue(factory.isIgnoreHttpsErrors());
 
         HttpEndpointConfiguration configuration = client.getEndpointConfiguration();
         assertEquals(configuration.getTimeout(), 10_000L);
