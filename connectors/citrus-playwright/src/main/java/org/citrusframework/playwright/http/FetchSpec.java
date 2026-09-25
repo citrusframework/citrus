@@ -44,16 +44,14 @@ final class FetchSpec {
     private final String url;
     private final Map<String, String> headers;
     private final byte[] body;
-    private final Double timeout;
-    private final Integer maxRedirects;
+    private final TransportOptions options;
 
-    private FetchSpec(String method, String url, Map<String, String> headers, byte[] body, Double timeout, Integer maxRedirects) {
+    private FetchSpec(String method, String url, Map<String, String> headers, byte[] body, TransportOptions options) {
         this.method = method;
         this.url = url;
         this.headers = Collections.unmodifiableMap(headers);
         this.body = body;
-        this.timeout = timeout;
-        this.maxRedirects = maxRedirects;
+        this.options = options;
     }
 
     /**
@@ -63,12 +61,11 @@ final class FetchSpec {
      * @param uri absolute request URI
      * @param headers request headers
      * @param body buffered request body
-     * @param timeout driver request timeout in milliseconds, or null for the driver default
-     * @param maxRedirects redirect limit, or null for the driver default
+     * @param options per-client driver settings
      * @return fetch specification
      * @throws CitrusRuntimeException when the request sets a {@code Cookie} header
      */
-    static FetchSpec of(HttpMethod method, URI uri, HttpHeaders headers, byte[] body, Double timeout, Integer maxRedirects) {
+    static FetchSpec of(HttpMethod method, URI uri, HttpHeaders headers, byte[] body, TransportOptions options) {
         Map<String, String> forwarded = new LinkedHashMap<>();
         headers.forEach((name, values) -> {
             String normalized = name.toLowerCase(Locale.ROOT);
@@ -82,7 +79,7 @@ final class FetchSpec {
             }
         });
 
-        return new FetchSpec(method.name(), uri.toString(), forwarded, body, timeout, maxRedirects);
+        return new FetchSpec(method.name(), uri.toString(), forwarded, body, options);
     }
 
     /**
@@ -99,11 +96,17 @@ final class FetchSpec {
         if (body.length > 0) {
             options.setData(body);
         }
-        if (timeout != null) {
-            options.setTimeout(timeout);
+        if (this.options.timeout() != null) {
+            options.setTimeout(this.options.timeout());
         }
-        if (maxRedirects != null) {
-            options.setMaxRedirects(maxRedirects);
+        if (this.options.maxRedirects() != null) {
+            options.setMaxRedirects(this.options.maxRedirects());
+        }
+        if (this.options.maxRetries() != null) {
+            options.setMaxRetries(this.options.maxRetries());
+        }
+        if (this.options.ignoreHttpsErrors()) {
+            options.setIgnoreHTTPSErrors(true);
         }
         return options;
     }
@@ -124,11 +127,7 @@ final class FetchSpec {
         return body;
     }
 
-    Double timeout() {
-        return timeout;
-    }
-
-    Integer maxRedirects() {
-        return maxRedirects;
+    TransportOptions options() {
+        return options;
     }
 }

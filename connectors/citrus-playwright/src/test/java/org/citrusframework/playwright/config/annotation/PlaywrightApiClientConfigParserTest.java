@@ -45,6 +45,8 @@ class PlaywrightApiClientConfigParserTest {
             requestUrl = "${apiUrl}",
             timeout = 10_000L,
             maxRedirects = 0,
+            maxRetries = 2,
+            ignoreHttpsErrors = true,
             handleCookies = true)
     private HttpClient configured;
 
@@ -85,6 +87,8 @@ class PlaywrightApiClientConfigParserTest {
         assertEquals(factory.getContextAlias(), "admin");
         assertEquals(factory.getTimeout(), 10_000.0);
         assertEquals(factory.getMaxRedirects(), Integer.valueOf(0));
+        assertEquals(factory.getMaxRetries(), Integer.valueOf(2));
+        assertTrue(factory.isIgnoreHttpsErrors());
 
         HttpEndpointConfiguration configuration = client.getEndpointConfiguration();
         assertEquals(configuration.getRequestUrl(), "http://api.localhost:9090");
@@ -100,6 +104,8 @@ class PlaywrightApiClientConfigParserTest {
         assertNull(factory.getContextAlias());
         assertNull(factory.getTimeout());
         assertNull(factory.getMaxRedirects());
+        assertNull(factory.getMaxRetries());
+        assertFalse(factory.isIgnoreHttpsErrors());
         assertEquals(client.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080");
         assertFalse(client.getEndpointConfiguration().isHandleCookies());
     }

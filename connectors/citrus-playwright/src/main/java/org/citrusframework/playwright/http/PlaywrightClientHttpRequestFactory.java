@@ -29,7 +29,8 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 /**
  * Transport for the Citrus {@code HttpClient} that sends every request through a Playwright
  * browser context, so requests share the context's cookies (in both directions) and its HTTP
- * settings: extra headers, user agent and HTTP credentials.
+ * settings: extra headers, user agent, HTTP credentials, proxy, client certificates and HTTPS error
+ * handling.
  *
  * <p>Plug it into any HTTP client with {@code HttpClientBuilder.requestFactory(...)}, or build a
  * ready client with {@code PlaywrightEndpoints.playwright().apiClient()}. Every request runs on
@@ -41,6 +42,8 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
     private String contextAlias;
     private Double timeout;
     private Integer maxRedirects;
+    private Integer maxRetries;
+    private boolean ignoreHttpsErrors;
 
     /**
      * Creates a transport bound to a browser endpoint.
@@ -88,6 +91,29 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
         return this;
     }
 
+    /**
+     * Retries a request after a connection reset, with the driver's backoff starting at 250 ms.
+     *
+     * @param maxRetries retry limit; 0 disables retries
+     * @return this factory
+     */
+    public PlaywrightClientHttpRequestFactory maxRetries(int maxRetries) {
+        this.maxRetries = maxRetries;
+        return this;
+    }
+
+    /**
+     * Accepts invalid TLS certificates for every request of this client. When false, the browser
+     * context's own {@code ignoreHTTPSErrors} setting decides; this option can only widen it.
+     *
+     * @param ignoreHttpsErrors true to accept invalid certificates
+     * @return this factory
+     */
+    public PlaywrightClientHttpRequestFactory ignoreHttpsErrors(boolean ignoreHttpsErrors) {
+        this.ignoreHttpsErrors = ignoreHttpsErrors;
+        return this;
+    }
+
     @Override
     public ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) {
         return new PlaywrightClientHttpRequest(this, uri, httpMethod);
@@ -109,6 +135,15 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
                         .formatted(contextAlias, String.join(", ", browser.getContextAliases()))));
     }
 
+    /**
+     * Snapshot of the per-client driver settings for the next request.
+     *
+     * @return transport options
+     */
+    TransportOptions options() {
+        return new TransportOptions(timeout, maxRedirects, maxRetries, ignoreHttpsErrors);
+    }
+
     public PlaywrightBrowser getBrowser() {
         return browser;
     }
@@ -123,5 +158,13 @@ public class PlaywrightClientHttpRequestFactory implements ClientHttpRequestFact
 
     public Integer getMaxRedirects() {
         return maxRedirects;
+    }
+
+    public Integer getMaxRetries() {
+        return maxRetries;
+    }
+
+    public boolean isIgnoreHttpsErrors() {
+        return ignoreHttpsErrors;
     }
 }

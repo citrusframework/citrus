@@ -22,6 +22,13 @@ import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIG
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_SERVER_IP;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_SERVER_PORT;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TIMING_RESPONSE_END;
+import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TIMING_SECURE_CONNECTION_START;
+import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_ISSUER;
+import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_PROTOCOL;
+import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_SUBJECT_NAME;
+import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_VALID_FROM;
+import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_VALID_TO;
+import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_URL;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
@@ -48,6 +55,7 @@ import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
 import org.citrusframework.http.actions.HttpClientResponseActionBuilder;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
+import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.playwright.dsl.AbstractDslLoaderTest;
@@ -72,11 +80,12 @@ import org.testng.annotations.Test;
  * session travels both ways, context settings apply, and the standard {@code http()} DSL verifies
  * the exchange in Java, XML and YAML.
  */
-public class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
+class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
     private static final String API_CLIENT_NAME = "browserApi";
 
     private FixtureServer server;
+    private FixtureServer httpsServer;
     private PlaywrightBrowser browser;
     private HttpClient browserApi;
 
@@ -120,6 +129,15 @@ public class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
                     }
                 })
                 .route("/echo", (request, response) -> response.send(200, "text/plain", "echo"))
+                .route("/redirect", (request, response) -> response.header("Location", "/echo").send(302, null, ""))
+                .route("/slow", (request, response) -> {
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    response.send(200, "text/plain", "slow");
+                })
                 .route("/whoami", (request, response) -> response.send(200, "text/html",
                         "<html><body><pre id=\"cookies\">%s</pre></body></html>".formatted(
                                 request.header("Cookie") == null ? "" : request.header("Cookie"))));
@@ -133,6 +151,10 @@ public class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         }
         if (server != null) {
             server.close();
+        }
+        if (httpsServer != null) {
+            httpsServer.close();
+            httpsServer = null;
         }
     }
 
@@ -350,6 +372,71 @@ public class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
     }
 
     @Test
+    void shouldRejectAnInvalidCertificateByDefault() throws IOException {
+        startBrowser(builder -> { });
+        HttpClient client = PlaywrightEndpoints.playwright().apiClient().browser(browser).requestUrl(startHttps()).build();
+
+        RuntimeException error = expectThrows(RuntimeException.class, () -> send(client, "/echo"));
+
+        assertTrue(messages(error).contains("Browser-session request GET https://127.0.0.1"), messages(error));
+        assertTrue(httpsServer.lastRequest("/echo").isEmpty());
+    }
+
+    @Test
+    void shouldAcceptAnInvalidCertificateWhenTheClientIgnoresHttpsErrors() throws IOException {
+        startBrowser(builder -> { });
+        HttpClient client = PlaywrightEndpoints.playwright().apiClient().browser(browser)
+                .requestUrl(startHttps())
+                .ignoreHttpsErrors(true)
+                .build();
+
+        Message response = exchange(client, "/echo");
+
+        assertEquals(String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "200");
+        assertEquals(String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_SUBJECT_NAME)), "Citrus");
+        assertEquals(String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_ISSUER)), "Citrus");
+        assertEquals(String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_VALID_FROM)), "1475601682");
+        assertEquals(String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_VALID_TO)), "1483377682");
+        assertTrue(String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_PROTOCOL)).startsWith("TLS"),
+                String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_PROTOCOL)));
+        assertTrue(response.getHeaders().containsKey(PLAYWRIGHT_API_TIMING_SECURE_CONNECTION_START), String.valueOf(response.getHeaders()));
+    }
+
+    @Test
+    void shouldHonourTheBrowserContextIgnoreHttpsErrors() throws IOException {
+        startBrowser(builder -> builder.contextOptions(new Browser.NewContextOptions().setIgnoreHTTPSErrors(true)));
+        HttpClient client = PlaywrightEndpoints.playwright().apiClient().browser(browser).requestUrl(startHttps()).build();
+
+        Message response = exchange(client, "/echo");
+
+        assertEquals(String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "200");
+    }
+
+    @Test
+    void shouldReturnTheRedirectItselfWhenRedirectsAreDisabled() {
+        startBrowser(builder -> { });
+        HttpClient noRedirects = PlaywrightEndpoints.playwright().apiClient().browser(browser).maxRedirects(0).build();
+
+        Message redirect = exchange(noRedirects, "/redirect");
+        Message followed = exchange(browserApi, "/redirect");
+
+        assertEquals(String.valueOf(redirect.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "302");
+        assertEquals(header(redirect, "Location"), "/echo");
+        assertEquals(String.valueOf(followed.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "200");
+        assertEquals(String.valueOf(followed.getHeader(PLAYWRIGHT_API_URL)), server.url("/echo"));
+    }
+
+    @Test
+    void shouldTimeOutASlowRequest() {
+        startBrowser(builder -> { });
+        HttpClient impatient = PlaywrightEndpoints.playwright().apiClient().browser(browser).timeout(300L).build();
+
+        RuntimeException error = expectThrows(RuntimeException.class, () -> send(impatient, "/slow"));
+
+        assertTrue(messages(error).contains("300"), messages(error));
+    }
+
+    @Test
     void shouldRunTheXmlSource() {
         startBrowser(builder -> { });
         context.setVariable("loginUrl", server.url("/login"));
@@ -394,6 +481,12 @@ public class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         browserApi.setName(API_CLIENT_NAME);
         context.getReferenceResolver().bind(BROWSER_NAME, browser);
         context.getReferenceResolver().bind(API_CLIENT_NAME, browserApi);
+    }
+
+    private String startHttps() throws IOException {
+        httpsServer = FixtureServer.startHttps()
+                .route("/echo", (request, response) -> response.send(200, "text/plain", "secure echo"));
+        return httpsServer.url("");
     }
 
     private void open(String path) {

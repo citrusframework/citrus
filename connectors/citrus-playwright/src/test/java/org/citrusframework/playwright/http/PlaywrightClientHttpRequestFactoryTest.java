@@ -189,6 +189,29 @@ class PlaywrightClientHttpRequestFactoryTest {
     }
 
     @Test
+    void shouldReportTheReasonOfAStructuredDriverError() throws IOException {
+        browser.start();
+        // The format the 1.63 driver uses for a request timeout, call log included.
+        when(browser.api(browser.getCurrentContext()).fetch(anyString(), any(RequestOptions.class))).thenThrow(new PlaywrightException(
+                "Error {\n"
+                        + "  message='Timeout 300ms exceeded.\n"
+                        + "  name='TimeoutError\n"
+                        + "  stack='TimeoutError: Timeout 300ms exceeded.\n"
+                        + "    at _ProgressController.run (/tmp/playwright-java/package/lib/coreBundle.js:12360:32)\n"
+                        + "}\n"
+                        + "Call log:\n"
+                        + "-   - → GET http://localhost:8080/api/orders?source=ui\n"
+                        + "-     - cookie: SID=secret\n"));
+
+        ClientHttpRequest request = new PlaywrightClientHttpRequestFactory(browser).createRequest(ORDERS, HttpMethod.GET);
+        IOException error = expectThrows(IOException.class, request::execute);
+
+        assertTrue(error.getMessage().endsWith("failed: Timeout 300ms exceeded."), error.getMessage());
+        assertFalse(error.getMessage().contains("SID=secret"), error.getMessage());
+        assertFalse(error.getMessage().contains("coreBundle"), error.getMessage());
+    }
+
+    @Test
     void shouldMapTheSpringRequestToAFetchSpec() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
@@ -200,19 +223,18 @@ class PlaywrightClientHttpRequestFactoryTest {
         headers.add("Transfer-Encoding", "chunked");
         byte[] body = "{\"item\":\"book\"}".getBytes(StandardCharsets.UTF_8);
 
-        FetchSpec spec = FetchSpec.of(HttpMethod.POST, ORDERS, headers, body, 5000.0, 0);
+        FetchSpec spec = FetchSpec.of(HttpMethod.POST, ORDERS, headers, body, new TransportOptions(5000.0, 0, null, false));
 
         assertEquals(spec.method(), "POST");
         assertEquals(spec.url(), "http://localhost:8080/api/orders?source=ui");
         assertEquals(spec.headers(), Map.of("Content-Type", "application/json", "Accept", "application/json, text/plain"));
         assertEquals(new String(spec.body(), StandardCharsets.UTF_8), "{\"item\":\"book\"}");
-        assertEquals(spec.timeout(), 5000.0);
-        assertEquals(spec.maxRedirects(), Integer.valueOf(0));
+        assertEquals(spec.options(), new TransportOptions(5000.0, 0, null, false));
     }
 
     @Test
     void shouldLeaveOptionalFetchSettingsUnset() throws Exception {
-        FetchSpec spec = FetchSpec.of(HttpMethod.GET, ORDERS, new HttpHeaders(), new byte[0], null, null);
+        FetchSpec spec = FetchSpec.of(HttpMethod.GET, ORDERS, new HttpHeaders(), new byte[0], TransportOptions.DEFAULTS);
 
         RequestOptions options = spec.toRequestOptions();
 
@@ -221,6 +243,8 @@ class PlaywrightClientHttpRequestFactoryTest {
         assertNull(field(options, "data"));
         assertNull(field(options, "timeout"));
         assertNull(field(options, "maxRedirects"));
+        assertNull(field(options, "maxRetries"));
+        assertNull(field(options, "ignoreHTTPSErrors"));
     }
 
     @Test
@@ -229,7 +253,7 @@ class PlaywrightClientHttpRequestFactoryTest {
         headers.add("Content-Type", "application/json");
         byte[] body = "{}".getBytes(StandardCharsets.UTF_8);
 
-        RequestOptions options = FetchSpec.of(HttpMethod.PUT, ORDERS, headers, body, 2500.0, 3).toRequestOptions();
+        RequestOptions options = FetchSpec.of(HttpMethod.PUT, ORDERS, headers, body, new TransportOptions(2500.0, 3, 2, true)).toRequestOptions();
 
         assertEquals(field(options, "method"), "PUT");
         assertEquals(field(options, "headers"), Map.of("Content-Type", "application/json"));
@@ -237,6 +261,40 @@ class PlaywrightClientHttpRequestFactoryTest {
         assertEquals(field(options, "failOnStatusCode"), Boolean.FALSE);
         assertEquals(field(options, "timeout"), 2500.0);
         assertEquals(field(options, "maxRedirects"), 3);
+        assertEquals(field(options, "maxRetries"), 2);
+        assertEquals(field(options, "ignoreHTTPSErrors"), Boolean.TRUE);
+    }
+
+    @Test
+    void shouldCarryTheFactorySettingsIntoEveryFetch() throws IOException {
+        browser.start();
+        PlaywrightClientHttpRequestFactory factory = new PlaywrightClientHttpRequestFactory(browser)
+                .timeout(2500)
+                .maxRedirects(0)
+                .maxRetries(2)
+                .ignoreHttpsErrors(true);
+
+        factory.createRequest(ORDERS, HttpMethod.GET).execute();
+
+        assertEquals(factory.options(), new TransportOptions(2500.0, 0, 2, true));
+        assertEquals(factory.getMaxRetries(), Integer.valueOf(2));
+        assertTrue(factory.isIgnoreHttpsErrors());
+    }
+
+    @Test
+    void shouldReportFailuresWhileReadingTheResponseWithoutTheDriverCallLog() throws IOException {
+        browser.start();
+        APIResponse driverResponse = apiResponse(200, "");
+        when(driverResponse.body()).thenThrow(new PlaywrightException("Error: socket hang up\nCall log:\n  -   cookie: SID=secret"));
+        when(browser.api(browser.getCurrentContext()).fetch(anyString(), any(RequestOptions.class))).thenReturn(driverResponse);
+
+        ClientHttpRequest request = new PlaywrightClientHttpRequestFactory(browser).createRequest(ORDERS, HttpMethod.GET);
+        IOException error = expectThrows(IOException.class, request::execute);
+
+        assertTrue(error.getMessage().contains("socket hang up"), error.getMessage());
+        assertFalse(error.getMessage().contains("SID=secret"), error.getMessage());
+        assertNull(error.getCause());
+        verify(driverResponse).dispose();
     }
 
     /**

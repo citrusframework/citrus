@@ -18,11 +18,15 @@ package org.citrusframework.playwright.support;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpsConfigurator;
+import com.sun.net.httpserver.HttpsServer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -30,6 +34,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
 
 /**
  * Local HTTP server for browser integration tests, on {@code 127.0.0.1} with a random port.
@@ -37,27 +43,59 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <p>Serves the static files under {@code /fixtures} from the test classpath, plus any routes a
  * test registers. Every request that reaches a route is recorded, so tests can assert what the
  * browser or an API client actually sent.</p>
+ *
+ * <p>{@link #startHttps()} serves the same over TLS with the self-signed, expired certificate in
+ * {@code keystore/fixture-server.jks} ({@code CN=Citrus}), which every client rejects unless it
+ * ignores HTTPS errors.</p>
  */
 public final class FixtureServer implements AutoCloseable {
 
+    private static final String KEYSTORE = "/keystore/fixture-server.jks";
+    private static final char[] KEYSTORE_PASSWORD = "secret".toCharArray();
+
     private final HttpServer server;
+    private final String scheme;
     private final Map<String, Route> routes = new ConcurrentHashMap<>();
     private final List<RecordedRequest> requests = new CopyOnWriteArrayList<>();
 
-    private FixtureServer(HttpServer server) {
+    private FixtureServer(HttpServer server, String scheme) {
         this.server = server;
+        this.scheme = scheme;
     }
 
     public static FixtureServer start() throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
-        FixtureServer fixture = new FixtureServer(server);
+        return start(HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0), "http");
+    }
+
+    public static FixtureServer startHttps() throws IOException {
+        HttpsServer server = HttpsServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+        server.setHttpsConfigurator(new HttpsConfigurator(sslContext()));
+        return start(server, "https");
+    }
+
+    private static FixtureServer start(HttpServer server, String scheme) {
+        FixtureServer fixture = new FixtureServer(server, scheme);
         server.createContext("/", fixture::handle);
         server.start();
         return fixture;
     }
 
+    private static SSLContext sslContext() throws IOException {
+        try (InputStream stream = FixtureServer.class.getResourceAsStream(KEYSTORE)) {
+            KeyStore keyStore = KeyStore.getInstance("JKS");
+            keyStore.load(stream, KEYSTORE_PASSWORD);
+            KeyManagerFactory keyManagers = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagers.init(keyStore, KEYSTORE_PASSWORD);
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(keyManagers.getKeyManagers(), null, null);
+            return context;
+        } catch (GeneralSecurityException e) {
+            throw new IOException("Failed to load the fixture server keystore " + KEYSTORE, e);
+        }
+    }
+
     public String url(String path) {
-        return "http://127.0.0.1:%d%s".formatted(server.getAddress().getPort(), path);
+        return "%s://127.0.0.1:%d%s".formatted(scheme, server.getAddress().getPort(), path);
     }
 
     /**
