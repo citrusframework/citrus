@@ -17,10 +17,13 @@
 package org.citrusframework.playwright.http;
 
 import com.microsoft.playwright.APIResponse;
+import com.microsoft.playwright.PlaywrightException;
 import com.microsoft.playwright.options.HttpHeader;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Locale;
+import java.util.Set;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -33,10 +36,17 @@ import org.springframework.http.client.ClientHttpResponse;
  * browser's owner thread, so nothing touches the driver once the response is handed to Spring.
  * Headers come from {@link APIResponse#headersArray()}, which keeps every value of a repeated
  * header such as {@code Set-Cookie}.</p>
+ *
+ * <p>The driver decompresses {@code gzip}, {@code br} and {@code deflate} bodies but reports the
+ * server's headers. For such a body the snapshot drops {@code Content-Encoding} and sets
+ * {@code Content-Length} to the decoded size, because Spring reads exactly that many bytes.</p>
  */
 final class PlaywrightClientHttpResponse implements ClientHttpResponse {
 
     private static final byte[] EMPTY_BODY = new byte[0];
+
+    /** Content codings the driver decodes before it hands out the body. */
+    private static final Set<String> DECODED_ENCODINGS = Set.of("gzip", "x-gzip", "br", "deflate");
 
     private final HttpStatusCode statusCode;
     private final String statusText;
@@ -65,11 +75,30 @@ final class PlaywrightClientHttpResponse implements ClientHttpResponse {
             TransportDetailHeaders.from(response.url(), response.timing(), response.serverAddr(), response.securityDetails())
                     .forEach(headers::set);
 
-            byte[] body = response.body();
-            return new PlaywrightClientHttpResponse(HttpStatusCode.valueOf(response.status()), response.statusText(),
-                    headers, body == null ? EMPTY_BODY : body);
+            byte[] body = response.body() == null ? EMPTY_BODY : response.body();
+            describeDecodedBody(headers, body);
+            return new PlaywrightClientHttpResponse(statusCode(response.status()), response.statusText(), headers, body);
         } finally {
             response.dispose();
+        }
+    }
+
+    /**
+     * Spring accepts only three-digit codes. Anything else is reported like a driver failure, so
+     * the request adds its method and URL.
+     */
+    private static HttpStatusCode statusCode(int status) {
+        if (status < 100 || status > 999) {
+            throw new PlaywrightException("invalid response status code " + status);
+        }
+        return HttpStatusCode.valueOf(status);
+    }
+
+    private static void describeDecodedBody(HttpHeaders headers, byte[] body) {
+        String encoding = headers.getFirst(HttpHeaders.CONTENT_ENCODING);
+        if (encoding != null && DECODED_ENCODINGS.contains(encoding.trim().toLowerCase(Locale.ROOT))) {
+            headers.remove(HttpHeaders.CONTENT_ENCODING);
+            headers.setContentLength(body.length);
         }
     }
 

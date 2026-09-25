@@ -42,6 +42,8 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.citrusframework.util.StringUtils;
+
 /**
  * Turns the details the driver reports for an API response (final URL, server address, TLS and
  * resource timing) into response headers.
@@ -93,7 +95,7 @@ final class TransportDetailHeaders {
     }
 
     private static void putText(Map<String, String> headers, String name, String value) {
-        if (value != null && !value.isEmpty()) {
+        if (StringUtils.hasText(value)) {
             headers.put(name, value);
         }
     }

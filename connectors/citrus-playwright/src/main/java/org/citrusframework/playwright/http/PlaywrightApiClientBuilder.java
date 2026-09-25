@@ -42,10 +42,7 @@ public class PlaywrightApiClientBuilder extends AbstractEndpointBuilder<HttpClie
     private String browserName;
     private String contextAlias;
     private String requestUrl;
-    private Long timeout;
-    private Integer maxRedirects;
-    private Integer maxRetries;
-    private boolean ignoreHttpsErrors;
+    private TransportOptions transportOptions = TransportOptions.DEFAULTS;
 
     /**
      * Binds the client to a browser endpoint.
@@ -101,7 +98,8 @@ public class PlaywrightApiClientBuilder extends AbstractEndpointBuilder<HttpClie
      * @return this builder
      */
     public PlaywrightApiClientBuilder timeout(long timeout) {
-        this.timeout = timeout;
+        this.transportOptions = transportOptions.withTimeout(timeout);
+        endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
     }
 
@@ -112,7 +110,7 @@ public class PlaywrightApiClientBuilder extends AbstractEndpointBuilder<HttpClie
      * @return this builder
      */
     public PlaywrightApiClientBuilder maxRedirects(int maxRedirects) {
-        this.maxRedirects = maxRedirects;
+        this.transportOptions = transportOptions.withMaxRedirects(maxRedirects);
         return this;
     }
 
@@ -123,7 +121,7 @@ public class PlaywrightApiClientBuilder extends AbstractEndpointBuilder<HttpClie
      * @return this builder
      */
     public PlaywrightApiClientBuilder maxRetries(int maxRetries) {
-        this.maxRetries = maxRetries;
+        this.transportOptions = transportOptions.withMaxRetries(maxRetries);
         return this;
     }
 
@@ -135,7 +133,7 @@ public class PlaywrightApiClientBuilder extends AbstractEndpointBuilder<HttpClie
      * @return this builder
      */
     public PlaywrightApiClientBuilder ignoreHttpsErrors(boolean ignoreHttpsErrors) {
-        this.ignoreHttpsErrors = ignoreHttpsErrors;
+        this.transportOptions = transportOptions.withIgnoreHttpsErrors(ignoreHttpsErrors);
         return this;
     }
 
@@ -172,25 +170,20 @@ public class PlaywrightApiClientBuilder extends AbstractEndpointBuilder<HttpClie
                     + "or configure a baseUrl on the browser endpoint '%s'").formatted(resolvedBrowser.getName()));
         }
 
-        PlaywrightClientHttpRequestFactory factory = new PlaywrightClientHttpRequestFactory(resolvedBrowser)
-                .context(contextAlias)
-                .ignoreHttpsErrors(ignoreHttpsErrors);
-        if (maxRedirects != null) {
-            factory.maxRedirects(maxRedirects);
-        }
-        if (maxRetries != null) {
-            factory.maxRetries(maxRetries);
-        }
-
         HttpEndpointConfiguration configuration = endpoint.getEndpointConfiguration();
         configuration.setRequestUrl(url);
-        configuration.setRequestFactory(factory);
-        if (timeout != null) {
-            factory.timeout(timeout);
-            configuration.setTimeout(timeout);
-        }
+        configuration.setRequestFactory(new PlaywrightClientHttpRequestFactory(resolvedBrowser, contextAlias, transportOptions));
 
         return super.build();
+    }
+
+    /**
+     * Never offers itself for a plain {@code HttpClient} endpoint: the endpoint factory picks the
+     * first registered builder that supports the field type, and this one needs a browser.
+     */
+    @Override
+    public boolean supports(Class<?> endpointType) {
+        return false;
     }
 
     @Override

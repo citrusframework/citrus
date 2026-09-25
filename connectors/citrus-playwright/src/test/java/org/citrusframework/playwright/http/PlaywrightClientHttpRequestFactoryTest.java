@@ -212,6 +212,20 @@ class PlaywrightClientHttpRequestFactoryTest {
     }
 
     @Test
+    void shouldReportAnInvalidStatusCodeLikeAnyDriverFailure() throws IOException {
+        browser.start();
+        APIResponse driverResponse = apiResponse(1000, "");
+        when(browser.api(browser.getCurrentContext()).fetch(anyString(), any(RequestOptions.class))).thenReturn(driverResponse);
+
+        ClientHttpRequest request = new PlaywrightClientHttpRequestFactory(browser).createRequest(ORDERS, HttpMethod.GET);
+        IOException error = expectThrows(IOException.class, request::execute);
+
+        assertTrue(error.getMessage().startsWith("Browser-session request GET http://localhost:8080/api/orders"), error.getMessage());
+        assertTrue(error.getMessage().endsWith("invalid response status code 1000"), error.getMessage());
+        verify(driverResponse).dispose();
+    }
+
+    @Test
     void shouldMapTheSpringRequestToAFetchSpec() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
