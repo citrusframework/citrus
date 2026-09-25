@@ -18,6 +18,7 @@ package org.citrusframework.playwright.endpoint.builder;
 
 import org.citrusframework.endpoint.builder.AbstractEndpointBuilder;
 import org.citrusframework.playwright.endpoint.PlaywrightEndpointBuilder;
+import org.citrusframework.playwright.http.PlaywrightApiClientBuilder;
 
 /**
  * Static endpoint-builder entry point for Citrus Playwright endpoints.
@@ -47,5 +48,15 @@ public class PlaywrightEndpoints extends AbstractEndpointBuilder<PlaywrightEndpo
      */
     public PlaywrightEndpointBuilder browser() {
         return builder;
+    }
+
+    /**
+     * Starts a Citrus HTTP client whose requests travel through a browser context and carry
+     * the browser's session.
+     *
+     * @return browser-session HTTP client builder
+     */
+    public PlaywrightApiClientBuilder apiClient() {
+        return new PlaywrightApiClientBuilder();
     }
 }
