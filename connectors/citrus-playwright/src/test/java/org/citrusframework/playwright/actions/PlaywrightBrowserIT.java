@@ -22,15 +22,9 @@ import static org.testng.Assert.expectThrows;
 import static org.testng.Assert.assertTrue;
 
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Playwright;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Proxy;
-import java.net.InetSocketAddress;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,6 +46,8 @@ import org.citrusframework.playwright.model.NetworkRecord;
 import org.citrusframework.playwright.model.NetworkResponseResult;
 import org.citrusframework.playwright.model.PlaywrightTarget;
 import org.citrusframework.playwright.support.FailureEvidenceListener;
+import org.citrusframework.playwright.support.FixtureServer;
+import org.citrusframework.playwright.support.PlaywrightRuntime;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -65,7 +61,7 @@ class PlaywrightBrowserIT {
 
     @BeforeClass
     public void configureMaskKeywords() {
-        if (!chromiumAvailable()) {
+        if (!PlaywrightRuntime.chromiumAvailable()) {
             throw new SkipException("Chromium is not installed for Playwright - install it with -Pplaywright-runtimes");
         }
 
@@ -469,60 +465,11 @@ class PlaywrightBrowserIT {
         }
     }
 
-    static class FixtureServer implements AutoCloseable {
-        private final HttpServer server;
-
-        private FixtureServer(HttpServer server) {
-            this.server = server;
-        }
-
-        static FixtureServer start() throws IOException {
-            HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
-            server.createContext("/", FixtureServer::handle);
-            server.start();
-            return new FixtureServer(server);
-        }
-
-        String url(String path) {
-            return "http://127.0.0.1:%d%s".formatted(server.getAddress().getPort(), path);
-        }
-
-        @Override
-        public void close() {
-            server.stop(0);
-        }
-
-        private static void handle(HttpExchange exchange) throws IOException {
-            String path = exchange.getRequestURI().getPath();
-            try (InputStream stream = PlaywrightBrowserIT.class.getResourceAsStream("/fixtures" + path)) {
-                if (stream == null) {
-                    exchange.sendResponseHeaders(404, -1);
-                    return;
-                }
-                byte[] body = stream.readAllBytes();
-                exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
-                exchange.sendResponseHeaders(200, body.length);
-                exchange.getResponseBody().write(body);
-            } finally {
-                exchange.close();
-            }
-        }
-    }
-
     private TestCase testCase(String name) {
         return (TestCase) Proxy.newProxyInstance(TestCase.class.getClassLoader(), new Class<?>[]{TestCase.class},
                 (proxy, method, args) -> "getName".equals(method.getName()) ? name : null);
     }
 
-    private boolean chromiumAvailable() {
-        try (Playwright playwright = Playwright.create()) {
-            try (com.microsoft.playwright.Browser ignored = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true))) {
-                return true;
-            }
-        } catch (RuntimeException e) {
-            return false;
-        }
-    }
     @Test
     void shouldDriveUpliftCapabilitiesAgainstLocalFixture() throws Exception {
         URL fixture = getClass().getResource("/fixtures/uplift.html");
@@ -608,5 +555,4 @@ class PlaywrightBrowserIT {
         return header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F'
                 && header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P';
     }
-
 }

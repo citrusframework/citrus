@@ -1,1 +1,2 @@
 browser=org.citrusframework.playwright.config.annotation.PlaywrightBrowserConfigParser
+api-client=org.citrusframework.playwright.config.annotation.PlaywrightApiClientConfigParser
