@@ -86,6 +86,73 @@ class PlaywrightClientHttpResponseTest {
     }
 
     @Test
+    void shouldKeepTheEntityHeadersOfAResponseWithoutBody() {
+        // HEAD, 204 and 304: the headers describe the entity, not a delivered body.
+        APIResponse response = response(200, "OK", "");
+        when(response.headersArray()).thenReturn(List.of(
+                header("Content-Encoding", "gzip"),
+                header("Content-Length", "48213")));
+
+        PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
+
+        assertEquals(snapshot.getHeaders().getFirst("Content-Encoding"), "gzip");
+        assertEquals(snapshot.getHeaders().getContentLength(), 48213L);
+    }
+
+    @Test
+    void shouldDescribeADecodedChunkedBodyWithOneFramingHeader() throws IOException {
+        String json = "{\"user\":\"alice\"}";
+        APIResponse response = response(200, "OK", json);
+        when(response.headersArray()).thenReturn(List.of(
+                header("Content-Encoding", "gzip"),
+                header("Transfer-Encoding", "chunked")));
+
+        PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
+
+        assertNull(snapshot.getHeaders().getFirst("Content-Encoding"));
+        assertNull(snapshot.getHeaders().getFirst("Transfer-Encoding"));
+        assertEquals(snapshot.getHeaders().getContentLength(), json.length());
+    }
+
+    @Test
+    void shouldDescribeABodyWhoseLengthDisagreesWhateverTheCoding() {
+        // A coding the connector does not know, decoded by a future driver.
+        String json = "{\"items\":[\"a\",\"b\",\"c\",\"d\"]}";
+        APIResponse response = response(200, "OK", json);
+        when(response.headersArray()).thenReturn(List.of(
+                header("Content-Encoding", "zstd"),
+                header("Content-Length", "11")));
+
+        PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
+
+        assertNull(snapshot.getHeaders().getFirst("Content-Encoding"));
+        assertEquals(snapshot.getHeaders().getContentLength(), json.length());
+    }
+
+    @Test
+    void shouldKeepTheHeadersOfABodyTheDriverDidNotTouch() {
+        String data = "0123456789";
+        APIResponse response = response(200, "OK", data);
+        when(response.headersArray()).thenReturn(List.of(
+                header("Content-Encoding", "zstd"),
+                header("Content-Length", "10")));
+
+        PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
+
+        assertEquals(snapshot.getHeaders().getFirst("Content-Encoding"), "zstd");
+        assertEquals(snapshot.getHeaders().getContentLength(), 10L);
+    }
+
+    @Test
+    void shouldFetchTheBodyFromTheDriverOnce() {
+        APIResponse response = response(200, "OK", "{}");
+
+        PlaywrightClientHttpResponse.snapshot(response);
+
+        verify(response, times(1)).body();
+    }
+
+    @Test
     void shouldKeepTheContentLengthOfAnUncompressedResponse() {
         APIResponse response = response(200, "OK", "");
         when(response.headersArray()).thenReturn(List.of(header("Content-Length", "900")));
