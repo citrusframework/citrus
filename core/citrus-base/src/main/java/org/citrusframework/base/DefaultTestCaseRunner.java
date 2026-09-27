@@ -178,9 +178,7 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
             ((ReferenceResolverAware) builder).setReferenceResolver(context.getReferenceResolver());
         }
 
-        if (builder instanceof ApplyTestBehaviorAction.Builder) {
-            ((ApplyTestBehaviorAction.Builder) builder).on(this);
-        }
+        TestActionRunnerInjector.inject(builder, this);
 
         T action = builder.build();
 

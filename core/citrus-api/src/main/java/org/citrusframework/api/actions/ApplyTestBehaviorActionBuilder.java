@@ -16,6 +16,8 @@
 
 package org.citrusframework.api.actions;
 
+import java.util.List;
+
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionRunner;
@@ -28,6 +30,28 @@ public interface ApplyTestBehaviorActionBuilder<T extends TestAction>
 
     ApplyTestBehaviorActionBuilder<T> on(TestActionRunner runner);
 
+    /**
+     * Applies the behavior on a copy of the test context, so its variables do not affect the calling test.
+     * Use {@link #publish(String...)} to hand variables back.
+     */
+    ApplyTestBehaviorActionBuilder<T> isolated();
+
+    /**
+     * Sets whether the behavior shares the variables of the calling test. Enabled by default.
+     */
+    ApplyTestBehaviorActionBuilder<T> globalContext(boolean enabled);
+
+    /**
+     * Copies given variables from an isolated behavior back to the calling test once the behavior is done.
+     */
+    ApplyTestBehaviorActionBuilder<T> publish(String... variableNames);
+
+    /**
+     * Declares variables the behavior needs. Applying the behavior without them fails before any of its
+     * actions run.
+     */
+    ApplyTestBehaviorActionBuilder<T> requires(String... variableNames);
+
     interface BuilderFactory {
 
         ApplyTestBehaviorActionBuilder<?> apply();
@@ -36,6 +60,14 @@ public interface ApplyTestBehaviorActionBuilder<T extends TestAction>
             return apply().behavior(behavior);
         }
 
+        /**
+         * Applies given behaviors one after another as a single composite behavior.
+         */
+        default ApplyTestBehaviorActionBuilder<?> apply(List<TestBehavior> behaviors) {
+            return apply(behaviors.stream()
+                    .reduce(TestBehavior::andThen)
+                    .orElseThrow(() -> new IllegalArgumentException("Missing test behaviors to apply")));
+        }
     }
 
 }
