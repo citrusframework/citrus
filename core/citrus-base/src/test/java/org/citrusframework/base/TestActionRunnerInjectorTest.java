@@ -23,11 +23,14 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestActionRunnerAware;
 import org.citrusframework.actions.EchoAction;
+import org.citrusframework.container.FinallySequence;
 import org.citrusframework.container.Sequence;
 import org.citrusframework.dsl.TestActionSupport;
 import org.testng.annotations.Test;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
@@ -108,6 +111,19 @@ public class TestActionRunnerInjectorTest extends UnitTestSupport implements Tes
         assertEquals(finalActions.size(), 1);
         assertEquals(((EchoAction) finalActions.get(0)).getMessage(), "behaviorFinally");
         assertTrue(context.getFinalActions().isEmpty());
+    }
+
+    @Test
+    public void shouldKeepExplicitRunnerOfNestedBehavior() {
+        DefaultTestCaseRunner testCaseRunner = new DefaultTestCaseRunner(context);
+        TestActionRunner explicit = mock(TestActionRunner.class);
+
+        testCaseRunner.run(sequential().actions(
+                apply().behavior(behavior -> behavior.run(doFinally().actions(echo("behaviorFinally")))).on(explicit)
+        ));
+
+        verify(explicit).run(any(FinallySequence.Builder.class));
+        assertTrue(((DefaultTestCase) testCaseRunner.getTestCase()).getFinalActions().isEmpty());
     }
 
     @Test

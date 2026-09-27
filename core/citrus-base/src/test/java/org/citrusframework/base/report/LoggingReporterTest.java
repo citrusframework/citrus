@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 
 import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.actions.EchoAction;
+import org.citrusframework.container.Sequence;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.log.LogColors;
 import org.citrusframework.report.LoggingReporter;
@@ -92,6 +93,15 @@ public class LoggingReporterTest {
         fixture.onStart();
 
         verify(logger, never()).info(argThat(a -> a.startsWith("C I T R U S  T E S T S")));
+    }
+
+    @Test
+    public void testLoggingReporterContainerStart() {
+        fixture.onTestActionStart(test, new Sequence.Builder().build());
+        fixture.onTestActionStart(test, new Sequence.Builder().actions(echo).build());
+
+        verify(logger).info("➤ sequential - container");
+        verify(logger).info("➤ sequential - container with (1) embedded actions");
     }
 
     @Test

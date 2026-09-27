@@ -53,6 +53,9 @@ public class ApplyTestBehaviorAction extends AbstractActionContainer {
     private final List<String> publish;
     private final List<String> requires;
 
+    /** Isolated test context of the current execution, handed back to the caller once async actions are done */
+    private volatile TestContext isolatedScope;
+
     public ApplyTestBehaviorAction(Builder builder) {
         super(Optional.ofNullable(builder.behavior)
                 .map(TestBehavior::getName)
@@ -62,7 +65,7 @@ public class ApplyTestBehaviorAction extends AbstractActionContainer {
         // Nested actions belong to this execution only, never to the builder that may build again (e.g. in iterations)
         this.actions = new ArrayList<>();
 
-        this.runner = builder.runner;
+        this.runner = Optional.ofNullable(builder.runner).orElse(builder.injectedRunner);
         this.behavior = builder.behavior;
         this.globalContext = builder.globalContext;
         this.publish = List.copyOf(builder.publish);
@@ -77,12 +80,49 @@ public class ApplyTestBehaviorAction extends AbstractActionContainer {
 
         verifyRequiredVariables(context);
 
-        TestContext scope = globalContext ? context : TestContextFactory.copyOf(context);
-        behavior.apply(new NestedTestActionRunner(this, scope, runner));
-
-        if (!globalContext) {
-            publishVariables(scope, context);
+        if (globalContext) {
+            behavior.apply(new NestedTestActionRunner(this, context, runner));
+        } else {
+            applyIsolated(context);
         }
+
+        publishVariables(globalContext ? context : isolatedScope, context);
+    }
+
+    private void applyIsolated(TestContext context) {
+        if (context.hasExceptions()) {
+            throw context.getExceptions().remove(0);
+        }
+
+        isolatedScope = TestContextFactory.copyOf(context);
+        try {
+            behavior.apply(new NestedTestActionRunner(this, isolatedScope, runner));
+        } finally {
+            handBack(isolatedScope, context);
+        }
+    }
+
+    /**
+     * Moves exceptions raised by forked actions and finally actions registered on the isolated test context
+     * to the calling test context, where the test case picks them up.
+     */
+    private static void handBack(TestContext scope, TestContext context) {
+        context.getExceptions().addAll(scope.getExceptions());
+        scope.getExceptions().clear();
+        context.getFinalActions().addAll(scope.getFinalActions());
+        scope.getFinalActions().clear();
+    }
+
+    @Override
+    public boolean isDone(TestContext context) {
+        boolean done = super.isDone(context);
+
+        TestContext scope = isolatedScope;
+        if (done && scope != null) {
+            handBack(scope, context);
+        }
+
+        return done;
     }
 
     private void verifyRequiredVariables(TestContext context) {
@@ -114,6 +154,7 @@ public class ApplyTestBehaviorAction extends AbstractActionContainer {
             implements ApplyTestBehaviorActionBuilder<ApplyTestBehaviorAction>, TestActionRunnerAware {
 
         private TestActionRunner runner;
+        private TestActionRunner injectedRunner;
         private TestBehavior behavior;
         private boolean globalContext = true;
         private final List<String> publish = new ArrayList<>();
@@ -164,9 +205,12 @@ public class ApplyTestBehaviorAction extends AbstractActionContainer {
             return this;
         }
 
+        /**
+         * Receives the runner that runs this action. A runner set explicitly with {@link #on(TestActionRunner)} wins.
+         */
         @Override
         public void setTestActionRunner(TestActionRunner runner) {
-            on(runner);
+            this.injectedRunner = runner;
         }
 
         @Override

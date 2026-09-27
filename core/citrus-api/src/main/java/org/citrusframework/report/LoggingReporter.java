@@ -314,7 +314,9 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         String actionName = resolveActionName(testAction);
 
         if (testAction instanceof TestActionContainer container) {
-            info(LogColors.start(INDICATOR_START) + " " + actionName + " - container with (" + container.getActionCount() + ") embedded actions");
+            // Containers like applied test behaviors only know their nested actions once they have run
+            String embedded = container.getActionCount() > 0 ? " with (" + container.getActionCount() + ") embedded actions" : "";
+            info(LogColors.start(INDICATOR_START) + " " + actionName + " - container" + embedded);
         } else {
             debug(LogColors.start(INDICATOR_START) + " " + actionName);
         }

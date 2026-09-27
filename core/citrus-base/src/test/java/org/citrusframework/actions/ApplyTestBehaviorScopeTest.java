@@ -18,8 +18,10 @@ package org.citrusframework.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.citrusframework.TestBehavior;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.container.Iterate;
@@ -116,6 +118,68 @@ public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestA
                 () -> runner.run(apply(TestBehavior.named("create order", createOrder)).isolated().publish("invoiceId")));
 
         assertEquals(failure.getMessage(), "Test behavior 'create order' did not set published variable 'invoiceId'");
+    }
+
+    @Test
+    public void shouldFailWhenPublishedVariableIsMissingInGlobalScope() {
+        TestCaseFailedException failure = expectThrows(TestCaseFailedException.class,
+                () -> runner.run(apply(TestBehavior.named("create order", createOrder)).publish("invoiceId")));
+
+        assertEquals(failure.getMessage(), "Test behavior 'create order' did not set published variable 'invoiceId'");
+    }
+
+    @Test
+    public void shouldPublishInGlobalScope() {
+        runner.run(apply(createOrder).publish("orderId"));
+
+        assertEquals(context.getVariable("orderId"), "1001");
+    }
+
+    @Test
+    public void shouldHandBackExceptionsOfIsolatedScope() {
+        runner.run(apply(behavior -> behavior.run(action(scope -> scope.addException(new CitrusRuntimeException("forked failure")))))
+                .isolated());
+
+        assertEquals(context.getExceptions().size(), 1);
+        assertEquals(context.getExceptions().get(0).getMessage(), "forked failure");
+    }
+
+    @Test
+    public void shouldHandBackLateExceptionsOfIsolatedScopeOnCompletion() {
+        AtomicReference<TestContext> isolatedScope = new AtomicReference<>();
+        runner.run(apply(behavior -> behavior.run(action(isolatedScope::set))).isolated());
+        ApplyTestBehaviorAction applied = (ApplyTestBehaviorAction) runner.getTestCase().getActions().get(0);
+
+        isolatedScope.get().addException(new CitrusRuntimeException("late forked failure"));
+
+        assertTrue(applied.isDone(context));
+        assertEquals(context.getExceptions().size(), 1);
+        assertEquals(context.getExceptions().get(0).getMessage(), "late forked failure");
+    }
+
+    @Test
+    public void shouldRaisePendingExceptionBeforeIsolatedBehavior() {
+        TestCaseFailedException failure = expectThrows(TestCaseFailedException.class,
+                () -> runner.run(sequential().actions(
+                        action(caller -> caller.addException(new CitrusRuntimeException("pending failure"))),
+                        apply(createOrder).isolated()
+                )));
+
+        assertEquals(failure.getMessage(), "pending failure");
+        assertTrue(log.isEmpty());
+    }
+
+    @Test
+    public void shouldHandBackFinallyActionsOfIsolatedScopeWithoutRunner() {
+        ApplyTestBehaviorAction applied = new ApplyTestBehaviorAction.Builder()
+                .behavior(behavior -> behavior.run(doFinally().actions(echo("cleanup"))))
+                .isolated()
+                .build();
+
+        applied.execute(context);
+
+        assertEquals(context.getFinalActions().size(), 1);
+        assertEquals(((EchoAction) context.getFinalActions().get(0).build()).getMessage(), "cleanup");
     }
 
     @Test

@@ -512,15 +512,14 @@ lines of their own; only what they log themselves appears in between:
 
 [source]
 ----
-➤ foo behavior - container with (0) embedded actions
+➤ foo behavior - container
 Setting variable: foo to value: test
 fooBehavior
 ✔ foo behavior
 ----
 
-The console logs the number of embedded actions when the behavior starts, before it has run any. When a behavior runs
-inside another container, the console shows that container's step lines only, as for any nested action. The flow report
-still lists the behavior under its name.
+When a behavior runs inside another container, the console shows that container's step lines only, as for any nested
+action. The flow report still lists the behavior under its name.
 
 By default the name is the simple class name of the behavior split into lower case words, so `FooBehavior` is reported as
 `foo behavior`. Acronyms are kept as they are: `SendSOAPRequest` is reported as `send SOAP request`. Nested classes and
@@ -563,7 +562,7 @@ public void behaviorInContainerTest() {
 ----
 
 The test action runner is passed to the behavior automatically. The explicit form `apply().behavior(new FooBehavior()).on(runner)`
-keeps working, but the `on(runner)` call is not needed anymore.
+keeps working, and a runner set that way is kept, but the `on(runner)` call is not needed anymore.
 
 [[java-test-behaviors-composition]]
 ==== Composing behaviors
@@ -682,7 +681,8 @@ public void isolatedBehaviorTest() {
 }
 ----
 
-A published variable that the behavior does not set fails the test with an error naming the variable.
+A published variable that the behavior does not set fails the test with an error naming the variable. Exceptions raised by
+forked actions and `doFinally()` actions inside an isolated behavior still reach the test.
 
 [[java-test-behaviors-upgrade]]
 ==== Upgrading from earlier versions
