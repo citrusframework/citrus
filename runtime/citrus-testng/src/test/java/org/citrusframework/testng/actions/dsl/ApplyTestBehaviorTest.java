@@ -47,16 +47,12 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("foo"), "test");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 4);
+        Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), ApplyTestBehaviorAction.class);
+        assertFooBehavior(test.getActions().get(0));
 
-        Assert.assertEquals(test.getActions().get(1).getClass(), CreateVariablesAction.class);
-
-        Assert.assertEquals(test.getActions().get(2).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(2)).getMessage(), "fooBehavior");
-
-        Assert.assertEquals(test.getActions().get(3).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(3)).getMessage(), "test");
+        Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "test");
     }
 
     @Test
@@ -77,15 +73,15 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
         }));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 3);
+        Assert.assertEquals(test.getActionCount(), 2);
 
         Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)test.getActions().get(0)).getMessage(), "test");
 
         Assert.assertEquals(test.getActions().get(1).getClass(), ApplyTestBehaviorAction.class);
-
-        Assert.assertEquals(test.getActions().get(2).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(2)).getMessage(), "behavior");
+        ApplyTestBehaviorAction behavior = (ApplyTestBehaviorAction) test.getActions().get(1);
+        Assert.assertEquals(behavior.getExecutedActions().size(), 1);
+        Assert.assertEquals(((EchoAction)behavior.getExecutedActions().get(0)).getMessage(), "behavior");
 
         Assert.assertTrue(test instanceof DefaultTestCase);
         List<TestAction> finalActions = ((DefaultTestCase)test).getFinalActions();
@@ -107,7 +103,7 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
                 ));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
+        Assert.assertEquals(test.getActionCount(), 1);
 
         Assert.assertEquals(test.getActions().get(0).getClass(), Sequence.class);
         Sequence sequence = (Sequence) test.getActions().get(0);
@@ -121,8 +117,9 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
         Assert.assertEquals(sequence.getActions().get(2).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)sequence.getActions().get(2)).getMessage(), "after");
 
-        Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "behavior");
+        ApplyTestBehaviorAction behavior = (ApplyTestBehaviorAction) sequence.getExecutedActions().get(1);
+        Assert.assertEquals(behavior.getExecutedActions().size(), 1);
+        Assert.assertEquals(((EchoAction)behavior.getExecutedActions().get(0)).getMessage(), "behavior");
     }
 
     @Test
@@ -145,7 +142,7 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
         ));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
+        Assert.assertEquals(test.getActionCount(), 1);
 
         Assert.assertEquals(test.getActions().get(0).getClass(), Sequence.class);
         Sequence sequence = (Sequence) test.getActions().get(0);
@@ -156,8 +153,9 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
 
         Assert.assertEquals(sequence.getActions().get(1).getClass(), ApplyTestBehaviorAction.class);
 
-        Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "behavior");
+        ApplyTestBehaviorAction behavior = (ApplyTestBehaviorAction) sequence.getExecutedActions().get(1);
+        Assert.assertEquals(behavior.getExecutedActions().size(), 1);
+        Assert.assertEquals(((EchoAction)behavior.getExecutedActions().get(0)).getMessage(), "behavior");
 
         Assert.assertTrue(test instanceof DefaultTestCase);
         List<TestAction> finalActions = ((DefaultTestCase)test).getFinalActions();
@@ -186,23 +184,19 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("bar"), "test");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 7);
+        Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getActions().get(0).getClass(), ApplyTestBehaviorAction.class);
+        assertFooBehavior(test.getActions().get(0));
 
-        Assert.assertEquals(test.getActions().get(1).getClass(), CreateVariablesAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "test");
 
-        Assert.assertEquals(test.getActions().get(2).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(2)).getMessage(), "fooBehavior");
-
-        Assert.assertEquals(test.getActions().get(3).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(3)).getMessage(), "test");
-
-        Assert.assertEquals(test.getActions().get(4).getClass(), ApplyTestBehaviorAction.class);
-
-        Assert.assertEquals(test.getActions().get(5).getClass(), CreateVariablesAction.class);
-
-        Assert.assertEquals(test.getActions().get(6).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(6)).getMessage(), "barBehavior");
+        Assert.assertEquals(test.getActions().get(2).getClass(), ApplyTestBehaviorAction.class);
+        ApplyTestBehaviorAction bar = (ApplyTestBehaviorAction) test.getActions().get(2);
+        Assert.assertEquals(bar.getName(), "bar behavior");
+        Assert.assertEquals(bar.getExecutedActions().size(), 2);
+        Assert.assertEquals(bar.getExecutedActions().get(0).getClass(), CreateVariablesAction.class);
+        Assert.assertEquals(((EchoAction)bar.getExecutedActions().get(1)).getMessage(), "barBehavior");
     }
 
     @Test
@@ -218,21 +212,15 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("foo"), "test");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 7);
+        Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getActions().get(0).getClass(), ApplyTestBehaviorAction.class);
+        assertFooBehavior(test.getActions().get(0));
 
-        Assert.assertEquals(test.getActions().get(1).getClass(), CreateVariablesAction.class);
-        Assert.assertEquals(test.getActions().get(2).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(2)).getMessage(), "fooBehavior");
+        Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "test");
 
-        Assert.assertEquals(test.getActions().get(3).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(3)).getMessage(), "test");
-
-        Assert.assertEquals(test.getActions().get(4).getClass(), ApplyTestBehaviorAction.class);
-
-        Assert.assertEquals(test.getActions().get(5).getClass(), CreateVariablesAction.class);
-        Assert.assertEquals(test.getActions().get(6).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(6)).getMessage(), "fooBehavior");
+        Assert.assertEquals(test.getActions().get(2).getClass(), ApplyTestBehaviorAction.class);
+        assertFooBehavior(test.getActions().get(2));
     }
 
     @Test
@@ -249,7 +237,7 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("foo"), "test");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 5);
+        Assert.assertEquals(test.getActionCount(), 1);
 
         Assert.assertEquals(test.getActions().get(0).getClass(), Sequence.class);
         Sequence sequence = (Sequence) test.getActions().get(0);
@@ -262,13 +250,16 @@ public class ApplyTestBehaviorTest extends UnitTestSupport {
 
         Assert.assertEquals(sequence.getActions().get(2).getClass(), ApplyTestBehaviorAction.class);
 
-        Assert.assertEquals(test.getActions().get(1).getClass(), CreateVariablesAction.class);
-        Assert.assertEquals(test.getActions().get(2).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(2)).getMessage(), "fooBehavior");
+        assertFooBehavior(sequence.getExecutedActions().get(0));
+        assertFooBehavior(sequence.getExecutedActions().get(2));
+    }
 
-        Assert.assertEquals(test.getActions().get(3).getClass(), CreateVariablesAction.class);
-        Assert.assertEquals(test.getActions().get(4).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getActions().get(4)).getMessage(), "fooBehavior");
+    private static void assertFooBehavior(TestAction action) {
+        ApplyTestBehaviorAction foo = (ApplyTestBehaviorAction) action;
+        Assert.assertEquals(foo.getName(), "foo behavior");
+        Assert.assertEquals(foo.getExecutedActions().size(), 2);
+        Assert.assertEquals(foo.getExecutedActions().get(0).getClass(), CreateVariablesAction.class);
+        Assert.assertEquals(((EchoAction)foo.getExecutedActions().get(1)).getMessage(), "fooBehavior");
     }
 
     private static class FooBehavior implements TestBehavior, TestActionSupport {
