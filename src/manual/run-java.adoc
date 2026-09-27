@@ -585,6 +585,60 @@ public void composedBehaviorTest() {
 }
 ----
 
+[[java-test-behaviors-fluent]]
+==== Fluent behaviors
+
+A behavior does not have to be created with `new`. The `apply(..)` method accepts any `TestBehavior` instance, so a
+behavior can offer a static factory method and fluent methods for its inputs:
+
+[source,java]
+----
+public record PlaceAnOrder(String item, int quantity) implements TestBehavior, TestActionSupport {
+
+    public static PlaceAnOrder placeAnOrder() {
+        return new PlaceAnOrder(null, 1);
+    }
+
+    public PlaceAnOrder forItem(String item) {
+        return new PlaceAnOrder(item, quantity);
+    }
+
+    public PlaceAnOrder inQuantity(int quantity) {
+        return new PlaceAnOrder(item, quantity);
+    }
+
+    @Override
+    public void apply(TestActionRunner runner) {
+        if (item == null) {
+            throw new CitrusRuntimeException("Missing item to order - use forItem(..)");
+        }
+
+        runner.run(echo("Ordering %d x %s".formatted(quantity, item)));
+    }
+}
+----
+
+[source,java]
+----
+@CitrusTest
+public void fluentBehaviorTest() {
+    variable("sku", "SKU-1");
+
+    $(apply(placeAnOrder().forItem("${sku}").inQuantity(5)));
+}
+----
+
+The behavior is reported as `place an order`. When writing fluent behaviors, keep in mind:
+
+* Return a new instance from every fluent method, as the record above does. A mutable builder shares its state when the
+same instance is applied more than once or inside `parallel()`.
+* Check required inputs at the start of `apply(..)`. The check runs before any of the behavior's actions, so a missing
+input fails the test with a clear message. To require test variables instead, use `requires(..)` as described in
+link:#java-test-behaviors-variables[Behavior variables].
+* Inputs may contain test variable expressions such as `${sku}`. The behavior's actions resolve them when they run.
+* The report name comes from the class, not from the inputs. Override `getName()` to include inputs in the name. The name
+is fixed when the action is built, so variable expressions appear in it unresolved.
+
 [[java-test-behaviors-variables]]
 ==== Behavior variables
 
