@@ -490,15 +490,37 @@ set of test actions.
 [[java-test-behaviors-reporting]]
 ==== Behavior names in reports
 
-An applied behavior is a test action container. It appears in the test report under the name of the behavior, and the
-actions it runs are nested underneath:
+An applied behavior is a test action container, reported under the name of the behavior.
+
+The test flow report written to `target/citrus-reports/<TestClass>.<method>-flow.json` lists the behavior as one entry,
+with the actions it runs nested underneath:
+
+[source,json]
+----
+{
+  "name": "foo behavior",
+  "path": "actions.0.foo behavior",
+  "actions": [
+    { "name": "create-variables", "path": "actions.0.foo behavior.actions.0.create-variables" },
+    { "name": "echo", "path": "actions.0.foo behavior.actions.1.echo" }
+  ]
+}
+----
+
+The console log shows a behavior applied at the top level of the test as a single step. Its nested actions get no step
+lines of their own; only what they log themselves appears in between:
 
 [source]
 ----
-foo behavior
-  +- create-variables
-  +- echo
+➤ foo behavior - container with (0) embedded actions
+Setting variable: foo to value: test
+fooBehavior
+✔ foo behavior
 ----
+
+The console logs the number of embedded actions when the behavior starts, before it has run any. When a behavior runs
+inside another container, the console shows that container's step lines only, as for any nested action. The flow report
+still lists the behavior under its name.
 
 By default the name is the simple class name of the behavior split into lower case words, so `FooBehavior` is reported as
 `foo behavior`. Acronyms are kept as they are: `SendSOAPRequest` is reported as `send SOAP request`. Nested classes and
