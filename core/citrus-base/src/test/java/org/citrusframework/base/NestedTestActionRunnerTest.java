@@ -168,6 +168,24 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
     }
 
     @Test
+    public void shouldNotFailTestForFailureCaughtByBehavior() {
+        DefaultTestCaseRunner outer = new DefaultTestCaseRunner(context);
+        outer.start();
+
+        outer.run(apply(behavior -> {
+            try {
+                behavior.run(fail("boom"));
+            } catch (TestCaseFailedException e) {
+                log.add("caught " + e.getMessage());
+            }
+        }));
+        outer.stop();
+
+        assertEquals(log, List.of("caught boom"));
+        assertTrue(outer.getTestCase().getTestResult().isSuccess());
+    }
+
+    @Test
     public void shouldRaisePendingContextException() {
         NestedTestActionRunner runner = new NestedTestActionRunner(container, context, null);
         CitrusRuntimeException pending = new CitrusRuntimeException("async failure");
