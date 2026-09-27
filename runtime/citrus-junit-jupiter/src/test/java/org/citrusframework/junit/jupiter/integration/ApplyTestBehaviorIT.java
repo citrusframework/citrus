@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.annotations.CitrusResource;
@@ -28,6 +29,7 @@ import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.citrusframework.junit.jupiter.integration.ApplyTestBehaviorIT.PlaceAnOrder.placeAnOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -91,6 +93,23 @@ public class ApplyTestBehaviorIT implements TestActionSupport {
         assertFalse(context.getVariables().containsKey("scratch"));
     }
 
+    @Test
+    @CitrusTest
+    public void shouldApplyFluentBehavior(@CitrusResource TestActionRunner runner, @CitrusResource TestContext context) {
+        runner.run(createVariable("sku", "SKU-1"));
+
+        runner.run(apply(placeAnOrder().forItem("${sku}").inQuantity(5)));
+
+        assertEquals("5 x SKU-1", context.getVariable("order"));
+
+        runner.run(sequential()
+                .actions(
+                        apply(placeAnOrder().forItem("SKU-2"))
+                ));
+
+        assertEquals("1 x SKU-2", context.getVariable("order"));
+    }
+
     private record SayHelloBehavior(String greeting) implements TestBehavior, TestActionSupport {
             public SayHelloBehavior() {
                 this("Hello");
@@ -112,6 +131,31 @@ public class ApplyTestBehaviorIT implements TestActionSupport {
                     .variable("greetings", "1")
                     .variable("scratch", "not published"));
             runner.run(echo("${greeting} Citrus!"));
+        }
+    }
+
+    record PlaceAnOrder(String item, int quantity) implements TestBehavior, TestActionSupport {
+
+        static PlaceAnOrder placeAnOrder() {
+            return new PlaceAnOrder(null, 1);
+        }
+
+        PlaceAnOrder forItem(String item) {
+            return new PlaceAnOrder(item, quantity);
+        }
+
+        PlaceAnOrder inQuantity(int quantity) {
+            return new PlaceAnOrder(item, quantity);
+        }
+
+        @Override
+        public void apply(TestActionRunner runner) {
+            if (item == null) {
+                throw new CitrusRuntimeException("Missing item to order - use forItem(..)");
+            }
+
+            runner.run(echo("Ordering %d x %s".formatted(quantity, item)));
+            runner.run(createVariable("order", "%d x %s".formatted(quantity, item)));
         }
     }
 }
