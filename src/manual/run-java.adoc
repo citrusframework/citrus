@@ -423,30 +423,44 @@ public interface TestBehavior {
     /**
      * Behavior building method.
      */
-    void apply(TestCaseRunner t);
+    void apply(TestActionRunner runner);
 
+    /**
+     * Name of this behavior in test reports.
+     */
+    default String getName() { ... }
+
+    /**
+     * Sequential composition, reported as "<this name> then <next name>".
+     */
+    default TestBehavior andThen(TestBehavior next) { ... }
+
+    /**
+     * Gives a behavior, usually a lambda, an explicit report name.
+     */
+    static TestBehavior named(String name, TestBehavior delegate) { ... }
 }
 ----
 
-The behavior is provided with the test action runner and all actions in the behavior should run on that t. Every time
+The behavior is provided with a test action runner and all actions in the behavior should run on that runner. Every time
 the behavior is applied to a test the actions get executed accordingly.
 
 .Test behaviors
 [source,java]
 ----
-public class FooBehavior implements TestBehavior {
-    public void apply(TestCaseRunner t) {
-        t.run(createVariable("foo", "test"));
+public class FooBehavior implements TestBehavior, TestActionSupport {
+    public void apply(TestActionRunner runner) {
+        runner.run(createVariable("foo", "test"));
 
-        t.run(echo("fooBehavior"));
+        runner.run(echo("fooBehavior"));
     }
 }
 
-public class BarBehavior implements TestBehavior {
-    public void apply(TestCaseRunner t) {
-        t.run(createVariable("bar", "test"));
+public class BarBehavior implements TestBehavior, TestActionSupport {
+    public void apply(TestActionRunner runner) {
+        runner.run(createVariable("bar", "test"));
 
-        t.run(echo("barBehavior"));
+        runner.run(echo("barBehavior"));
     }
 }
 ----
@@ -461,7 +475,7 @@ a normal test case would do. You can apply the behaviors multiple times in diffe
 public void behaviorTest() {
     $(apply(new FooBehavior()));
 
-    $(echo("Successfully applied bar behavior"));
+    $(echo("Successfully applied foo behavior"));
 
     $(apply(new BarBehavior()));
 
@@ -473,17 +487,151 @@ The behavior is applied to the test case by calling the *apply()* method. As a r
 its logic at this point of the test execution. The same behavior can now be called in multiple test cases so we have a reusable
 set of test actions.
 
+[[java-test-behaviors-reporting]]
+==== Behavior names in reports
+
+An applied behavior is a test action container. It appears in the test report under the name of the behavior, and the
+actions it runs are nested underneath:
+
+[source]
+----
+foo behavior
+  +- create-variables
+  +- echo
+----
+
+By default the name is the simple class name of the behavior split into lower case words, so `FooBehavior` is reported as
+`foo behavior`. Acronyms are kept as they are: `SendSOAPRequest` is reported as `send SOAP request`. Nested classes and
+records use their simple name only.
+
+Lambdas and anonymous classes have no usable class name, so they are reported as `behavior`. Use `TestBehavior.named(..)`
+to give them a name, or set a name for one particular application on the action:
+
+[source,java]
+----
+@CitrusTest
+public void namedBehaviorTest() {
+    $(apply(TestBehavior.named("sign in", runner -> runner.run(echo("Signing in")))));
+
+    $(apply(new FooBehavior()).name("create foo variable"));
+}
+----
+
+A behavior class may also override `getName()` to describe itself.
+
+NOTE: A `doFinally()` block run inside a behavior still belongs to the test. Its actions run when the test finishes, not
+when the behavior is done, exactly like a `doFinally()` block in the test itself.
+
+[[java-test-behaviors-containers]]
+==== Behaviors in containers
+
+A behavior is applied with the same spelling everywhere: at the top level of the test, inside test action containers such
+as `sequential()`, `parallel()` or `iterate()`, and inside another behavior.
+
+[source,java]
+----
+@CitrusTest
+public void behaviorInContainerTest() {
+    $(sequential().actions(
+        echo("Before the behavior"),
+        apply(new FooBehavior()),
+        echo("After the behavior")
+    ));
+}
+----
+
+The test action runner is passed to the behavior automatically. The explicit form `apply().behavior(new FooBehavior()).on(runner)`
+keeps working, but the `on(runner)` call is not needed anymore.
+
+[[java-test-behaviors-composition]]
+==== Composing behaviors
+
+Behaviors compose into larger behaviors without writing a wrapper class for each combination. The composite applies its
+parts in order and is reported as one behavior whose name joins the names of its parts:
+
+[source,java]
+----
+@CitrusTest
+public void composedBehaviorTest() {
+    TestBehavior signIn = TestBehavior.named("sign in", runner -> runner.run(echo("Signing in")));
+
+    // reported as "sign in then foo behavior"
+    $(apply(signIn.andThen(new FooBehavior())));
+
+    // reported as "sign in then foo behavior then bar behavior"
+    $(apply(List.of(signIn, new FooBehavior(), new BarBehavior())));
+}
+----
+
+[[java-test-behaviors-variables]]
+==== Behavior variables
+
 A behavior may use different variable names than the test and vice versa. No doubt the behavior will fail as soon as special
 variables with respective values are not present. Unknown variables cause the behavior and the whole test to fail with errors.
 
-So a good approach would be to harmonize variable usage across behaviors and test cases, so that templates and test cases
-do use the same variable naming. The behavior automatically knows all variables in the test case and all test variables
-created inside the behavior are visible to the test case after applying.
+So a good approach would be to harmonize variable usage across behaviors and test cases, so that behaviors and test cases
+do use the same variable naming. By default the behavior automatically knows all variables in the test case and all test
+variables created inside the behavior are visible to the test case after applying. When a behavior changes a variable that
+the test case defines, the change affects the variable in the global test context.
 
-IMPORTANT: When a behavior changes variables this will automatically affect the variables in the whole test. So if you
-change a variable value inside a behavior and the variable is defined inside the test case the changes will affect
-the variable in a global test context. This means we have to be careful when executing a behavior several times in a test,
-especially in combination with parallel containers (see link:#containers-parallel[containers-parallel]).
+A behavior that declares the variables it needs fails fast when they are missing. The check runs before any of the
+behavior's actions, and the error names the missing variable:
+
+[source,java]
+----
+@CitrusTest
+public void requiredVariablesTest() {
+    variable("foo", "test");
+
+    $(apply(new BarBehavior()).requires("foo"));
+}
+----
+
+When a behavior is applied several times in a test, especially in combination with parallel containers (see
+link:#containers-parallel[containers-parallel]), sharing the global test context is often not what you want. Apply the
+behavior with an isolated variable scope instead. An isolated behavior reads all variables of the test, but works on a
+copy of the test context, so its changes do not leak into the test. Use `publish(..)` to hand selected variables back:
+
+[source,java]
+----
+@CitrusTest
+public void isolatedBehaviorTest() {
+    // "foo" is not visible to the test after the behavior
+    $(apply(new FooBehavior()).isolated());
+
+    // only "bar" is copied back into the test
+    $(apply(new BarBehavior()).isolated().publish("bar"));
+
+    $(echo("${bar}"));
+}
+----
+
+A published variable that the behavior does not set fails the test with an error naming the variable.
+
+[[java-test-behaviors-upgrade]]
+==== Upgrading from earlier versions
+
+Since Citrus 5.1 an applied behavior is a test action container. This changes the structure of a test case, not the way
+it runs: execution order, variable visibility, exception propagation and the placement of finally actions are the same as
+before.
+
+What you can observe:
+
+* `TestCase.getActions()` and `TestCase.getActionCount()` list an applied behavior as a single `ApplyTestBehaviorAction`.
+The actions the behavior runs are no longer added to the test case. Read them from `ApplyTestBehaviorAction.getExecutedActions()`
+instead, like the nested actions of any other container.
+* Test action listeners and reporters receive the applied behavior instead of each nested action, the same way they treat
+actions nested in `sequential()` and other containers.
+* The applied behavior is named after the behavior, as described above, instead of `apply-behavior`.
+* A failure that the behavior catches itself no longer marks the test result as failed. Before, the test passed but was
+reported as a failure.
+
+`ApplyTestBehaviorAction.Builder` now extends `AbstractTestContainerBuilder`, which in turn extends the former superclass
+`AbstractTestActionBuilder`. Code using the builder keeps compiling. Custom implementations of the
+`ApplyTestBehaviorActionBuilder` interface need to implement its new methods.
+
+`TestBehavior` gained a default `getName()` method. A behavior class that already declares a `getName()` method now
+overrides it, so that method becomes the report name of the behavior. It must be public and return a `String`.
 
 [[java-custom-actions]]
 === Run custom code
