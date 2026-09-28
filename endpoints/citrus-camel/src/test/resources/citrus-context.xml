@@ -30,10 +30,10 @@
       <choice>
         <when>
           <simple>${in.header.operation} != null</simple>
-          <to uri="direct:out-route" pattern="InOut"/>
+          <to uri="seda:out-route" pattern="InOnly"/>
         </when>
         <otherwise>
-          <to uri="direct:default-route" pattern="InOut" />
+          <to uri="seda:default-route" pattern="InOnly"/>
         </otherwise>
       </choice>
     </route>
@@ -77,12 +77,12 @@
                               endpoint-uri="direct:in-route"
                               timeout="1000"/>
   <citrus-camel:sync-endpoint id="outRouteEndpoint"
-                              camel-context="camelContext"
-                              endpoint-uri="direct:out-route"
-                              timeout="1000"/>
+                               camel-context="camelContext"
+                               endpoint-uri="seda:out-route"
+                               timeout="5000"/>
   <citrus-camel:sync-endpoint id="defaultRouteEndpoint"
-                              camel-context="camelContext"
-                              endpoint-uri="direct:default-route"
-                              timeout="1000"/>
+                               camel-context="camelContext"
+                               endpoint-uri="seda:default-route"
+                               timeout="5000"/>
 
 </beans>
