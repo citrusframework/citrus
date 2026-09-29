@@ -18,7 +18,10 @@ package org.citrusframework.playwright.yaml;
 import java.util.List;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.playwright.actions.ConsoleAction;
 import org.citrusframework.playwright.actions.CredentialsAction;
+import org.citrusframework.playwright.actions.DropAction;
+import org.citrusframework.playwright.actions.VerifyAction;
 import org.citrusframework.playwright.actions.NetworkAction;
 import org.citrusframework.playwright.dsl.PageObjectFixtures;
 import org.testng.annotations.Test;
@@ -37,6 +40,33 @@ class ActionWrapperTest {
         CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, () -> new Console().build());
 
         assertEquals(exception.getMessage(), "Missing Playwright console command");
+    }
+
+    @Test
+    void shouldBuildPageErrorCommands() {
+        Console noErrors = new Console();
+        noErrors.setCommand("verify-no-page-errors");
+        assertEquals(noErrors.build().getCommand(), ConsoleAction.Command.VERIFY_NO_PAGE_ERRORS);
+
+        Console contains = new Console();
+        contains.setCommand("verify-page-errors-contain");
+        contains.setText("TypeError");
+        assertEquals(contains.build().getCommand(), ConsoleAction.Command.VERIFY_PAGE_ERRORS_CONTAIN);
+
+        Console report = new Console();
+        report.setCommand("page-errors-report");
+        report.setVariable("pageErrors");
+        assertEquals(report.build().getCommand(), ConsoleAction.Command.PAGE_ERRORS_REPORT);
+    }
+
+    @Test
+    void shouldPassConsoleFilter() {
+        Console report = new Console();
+        report.setCommand("report");
+        report.setFilter("since-navigation");
+        report.setVariable("consoleReport");
+
+        assertEquals(report.build().getFilter(), "since-navigation");
     }
 
     @Test
@@ -67,6 +97,31 @@ class ActionWrapperTest {
 
         assertEquals(action.getResponseStatus(), Integer.valueOf(404));
         assertEquals(action.getStatus(), Integer.valueOf(200));
+    }
+
+    @Test
+    void shouldApplyResponseAddressAndSecurityExpectations() {
+        Network network = new Network();
+        network.setCommand("wait-for-response");
+        network.setUrlContains("/orders");
+        network.setServerIp("93.184.216.34");
+        network.setServerPort(443);
+        network.setSecurityProtocol("TLSv1.3");
+
+        NetworkAction action = network.build();
+
+        assertEquals(action.getExpectedServerIp(), "93.184.216.34");
+        assertEquals(action.getExpectedServerPort(), Integer.valueOf(443));
+        assertEquals(action.getExpectedSecurityProtocol(), "TLSv1.3");
+    }
+
+    @Test
+    void shouldRejectIncompleteServerAddress() {
+        Network network = new Network();
+        network.setCommand("wait-for-response");
+        network.setServerIp("93.184.216.34");
+
+        expectThrows(CitrusRuntimeException.class, network::build);
     }
 
     @Test
@@ -190,9 +245,69 @@ class ActionWrapperTest {
     }
 
     @Test
+    void shouldApplyDropOptions() {
+        Drop drop = new Drop();
+        drop.setValue("hello");
+        drop.setFile("note.txt");
+        drop.setContentType("text/plain");
+        Element element = new Element();
+        element.setCss("#dropzone");
+        drop.setElement(element);
+        drop.setTimeout(5000D);
+        drop.setPositionX(10D);
+        drop.setPositionY(20D);
+
+        DropAction action = drop.build();
+        assertEquals(action.getTimeout(), Double.valueOf(5000));
+        assertEquals(action.getPositionX(), Double.valueOf(10));
+        assertEquals(action.getPositionY(), Double.valueOf(20));
+    }
+
+    @Test
+    void shouldRejectIncompleteDropPosition() {
+        Drop drop = new Drop();
+        drop.setValue("hello");
+        drop.setFile("note.txt");
+        drop.setContentType("text/plain");
+        Element element = new Element();
+        element.setCss("#dropzone");
+        drop.setElement(element);
+        drop.setPositionX(10D);
+
+        expectThrows(CitrusRuntimeException.class, drop::build);
+    }
+
+    @Test
+    void shouldApplyAriaSnapshotTimeout() {
+        Verify verify = new Verify();
+        verify.setCheck("aria-snapshot-matches");
+        verify.setExpected("- heading \"Title\"");
+        verify.setTimeout(5000D);
+        Element element = new Element();
+        element.setCss("#panel");
+        verify.setElement(element);
+
+        VerifyAction action = verify.build();
+        assertEquals(VerifyAction.Check.ARIA_SNAPSHOT_MATCHES, action.getCheck());
+        assertEquals(Double.valueOf(5000), action.getTimeout());
+    }
+
+    @Test
     void shouldRejectUnknownStorageScope() {
         Storage storage = new Storage();
 
         expectThrows(CitrusRuntimeException.class, () -> storage.setScope("cookie"));
+    }
+
+    @Test
+    void shouldPassStorageStateFlags() {
+        Storage storage = new Storage();
+        storage.setCommand("save-state");
+        storage.setPath("target/state.json");
+        storage.setIndexedDB(true);
+        storage.setCredentials(true);
+
+        assertEquals(storage.build().getIndexedDB(), Boolean.TRUE);
+        assertEquals(storage.build().getCredentials(), Boolean.TRUE);
     }
 }

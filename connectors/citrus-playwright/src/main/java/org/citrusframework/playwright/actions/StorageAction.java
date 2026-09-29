@@ -57,6 +57,8 @@ public class StorageAction extends AbstractPlaywrightAction {
     private final String variable;
     private final String path;
     private final Boolean opfs;
+    private final Boolean indexedDB;
+    private final Boolean credentials;
 
     public StorageAction(Builder builder) {
         super("storage", builder);
@@ -67,6 +69,8 @@ public class StorageAction extends AbstractPlaywrightAction {
         this.variable = builder.variable;
         this.path = builder.path;
         this.opfs = builder.opfs;
+        this.indexedDB = builder.indexedDB;
+        this.credentials = builder.credentials;
     }
 
     @Override
@@ -97,6 +101,12 @@ public class StorageAction extends AbstractPlaywrightAction {
         if (opfs != null) {
             options.setOpfs(opfs);
         }
+        if (indexedDB != null) {
+            options.setIndexedDB(indexedDB);
+        }
+        if (credentials != null) {
+            options.setCredentials(credentials);
+        }
 
         return options;
     }
@@ -121,6 +131,14 @@ public class StorageAction extends AbstractPlaywrightAction {
         return opfs;
     }
 
+    public Boolean getIndexedDB() {
+        return indexedDB;
+    }
+
+    public Boolean getCredentials() {
+        return credentials;
+    }
+
     /**
      * Fluent builder for local/session storage and storage-state commands.
      */
@@ -132,6 +150,8 @@ public class StorageAction extends AbstractPlaywrightAction {
         private String variable;
         private String path;
         private Boolean opfs;
+        private Boolean indexedDB;
+        private Boolean credentials;
 
         /**
          * Targets local storage.
@@ -248,6 +268,32 @@ public class StorageAction extends AbstractPlaywrightAction {
          */
         public Builder opfs(boolean opfs) {
             this.opfs = opfs;
+            return this;
+        }
+
+        /**
+         * Includes IndexedDB in the saved storage state so it can be
+         * restored into a later browser context.
+         *
+         * @param indexedDB true to include IndexedDB
+         * @return this builder
+         */
+        public Builder indexedDB(boolean indexedDB) {
+            this.indexedDB = indexedDB;
+            return this;
+        }
+
+        /**
+         * Includes stored credentials in the saved storage state so they can be
+         * restored into a later browser context. The credentials are written into
+         * the storage-state file on disk — keep the flag off unless the restored
+         * session needs them.
+         *
+         * @param credentials true to include stored credentials
+         * @return this builder
+         */
+        public Builder credentials(boolean credentials) {
+            this.credentials = credentials;
             return this;
         }
 

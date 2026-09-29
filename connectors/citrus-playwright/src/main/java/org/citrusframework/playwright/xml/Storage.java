@@ -73,6 +73,16 @@ public class Storage extends AbstractPlaywrightAction.Builder<StorageAction, Sto
         delegate.opfs(opfs);
     }
 
+    @XmlAttribute(name = "indexed-db")
+    public void setIndexedDB(Boolean indexedDB) {
+        delegate.indexedDB(indexedDB);
+    }
+
+    @XmlAttribute
+    public void setCredentials(Boolean credentials) {
+        delegate.credentials(credentials);
+    }
+
     @XmlAttribute
     public void setVariable(String variable) {
         delegate.variable(variable);

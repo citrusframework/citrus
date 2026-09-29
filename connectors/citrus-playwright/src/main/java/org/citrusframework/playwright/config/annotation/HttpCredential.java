@@ -50,4 +50,11 @@ public @interface HttpCredential {
      * @return password
      */
     String password();
+
+    /**
+     * Controls when the credentials are sent: {@code always} or {@code unauthorized}.
+     * An empty value leaves the driver default in place.
+     * @return send mode, or empty for the driver default
+     */
+    String send() default "";
 }

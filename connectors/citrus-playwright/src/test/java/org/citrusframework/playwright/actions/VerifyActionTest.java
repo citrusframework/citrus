@@ -183,6 +183,22 @@ class VerifyActionTest {
     }
 
     @Test
+    void shouldRegisterAriaSnapshotTimeout() {
+        VerifyAction action = new VerifyAction.Builder().locator("#panel")
+                .ariaSnapshotMatches("- heading \"Title\"").timeout(5000D).build();
+
+        assertEquals(Double.valueOf(5000), action.getTimeout());
+    }
+
+    @Test
+    void shouldLeaveAriaSnapshotTimeoutUnsetByDefault() {
+        VerifyAction action = new VerifyAction.Builder().locator("#panel")
+                .ariaSnapshotMatches("- heading \"Title\"").build();
+
+        assertEquals(null, action.getTimeout());
+    }
+
+    @Test
     void shouldRedactSecretsInAriaSnapshotMismatch() {
         ValidationException exception = VerifyAction.ariaSnapshotFailure(
                 new AssertionError("expected token=s3cret-value"),

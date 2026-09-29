@@ -57,6 +57,17 @@ class VerifyTest {
     }
 
     @Test
+    void shouldApplyAriaSnapshotTimeout() {
+        Verify verify = new Verify();
+        verify.setCheck("aria-snapshot-matches");
+        verify.setExpected("- heading \"Title\"");
+        verify.setTimeout(5000D);
+        verify.setElement(css("#panel"));
+
+        assertEquals(Double.valueOf(5000), verify.build().getTimeout());
+    }
+
+    @Test
     void shouldFailOnMissingCheckProperty() {
         Verify verify = new Verify();
         verify.setCheck("count");

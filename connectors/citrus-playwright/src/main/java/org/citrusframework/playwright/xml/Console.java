@@ -51,6 +51,11 @@ public class Console extends AbstractPlaywrightAction.Builder<ConsoleAction, Con
         delegate.variable(variable);
     }
 
+    @XmlAttribute
+    public void setFilter(String filter) {
+        delegate.filter(filter);
+    }
+
     @Override
     public Console description(String description) {
         delegate.description(description);
@@ -76,6 +81,9 @@ public class Console extends AbstractPlaywrightAction.Builder<ConsoleAction, Con
             case "clear" -> delegate.clear();
             case "report" -> delegate.report();
             case "verify-contains" -> delegate.verifyContains(text);
+            case "verify-no-page-errors" -> delegate.verifyNoPageErrors();
+            case "verify-page-errors-contain" -> delegate.verifyPageErrorsContain(text);
+            case "page-errors-report" -> delegate.pageErrors();
             default -> throw DslCommands.unsupported("console", command);
         }
 

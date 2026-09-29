@@ -70,6 +70,47 @@ class ScreencastDslTest {
     }
 
     @Test
+    void shouldShowCustomOverlayFromDeclaredHtml() {
+        Screencast screencast = new Screencast();
+        screencast.setHtml("<div>Step 3</div>");
+        screencast.setCommand("show-overlay");
+
+        assertEquals(ScreencastAction.Command.SHOW_OVERLAY, screencast.build().getCommand());
+    }
+
+    @Test
+    void shouldShowAndHideOverlays() {
+        Screencast show = new Screencast();
+        show.setCommand("show-overlays");
+        assertEquals(ScreencastAction.Command.SHOW_OVERLAYS, show.build().getCommand());
+
+        Screencast hide = new Screencast();
+        hide.setCommand("hide-overlays");
+        assertEquals(ScreencastAction.Command.HIDE_OVERLAYS, hide.build().getCommand());
+    }
+
+    @Test
+    void shouldStartRecordingWithDeclaredSize() {
+        Screencast screencast = new Screencast();
+        screencast.setPath("target/playwright/run.webm");
+        screencast.setSizeWidth(1280);
+        screencast.setSizeHeight(720);
+        screencast.setCommand("start");
+
+        assertEquals(ScreencastAction.Command.START, screencast.build().getCommand());
+    }
+
+    @Test
+    void shouldRejectIncompleteSize() {
+        Screencast screencast = new Screencast();
+        screencast.setPath("target/playwright/run.webm");
+        screencast.setSizeWidth(1280);
+        screencast.setCommand("start");
+
+        expectThrows(CitrusRuntimeException.class, screencast::build);
+    }
+
+    @Test
     void shouldRejectUnsupportedCommand() {
         Screencast screencast = new Screencast();
 

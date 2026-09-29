@@ -76,6 +76,9 @@ public class NetworkAction extends AbstractPlaywrightAction {
     private final LocatorSpec triggerLocator;
     private final String triggerScript;
     private final boolean includeBody;
+    private final String expectedServerIp;
+    private final Integer expectedServerPort;
+    private final String expectedSecurityProtocol;
 
     public NetworkAction(Builder builder) {
         super("network", builder);
@@ -97,6 +100,9 @@ public class NetworkAction extends AbstractPlaywrightAction {
         this.triggerLocator = builder.triggerLocator;
         this.triggerScript = builder.triggerScript;
         this.includeBody = builder.includeBody;
+        this.expectedServerIp = builder.expectedServerIp;
+        this.expectedServerPort = builder.expectedServerPort;
+        this.expectedSecurityProtocol = builder.expectedSecurityProtocol;
     }
 
     @Override
@@ -150,9 +156,36 @@ public class NetworkAction extends AbstractPlaywrightAction {
             options.setTimeout(timeoutMs);
         }
         Response response = page.waitForResponse(responsePredicate(context), options, () -> trigger(page, context));
+        verifyServerAddress(response, context);
+        verifySecurityDetails(response, context);
         if (variable != null) {
             SecretPatternRedactor redactor = browser.createRedactor();
             context.setVariable(variable, NetworkResponseResult.from(response, redactor, includeBody));
+        }
+    }
+
+    private void verifyServerAddress(Response response, TestContext context) {
+        if (expectedServerIp == null) {
+            return;
+        }
+        String expectedIp = resolve(expectedServerIp, context);
+        String actualIp = response.serverAddr() == null ? null : response.serverAddr().ipAddress;
+        Integer actualPort = response.serverAddr() == null ? null : response.serverAddr().port;
+        if (!expectedIp.equals(actualIp) || !expectedServerPort.equals(actualPort)) {
+            throw new ValidationException("Expected Playwright response server address '%s:%d' but got '%s:%s'"
+                    .formatted(expectedIp, expectedServerPort, actualIp, actualPort));
+        }
+    }
+
+    private void verifySecurityDetails(Response response, TestContext context) {
+        if (expectedSecurityProtocol == null) {
+            return;
+        }
+        String expectedProtocol = resolve(expectedSecurityProtocol, context);
+        String actualProtocol = response.securityDetails() == null ? null : response.securityDetails().protocol;
+        if (!expectedProtocol.equals(actualProtocol)) {
+            throw new ValidationException("Expected Playwright response TLS protocol '%s' but got '%s'"
+                    .formatted(expectedProtocol, actualProtocol));
         }
     }
 
@@ -230,6 +263,18 @@ public class NetworkAction extends AbstractPlaywrightAction {
         return triggerLocator;
     }
 
+    public String getExpectedServerIp() {
+        return expectedServerIp;
+    }
+
+    public Integer getExpectedServerPort() {
+        return expectedServerPort;
+    }
+
+    public String getExpectedSecurityProtocol() {
+        return expectedSecurityProtocol;
+    }
+
     /**
      * Fluent builder for network capture, report, and verification commands.
      */
@@ -252,6 +297,9 @@ public class NetworkAction extends AbstractPlaywrightAction {
         private LocatorSpec triggerLocator;
         private String triggerScript;
         private boolean includeBody;
+        private String expectedServerIp;
+        private Integer expectedServerPort;
+        private String expectedSecurityProtocol;
 
         /**
          * Starts bounded network capture for the current page.
@@ -510,6 +558,33 @@ public class NetworkAction extends AbstractPlaywrightAction {
          */
         public Builder includeBody() {
             this.includeBody = true;
+            return this;
+        }
+
+        /**
+         * Verifies the waited response was served by the expected server address.
+         * Only the {@code wait-for-response} command reads it.
+         *
+         * @param ipAddress expected server IP address
+         * @param port expected server port
+         * @return this builder
+         */
+        public Builder verifyServerAddress(String ipAddress, int port) {
+            this.expectedServerIp = ipAddress;
+            this.expectedServerPort = port;
+            return this;
+        }
+
+        /**
+         * Verifies the waited response used the expected TLS protocol.
+         * Only the {@code wait-for-response} command reads it; on plain HTTP the
+         * driver reports no security details and the verification fails.
+         *
+         * @param protocol expected TLS protocol, for example {@code TLSv1.3}
+         * @return this builder
+         */
+        public Builder verifySecurityDetails(String protocol) {
+            this.expectedSecurityProtocol = protocol;
             return this;
         }
 

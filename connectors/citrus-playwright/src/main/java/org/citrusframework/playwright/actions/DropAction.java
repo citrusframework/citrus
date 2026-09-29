@@ -43,6 +43,9 @@ public class DropAction extends AbstractPlaywrightAction {
     private final String fileMimeType;
     private final String fileContent;
     private final Map<String, String> data;
+    private final Double timeout;
+    private final Double positionX;
+    private final Double positionY;
 
     public DropAction(Builder builder) {
         super("drop", builder);
@@ -51,6 +54,9 @@ public class DropAction extends AbstractPlaywrightAction {
         this.fileMimeType = builder.fileMimeType;
         this.fileContent = builder.fileContent;
         this.data = Map.copyOf(builder.data);
+        this.timeout = builder.timeout;
+        this.positionX = builder.positionX;
+        this.positionY = builder.positionY;
     }
 
     public Map<String, String> getData() {
@@ -61,10 +67,37 @@ public class DropAction extends AbstractPlaywrightAction {
         return fileName;
     }
 
+    public Double getTimeout() {
+        return timeout;
+    }
+
+    public Double getPositionX() {
+        return positionX;
+    }
+
+    public Double getPositionY() {
+        return positionY;
+    }
+
     @Override
     protected void execute(PlaywrightBrowser browser, TestContext context) {
         Locator element = LocatorResolver.resolve(browser.getCurrentPage(), locator, context);
-        element.drop(payload(context));
+        if (timeout == null && positionX == null) {
+            element.drop(payload(context));
+        } else {
+            element.drop(payload(context), dropOptions());
+        }
+    }
+
+    private Locator.DropOptions dropOptions() {
+        Locator.DropOptions options = new Locator.DropOptions();
+        if (timeout != null) {
+            options.setTimeout(timeout);
+        }
+        if (positionX != null && positionY != null) {
+            options.setPosition(positionX, positionY);
+        }
+        return options;
     }
 
     private DropPayload payload(TestContext context) {
@@ -91,6 +124,9 @@ public class DropAction extends AbstractPlaywrightAction {
         private String fileMimeType;
         private String fileContent;
         private final Map<String, String> data = new LinkedHashMap<>();
+        private Double timeout;
+        private Double positionX;
+        private Double positionY;
 
         /**
          * Drops a single in-memory file onto the element.
@@ -117,6 +153,30 @@ public class DropAction extends AbstractPlaywrightAction {
          */
         public Builder data(String mimeType, String value) {
             this.data.put(mimeType, value);
+            return this;
+        }
+
+        /**
+         * Sets the drop timeout in milliseconds.
+         *
+         * @param timeoutMs timeout in milliseconds
+         * @return this builder
+         */
+        public Builder timeout(double timeoutMs) {
+            this.timeout = timeoutMs;
+            return this;
+        }
+
+        /**
+         * Drops at a position relative to the element's top-left corner.
+         *
+         * @param x horizontal offset in pixels
+         * @param y vertical offset in pixels
+         * @return this builder
+         */
+        public Builder position(double x, double y) {
+            this.positionX = x;
+            this.positionY = y;
             return this;
         }
 

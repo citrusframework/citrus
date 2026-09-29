@@ -19,6 +19,7 @@ package org.citrusframework.playwright.yaml;
 import org.citrusframework.api.yaml.SchemaProperty;
 
 import org.citrusframework.TestActor;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.ScreencastAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
@@ -37,6 +38,9 @@ public class Screencast extends AbstractPlaywrightAction.Builder<ScreencastActio
     private String command;
     private String path;
     private String title;
+    private String html;
+    private Integer sizeWidth;
+    private Integer sizeHeight;
 
     @SchemaProperty
     public void setPath(String path) {
@@ -46,6 +50,21 @@ public class Screencast extends AbstractPlaywrightAction.Builder<ScreencastActio
     @SchemaProperty
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @SchemaProperty
+    public void setHtml(String html) {
+        this.html = html;
+    }
+
+    @SchemaProperty
+    public void setSizeWidth(Integer sizeWidth) {
+        this.sizeWidth = sizeWidth;
+    }
+
+    @SchemaProperty
+    public void setSizeHeight(Integer sizeHeight) {
+        this.sizeHeight = sizeHeight;
     }
 
     @SchemaProperty
@@ -103,12 +122,22 @@ public class Screencast extends AbstractPlaywrightAction.Builder<ScreencastActio
 
     @Override
     public ScreencastAction build() {
+        if (sizeWidth != null || sizeHeight != null) {
+            if (sizeWidth == null || sizeHeight == null) {
+                throw new CitrusRuntimeException(
+                        "Incomplete Playwright screencast size - set both size-width and size-height");
+            }
+            delegate.size(sizeWidth, sizeHeight);
+        }
         switch (DslCommands.normalize(command)) {
             case "start" -> delegate.start(path);
             case "stop" -> delegate.stop();
             case "show-actions" -> delegate.showActions();
             case "hide-actions" -> delegate.hideActions();
             case "show-chapter" -> delegate.showChapter(title);
+            case "show-overlay" -> delegate.showOverlay(html);
+            case "show-overlays" -> delegate.showOverlays();
+            case "hide-overlays" -> delegate.hideOverlays();
             default -> throw DslCommands.unsupported("screencast", command);
         }
         return delegate.build();

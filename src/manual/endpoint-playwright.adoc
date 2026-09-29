@@ -203,6 +203,13 @@ $(playwright().verify().locator("#panel").ariaSnapshotMatches("""
 ----
 
 Both route their failure message through the configured secret redaction before it is reported.
+`ariaSnapshotMatches` accepts a `timeout` in milliseconds for slow-rendering regions; the
+substring check has no timeout because it reads an already captured snapshot:
+
+[source,java]
+----
+$(playwright().verify().locator("#panel").ariaSnapshotMatches("- heading \"Title\"").timeout(5000));
+----
 
 Extract values into test variables:
 
@@ -248,6 +255,16 @@ $(playwright().drop().locator("#dropzone")
         .data("text/uri-list", "https://example.com"));
 ----
 
+A drop can carry the driver's own options: a `timeout` in milliseconds and a drop `position`
+relative to the element's top-left corner. Both are unset by default, which keeps the
+no-options `drop` call:
+
+[source,java]
+----
+$(playwright().drop().locator("#dropzone").file("note.txt", "text/plain", "hello").timeout(5000));
+$(playwright().drop().locator("#dropzone").data("text/plain", "hello").position(10, 20));
+----
+
 [[playwright-tracing]]
 == Tracing, HAR and screencast
 
@@ -286,6 +303,20 @@ $(playwright().screencast().stop());
 NOTE: The chapter text is set with `chapterDescription(...)`, not `description(...)`. The latter
 is the standard Citrus action description shared by every action builder.
 
+A recording can carry custom HTML overlays, for example to narrate a walkthrough, and the
+recording size can be chosen up front. Overlay content is test-supplied HTML rendered into the
+page — do not interpolate untrusted data into it. Overlays stay visible until they are hidden
+again:
+
+[source,java]
+----
+$(playwright().screencast().start("target/playwright/run.webm").size(1280, 720));
+$(playwright().screencast().showOverlay("<div>Step 3 — checkout</div>"));
+$(playwright().screencast().showOverlays());
+$(playwright().screencast().hideOverlays());
+$(playwright().screencast().stop());
+----
+
 Recording is expensive. Keep it to the scenarios whose output you intend to review. The real-time
 frame callback is Java DSL only, because a callback has no declarative representation:
 
@@ -304,8 +335,13 @@ browser context:
 [source,java]
 ----
 $(playwright().storage().saveState("target/state.json").opfs(true));
+$(playwright().storage().saveState("target/state.json").indexedDB(true).credentials(true));
 $(playwright().storage().restoreState("target/state.json"));
 ----
+
+`indexedDB` and `credentials` default to off, like `opfs`. Note that `credentials(true)` writes
+credential material into the storage-state file on disk — keep it off unless the restored
+session genuinely needs those credentials.
 
 [[playwright-dialogs]]
 == Dialogs
@@ -316,6 +352,61 @@ Besides accepting and dismissing a dialog, a test can assert that one was closed
 ----
 $(playwright().dialog().accept().triggerScript("window.confirm('Delete?')"));
 $(playwright().dialog().verifyClosed().triggerScript("window.alert('Saved')"));
+----
+
+[[playwright-console-network]]
+== Console messages, page errors and response details
+
+Uncaught page JavaScript errors are read directly from the page — there is no capture step, the
+call observes the errors present at that moment. Assert that a page stayed clean, match an
+error, or extract the report into a variable:
+
+[source,java]
+----
+$(playwright().console().verifyNoPageErrors());
+$(playwright().console().verifyPageErrorsContain("TypeError"));
+$(playwright().console().pageErrors().variable("pageErrors"));
+----
+
+Console message retrieval reads the capture registry by default. With `filter` set to
+`since-navigation` it instead reads directly from the page, returning only messages since the
+last navigation:
+
+[source,java]
+----
+$(playwright().console().report().variable("consoleReport"));
+$(playwright().console().report().filter("since-navigation").variable("recentConsole"));
+$(playwright().console().verifyContains("Started"));
+----
+
+[source,xml,indent=0,role="secondary"]
+----
+<playwright>
+  <console command="verify-no-page-errors"/>
+  <console command="page-errors-report" variable="pageErrors"/>
+  <console command="report" filter="since-navigation" variable="recentConsole"/>
+</playwright>
+----
+
+A waited-for page response can additionally verify which server answered and over which TLS
+protocol, and the structured snapshot stored in a variable carries the same details. On plain
+HTTP the driver reports no security details, so the TLS fields are absent rather than empty:
+
+[source,java]
+----
+$(playwright().network().waitForResponse().urlContains("/api/orders")
+        .triggerScript("() => fetch('/api/orders')")
+        .verifyServerAddress("127.0.0.1", 8080)
+        .verifySecurityDetails("TLSv1.3")
+        .variable("response"));
+----
+
+[source,xml,indent=0,role="secondary"]
+----
+<playwright>
+  <network command="wait-for-response" url-contains="/api/orders" server-ip="127.0.0.1"
+      server-port="8080" security-protocol="TLSv1.3" variable="response"/>
+</playwright>
 ----
 
 [[playwright-credentials]]
@@ -338,6 +429,16 @@ private PlaywrightBrowser browser;
 
 An explicitly configured `contextOptions` still wins, so the raw driver escape hatch keeps working
 unchanged.
+
+Each credential can control when it is sent with `send`: `always` or `unauthorized`. Unset
+means the driver default. Use `unauthorized` against servers that require an unauthenticated
+first request:
+
+[source,java]
+----
+@HttpCredential(origin = "https://api.example.com", username = "api",
+        password = "${apiPassword}", send = "unauthorized")
+----
 
 WebAuthn passkeys are driven through a virtual authenticator, so passkey login flows need no
 hardware:

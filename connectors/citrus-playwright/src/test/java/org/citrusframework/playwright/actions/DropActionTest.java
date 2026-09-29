@@ -16,6 +16,7 @@
 
 package org.citrusframework.playwright.actions;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -88,6 +89,38 @@ class DropActionTest {
                 .data("text/plain", "${greeting}").build().execute(context);
 
         assertEquals("hi", capturedPayload().data.get("text/plain"));
+    }
+
+    @Test
+    void shouldDropWithTimeoutOption() {
+        new DropAction.Builder().locator("#dropzone")
+                .file("note.txt", "text/plain", "hello").timeout(5000).build().execute(context);
+
+        ArgumentCaptor<DropPayload> payloadCaptor = ArgumentCaptor.forClass(DropPayload.class);
+        ArgumentCaptor<Locator.DropOptions> optionsCaptor = ArgumentCaptor.forClass(Locator.DropOptions.class);
+        verify(element).drop(payloadCaptor.capture(), optionsCaptor.capture());
+        assertEquals(Double.valueOf(5000), optionsCaptor.getValue().timeout);
+    }
+
+    @Test
+    void shouldDropAtPosition() {
+        new DropAction.Builder().locator("#dropzone")
+                .data("text/plain", "hello").position(10, 20).build().execute(context);
+
+        ArgumentCaptor<DropPayload> payloadCaptor = ArgumentCaptor.forClass(DropPayload.class);
+        ArgumentCaptor<Locator.DropOptions> optionsCaptor = ArgumentCaptor.forClass(Locator.DropOptions.class);
+        verify(element).drop(payloadCaptor.capture(), optionsCaptor.capture());
+        assertEquals(10.0, optionsCaptor.getValue().position.x);
+        assertEquals(20.0, optionsCaptor.getValue().position.y);
+    }
+
+    @Test
+    void shouldDropWithoutOptionsByDefault() {
+        new DropAction.Builder().locator("#dropzone")
+                .file("note.txt", "text/plain", "hello").build().execute(context);
+
+        verify(element).drop(any(DropPayload.class));
+        verify(element, org.mockito.Mockito.never()).drop(any(DropPayload.class), any(Locator.DropOptions.class));
     }
 
     @Test

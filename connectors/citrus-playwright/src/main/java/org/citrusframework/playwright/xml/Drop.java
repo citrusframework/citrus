@@ -20,6 +20,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.DropAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
@@ -35,6 +36,9 @@ public class Drop extends AbstractPlaywrightAction.Builder<DropAction, Drop> {
     private String fileName;
     private String fileMimeType;
     private String value;
+    private Double timeout;
+    private Double positionX;
+    private Double positionY;
 
     @XmlElement
     public void setElement(Element element) {
@@ -54,6 +58,21 @@ public class Drop extends AbstractPlaywrightAction.Builder<DropAction, Drop> {
     @XmlAttribute
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @XmlAttribute
+    public void setTimeout(Double timeout) {
+        this.timeout = timeout;
+    }
+
+    @XmlAttribute(name = "position-x")
+    public void setPositionX(Double positionX) {
+        this.positionX = positionX;
+    }
+
+    @XmlAttribute(name = "position-y")
+    public void setPositionY(Double positionY) {
+        this.positionY = positionY;
     }
 
     @Override
@@ -82,6 +101,16 @@ public class Drop extends AbstractPlaywrightAction.Builder<DropAction, Drop> {
             } else {
                 delegate.data(fileMimeType, value);
             }
+        }
+        if (timeout != null) {
+            delegate.timeout(timeout);
+        }
+        if (positionX != null || positionY != null) {
+            if (positionX == null || positionY == null) {
+                throw new CitrusRuntimeException(
+                        "Incomplete Playwright drop position - set both position-x and position-y");
+            }
+            delegate.position(positionX, positionY);
         }
         return delegate.build();
     }

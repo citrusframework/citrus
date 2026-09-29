@@ -71,6 +71,16 @@ public class Storage extends AbstractPlaywrightAction.Builder<StorageAction, Sto
     }
 
     @SchemaProperty
+    public void setIndexedDB(Boolean indexedDB) {
+        delegate.indexedDB(indexedDB);
+    }
+
+    @SchemaProperty
+    public void setCredentials(Boolean credentials) {
+        delegate.credentials(credentials);
+    }
+
+    @SchemaProperty
     public void setVariable(String variable) {
         delegate.variable(variable);
     }

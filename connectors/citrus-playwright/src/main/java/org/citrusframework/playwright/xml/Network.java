@@ -26,6 +26,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.citrusframework.TestActor;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.NetworkAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
@@ -47,6 +48,9 @@ public class Network extends AbstractPlaywrightAction.Builder<NetworkAction, Net
     private Integer status;
     private String headerName;
     private String headerValue;
+    private String serverIp;
+    private Integer serverPort;
+    private String securityProtocol;
 
     @XmlAttribute
     public void setCommand(String command) {
@@ -93,6 +97,21 @@ public class Network extends AbstractPlaywrightAction.Builder<NetworkAction, Net
     @XmlAttribute(name = "header-value")
     public void setHeaderValue(String headerValue) {
         this.headerValue = headerValue;
+    }
+
+    @XmlAttribute(name = "server-ip")
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
+    }
+
+    @XmlAttribute(name = "server-port")
+    public void setServerPort(Integer serverPort) {
+        this.serverPort = serverPort;
+    }
+
+    @XmlAttribute(name = "security-protocol")
+    public void setSecurityProtocol(String securityProtocol) {
+        this.securityProtocol = securityProtocol;
     }
 
     @XmlAttribute
@@ -178,6 +197,16 @@ public class Network extends AbstractPlaywrightAction.Builder<NetworkAction, Net
         // the current command, so it must run after the command has been applied above.
         if (status != null) {
             delegate.status(status);
+        }
+        if (serverIp != null || serverPort != null) {
+            if (serverIp == null || serverPort == null) {
+                throw new CitrusRuntimeException(
+                        "Incomplete Playwright response server address - set both server-ip and server-port");
+            }
+            delegate.verifyServerAddress(serverIp, serverPort);
+        }
+        if (securityProtocol != null) {
+            delegate.verifySecurityDetails(securityProtocol);
         }
         getHeaders().forEach(header -> delegate.header(header.getName(), header.getValue()));
 
