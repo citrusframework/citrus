@@ -16,8 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.Optional;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.Answer;
 import org.citrusframework.Question;
@@ -40,20 +38,24 @@ public class AskAction<T> extends AbstractTestAction {
     private final String saveAs;
     private final TestActionRunner runner;
 
+    /** Report name of the question, resolved once: a custom getName() is read a single time. */
+    private final String questionName;
+
     public AskAction(Builder<T> builder) {
-        super(Optional.ofNullable(builder.question)
-                .map(Question::getName)
-                .filter(name -> name != null && !name.isBlank())
-                .map(name -> "ask: " + name)
-                .orElse("ask"), builder);
+        this(builder, builder.question != null ? builder.question.getName() : null);
+    }
+
+    private AskAction(Builder<T> builder, String questionName) {
+        super(questionName != null && !questionName.isBlank() ? "ask: " + questionName : "ask", builder);
 
         this.question = builder.question;
         this.holder = builder.holder;
         this.saveAs = builder.saveAs;
         this.runner = builder.runner;
+        this.questionName = questionName;
 
-        if (this.question != null && this.holder != null) {
-            this.holder.setQuestionName(this.question.getName());
+        if (this.questionName != null && this.holder != null) {
+            this.holder.setQuestionName(this.questionName);
         }
     }
 
@@ -64,15 +66,18 @@ public class AskAction<T> extends AbstractTestAction {
         }
 
         if (holder == null) {
-            throw new CitrusRuntimeException("Missing answer holder - use into(..) to receive the answer of question '%s'".formatted(question.getName()));
+            throw new CitrusRuntimeException("Missing answer holder - use into(..) to receive the answer of question '%s'".formatted(questionName));
         }
+
+        holder.setQuestionName(questionName);
 
         final T value;
         try {
             value = question.answeredBy(runner, context);
         } catch (Exception | Error e) {
+            String detail = e.getMessage() != null ? e.getMessage() : e.toString();
             throw new CitrusRuntimeException(
-                    "Failed to answer question '%s': %s".formatted(question.getName(), e.getMessage()), e);
+                    "Failed to answer question '%s': %s".formatted(questionName, detail), e);
         }
 
         holder.set(value);
@@ -104,10 +109,6 @@ public class AskAction<T> extends AbstractTestAction {
         private Answer<T> holder;
         private String saveAs;
         private TestActionRunner runner;
-
-        public static <T> Builder<T> ask() {
-            return new Builder<>();
-        }
 
         public static <T> Builder<T> ask(Question<T> question) {
             Builder<T> builder = new Builder<>();

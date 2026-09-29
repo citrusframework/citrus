@@ -28,12 +28,15 @@ public interface AskActionBuilder<V, T extends TestAction>
 
     AskActionBuilder<V, T> into(Answer<V> holder);
 
+    /**
+     * Also publishes the answer as a test variable for later `${...}` expressions.
+     * A {@code null} answer is not published: test contexts forbid {@code null} values,
+     * so the variable stays undefined.
+     */
     AskActionBuilder<V, T> saveAs(String variableName);
 
     interface BuilderFactory {
 
         <V> AskActionBuilder<V, ?> ask(Question<V> question);
-
-        <V> AskActionBuilder<V, ?> ask();
     }
 }
