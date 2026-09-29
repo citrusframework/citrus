@@ -151,6 +151,8 @@ public class SegmentVariableExtractorRegistry {
         private Object getIndexedElement(VariableExpressionSegmentMatcher matcher, Object indexedValue) {
             if (indexedValue.getClass().isArray()) {
                 return  Array.get(indexedValue, matcher.getSegmentIndex());
+            } else if (indexedValue instanceof List<?> list) {
+                return list.get(matcher.getSegmentIndex());
             } else {
                 throw new CitrusRuntimeException(
                         String.format("Expected an instance of Array type. Cannot retrieve indexed property %s from %s ",
