@@ -18,6 +18,7 @@ package org.citrusframework.playwright.yaml;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.DropAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
@@ -32,6 +33,9 @@ public class Drop extends AbstractPlaywrightAction.Builder<DropAction, Drop> {
     private String fileName;
     private String fileMimeType;
     private String value;
+    private Double timeout;
+    private Double positionX;
+    private Double positionY;
 
     @SchemaProperty
     public void setElement(Element element) {
@@ -51,6 +55,21 @@ public class Drop extends AbstractPlaywrightAction.Builder<DropAction, Drop> {
     @SchemaProperty
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @SchemaProperty
+    public void setTimeout(Double timeout) {
+        this.timeout = timeout;
+    }
+
+    @SchemaProperty
+    public void setPositionX(Double positionX) {
+        this.positionX = positionX;
+    }
+
+    @SchemaProperty
+    public void setPositionY(Double positionY) {
+        this.positionY = positionY;
     }
 
     @Override
@@ -79,6 +98,16 @@ public class Drop extends AbstractPlaywrightAction.Builder<DropAction, Drop> {
             } else {
                 delegate.data(fileMimeType, value);
             }
+        }
+        if (timeout != null) {
+            delegate.timeout(timeout);
+        }
+        if (positionX != null || positionY != null) {
+            if (positionX == null || positionY == null) {
+                throw new CitrusRuntimeException(
+                        "Incomplete Playwright drop position - set both position-x and position-y");
+            }
+            delegate.position(positionX, positionY);
         }
         return delegate.build();
     }

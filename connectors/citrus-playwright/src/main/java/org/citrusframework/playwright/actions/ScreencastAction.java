@@ -47,18 +47,24 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         STOP,
         SHOW_ACTIONS,
         HIDE_ACTIONS,
-        SHOW_CHAPTER
+        SHOW_CHAPTER,
+        SHOW_OVERLAY,
+        SHOW_OVERLAYS,
+        HIDE_OVERLAYS
     }
 
     private final Command command;
     private final String path;
     private final Integer quality;
+    private final Integer sizeWidth;
+    private final Integer sizeHeight;
     private final Consumer<ScreencastFrame> onFrame;
     private final AnnotatePosition position;
     private final Integer fontSize;
     private final Double duration;
     private final String chapterTitle;
     private final String description;
+    private final String overlayHtml;
     private final String variable;
 
     public ScreencastAction(Builder builder) {
@@ -66,12 +72,15 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         this.command = builder.command;
         this.path = builder.path;
         this.quality = builder.quality;
+        this.sizeWidth = builder.sizeWidth;
+        this.sizeHeight = builder.sizeHeight;
         this.onFrame = builder.onFrame;
         this.position = builder.position;
         this.fontSize = builder.fontSize;
         this.duration = builder.duration;
         this.chapterTitle = builder.chapterTitle;
         this.description = builder.description;
+        this.overlayHtml = builder.overlayHtml;
         this.variable = builder.variable;
     }
 
@@ -90,6 +99,12 @@ public class ScreencastAction extends AbstractPlaywrightAction {
             case HIDE_ACTIONS -> screencast.hideActions();
             case SHOW_CHAPTER -> screencast.showChapter(
                     LocatorResolver.resolve(chapterTitle, context), showChapterOptions(context));
+            case SHOW_OVERLAY ->
+                // The returned handle is intentionally not retained: the overlay persists
+                // until hideOverlays() closes it, which is the only lifecycle this action models.
+                    screencast.showOverlay(LocatorResolver.resolve(overlayHtml, context));
+            case SHOW_OVERLAYS -> screencast.showOverlays();
+            case HIDE_OVERLAYS -> screencast.hideOverlays();
         }
     }
 
@@ -100,6 +115,9 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         Screencast.StartOptions options = new Screencast.StartOptions().setPath(target);
         if (quality != null) {
             options.setQuality(quality);
+        }
+        if (sizeWidth != null && sizeHeight != null) {
+            options.setSize(sizeWidth, sizeHeight);
         }
         if (onFrame != null) {
             options.setOnFrame(onFrame);
@@ -175,12 +193,15 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         private Command command;
         private String path;
         private Integer quality;
+        private Integer sizeWidth;
+        private Integer sizeHeight;
         private Consumer<ScreencastFrame> onFrame;
         private AnnotatePosition position;
         private Integer fontSize;
         private Double duration;
         private String chapterTitle;
         private String description;
+        private String overlayHtml;
         private String variable;
 
         /**
@@ -286,6 +307,51 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         }
 
         /**
+         * Shows a custom HTML overlay on the recording. The overlay stays visible until
+         * {@link #hideOverlays()} closes it.
+         *
+         * @param html overlay HTML, test-supplied
+         * @return this builder
+         */
+        public Builder showOverlay(String html) {
+            this.command = Command.SHOW_OVERLAY;
+            this.overlayHtml = html;
+            return this;
+        }
+
+        /**
+         * Re-shows custom overlays hidden again after {@link #hideOverlays()}.
+         *
+         * @return this builder
+         */
+        public Builder showOverlays() {
+            this.command = Command.SHOW_OVERLAYS;
+            return this;
+        }
+
+        /**
+         * Hides custom overlays on the recording.
+         *
+         * @return this builder
+         */
+        public Builder hideOverlays() {
+            this.command = Command.HIDE_OVERLAYS;
+            return this;
+        }
+
+        /**
+         * Sets the recording dimensions applied when the recording starts.
+         *
+         * @param width recording width in pixels, must be positive
+         * @param height recording height in pixels, must be positive
+         * @return this builder
+         */
+        public Builder size(int width, int height) {
+            this.sizeWidth = width;
+            this.sizeHeight = height;
+            return this;
+        }
+        /**
          * Sets the recording quality.
          *
          * @param quality quality between 0 and 100
@@ -329,6 +395,15 @@ public class ScreencastAction extends AbstractPlaywrightAction {
             }
             if (command == Command.SHOW_CHAPTER && (chapterTitle == null || chapterTitle.isBlank())) {
                 throw new CitrusRuntimeException("Missing Playwright screencast chapter title");
+            }
+            if (command == Command.SHOW_OVERLAY && (overlayHtml == null || overlayHtml.isBlank())) {
+                throw new CitrusRuntimeException("Missing Playwright screencast overlay HTML - call showOverlay(...) with content");
+            }
+            if ((sizeWidth != null || sizeHeight != null) && command != Command.START) {
+                throw new CitrusRuntimeException("Playwright screencast size only applies to the start command");
+            }
+            if ((sizeWidth != null && sizeWidth <= 0) || (sizeHeight != null && sizeHeight <= 0)) {
+                throw new CitrusRuntimeException("Playwright screencast size must be positive");
             }
             return new ScreencastAction(this);
         }

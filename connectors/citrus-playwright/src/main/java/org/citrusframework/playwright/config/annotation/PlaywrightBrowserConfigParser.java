@@ -17,11 +17,14 @@
 package org.citrusframework.playwright.config.annotation;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import com.microsoft.playwright.options.HttpCredentials;
+import com.microsoft.playwright.options.HttpCredentialsSend;
 
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.PlaywrightEndpointBuilder;
 import org.citrusframework.spi.ReferenceResolver;
@@ -81,6 +84,20 @@ public class PlaywrightBrowserConfigParser implements AnnotationConfigParser<Pla
             resolved.setOrigin(context.replaceDynamicContentInString(credential.origin()));
         }
 
+        if (StringUtils.hasText(credential.send())) {
+            resolved.setSend(toHttpCredentialsSend(credential.send()));
+        }
+
         return resolved;
+    }
+
+    private static HttpCredentialsSend toHttpCredentialsSend(String send) {
+        try {
+            return HttpCredentialsSend.valueOf(send.trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            throw new CitrusRuntimeException(
+                    "Unsupported Playwright HTTP credential send mode: " + send
+                            + " - use one of always, unauthorized", e);
+        }
     }
 }

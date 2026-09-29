@@ -44,6 +44,7 @@ public class Verify extends AbstractPlaywrightAction.Builder<VerifyAction, Verif
     private Double y;
     private Double width;
     private Double height;
+    private Double timeout;
 
     @XmlAttribute(name = "check")
     public void setCheck(String check) {
@@ -100,6 +101,11 @@ public class Verify extends AbstractPlaywrightAction.Builder<VerifyAction, Verif
         this.height = height;
     }
 
+    @XmlAttribute(name = "timeout")
+    public void setTimeout(Double timeout) {
+        this.timeout = timeout;
+    }
+
     @XmlElement
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
@@ -140,6 +146,7 @@ public class Verify extends AbstractPlaywrightAction.Builder<VerifyAction, Verif
                 .x(x)
                 .y(y)
                 .width(width)
-                .height(height);
+                .height(height)
+                .timeout(timeout);
     }
 }

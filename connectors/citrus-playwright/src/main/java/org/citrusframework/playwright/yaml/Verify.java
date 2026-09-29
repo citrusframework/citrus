@@ -41,6 +41,7 @@ public class Verify extends AbstractPlaywrightAction.Builder<VerifyAction, Verif
     private Double y;
     private Double width;
     private Double height;
+    private Double timeout;
 
     @SchemaProperty(description = "Verification check name such as visible, text, url, value, attribute, count, or storage-local.")
     public void setCheck(String check) {
@@ -97,6 +98,11 @@ public class Verify extends AbstractPlaywrightAction.Builder<VerifyAction, Verif
         this.height = height;
     }
 
+    @SchemaProperty(description = "Assertion timeout in milliseconds for the aria-snapshot-matches check.")
+    public void setTimeout(Double timeout) {
+        this.timeout = timeout;
+    }
+
     @SchemaProperty
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
@@ -137,6 +143,7 @@ public class Verify extends AbstractPlaywrightAction.Builder<VerifyAction, Verif
                 .x(x)
                 .y(y)
                 .width(width)
-                .height(height);
+                .height(height)
+                .timeout(timeout);
     }
 }

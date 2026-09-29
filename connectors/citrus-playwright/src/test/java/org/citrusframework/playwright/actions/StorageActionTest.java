@@ -173,4 +173,27 @@ class StorageActionTest {
         verify(browser.context()).storageState(captor.capture());
         assertNull(captor.getValue().opfs);
     }
+
+    @Test
+    void shouldIncludeIndexedDBAndCredentialsInStorageState() {
+        new StorageAction.Builder().saveState("target/state.json").indexedDB(true).credentials(true)
+                .build().execute(context);
+
+        ArgumentCaptor<BrowserContext.StorageStateOptions> captor =
+                ArgumentCaptor.forClass(BrowserContext.StorageStateOptions.class);
+        verify(browser.context()).storageState(captor.capture());
+        assertEquals(Boolean.TRUE, captor.getValue().indexedDB);
+        assertEquals(Boolean.TRUE, captor.getValue().credentials);
+    }
+
+    @Test
+    void shouldLeaveIndexedDBAndCredentialsUnsetByDefault() {
+        new StorageAction.Builder().saveState("target/state.json").build().execute(context);
+
+        ArgumentCaptor<BrowserContext.StorageStateOptions> captor =
+                ArgumentCaptor.forClass(BrowserContext.StorageStateOptions.class);
+        verify(browser.context()).storageState(captor.capture());
+        assertNull(captor.getValue().indexedDB);
+        assertNull(captor.getValue().credentials);
+    }
 }

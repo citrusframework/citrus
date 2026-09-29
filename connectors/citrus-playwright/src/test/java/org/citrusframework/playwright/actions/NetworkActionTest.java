@@ -164,6 +164,93 @@ class NetworkActionTest {
     }
 
     @Test
+    void shouldVerifyResponseServerAddress() {
+        Response response = waitableResponse();
+
+        new NetworkAction.Builder().waitForResponse().urlContains("/orders")
+                .verifyServerAddress("93.184.216.34", 443).build().execute(context);
+    }
+
+    @Test
+    void shouldFailWhenServerAddressMismatch() {
+        Response response = waitableResponse();
+
+        NetworkAction action = new NetworkAction.Builder().waitForResponse().urlContains("/orders")
+                .verifyServerAddress("10.0.0.1", 443).build();
+
+        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        assertTrue(exception.getMessage().contains("10.0.0.1"));
+    }
+
+    @Test
+    void shouldVerifyResponseSecurityDetails() {
+        Response response = waitableResponse();
+
+        new NetworkAction.Builder().waitForResponse().urlContains("/orders")
+                .verifySecurityDetails("TLSv1.3").build().execute(context);
+    }
+
+    @Test
+    void shouldFailWhenSecurityProtocolMismatch() {
+        Response response = waitableResponse();
+
+        NetworkAction action = new NetworkAction.Builder().waitForResponse().urlContains("/orders")
+                .verifySecurityDetails("TLSv1.2").build();
+
+        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        assertTrue(exception.getMessage().contains("TLSv1.2"));
+    }
+
+    @Test
+    void shouldSnapshotServerAndTlsDetails() {
+        Response response = waitableResponse();
+
+        new NetworkAction.Builder().waitForResponse().urlContains("/orders").variable("resp")
+                .build().execute(context);
+
+        org.citrusframework.playwright.model.NetworkResponseResult result =
+                (org.citrusframework.playwright.model.NetworkResponseResult) context.getVariableObject("resp");
+        assertTrue(result.serverIp().contains("93.184.216.34"));
+        assertTrue(result.serverPort() == 443);
+        assertTrue(result.tlsProtocol().contains("TLSv1.3"));
+    }
+
+    @Test
+    void shouldOmitTlsDetailsOnPlainHttp() {
+        Response response = waitableResponse();
+        when(response.securityDetails()).thenReturn(null);
+
+        new NetworkAction.Builder().waitForResponse().urlContains("/orders").variable("resp")
+                .build().execute(context);
+
+        org.citrusframework.playwright.model.NetworkResponseResult result =
+                (org.citrusframework.playwright.model.NetworkResponseResult) context.getVariableObject("resp");
+        assertTrue(result.tlsProtocol() == null);
+    }
+
+    private Response waitableResponse() {
+        Response response = browser.response();
+        when(response.request()).thenReturn(mock(Request.class));
+        when(response.request().method()).thenReturn("GET");
+        when(response.url()).thenReturn("https://api.example.com/orders");
+        when(response.status()).thenReturn(200);
+        when(response.ok()).thenReturn(true);
+        when(response.headers()).thenReturn(Map.of("content-type", "application/json"));
+        com.microsoft.playwright.options.ServerAddr serverAddr = mock(com.microsoft.playwright.options.ServerAddr.class);
+        serverAddr.ipAddress = "93.184.216.34";
+        serverAddr.port = 443;
+        when(response.serverAddr()).thenReturn(serverAddr);
+        com.microsoft.playwright.options.SecurityDetails securityDetails =
+                mock(com.microsoft.playwright.options.SecurityDetails.class);
+        securityDetails.protocol = "TLSv1.3";
+        securityDetails.subjectName = "CN=api.example.com";
+        securityDetails.issuer = "CN=Example CA";
+        when(response.securityDetails()).thenReturn(securityDetails);
+        when(browser.page().waitForResponse(any(java.util.function.Predicate.class), any(), any())).thenReturn(response);
+        return response;
+    }
+
+    @Test
     void shouldFailFastWhenCommandMissing() {
         expectThrows(CitrusRuntimeException.class, () -> new NetworkAction.Builder().build());
     }

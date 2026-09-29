@@ -539,6 +539,71 @@ class PlaywrightBrowserIT {
         }
     }
 
+    @Test
+    void shouldDriveDriverOptionCoverageAgainstLocalFixture() throws Exception {
+        URL fixture = getClass().getResource("/fixtures/option-coverage.html");
+        Path video = Path.of("target", "playwright", "option-coverage.webm");
+        Path state = Path.of("target", "playwright", "option-coverage-state.json");
+        Files.deleteIfExists(video);
+        Files.deleteIfExists(state);
+
+        PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
+                .browser()
+                .browserType("chromium")
+                .headless(true)
+                .defaultTimeout(5000)
+                .build();
+
+        TestContext context = new TestContext();
+        try (FixtureServer server = FixtureServer.start()) {
+            String apiUrl = server.url("/phase2.html");
+            int apiPort = java.net.URI.create(apiUrl).getPort();
+
+            playwright().browser(browser).start().build().execute(context);
+            playwright().browser(browser).open().url(fixture.toExternalForm()).build().execute(context);
+
+            // O1 - the fixture throws an uncaught error on load.
+            playwright().browser(browser).console().verifyPageErrorsContain("option-coverage-boom")
+                    .build().execute(context);
+            playwright().browser(browser).console().pageErrors().variable("pageErrors")
+                    .build().execute(context);
+            assertTrue(context.getVariable("pageErrors").contains("option-coverage-boom"));
+            expectThrows(ValidationException.class,
+                    () -> playwright().browser(browser).console().verifyNoPageErrors()
+                            .build().execute(context));
+
+            // O2 + O3 - sized recording with a custom overlay.
+            playwright().browser(browser).screencast().start(video.toString()).size(640, 480)
+                    .build().execute(context);
+            playwright().browser(browser).screencast().showOverlay("<div>Option coverage</div>")
+                    .build().execute(context);
+            playwright().browser(browser).screencast().showOverlays().build().execute(context);
+            playwright().browser(browser).screencast().hideOverlays().build().execute(context);
+            playwright().browser(browser).screencast().stop().build().execute(context);
+            assertTrue(Files.exists(video), "expected a screencast recording at " + video);
+
+            // O4 - storage state with the full browser state flags.
+            playwright().browser(browser).storage().saveState(state.toString()).indexedDB(true)
+                    .credentials(true).build().execute(context);
+            assertTrue(Files.exists(state), "expected a storage state at " + state);
+
+            // O9 - page-side response carries server address; plain HTTP has no TLS details.
+            playwright().browser(browser).open().url(apiUrl).build().execute(context);
+            playwright().browser(browser).network().waitForResponse().urlContains("/phase2.html")
+                    .triggerScript("() => fetch('/phase2.html')")
+                    .verifyServerAddress("127.0.0.1", apiPort)
+                    .variable("resp").build().execute(context);
+
+            NetworkResponseResult result =
+                    (NetworkResponseResult) context.getVariableObject("resp");
+            assertEquals("127.0.0.1", result.serverIp());
+            assertEquals(Integer.valueOf(apiPort), result.serverPort());
+            assertEquals(null, result.tlsProtocol());
+        } finally {
+            playwright().browser(browser).stop().build().execute(context);
+        }
+    }
+
     /**
      * Checks the RIFF/WEBP container signature so the assertion proves the format, not just that
      * some bytes were written.

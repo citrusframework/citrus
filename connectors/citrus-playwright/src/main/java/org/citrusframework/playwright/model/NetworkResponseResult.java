@@ -29,9 +29,19 @@ import java.util.Map;
  * @param ok Playwright response success flag
  * @param headers sanitized response headers
  * @param body sanitized response body when body capture is enabled
+ * @param serverIp response server IP address, or null when the driver reports none
+ * @param serverPort response server port, or null when the driver reports none
+ * @param tlsProtocol TLS protocol, or null on plain HTTP
+ * @param tlsSubjectName TLS certificate subject, or null on plain HTTP
+ * @param tlsIssuer TLS certificate issuer, or null on plain HTTP
+ * @param tlsValidFrom TLS certificate validity start in epoch seconds, or null on plain HTTP
+ * @param tlsValidTo TLS certificate validity end in epoch seconds, or null on plain HTTP
  */
 public record NetworkResponseResult(String method, String url, int status, boolean ok,
-                                    Map<String, String> headers, String body) {
+                                    Map<String, String> headers, String body,
+                                    String serverIp, Integer serverPort,
+                                    String tlsProtocol, String tlsSubjectName, String tlsIssuer,
+                                    Double tlsValidFrom, Double tlsValidTo) {
 
     /**
      * Creates a response snapshot from a Playwright response.
@@ -50,12 +60,40 @@ public record NetworkResponseResult(String method, String url, int status, boole
                 body = "<unavailable>";
             }
         }
+
+        String serverIp = null;
+        Integer serverPort = null;
+        if (response.serverAddr() != null) {
+            serverIp = response.serverAddr().ipAddress;
+            serverPort = response.serverAddr().port;
+        }
+
+        String tlsProtocol = null;
+        String tlsSubjectName = null;
+        String tlsIssuer = null;
+        Double tlsValidFrom = null;
+        Double tlsValidTo = null;
+        if (response.securityDetails() != null) {
+            tlsProtocol = response.securityDetails().protocol;
+            tlsSubjectName = redactor.sanitizeText(response.securityDetails().subjectName);
+            tlsIssuer = redactor.sanitizeText(response.securityDetails().issuer);
+            tlsValidFrom = response.securityDetails().validFrom;
+            tlsValidTo = response.securityDetails().validTo;
+        }
+
         return new NetworkResponseResult(
                 response.request().method(),
                 redactor.sanitizeUrl(response.url()),
                 response.status(),
                 response.ok(),
                 redactor.sanitizeHeaders(response.headers()),
-                body);
+                body,
+                serverIp,
+                serverPort,
+                tlsProtocol,
+                tlsSubjectName,
+                tlsIssuer,
+                tlsValidFrom,
+                tlsValidTo);
     }
 }

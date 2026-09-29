@@ -149,6 +149,69 @@ class ScreencastActionTest {
     }
 
     @Test
+    void shouldShowCustomOverlay() {
+        new ScreencastAction.Builder().showOverlay("<div>Step 3</div>").build().execute(context);
+
+        verify(screencast).showOverlay(eq("<div>Step 3</div>"));
+    }
+
+    @Test
+    void shouldResolveVariablesInOverlayHtml() {
+        context.setVariable("step", "checkout");
+
+        new ScreencastAction.Builder().showOverlay("<div>${step}</div>").build().execute(context);
+
+        verify(screencast).showOverlay(eq("<div>checkout</div>"));
+    }
+
+    @Test
+    void shouldShowAndHideOverlays() {
+        new ScreencastAction.Builder().showOverlays().build().execute(context);
+        new ScreencastAction.Builder().hideOverlays().build().execute(context);
+
+        verify(screencast).showOverlays();
+        verify(screencast).hideOverlays();
+    }
+
+    @Test
+    void shouldStartRecordingWithSize() {
+        new ScreencastAction.Builder().start("target/playwright/run.webm").size(1280, 720)
+                .build().execute(context);
+
+        ArgumentCaptor<Screencast.StartOptions> captor = ArgumentCaptor.forClass(Screencast.StartOptions.class);
+        verify(screencast).start(captor.capture());
+        assertEquals(1280, captor.getValue().size.width);
+        assertEquals(720, captor.getValue().size.height);
+    }
+
+    @Test
+    void shouldStartRecordingWithoutSizeByDefault() {
+        new ScreencastAction.Builder().start("target/playwright/run.webm").build().execute(context);
+
+        ArgumentCaptor<Screencast.StartOptions> captor = ArgumentCaptor.forClass(Screencast.StartOptions.class);
+        verify(screencast).start(captor.capture());
+        assertEquals(null, captor.getValue().size);
+    }
+
+    @Test
+    void shouldFailFastWhenOverlayHtmlMissing() {
+        expectThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().showOverlay("  ").build());
+    }
+
+    @Test
+    void shouldFailFastWhenSizeWithoutStart() {
+        expectThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().stop().size(1280, 720).build());
+    }
+
+    @Test
+    void shouldFailFastWhenSizeNotPositive() {
+        expectThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().start("target/playwright/run.webm").size(0, 720).build());
+    }
+
+    @Test
     void shouldFailFastWhenCommandMissing() {
         expectThrows(CitrusRuntimeException.class, () -> new ScreencastAction.Builder().build());
     }

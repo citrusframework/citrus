@@ -20,6 +20,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.assertions.LocatorAssertions;
 
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -154,6 +155,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
     private final Double y;
     private final Double width;
     private final Double height;
+    private final Double timeout;
 
     /**
      * Creates a verify action from its fluent builder.
@@ -175,6 +177,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
         this.y = builder.y;
         this.width = builder.width;
         this.height = builder.height;
+        this.timeout = builder.timeout;
     }
 
     /**
@@ -184,6 +187,15 @@ public class VerifyAction extends AbstractPlaywrightAction {
      */
     public Check getCheck() {
         return check;
+    }
+
+    /**
+     * Returns the ARIA snapshot assertion timeout in milliseconds.
+     *
+     * @return timeout, or null for the driver default
+     */
+    public Double getTimeout() {
+        return timeout;
     }
 
     @Override
@@ -221,7 +233,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
             case BOUNDS -> assertBounds(browser, locatorReader.boundingBox(element));
             case ARIA_SNAPSHOT_CONTAINS -> assertContains(browser, "locator ARIA snapshot", resolve(expected, context),
                     locatorReader.ariaSnapshot(element));
-            case ARIA_SNAPSHOT_MATCHES -> assertAriaSnapshotMatches(element, resolve(expected, context), locatorReader);
+            case ARIA_SNAPSHOT_MATCHES -> assertAriaSnapshotMatches(element, resolve(expected, context), timeout, locatorReader);
             case URL -> assertEquals(browser, "page URL", resolve(expected, context), page.url());
             case TITLE -> assertEquals(browser, "page title", resolve(expected, context), page.title());
             case PAGE_COUNT -> assertEquals(browser, "page count", count, pageReader.pageCount(browser));
@@ -281,11 +293,18 @@ public class VerifyAction extends AbstractPlaywrightAction {
      *
      * @param element resolved locator
      * @param expectedSnapshot expected ARIA snapshot
+     * @param timeoutMs assertion timeout in milliseconds, or null for the driver default
      * @param locatorReader reader supplying the configured secret redaction
      */
-    private void assertAriaSnapshotMatches(Locator element, String expectedSnapshot, LocatorStateReader locatorReader) {
+    private void assertAriaSnapshotMatches(Locator element, String expectedSnapshot, Double timeoutMs,
+            LocatorStateReader locatorReader) {
         try {
-            assertThat(element).matchesAriaSnapshot(expectedSnapshot);
+            if (timeoutMs == null) {
+                assertThat(element).matchesAriaSnapshot(expectedSnapshot);
+            } else {
+                assertThat(element).matchesAriaSnapshot(expectedSnapshot,
+                        new LocatorAssertions.MatchesAriaSnapshotOptions().setTimeout(timeoutMs));
+            }
         } catch (AssertionError e) {
             throw ariaSnapshotFailure(e, locatorReader::sanitizeText);
         }
@@ -401,6 +420,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
         private Double y;
         private Double width;
         private Double height;
+        private Double timeout;
 
         /**
          * Sets the verification check, deriving the target scope from it.
@@ -785,6 +805,19 @@ public class VerifyAction extends AbstractPlaywrightAction {
         public Builder ariaSnapshotMatches(String expected) {
             this.check = Check.ARIA_SNAPSHOT_MATCHES;
             this.expected = expected;
+            return this;
+        }
+
+        /**
+         * Sets the assertion timeout applied to the ARIA snapshot match.
+         * Only the {@code ARIA_SNAPSHOT_MATCHES} check reads it; every other
+         * check ignores the value.
+         *
+         * @param timeoutMs timeout in milliseconds, or null for the driver default
+         * @return this builder
+         */
+        public Builder timeout(Double timeoutMs) {
+            this.timeout = timeoutMs;
             return this;
         }
 
