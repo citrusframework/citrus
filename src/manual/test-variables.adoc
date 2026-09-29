@@ -379,6 +379,10 @@ Resolution rules by segment type:
 | Array or `List` index | `[N]` | Reads element `N` (`Array.get` for arrays, `List.get` for lists); `N` may have multiple digits | `${container.currencies[12].code}` |
 | Map key | `.keyName` | Reads `map.get(keyName)` | `${container.campaign.id}` |
 
+The index grammar is strict: `[N]` holds one or more ASCII digits only — no signs, no spaces, one index per segment
+(`matrix[0][1]` is not supported). Indexes beyond the `int` range fail with a Citrus error. Resolution uses fields, not
+property getters: a value exposed only through `getX()` with no backing field `x` cannot be resolved.
+
 What Citrus CAN resolve:
 
 [source,plaintext]

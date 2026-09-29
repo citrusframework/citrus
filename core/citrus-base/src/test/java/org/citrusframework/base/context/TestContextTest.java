@@ -178,6 +178,11 @@ public class TestContextTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("${listContainer.manyVals[12]}"), "v12");
         Assert.assertEquals(context.getVariable("${manyArr[12]}"), "12");
         Assert.assertThrows(IndexOutOfBoundsException.class, () -> context.getVariable("${listContainer.strVals[9]}"));
+
+        context.setVariable("mapVar", Map.of("list", List.of("A", "B")));
+        Assert.assertEquals(context.getVariable("${mapVar.list[0]}"), "A");
+
+        Assert.assertThrows(CitrusRuntimeException.class, () -> context.getVariable("${listContainer.nullList[0]}"));
      }
 
     @Test
@@ -478,6 +483,8 @@ public class TestContextTest extends UnitTestSupport {
         private final List<Item> items = List.of(new Item("X"), new Item("Y"));
 
         private final List<String> manyVals = List.of("v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12");
+
+        private final List<String> nullList = null;
 
         private static final String CONSTANT = "FOO";
 
