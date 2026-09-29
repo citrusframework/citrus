@@ -336,40 +336,161 @@ sections.
 A test variable can hold any Java object, not just strings. Store a rich object with `setVariable` (or `variable(...)` in the
 Java DSL) and traverse its fields, list/array elements, and map entries directly in `${...}` expressions. A common pattern is
 to keep all scenario-lifetime data under a single `container` variable — sometimes called the scenario container or data
-container — so every test step reads from one predictable root instead of scattered variables.
+container — so every test step reads from one predictable root instead of scattered variables:
+
+[source,plaintext]
+----
+❌ Scattered: separate variables per domain, static helpers, ad-hoc context entries
+✓ Container:  container
+              ├── customer   → Customer entity (Java object)
+              ├── order      → Order entity (Java object)
+              ├── currencies → reference data (Java List)
+              └── campaign   → runtime-created data (Java Map or object)
+----
 
 [source,java,indent=0]
 ----
 context.setVariable("container", scenarioContainer);
-echo("Agency id is ${container.agency.id}, first currency is ${container.currencies[0].code}");
+echo("Customer id is ${container.customer.id}, first currency is ${container.currencies[0].code}");
 ----
 
-Dotted segments resolve to Java fields by reflection, including inherited and `static` fields, and traversal continues after
-each segment, so nested objects work naturally (`${container.agency.address.city}`). A segment on a `java.util.Map` resolves
-as a key lookup (`${container.campaign.id}` reads `campaign.get("id")`).
+NOTE: Never store credentials, tokens, or secrets in the container. It lives in plain memory in the test context and is
+designed for business fixtures, not sensitive material. Container data should be treated as read-only once published: write
+it during setup, then only read it during test execution.
 
-Indexed segments (`[N]`, where `N` is one or more digits) work on both Java arrays and `java.util.List` values, and traversal
-continues after the element:
+[[variables-object-graph-resolution]]
+=== How Citrus resolves path expressions
+
+When Citrus encounters `${container.customer.id}`, it walks the path segment by segment:
+
+1. **Root resolution**: find the `container` variable in the `TestContext`.
+2. **Segment parsing**: split the remainder into segments: `customer` → `id`.
+3. **Reflection traversal**: for `customer`, read the `customer` field of the container object; for `id`, read the `id`
+field of the customer object. Each step uses the declared or inherited Java field (including `static` fields).
+4. **Type conversion**: convert the final value to a string for expression substitution.
+
+Resolution rules by segment type:
+
+| Segment | Syntax | What Citrus does | Example |
+|---|---|---|---|
+| Object field | `.fieldName` | Reads the declared or inherited Java field via reflection | `${container.customer}` |
+| Nested object | `.field.subfield` | Traverses into the referenced object | `${container.customer.address.city}` |
+| Static field | `.CONSTANT` | Reads a `static` field | `${container.data.CONSTANT}` |
+| Array or `List` index | `[N]` | Reads element `N` (`Array.get` for arrays, `List.get` for lists); `N` may have multiple digits | `${container.currencies[12].code}` |
+| Map key | `.keyName` | Reads `map.get(keyName)` | `${container.campaign.id}` |
+
+What Citrus CAN resolve:
 
 [source,plaintext]
 ----
-${container.intVals[1]}              # array element
-${container.currencies[0].code}      # first list element's field
-${container.currencies[12].code}     # multi-digit indexes work for arrays and lists
-${containerArray[3].data[1].data}    # indexes compose with nested objects
+✓ Direct field access:      ${container.customer}
+✓ Nested field access:      ${container.customer.id}
+✓ Array indexing:            ${container.intVals[1]}
+✓ List indexing:             ${container.currencies[0].code}
+✓ Multi-digit indexes:       ${container.currencies[12].code}
+✓ Nested array/list+field:   ${containerArray[3].data[1].data}
+✓ Map key access:            ${container.campaign.id}
+✓ Static final fields:       ${container.data.CONSTANT}
+✓ Inherited fields:          (fields from parent classes)
 ----
 
-The resolved value is converted to a string (`String.valueOf`, or `toString()` for objects). When you need the raw object
-instead, use `TestContext.getVariableObject("container.agency")`.
+What Citrus CANNOT resolve:
 
-Unknown segments fail fast with a `CitrusRuntimeException`: an unknown variable root, an unknown field name, or an indexed
-segment on a value that is neither an array nor a `List` (the error keeps the `Expected an instance of Array type...`
-message). Out-of-bounds indexes propagate the JDK exception (`IndexOutOfBoundsException` for lists,
-`ArrayIndexOutOfBoundsException` for arrays). For optional data where absence is a valid state, guard the access in your test
-(e.g. assert presence first) rather than relying on the exception.
+[source,plaintext]
+----
+❌ Method invocation:        ${container.getCustomer().getId()}
+❌ Conditional expressions:  ${container.customer != null ? ...}
+❌ Lambda/functional:        ${container.list.stream().filter(...)}
+❌ Constructor calls:         ${new String("test")}
+❌ Sets and other collections (only arrays and java.util.List support [N])
+----
 
-NOTE: Never store credentials, tokens, or secrets in the container. It lives in plain memory in the test context and is
-designed for business fixtures, not sensitive material.
+[[variables-object-graph-example]]
+=== Worked example
+
+Given a holder class such as the `DataContainer` used in the Citrus test suite:
+
+[source,java,indent=0]
+----
+private static class DataContainer {
+    private final int number = 99;
+    private final Object data;
+    private final int[] intVals = new int[] {0, 1, 2, 3, 4};
+    private final List<String> strVals = List.of("A", "B", "C");
+    private static final String CONSTANT = "FOO";
+
+    public DataContainer(Object data) {
+        this.data = data;
+    }
+}
+----
+
+| Field | Type | Notes |
+|---|---|---|
+| `number` | `int` | Primitive, always accessible |
+| `data` | `Object` | Can hold any type, including nested holders for deep traversal |
+| `intVals` | `int[]` | Primitive array, supports `[N]` |
+| `strVals` | `List<String>` | List, supports `[N]` exactly like an array |
+| `CONSTANT` | `String` | `static final`, accessible by name |
+
+Resolution walkthrough with `context.setVariable("container", new DataContainer(new DataContainer("nested")))`:
+
+[source,plaintext]
+----
+${container.number}           → 99                                  (direct field)
+${container.data.data}        → "nested"                            (nested traversal)
+${container.data.number}      → 99                                  (field of nested object)
+${container.data.CONSTANT}    → "FOO"                               (static field)
+${container.intVals[1]}       → 1                                   (array index)
+${container.strVals[1]}       → "B"                                 (list index)
+${containerArray[3].data[1].data} → "B"                             (index composes with nesting)
+----
+
+[[variables-object-graph-conversion]]
+=== Type conversion
+
+The resolved value is converted to a string (`String.valueOf`, or `toString()` for objects):
+
+| Java type | Result | Example |
+|---|---|---|
+| `String` | As-is | `"hello"` → `"hello"` |
+| `int`, `long`, `double`, wrappers | `String.valueOf()` | `99` → `"99"` |
+| `boolean` | `String.valueOf()` | `true` → `"true"` |
+| `LocalDate` and other objects | `toString()` | `2024-01-15` → `"2024-01-15"` |
+
+When you need the raw object instead of its string form, use `TestContext.getVariableObject("container.customer")`.
+
+[[variables-object-graph-errors]]
+=== Errors
+
+Unknown segments fail fast with a `CitrusRuntimeException`:
+
+* Unknown variable root (`${nope.id}`), unknown field (`${container.bogus}`), or an indexed segment on a value that
+is neither an array nor a `List` (`Expected an instance of Array type...`).
+* A field that exists but currently holds `null` also fails: guard optional data in your test (e.g. assert presence
+first) rather than relying on the exception. The same applies to missing map keys.
+* Out-of-bounds indexes propagate the JDK exception (`IndexOutOfBoundsException` for lists,
+`ArrayIndexOutOfBoundsException` for arrays).
+
+[[variables-object-graph-practices]]
+=== Best practices
+
+* Use direct expressions for values that must exist (`${container.customer.id}`) — a failure then means a real bug.
+* Keep container data read-only after publication: publish once during setup, read many times.
+* Use descriptive names matching your domain (`${container.customer.name}`, not `${container.c.name}`).
+* Verify the container is populated before access; a clear setup assertion beats a cryptic resolution error later.
+
+[[variables-object-graph-troubleshooting]]
+=== Troubleshooting
+
+* `Unknown variable 'container'` — the container has not been published to the `TestContext` yet. Check that setup ran
+before the failing step.
+* `Unknown segment-value for segment 'X'` — the field name is misspelled, does not exist on the entity, or currently
+holds `null`. Check the entity class for the exact camelCase field name.
+* `Expected an instance of Array type...` — `[N]` was applied to a value that is neither an array nor a `List` (e.g. a
+`Set` or a plain object). Only arrays and `java.util.List` support indexed access.
+* Stale data from a previous test — variables live for the whole test case, so republish the container per test instead
+of reusing it across tests.
 
 [[variables-path-expressions]]
 == Path expressions
