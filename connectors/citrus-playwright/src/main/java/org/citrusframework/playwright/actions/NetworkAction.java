@@ -23,6 +23,7 @@ import com.microsoft.playwright.Route;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -171,7 +172,7 @@ public class NetworkAction extends AbstractPlaywrightAction {
         String expectedIp = resolve(expectedServerIp, context);
         String actualIp = response.serverAddr() == null ? null : response.serverAddr().ipAddress;
         Integer actualPort = response.serverAddr() == null ? null : response.serverAddr().port;
-        if (!expectedIp.equals(actualIp) || !expectedServerPort.equals(actualPort)) {
+        if (!expectedIp.equals(actualIp) || !Objects.equals(expectedServerPort, actualPort)) {
             throw new ValidationException("Expected Playwright response server address '%s:%d' but got '%s:%s'"
                     .formatted(expectedIp, expectedServerPort, actualIp, actualPort));
         }

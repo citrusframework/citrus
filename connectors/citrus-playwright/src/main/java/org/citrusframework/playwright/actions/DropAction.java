@@ -82,7 +82,7 @@ public class DropAction extends AbstractPlaywrightAction {
     @Override
     protected void execute(PlaywrightBrowser browser, TestContext context) {
         Locator element = LocatorResolver.resolve(browser.getCurrentPage(), locator, context);
-        if (timeout == null && positionX == null) {
+        if (timeout == null && positionX == null && positionY == null) {
             element.drop(payload(context));
         } else {
             element.drop(payload(context), dropOptions());
@@ -191,6 +191,10 @@ public class DropAction extends AbstractPlaywrightAction {
             if (fileName != null && !data.isEmpty()) {
                 throw new CitrusRuntimeException(
                         "Ambiguous Playwright drop payload - set either a file or data entries, not both");
+            }
+            if ((positionX == null) != (positionY == null)) {
+                throw new CitrusRuntimeException(
+                        "Incomplete Playwright drop position - set both coordinates");
             }
 
             return new DropAction(this);

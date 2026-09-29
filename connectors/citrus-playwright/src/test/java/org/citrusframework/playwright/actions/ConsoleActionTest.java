@@ -113,6 +113,7 @@ class ConsoleActionTest {
 
         ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("1"));
+        assertTrue(exception.getMessage().contains("not a function"));
     }
 
     @Test
