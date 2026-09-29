@@ -84,8 +84,10 @@ public class ConsoleAction extends AbstractPlaywrightAction {
             case VERIFY_NO_PAGE_ERRORS -> {
                 List<String> errors = browser.getCurrentPage().pageErrors();
                 if (!errors.isEmpty()) {
+                    String first = String.valueOf(errors.get(0));
                     throw new ValidationException(
-                            "Expected no Playwright page errors but found %d".formatted(errors.size()));
+                            "Expected no Playwright page errors but found %d, first error: %s"
+                                    .formatted(errors.size(), first.length() > 200 ? first.substring(0, 200) + "…" : first));
                 }
             }
             case VERIFY_PAGE_ERRORS_CONTAIN -> {

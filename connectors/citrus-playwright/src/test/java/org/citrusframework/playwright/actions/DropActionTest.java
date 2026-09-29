@@ -135,6 +135,17 @@ class DropActionTest {
                 () -> new DropAction.Builder().locator("#dropzone").build());
     }
 
+    @Test
+    void shouldFailFastWhenPositionIncomplete() throws Exception {
+        DropAction.Builder builder = new DropAction.Builder().locator("#dropzone")
+                .data("text/plain", "x");
+        java.lang.reflect.Field field = DropAction.Builder.class.getDeclaredField("positionX");
+        field.setAccessible(true);
+        field.set(builder, Double.valueOf(10));
+
+        expectThrows(CitrusRuntimeException.class, builder::build);
+    }
+
     private DropPayload capturedPayload() {
         ArgumentCaptor<DropPayload> captor = ArgumentCaptor.forClass(DropPayload.class);
         verify(element).drop(captor.capture());

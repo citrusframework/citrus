@@ -101,7 +101,8 @@ public class ScreencastAction extends AbstractPlaywrightAction {
                     LocatorResolver.resolve(chapterTitle, context), showChapterOptions(context));
             case SHOW_OVERLAY ->
                 // The returned handle is intentionally not retained: the overlay persists
-                // until hideOverlays() closes it, which is the only lifecycle this action models.
+                // until hideOverlays() hides it again. Removal is not modeled — stopping
+                // the recording cleans up.
                     screencast.showOverlay(LocatorResolver.resolve(overlayHtml, context));
             case SHOW_OVERLAYS -> screencast.showOverlays();
             case HIDE_OVERLAYS -> screencast.hideOverlays();

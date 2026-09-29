@@ -85,7 +85,8 @@ public class PlaywrightBrowserConfigParser implements AnnotationConfigParser<Pla
         }
 
         if (StringUtils.hasText(credential.send())) {
-            resolved.setSend(toHttpCredentialsSend(credential.send()));
+            resolved.setSend(toHttpCredentialsSend(
+                    context.replaceDynamicContentInString(credential.send())));
         }
 
         return resolved;

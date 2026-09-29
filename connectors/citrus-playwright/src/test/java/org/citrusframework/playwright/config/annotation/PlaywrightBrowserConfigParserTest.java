@@ -57,6 +57,10 @@ class PlaywrightBrowserConfigParserTest {
             @HttpCredential(username = "u", password = "p", send = "sometimes") })
     private PlaywrightBrowser brokenCredentialBrowser;
 
+    @PlaywrightBrowserConfig(httpCredentials = {
+            @HttpCredential(username = "u", password = "p", send = "${mode}") })
+    private PlaywrightBrowser variableCredentialBrowser;
+
     @Test
     void shouldLookupParserByQualifier() {
         assertTrue(AnnotationConfigParser.lookup().containsKey("playwright.browser"));
@@ -116,5 +120,22 @@ class PlaywrightBrowserConfigParserTest {
                 CitrusRuntimeException.class,
                 () -> new PlaywrightBrowserConfigParser().parse(annotation, new SimpleReferenceResolver(), context));
         assertTrue(exception.getMessage().contains("sometimes"));
+    }
+
+    @Test
+    void shouldResolveCredentialSendModeFromVariable() throws Exception {
+        PlaywrightBrowserConfig annotation = getClass()
+                .getDeclaredField("variableCredentialBrowser")
+                .getAnnotation(PlaywrightBrowserConfig.class);
+
+        TestContext context = TestContextFactory.newInstance().getObject();
+        context.setVariable("mode", "unauthorized");
+        PlaywrightBrowser endpoint =
+                new PlaywrightBrowserConfigParser().parse(annotation, new SimpleReferenceResolver(), context);
+
+        List<com.microsoft.playwright.options.HttpCredentials> credentials =
+                endpoint.getEndpointConfiguration().getHttpCredentials();
+        assertEquals(1, credentials.size());
+        assertEquals(HttpCredentialsSend.UNAUTHORIZED, credentials.get(0).send);
     }
 }
