@@ -93,6 +93,16 @@ public class VariableExpressionSegmentMatcherTest {
                         .addSegmentAttributes("prop1", 1)
                         .addSegmentAttributes("prop2", 2)
                         .addSegmentAttributes("//title[@lang='en']]", -1),
+                    new TestData("var[12]")
+                        .addSegmentAttributes("var", 12),
+                    new TestData("var.prop1[10].prop2")
+                        .addSegmentAttributes("var", -1)
+                        .addSegmentAttributes("prop1", 10)
+                        .addSegmentAttributes("prop2", -1),
+                    new TestData("var1.prop1[12].prop2[3]")
+                        .addSegmentAttributes("var1", -1)
+                        .addSegmentAttributes("prop1", 12)
+                        .addSegmentAttributes("prop2", 3),
                 };
 
     }

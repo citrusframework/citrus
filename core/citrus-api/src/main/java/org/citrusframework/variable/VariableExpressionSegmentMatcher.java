@@ -54,7 +54,7 @@ public class VariableExpressionSegmentMatcher {
     /**
      * Pattern to parse a variable expression
      */
-    private static final Pattern VAR_PATH_PATTERN = Pattern.compile("(xpath\\((.*)\\)$)|(jsonPath\\((\\$[.\\[].*)\\)$)|(([^\\[\\].]+)(\\[([0-9])])?)(\\.|$)");
+    private static final Pattern VAR_PATH_PATTERN = Pattern.compile("(xpath\\((.*)\\)$)|(jsonPath\\((\\$[.\\[].*)\\)$)|(([^\\[\\].]+)(\\[([0-9]+)])?)(\\.|$)");
 
     /**
      * The regex group index for the full xpath segment

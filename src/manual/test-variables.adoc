@@ -330,6 +330,47 @@ type the existence of elements can be saved to variable values. The result type 
 a comma separated string of all values in this node list. Simply use the expression result type attributes as shown in previous
 sections.
 
+[[variables-object-graph]]
+== Object graphs and the scenario container
+
+A test variable can hold any Java object, not just strings. Store a rich object with `setVariable` (or `variable(...)` in the
+Java DSL) and traverse its fields, list/array elements, and map entries directly in `${...}` expressions. A common pattern is
+to keep all scenario-lifetime data under a single `container` variable — sometimes called the scenario container or data
+container — so every test step reads from one predictable root instead of scattered variables.
+
+[source,java,indent=0]
+----
+context.setVariable("container", scenarioContainer);
+echo("Agency id is ${container.agency.id}, first currency is ${container.currencies[0].code}");
+----
+
+Dotted segments resolve to Java fields by reflection, including inherited and `static` fields, and traversal continues after
+each segment, so nested objects work naturally (`${container.agency.address.city}`). A segment on a `java.util.Map` resolves
+as a key lookup (`${container.campaign.id}` reads `campaign.get("id")`).
+
+Indexed segments (`[N]`, where `N` is one or more digits) work on both Java arrays and `java.util.List` values, and traversal
+continues after the element:
+
+[source,plaintext]
+----
+${container.intVals[1]}              # array element
+${container.currencies[0].code}      # first list element's field
+${container.currencies[12].code}     # multi-digit indexes work for arrays and lists
+${containerArray[3].data[1].data}    # indexes compose with nested objects
+----
+
+The resolved value is converted to a string (`String.valueOf`, or `toString()` for objects). When you need the raw object
+instead, use `TestContext.getVariableObject("container.agency")`.
+
+Unknown segments fail fast with a `CitrusRuntimeException`: an unknown variable root, an unknown field name, or an indexed
+segment on a value that is neither an array nor a `List` (the error keeps the `Expected an instance of Array type...`
+message). Out-of-bounds indexes propagate the JDK exception (`IndexOutOfBoundsException` for lists,
+`ArrayIndexOutOfBoundsException` for arrays). For optional data where absence is a valid state, guard the access in your test
+(e.g. assert presence first) rather than relying on the exception.
+
+NOTE: Never store credentials, tokens, or secrets in the container. It lives in plain memory in the test context and is
+designed for business fixtures, not sensitive material.
+
 [[variables-path-expressions]]
 == Path expressions
 
