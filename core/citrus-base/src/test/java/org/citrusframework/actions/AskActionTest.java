@@ -77,6 +77,32 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
     }
 
     @Test
+    public void shouldNameQuestionWhenCauseHasNoMessage() {
+        Answer<String> holder = new Answer<>();
+
+        Question<String> broken = Question.about("the order id", ctx -> {
+            throw new IllegalStateException();
+        });
+
+        TestCaseFailedException e = expectThrows(TestCaseFailedException.class,
+                () -> runner.run(ask(broken).into(holder)));
+        assertTrue(e.getMessage().contains("the order id"));
+        assertTrue(e.getMessage().contains("IllegalStateException"));
+        assertTrue(!e.getMessage().endsWith(": null"));
+    }
+
+    @Test
+    public void shouldSkipSaveAsForNullAnswer() {
+        Answer<String> holder = new Answer<>();
+
+        runner.run(ask(Question.<String>about("maybe missing", ctx -> null)).into(holder).saveAs("maybeMissing"));
+
+        assertTrue(holder.isAnswered());
+        assertTrue(holder.get() == null);
+        assertTrue(!context.getVariables().containsKey("maybeMissing"));
+    }
+
+    @Test
     public void shouldPublishValueAsVariableWithSaveAs() {
         Answer<String> orderId = new Answer<>();
 

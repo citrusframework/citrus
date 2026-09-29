@@ -39,7 +39,7 @@ public final class Answer<T> implements Supplier<T> {
      * @throws CitrusRuntimeException when not answered yet, naming the question when known.
      */
     @Override
-    public T get() {
+    public synchronized T get() {
         if (!answered) {
             if (questionName != null) {
                 throw new CitrusRuntimeException(
@@ -57,7 +57,7 @@ public final class Answer<T> implements Supplier<T> {
      * @param value the answer, may be null.
      * @throws CitrusRuntimeException when assigned a second time.
      */
-    public void set(T value) {
+    public synchronized void set(T value) {
         if (answered) {
             if (questionName != null) {
                 throw new CitrusRuntimeException(
@@ -72,11 +72,12 @@ public final class Answer<T> implements Supplier<T> {
     }
 
     /**
-     * Names the question this holder waits for. Called by the asking action when built,
-     * so reading too early names the question instead of returning null.
+     * Names the question this holder waits for. Called by the asking action when built
+     * and refreshed when executed, so reading too early names the question instead of
+     * returning null. Not for direct use: the asking action manages it.
      * @param questionName the question name.
      */
-    public void setQuestionName(String questionName) {
+    public synchronized void setQuestionName(String questionName) {
         this.questionName = questionName;
     }
 

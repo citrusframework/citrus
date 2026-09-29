@@ -72,11 +72,6 @@ public interface BaseTestActionSupport extends BaseTestActions, TestActionContai
     }
 
     @Override
-    default <V> AskAction.Builder<V> ask() {
-        return new AskAction.Builder<>();
-    }
-
-    @Override
     default CreateVariablesAction.Builder createVariables() {
         return new CreateVariablesAction.Builder();
     }

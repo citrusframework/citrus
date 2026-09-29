@@ -92,4 +92,44 @@ public class AnswerTest {
         assertTrue(answer.isAnswered());
         assertEquals(answer.get(), Integer.valueOf(5));
     }
+
+    @Test
+    public void shouldAssignOnlyOnceUnderConcurrency() throws InterruptedException {
+        Answer<String> answer = new Answer<>();
+        answer.setQuestionName("the order id");
+
+        java.util.concurrent.CountDownLatch ready = new java.util.concurrent.CountDownLatch(2);
+        java.util.concurrent.CountDownLatch start = new java.util.concurrent.CountDownLatch(1);
+        java.util.concurrent.atomic.AtomicInteger failures = new java.util.concurrent.atomic.AtomicInteger();
+
+        Runnable assign = () -> {
+            ready.countDown();
+            try {
+                start.await();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+
+            try {
+                answer.set("ORD-123");
+            } catch (CitrusRuntimeException e) {
+                failures.incrementAndGet();
+            }
+        };
+
+        Thread first = new Thread(assign);
+        Thread second = new Thread(assign);
+        first.start();
+        second.start();
+
+        ready.await();
+        start.countDown();
+        first.join();
+        second.join();
+
+        assertTrue(answer.isAnswered());
+        assertEquals(answer.get(), "ORD-123");
+        assertEquals(failures.get(), 1);
+    }
 }
