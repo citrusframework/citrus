@@ -16,6 +16,7 @@
 
 package org.citrusframework.variable;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -37,6 +38,12 @@ public class VariableExpressionSegmentMatcherTest {
             assertEquals(attributes.index, matcher.getSegmentIndex());
         }
         assertFalse(matcher.nextMatch());
+    }
+
+    @Test
+    public void testOversizedIndex() {
+        assertThrows(CitrusRuntimeException.class,
+                () -> new VariableExpressionSegmentMatcher("var[9999999999]").nextMatch());
     }
 
     @DataProvider(name = "matcherDataprovider")
