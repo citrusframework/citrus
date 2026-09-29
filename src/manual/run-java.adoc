@@ -684,6 +684,68 @@ public void isolatedBehaviorTest() {
 A published variable that the behavior does not set fails the test with an error naming the variable. Exceptions raised by
 forked actions and `doFinally()` actions inside an isolated behavior still reach the test.
 
+[[java-test-behaviors-questions]]
+==== Asking questions with typed answers
+
+Today the only way a value leaves an action is a test variable:
+
+[source,java]
+----
+$(http().client("orders").receive().response(HttpStatus.OK)
+        .message().extract(fromBody().expression("$.id", "orderId")));
+// from here on the value is "${orderId}" - a String, usable only inside Citrus expressions
+----
+
+Everything is a `String`, the value cannot leave the DSL into plain Java, a value derived from several sources has no
+single named home, and the assignment is invisible in the report. A `Question<T>` is the named, reusable unit that runs
+as an ordinary reported test action and returns a typed Java value:
+
+[source,java]
+----
+public static class TheOrderId implements Question<String> {
+    @Override
+    public String answeredBy(TestActionRunner runner, TestContext context) {
+        return context.getVariable("orderId", String.class);
+    }
+}
+----
+
+The report name follows the same rule as behaviors, so `TheOrderId` is reported as `the order id`. Lambdas and
+anonymous classes are reported as `behavior`; use the pure-read form to name them:
+
+[source,java]
+----
+Question<Integer> lineCount = Question.about("line count",
+        ctx -> ctx.getVariable("lines", String.class).split("\n").length);
+----
+
+Ask the question with `ask(..)`, holding the value in an `Answer<T>`:
+
+[source,java]
+----
+Answer<String> orderId = new Answer<>();
+
+$(ask(theOrderId()).into(orderId).saveAs("orderId"));
+
+assertThat(orderId.get(), startsWith("ORD-"));
+
+$(http().client("warehouse").send().get("/orders/" + orderId.get()));
+----
+
+The action is reported as `ask: the order id` at the position it ran, and a throwing question fails the test with the
+question's name in the message. `Answer<T>` is a single-assignment holder: reading it before the action has run throws
+an error naming the question instead of returning `null`, a second assignment fails the same way, and a `null` answer
+is a valid answer distinct from "not answered yet". It implements `Supplier<T>` for free interop with `Optional` and
+stream code.
+
+The holder exists because `run(..)` returns the runner for chaining, never the built action, so a value cannot come
+back by return value without changing a core interface. `saveAs(..)` additionally publishes the value as a test
+variable, so a question feeds both plain Java and later `${...}` expressions. The `ask(..)` builder receives the active
+runner automatically, so asking works inside `sequential()` and inside an applied behavior with no extra wiring.
+
+A question is answered synchronously at the point of the call: it reads what the test already has, or performs a
+synchronous exchange. Correlated async replies stay the job of receive-actions and message selectors.
+
 [[java-test-behaviors-upgrade]]
 ==== Upgrading from earlier versions
 
