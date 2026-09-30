@@ -159,7 +159,7 @@ public class SegmentVariableExtractorRegistry {
                 return list.get(matcher.getSegmentIndex());
             } else {
                 throw new CitrusRuntimeException(
-                        String.format("Expected an instance of Array type. Cannot retrieve indexed property %s from %s ",
+                        String.format("Expected an instance of Array or List type. Cannot retrieve indexed property %s from %s ",
                                 matcher.getSegmentExpression(), indexedValue.getClass().getName()));
             }
         }
