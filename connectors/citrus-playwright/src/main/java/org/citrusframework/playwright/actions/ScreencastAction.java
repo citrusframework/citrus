@@ -352,6 +352,7 @@ public class ScreencastAction extends AbstractPlaywrightAction {
             this.sizeHeight = height;
             return this;
         }
+
         /**
          * Sets the recording quality.
          *
@@ -399,6 +400,10 @@ public class ScreencastAction extends AbstractPlaywrightAction {
             }
             if (command == Command.SHOW_OVERLAY && (overlayHtml == null || overlayHtml.isBlank())) {
                 throw new CitrusRuntimeException("Missing Playwright screencast overlay HTML - call showOverlay(...) with content");
+            }
+            if ((sizeWidth == null) != (sizeHeight == null)) {
+                throw new CitrusRuntimeException(
+                        "Incomplete Playwright screencast size - set both size-width and size-height");
             }
             if ((sizeWidth != null || sizeHeight != null) && command != Command.START) {
                 throw new CitrusRuntimeException("Playwright screencast size only applies to the start command");

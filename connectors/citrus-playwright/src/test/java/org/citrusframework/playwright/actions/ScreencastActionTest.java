@@ -212,6 +212,17 @@ class ScreencastActionTest {
     }
 
     @Test
+    void shouldFailFastWhenSizeIncomplete() throws Exception {
+        ScreencastAction.Builder builder = new ScreencastAction.Builder()
+                .start("target/playwright/run.webm");
+        java.lang.reflect.Field field = ScreencastAction.Builder.class.getDeclaredField("sizeWidth");
+        field.setAccessible(true);
+        field.set(builder, Integer.valueOf(1280));
+
+        expectThrows(CitrusRuntimeException.class, builder::build);
+    }
+
+    @Test
     void shouldFailFastWhenCommandMissing() {
         expectThrows(CitrusRuntimeException.class, () -> new ScreencastAction.Builder().build());
     }
