@@ -26,30 +26,50 @@ import com.github.freva.asciitable.Column;
 import com.github.freva.asciitable.HorizontalAlign;
 import com.github.freva.asciitable.OverflowBehaviour;
 import main.CitrusJBang;
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.Option;
+import org.aesh.command.option.ParentCommand;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
 
 import static java.lang.Long.compare;
 import static java.lang.Long.parseLong;
 
-@Command(name = "ls", description = "List running Citrus tests")
+@CommandDefinition(name = "ls", description = "List running Citrus tests", generateHelp = true)
 public class ListTests extends CitrusCommand {
 
-    @CommandLine.Option(names = { "--sort" },
-                        description = "Sort by pid, name or age", defaultValue = "pid")
+    @Option(name = "sort", description = "Sort by pid, name or age", defaultValue = "pid")
     String sort;
 
-    @CommandLine.Option(names = { "--pid" },
-                        description = "List only pid in the output")
+    @Option(name = "pid", description = "List only pid in the output", hasValue = false)
     boolean pid;
+
+    @ParentCommand
+    private CitrusJBangMain parent;
+
+    public ListTests() {
+        super(null);
+    }
 
     public ListTests(CitrusJBangMain main) {
         super(main);
     }
 
     @Override
-    public Integer call() {
+    public CitrusJBangMain getMain() {
+        if (super.getMain() == null) {
+            setMain(parent);
+        }
+        return super.getMain();
+    }
+
+    @Override
+    public CommandResult execute(CommandInvocation invocation) throws org.aesh.command.CommandException, InterruptedException {
+        return result(call());
+    }
+
+    int call() {
         List<Row> rows = new ArrayList<>();
 
         final long cur = ProcessHandle.current().pid();

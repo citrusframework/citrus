@@ -16,9 +16,11 @@
 
 package org.citrusframework.jbang.cli.commands;
 
-import java.nio.file.Path;
-import java.util.Stack;
-
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.Argument;
+import org.aesh.command.option.ParentCommand;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.jbang.cli.JsonSupport;
 import org.citrusframework.jbang.cli.util.CodeAnalyzer;
@@ -26,41 +28,49 @@ import org.citrusframework.jbang.cli.util.DelegatingCodeAnalyzer;
 import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
 
-@Command(name = "inspect", description = "Inspect a Citrus test and its source code in order to provide detailed information " +
-        "such as used endpoints as well as required modules and dependencies.")
+@CommandDefinition(name = "inspect", description = "Inspect a Citrus test and its source code in order to provide detailed information " +
+        "such as used endpoints as well as required modules and dependencies.", generateHelp = true)
 public class Inspect extends CitrusCommand {
 
-    @Parameters(description = "Path to the test file (or a github link)", arity = "1",
-            paramLabel = "<file>", parameterConsumer = Inspect.FileConsumer.class)
-    private Path filePath; // Defined only for file path completion; the field never used
-
+    @Argument(description = "Path to the test file (or a github link)", paramLabel = "<file>", required = true)
     private String file;
+
+    @ParentCommand
+    private CitrusJBangMain parent;
+
+    public Inspect() {
+        super(null);
+    }
 
     public Inspect(CitrusJBangMain main) {
         super(main);
     }
 
     @Override
-    public Integer call() throws Exception {
+    public CitrusJBangMain getMain() {
+        if (super.getMain() == null) {
+            setMain(parent);
+        }
+        return super.getMain();
+    }
+
+    @Override
+    public CommandResult execute(CommandInvocation invocation) throws org.aesh.command.CommandException, InterruptedException {
+        try {
+            return result(call());
+        } catch (Exception e) {
+            printer().printErr("Failed to inspect test: %s".formatted(e.getMessage()));
+            return CommandResult.FAILURE;
+        }
+    }
+
+    int call() throws Exception {
         Resource sourceFile = Resources.create(file);
         CodeAnalyzer.ScanResult result = new DelegatingCodeAnalyzer().scan(sourceFile);
 
         printer().println(MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(result)));
 
         return 0;
-    }
-
-    private String[] inspectEndpoints(String content) {
-        return new String[]{};
-    }
-
-    static class FileConsumer extends CitrusCommand.ParameterConsumer<Inspect> {
-        @Override
-        protected void doConsumeParameters(Stack<String> args, Inspect cmd) {
-            cmd.file = args.pop();
-        }
     }
 }
