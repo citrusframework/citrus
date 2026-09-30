@@ -39,13 +39,13 @@ import static java.nio.file.Files.writeString;
 public class Init extends CitrusCommand {
 
     @Argument(description = "Name of test file (or a github link)", paramLabel = "<file>", required = true)
-    private String file;
+    String file;
 
     @Option(name = "directory", description = "Directory where the files will be created", defaultValue = ".")
-    private String directory;
+    String directory;
 
     @ParentCommand
-    private CitrusJBangMain parent;
+    CitrusJBangMain parent;
 
     public Init() {
         super(null);
