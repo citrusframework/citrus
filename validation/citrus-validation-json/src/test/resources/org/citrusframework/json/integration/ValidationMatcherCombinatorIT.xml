@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ValidationMatcherCombinatorIT">
+    <meta-info>
+      <author>Citrus</author>
+      <creationdate>2024-01-01</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Citrus</last-updated-by>
+      <last-updated-on>2024-01-01T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      Integration tests for allOf, anyOf, not combinator validation matchers in YAML and XML DSL.
+    </description>
+
+    <actions>
+      <!-- allOf: all three sub-matchers must pass -->
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "value": "hello world"
+              }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "value": "@allOf(startsWith('hello'), endsWith('world'), contains('lo wo'))@"
+              }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <!-- anyOf: at least one sub-matcher must pass -->
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "status": "success"
+              }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "status": "@anyOf(equalsIgnoreCase('ok'), equalsIgnoreCase('success'))@"
+              }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <!-- not: inner matcher must fail -->
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "msg": "hello citrus"
+              }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "msg": "@not(contains('error'))@"
+              }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <!-- nested: allOf with anyOf and not inside -->
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "result": "foo-ok"
+              }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "result": "@allOf(anyOf(startsWith('foo'), startsWith('bar')), not(contains('error')))@"
+              }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <!-- allOf via JSONPath validate expressions -->
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "code": "200",
+                "message": "Request processed successfully"
+              }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <validate path="$.code" value="@allOf(notEmpty(), matches('[0-9]+'))@"/>
+          <validate path="$.message" value="@anyOf(startsWith('Request'), startsWith('Response'))@"/>
+        </message>
+      </receive>
+    </actions>
+  </testcase>
+</spring:beans>
