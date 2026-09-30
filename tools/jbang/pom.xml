@@ -69,8 +69,13 @@
 
     <!-- CLI -->
     <dependency>
-      <groupId>info.picocli</groupId>
-      <artifactId>picocli</artifactId>
+      <groupId>org.aesh</groupId>
+      <artifactId>aesh</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.aesh</groupId>
+      <artifactId>aesh-processor</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.github.freva</groupId>
