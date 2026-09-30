@@ -31,7 +31,7 @@ import org.citrusframework.jbang.cli.StringPrinter;
 public class AgentStop extends CitrusCommand {
 
     @ParentCommand
-    private Agent parent;
+    Agent parent;
 
     public AgentStop() {
         super(null);

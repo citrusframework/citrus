@@ -26,7 +26,7 @@ import org.citrusframework.jbang.cli.CitrusJBangMain;
 public class Agent extends CitrusCommand implements org.aesh.command.GroupCommand<CommandInvocation> {
 
     @ParentCommand
-    private CitrusJBangMain parent;
+    CitrusJBangMain parent;
 
     public Agent() {
         super(null);

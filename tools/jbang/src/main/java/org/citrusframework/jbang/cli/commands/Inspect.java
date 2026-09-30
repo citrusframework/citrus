@@ -34,10 +34,10 @@ import org.citrusframework.spi.Resources;
 public class Inspect extends CitrusCommand {
 
     @Argument(description = "Path to the test file (or a github link)", paramLabel = "<file>", required = true)
-    private String file;
+    String file;
 
     @ParentCommand
-    private CitrusJBangMain parent;
+    CitrusJBangMain parent;
 
     public Inspect() {
         super(null);

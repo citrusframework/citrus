@@ -26,7 +26,7 @@ import org.citrusframework.jbang.cli.CitrusJBangMain;
 public class Complete extends CitrusCommand {
 
     @ParentCommand
-    private CitrusJBangMain parent;
+    CitrusJBangMain parent;
 
     public Complete() {
         super(null);
