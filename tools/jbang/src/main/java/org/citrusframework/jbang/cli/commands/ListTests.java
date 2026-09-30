@@ -46,7 +46,7 @@ public class ListTests extends CitrusCommand {
     boolean pid;
 
     @ParentCommand
-    private CitrusJBangMain parent;
+    CitrusJBangMain parent;
 
     public ListTests() {
         super(null);

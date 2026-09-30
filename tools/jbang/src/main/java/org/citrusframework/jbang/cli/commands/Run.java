@@ -71,53 +71,53 @@ import org.aesh.command.option.ParentCommand;
 public class Run extends CitrusCommand {
 
     @Option(name = "engine", description = "Name of the test engine that is used to run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
-    private String engine;
+    String engine;
 
     @Option(name = "verbose", defaultValue = "true", description = "Should the test engine print verbose test summary information.")
-    private String verbose;
+    String verbose;
 
     @Option(name = "reset", defaultValue = "true", description = "Should the test engine reset the suite state for this run.")
-    private String reset;
+    String reset;
 
     @OptionList(name = "includes", valueSeparator = ',', description = "Includes test name pattern.")
-    private List<String> includes;
+    List<String> includes;
 
     @Option(name = "work-directory", description = "The working directory used by the file based test engines to load file resources from.")
-    private String workDir;
+    String workDir;
 
     @OptionList(name = "repository", aliases = {"repositories"}, valueSeparator = ',', description = "Set of Maven repositories that should be used to resolve dependencies.")
-    private List<String> repositories;
+    List<String> repositories;
 
     @Option(name = "modules", description = "Comma delimited list of additional Citrus modules that must be loaded to run the test.")
-    private String modules;
+    String modules;
 
     @OptionList(name = "dep", aliases = {"dependency"}, valueSeparator = ',', description = "Comma delimited list of additional Maven GAV dependencies that must be loaded to run the test.")
-    private List<String> dependencies;
+    List<String> dependencies;
 
     @Option(name = "offline", defaultValue = "false", hasValue = false, description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
-    private boolean offline;
+    boolean offline;
 
     @Option(name = "inspect-code", defaultValue = "true", hasValue = false, description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
-    private boolean inspectCode = true;
+    boolean inspectCode = true;
 
     @OptionList(name = "property", aliases = {"properties"}, valueSeparator = ',', description = "Default System property to set before the test run.")
-    private List<String> properties;
+    List<String> properties;
 
     @Option(name = "logging", defaultValue = "true", hasValue = false, description = "Can be used to turn off logging")
-    private boolean logging = true;
+    boolean logging = true;
 
     @Option(name = "logging-level", defaultValue = "info", description = "Logging level")
-    private String loggingLevel = "info";
+    String loggingLevel = "info";
 
     @Option(name = "logging-color", defaultValue = "true", hasValue = false, description = "Use colored logging")
-    private boolean loggingColor = true;
+    boolean loggingColor = true;
 
     @Arguments(description = "The test file(s) to run. If no files specified then application.properties is used as source for which files to run.",
                 paramLabel = "<files>")
-    private List<String> files;
+    List<String> files;
 
     @ParentCommand
-    private CitrusJBangMain parent;
+    CitrusJBangMain parent;
 
     public Run() {
         super(null);

@@ -39,58 +39,58 @@ import org.aesh.command.option.ParentCommand;
 public class AgentStart extends CitrusCommand {
 
     @Option(name = "engine", description = "Name of the test engine that is used ti run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
-    private String engine;
+    String engine;
 
     @Option(name = "port", description = "Server port.")
-    private String port;
+    String port;
 
     @Option(name = "verbose", defaultValue = "true", description = "Should the test engine print verbose test summary information.")
-    private String verbose;
+    String verbose;
 
     @Option(name = "reset", defaultValue = "true", description = "Should the test engine reset the suite state for each run.")
-    private String reset;
+    String reset;
 
     @Option(name = "system-exit", description = "Should the server exit based on success or failure of the test run.")
-    private String systemExit;
+    String systemExit;
 
     @Option(name = "skip-tests", description = "Should the server skip the test run at startup.")
-    private String skipTests;
+    String skipTests;
 
     @Option(name = "config-class", description = "Configuration class name.")
-    private String configClass;
+    String configClass;
 
     @Option(name = "time-to-live", description = "If this time is set the server automatically terminates after the given time.")
-    private String timeToLive;
+    String timeToLive;
 
     @Option(name = "test-jar", description = "Path to a Java archive that holds tests to run.")
-    private String testJar;
+    String testJar;
 
     @OptionList(name = "packages", description = "Test package name to include in the test run.")
-    private List<String> packages;
+    List<String> packages;
 
     @OptionList(name = "includes", description = "Includes test name pattern.")
-    private List<String> includes;
+    List<String> includes;
 
     @Option(name = "modules", description = "Comma delimited list of additional Citrus modules that should be loaded with the agent.")
-    private String modules;
+    String modules;
 
     @OptionList(name = "dep", description = "Set of additional Maven dependencies that should be loaded with the agent.")
-    private List<String> dependencies;
+    List<String> dependencies;
 
     @Option(name = "offline", description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
-    private String offline;
+    String offline;
 
     @Option(name = "inspect-code", defaultValue = "true", description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
-    private String inspectCode;
+    String inspectCode;
 
     @OptionList(name = "property", description = "Default System property to set before the test run.")
-    private List<String> properties;
+    List<String> properties;
 
     @Option(name = "work-directory", description = "The working directory used by the file based test engines to load file resources from.")
-    private String workDir;
+    String workDir;
 
     @ParentCommand
-    private Agent parent;
+    Agent parent;
 
     public AgentStart() {
         super(null);

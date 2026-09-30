@@ -72,58 +72,58 @@ import static java.util.stream.Collectors.joining;
 public class AgentRun extends CitrusCommand {
 
     @Argument(description = "Path to the test file (or a github link)", paramLabel = "<file>")
-    private String file;
+    String file;
 
     @Option(name = "engine", description = "Name of the test engine that is used ti run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
-    private String engine;
+    String engine;
 
     @Option(name = "url", description = "Server endpoint URL to connect to.")
-    private String url;
+    String url;
 
     @Option(name = "port", description = "Server port to connect to.")
-    private String port;
+    String port;
 
     @Option(name = "polling-interval", defaultValue = "2000", description = "Interval used to poll for test results. Only used in asynchronous test execution mode.")
-    private String pollingInterval;
+    String pollingInterval;
 
     @Option(name = "timeout", defaultValue = "60000", description = "Http request timeout.")
-    private String timeout;
+    String timeout;
 
     @Option(name = "async", hasValue = false, description = "Should the test engine print verbose test summary information.")
-    private boolean async;
+    boolean async;
 
     @Option(name = "background", hasValue = false, description = "When enabled the command is not blocking for the test result response.")
-    private boolean background;
+    boolean background;
 
     @Option(name = "verbose", defaultValue = "true", description = "Should the test engine print verbose test summary information.")
-    private String verbose;
+    String verbose;
 
     @Option(name = "reset", defaultValue = "true", description = "Should the test engine reset the suite state for each run.")
-    private String reset;
+    String reset;
 
     @Option(name = "test-jar", description = "Path to a Java archive that holds tests to run.")
-    private String testJar;
+    String testJar;
 
     @OptionList(name = "packages", description = "Test package name to include in the test run.")
-    private List<String> packages;
+    List<String> packages;
 
     @OptionList(name = "includes", description = "Includes test name pattern.")
-    private List<String> includes;
+    List<String> includes;
 
     @Option(name = "modules", description = "Comma delimited list of additional Citrus modules that should be loaded with the agent.")
-    private String modules;
+    String modules;
 
     @OptionList(name = "dep", description = "Set of additional Maven dependencies that should be loaded with the agent.")
-    private List<String> dependencies;
+    List<String> dependencies;
 
     @OptionList(name = "property", description = "Default System property to set before the test run.")
-    private List<String> properties;
+    List<String> properties;
 
     @Option(name = "work-directory", description = "The working directory used by the file based test engines to load file resources from.")
-    private String workDir;
+    String workDir;
 
     @ParentCommand
-    private Agent parent;
+    Agent parent;
 
     public AgentRun() {
         super(null);
