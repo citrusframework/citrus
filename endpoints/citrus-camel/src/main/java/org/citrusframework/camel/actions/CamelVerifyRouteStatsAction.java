@@ -17,7 +17,10 @@
 package org.citrusframework.camel.actions;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.mbean.ManagedRouteMBean;
 import org.citrusframework.api.actions.camel.CamelVerifyRouteStatsActionBuilder;
@@ -41,6 +44,7 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
     private final Long completed;
     private final Long failed;
     private final String expectedStatsJson;
+    private final BiConsumer<CamelRouteStats, TestContext> validator;
 
     public CamelVerifyRouteStatsAction(Builder builder) {
         super("verify-route-stats", builder);
@@ -48,6 +52,7 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
         this.completed = builder.completed;
         this.failed = builder.failed;
         this.expectedStatsJson = builder.expectedStatsJson;
+        this.validator = builder.validator;
     }
 
     @Override
@@ -102,11 +107,11 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
                 Message controlMessage = new DefaultMessage(resolvedExpectedJson)
                         .setType(MessageType.JSON);
 
-                MessageValidator<? extends ValidationContext> validator = MessageValidator.lookup("json")
+                MessageValidator<? extends ValidationContext> jsonValidator = MessageValidator.lookup("json")
                         .orElseThrow(() -> new CitrusRuntimeException(
                                 "No JSON message validator found - make sure citrus-validation-json is on the classpath"));
 
-                validator.validateMessage(receivedMessage, controlMessage, context,
+                jsonValidator.validateMessage(receivedMessage, controlMessage, context,
                         List.of(new JsonMessageValidationContext.Builder()
                                 .schemaValidation(false)
                                 .strict(false)
@@ -118,6 +123,24 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
             } catch (Exception e) {
                 throw new CitrusRuntimeException(
                         "Failed to verify route statistics JSON for routeId '%s'"
+                                .formatted(resolvedRouteId), e);
+            }
+        }
+
+        if (validator != null) {
+            try {
+                String actualStatsJson = routeMBean.dumpStatsAsJSon(false);
+                CamelRouteStats stats = JsonMapper.builder()
+                        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                        .build()
+                        .readValue(actualStatsJson, CamelRouteStats.class);
+                validator.accept(stats, context);
+                logger.info("Verified route '{}' statistics via custom validator", resolvedRouteId);
+            } catch (ValidationException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new CitrusRuntimeException(
+                        "Failed to verify route statistics via custom validator for routeId '%s'"
                                 .formatted(resolvedRouteId), e);
             }
         }
@@ -135,12 +158,17 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
         return expectedStatsJson;
     }
 
+    public BiConsumer<CamelRouteStats, TestContext> getValidator() {
+        return validator;
+    }
+
     public static final class Builder extends AbstractCamelRouteAction.Builder<CamelVerifyRouteStatsAction, Builder>
             implements CamelVerifyRouteStatsActionBuilder<CamelVerifyRouteStatsAction, Builder> {
 
         private Long completed;
         private Long failed;
         private String expectedStatsJson;
+        private BiConsumer<CamelRouteStats, TestContext> validator;
 
         @Override
         public Builder completed(long completed) {
@@ -157,6 +185,13 @@ public class CamelVerifyRouteStatsAction extends AbstractCamelRouteAction {
         @Override
         public Builder stats(String expectedStatsJson) {
             this.expectedStatsJson = expectedStatsJson;
+            return this;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <R> Builder validate(BiConsumer<R, TestContext> validator) {
+            this.validator = (BiConsumer<CamelRouteStats, TestContext>) validator;
             return this;
         }
 

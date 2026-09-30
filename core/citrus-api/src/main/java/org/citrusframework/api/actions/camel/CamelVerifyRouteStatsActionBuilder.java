@@ -16,7 +16,10 @@
 
 package org.citrusframework.api.actions.camel;
 
+import java.util.function.BiConsumer;
+
 import org.citrusframework.TestAction;
+import org.citrusframework.context.TestContext;
 
 public interface CamelVerifyRouteStatsActionBuilder<T extends TestAction, B extends CamelVerifyRouteStatsActionBuilder<T, B>>
         extends CamelRouteActionBuilderBase<T, B> {
@@ -26,4 +29,16 @@ public interface CamelVerifyRouteStatsActionBuilder<T extends TestAction, B exte
     B failed(long failed);
 
     B stats(String expectedStatsJson);
+
+    /**
+     * Supplies a custom validation callback that receives the deserialized route statistics and
+     * the current {@link TestContext}. The callback is invoked after the raw JSON has been
+     * obtained from the managed route MBean, allowing arbitrary, type-safe assertions against the
+     * route stats model object.
+     *
+     * @param validator BiConsumer accepting the deserialized route stats and the test context
+     * @param <R>       the route stats model type (e.g. {@code CamelRouteStats})
+     * @return this builder
+     */
+    <R> B validate(BiConsumer<R, TestContext> validator);
 }
