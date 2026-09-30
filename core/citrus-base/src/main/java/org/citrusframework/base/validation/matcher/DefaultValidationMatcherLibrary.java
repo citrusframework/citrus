@@ -19,6 +19,8 @@ package org.citrusframework.base.validation.matcher;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
+import org.citrusframework.base.validation.matcher.core.AllOfValidationMatcher;
+import org.citrusframework.base.validation.matcher.core.AnyOfValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.ContainsIgnoreCaseValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.ContainsValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.CreateVariableValidationMatcher;
@@ -41,6 +43,7 @@ import org.citrusframework.base.validation.matcher.core.StringLengthValidationMa
 import org.citrusframework.base.validation.matcher.core.TrimAllWhitespacesValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.TrimValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.UuidV4ValidationMatcher;
+import org.citrusframework.base.validation.matcher.core.NotValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.WeekdayValidationMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +61,8 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
     public DefaultValidationMatcherLibrary() {
         setName("citrusValidationMatcherLibrary");
 
+        addMember("allOf", new AllOfValidationMatcher());
+        addMember("anyOf", new AnyOfValidationMatcher());
         addMember("equalsIgnoreCase", new EqualsIgnoreCaseValidationMatcher());
         addMember("ignoreNewLine", new IgnoreNewLineValidationMatcher());
         addMember("trim", new TrimValidationMatcher());
@@ -76,6 +81,7 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
         addMember("dateRange", new DateRangeValidationMatcher());
         addMember("empty", new EmptyValidationMatcher());
         addMember("notEmpty", new NotEmptyValidationMatcher());
+        addMember("not", new NotValidationMatcher());
         addMember("null", new NullValidationMatcher());
         addMember("notNull", new NotNullValidationMatcher());
         addMember("ignore", new IgnoreValidationMatcher());

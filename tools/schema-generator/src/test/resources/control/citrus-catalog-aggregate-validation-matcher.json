@@ -138,6 +138,30 @@
       "type": "object",
       "additionalProperties": false    }
   },
+  "allOf": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "allOf",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "AllOf",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "not": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "not",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "Not",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
   "trim": {
     "kind": "testValidationMatcher",
     "version": "${citrus.version}",
@@ -304,6 +328,18 @@
       "required": [
         "value"
       ],
+      "additionalProperties": false    }
+  },
+  "anyOf": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "anyOf",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "AnyOf",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
       "additionalProperties": false    }
   },
   "containsIgnoreCase": {
