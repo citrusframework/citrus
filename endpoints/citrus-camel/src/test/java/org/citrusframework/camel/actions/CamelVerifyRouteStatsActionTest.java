@@ -28,6 +28,8 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class CamelVerifyRouteStatsActionTest extends AbstractTestNGUnitTest {
 
@@ -259,6 +261,103 @@ public class CamelVerifyRouteStatsActionTest extends AbstractTestNGUnitTest {
                 .completed(5)
                 .stats("""
                         {"exchangesFailed": 0}""")
+                .build();
+        action.execute(context);
+    }
+
+    @Test
+    public void testVerifyStatsViaBiConsumer() {
+        reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
+
+        String actualJson = """
+                {"exchangesCompleted": 5, "exchangesFailed": 2, "meanProcessingTime": 100}""";
+
+        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
+        when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
+        when(routeMBean.dumpStatsAsJSon(false)).thenReturn(actualJson);
+
+        CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route("route_1")
+                .validate((CamelRouteStats stats, org.citrusframework.context.TestContext ctx) -> {
+                    assertNotNull(stats);
+                    assertNotNull(ctx);
+                    assertEquals(stats.getExchangesCompleted(), 5L);
+                    assertEquals(stats.getExchangesFailed(), 2L);
+                    assertEquals(stats.getMeanProcessingTime(), 100L);
+                })
+                .build();
+        action.execute(context);
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testVerifyStatsViaBiConsumerFailingAssertion() {
+        reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
+
+        String actualJson = """
+                {"exchangesCompleted": 3, "exchangesFailed": 0}""";
+
+        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
+        when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
+        when(routeMBean.dumpStatsAsJSon(false)).thenReturn(actualJson);
+
+        CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route("route_1")
+                .validate((CamelRouteStats stats, org.citrusframework.context.TestContext ctx) -> {
+                    if (stats.getExchangesCompleted() != 5L) {
+                        throw new ValidationException("Expected 5 completed exchanges but got " + stats.getExchangesCompleted());
+                    }
+                })
+                .build();
+        action.execute(context);
+    }
+
+    @Test
+    public void testVerifyStatsViaBiConsumerCombinedWithCompleted() {
+        reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
+
+        String actualJson = """
+                {"exchangesCompleted": 5, "exchangesFailed": 0, "meanProcessingTime": 42}""";
+
+        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
+        when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
+        when(routeMBean.getExchangesCompleted()).thenReturn(5L);
+        when(routeMBean.dumpStatsAsJSon(false)).thenReturn(actualJson);
+
+        CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route("route_1")
+                .completed(5)
+                .validate((CamelRouteStats stats, org.citrusframework.context.TestContext ctx) -> {
+                    assertEquals(stats.getMeanProcessingTime(), 42L);
+                })
+                .build();
+        action.execute(context);
+    }
+
+    @Test
+    public void testVerifyStatsViaBiConsumerUnknownFieldsIgnored() {
+        reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
+
+        String actualJson = """
+                {"exchangesCompleted": 7, "exchangesFailed": 1, "unknownFutureField": "ignored"}""";
+
+        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
+        when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
+        when(routeMBean.dumpStatsAsJSon(false)).thenReturn(actualJson);
+
+        CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route("route_1")
+                .validate((CamelRouteStats stats, org.citrusframework.context.TestContext ctx) -> {
+                    assertEquals(stats.getExchangesCompleted(), 7L);
+                    assertEquals(stats.getExchangesFailed(), 1L);
+                })
                 .build();
         action.execute(context);
     }
