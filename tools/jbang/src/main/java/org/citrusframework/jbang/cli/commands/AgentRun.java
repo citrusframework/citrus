@@ -19,13 +19,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Stack;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,76 +58,92 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.Argument;
+import org.aesh.command.option.Option;
+import org.aesh.command.option.OptionList;
+import org.aesh.command.option.ParentCommand;
 
 import static java.util.stream.Collectors.joining;
 
-@Command(name = "run", description = "Runs tests on the agent server")
+@CommandDefinition(name = "run", description = "Runs tests on the agent server", generateHelp = true)
 public class AgentRun extends CitrusCommand {
 
-    @Parameters(description = "Path to the test file (or a github link)", arity = "0..1",
-            paramLabel = "<file>", parameterConsumer = FileConsumer.class)
-    private Path filePath; // Defined only for file path completion; the field never used
-
+    @Argument(description = "Path to the test file (or a github link)", paramLabel = "<file>")
     private String file;
 
-    @Option(names = { "--engine" }, description = "Name of the test engine that is used ti run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
+    @Option(name = "engine", description = "Name of the test engine that is used ti run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
     private String engine;
 
-    @Option(names = { "--url" }, description = "Server endpoint URL to connect to.")
+    @Option(name = "url", description = "Server endpoint URL to connect to.")
     private String url;
 
-    @Option(names = { "--port" }, description = "Server port to connect to.")
+    @Option(name = "port", description = "Server port to connect to.")
     private String port;
 
-    @Option(names = { "--polling-interval" }, defaultValue = "2000", description = "Interval used to poll for test results. Only used in asynchronous test execution mode.")
+    @Option(name = "polling-interval", defaultValue = "2000", description = "Interval used to poll for test results. Only used in asynchronous test execution mode.")
     private String pollingInterval;
 
-    @Option(names = { "--timeout" }, defaultValue = "60000", description = "Http request timeout.")
+    @Option(name = "timeout", defaultValue = "60000", description = "Http request timeout.")
     private String timeout;
 
-    @Option(names = { "--async" }, description = "Should the test engine print verbose test summary information.")
+    @Option(name = "async", hasValue = false, description = "Should the test engine print verbose test summary information.")
     private boolean async;
 
-    @Option(names = { "--background" }, description = "When enabled the command is not blocking for the test result response.")
+    @Option(name = "background", hasValue = false, description = "When enabled the command is not blocking for the test result response.")
     private boolean background;
 
-    @Option(names = { "--verbose" }, defaultValue = "true", description = "Should the test engine print verbose test summary information.")
+    @Option(name = "verbose", defaultValue = "true", description = "Should the test engine print verbose test summary information.")
     private String verbose;
 
-    @Option(names = { "--reset" }, defaultValue = "true", description = "Should the test engine reset the suite state for each run.")
+    @Option(name = "reset", defaultValue = "true", description = "Should the test engine reset the suite state for each run.")
     private String reset;
 
-    @Option(names = { "--test-jar" }, description = "Path to a Java archive that holds tests to run.")
+    @Option(name = "test-jar", description = "Path to a Java archive that holds tests to run.")
     private String testJar;
 
-    @Option(names = { "--packages" }, arity = "0..*", description = "Test package name to include in the test run.")
-    private String[] packages;
+    @OptionList(name = "packages", description = "Test package name to include in the test run.")
+    private List<String> packages;
 
-    @Option(names = { "--includes" }, arity = "0..*", description = "Includes test name pattern.")
-    private String[] includes;
+    @OptionList(name = "includes", description = "Includes test name pattern.")
+    private List<String> includes;
 
-    @Option(names = { "--modules" }, description = "Comma delimited list of additional Citrus modules that should be loaded with the agent.")
+    @Option(name = "modules", description = "Comma delimited list of additional Citrus modules that should be loaded with the agent.")
     private String modules;
 
-    @Option(names = { "--dep" }, arity = "0..*", description = "Set of additional Maven dependencies that should be loaded with the agent.")
-    private String[] dependencies;
+    @OptionList(name = "dep", description = "Set of additional Maven dependencies that should be loaded with the agent.")
+    private List<String> dependencies;
 
-    @Option(names = { "--property" }, arity = "0..*", description = "Default System property to set before the test run.")
-    private String[] properties;
+    @OptionList(name = "property", description = "Default System property to set before the test run.")
+    private List<String> properties;
 
-    @Option(names = { "--work-directory" }, description = "The working directory used by the file based test engines to load file resources from.")
+    @Option(name = "work-directory", description = "The working directory used by the file based test engines to load file resources from.")
     private String workDir;
+
+    @ParentCommand
+    private Agent parent;
+
+    public AgentRun() {
+        super(null);
+    }
 
     public AgentRun(CitrusJBangMain main) {
         super(main);
     }
 
     @Override
-    public Integer call() {
-        return runTests();
+    public CitrusJBangMain getMain() {
+        if (super.getMain() == null && parent != null) {
+            setMain(parent.getMain());
+        }
+        return super.getMain();
+    }
+
+    @Override
+    public CommandResult execute(CommandInvocation invocation) throws org.aesh.command.CommandException, InterruptedException {
+        return result(runTests());
     }
 
     private int runTests() {
@@ -394,7 +408,7 @@ public class AgentRun extends CitrusCommand {
         }
 
         if (includes != null) {
-            configuration.setIncludes(includes);
+            configuration.setIncludes(includes.toArray(String[]::new));
         }
 
         if (workDir != null) {
@@ -402,11 +416,11 @@ public class AgentRun extends CitrusCommand {
         }
 
         if (packages != null) {
-            configuration.setPackages(List.of(packages));
+            configuration.setPackages(packages);
         }
 
         if (properties != null) {
-            configuration.addDefaultProperties(Arrays.stream(properties)
+            configuration.addDefaultProperties(properties.stream()
                     .filter(p -> p.contains("="))
                     .map(p -> p.split("=", 2))
                     .collect(Collectors.toMap(p -> p[0], p -> p[1])));
@@ -420,22 +434,13 @@ public class AgentRun extends CitrusCommand {
         }
 
         if (dependencies != null) {
-            configuration.setDependencies(Arrays.stream(dependencies)
+            configuration.setDependencies(dependencies.stream()
                     .map(String::trim)
                     .filter(StringUtils::hasText)
                     .collect(Collectors.toSet()));
         }
 
         return configuration;
-    }
-
-    static class FileConsumer extends CitrusCommand.ParameterConsumer<AgentRun> {
-        @Override
-        protected void doConsumeParameters(Stack<String> args, AgentRun cmd) {
-            if (!args.isEmpty()) {
-                cmd.file = args.pop();
-            }
-        }
     }
 
     /**

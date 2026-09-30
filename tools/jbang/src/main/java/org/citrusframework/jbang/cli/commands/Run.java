@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,72 +59,88 @@ import org.citrusframework.report.TestResults;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.Arguments;
+import org.aesh.command.option.Option;
+import org.aesh.command.option.OptionList;
+import org.aesh.command.option.ParentCommand;
 
-@Command(name = "run", description = "Run as local Citrus test")
+@CommandDefinition(name = "run", description = "Run as local Citrus test", generateHelp = true)
 public class Run extends CitrusCommand {
 
-    @Option(names = { "--engine" }, description = "Name of the test engine that is used to run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
+    @Option(name = "engine", description = "Name of the test engine that is used to run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
     private String engine;
 
-    @Option(names = { "--verbose" }, defaultValue = "true", description = "Should the test engine print verbose test summary information.")
+    @Option(name = "verbose", defaultValue = "true", description = "Should the test engine print verbose test summary information.")
     private String verbose;
 
-    @Option(names = { "--reset" }, defaultValue = "true", description = "Should the test engine reset the suite state for this run.")
+    @Option(name = "reset", defaultValue = "true", description = "Should the test engine reset the suite state for this run.")
     private String reset;
 
-    @Option(names = { "--includes" }, split = ",", description = "Includes test name pattern.")
+    @OptionList(name = "includes", valueSeparator = ',', description = "Includes test name pattern.")
     private List<String> includes;
 
-    @Option(names = { "--work-directory" }, description = "The working directory used by the file based test engines to load file resources from.")
+    @Option(name = "work-directory", description = "The working directory used by the file based test engines to load file resources from.")
     private String workDir;
 
-    @Option(names = { "--repository", "--repositories" }, split = ",", description = "Set of Maven repositories that should be used to resolve dependencies.")
+    @OptionList(name = "repository", aliases = {"repositories"}, valueSeparator = ',', description = "Set of Maven repositories that should be used to resolve dependencies.")
     private List<String> repositories;
 
-    @Option(names = { "--modules" }, description = "Comma delimited list of additional Citrus modules that must be loaded to run the test.")
+    @Option(name = "modules", description = "Comma delimited list of additional Citrus modules that must be loaded to run the test.")
     private String modules;
 
-    @Option(names = { "--dep", "--dependency" }, split = ",", description = "Comma delimited list of additional Maven GAV dependencies that must be loaded to run the test.")
+    @OptionList(name = "dep", aliases = {"dependency"}, valueSeparator = ',', description = "Comma delimited list of additional Maven GAV dependencies that must be loaded to run the test.")
     private List<String> dependencies;
 
-    @Option(names = { "--offline" }, defaultValue = "false", description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
+    @Option(name = "offline", defaultValue = "false", hasValue = false, description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
     private boolean offline;
 
-    @Option(names = { "--inspect-code" }, defaultValue = "true", description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
+    @Option(name = "inspect-code", defaultValue = "true", hasValue = false, description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
     private boolean inspectCode = true;
 
-    @Option(names = { "--property", "--properties" }, split = ",", description = "Default System property to set before the test run.")
+    @OptionList(name = "property", aliases = {"properties"}, valueSeparator = ',', description = "Default System property to set before the test run.")
     private List<String> properties;
 
-    @Option(names = { "--logging" }, defaultValue = "true", description = "Can be used to turn off logging")
+    @Option(name = "logging", defaultValue = "true", hasValue = false, description = "Can be used to turn off logging")
     private boolean logging = true;
 
-    @Option(names = { "--logging-level" }, completionCandidates = LoggingSupport.LoggingLevels.class,
-            defaultValue = "info", description = "Logging level")
+    @Option(name = "logging-level", defaultValue = "info", description = "Logging level")
     private String loggingLevel = "info";
 
-    @Option(names = { "--logging-color" }, defaultValue = "true", description = "Use colored logging")
+    @Option(name = "logging-color", defaultValue = "true", hasValue = false, description = "Use colored logging")
     private boolean loggingColor = true;
 
-    @Parameters(description = "The test file(s) to run. If no files specified then application.properties is used as source for which files to run.",
-                arity = "0..9", paramLabel = "<files>", parameterConsumer = FilesConsumer.class)
-    Path[] filePaths; // Defined only for file path completion; the field never used
+    @Arguments(description = "The test file(s) to run. If no files specified then application.properties is used as source for which files to run.",
+                paramLabel = "<files>")
+    private List<String> files;
 
-    String[] files;
+    @ParentCommand
+    private CitrusJBangMain parent;
+
+    public Run() {
+        super(null);
+    }
 
     public Run(CitrusJBangMain main) {
         super(main);
     }
 
     @Override
-    public Integer call() {
-        return run();
+    public CitrusJBangMain getMain() {
+        if (super.getMain() == null) {
+            setMain(parent);
+        }
+        return super.getMain();
     }
 
-    private int run() {
+    @Override
+    public CommandResult execute(CommandInvocation invocation) throws org.aesh.command.CommandException, InterruptedException {
+        return result(run());
+    }
+
+    int run() {
         File work = new File(CitrusJBangMain.Settings.getWorkDir());
         TestReporterSettings.setReportDirectory(CitrusJBangMain.Settings.getReportDirectory());
         removeDir(work);
@@ -135,25 +150,26 @@ public class Run extends CitrusCommand {
         }
 
         // if no specific file to run then try to auto-detect
-        if (files == null || files.length == 0) {
+        if (files == null || files.isEmpty()) {
             // auto-detect test files
-            files = new File(".").list((dir, name) -> {
+            String[] detected = new File(".").list((dir, name) -> {
                 if (new File(dir, name).isDirectory()) {
                     return true;
                 }
 
                 return Arrays.stream(CitrusJBangMain.Settings.getTestSourceFileExt()).anyMatch(name::endsWith);
             });
+            files = detected != null ? new ArrayList<>(Arrays.asList(detected)) : new ArrayList<>();
         }
 
         // filter out duplicate files
-        if (files != null && files.length > 0) {
-            files = Arrays.stream(files).distinct().toArray(String[]::new);
+        if (files != null && !files.isEmpty()) {
+            files = files.stream().distinct().collect(Collectors.toList());
         }
 
         List<String> tests = new ArrayList<>();
         try {
-            resolveTests(files, tests);
+            resolveTests(files != null ? files.toArray(String[]::new) : new String[] {}, tests);
         } catch (Exception e) {
             if (Optional.ofNullable(verbose).map(Boolean::parseBoolean).orElse(false)) {
                 e.printStackTrace(System.err);
@@ -571,18 +587,6 @@ public class Run extends CitrusCommand {
             fqn = cn;
         }
         return fqn;
-    }
-
-    static class FilesConsumer extends ParameterConsumer<Run> {
-        @Override
-        protected void doConsumeParameters(Stack<String> args, Run cmd) {
-            List<String> files = new ArrayList<>();
-            while (!args.isEmpty()) {
-                String arg = args.pop();
-                files.add(arg);
-            }
-            cmd.files = files.toArray(String[]::new);
-        }
     }
 
     /**
