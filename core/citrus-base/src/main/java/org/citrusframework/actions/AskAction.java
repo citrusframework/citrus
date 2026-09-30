@@ -74,7 +74,7 @@ public class AskAction<T> extends AbstractTestAction {
         final T value;
         try {
             value = question.answeredBy(runner, context);
-        } catch (Exception | Error e) {
+        } catch (Exception | AssertionError e) {
             String detail = e.getMessage() != null ? e.getMessage() : e.toString();
             throw new CitrusRuntimeException(
                     "Failed to answer question '%s': %s".formatted(questionName, detail), e);

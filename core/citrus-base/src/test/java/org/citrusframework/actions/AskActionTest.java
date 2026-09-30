@@ -77,6 +77,20 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
     }
 
     @Test
+    public void shouldNameQuestionWhenAssertionInsideQuestionFails() {
+        Answer<String> holder = new Answer<>();
+
+        Question<String> asserting = Question.about("the order id", ctx -> {
+            throw new AssertionError("expected ORD- but was nothing");
+        });
+
+        TestCaseFailedException e = expectThrows(TestCaseFailedException.class,
+                () -> runner.run(ask(asserting).into(holder)));
+        assertTrue(e.getMessage().contains("the order id"));
+        assertTrue(e.getMessage().contains("expected ORD- but was nothing"));
+    }
+
+    @Test
     public void shouldNameQuestionWhenCauseHasNoMessage() {
         Answer<String> holder = new Answer<>();
 
