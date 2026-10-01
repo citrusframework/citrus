@@ -54,6 +54,7 @@ import org.citrusframework.jbang.cli.util.DelegatingCodeAnalyzer;
 import org.citrusframework.log.CitrusLogSettings;
 import org.citrusframework.api.main.TestEngine;
 import org.citrusframework.api.main.TestRunConfiguration;
+import org.citrusframework.message.MessageType;
 import org.citrusframework.report.TestReporter;
 import org.citrusframework.report.TestReporterSettings;
 import org.citrusframework.report.TestResults;
@@ -435,6 +436,9 @@ public class Run extends CitrusCommand {
                 printer().printErr("Failed to read Citrus application properties file '%s'".formatted(citrusApplicationProperties));
             }
         }
+
+        configuration.addDefaultProperty(CitrusSettings.DEFAULT_MESSAGE_TYPE_PROPERTY, MessageType.JSON.name(), false);
+
         return configuration;
     }
 

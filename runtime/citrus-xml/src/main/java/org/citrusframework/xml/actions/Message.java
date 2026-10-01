@@ -120,7 +120,7 @@ public class Message {
     }
 
     public String getType() {
-        return Objects.requireNonNullElse(type, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        return Objects.requireNonNullElse(type, CitrusSettings.getDefaultMessageType());
     }
 
     public void setType(String value) {

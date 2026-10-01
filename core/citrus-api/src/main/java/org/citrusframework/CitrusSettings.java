@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.validation.CustomValidatorStrategy;
 import org.slf4j.Logger;
@@ -44,9 +46,6 @@ import static org.citrusframework.api.common.TestLoader.JAVA;
 import static org.citrusframework.api.common.TestLoader.SPRING;
 import static org.citrusframework.api.common.TestLoader.YAML;
 import static org.citrusframework.message.MessageType.XML;
-
-import org.citrusframework.config.CitrusConfigProperties;
-import org.citrusframework.config.CitrusConfigProperty;
 
 @CitrusConfigProperties(prefix = "citrus", description = "Core Citrus framework settings.")
 public final class CitrusSettings {
@@ -228,10 +227,13 @@ public final class CitrusSettings {
     @CitrusConfigProperty(description = "Default message type used in message validation.", defaultValue = "XML")
     public static final String DEFAULT_MESSAGE_TYPE_PROPERTY = "citrus.default.message.type";
     public static final String DEFAULT_MESSAGE_TYPE_ENV = "CITRUS_DEFAULT_MESSAGE_TYPE";
-    public static final String DEFAULT_MESSAGE_TYPE = getPropertyEnvOrDefault(
-            DEFAULT_MESSAGE_TYPE_PROPERTY,
-            DEFAULT_MESSAGE_TYPE_ENV,
-            XML.toString());
+    public static final String DEFAULT_MESSAGE_TYPE_DEFAULT = XML.name();
+    /**
+     * @deprecated Use {@link #getDefaultMessageType()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
+    public static final String DEFAULT_MESSAGE_TYPE = getDefaultMessageType();
 
     /**
      * Flag to allow deactivation of the http message builder citrus header update. See <a href="https://github.com/citrusframework/citrus/issues/1143">ISSUE-1143</a> for details.
@@ -672,5 +674,12 @@ public final class CitrusSettings {
                         ALLOW_VALIDATION_MATCHER_OVERRIDE_DEFAULT
                 )
         );
+    }
+
+    public static String getDefaultMessageType() {
+        return getPropertyEnvOrDefault(
+                DEFAULT_MESSAGE_TYPE_PROPERTY,
+                DEFAULT_MESSAGE_TYPE_ENV,
+                DEFAULT_MESSAGE_TYPE_DEFAULT);
     }
 }

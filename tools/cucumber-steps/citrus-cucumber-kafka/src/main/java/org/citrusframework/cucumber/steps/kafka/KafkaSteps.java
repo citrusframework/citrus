@@ -68,7 +68,7 @@ public class KafkaSteps {
 
     private long timeout = KafkaSettings.getConsumerTimeout();
 
-    private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
+    private String messageType = CitrusSettings.getDefaultMessageType();
 
     @Before
     public void before(Scenario scenario) {
@@ -86,7 +86,7 @@ public class KafkaSteps {
         headers = new HashMap<>();
         body = null;
 
-        messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
+        messageType = CitrusSettings.getDefaultMessageType();
         messageKey = null;
         partition = null;
     }
