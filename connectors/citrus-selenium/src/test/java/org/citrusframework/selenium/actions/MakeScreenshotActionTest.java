@@ -66,7 +66,7 @@ public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
     public void testExecuteOutputDir() {
         when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(Resources.fromClasspath("screenshot.png").file());
 
-        context.setVariable(CitrusSettings.TEST_NAME_VARIABLE, "MyTest");
+        context.setVariable(CitrusSettings.getTestNameVariable(), "MyTest");
 
         MakeScreenshotAction action =  new MakeScreenshotAction.Builder()
                 .browser(seleniumBrowser)

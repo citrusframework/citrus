@@ -95,7 +95,7 @@ public class DefaultTypeConverter implements TypeConverter {
         if (byte[].class.isAssignableFrom(type)) {
             if (target instanceof String) {
                 try {
-                    return (T) String.valueOf(target).getBytes(CitrusSettings.CITRUS_FILE_ENCODING);
+                    return (T) String.valueOf(target).getBytes(CitrusSettings.getFileEncoding());
                 } catch (UnsupportedEncodingException e) {
                     return (T) String.valueOf(target).getBytes();
                 }
@@ -124,13 +124,13 @@ public class DefaultTypeConverter implements TypeConverter {
                 return (T) new ByteArrayInputStream((byte[]) target);
             } else if (target instanceof String) {
                 try {
-                    return (T) new ByteArrayInputStream(String.valueOf(target).getBytes(CitrusSettings.CITRUS_FILE_ENCODING));
+                    return (T) new ByteArrayInputStream(String.valueOf(target).getBytes(CitrusSettings.getFileEncoding()));
                 } catch (UnsupportedEncodingException e) {
                     return (T) new ByteArrayInputStream(String.valueOf(target).getBytes());
                 }
             } else {
                 try {
-                    return (T) new ByteArrayInputStream(target.toString().getBytes(CitrusSettings.CITRUS_FILE_ENCODING));
+                    return (T) new ByteArrayInputStream(target.toString().getBytes(CitrusSettings.getFileEncoding()));
                 } catch (UnsupportedEncodingException e) {
                     return (T) new ByteArrayInputStream(target.toString().getBytes());
                 }

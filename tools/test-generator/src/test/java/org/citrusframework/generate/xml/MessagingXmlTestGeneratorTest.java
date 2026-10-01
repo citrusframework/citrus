@@ -43,10 +43,10 @@ public class MessagingXmlTestGeneratorTest {
 
         generator.create();
 
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/SampleReqResIT.java");
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleReqResIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/org/citrusframework/SampleReqResIT.xml");
+        File xmlFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "resources/org/citrusframework/SampleReqResIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);

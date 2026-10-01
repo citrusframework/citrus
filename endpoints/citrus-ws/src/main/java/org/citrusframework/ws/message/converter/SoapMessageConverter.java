@@ -77,7 +77,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     private static final Logger logger = LoggerFactory.getLogger(SoapMessageConverter.class);
 
     /** Default payload source encoding */
-    private String charset = CitrusSettings.CITRUS_FILE_ENCODING;
+    private String charset = CitrusSettings.getFileEncoding();
 
     @Override
     public WebServiceMessage convertOutbound(final Message internalMessage,

@@ -125,8 +125,8 @@ public abstract class TestUtils {
     }
 
     public static String getTestName(TestContext context) {
-        if (context.getVariables().containsKey(CitrusSettings.TEST_NAME_VARIABLE)) {
-            return context.getVariable(CitrusSettings.TEST_NAME_VARIABLE);
+        if (context.getVariables().containsKey(CitrusSettings.getTestNameVariable())) {
+            return context.getVariable(CitrusSettings.getTestNameVariable());
         } else {
             return "";
         }
@@ -142,8 +142,8 @@ public abstract class TestUtils {
     private static Thread createWaitingThread(final Runnable runnable, TestContext context) {
         final Thread waitThread = Executors.defaultThreadFactory().newThread(runnable);
 
-        if (context.getVariables().containsKey(CitrusSettings.TEST_NAME_VARIABLE)) {
-            waitThread.setName(WAIT_THREAD_PREFIX.concat(context.getVariable(CitrusSettings.TEST_NAME_VARIABLE))
+        if (context.getVariables().containsKey(CitrusSettings.getTestNameVariable())) {
+            waitThread.setName(WAIT_THREAD_PREFIX.concat(context.getVariable(CitrusSettings.getTestNameVariable()))
                     .concat("-").concat(waitThread.getName()));
         } else {
             waitThread.setName(WAIT_THREAD_PREFIX.concat(waitThread.getName()));

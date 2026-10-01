@@ -110,7 +110,7 @@ public class SwaggerJavaTestGeneratorTest {
     }
 
     private void verifyTest(String name) throws IOException {
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/" +
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/" +
                 name + FileUtils.FILE_EXTENSION_JAVA);
         Assert.assertTrue(javaFile.exists());
 
@@ -124,7 +124,7 @@ public class SwaggerJavaTestGeneratorTest {
     private void verifyTestWithStatus(String name, String httpStatusName) throws IOException {
         verifyTest(name);
 
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/" +
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/" +
                 name + FileUtils.FILE_EXTENSION_JAVA);
         String javaContent = FileUtils.readToString(javaFile);
 

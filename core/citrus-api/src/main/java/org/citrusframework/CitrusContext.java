@@ -55,9 +55,9 @@ public interface CitrusContext extends TestListenerAware, TestActionListenerAwar
         CitrusContext context = ServiceLoader.load(CitrusContext.class).findFirst()
                 .orElseThrow(() -> new CitrusRuntimeException("No CitrusContext registered on the classpath/modulepath"));;
 
-        if (StringUtils.hasText(CitrusSettings.DEFAULT_CONFIG_CLASS)) {
+        if (StringUtils.hasText(CitrusSettings.getDefaultConfigClass())) {
             try {
-                Class<?> configClass = Class.forName(CitrusSettings.DEFAULT_CONFIG_CLASS, true, ClassLoaderHelper.getClassLoader());
+                Class<?> configClass = Class.forName(CitrusSettings.getDefaultConfigClass(), true, ClassLoaderHelper.getClassLoader());
                 context.parseConfiguration(configClass);
             } catch (ClassNotFoundException e) {
                 throw new CitrusRuntimeException("Failed to instantiate custom configuration class", e);

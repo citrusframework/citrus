@@ -63,8 +63,8 @@ public class TestContextTest extends UnitTestSupport {
         testContext.setGlobalVariables(globalVariables);
         testcase.execute(testContext);
 
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase");
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), DefaultTestCase.class.getPackage().getName());
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestNameVariable()), "MyTestCase");
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestPackageVariable()), DefaultTestCase.class.getPackage().getName());
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
         Assert.assertTrue(testContext.getVariables().containsKey("test1Var"));
@@ -80,8 +80,8 @@ public class TestContextTest extends UnitTestSupport {
         testContext.setGlobalVariables(globalVariables);
         testcase2.execute(testContext);
 
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase2");
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestNameVariable()), "MyTestCase2");
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestPackageVariable()), TestCase.class.getPackage().getName());
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
         Assert.assertTrue(testContext.getVariables().containsKey("test2Var"));

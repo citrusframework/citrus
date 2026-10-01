@@ -175,10 +175,10 @@ public class TransformAction extends AbstractTestAction {
 
         private String xmlData;
         private String xmlResourcePath;
-        private String xmlResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
+        private String xmlResourceCharset = CitrusSettings.getFileEncoding();
         private String xsltData;
         private String xsltResourcePath;
-        private String xsltResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
+        private String xsltResourceCharset = CitrusSettings.getFileEncoding();
         private String targetVariable = "transform-result";
 
         /**

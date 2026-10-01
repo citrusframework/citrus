@@ -64,8 +64,8 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
 
         if (screenshot != null) {
             String testName = "Test";
-            if (context.getVariables().containsKey(CitrusSettings.TEST_NAME_VARIABLE)) {
-                testName = context.getVariable(CitrusSettings.TEST_NAME_VARIABLE);
+            if (context.getVariables().containsKey(CitrusSettings.getTestNameVariable())) {
+                testName = context.getVariable(CitrusSettings.getTestNameVariable());
             }
 
             context.setVariable(SeleniumHeaders.SELENIUM_SCREENSHOT, testName + "_" + screenshot.getName());

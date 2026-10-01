@@ -62,7 +62,7 @@ public class BinaryMessageProcessor extends AbstractMessageProcessor {
      */
     public static final class Builder implements BinaryMessageProcessorBuilder<BinaryMessageProcessor, Builder> {
 
-        private Charset encoding = Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING);
+        private Charset encoding = Charset.forName(CitrusSettings.getFileEncoding());
 
         public static Builder toBinary() {
             return new Builder();

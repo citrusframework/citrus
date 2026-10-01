@@ -34,7 +34,7 @@ public class MailMessageConverterTest {
         assertEquals(parseCharsetFromContentType("text/plain;charset=UTF-8"), StandardCharsets.UTF_8.name());
         assertEquals(parseCharsetFromContentType("text/*; charset=ISO-8859-1"), StandardCharsets.ISO_8859_1.name());
         assertEquals(parseCharsetFromContentType("*/*;     charset=ISO-8859-1"), StandardCharsets.ISO_8859_1.name());
-        assertEquals(parseCharsetFromContentType("text/plain"), CitrusSettings.CITRUS_FILE_ENCODING);
-        assertEquals(parseCharsetFromContentType("text/plain   ;    "), CitrusSettings.CITRUS_FILE_ENCODING);
+        assertEquals(parseCharsetFromContentType("text/plain"), CitrusSettings.getFileEncoding());
+        assertEquals(parseCharsetFromContentType("text/plain   ;    "), CitrusSettings.getFileEncoding());
     }
 }

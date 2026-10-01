@@ -49,11 +49,11 @@ public class WsdlXmlTestGeneratorTest {
     }
 
     private void verifyTest(String name, String requestName, String responseName) throws IOException {
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/" +
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/" +
                 name + FileUtils.FILE_EXTENSION_JAVA);
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/org/citrusframework/" +
+        File xmlFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "resources/org/citrusframework/" +
                 name + FileUtils.FILE_EXTENSION_XML);
         Assert.assertTrue(xmlFile.exists());
 
