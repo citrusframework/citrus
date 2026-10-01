@@ -25,24 +25,26 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-public class GreaterThanValidationMatcherTest extends UnitTestSupport {
+public class LowerThanOrEqualToValidationMatcherTest extends UnitTestSupport {
 
-	private GreaterThanValidationMatcher matcher = new GreaterThanValidationMatcher();
+	private LowerThanOrEqualToValidationMatcher matcher = new LowerThanOrEqualToValidationMatcher();
 
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "3", singletonList("2"), context);
-        matcher.validate("field", "1", singletonList("-1"), context);
-        matcher.validate("field", "0.000000001", singletonList("0"), context);
-        matcher.validate("field", "0", singletonList("-0.000000001"), context);
+        matcher.validate("field", "2", singletonList("3"), context);
+        matcher.validate("field", "-1", singletonList("1"), context);
+        matcher.validate("field", "-0.000000001", singletonList("0"), context);
+        matcher.validate("field", "0", singletonList("0.000000001"), context);
+        matcher.validate("field", "2.0", singletonList("2.0"), context);
+        matcher.validate("field", "2", singletonList("2"), context);
     }
 
     @Test
     public void testValidateError() {
     	assertException("field", "NaN", singletonList("2"));
     	assertException("field", "2", singletonList("NaN"));
-    	assertException("field", "2.0", singletonList("2.0"));
-    	assertException("field", "2.0", singletonList("2.1"));
+    	assertException("field", "2.1", singletonList("2.0"));
+    	assertException("field", "3", singletonList("2"));
     }
 
     private void assertException(String fieldName, String value, List<String> control) {

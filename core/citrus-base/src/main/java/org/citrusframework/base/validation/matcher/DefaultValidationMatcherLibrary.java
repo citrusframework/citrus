@@ -29,10 +29,12 @@ import org.citrusframework.base.validation.matcher.core.DateRangeValidationMatch
 import org.citrusframework.base.validation.matcher.core.EmptyValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.EndsWithValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.EqualsIgnoreCaseValidationMatcher;
+import org.citrusframework.base.validation.matcher.core.GreaterThanOrEqualToValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.GreaterThanValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.IgnoreNewLineValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.IgnoreValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.IsNumberValidationMatcher;
+import org.citrusframework.base.validation.matcher.core.LowerThanOrEqualToValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.LowerThanValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.MatchesValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.NotEmptyValidationMatcher;
@@ -70,7 +72,9 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
         addMember("contains", new ContainsValidationMatcher());
         addMember("containsIgnoreCase", new ContainsIgnoreCaseValidationMatcher());
         addMember("greaterThan", new GreaterThanValidationMatcher());
+        addMember("greaterThanOrEqualTo", new GreaterThanOrEqualToValidationMatcher());
         addMember("lowerThan", new LowerThanValidationMatcher());
+        addMember("lowerThanOrEqualTo", new LowerThanOrEqualToValidationMatcher());
         addMember("startsWith", new StartsWithValidationMatcher());
         addMember("endsWith", new EndsWithValidationMatcher());
         addMember("isNumber", new IsNumberValidationMatcher());

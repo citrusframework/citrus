@@ -269,6 +269,26 @@ The matcher implementation will check on numeric values to be greater than a min
 <value>@greaterThan(5)@</value>
 ----
 
+[[matcher-greaterthanorequalto]]
+== greaterThanOrEqualTo()
+
+The matcher implementation will check on numeric values to be greater than or equal to a minimum value.
+
+[source,xml]
+----
+<value>@greaterThanOrEqualTo(5)@</value>
+----
+
+[[matcher-lowerthanorequalto]]
+== lowerThanOrEqualTo()
+
+This matcher checks a number to be lower than or equal to a given threshold value.
+
+[source,xml]
+----
+<value>@lowerThanOrEqualTo(5)@</value>
+----
+
 [[matcher-isweekday]]
 == isWeekday()
 

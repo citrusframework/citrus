@@ -296,6 +296,50 @@
       ],
       "additionalProperties": false    }
   },
+  "greaterThanOrEqualTo": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "greaterThanOrEqualTo",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "GreaterThanOrEqualTo",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "title": "Value",
+          "description": "The numeric value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
+  "lowerThanOrEqualTo": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "lowerThanOrEqualTo",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "LowerThanOrEqualTo",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "title": "Value",
+          "description": "The numeric value to evaluate."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false    }
+  },
   "notNull": {
     "kind": "testValidationMatcher",
     "version": "${citrus.version}",
