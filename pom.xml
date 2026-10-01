@@ -281,7 +281,6 @@
     <openapi-request-validator.json-schema-validator.version>2.0.8</openapi-request-validator.json-schema-validator.version>
     <org.openapitools.version>7.26.0</org.openapitools.version>
     <aesh.version>3.18.2</aesh.version>
-    <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.14</postgresql.version>
     <!--
       The version below is used for the protobuf-java runtime as well as for the protoc binary
