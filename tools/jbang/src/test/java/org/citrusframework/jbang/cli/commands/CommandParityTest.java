@@ -16,8 +16,11 @@
 
 package org.citrusframework.jbang.cli.commands;
 
+import java.nio.file.Path;
+
 import org.citrusframework.jbang.cli.CitrusJBangMain;
-import org.junit.jupiter.api.Assertions;
+import org.citrusframework.spi.Resources;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -74,8 +77,8 @@ public class CommandParityTest extends CommandTest {
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("completion");
 
-        Assertions.assertFalse(printer.getOutput().isBlank(), "completion script expected on printer");
-        Assertions.assertTrue(printer.getOutput().contains("citrus"), "completion script expected to mention citrus");
+        Assert.assertFalse(printer.getOutput().isBlank(), "completion script expected on printer");
+        Assert.assertTrue(printer.getOutput().contains("citrus"), "completion script expected to mention citrus");
     }
 
     @Test
@@ -83,6 +86,43 @@ public class CommandParityTest extends CommandTest {
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("ls", "--sort", "name");
 
-        Assertions.assertTrue(printer.getOutput().contains("PID"), "ls table header expected");
+        Assert.assertTrue(printer.getOutput().contains("PID"), "ls table header expected");
+    }
+
+    @Test
+    public void shouldPrintVersion() {
+        CitrusJBangMain main = createCitrusJBangMain();
+        main.execute("--version");
+
+        Assert.assertFalse(printer.getOutput().isBlank(), "version output expected");
+
+        main.execute("-V");
+
+        Assert.assertFalse(printer.getOutput().isBlank(), "version output expected");
+    }
+
+    @Test
+    public void shouldAcceptMultiValueOptions() {
+        Path source = Resources.fromClasspath("runnable/yaml-sample.citrus.it.yaml").file().toPath();
+
+        CitrusJBangMain main = createCitrusJBangMain();
+        main.execute("run", source.toString(), "--dep", "foo:bar:1.0", "--dependency", "baz:qux:2.0",
+                "--property", "parityA=1,parityB=2", "--offline");
+    }
+
+    @Test
+    public void shouldAcceptExplicitBooleanValues() {
+        Path source = Resources.fromClasspath("runnable/yaml-sample.citrus.it.yaml").file().toPath();
+
+        CitrusJBangMain main = createCitrusJBangMain();
+        main.execute("run", source.toString(), "--logging", "false", "--inspect-code", "false", "--offline");
+    }
+
+    @Test
+    public void shouldAcceptBareToggleFlags() {
+        Path source = Resources.fromClasspath("runnable/yaml-sample.citrus.it.yaml").file().toPath();
+
+        CitrusJBangMain main = createCitrusJBangMain();
+        main.execute("run", source.toString(), "--offline");
     }
 }
