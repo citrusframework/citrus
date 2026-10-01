@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.message.Message;
 import org.citrusframework.util.BehaviorNames;
 import org.citrusframework.util.StringUtils;
 
@@ -79,5 +80,27 @@ public interface Question<T> {
                 return name;
             }
         };
+    }
+
+    /**
+     * Reads a test variable, so tests need no dealing with {@link TestContext} internals.
+     * Reported as {@code variable <name>}.
+     * @param name the variable name.
+     * @param type the answer type the variable is converted to.
+     * @param <T> the answer type.
+     * @return the question.
+     */
+    static <T> Question<T> variable(String name, Class<T> type) {
+        return about("variable " + name, context -> context.getVariable(name, type));
+    }
+
+    /**
+     * Reads a stored message by name from the message store.
+     * Reported as {@code message <name>}.
+     * @param messageName the message name.
+     * @return the question.
+     */
+    static Question<Message> message(String messageName) {
+        return about("message " + messageName, context -> context.getMessageStore().getMessage(messageName));
     }
 }

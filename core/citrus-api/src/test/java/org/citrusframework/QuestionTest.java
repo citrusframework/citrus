@@ -17,9 +17,11 @@
 package org.citrusframework;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.message.MessageStore;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 
@@ -27,6 +29,7 @@ public class QuestionTest {
 
     private final TestActionRunner runner = mock(TestActionRunner.class);
     private final TestContext context = mock(TestContext.class);
+    private final MessageStore messageStore = mock(MessageStore.class);
 
     @Test
     public void shouldStayAssignableFromLambda() {
@@ -71,6 +74,29 @@ public class QuestionTest {
     public void shouldRejectMissingName() {
         assertThrows(IllegalArgumentException.class, () -> Question.about(" ", ctx -> "answer"));
         assertThrows(NullPointerException.class, () -> Question.about("the order id", null));
+    }
+
+    @Test
+    public void shouldReadVariableWithoutContextInternals() {
+        when(context.getVariable("orderId", String.class)).thenReturn("ORD-123");
+
+        Question<String> question = Question.variable("orderId", String.class);
+
+        assertEquals(question.getName(), "variable orderId");
+        assertEquals(question.answeredBy(runner, context), "ORD-123");
+    }
+
+    @Test
+    public void shouldReadMessageFromStore() {
+        org.citrusframework.message.Message message =
+                new org.citrusframework.message.DefaultMessage("ORD-123");
+        when(context.getMessageStore()).thenReturn(messageStore);
+        when(messageStore.getMessage("orders")).thenReturn(message);
+
+        Question<org.citrusframework.message.Message> question = Question.message("orders");
+
+        assertEquals(question.getName(), "message orders");
+        assertEquals(question.answeredBy(runner, context), message);
     }
 
     private static class TheOrderId implements Question<String> {

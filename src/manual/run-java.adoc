@@ -698,7 +698,8 @@ $(http().client("orders").receive().response(HttpStatus.OK)
 
 Everything is a `String`, the value cannot leave the DSL into plain Java, a value derived from several sources has no
 single named home, and the assignment is invisible in the report. A `Question<T>` is the named, reusable unit that runs
-as an ordinary reported test action and returns a typed Java value:
+as an ordinary reported test action and returns a typed Java value. This is the Screenplay question concept fitted
+into core: the injected runner is the capability a question acts through — with no Actor, Ability, or new module:
 
 [source,java]
 ----
@@ -717,6 +718,14 @@ anonymous classes are reported as `behavior`; use the pure-read form to name the
 ----
 Question<Integer> lineCount = Question.about("line count",
         ctx -> ctx.getVariable("lines", String.class).split("\n").length);
+----
+
+Two ready-made questions cover the common reads without touching `TestContext` internals:
+
+[source,java]
+----
+Question<String> orderId = Question.variable("orderId", String.class);  // reported as "variable orderId"
+Question<Message> orders = Question.message("orders");                  // reported as "message orders"
 ----
 
 Ask the question with `ask(..)`, holding the value in an `Answer<T>`:

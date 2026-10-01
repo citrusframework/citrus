@@ -85,12 +85,12 @@ public final class Answer<T> implements Supplier<T> {
      * Whether the question has been answered, including an answer of null.
      * @return true when answered.
      */
-    public boolean isAnswered() {
+    public synchronized boolean isAnswered() {
         return answered;
     }
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         if (!answered) {
             return "unanswered";
         }
