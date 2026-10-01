@@ -89,10 +89,10 @@ public class AgentRun extends CitrusCommand {
     @Option(name = "timeout", defaultValue = "60000", description = "Http request timeout.")
     String timeout;
 
-    @Option(name = "async", hasValue = false, description = "Should the test engine print verbose test summary information.")
+    @Option(name = "async", optionalValue = true, fallbackValue = "true", description = "Should the test engine print verbose test summary information.")
     boolean async;
 
-    @Option(name = "background", hasValue = false, description = "When enabled the command is not blocking for the test result response.")
+    @Option(name = "background", optionalValue = true, fallbackValue = "true", description = "When enabled the command is not blocking for the test result response.")
     boolean background;
 
     @Option(name = "verbose", defaultValue = "true", description = "Should the test engine print verbose test summary information.")

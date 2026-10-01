@@ -265,7 +265,6 @@
     <okhttp.version>5.4.0</okhttp.version>
     <org.openapitools.version>7.23.0</org.openapitools.version>
     <aesh.version>3.18.2</aesh.version>
-    <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.13</postgresql.version>
     <quarkus.platform.version>3.38.0</quarkus.platform.version>
     <quarkus.mcp-server.version>1.13.1</quarkus.mcp-server.version>

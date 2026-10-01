@@ -94,22 +94,22 @@ public class Run extends CitrusCommand {
     @OptionList(name = "dep", aliases = {"dependency"}, valueSeparator = ',', description = "Comma delimited list of additional Maven GAV dependencies that must be loaded to run the test.")
     List<String> dependencies;
 
-    @Option(name = "offline", defaultValue = "false", hasValue = false, description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
+    @Option(name = "offline", defaultValue = "false", optionalValue = true, fallbackValue = "true", description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
     boolean offline;
 
-    @Option(name = "inspect-code", defaultValue = "true", hasValue = false, description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
+    @Option(name = "inspect-code", defaultValue = "true", optionalValue = true, fallbackValue = "true", description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
     boolean inspectCode = true;
 
     @OptionList(name = "property", aliases = {"properties"}, valueSeparator = ',', description = "Default System property to set before the test run.")
     List<String> properties;
 
-    @Option(name = "logging", defaultValue = "true", hasValue = false, description = "Can be used to turn off logging")
+    @Option(name = "logging", defaultValue = "true", optionalValue = true, fallbackValue = "true", description = "Can be used to turn off logging")
     boolean logging = true;
 
     @Option(name = "logging-level", defaultValue = "info", description = "Logging level")
     String loggingLevel = "info";
 
-    @Option(name = "logging-color", defaultValue = "true", hasValue = false, description = "Use colored logging")
+    @Option(name = "logging-color", defaultValue = "true", optionalValue = true, fallbackValue = "true", description = "Use colored logging")
     boolean loggingColor = true;
 
     @Arguments(description = "The test file(s) to run. If no files specified then application.properties is used as source for which files to run.",
