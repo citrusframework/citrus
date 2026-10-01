@@ -24,6 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
+import static org.testng.Assert.assertTrue;
 
 public class QuestionTest {
 
@@ -97,6 +98,34 @@ public class QuestionTest {
 
         assertEquals(question.getName(), "message orders");
         assertEquals(question.answeredBy(runner, context), message);
+    }
+
+    @Test
+    public void shouldFailForUnknownMessage() {
+        when(context.getMessageStore()).thenReturn(messageStore);
+        when(messageStore.getMessage("ordres")).thenReturn(null);
+
+        Question<org.citrusframework.message.Message> question = Question.message("ordres");
+
+        try {
+            question.answeredBy(runner, context);
+            throw new AssertionError("Expected CitrusRuntimeException");
+        } catch (org.citrusframework.exceptions.CitrusRuntimeException e) {
+            assertTrue(e.getMessage().contains("ordres"));
+        }
+    }
+
+    @Test
+    public void shouldRejectMissingVariableInput() {
+        assertThrows(IllegalArgumentException.class, () -> Question.variable(null, String.class));
+        assertThrows(IllegalArgumentException.class, () -> Question.variable(" ", String.class));
+        assertThrows(NullPointerException.class, () -> Question.variable("orderId", null));
+    }
+
+    @Test
+    public void shouldRejectMissingMessageName() {
+        assertThrows(IllegalArgumentException.class, () -> Question.message(null));
+        assertThrows(IllegalArgumentException.class, () -> Question.message(" "));
     }
 
     private static class TheOrderId implements Question<String> {

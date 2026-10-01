@@ -30,6 +30,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
  * through an {@link Answer} holder, optionally publishing it as a test variable.
  * <p>
  * The action is reported as {@code ask: <question name>} at the position it ran.
+ * Holders are single-use: an action whose holder is already answered fails instead of
+ * overwriting it, so asking inside loops needs a fresh holder per iteration.
  */
 public class AskAction<T> extends AbstractTestAction {
 
@@ -54,7 +56,7 @@ public class AskAction<T> extends AbstractTestAction {
         this.runner = builder.runner;
         this.questionName = questionName;
 
-        if (this.questionName != null && this.holder != null) {
+        if (this.questionName != null && this.holder != null && !this.holder.isAnswered()) {
             this.holder.setQuestionName(this.questionName);
         }
     }
@@ -69,7 +71,9 @@ public class AskAction<T> extends AbstractTestAction {
             throw new CitrusRuntimeException("Missing answer holder - use into(..) to receive the answer of question '%s'".formatted(questionName));
         }
 
-        holder.setQuestionName(questionName);
+        if (!holder.isAnswered()) {
+            holder.setQuestionName(questionName);
+        }
 
         final T value;
         try {
@@ -141,6 +145,10 @@ public class AskAction<T> extends AbstractTestAction {
 
         @Override
         public AskAction<T> build() {
+            if (saveAs != null && saveAs.isBlank()) {
+                throw new IllegalArgumentException("Missing variable name to save the answer as");
+            }
+
             return new AskAction<>(this);
         }
     }
