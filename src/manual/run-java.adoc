@@ -750,7 +750,8 @@ stream code.
 The holder exists because `run(..)` returns the runner for chaining, never the built action, so a value cannot come
 back by return value without changing a core interface. `saveAs(..)` additionally publishes the value as a test
 variable, so a question feeds both plain Java and later `${...}` expressions. A `null` answer is not published:
-test contexts forbid `null` values, so the variable stays undefined. The `ask(..)` builder receives the active
+test contexts forbid `null` values, so the variable stays undefined. Holders are single-use: asking into an
+already-answered holder fails instead of overwriting it, so loops need a fresh holder per iteration. The `ask(..)` builder receives the active
 runner automatically, so asking works inside `sequential()` and inside an applied behavior with no extra wiring.
 
 A question is answered synchronously at the point of the call: it reads what the test already has, or performs a

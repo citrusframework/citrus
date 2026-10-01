@@ -185,6 +185,25 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
     }
 
     @Test
+    public void shouldNameFirstQuestionWhenHolderIsReused() {
+        Answer<String> holder = new Answer<>();
+
+        runner.run(ask(Question.about("first question", ctx -> "one")).into(holder));
+
+        TestCaseFailedException e = expectThrows(TestCaseFailedException.class,
+                () -> runner.run(ask(Question.about("second question", ctx -> "two")).into(holder)));
+        assertTrue(e.getMessage().contains("first question"));
+    }
+
+    @Test
+    public void shouldRejectBlankSaveAs() {
+        Answer<String> holder = new Answer<>();
+
+        expectThrows(IllegalArgumentException.class,
+                () -> new AskAction.Builder<String>().question(new TheOrderId()).into(holder).saveAs(" ").build());
+    }
+
+    @Test
     public void shouldRejectMissingQuestion() {
         Answer<String> holder = new Answer<>();
 

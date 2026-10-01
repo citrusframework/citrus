@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.BehaviorNames;
 import org.citrusframework.util.StringUtils;
@@ -91,16 +92,36 @@ public interface Question<T> {
      * @return the question.
      */
     static <T> Question<T> variable(String name, Class<T> type) {
+        if (!StringUtils.hasText(name)) {
+            throw new IllegalArgumentException("Missing variable name");
+        }
+
+        Objects.requireNonNull(type, "Missing variable type");
+
         return about("variable " + name, context -> context.getVariable(name, type));
     }
 
     /**
-     * Reads a stored message by name from the message store.
+     * Reads a stored message by name from the message store. A missing message fails
+     * naming it instead of answering {@code null} — the store can never hold {@code null},
+     * so {@code null} here always means "missing", never "answered null".
      * Reported as {@code message <name>}.
      * @param messageName the message name.
      * @return the question.
      */
     static Question<Message> message(String messageName) {
-        return about("message " + messageName, context -> context.getMessageStore().getMessage(messageName));
+        if (!StringUtils.hasText(messageName)) {
+            throw new IllegalArgumentException("Missing message name");
+        }
+
+        return about("message " + messageName, context -> {
+            Message message = context.getMessageStore().getMessage(messageName);
+
+            if (message == null) {
+                throw new CitrusRuntimeException("Unknown message '%s'".formatted(messageName));
+            }
+
+            return message;
+        });
     }
 }
