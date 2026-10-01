@@ -134,8 +134,8 @@ public class HttpClientSteps implements HttpSteps {
         requestHeaders = new HashMap<>();
         responseHeaders = new HashMap<>();
         requestParams = new HashMap<>();
-        requestMessageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
-        responseMessageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
+        requestMessageType = CitrusSettings.getDefaultMessageType();
+        responseMessageType = CitrusSettings.getDefaultMessageType();
         requestBody = null;
         responseBody = null;
         bodyValidationExpressions = new HashMap<>();

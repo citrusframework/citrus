@@ -136,7 +136,7 @@ public class Message {
     }
 
     public String getType() {
-        return Objects.requireNonNullElse(type, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        return Objects.requireNonNullElse(type, CitrusSettings.getDefaultMessageType());
     }
 
     @SchemaProperty(advanced = true,

@@ -113,7 +113,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
-                    configuration.getDefaultProperties().putAll(Arrays.stream(value.split(","))
+                    configuration.addDefaultProperties(Arrays.stream(value.split(","))
                             .map(keyValue -> keyValue.split("="))
                             .filter(keyValue -> StringUtils.hasText(keyValue[0]))
                             .map(keyValue -> {
