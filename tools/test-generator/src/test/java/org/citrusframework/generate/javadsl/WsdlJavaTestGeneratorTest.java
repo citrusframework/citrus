@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
  */
 public class WsdlJavaTestGeneratorTest {
 
-    private final String testDir = CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/";
+    private final String testDir = CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/";
 
     private final CleanupUtils cleanupUtils = new CleanupUtils();
 

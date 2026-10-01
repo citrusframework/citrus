@@ -94,7 +94,7 @@ public class DefaultScriptValidationContext extends DefaultValidationContext imp
     public static final class Builder implements ScriptValidationContextBuilder<DefaultScriptValidationContext, Builder> {
 
         private String validationScriptResourcePath;
-        private String validationScriptResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
+        private String validationScriptResourceCharset = CitrusSettings.getFileEncoding();
         private String validationScript = "";
         private String scriptType = ScriptTypes.GROOVY;
 

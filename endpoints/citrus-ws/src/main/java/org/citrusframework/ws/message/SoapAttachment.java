@@ -109,7 +109,7 @@ public class SoapAttachment implements Attachment, Serializable {
             soapAttachment.setDataHandler(attachment.getDataHandler());
         }
 
-        soapAttachment.setCharsetName(CitrusSettings.CITRUS_FILE_ENCODING);
+        soapAttachment.setCharsetName(CitrusSettings.getFileEncoding());
 
         return soapAttachment;
     }

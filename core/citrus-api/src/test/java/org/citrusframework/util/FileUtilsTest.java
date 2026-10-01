@@ -76,7 +76,7 @@ public class FileUtilsTest {
 
     @Test
     public void testGetCharset() {
-        assertEquals(FileUtils.getCharset("/path/to/some/file.txt").displayName(), CitrusSettings.CITRUS_FILE_ENCODING);
+        assertEquals(FileUtils.getCharset("/path/to/some/file.txt").displayName(), CitrusSettings.getFileEncoding());
         assertEquals(FileUtils.getCharset("/path/to/some/file.txt" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1"), StandardCharsets.ISO_8859_1);
     }
 

@@ -325,8 +325,8 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         fixture.setVariableDefinitions(variables);
 
         fixture.addTestAction(action(context -> {
-            assertEquals(context.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase");
-            assertEquals(context.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), DefaultTestCase.class.getPackage().getName());
+            assertEquals(context.getVariables().get(CitrusSettings.getTestNameVariable()), "MyTestCase");
+            assertEquals(context.getVariables().get(CitrusSettings.getTestPackageVariable()), DefaultTestCase.class.getPackage().getName());
             assertEquals(context.getVariable("${name}"), "Citrus");
             assertEquals(context.getVariable("${framework}"), "Citrus");
             assertEquals(context.getVariable("${hello}"), "Hello Citrus!");

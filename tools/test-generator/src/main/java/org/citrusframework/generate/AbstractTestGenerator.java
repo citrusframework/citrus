@@ -40,7 +40,7 @@ public abstract class AbstractTestGenerator<T extends TestGenerator<T>> implemen
     private String targetPackage;
 
     /** Source directory for tests */
-    private String srcDirectory = CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY;
+    private String srcDirectory = CitrusSettings.getDefaultTestSrcDirectory();
 
     /** Target unit testing framework */
     private UnitFramework framework;

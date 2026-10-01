@@ -83,7 +83,7 @@ public interface Resource {
      * @see #getInputStream()
      */
     default Reader getReader() throws IOException {
-        return getReader(Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING));
+        return getReader(Charset.forName(CitrusSettings.getFileEncoding()));
     }
 
     /**

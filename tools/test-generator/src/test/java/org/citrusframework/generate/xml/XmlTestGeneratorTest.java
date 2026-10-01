@@ -41,10 +41,10 @@ public class XmlTestGeneratorTest {
 
         generator.create();
 
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/SampleIT.java");
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/org/citrusframework/SampleIT.xml");
+        File xmlFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "resources/org/citrusframework/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
@@ -70,10 +70,10 @@ public class XmlTestGeneratorTest {
 
         generator.create();
 
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/SampleIT.java");
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/org/citrusframework/SampleIT.xml");
+        File xmlFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "resources/org/citrusframework/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
@@ -99,10 +99,10 @@ public class XmlTestGeneratorTest {
 
         generator.create();
 
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/SampleIT.java");
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/org/citrusframework/SampleIT.xml");
+        File xmlFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "resources/org/citrusframework/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
@@ -138,10 +138,10 @@ public class XmlTestGeneratorTest {
     public void testDefaultValues() throws IOException {
         TestGeneratorMain.main(new String[] {"-name", "SampleIT"});
 
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/SampleIT.java");
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/org/citrusframework/SampleIT.xml");
+        File xmlFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "resources/org/citrusframework/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);

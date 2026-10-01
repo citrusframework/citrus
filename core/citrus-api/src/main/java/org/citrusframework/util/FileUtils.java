@@ -286,7 +286,7 @@ public abstract class FileUtils {
      * @return
      */
     public static Charset getDefaultCharset() {
-        return Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING);
+        return Charset.forName(CitrusSettings.getFileEncoding());
     }
 
     /**
