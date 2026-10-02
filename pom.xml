@@ -1135,11 +1135,6 @@
         <artifactId>jackson-jaxrs-json-provider</artifactId>
         <version>${jackson.version}</version>
       </dependency>
-      <dependency>
-        <groupId>tools.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jakarta-jsonp</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
 
       <!-- JSON validation -->
       <dependency>
