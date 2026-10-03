@@ -19,21 +19,44 @@ package org.citrusframework.jbang.cli.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.ParentCommand;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.jbang.cli.Printer;
 import org.citrusframework.jbang.cli.StringPrinter;
-import picocli.CommandLine.Command;
 
-@Command(name = "stop", description = "Stop the Citrus agent service")
+@CommandDefinition(name = "stop", description = "Stop the Citrus agent service", generateHelp = true)
 public class AgentStop extends CitrusCommand {
+
+    @ParentCommand
+    Agent parent;
+
+    public AgentStop() {
+        super(null);
+    }
 
     public AgentStop(CitrusJBangMain main) {
         super(main);
     }
 
     @Override
-    public Integer call() throws Exception {
-        return stop();
+    public CitrusJBangMain getMain() {
+        if (super.getMain() == null && parent != null) {
+            setMain(parent.getMain());
+        }
+        return super.getMain();
+    }
+
+    @Override
+    public CommandResult execute(CommandInvocation invocation) throws org.aesh.command.CommandException, InterruptedException {
+        try {
+            return result(stop());
+        } catch (Exception e) {
+            printer().printErr("Failed to stop agent: %s".formatted(e.getMessage()));
+            return CommandResult.FAILURE;
+        }
     }
 
     private int stop() throws Exception {

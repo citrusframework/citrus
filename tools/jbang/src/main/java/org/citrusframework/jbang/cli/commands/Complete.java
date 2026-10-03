@@ -15,26 +15,48 @@
  */
 package org.citrusframework.jbang.cli.commands;
 
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.ParentCommand;
+import org.aesh.util.completer.ShellCompletionGenerator;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
-import picocli.AutoComplete;
-import picocli.CommandLine;
 
-@CommandLine.Command(name = "complete", description = "Generate completion script for bash/zsh")
+@CommandDefinition(name = "completion", aliases = {"complete"}, description = "Generate completion script for bash/zsh", generateHelp = true)
 public class Complete extends CitrusCommand {
+
+    @ParentCommand
+    CitrusJBangMain parent;
+
+    public Complete() {
+        super(null);
+    }
 
     public Complete(CitrusJBangMain main) {
         super(main);
     }
 
     @Override
-    public Integer call() {
-        String script = AutoComplete.bash(
-                spec.parent().name(),
-                spec.parent().commandLine());
+    public CitrusJBangMain getMain() {
+        if (super.getMain() == null) {
+            setMain(parent);
+        }
+        return super.getMain();
+    }
 
-        // not PrintWriter.println: scripts with Windows line separators fail in strange ways!
-        printer().print(script);
-        printer().print("\n");
-        return 0;
+    @Override
+    public CommandResult execute(CommandInvocation invocation) throws org.aesh.command.CommandException, InterruptedException {
+        try {
+            String script = ShellCompletionGenerator.generate(
+                    ShellCompletionGenerator.ShellType.BASH, CitrusJBangMain.class, "citrus");
+
+            // not PrintWriter.println: scripts with Windows line separators fail in strange ways!
+            printer().print(script);
+            printer().print("\n");
+            return CommandResult.SUCCESS;
+        } catch (Exception e) {
+            printer().printErr("Failed to generate completion script: %s".formatted(e.getMessage()));
+            return CommandResult.FAILURE;
+        }
     }
 }
