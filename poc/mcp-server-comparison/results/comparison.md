@@ -146,8 +146,9 @@ begins, the list row is its critical dependency.
 
 ## Scope concessions needing maintainer agreement (none granted)
 
-1. Framework-hosted test only — i.e. accepting `@QuarkusTest`/`@SpringBootTest`
-   ownership instead of ordinary-Java same-JVM start/stop. A Citrus test must survive
+1. Framework-hosted test only — not accepted: `@QuarkusTest`/`@SpringBootTest`
+   ownership instead of ordinary-Java same-JVM start/stop is off the table. Citrus
+   tests are written without framework harnesses — a Citrus test survives
    on `@CitrusSupport` + plain Java alone: the server is a test-owned field, built in
    `@BeforeEach` and stopped in `@AfterEach`, with `receive()`/`send()` asserting
    through the Citrus runner. A framework harness boots the server *around* the test
