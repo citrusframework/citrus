@@ -146,8 +146,16 @@ begins, the list row is its critical dependency.
 
 ## Scope concessions needing maintainer agreement (none granted)
 
-1. Framework-hosted test only (e.g. `@QuarkusTest`/`@SpringBootTest` ownership
-   instead of ordinary-Java same-JVM start/stop).
+1. Framework-hosted test only — i.e. accepting `@QuarkusTest`/`@SpringBootTest`
+   ownership instead of ordinary-Java same-JVM start/stop. A Citrus test must survive
+   on `@CitrusSupport` + plain Java alone: the server is a test-owned field, built in
+   `@BeforeEach` and stopped in `@AfterEach`, with `receive()`/`send()` asserting
+   through the Citrus runner. A framework harness boots the server *around* the test
+   (shared cached contexts, auto-start, framework-owned shutdown), which hides
+   lifecycle bugs and fights Citrus context management. Rule of thumb: if removing
+   the framework annotation breaks the setup, the test was proving the harness, not
+   the endpoint. (Quarkus setup stays config-declared per the DSL table above; only
+   the harness rule is common.)
 2. Shared host with named paths instead of independent A/B hosts.
 3. Subprocess-HTTP-child instead of same-JVM embedding.
 4. Upstream extension request before endpoint design changes.
