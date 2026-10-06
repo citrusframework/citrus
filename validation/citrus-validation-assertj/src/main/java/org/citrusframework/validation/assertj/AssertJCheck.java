@@ -89,7 +89,7 @@ public final class AssertJCheck {
         try {
             assertion.accept(value);
         } catch (ClassCastException e) {
-            throw new AssertionError(String.format("Expecting value '%s' of type %s to be accepted by %s",
+            throw new TypeMismatchError(String.format("Expecting value '%s' of type %s to be accepted by %s",
                     value, value.getClass().getName(), description), e);
         }
     }
@@ -102,12 +102,22 @@ public final class AssertJCheck {
         try {
             return context.getTypeConverter().convertIfNecessary(received, type);
         } catch (RuntimeException e) {
-            throw new AssertionError(String.format("Expecting value '%s' to be convertible to %s", received, type.getName()), e);
+            throw new TypeMismatchError(String.format("Expecting value '%s' to be convertible to %s", received, type.getName()), e);
         }
     }
 
     @Override
     public String toString() {
         return description;
+    }
+
+    /**
+     * Failure caused by a value that does not fit the check's type rather than by the assertion itself.
+     */
+    static final class TypeMismatchError extends AssertionError {
+
+        TypeMismatchError(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 }

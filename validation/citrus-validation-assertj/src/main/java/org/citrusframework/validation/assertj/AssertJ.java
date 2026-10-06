@@ -16,6 +16,7 @@
 
 package org.citrusframework.validation.assertj;
 
+import org.assertj.core.api.Condition;
 import org.assertj.core.api.ThrowingConsumer;
 
 /**
@@ -42,5 +43,40 @@ public final class AssertJ {
      */
     public static <T> AssertJCheck satisfies(Class<T> type, ThrowingConsumer<T> assertion) {
         return AssertJCheck.of(type, assertion);
+    }
+
+    /**
+     * Container condition that checks the current iteration index with the given assertion.
+     */
+    public static AssertJConditionExpression conditionOf(ThrowingConsumer<Integer> assertion) {
+        return new AssertJConditionExpression(AssertJCheck.of(Integer.class, assertion));
+    }
+
+    /**
+     * Container condition that checks the current iteration index with the given AssertJ condition.
+     */
+    public static AssertJConditionExpression conditionOf(Condition<?> condition) {
+        return new AssertJConditionExpression(AssertJCheck.of(condition));
+    }
+
+    /**
+     * Container condition that checks the given value with the assertion. Test variables in a String value are resolved first.
+     */
+    public static AssertJConditionExpression conditionOf(Object value, ThrowingConsumer<Object> assertion) {
+        return new AssertJConditionExpression(AssertJCheck.of(null, assertion), value);
+    }
+
+    /**
+     * Container condition that resolves test variables in the given value, converts it to the given type and checks it with the assertion.
+     */
+    public static <T> AssertJConditionExpression conditionOf(Class<T> type, Object value, ThrowingConsumer<T> assertion) {
+        return new AssertJConditionExpression(AssertJCheck.of(type, assertion), value);
+    }
+
+    /**
+     * Container condition that checks the given value with the AssertJ condition. Test variables in a String value are resolved first.
+     */
+    public static AssertJConditionExpression conditionOf(Object value, Condition<?> condition) {
+        return new AssertJConditionExpression(AssertJCheck.of(condition), value);
     }
 }
