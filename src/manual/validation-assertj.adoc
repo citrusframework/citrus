@@ -183,12 +183,345 @@ To assert on another value than the received one, give the value first and the c
 In a container condition without an explicit value the matcher receives the iteration index as a String, so start the
 chain with `asInt()`: `@assertj(asInt().isLessThan(5))@`.
 
+The link:#assertj-assertion-reference[assertion reference] below lists every assertion you can call, per type.
+
 A chain that cannot be resolved fails the validation with a message that names the problem, for instance
 `No AssertJ assertion 'isAwesome()' on StringAssert`.
 
 IMPORTANT: Container conditions in XML and YAML tests treat every validation error as `false`. A typo in an
 `@assertj()@` container condition therefore ends an `iterate` loop right away rather than failing the test. Check new
 container conditions with an `echo` in the loop body.
+
+[[assertj-assertion-reference]]
+=== Assertion reference
+
+These are the AssertJ assertions you can call in an `@assertj()@` chain, grouped by the type the chain is on.
+The list follows the matcher's rules: methods declared by AssertJ that return an assertion, take only literal
+arguments and are not deprecated (AssertJ 3.27.7). Every example in the tables passes against the shown
+received value.
+
+Placeholders: `+'text'+` is quoted text, `+5+` a whole number, `+1.5+` a decimal number, `+value+` any literal,
+and `+, …+` means more arguments of the same kind may follow.
+
+[[assertj-assertion-reference-text]]
+==== Text
+
+The chain starts here: the received value is always a String.
+
+[cols="2,5,4",options="header"]
+|===
+|Checks |Calls |Example
+
+|Equality
+|`+doesNotHaveToString('text')+` `+doesNotHaveToString('text', value, …)+` `+hasToString('text')+` `+hasToString('text', value, …)+` `+isEqualTo('text')+` `+isEqualTo('text', value, …)+` `+isEqualToIgnoringCase('text')+` `+isEqualToIgnoringNewLines('text')+` `+isEqualToIgnoringWhitespace('text')+` `+isEqualToNormalizingNewlines('text')+` `+isEqualToNormalizingPunctuationAndWhitespace('text')+` `+isEqualToNormalizingUnicode('text')+` `+isEqualToNormalizingWhitespace('text')+` `+isNotEqualTo(value)+` `+isNotEqualToIgnoringCase('text')+` `+isNotEqualToIgnoringWhitespace('text')+` `+isNotEqualToNormalizingWhitespace('text')+`
+|`+@assertj(isEqualToIgnoringCase('OK-123'))@+` on `+ok-123+` +
+`+@assertj(isEqualToNormalizingWhitespace('a b'))@+` on `+a  b+`
+
+|Null, empty & blank
+|`+isBlank()+` `+isEmpty()+` `+isNotBlank()+` `+isNotEmpty()+` `+isNotNull()+` `+isNull()+` `+isNullOrEmpty()+`
+|`+@assertj(isNotBlank())@+` on `+OK+` +
+`+@assertj(isNullOrEmpty())@+` on an empty value
+
+|Contains
+|`+contains('text', …)+` `+containsAnyOf('text', …)+` `+containsIgnoringCase('text')+` `+containsIgnoringNewLines('text', …)+` `+containsIgnoringWhitespaces('text', …)+` `+containsOnlyDigits()+` `+containsOnlyOnce('text')+` `+containsOnlyWhitespaces()+` `+containsSequence('text', …)+` `+containsSubsequence('text', …)+` `+containsWhitespaces()+` `+doesNotContain('text', …)+` `+doesNotContainAnyWhitespaces()+` `+doesNotContainIgnoringCase('text', …)+` `+doesNotContainOnlyWhitespaces()+` `+isSubstringOf('text')+`
+|`+@assertj(contains('Hello', 'Citrus'))@+` on `+Hello Citrus+` +
+`+@assertj(containsOnlyOnce('b'))@+` on `+a-b-a+`
+
+|Start & end
+|`+doesNotEndWith('text')+` `+doesNotEndWithIgnoringCase('text')+` `+doesNotEndWithWhitespaces()+` `+doesNotStartWith('text')+` `+doesNotStartWithIgnoringCase('text')+` `+doesNotStartWithWhitespaces()+` `+endsWith('text')+` `+endsWithIgnoringCase('text')+` `+startsWith('text')+` `+startsWithIgnoringCase('text')+`
+|`+@assertj(startsWith('OK').endsWith('123'))@+` on `+OK-123+` +
+`+@assertj(startsWithIgnoringCase('OK'))@+` on `+ok-123+`
+
+|Regular expressions
+|`+containsPattern('text')+` `+doesNotContainPattern('text')+` `+doesNotMatch('text')+` `+matches('text')+`
+|`+@assertj(matches('[A-Z]{3}'))@+` on `+ABC+`
+
+|Size
+|`+hasLineCount(5)+` `+hasSize(5)+` `+hasSizeBetween(5, 5)+` `+hasSizeGreaterThan(5)+` `+hasSizeGreaterThanOrEqualTo(5)+` `+hasSizeLessThan(5)+` `+hasSizeLessThanOrEqualTo(5)+`
+|`+@assertj(hasSizeBetween(1, 5))@+` on `+abc+`
+
+|Character classes & case
+|`+isAlphabetic()+` `+isAlphanumeric()+` `+isASCII()+` `+isLowerCase()+` `+isMixedCase()+` `+isPrintable()+` `+isUpperCase()+` `+isVisible()+`
+|`+@assertj(containsOnlyDigits())@+` on `+12345+` +
+`+@assertj(isUpperCase())@+` on `+ABC+`
+
+|Alphabetical order
+|`+isBetween('text', 'text')+` `+isGreaterThan('text')+` `+isGreaterThanOrEqualTo('text')+` `+isLessThan('text')+` `+isLessThanOrEqualTo('text')+` `+isStrictlyBetween('text', 'text')+`
+|`+@assertj(isBetween('a', 'c'))@+` on `+b+`
+
+|One of a set
+|`+isIn(value, …)+` `+isNotIn(value, …)+`
+|`+@assertj(isIn('OK', 'PENDING'))@+` on `+OK+`
+
+|Encoding
+|`+isBase64()+` `+isHexadecimal()+`
+|`+@assertj(isBase64())@+` on `+SGVsbG8=+` +
+`+@assertj(asBase64Decoded().hasSize(5))@+` on `+SGVsbG8=+`
+
+|Switch type
+|`+asBase64Decoded()+` `+asBoolean()+` `+asByte()+` `+asDouble()+` `+asFloat()+` `+asInt()+` `+asLong()+` `+asShort()+` `+asString()+`
+|
+
+|Failure message & description
+|`+as('text', value, …)+` `+describedAs('text', value, …)+` `+inBinary()+` `+inHexadecimal()+` `+inUnicode()+` `+overridingErrorMessage('text', value, …)+` `+withFailMessage('text', value, …)+`
+|`+@assertj(as('status').isEqualTo('OK'))@+` on `+OK+`
+|===
+
+[[assertj-assertion-reference-whole]]
+==== Whole numbers
+
+Reached with `+asInt()+` or `+asLong()+` or `+asShort()+` or `+asByte()+`. All four have the same assertions.
+
+[cols="2,5,4",options="header"]
+|===
+|Checks |Calls |Example
+
+|Equality
+|`+doesNotHaveToString('text')+` `+doesNotHaveToString('text', value, …)+` `+hasToString('text')+` `+hasToString('text', value, …)+` `+isEqualTo(5)+` `+isNotEqualTo(5)+`
+|`+@assertj(asInt().isEqualTo(7))@+` on `+7+`
+
+|Comparison & range
+|`+isBetween(5, 5)+` `+isGreaterThan(5)+` `+isGreaterThanOrEqualTo(5)+` `+isLessThan(5)+` `+isLessThanOrEqualTo(5)+` `+isStrictlyBetween(5, 5)+`
+|`+@assertj(asInt().isBetween(1, 10))@+` on `+7+` +
+`+@assertj(asLong().isGreaterThan(5))@+` on `+9999999999+`
+
+|Sign, zero & one
+|`+isNegative()+` `+isNotNegative()+` `+isNotPositive()+` `+isNotZero()+` `+isOne()+` `+isPositive()+` `+isZero()+`
+|`+@assertj(asInt().isPositive())@+` on `+7+` +
+`+@assertj(asInt().isZero())@+` on `+0+`
+
+|Parity
+|`+isEven()+` `+isOdd()+`
+|`+@assertj(asInt().isOdd())@+` on `+7+`
+
+|One of a set
+|`+isIn(value, …)+` `+isNotIn(value, …)+`
+|`+@assertj(asInt().isIn(5, 6, 7))@+` on `+7+`
+
+|Null, empty & blank
+|`+isNotNull()+` `+isNull()+`
+|
+
+|Switch type
+|`+asString()+`
+|
+
+|Failure message & description
+|`+as('text', value, …)+` `+describedAs('text', value, …)+` `+inBinary()+` `+inHexadecimal()+` `+overridingErrorMessage('text', value, …)+` `+withFailMessage('text', value, …)+`
+|
+|===
+
+[[assertj-assertion-reference-decimal]]
+==== Decimals
+
+Reached with `+asDouble()+` or `+asFloat()+`. Both have the same assertions.
+
+[cols="2,5,4",options="header"]
+|===
+|Checks |Calls |Example
+
+|Equality
+|`+doesNotHaveToString('text')+` `+doesNotHaveToString('text', value, …)+` `+hasToString('text')+` `+hasToString('text', value, …)+` `+isEqualTo(1.5)+` `+isNotEqualTo(1.5)+`
+|`+@assertj(asFloat().isEqualTo(3.5))@+` on `+3.5+`
+
+|Comparison & range
+|`+isBetween(1.5, 1.5)+` `+isGreaterThan(1.5)+` `+isGreaterThanOrEqualTo(1.5)+` `+isLessThan(1.5)+` `+isLessThanOrEqualTo(1.5)+` `+isStrictlyBetween(1.5, 1.5)+`
+|`+@assertj(asDouble().isBetween(3, 4))@+` on `+3.5+` +
+`+@assertj(asDouble().isGreaterThan(3.4))@+` on `+3.5+`
+
+|Sign, zero & one
+|`+isNegative()+` `+isNotNegative()+` `+isNotPositive()+` `+isNotZero()+` `+isOne()+` `+isPositive()+` `+isZero()+`
+|
+
+|Special values
+|`+isFinite()+` `+isInfinite()+` `+isNaN()+` `+isNotFinite()+` `+isNotInfinite()+` `+isNotNaN()+`
+|`+@assertj(asDouble().isNaN())@+` on `+NaN+` +
+`+@assertj(asDouble().isFinite())@+` on `+3.5+`
+
+|One of a set
+|`+isIn(value, …)+` `+isNotIn(value, …)+`
+|
+
+|Null, empty & blank
+|`+isNotNull()+` `+isNull()+`
+|
+
+|Switch type
+|`+asString()+`
+|
+
+|Failure message & description
+|`+as('text', value, …)+` `+describedAs('text', value, …)+` `+inBinary()+` `+inHexadecimal()+` `+overridingErrorMessage('text', value, …)+` `+withFailMessage('text', value, …)+`
+|
+|===
+
+[[assertj-assertion-reference-bool]]
+==== Boolean
+
+Reached with `+asBoolean()+`. 
+
+[cols="2,5,4",options="header"]
+|===
+|Checks |Calls |Example
+
+|True / false
+|`+isFalse()+` `+isTrue()+`
+|`+@assertj(asBoolean().isTrue())@+` on `+true+`
+
+|Equality
+|`+doesNotHaveToString('text')+` `+doesNotHaveToString('text', value, …)+` `+hasToString('text')+` `+hasToString('text', value, …)+` `+isEqualTo(true)+` `+isNotEqualTo(true)+`
+|
+
+|One of a set
+|`+isIn(value, …)+` `+isNotIn(value, …)+`
+|
+
+|Null, empty & blank
+|`+isNotNull()+` `+isNull()+`
+|
+
+|Switch type
+|`+asString()+`
+|
+
+|Failure message & description
+|`+as('text', value, …)+` `+describedAs('text', value, …)+` `+overridingErrorMessage('text', value, …)+` `+withFailMessage('text', value, …)+`
+|
+|===
+
+[[assertj-assertion-reference-list]]
+==== List
+
+Reached with `+asList()+`. Parses values such as [a, b, c] (XPath node-sets, JsonPath arrays). Elements are Strings.
+
+[cols="2,5,4",options="header"]
+|===
+|Checks |Calls |Example
+
+|Size
+|`+hasSize(5)+` `+hasSizeBetween(5, 5)+` `+hasSizeGreaterThan(5)+` `+hasSizeGreaterThanOrEqualTo(5)+` `+hasSizeLessThan(5)+` `+hasSizeLessThanOrEqualTo(5)+`
+|`+@assertj(asList().hasSize(3))@+` on `+[a, b, c]+`
+
+|Contains
+|`+contains(value, …)+` `+containsAnyOf(value, …)+` `+containsOnly(value, …)+` `+containsOnlyOnce(value, …)+` `+doesNotContain(value, …)+`
+|`+@assertj(asList().contains('b'))@+` on `+[a, b, c]+` +
+`+@assertj(asList().containsOnly('a', 'b', 'c'))@+` on `+[a, b, c]+`
+
+|Order & uniqueness
+|`+containsExactly(value, …)+` `+containsExactlyInAnyOrder(value, …)+` `+containsSequence(value, …)+` `+containsSubsequence(value, …)+` `+doesNotContainSequence(value, …)+` `+doesNotContainSubsequence(value, …)+` `+doesNotHaveDuplicates()+` `+endsWith(value, value, …)+` `+isSorted()+` `+startsWith(value, …)+`
+|`+@assertj(asList().containsExactly('a', 'b', 'c'))@+` on `+[a, b, c]+` +
+`+@assertj(asList().containsExactlyInAnyOrder('c', 'a', 'b'))@+` on `+[a, b, c]+`
+
+|Navigate to an element or the size
+|`+element(5)+` `+elements(5, …)+` `+first()+` `+last()+` `+singleElement()+` `+size()+`
+|`+@assertj(asList().first().isEqualTo('a'))@+` on `+[a, b, c]+` +
+`+@assertj(asList().element(1).isEqualTo('b'))@+` on `+[a, b, c]+`
+
+|Null, empty & blank
+|`+containsNull()+` `+containsOnlyNulls()+` `+doesNotContainNull()+` `+isEmpty()+` `+isNotEmpty()+` `+isNotNull()+` `+isNull()+` `+isNullOrEmpty()+`
+|`+@assertj(asList().isEmpty())@+` on `+[]+`
+
+|One of a set
+|`+isIn(value, …)+` `+isNotIn(value, …)+` `+isSubsetOf(value, …)+`
+|`+@assertj(asList().isSubsetOf('a', 'b', 'c'))@+` on `+[a, b]+`
+
+|Equality
+|`+doesNotHaveToString('text')+` `+doesNotHaveToString('text', value, …)+` `+hasToString('text')+` `+hasToString('text', value, …)+`
+|
+
+|Switch type
+|`+asString()+`
+|
+
+|Failure message & description
+|`+as('text', value, …)+` `+describedAs('text', value, …)+` `+inBinary()+` `+inHexadecimal()+` `+overridingErrorMessage('text', value, …)+` `+withFailMessage('text', value, …)+`
+|
+|===
+
+[[assertj-assertion-reference-map]]
+==== Map
+
+Reached with `+asMap()+`. Parses values such as {k=v, x=y}. Keys and values are Strings.
+
+[cols="2,5,4",options="header"]
+|===
+|Checks |Calls |Example
+
+|Keys
+|`+containsKey(value)+` `+containsKeys(value, …)+` `+containsOnlyKeys(value, …)+` `+doesNotContainKey(value)+` `+doesNotContainKeys(value, …)+`
+|`+@assertj(asMap().containsKeys('k', 'x'))@+` on `+{k=v, x=y}+` +
+`+@assertj(asMap().doesNotContainKey('z'))@+` on `+{k=v, x=y}+`
+
+|Values
+|`+containsValue(value)+` `+containsValues(value, …)+` `+doesNotContainValue(value)+`
+|`+@assertj(asMap().containsValue('v'))@+` on `+{k=v, x=y}+`
+
+|Entries
+|`+containsEntry(value, value)+` `+doesNotContainEntry(value, value)+`
+|`+@assertj(asMap().containsEntry('k', 'v'))@+` on `+{k=v, x=y}+`
+
+|Size
+|`+hasSize(5)+` `+hasSizeBetween(5, 5)+` `+hasSizeGreaterThan(5)+` `+hasSizeGreaterThanOrEqualTo(5)+` `+hasSizeLessThan(5)+` `+hasSizeLessThanOrEqualTo(5)+`
+|`+@assertj(asMap().hasSize(2))@+` on `+{k=v, x=y}+`
+
+|Navigate to a value or the size
+|`+extractingByKey(value)+` `+extractingByKeys(value, …)+` `+size()+` `+values()+`
+|`+@assertj(asMap().extractingByKey('k').isEqualTo('v'))@+` on `+{k=v, x=y}+` +
+`+@assertj(asMap().size().isEqualTo(2))@+` on `+{k=v, x=y}+`
+
+|Null, empty & blank
+|`+isEmpty()+` `+isNotEmpty()+` `+isNotNull()+` `+isNull()+` `+isNullOrEmpty()+`
+|
+
+|One of a set
+|`+isIn(value, …)+` `+isNotIn(value, …)+`
+|
+
+|Equality
+|`+doesNotHaveToString('text')+` `+doesNotHaveToString('text', value, …)+` `+hasToString('text')+` `+hasToString('text', value, …)+`
+|
+
+|Switch type
+|`+asString()+`
+|
+
+|Failure message & description
+|`+as('text', value, …)+` `+describedAs('text', value, …)+` `+overridingErrorMessage('text', value, …)+` `+withFailMessage('text', value, …)+`
+|
+|===
+
+Assertions that look at Java object identity, fields or hash codes (for example `+isSameAs(value)+`,
+`+hasFieldOrProperty('text')+`, `+usingRecursiveComparison()+`) also resolve, but they rarely make sense on values
+parsed from a message, so the tables leave them out.
+
+[[assertj-assertion-reference-pitfalls]]
+==== Pitfalls
+
+[cols="4,5,4",options="header"]
+|===
+|Avoid |Why |Use instead
+
+|`+@assertj(asList().contains(1))@+` on `+[1, 2]+`
+|List elements, map keys and map values are Strings, so the number `+1+` never equals `+"1"+`.
+|`+@assertj(asList().contains('1'))@+`
+
+|`+@assertj(asDouble().isCloseTo(7.0, 0.1))@+`
+|`+isCloseTo+` needs an `+Offset+` object, which a literal cannot express. The matcher reports an error.
+|`+@assertj(asDouble().isBetween(6.9, 7.1))@+`, or the Java DSL
+
+|`+@assertj(isNotEmpty().asList())@+`
+|`+asList()+` and `+asMap()+` are only allowed as the first call.
+|`+@assertj(asList().isNotEmpty())@+`
+
+|`+@assertj(isEmpty().isNotNull())@+`
+|`+isEmpty()+` returns nothing, so it ends the chain.
+|`+@assertj(isNotNull().isEmpty())@+`
+
+|`+@assertj(isLessThan(5))@+` as an `+iterate+` condition
+|The index arrives as text, and text has no `+isLessThan+` for a number. A container condition treats the error as
+`+false+`, so the loop ends at once without failing the test.
+|`+@assertj(asInt().isLessThan(5))@+`
+|===
 
 [[assertj-hamcrest-comparison]]
 === Migrating from Hamcrest
