@@ -230,6 +230,33 @@
       "type": "object",
       "additionalProperties": false    }
   },
+  "assertj": {
+    "kind": "testValidationMatcher",
+    "version": "${citrus.version}",
+    "name": "assertj",
+    "group": "citrus",
+    "module": "citrus-validation-assertj",
+    "title": "Assertj",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "expression": {
+          "type": "string",
+          "title": "Expression",
+          "description": "The AssertJ assertion chain to apply, e.g. asInt().isBetween(1, 10)."
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "The value to verify instead of the received value."
+        }
+      },
+      "required": [
+        "expression"
+      ],
+      "additionalProperties": false    }
+  },
   "equalsIgnoreCase": {
     "kind": "testValidationMatcher",
     "version": "${citrus.version}",
