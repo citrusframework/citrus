@@ -207,7 +207,7 @@ AssertJ:
 |`.expression("number:/TestRequest/Status[.='success']", satisfies(Double.class, s -> assertThat(s).isGreaterThan(0.0)))`
 
 |`.expression("node-set:/TestRequest/OrderType", hasSize(3))`
-|`.expression("node-set:/TestRequest/OrderType", satisfies(t -> assertThat(t).asList().hasSize(3)))`
+|`.expression("node-set:/TestRequest/OrderType", satisfies(List.class, t -> assertThat(t).hasSize(3)))`
 
 |`@assertThat(greaterThan(0.0))@`
 |`@assertj(asDouble().isGreaterThan(0.0))@`
