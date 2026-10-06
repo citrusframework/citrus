@@ -91,6 +91,16 @@ public class AssertJCheckTest extends UnitTestSupport {
     }
 
     @Test
+    public void shouldFailWhenConditionTypeDoesNotMatchValue() {
+        AssertJCheck check = AssertJCheck.of(new Condition<Integer>(q -> q > 5, "greater than 5"));
+
+        assertThatThrownBy(() -> check.check("7", context))
+                .isInstanceOf(AssertionError.class)
+                .hasMessageContaining("java.lang.String")
+                .hasMessageContaining("condition(greater than 5)");
+    }
+
+    @Test
     public void shouldDescribeItself() {
         assertThat(AssertJCheck.of(new Condition<>(v -> true, "ok status")))
                 .hasToString("condition(ok status)");
