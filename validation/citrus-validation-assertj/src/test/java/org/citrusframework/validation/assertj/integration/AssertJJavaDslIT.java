@@ -81,6 +81,21 @@ public class AssertJJavaDslIT extends TestNGCitrusSpringSupport implements TestA
 
     @Test
     @CitrusTest
+    public void shouldRunManualMigrationExamples() {
+        $(send(direct)
+                .message()
+                .body("<TestRequest><Error/><Status>success</Status><OrderType>a</OrderType><OrderType>b</OrderType><OrderType>c</OrderType></TestRequest>"));
+
+        $(receive(direct)
+                .message()
+                .validate(validation().xpath()
+                        .expression("/TestRequest/Error", satisfies(e -> assertThat(e).satisfiesAnyOf(v -> assertThat(v).isNull(), v -> assertThat(v).asString().isEmpty())))
+                        .expression("number:count(/TestRequest/Status[.='success'])", satisfies(Double.class, s -> assertThat(s).isGreaterThan(0.0)))
+                        .expression("node-set:/TestRequest/OrderType", satisfies(t -> assertThat(t).asList().hasSize(3)))));
+    }
+
+    @Test
+    @CitrusTest
     public void shouldReportAssertJDescriptionOnFailure() {
         $(send(direct)
                 .message()

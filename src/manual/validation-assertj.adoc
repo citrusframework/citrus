@@ -1,0 +1,220 @@
+[[assertj-message-validation]]
+== AssertJ validation
+
+AssertJ validation lets you check received values, message headers and container conditions with
+https://assertj.github.io/doc/[AssertJ] assertions. It covers the same places as the
+link:#hamcrest-message-validation[Hamcrest validation], and both modules can be used side by side.
+
+AssertJ validation is not enabled by default in your project. You need to add the validation module
+to your project as a Maven dependency.
+
+.AssertJ validation module dependency
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-validation-assertj</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+The module brings `assertj-core` with it, so your tests can use AssertJ conditions and assertions right away.
+
+[[assertj-java-dsl]]
+=== Java DSL
+
+In the Java DSL you pass an AssertJ check as the expected value of a JsonPath or XPath expression, or of a message header.
+There are two kinds of checks:
+
+* an AssertJ `Condition`, passed as it is
+* an assertion lambda, wrapped with `satisfies(...)` from `org.citrusframework.validation.assertj.AssertJ`
+
+.Java
+[source,java,indent=0]
+----
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.citrusframework.validation.assertj.AssertJ.satisfies;
+
+$(receive(direct)
+    .message()
+    .type(MessageType.JSON)
+    .header("count", satisfies(Integer.class, c -> assertThat(c).isBetween(40, 50)))
+    .validate(validation().jsonPath()
+        .expression("$.qty", satisfies(Integer.class, q -> assertThat(q).isGreaterThan(5)))
+        .expression("$.status", new Condition<String>(s -> s.startsWith("OK"), "starts with OK"))
+        .expression("$.note", satisfies(n -> assertThat(n).isNull()))));
+----
+
+`satisfies(lambda)` hands the received value to the lambda as it is. `satisfies(Type.class, lambda)` converts the value
+to the given type first, using the Citrus type converter. That is how the header `count`, which arrives as the
+String `"42"`, reaches the lambda as the Integer `42`. A value that cannot be converted fails the validation with a
+message that names the target type.
+
+TIP: Mind the type of the received value when you use a `Condition` or an untyped `satisfies(...)`. XPath values and
+message headers are usually Strings, and JsonPath reads numbers as `Long`. A `Condition<Integer>` on a JsonPath number
+therefore fails. Use `Condition<Number>` or `Condition<Long>`, or let `satisfies(Integer.class, ...)` convert the value.
+
+The validation fails as soon as an assertion throws an `AssertionError`. The validation error carries AssertJ's own
+failure description, for instance `Expecting actual: 3 to be greater than: 5`.
+
+[[assertj-junit-assertions]]
+==== JUnit assertions
+
+The lambda in `satisfies(...)` fails by throwing any `AssertionError`, not only AssertJ's. You can use the JUnit Jupiter
+`Assertions` in the very same way, so there is no need for a separate JUnit validation module.
+
+.Java
+[source,java,indent=0]
+----
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+$(receive(direct)
+    .message()
+    .header("region", satisfies(r -> assertEquals("eu", r))));
+----
+
+[[assertj-container-conditions]]
+=== Container conditions
+
+`conditionOf(...)` turns an AssertJ check into a condition for the `iterate`, `repeat`, `repeatOnError`, `conditional`
+and `waitFor` containers. The condition is `true` when the assertion holds. A failed assertion makes the condition
+`false`, which keeps the container iterating or waiting, instead of failing the test.
+
+Without an explicit value the condition checks the iteration index. With an explicit value, test variables in the
+value are resolved on every evaluation.
+
+.Java
+[source,java,indent=0]
+----
+import static org.citrusframework.validation.assertj.AssertJ.conditionOf;
+
+$(iterate()
+    .condition(conditionOf(i -> assertThat(i).isLessThan(3)))
+    .index("i")
+    .actions(echo("iteration ${i}")));
+
+$(repeat()
+    .until(conditionOf(Integer.class, "${count}", c -> assertThat(c).isEqualTo(3)))
+    .actions(...));
+
+$(waitFor()
+    .condition(conditionOf(Integer.class, "${count}", c -> assertThat(c).isEqualTo(3)))
+    .milliseconds(1000L)
+    .interval(50L));
+----
+
+When `waitFor` times out, its error message contains the last AssertJ failure description. A value that cannot be
+converted to the given type is logged as a warning and counts as `false`.
+
+[[assertj-validation-matcher]]
+=== The @assertj()@ validation matcher
+
+In YAML and XML tests you use the `@assertj()@` validation matcher. It takes a chain of AssertJ assertion calls and
+applies it to `assertThat(receivedValue)`. It works wherever validation matchers are allowed: message headers, XPath and
+JsonPath expressions, and container conditions.
+
+.YAML
+[source,yaml,indent=0,role="primary"]
+----
+actions:
+  - receive:
+      endpoint: orders
+      message:
+        type: "json"
+        headers:
+          - name: status
+            value: "@assertj(startsWith('${prefix}').endsWith('1'))@"
+          - name: count
+            value: "@assertj(asInt().isBetween(40, 50))@"
+      validate:
+        - jsonPath:
+            - expression: "$.qty"
+              value: "@assertj(asInt().isBetween(1, 10))@"
+            - expression: "$.tags"
+              value: "@assertj(asList().containsExactly('a', 'b'))@"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="helloEndpoint">
+  <message>
+    <validate>
+      <xpath expression="/Order/Status" value="@assertj(isNotBlank().startsWith('OK').endsWith('123'))@"/>
+      <xpath expression="/Order/Item" value="@assertj(asList().hasSize(3).contains('b'))@" result-type="node-set"/>
+      <xpath expression="count(/Order/Item)" value="@assertj(asDouble().isEqualTo(3))@" result-type="number"/>
+    </validate>
+  </message>
+  <header>
+    <element name="Operation" value="@assertj(isIn('sayHello', 'sayHi'))@"/>
+  </header>
+</receive>
+----
+
+The received value is always a String, so the chain starts with the AssertJ String assertions. These calls switch to
+other assertion types:
+
+[horizontal]
+`asInt()`, `asLong()`, `asShort()`, `asByte()`:: integer assertions, e.g. `asInt().isBetween(1, 10)`
+`asDouble()`, `asFloat()`:: floating point assertions, e.g. `asDouble().isGreaterThan(3)`
+`asBoolean()`:: boolean assertions, e.g. `asBoolean().isTrue()`
+`asList()`:: list assertions on values such as `[a, b, c]`, e.g. a XPath node-set or a JsonPath array
+`asMap()`:: map assertions on values such as `{key=value}`
+
+`asList()` and `asMap()` are provided by Citrus and must be the first call of the chain.
+
+Arguments are literals only: quoted text (`'OK'`, with `\'` for a quote inside the text), integers, decimals, `true`,
+`false`, `null` and test variables such as `'${prefix}'`. When an assertion method is overloaded, the matcher picks the
+variant that fits the literals best. Assertions that need objects as arguments, for example `isCloseTo(3.4, offset)`,
+cannot be written as literals and are not available in the matcher. Use the Java DSL for those.
+
+To assert on another value than the received one, give the value first and the chain second:
+
+.Spring XML
+[source,xml,indent=0]
+----
+<iterate condition="@assertj('${i}', 'asInt().isLessThan(5)')@" index="i">
+  <echo>
+    <message>index is: ${i}</message>
+  </echo>
+</iterate>
+----
+
+In a container condition without an explicit value the matcher receives the iteration index as a String, so start the
+chain with `asInt()`: `@assertj(asInt().isLessThan(5))@`.
+
+A chain that cannot be resolved fails the validation with a message that names the problem, for instance
+`No AssertJ assertion 'isAwesome()' on StringAssert`.
+
+IMPORTANT: Container conditions in XML and YAML tests treat every validation error as `false`. A typo in an
+`@assertj()@` container condition therefore ends an `iterate` loop right away rather than failing the test. Check new
+container conditions with an `echo` in the loop body.
+
+[[assertj-hamcrest-comparison]]
+=== Migrating from Hamcrest
+
+The Hamcrest example from the link:#hamcrest-message-validation[Hamcrest validation] section reads like this with
+AssertJ:
+
+[cols="1,1"]
+|===
+|Hamcrest |AssertJ
+
+|`.expression("/TestRequest/Error", anyOf(empty(), nullValue()))`
+|`.expression("/TestRequest/Error", satisfies(e -> assertThat(e).satisfiesAnyOf(v -> assertThat(v).isNull(), v -> assertThat(v).asString().isEmpty())))`
+
+|`.expression("number:/TestRequest/Status[.='success']", greaterThan(0.0))`
+|`.expression("number:/TestRequest/Status[.='success']", satisfies(Double.class, s -> assertThat(s).isGreaterThan(0.0)))`
+
+|`.expression("node-set:/TestRequest/OrderType", hasSize(3))`
+|`.expression("node-set:/TestRequest/OrderType", satisfies(t -> assertThat(t).asList().hasSize(3)))`
+
+|`@assertThat(greaterThan(0.0))@`
+|`@assertj(asDouble().isGreaterThan(0.0))@`
+
+|`@assertThat(hasSize(3))@`
+|`@assertj(asList().hasSize(3))@`
+|===
+
+The matcher name `assertThat` stays with the Hamcrest module. With both modules on the classpath, `@assertThat()@`
+uses Hamcrest and `@assertj()@` uses AssertJ.
