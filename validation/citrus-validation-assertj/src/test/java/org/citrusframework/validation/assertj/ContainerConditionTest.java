@@ -16,6 +16,7 @@
 
 package org.citrusframework.validation.assertj;
 
+import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.citrusframework.TestAction;
@@ -75,7 +76,7 @@ public class ContainerConditionTest extends UnitTestSupport implements TestActio
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
                 .condition(conditionOf(i -> assertThat(i).isEqualTo(3)))
                 .index("i")
-                .autoSleep(0L)
+                .autoSleep(Duration.ZERO)
                 .actions(() -> counting(executions), new FailAction.Builder())
                 .build();
 

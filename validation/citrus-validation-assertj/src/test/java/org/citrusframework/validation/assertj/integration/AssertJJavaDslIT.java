@@ -16,6 +16,8 @@
 
 package org.citrusframework.validation.assertj.integration;
 
+import java.util.List;
+
 import org.assertj.core.api.Condition;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
@@ -91,7 +93,7 @@ public class AssertJJavaDslIT extends TestNGCitrusSpringSupport implements TestA
                 .validate(validation().xpath()
                         .expression("/TestRequest/Error", satisfies(e -> assertThat(e).satisfiesAnyOf(v -> assertThat(v).isNull(), v -> assertThat(v).asString().isEmpty())))
                         .expression("number:count(/TestRequest/Status[.='success'])", satisfies(Double.class, s -> assertThat(s).isGreaterThan(0.0)))
-                        .expression("node-set:/TestRequest/OrderType", satisfies(t -> assertThat(t).asList().hasSize(3)))));
+                        .expression("node-set:/TestRequest/OrderType", satisfies(List.class, t -> assertThat(t).hasSize(3)))));
     }
 
     @Test
