@@ -90,7 +90,7 @@ public final class AssertJCheck {
             assertion.accept(value);
         } catch (ClassCastException e) {
             throw new TypeMismatchError(String.format("Expecting value '%s' of type %s to be accepted by %s",
-                    value, value.getClass().getName(), description), e);
+                    value, value != null ? value.getClass().getName() : "null", description), e);
         }
     }
 
