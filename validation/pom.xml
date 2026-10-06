@@ -16,6 +16,7 @@
 
   <modules>
     <module>citrus-validation-hamcrest</module>
+    <module>citrus-validation-assertj</module>
     <module>citrus-validation-json</module>
     <module>citrus-validation-yaml</module>
     <module>citrus-validation-xml</module>
