@@ -39,6 +39,29 @@ public final class AssertJCheck {
     }
 
     /**
+     * Whether the given expected value type is checked with AssertJ: an {@link AssertJCheck} or an AssertJ {@link Condition}.
+     */
+    public static boolean isSupported(Class<?> type) {
+        return type != null && (AssertJCheck.class.isAssignableFrom(type) || Condition.class.isAssignableFrom(type));
+    }
+
+    /**
+     * Turns a supported expected value into a check.
+     * @see #isSupported(Class)
+     */
+    public static AssertJCheck from(Object expected) {
+        if (expected instanceof AssertJCheck check) {
+            return check;
+        }
+
+        if (expected instanceof Condition<?> condition) {
+            return of(condition);
+        }
+
+        throw new IllegalArgumentException("Unsupported AssertJ expected value: " + expected);
+    }
+
+    /**
      * Check that verifies the received value with an AssertJ condition.
      */
     @SuppressWarnings("unchecked")
@@ -62,7 +85,13 @@ public final class AssertJCheck {
      * @throws AssertionError when the assertion fails or the value cannot be converted to the target type
      */
     public void check(Object received, TestContext context) {
-        assertion.accept(convert(received, context));
+        Object value = convert(received, context);
+        try {
+            assertion.accept(value);
+        } catch (ClassCastException e) {
+            throw new AssertionError(String.format("Expecting value '%s' of type %s to be accepted by %s",
+                    value, value.getClass().getName(), description), e);
+        }
     }
 
     private Object convert(Object received, TestContext context) {
