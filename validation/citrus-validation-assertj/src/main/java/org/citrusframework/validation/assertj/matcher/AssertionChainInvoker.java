@@ -16,6 +16,7 @@
 
 package org.citrusframework.validation.assertj.matcher;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -291,9 +292,9 @@ final class AssertionChainInvoker {
 
         if (method.isVarArgs()) {
             Class<?> component = parameters[fixed].getComponentType();
-            Object varargs = java.lang.reflect.Array.newInstance(component, arguments.size() - fixed);
+            Object varargs = Array.newInstance(component, arguments.size() - fixed);
             for (int i = fixed; i < arguments.size(); i++) {
-                java.lang.reflect.Array.set(varargs, i - fixed, coerce(arguments.get(i), component));
+                Array.set(varargs, i - fixed, coerce(arguments.get(i), component));
             }
             values[fixed] = varargs;
         }
