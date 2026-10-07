@@ -99,4 +99,14 @@ public class AssertJValidationMatcherTest extends UnitTestSupport {
                 .isInstanceOf(ValidationException.class)
                 .hasMessageContaining("unquoted argument 'OK'");
     }
+
+    @Test
+    public void shouldReportMissingExpression() {
+        AssertJValidationMatcher matcher = new AssertJValidationMatcher();
+        AssertJValidationMatcher.Parameters parameters = matcher.getParameters();
+
+        assertThatThrownBy(() -> matcher.validate("status", "OK", parameters, context))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("Missing required 'expression'");
+    }
 }

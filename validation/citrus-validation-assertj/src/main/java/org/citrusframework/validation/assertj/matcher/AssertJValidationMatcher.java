@@ -36,7 +36,11 @@ public class AssertJValidationMatcher implements ParameterizedValidationMatcher<
 
     @Override
     public void validate(String fieldName, String value, Parameters controlParameters, TestContext context) throws ValidationException {
-        String expression = controlParameters.getExpression().trim();
+        String rawExpression = controlParameters.getExpression();
+        if (rawExpression == null) {
+            throw new ValidationException("Missing required 'expression' for @assertj()@ validation matcher");
+        }
+        String expression = rawExpression.trim();
         String actual = Optional.ofNullable(controlParameters.getValue()).orElse(value);
 
         List<AssertionCall> calls = AssertionChainParser.parse(expression);
