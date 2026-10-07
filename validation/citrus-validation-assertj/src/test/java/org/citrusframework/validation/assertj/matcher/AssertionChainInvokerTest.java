@@ -135,6 +135,16 @@ public class AssertionChainInvokerTest {
                 .hasMessage("'asList' is only supported as the first call of an @assertj()@ expression");
     }
 
+    @Test
+    public void shouldRejectBareCollectionConversion() {
+        assertThatThrownBy(() -> invoke("[a]", "asList()"))
+                .isInstanceOf(ValidationException.class)
+                .hasMessage("'asList' must be followed by an AssertJ assertion, e.g. asList().hasSize(3)");
+        assertThatThrownBy(() -> invoke("{k=v}", "asMap()"))
+                .isInstanceOf(ValidationException.class)
+                .hasMessage("'asMap' must be followed by an AssertJ assertion, e.g. asMap().hasSize(3)");
+    }
+
     private static void invoke(String value, String expression) {
         AssertionChainInvoker.invoke(value, AssertionChainParser.parse(expression));
     }

@@ -98,7 +98,7 @@ public class AssertJConditionExpression implements IteratingConditionExpression,
             lastFailure = null;
             return true;
         } catch (AssertJCheck.TypeMismatchError e) {
-            logger.warn("AssertJ condition cannot be checked: {}", e.getMessage());
+            logger.debug("AssertJ condition cannot be checked: {}", e.getMessage());
             lastFailure = e.getMessage();
             return false;
         } catch (AssertionError e) {

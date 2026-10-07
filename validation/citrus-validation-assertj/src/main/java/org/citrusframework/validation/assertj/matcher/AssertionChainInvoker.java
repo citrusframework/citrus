@@ -59,6 +59,10 @@ final class AssertionChainInvoker {
      * @throws ValidationException when a call cannot be resolved to an AssertJ assertion
      */
     static void invoke(String value, List<AssertionCall> calls) {
+        if (calls.size() == 1 && isCollectionConversion(calls.get(0))) {
+            throw new ValidationException(String.format("'%s' must be followed by an AssertJ assertion, e.g. %s().hasSize(3)", calls.get(0).name(), calls.get(0).name()));
+        }
+
         Object assertion = start(value, calls.get(0));
         int first = isCollectionConversion(calls.get(0)) ? 1 : 0;
 
