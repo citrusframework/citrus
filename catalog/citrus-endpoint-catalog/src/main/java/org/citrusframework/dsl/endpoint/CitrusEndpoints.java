@@ -186,7 +186,7 @@ public abstract class CitrusEndpoints {
     }
 
     /**
-     * Creates new PlaywrightBrowser builder.
+     * Creates new PlaywrightBrowser or PlaywrightApiClient builder.
      * @return
      */
     public static PlaywrightEndpointCatalog playwright() {
