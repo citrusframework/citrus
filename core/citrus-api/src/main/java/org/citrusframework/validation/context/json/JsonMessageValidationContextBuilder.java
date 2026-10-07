@@ -23,6 +23,8 @@ import org.citrusframework.validation.context.ValidationContext;
 public interface JsonMessageValidationContextBuilder<T extends ValidationContext, B extends JsonMessageValidationContextBuilder<T, B>>
         extends MessageValidationContextBuilder<T, B>, WithExpressions<JsonPathMessageValidationContextBuilder<?, ?>> {
 
+    B strict(boolean strict);
+
     JsonPathMessageValidationContextBuilder<?, ?> jsonPath();
 
     @Deprecated
