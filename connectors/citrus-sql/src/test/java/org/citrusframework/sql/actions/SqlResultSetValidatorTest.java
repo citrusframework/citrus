@@ -176,8 +176,7 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void plainValidatorAndScriptValidationCompose() {
-        reset(jdbcTemplate, resultSetScriptValidator);
+    public void plainValidatorAndScriptValidationCompose() {        reset(jdbcTemplate, resultSetScriptValidator);
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("STATUS", "in_progress");
@@ -194,5 +193,33 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
         Assert.assertTrue(called[0], "plain validator did not run alongside script validation");
         verify(resultSetScriptValidator).validateSqlResultSet(any(List.class),
                 any(org.citrusframework.validation.context.script.ScriptValidationContext.class), eq(context));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void plainValidatorFailureSkipsScriptValidation() {
+        reset(jdbcTemplate, resultSetScriptValidator);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("STATUS", "in_progress");
+
+        when(jdbcTemplate.queryForList(DB_STMT)).thenReturn(Collections.singletonList(resultMap));
+
+        try {
+            builder.statements(Collections.singletonList(DB_STMT))
+                    .validateScript("assert true", ScriptTypes.GROOVY)
+                    .validator((resultSet, context) -> {
+                        throw new ValidationException("java boom");
+                    })
+                    .build().execute(context);
+        } catch (ValidationException e) {
+            Assert.assertEquals(e.getMessage(), "java boom");
+            verify(resultSetScriptValidator, Mockito.never()).validateSqlResultSet(any(List.class),
+                    any(org.citrusframework.validation.context.script.ScriptValidationContext.class),
+                    eq(context));
+            return;
+        }
+
+        Assert.fail("Expected the plain validator failure to surface first");
     }
 }
