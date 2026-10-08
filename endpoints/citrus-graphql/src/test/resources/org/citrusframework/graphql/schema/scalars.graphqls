@@ -1,0 +1,5 @@
+scalar DateTime
+
+extend type Query {
+  booksSince(date: DateTime!): [Book]
+}
