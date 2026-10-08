@@ -589,7 +589,8 @@ The validator receives every result row in execution order as a `List<Map<String
 Object>>`; an empty result arrives as an empty list. A `ValidationException` (or an
 `AssertionError` from your assertion library) fails the action. The Java validator
 composes with the other paths: when a script validation and control result set are
-configured as well, all of them run. For script-based validation use
+configured as well, validators run in order — plain-Java validator, script validation,
+control result set — and the first failure aborts the rest. For script-based validation use
 `SqlResultSetScriptValidator` as before — that remains the hook scripts execute through.
 
 Rows can also be asserted as typed POJOs instead of raw column maps. The
@@ -615,7 +616,9 @@ $(sql()
 
 The POJO needs a no-argument constructor and JavaBean setters for the asserted
 properties. With several rows the assertion holds when ANY row satisfies it ("the table
-contains a row like this"); when none does, the failure lists the rows seen. A row that
+contains a row like this"); when none does, the failure lists the first few rows seen.
+Reject a row with a `ValidationException` or an `AssertionError` — any other exception
+propagates as a programming error. A row that
 cannot be mapped fails loudly, naming the column, the row index and the columns present.
 To take over multi-row semantics, override `validate(List<T>, TestContext)` instead —
 the empty list still reaches that override.

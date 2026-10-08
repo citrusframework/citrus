@@ -18,8 +18,12 @@ package org.citrusframework.sql.validation;
 
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
@@ -44,18 +48,25 @@ import org.springframework.beans.BeansException;
  */
 public abstract class SqlPojoValidationCallback<T> implements SqlResultSetValidator {
 
+    private static final int MAX_ROWS_IN_MESSAGE = 5;
+
     private final Class<T> type;
 
     protected SqlPojoValidationCallback(Class<T> type) {
-        this.type = type;
+        this.type = Objects.requireNonNull(type, "type must not be null");
     }
 
     @Override
     public final void validateSqlResultSet(List<Map<String, Object>> resultSet, TestContext context) {
+        Objects.requireNonNull(resultSet, "resultSet must not be null");
         List<T> rows = new ArrayList<>(resultSet.size());
         int index = 0;
         for (Map<String, Object> row : resultSet) {
-            rows.add(mapRow(row, index, resultSet));
+            if (row == null) {
+                throw new ValidationException("Cannot map row " + index + " of "
+                        + type.getSimpleName() + ": row is null");
+            }
+            rows.add(mapRow(row, index));
             index++;
         }
         validate(rows, context);
@@ -84,21 +95,52 @@ public abstract class SqlPojoValidationCallback<T> implements SqlResultSetValida
         }
 
         throw new ValidationException("SQL POJO validation failed for " + type.getSimpleName()
-                + ": none of " + rows.size() + " row(s) satisfied the assertion; rows seen: " + seen,
+                + ": none of " + rows.size() + " row(s) satisfied the assertion; rows seen: "
+                + renderSeen(seen),
                 lastFailure);
     }
 
+    private static String renderSeen(List<String> seen) {
+        if (seen.size() <= MAX_ROWS_IN_MESSAGE) {
+            return seen.toString();
+        }
+        return seen.subList(0, MAX_ROWS_IN_MESSAGE) + " ... and " + (seen.size() - MAX_ROWS_IN_MESSAGE)
+                + " more";
+    }
+
     /**
-     * Validates a single mapped row. Throw {@link ValidationException} (or use an
-     * assertion library throwing {@link AssertionError}) to reject the row.
+     * Validates a single mapped row. Reject the row by throwing {@link ValidationException}
+     * or an {@link AssertionError} from an assertion library — both count as mismatch and
+     * move on to the next row. Any other exception propagates as a programming error,
+     * without rows-seen context.
      */
     protected abstract void validate(T row, TestContext context);
 
-    private T mapRow(Map<String, Object> row, int index, List<Map<String, Object>> resultSet) {
-        T instance = BeanUtils.instantiateClass(type);
+    private T mapRow(Map<String, Object> row, int index) {
+        final T instance;
+        try {
+            instance = BeanUtils.instantiateClass(type);
+        } catch (BeansException e) {
+            throw new ValidationException("Cannot map row " + index + ": " + type.getSimpleName()
+                    + " needs an accessible no-arg constructor", e);
+        }
         BeanWrapper beanWrapper = new BeanWrapperImpl(instance);
+        Set<String> mapped = new HashSet<>();
+        Map<String, String> mappedFrom = new HashMap<>();
         for (Map.Entry<String, Object> column : row.entrySet()) {
             String property = matchProperty(beanWrapper, column.getKey(), row, index);
+            if (!mapped.add(property)) {
+                throw new ValidationException("Duplicate mapping to property '" + property
+                        + "' (row " + index + "): columns '" + mappedFrom.get(property)
+                        + "' and '" + column.getKey() + "' of " + type.getSimpleName());
+            }
+            mappedFrom.put(property, column.getKey());
+            if (column.getValue() == null
+                    && beanWrapper.getPropertyType(property).isPrimitive()) {
+                throw new ValidationException("Cannot map NULL column '" + column.getKey()
+                        + "' (row " + index + ") to primitive property '" + property + "' of "
+                        + type.getSimpleName() + ": use a wrapper type for nullable columns");
+            }
             try {
                 beanWrapper.setPropertyValue(property, column.getValue());
             } catch (BeansException e) {
