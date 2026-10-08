@@ -1,0 +1,4 @@
+type Query {
+  book(id: ID!): Book
+  books(first: Int): [Book]
+}
