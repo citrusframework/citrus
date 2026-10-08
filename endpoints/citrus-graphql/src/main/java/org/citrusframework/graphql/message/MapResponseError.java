@@ -20,6 +20,7 @@ import java.util.Map;
 
 import graphql.ErrorClassification;
 import graphql.language.SourceLocation;
+import org.citrusframework.api.graphql.GraphQlError;
 import org.springframework.graphql.ResponseError;
 import org.springframework.graphql.execution.ErrorType;
 
@@ -69,19 +70,7 @@ public class MapResponseError implements ResponseError {
      */
     @Override
     public String getPath() {
-        StringBuilder path = new StringBuilder();
-        for (Object segment : getParsedPath()) {
-            if (segment instanceof Number index) {
-                path.append('[').append(index).append(']');
-            } else {
-                if (!path.isEmpty()) {
-                    path.append('.');
-                }
-                path.append(segment);
-            }
-        }
-
-        return path.toString();
+        return GraphQlError.formatPath(getParsedPath());
     }
 
     @Override
