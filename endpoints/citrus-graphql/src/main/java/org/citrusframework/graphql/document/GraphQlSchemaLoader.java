@@ -16,28 +16,27 @@
 package org.citrusframework.graphql.document;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import graphql.GraphQLError;
 import graphql.language.SourceLocation;
 import graphql.schema.GraphQLSchema;
-import graphql.schema.idl.SchemaParser;
-import graphql.schema.idl.TypeDefinitionRegistry;
 import graphql.schema.idl.UnExecutableSchemaGenerator;
 import graphql.schema.idl.errors.SchemaProblem;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.graphql.execution.GraphQlSource;
 
 /**
  * Loads a GraphQL schema from one or more SDL resources for validating operations. The resources are
- * merged into one schema (so types and type extensions may be spread across files) and built without
- * any runtime wiring: the schema can validate documents but never execute them. Custom scalars get a
- * placeholder implementation that accepts any literal.
+ * merged by Spring GraphQL's {@link GraphQlSource} schema builder (so types and type extensions may be
+ * spread across files) and the schema is created without any runtime wiring: it can validate
+ * documents but never execute them. Custom scalars get a placeholder implementation that accepts any
+ * literal.
  * <p>
  * The schema is built lazily on first access and cached; concurrent first calls build it once.
  */
@@ -79,33 +78,47 @@ public class GraphQlSchemaLoader {
     }
 
     private GraphQLSchema load() {
-        TypeDefinitionRegistry registry = new TypeDefinitionRegistry();
-        for (String resourcePath : resourcePaths) {
-            TypeDefinitionRegistry parsed = parse(resourcePath);
-            try {
-                registry.merge(parsed);
-            } catch (SchemaProblem e) {
-                throw new CitrusRuntimeException("Invalid GraphQL schema '%s': %s".formatted(resourcePath, describe(e)), e);
-            }
-        }
+        org.springframework.core.io.Resource[] schemaResources = resourcePaths.stream()
+                .map(GraphQlSchemaLoader::read)
+                .toArray(org.springframework.core.io.Resource[]::new);
 
         try {
-            return UnExecutableSchemaGenerator.makeUnExecutableSchema(registry);
+            return GraphQlSource.schemaResourceBuilder()
+                    .schemaResources(schemaResources)
+                    .schemaFactory((registry, wiring) -> UnExecutableSchemaGenerator.makeUnExecutableSchema(registry))
+                    .build()
+                    .schema();
         } catch (SchemaProblem e) {
             throw new CitrusRuntimeException("Invalid GraphQL schema built from %s: %s".formatted(resourcePaths, describe(e)), e);
+        } catch (IllegalStateException e) {
+            if (e.getCause() instanceof SchemaProblem problem) {
+                throw new CitrusRuntimeException("Invalid GraphQL schema '%s': %s".formatted(failedResource(e), describe(problem)), e);
+            }
+
+            throw e;
         }
     }
 
-    private static TypeDefinitionRegistry parse(String resourcePath) {
+    /**
+     * Spring GraphQL reports a parse failure with the resource description in the exception message;
+     * the description of every resource is its Citrus resource path.
+     */
+    private String failedResource(IllegalStateException e) {
+        String message = String.valueOf(e.getMessage());
+        return resourcePaths.stream()
+                .filter(message::contains)
+                .findFirst()
+                .orElse(String.join(", ", resourcePaths));
+    }
+
+    private static org.springframework.core.io.Resource read(String resourcePath) {
         Resource resource = Resources.create(resourcePath);
         if (!resource.exists()) {
             throw new CitrusRuntimeException("GraphQL schema resource '%s' does not exist".formatted(resourcePath));
         }
 
-        try (Reader reader = resource.getReader(UTF_8)) {
-            return new SchemaParser().parse(reader);
-        } catch (SchemaProblem e) {
-            throw new CitrusRuntimeException("Invalid GraphQL schema '%s': %s".formatted(resourcePath, describe(e)), e);
+        try (InputStream inputStream = resource.getInputStream()) {
+            return new ByteArrayResource(inputStream.readAllBytes(), resourcePath);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read GraphQL schema resource '%s'".formatted(resourcePath), e);
         }
