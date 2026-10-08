@@ -36,7 +36,6 @@ import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.ArgumentCaptor;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.BeforeMethod;

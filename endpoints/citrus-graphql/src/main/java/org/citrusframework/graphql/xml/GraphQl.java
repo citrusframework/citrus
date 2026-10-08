@@ -94,14 +94,14 @@ public class GraphQl implements TestActionBuilder<TestAction>, ReferenceResolver
             if (request.query.file != null) {
                 requestBuilder.queryResource(request.query.file);
             } else {
-                requestBuilder.query(request.query.value.trim());
+                requestBuilder.query(trim(request.query.value));
             }
         }
         if (request.operationName != null) {
             requestBuilder.operationName(request.operationName);
         }
         if (request.variables != null) {
-            requestBuilder.variables(request.variables.trim());
+            requestBuilder.variables(trim(request.variables));
         }
         request.getVariableList().forEach(variable -> requestBuilder.variable(variable.name, variable.value));
         if ("GET".equalsIgnoreCase(request.method)) {
@@ -145,7 +145,7 @@ public class GraphQl implements TestActionBuilder<TestAction>, ReferenceResolver
             if (data.path != null) {
                 responseBuilder.data(data.path, data.value);
             } else {
-                responseBuilder.data(data.json.trim());
+                responseBuilder.data(trim(data.json));
             }
         });
         if (response.expectErrors != null) {
@@ -173,10 +173,10 @@ public class GraphQl implements TestActionBuilder<TestAction>, ReferenceResolver
             requestBuilder.operationName(request.operationName);
         }
         if (request.query != null) {
-            requestBuilder.query(request.query.trim());
+            requestBuilder.query(trim(request.query));
         }
         if (request.variables != null) {
-            requestBuilder.variables(request.variables.trim());
+            requestBuilder.variables(trim(request.variables));
         }
         request.getVariableList().forEach(variable -> requestBuilder.variable(variable.name, variable.value));
         if (request.strict != null) {
@@ -197,7 +197,7 @@ public class GraphQl implements TestActionBuilder<TestAction>, ReferenceResolver
         responseBuilder.description(description);
 
         if (response.data != null) {
-            responseBuilder.data(response.data.trim());
+            responseBuilder.data(trim(response.data));
         }
         response.getErrorList().forEach(error -> responseBuilder.error(error.toGraphQlError()));
         if (response.strict != null) {
@@ -283,6 +283,10 @@ public class GraphQl implements TestActionBuilder<TestAction>, ReferenceResolver
         }
 
         return receive;
+    }
+
+    private static String trim(String value) {
+        return value == null ? null : value.trim();
     }
 
     private GraphQlClientActionBuilder asClientBuilder() {
