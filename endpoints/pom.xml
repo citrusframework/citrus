@@ -18,6 +18,7 @@
     <module>citrus-spring-integration</module>
     <module>citrus-camel</module>
     <module>citrus-ftp</module>
+    <module>citrus-graphql</module>
     <module>citrus-http</module>
     <module>citrus-jms</module>
     <module>citrus-jmx</module>
