@@ -104,6 +104,13 @@ public class GraphQlRequestValidationTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void shouldValidateEffectiveOperationNameOfSingleOperation() {
+        Message message = request("{\"query\":\"mutation AddBook { addBook { id } }\"}");
+
+        validate(message, GraphQlMessageValidationContext.Builder.request().operationName("AddBook").build());
+    }
+
+    @Test
     public void shouldCompareQueriesIgnoringFormattingWhenStrict() {
         Message message = request("{\"query\":\"query Book($id:ID!){book(id:$id){title}}\"}");
 

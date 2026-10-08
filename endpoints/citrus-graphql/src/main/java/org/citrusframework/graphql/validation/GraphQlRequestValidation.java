@@ -63,7 +63,7 @@ final class GraphQlRequestValidation {
         }
 
         if (validationContext.getOperationName() != null) {
-            ValidationUtils.validateValues(request.getOperationName(),
+            ValidationUtils.validateValues(effectiveOperationName(request),
                     context.replaceDynamicContentInString(validationContext.getOperationName()), "operationName", context);
         }
 
@@ -73,6 +73,22 @@ final class GraphQlRequestValidation {
         }
 
         validateVariables(request.getVariables(), validationContext, context);
+    }
+
+    /**
+     * The operation the request executes: the given operation name, or the name of the document's
+     * single operation (the value of the operation name header).
+     */
+    private static String effectiveOperationName(GraphQlRequest request) {
+        if (request.getOperationName() != null) {
+            return request.getOperationName();
+        }
+
+        try {
+            return GraphQlDocuments.selectOperation(GraphQlDocuments.parse(request.getDocument()), null).name();
+        } catch (ValidationException e) {
+            return null;
+        }
     }
 
     private static void validateQuery(String actual, String expected, boolean strict, TestContext context) {
