@@ -95,6 +95,14 @@ public class GraphQlClientActionBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void shouldKeepAcceptHeaderSetOnMessage() {
+        var builder = graphql().client(client).send().query("{ a }");
+        builder.message().accept("application/json");
+
+        assertThat(send(builder).getAccept()).isEqualTo("application/json");
+    }
+
+    @Test
     public void shouldReadQueryFromResource() {
         HttpMessage sent = send(graphql().client(client).send()
                 .queryResource("classpath:org/citrusframework/graphql/actions/book.graphql")
