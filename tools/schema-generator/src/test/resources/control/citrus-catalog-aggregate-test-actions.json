@@ -1841,6 +1841,8 @@
         },
         "http": {
         },
+"graphql": {
+        },
         "jms": {
         },
         "kafka": {
@@ -2404,6 +2406,556 @@
               },
               "required": [
                 "http"
+              ]
+            },{
+              "type": "object",
+              "properties": {
+                "graphql": {
+                  "type": "object",
+                  "properties": {
+                    "client": {
+                    },
+                    "server": {
+                    }
+                  },
+                  "additionalProperties": false,
+                  "anyOf": [
+                    {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "client": {
+                              "type": "object",
+                              "properties": {
+                                "authentication": {
+                                  "type": "string",
+                                  "title": "Authentication",
+                                  "description": "Use given authentication mechanism.",
+                                  "$comment": "group:security"
+                                },
+                                "binaryMediaTypes": {
+                                  "title": "BinaryMediaTypes",
+                                  "description": "Sets the list of binary media types.",
+                                  "$comment": "group:advanced",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "title": "BinaryMediaTypes",
+                                    "description": "Sets the list of binary media types.",
+                                    "$comment": "group:advanced"
+                                  }
+                                },
+                                "charset": {
+                                  "type": "string",
+                                  "title": "Charset",
+                                  "description": "The default charset.",
+                                  "$comment": "group:advanced"
+                                },
+                                "contentType": {
+                                  "type": "string",
+                                  "title": "ContentType",
+                                  "description": "Sets the default content type header set for each request.",
+                                  "$comment": "group:advanced"
+                                },
+                                "correlator": {
+                                  "type": "string",
+                                  "title": "Correlator",
+                                  "description": "Sets the message correlator.",
+                                  "$comment": "group:advanced"
+                                },
+                                "defaultAcceptHeader": {
+                                  "type": "boolean",
+                                  "title": "DefaultAcceptHeader",
+                                  "description": "When enabled the client adds the default accept header to requests.",
+                                  "$comment": "group:advanced"
+                                },
+                                "disableRedirectHandling": {
+                                  "type": "boolean",
+                                  "title": "DisableRedirectHandling",
+                                  "description": "Disables the redirect handling for this client.",
+                                  "$comment": "group:advanced"
+                                },
+                                "endpointResolver": {
+                                  "type": "string",
+                                  "title": "EndpointResolver",
+                                  "description": "Sets the endpoint URI resolver.",
+                                  "$comment": "group:advanced"
+                                },
+                                "errorHandler": {
+                                  "type": "string",
+                                  "title": "ErrorHandler",
+                                  "description": "Sets a custom error handler.",
+                                  "$comment": "group:errorHandling"
+                                },
+                                "errorHandlingStrategy": {
+                                  "type": "string",
+                                  "title": "ErrorHandlingStrategy",
+                                  "description": "Sets the error handling strategy.",
+                                  "$comment": "group:errorHandling"
+                                },
+                                "handleCookies": {
+                                  "type": "boolean",
+                                  "title": "HandleCookies",
+                                  "description": "When enabled the client handles cookies.",
+                                  "$comment": "group:advanced"
+                                },
+                                "headerMapper": {
+                                  "type": "string",
+                                  "title": "HeaderMapper",
+                                  "description": "Sets a custom header mapper bean reference.",
+                                  "$comment": "group:advanced"
+                                },
+                                "interceptor": {
+                                  "type": "string",
+                                  "title": "Interceptor",
+                                  "description": "Sets a client interceptor.",
+                                  "$comment": "group:intercept"
+                                },
+                                "interceptors": {
+                                  "title": "Interceptors",
+                                  "description": "Sets the list of client interceptor bean references.",
+                                  "$comment": "group:intercept",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "title": "Interceptors",
+                                    "description": "Sets the list of client interceptor bean references.",
+                                    "$comment": "group:intercept"
+                                  }
+                                },
+                                "messageConverter": {
+                                  "type": "string",
+                                  "title": "MessageConverter",
+                                  "description": "Bean reference to a message converter.",
+                                  "$comment": "group:advanced"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "Name",
+                                  "description": "The name of the endpoint"
+                                },
+                                "path": {
+                                  "type": "string",
+                                  "title": "Path",
+                                  "description": "The GraphQL path appended to the request URL. Defaults to /graphql unless the request URL has a path."
+                                },
+                                "pollingInterval": {
+                                  "type": "integer",
+                                  "title": "PollingInterval",
+                                  "description": "Sets the polling interval when consuming messages.",
+                                  "$comment": "group:advanced"
+                                },
+                                "requestFactory": {
+                                  "type": "string",
+                                  "title": "RequestFactory",
+                                  "description": "Reference to a request factory.",
+                                  "$comment": "group:advanced"
+                                },
+                                "requestMethod": {
+                                  "type": "string",
+                                  "enum": [
+                                    "GET",
+                                    "HEAD",
+                                    "POST",
+                                    "PUT",
+                                    "PATCH",
+                                    "DELETE",
+                                    "OPTIONS",
+                                    "TRACE"
+                                  ],
+                                  "title": "RequestMethod",
+                                  "description": "The default request method to use"
+                                },
+                                "requestUrl": {
+                                  "type": "string",
+                                  "title": "RequestUrl",
+                                  "description": "Sets the Http client request URL."
+                                },
+                                "restTemplate": {
+                                  "type": "string",
+                                  "title": "RestTemplate",
+                                  "description": "The reference to a REST template bean.",
+                                  "$comment": "group:advanced"
+                                },
+                                "schema": {
+                                  "title": "Schema",
+                                  "description": "The SDL schema resources used to validate GraphQL documents.",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "title": "Schema",
+                                    "description": "The SDL schema resources used to validate GraphQL documents."
+                                  }
+                                },
+                                "securedConnection": {
+                                  "type": "string",
+                                  "title": "SecuredConnection",
+                                  "description": "Secure the connection with given security mechanism.",
+                                  "$comment": "group:security"
+                                },
+                                "strict": {
+                                  "type": "boolean",
+                                  "title": "Strict",
+                                  "description": "Enables or disables GraphQL document and response checks.",
+                                  "default": true                                },
+                                "timeout": {
+                                  "type": "integer",
+                                  "title": "Timeout",
+                                  "description": "The Http request timeout while waiting for a response",
+                                  "default": 5000
+                                }
+                              },
+                              "additionalProperties": false,
+                              "title": "Client",
+                              "description": "Sets the GraphQL client endpoint."
+                            }
+                          },
+                          "required": [
+                            "client"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "server": {
+                              "type": "object",
+                              "properties": {
+                                "authentication": {
+                                  "type": "string",
+                                  "title": "Authentication",
+                                  "description": "Use given authentication mechanism for all request paths.",
+                                  "$comment": "group:security"
+                                },
+                                "autoStart": {
+                                  "type": "boolean",
+                                  "title": "AutoStart",
+                                  "description": "When enabled the server is automatically started after creation."
+                                },
+                                "binaryMediaTypes": {
+                                  "title": "BinaryMediaTypes",
+                                  "description": "List of supported media types on this server.",
+                                  "$comment": "group:advanced",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "title": "BinaryMediaTypes",
+                                    "description": "List of supported media types on this server.",
+                                    "$comment": "group:advanced"
+                                  }
+                                },
+                                "connector": {
+                                  "type": "string",
+                                  "title": "Connector",
+                                  "description": "Add a connector to this server.",
+                                  "$comment": "group:servlet"
+                                },
+                                "connectors": {
+                                  "title": "Connectors",
+                                  "description": "Sets a list of connectors for this server.",
+                                  "$comment": "group:servlet",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "title": "Connectors",
+                                    "description": "Sets a list of connectors for this server.",
+                                    "$comment": "group:servlet"
+                                  }
+                                },
+                                "contextConfigLocation": {
+                                  "type": "string",
+                                  "title": "ContextConfigLocation",
+                                  "description": "Sets the Spring context configuration loaded for this Http server.",
+                                  "$comment": "group:advanced"
+                                },
+                                "contextPath": {
+                                  "type": "string",
+                                  "title": "ContextPath",
+                                  "description": "Sets the context path on this server.",
+                                  "$comment": "group:servlet"
+                                },
+                                "debugLogging": {
+                                  "type": "boolean",
+                                  "title": "DebugLogging",
+                                  "description": "When enabled the server prints debug logging output.",
+                                  "$comment": "group:advanced"
+                                },
+                                "defaultStatus": {
+                                  "type": "string",
+                                  "enum": [
+                                    "CONTINUE",
+                                    "SWITCHING_PROTOCOLS",
+                                    "PROCESSING",
+                                    "EARLY_HINTS",
+                                    "OK",
+                                    "CREATED",
+                                    "ACCEPTED",
+                                    "NON_AUTHORITATIVE_INFORMATION",
+                                    "NO_CONTENT",
+                                    "RESET_CONTENT",
+                                    "PARTIAL_CONTENT",
+                                    "MULTI_STATUS",
+                                    "ALREADY_REPORTED",
+                                    "IM_USED",
+                                    "MULTIPLE_CHOICES",
+                                    "MOVED_PERMANENTLY",
+                                    "FOUND",
+                                    "SEE_OTHER",
+                                    "NOT_MODIFIED",
+                                    "TEMPORARY_REDIRECT",
+                                    "PERMANENT_REDIRECT",
+                                    "BAD_REQUEST",
+                                    "UNAUTHORIZED",
+                                    "PAYMENT_REQUIRED",
+                                    "FORBIDDEN",
+                                    "NOT_FOUND",
+                                    "METHOD_NOT_ALLOWED",
+                                    "NOT_ACCEPTABLE",
+                                    "PROXY_AUTHENTICATION_REQUIRED",
+                                    "REQUEST_TIMEOUT",
+                                    "CONFLICT",
+                                    "GONE",
+                                    "LENGTH_REQUIRED",
+                                    "PRECONDITION_FAILED",
+                                    "CONTENT_TOO_LARGE",
+                                    "PAYLOAD_TOO_LARGE",
+                                    "URI_TOO_LONG",
+                                    "UNSUPPORTED_MEDIA_TYPE",
+                                    "REQUESTED_RANGE_NOT_SATISFIABLE",
+                                    "EXPECTATION_FAILED",
+                                    "I_AM_A_TEAPOT",
+                                    "MISDIRECTED_REQUEST",
+                                    "UNPROCESSABLE_CONTENT",
+                                    "UNPROCESSABLE_ENTITY",
+                                    "LOCKED",
+                                    "FAILED_DEPENDENCY",
+                                    "TOO_EARLY",
+                                    "UPGRADE_REQUIRED",
+                                    "PRECONDITION_REQUIRED",
+                                    "TOO_MANY_REQUESTS",
+                                    "REQUEST_HEADER_FIELDS_TOO_LARGE",
+                                    "UNAVAILABLE_FOR_LEGAL_REASONS",
+                                    "INTERNAL_SERVER_ERROR",
+                                    "NOT_IMPLEMENTED",
+                                    "BAD_GATEWAY",
+                                    "SERVICE_UNAVAILABLE",
+                                    "GATEWAY_TIMEOUT",
+                                    "HTTP_VERSION_NOT_SUPPORTED",
+                                    "VARIANT_ALSO_NEGOTIATES",
+                                    "INSUFFICIENT_STORAGE",
+                                    "LOOP_DETECTED",
+                                    "BANDWIDTH_LIMIT_EXCEEDED",
+                                    "NOT_EXTENDED",
+                                    "NETWORK_AUTHENTICATION_REQUIRED"
+                                  ],
+                                  "title": "DefaultStatus",
+                                  "description": "Sets the default status returned by the server.",
+                                  "$comment": "group:advanced"
+                                },
+                                "endpointAdapter": {
+                                  "type": "string",
+                                  "title": "EndpointAdapter",
+                                  "description": "Sets a custom endpoint adapter to handle requests.",
+                                  "$comment": "group:advanced"
+                                },
+                                "filterMappings": {
+                                  "type": "object",
+                                  "title": "FilterMappings",
+                                  "description": "Filter mapping used on this server.",
+                                  "additionalProperties": {
+                                    "type": "string",
+                                    "title": "FilterMappings",
+                                    "description": "Filter mapping used on this server.",
+                                    "$comment": "group:filter"
+                                  },
+                                  "$comment": "group:filter"
+                                },
+                                "filters": {
+                                  "type": "object",
+                                  "title": "Filters",
+                                  "description": "Map of Http filters used on this server.",
+                                  "additionalProperties": {
+                                    "type": "string",
+                                    "title": "Filters",
+                                    "description": "Map of Http filters used on this server.",
+                                    "$comment": "group:filter"
+                                  },
+                                  "$comment": "group:filter"
+                                },
+                                "handleAttributeHeaders": {
+                                  "type": "boolean",
+                                  "title": "HandleAttributeHeaders",
+                                  "description": "When enabled the server handles attribute headers.",
+                                  "$comment": "group:advanced"
+                                },
+                                "handleCookies": {
+                                  "type": "boolean",
+                                  "title": "HandleCookies",
+                                  "description": "When enabled the server handles cookies.",
+                                  "$comment": "group:advanced"
+                                },
+                                "interceptor": {
+                                  "type": "string",
+                                  "title": "Interceptor",
+                                  "description": "Sets a handler interceptor.",
+                                  "$comment": "group:intercept"
+                                },
+                                "interceptors": {
+                                  "title": "Interceptors",
+                                  "description": "Sets the list of handler interceptor bean references.",
+                                  "$comment": "group:intercept",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "title": "Interceptors",
+                                    "description": "Sets the list of handler interceptor bean references.",
+                                    "$comment": "group:intercept"
+                                  }
+                                },
+                                "messageConverter": {
+                                  "type": "string",
+                                  "title": "MessageConverter",
+                                  "description": "Sets the Http message converter bean reference.",
+                                  "$comment": "group:advanced"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "Name",
+                                  "description": "The name of the endpoint"
+                                },
+                                "path": {
+                                  "type": "string",
+                                  "title": "Path",
+                                  "description": "The GraphQL path.",
+                                  "default": "/graphql"
+                                },
+                                "port": {
+                                  "type": "integer",
+                                  "title": "Port",
+                                  "description": "The Http server port."
+                                },
+                                "removeSemicolonPathContent": {
+                                  "type": "boolean",
+                                  "title": "RemoveSemicolonPathContent",
+                                  "description": "When enabled the server removes semicolon path content from headers.",
+                                  "$comment": "group:advanced"
+                                },
+                                "resourceBase": {
+                                  "type": "string",
+                                  "title": "ResourceBase",
+                                  "description": "The server resource base path where resources get loaded from.",
+                                  "$comment": "group:advanced"
+                                },
+                                "responseCacheSize": {
+                                  "type": "integer",
+                                  "title": "ResponseCacheSize",
+                                  "description": "Sets the response cache size.",
+                                  "$comment": "group:advanced"
+                                },
+                                "rootParentContext": {
+                                  "type": "boolean",
+                                  "title": "RootParentContext",
+                                  "description": "When enabled the server uses the root Spring application context.",
+                                  "$comment": "group:advanced"
+                                },
+                                "schema": {
+                                  "title": "Schema",
+                                  "description": "The SDL schema resources used to validate incoming GraphQL documents.",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "title": "Schema",
+                                    "description": "The SDL schema resources used to validate incoming GraphQL documents."
+                                  }
+                                },
+                                "securePort": {
+                                  "type": "integer",
+                                  "title": "SecurePort",
+                                  "description": "The secured port.",
+                                  "$comment": "group:security"
+                                },
+                                "securedConnection": {
+                                  "type": "string",
+                                  "title": "SecuredConnection",
+                                  "description": "Secure the connections on given secured port with given security mechanism.",
+                                  "$comment": "group:security"
+                                },
+                                "securityHandler": {
+                                  "type": "string",
+                                  "title": "SecurityHandler",
+                                  "description": "Sets the security handler as a bean reference.",
+                                  "$comment": "group:security"
+                                },
+                                "servletHandler": {
+                                  "type": "string",
+                                  "title": "ServletHandler",
+                                  "description": "Sets a custom servlet handler as a bean reference.",
+                                  "$comment": "group:servlet"
+                                },
+                                "servletMappingPath": {
+                                  "type": "string",
+                                  "title": "ServletMappingPath",
+                                  "description": "Sets the servlet mapping path.",
+                                  "$comment": "group:servlet"
+                                },
+                                "servletName": {
+                                  "type": "string",
+                                  "title": "ServletName",
+                                  "description": "Sets the servlet name.",
+                                  "$comment": "group:servlet"
+                                },
+                                "strict": {
+                                  "type": "boolean",
+                                  "title": "Strict",
+                                  "description": "Enables or disables GraphQL document and reply checks.",
+                                  "default": true                                },
+                                "timeout": {
+                                  "type": "integer",
+                                  "title": "Timeout",
+                                  "description": "Sets the server timeout while waiting for incoming requests.",
+                                  "default": 5000
+                                },
+                                "useDefaultFilters": {
+                                  "type": "boolean",
+                                  "title": "UseDefaultFilters",
+                                  "description": "When enabled the server uses the default set of Http servlet filters.",
+                                  "$comment": "group:filter"
+                                }
+                              },
+                              "additionalProperties": false,
+                              "title": "Server",
+                              "description": "Sets the GraphQL server endpoint."
+                            }
+                          },
+                          "required": [
+                            "server"
+                          ]
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "client"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "server"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "title": "Graphql",
+                  "description": "GraphQL client and server endpoints"
+                }
+              },
+              "required": [
+                "graphql"
               ]
             },
             {
@@ -5611,6 +6163,10 @@
                   {
                     "required": [
                       "http"
+                    ]
+                  },{
+                    "required": [
+                      "graphql"
                     ]
                   },
                   {
@@ -22954,5 +23510,2251 @@
         }
       ]
     }
+  },
+  "graphql": {
+    "kind": "testActionGroup",
+    "version": "${citrus.version}",
+    "name": "graphql",
+    "module": "citrus-graphql",
+    "title": "Graphql",
+    "description": "GraphQL related test actions.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actor": {
+          "type": "string",
+          "title": "Actor",
+          "$comment": "group:advanced"
+        },
+        "client": {
+          "type": "string",
+          "title": "Client",
+          "description": "The GraphQL client calling the GraphQL API. Uses an endpoint URI or references an endpoint name."
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "server": {
+          "type": "string",
+          "title": "Server",
+          "description": "The GraphQL server simulating the GraphQL API. References an endpoint name."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "graphql-receiveRequest": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "graphql-receiveRequest",
+    "group": "graphql",
+    "module": "citrus-graphql",
+    "title": "ReceiveRequest",
+    "description": "Receives a GraphQL operation as server.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "extract": {
+          "type": "object",
+          "properties": {
+            "body": {
+              "title": "Body",
+              "description": "Extract elements from the message body into test variables.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "The path expression to evaluate."
+                  },
+                  "resultType": {
+                    "type": "string",
+                    "title": "ResultType",
+                    "description": "The expression result type. By default the path expression evaluate to String values.With this setting you can force another expression result type.",
+                    "$comment": "group:advanced"
+                  },
+                  "variable": {
+                    "type": "string",
+                    "title": "Variable",
+                    "description": "The test variable name."
+                  }
+                },
+                "required": [
+                  "variable"
+                ],
+                "additionalProperties": false,
+                "title": "Body",
+                "description": "Extract elements from the message body into test variables."
+              }
+            },
+            "header": {
+              "title": "Header",
+              "description": "Extract elements from the message header into test variables.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "The name of the message header."
+                  },
+                  "variable": {
+                    "type": "string",
+                    "title": "Variable",
+                    "description": "The test variable name."
+                  }
+                },
+                "required": [
+                  "name",
+                  "variable"
+                ],
+                "additionalProperties": false,
+                "title": "Header",
+                "description": "Extract elements from the message header into test variables."
+              }
+            }
+          },
+          "additionalProperties": false,
+          "title": "Extract",
+          "description": "Extract message content to test variables.",
+          "$comment": "group:advanced"
+        },
+        "headerValidator": {
+          "type": "string",
+          "title": "HeaderValidator",
+          "description": "Explicit header validator reference.",
+          "$comment": "group:advanced"
+        },
+        "headerValidators": {
+          "type": "string",
+          "title": "HeaderValidators",
+          "description": "Explicit header validator references.",
+          "$comment": "group:advanced"
+        },
+        "message": {
+          "type": "object",
+          "properties": {
+            "body": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
+                },
+                "resource": {
+                },
+                "script": {
+                }
+              },
+              "additionalProperties": false,
+              "anyOf": [
+                {
+                  "oneOf": [
+                    {
+                      "required": [
+                        "data"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "resource": {
+                          "type": "object",
+                          "properties": {
+                            "charset": {
+                              "type": "string",
+                              "title": "Charset",
+                              "$comment": "group:advanced"
+                            },
+                            "file": {
+                              "type": "string",
+                              "title": "File"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "title": "Resource",
+                          "description": "The message body loaded from a file resource."
+                        }
+                      },
+                      "required": [
+                        "resource"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "script": {
+                          "type": "object",
+                          "properties": {
+                            "charset": {
+                              "type": "string",
+                              "title": "Charset",
+                              "description": "The charset used to load the file resource.",
+                              "$comment": "group:advanced"
+                            },
+                            "content": {
+                              "type": "string",
+                              "title": "Content",
+                              "description": "The script content as inline data."
+                            },
+                            "file": {
+                              "type": "string",
+                              "title": "File",
+                              "description": "The script content loaded as a file resource."
+                            },
+                            "type": {
+                              "type": "string",
+                              "title": "Type",
+                              "description": "The script type.",
+                              "default": "groovy"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "title": "Script",
+                          "description": "The message body set via script."
+                        }
+                      },
+                      "required": [
+                        "script"
+                      ]
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ],
+              "title": "Body",
+              "description": "The message body."
+            },
+            "dataDictionary": {
+              "type": "string",
+              "title": "DataDictionary",
+              "description": "Sets a data dictionary that transforms message content before it is being processed.",
+              "$comment": "group:dictionary"
+            },
+            "expression": {
+              "title": "Expression",
+              "description": "List of path expressions to evaluate on the message content before processing the message.",
+              "$comment": "group:advanced",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "The path expression to evaluate."
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The expected expression result value."
+                  }
+                },
+                "required": [
+                  "path",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "title": "Expression",
+                "description": "List of path expressions to evaluate on the message content before processing the message.",
+                "$comment": "group:advanced"
+              }
+            },
+            "headerIgnoreCase": {
+              "type": "boolean",
+              "title": "HeaderIgnoreCase",
+              "description": "When enabled the header case is not verified.",
+              "$comment": "group:advanced"
+            },
+            "headers": {
+              "title": "Headers",
+              "description": "The message headers.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "The message header name."
+                  },
+                  "resource": {
+                  },
+                  "type": {
+                    "type": "string",
+                    "title": "Type",
+                    "description": "The message header type to create typed message headers.",
+                    "$comment": "group:advanced"
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
+                  }
+                },
+                "additionalProperties": false,
+                "anyOf": [
+                  {
+                    "oneOf": [
+                      {
+                        "required": [
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "resource": {
+                            "type": "object",
+                            "properties": {
+                              "charset": {
+                                "type": "string",
+                                "title": "Charset",
+                                "description": "Optional file resource charset used to read the file content.",
+                                "$comment": "group:advanced"
+                              },
+                              "file": {
+                                "type": "string",
+                                "title": "File",
+                                "description": "The file resource path."
+                              }
+                            },
+                            "required": [
+                              "file"
+                            ],
+                            "additionalProperties": false,
+                            "title": "Resource",
+                            "description": "The header data loaded from a file resource."
+                          }
+                        },
+                        "required": [
+                          "resource"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "title": "Headers",
+                "description": "The message headers."
+              }
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The message name. Named messages may be referenced in subsequent test steps."
+            },
+            "schema": {
+              "type": "string",
+              "title": "Schema",
+              "description": "The reference to a schema in the bean registry that should be used for validation.",
+              "$comment": "group:schema"
+            },
+            "schemaRepository": {
+              "type": "string",
+              "title": "SchemaRepository",
+              "description": "The schema repository holding the schema.",
+              "$comment": "group:schema"
+            },
+            "schemaValidation": {
+              "type": "boolean",
+              "title": "SchemaValidation",
+              "description": "Enables the schema validation.",
+              "$comment": "group:schema"
+            },
+            "type": {
+              "type": "string",
+              "title": "Type",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
+              "$comment": "group:advanced"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Message",
+          "description": "Expected message headers or body.",
+          "$comment": "group:advanced"
+        },
+        "method": {
+          "type": "string",
+          "title": "Method",
+          "description": "Expected request method, POST or GET."
+        },
+        "operationName": {
+          "type": "string",
+          "title": "OperationName",
+          "description": "Expected operation name."
+        },
+        "query": {
+          "type": "string",
+          "title": "Query",
+          "description": "Expected GraphQL document."
+        },
+        "select": {
+          "type": "string",
+          "title": "Select",
+          "description": "Message selector expression.",
+          "$comment": "group:advanced"
+        },
+        "selector": {
+          "type": "object",
+          "properties": {
+            "element": {
+              "title": "Element",
+              "description": "List of elements to build the selector expression.",
+              "$comment": "group:advanced",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "Select element key name."
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "Select expression value."
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "title": "Element",
+                "description": "List of elements to build the selector expression.",
+                "$comment": "group:advanced"
+              }
+            },
+            "value": {
+              "type": "string",
+              "title": "Value",
+              "description": "Selector expression value."
+            }
+          },
+          "additionalProperties": false,
+          "title": "Selector",
+          "description": "Message selector.",
+          "$comment": "group:advanced"
+        },
+        "strict": {
+          "type": "boolean",
+          "title": "Strict",
+          "description": "Enables or disables the GraphQL checks.",
+          "default": true        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Receive timeout in milliseconds.",
+          "$comment": "group:advanced"
+        },
+        "validate": {
+          "title": "Validate",
+          "description": "Additional message validations, e.g. JSONPath expressions.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "jsonPath": {
+                "title": "JsonPath",
+                "description": "JsonPath validation expression.",
+                "$comment": "group:jsonPath",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "expression": {
+                      "type": "string",
+                      "title": "Expression",
+                      "description": "The Json path expression to evaluate."
+                    },
+                    "value": {
+                      "type": "string",
+                      "title": "Value",
+                      "description": "The expected result."
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "value"
+                  ],
+                  "additionalProperties": false,
+                  "title": "JsonPath",
+                  "description": "JsonPath validation expression.",
+                  "$comment": "group:jsonPath"
+                }
+              },
+              "namespace": {
+                "title": "Namespace",
+                "description": "List of expected namespaces.",
+                "$comment": "group:xml",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "prefix": {
+                      "type": "string",
+                      "title": "Prefix",
+                      "description": "The expected namespace prefix."
+                    },
+                    "value": {
+                      "type": "string",
+                      "title": "Value",
+                      "description": "The expected namespace value."
+                    }
+                  },
+                  "required": [
+                    "prefix",
+                    "value"
+                  ],
+                  "additionalProperties": false,
+                  "title": "Namespace",
+                  "description": "List of expected namespaces.",
+                  "$comment": "group:xml"
+                }
+              },
+              "path": {
+                "type": "string",
+                "title": "Path",
+                "description": "Message validation expression."
+              },
+              "resultType": {
+                "type": "string",
+                "title": "ResultType",
+                "description": "Expected expression result type.",
+                "$comment": "group:advanced"
+              },
+              "script": {
+                "type": "object",
+                "properties": {
+                  "charset": {
+                    "type": "string",
+                    "title": "Charset",
+                    "description": "The charset used to load the file resource.",
+                    "$comment": "group:advanced"
+                  },
+                  "content": {
+                    "type": "string",
+                    "title": "Content",
+                    "description": "The script content as inline data."
+                  },
+                  "file": {
+                    "type": "string",
+                    "title": "File",
+                    "description": "The script content loaded as a file resource."
+                  },
+                  "type": {
+                    "type": "string",
+                    "title": "Type",
+                    "description": "The script type.",
+                    "default": "groovy"
+                  }
+                },
+                "additionalProperties": false,
+                "title": "Script",
+                "description": "Script that builds the expected validate value.",
+                "$comment": "group:script"
+              },
+              "value": {
+                "type": "string",
+                "title": "Value",
+                "description": "Expected message validation expression value."
+              },
+              "xpath": {
+                "title": "Xpath",
+                "description": "Xpath validation expression.",
+                "$comment": "group:xml",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "expression": {
+                      "type": "string",
+                      "title": "Expression",
+                      "description": "The Xpath expression to evaluate."
+                    },
+                    "resultType": {
+                      "type": "string",
+                      "title": "ResultType",
+                      "description": "The expected result type.",
+                      "$comment": "group:advanced"
+                    },
+                    "value": {
+                      "type": "string",
+                      "title": "Value",
+                      "description": "The expected result."
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "value"
+                  ],
+                  "additionalProperties": false,
+                  "title": "Xpath",
+                  "description": "Xpath validation expression.",
+                  "$comment": "group:xml"
+                }
+              }
+            },
+            "additionalProperties": false,
+            "title": "Validate",
+            "description": "Additional message validations, e.g. JSONPath expressions.",
+            "$comment": "group:advanced"
+          }
+        },
+        "validator": {
+          "type": "string",
+          "title": "Validator",
+          "description": "Explicit message validator reference.",
+          "$comment": "group:advanced"
+        },
+        "validators": {
+          "type": "string",
+          "title": "Validators",
+          "description": "Explicit message validator references.",
+          "$comment": "group:advanced"
+        },
+        "variable": {
+          "title": "Variable",
+          "description": "Expected single variables; validation matchers are supported.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "title": "Name",
+                "description": "The variable name."
+              },
+              "value": {
+                "type": "string",
+                "title": "Value",
+                "description": "The variable value; sent as string. Use 'variables' for typed values."
+              }
+            },
+            "required": [
+              "name",
+              "value"
+            ],
+            "additionalProperties": false,
+            "title": "Variable",
+            "description": "Expected single variables; validation matchers are supported."
+          }
+        },
+        "variables": {
+          "type": "string",
+          "title": "Variables",
+          "description": "Expected variables as JSON object."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "graphql-receiveResponse": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "graphql-receiveResponse",
+    "group": "graphql",
+    "module": "citrus-graphql",
+    "title": "ReceiveResponse",
+    "description": "Receives a GraphQL response as client.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "data": {
+          "title": "Data",
+          "description": "Expected response data.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "json": {
+                "type": "string",
+                "title": "Json",
+                "description": "Expected data object as JSON, compared as a whole."
+              },
+              "path": {
+                "type": "string",
+                "title": "Path",
+                "description": "JSONPath relative to $.data."
+              },
+              "value": {
+                "type": "string",
+                "title": "Value",
+                "description": "Expected value at the path; validation matchers are supported."
+              }
+            },
+            "additionalProperties": false,
+            "title": "Data",
+            "description": "Expected response data."
+          }
+        },
+        "expectError": {
+          "title": "ExpectError",
+          "description": "Expected GraphQL errors; each must match an error of the response.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Code",
+                "description": "The error code in extensions.code."
+              },
+              "message": {
+                "type": "string",
+                "title": "Message",
+                "description": "The error message; validation matchers are supported when expecting errors."
+              },
+              "path": {
+                "type": "string",
+                "title": "Path",
+                "description": "The error path, e.g. books[1].title."
+              }
+            },
+            "additionalProperties": false,
+            "title": "ExpectError",
+            "description": "Expected GraphQL errors; each must match an error of the response."
+          }
+        },
+        "expectErrors": {
+          "type": "boolean",
+          "title": "ExpectErrors",
+          "description": "Expects at least one GraphQL error."
+        },
+        "extract": {
+          "type": "object",
+          "properties": {
+            "body": {
+              "title": "Body",
+              "description": "Extract elements from the message body into test variables.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "The path expression to evaluate."
+                  },
+                  "resultType": {
+                    "type": "string",
+                    "title": "ResultType",
+                    "description": "The expression result type. By default the path expression evaluate to String values.With this setting you can force another expression result type.",
+                    "$comment": "group:advanced"
+                  },
+                  "variable": {
+                    "type": "string",
+                    "title": "Variable",
+                    "description": "The test variable name."
+                  }
+                },
+                "required": [
+                  "variable"
+                ],
+                "additionalProperties": false,
+                "title": "Body",
+                "description": "Extract elements from the message body into test variables."
+              }
+            },
+            "header": {
+              "title": "Header",
+              "description": "Extract elements from the message header into test variables.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "The name of the message header."
+                  },
+                  "variable": {
+                    "type": "string",
+                    "title": "Variable",
+                    "description": "The test variable name."
+                  }
+                },
+                "required": [
+                  "name",
+                  "variable"
+                ],
+                "additionalProperties": false,
+                "title": "Header",
+                "description": "Extract elements from the message header into test variables."
+              }
+            }
+          },
+          "additionalProperties": false,
+          "title": "Extract",
+          "description": "Extract message content to test variables.",
+          "$comment": "group:advanced"
+        },
+        "headerValidator": {
+          "type": "string",
+          "title": "HeaderValidator",
+          "description": "Explicit header validator reference.",
+          "$comment": "group:advanced"
+        },
+        "headerValidators": {
+          "type": "string",
+          "title": "HeaderValidators",
+          "description": "Explicit header validator references.",
+          "$comment": "group:advanced"
+        },
+        "message": {
+          "type": "object",
+          "properties": {
+            "body": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
+                },
+                "resource": {
+                },
+                "script": {
+                }
+              },
+              "additionalProperties": false,
+              "anyOf": [
+                {
+                  "oneOf": [
+                    {
+                      "required": [
+                        "data"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "resource": {
+                          "type": "object",
+                          "properties": {
+                            "charset": {
+                              "type": "string",
+                              "title": "Charset",
+                              "$comment": "group:advanced"
+                            },
+                            "file": {
+                              "type": "string",
+                              "title": "File"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "title": "Resource",
+                          "description": "The message body loaded from a file resource."
+                        }
+                      },
+                      "required": [
+                        "resource"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "script": {
+                          "type": "object",
+                          "properties": {
+                            "charset": {
+                              "type": "string",
+                              "title": "Charset",
+                              "description": "The charset used to load the file resource.",
+                              "$comment": "group:advanced"
+                            },
+                            "content": {
+                              "type": "string",
+                              "title": "Content",
+                              "description": "The script content as inline data."
+                            },
+                            "file": {
+                              "type": "string",
+                              "title": "File",
+                              "description": "The script content loaded as a file resource."
+                            },
+                            "type": {
+                              "type": "string",
+                              "title": "Type",
+                              "description": "The script type.",
+                              "default": "groovy"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "title": "Script",
+                          "description": "The message body set via script."
+                        }
+                      },
+                      "required": [
+                        "script"
+                      ]
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ],
+              "title": "Body",
+              "description": "The message body."
+            },
+            "dataDictionary": {
+              "type": "string",
+              "title": "DataDictionary",
+              "description": "Sets a data dictionary that transforms message content before it is being processed.",
+              "$comment": "group:dictionary"
+            },
+            "expression": {
+              "title": "Expression",
+              "description": "List of path expressions to evaluate on the message content before processing the message.",
+              "$comment": "group:advanced",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "The path expression to evaluate."
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The expected expression result value."
+                  }
+                },
+                "required": [
+                  "path",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "title": "Expression",
+                "description": "List of path expressions to evaluate on the message content before processing the message.",
+                "$comment": "group:advanced"
+              }
+            },
+            "headerIgnoreCase": {
+              "type": "boolean",
+              "title": "HeaderIgnoreCase",
+              "description": "When enabled the header case is not verified.",
+              "$comment": "group:advanced"
+            },
+            "headers": {
+              "title": "Headers",
+              "description": "The message headers.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "The message header name."
+                  },
+                  "resource": {
+                  },
+                  "type": {
+                    "type": "string",
+                    "title": "Type",
+                    "description": "The message header type to create typed message headers.",
+                    "$comment": "group:advanced"
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
+                  }
+                },
+                "additionalProperties": false,
+                "anyOf": [
+                  {
+                    "oneOf": [
+                      {
+                        "required": [
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "resource": {
+                            "type": "object",
+                            "properties": {
+                              "charset": {
+                                "type": "string",
+                                "title": "Charset",
+                                "description": "Optional file resource charset used to read the file content.",
+                                "$comment": "group:advanced"
+                              },
+                              "file": {
+                                "type": "string",
+                                "title": "File",
+                                "description": "The file resource path."
+                              }
+                            },
+                            "required": [
+                              "file"
+                            ],
+                            "additionalProperties": false,
+                            "title": "Resource",
+                            "description": "The header data loaded from a file resource."
+                          }
+                        },
+                        "required": [
+                          "resource"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "title": "Headers",
+                "description": "The message headers."
+              }
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The message name. Named messages may be referenced in subsequent test steps."
+            },
+            "schema": {
+              "type": "string",
+              "title": "Schema",
+              "description": "The reference to a schema in the bean registry that should be used for validation.",
+              "$comment": "group:schema"
+            },
+            "schemaRepository": {
+              "type": "string",
+              "title": "SchemaRepository",
+              "description": "The schema repository holding the schema.",
+              "$comment": "group:schema"
+            },
+            "schemaValidation": {
+              "type": "boolean",
+              "title": "SchemaValidation",
+              "description": "Enables the schema validation.",
+              "$comment": "group:schema"
+            },
+            "type": {
+              "type": "string",
+              "title": "Type",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
+              "$comment": "group:advanced"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Message",
+          "description": "Expected message headers or body.",
+          "$comment": "group:advanced"
+        },
+        "select": {
+          "type": "string",
+          "title": "Select",
+          "description": "Message selector expression.",
+          "$comment": "group:advanced"
+        },
+        "selector": {
+          "type": "object",
+          "properties": {
+            "element": {
+              "title": "Element",
+              "description": "List of elements to build the selector expression.",
+              "$comment": "group:advanced",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "Select element key name."
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "Select expression value."
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "title": "Element",
+                "description": "List of elements to build the selector expression.",
+                "$comment": "group:advanced"
+              }
+            },
+            "value": {
+              "type": "string",
+              "title": "Value",
+              "description": "Selector expression value."
+            }
+          },
+          "additionalProperties": false,
+          "title": "Selector",
+          "description": "Message selector.",
+          "$comment": "group:advanced"
+        },
+        "status": {
+          "type": "integer",
+          "title": "Status",
+          "description": "Expected HTTP status code."
+        },
+        "strict": {
+          "type": "boolean",
+          "title": "Strict",
+          "description": "Enables or disables the GraphQL checks.",
+          "default": true        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Receive timeout in milliseconds.",
+          "$comment": "group:advanced"
+        },
+        "validate": {
+          "title": "Validate",
+          "description": "Additional message validations, e.g. JSONPath expressions.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "jsonPath": {
+                "title": "JsonPath",
+                "description": "JsonPath validation expression.",
+                "$comment": "group:jsonPath",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "expression": {
+                      "type": "string",
+                      "title": "Expression",
+                      "description": "The Json path expression to evaluate."
+                    },
+                    "value": {
+                      "type": "string",
+                      "title": "Value",
+                      "description": "The expected result."
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "value"
+                  ],
+                  "additionalProperties": false,
+                  "title": "JsonPath",
+                  "description": "JsonPath validation expression.",
+                  "$comment": "group:jsonPath"
+                }
+              },
+              "namespace": {
+                "title": "Namespace",
+                "description": "List of expected namespaces.",
+                "$comment": "group:xml",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "prefix": {
+                      "type": "string",
+                      "title": "Prefix",
+                      "description": "The expected namespace prefix."
+                    },
+                    "value": {
+                      "type": "string",
+                      "title": "Value",
+                      "description": "The expected namespace value."
+                    }
+                  },
+                  "required": [
+                    "prefix",
+                    "value"
+                  ],
+                  "additionalProperties": false,
+                  "title": "Namespace",
+                  "description": "List of expected namespaces.",
+                  "$comment": "group:xml"
+                }
+              },
+              "path": {
+                "type": "string",
+                "title": "Path",
+                "description": "Message validation expression."
+              },
+              "resultType": {
+                "type": "string",
+                "title": "ResultType",
+                "description": "Expected expression result type.",
+                "$comment": "group:advanced"
+              },
+              "script": {
+                "type": "object",
+                "properties": {
+                  "charset": {
+                    "type": "string",
+                    "title": "Charset",
+                    "description": "The charset used to load the file resource.",
+                    "$comment": "group:advanced"
+                  },
+                  "content": {
+                    "type": "string",
+                    "title": "Content",
+                    "description": "The script content as inline data."
+                  },
+                  "file": {
+                    "type": "string",
+                    "title": "File",
+                    "description": "The script content loaded as a file resource."
+                  },
+                  "type": {
+                    "type": "string",
+                    "title": "Type",
+                    "description": "The script type.",
+                    "default": "groovy"
+                  }
+                },
+                "additionalProperties": false,
+                "title": "Script",
+                "description": "Script that builds the expected validate value.",
+                "$comment": "group:script"
+              },
+              "value": {
+                "type": "string",
+                "title": "Value",
+                "description": "Expected message validation expression value."
+              },
+              "xpath": {
+                "title": "Xpath",
+                "description": "Xpath validation expression.",
+                "$comment": "group:xml",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "expression": {
+                      "type": "string",
+                      "title": "Expression",
+                      "description": "The Xpath expression to evaluate."
+                    },
+                    "resultType": {
+                      "type": "string",
+                      "title": "ResultType",
+                      "description": "The expected result type.",
+                      "$comment": "group:advanced"
+                    },
+                    "value": {
+                      "type": "string",
+                      "title": "Value",
+                      "description": "The expected result."
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "value"
+                  ],
+                  "additionalProperties": false,
+                  "title": "Xpath",
+                  "description": "Xpath validation expression.",
+                  "$comment": "group:xml"
+                }
+              }
+            },
+            "additionalProperties": false,
+            "title": "Validate",
+            "description": "Additional message validations, e.g. JSONPath expressions.",
+            "$comment": "group:advanced"
+          }
+        },
+        "validator": {
+          "type": "string",
+          "title": "Validator",
+          "description": "Explicit message validator reference.",
+          "$comment": "group:advanced"
+        },
+        "validators": {
+          "type": "string",
+          "title": "Validators",
+          "description": "Explicit message validator references.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "graphql-sendRequest": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "graphql-sendRequest",
+    "group": "graphql",
+    "module": "citrus-graphql",
+    "title": "SendRequest",
+    "description": "Sends a GraphQL operation as client.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "extract": {
+          "type": "object",
+          "properties": {
+            "body": {
+              "title": "Body",
+              "description": "Extract elements from the message body into test variables.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "The path expression to evaluate."
+                  },
+                  "resultType": {
+                    "type": "string",
+                    "title": "ResultType",
+                    "description": "The expression result type. By default the path expression evaluate to String values.With this setting you can force another expression result type.",
+                    "$comment": "group:advanced"
+                  },
+                  "variable": {
+                    "type": "string",
+                    "title": "Variable",
+                    "description": "The test variable name."
+                  }
+                },
+                "required": [
+                  "variable"
+                ],
+                "additionalProperties": false,
+                "title": "Body",
+                "description": "Extract elements from the message body into test variables."
+              }
+            },
+            "header": {
+              "title": "Header",
+              "description": "Extract elements from the message header into test variables.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "The name of the message header."
+                  },
+                  "variable": {
+                    "type": "string",
+                    "title": "Variable",
+                    "description": "The test variable name."
+                  }
+                },
+                "required": [
+                  "name",
+                  "variable"
+                ],
+                "additionalProperties": false,
+                "title": "Header",
+                "description": "Extract elements from the message header into test variables."
+              }
+            }
+          },
+          "additionalProperties": false,
+          "title": "Extract",
+          "description": "Extract message content to test variables before the request is sent.",
+          "$comment": "group:advanced"
+        },
+        "fork": {
+          "type": "boolean",
+          "title": "Fork",
+          "description": "When enabled the send operation does not block while waiting for the response.",
+          "$comment": "group:advanced"
+        },
+        "message": {
+          "type": "object",
+          "properties": {
+            "body": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
+                },
+                "resource": {
+                },
+                "script": {
+                }
+              },
+              "additionalProperties": false,
+              "anyOf": [
+                {
+                  "oneOf": [
+                    {
+                      "required": [
+                        "data"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "resource": {
+                          "type": "object",
+                          "properties": {
+                            "charset": {
+                              "type": "string",
+                              "title": "Charset",
+                              "$comment": "group:advanced"
+                            },
+                            "file": {
+                              "type": "string",
+                              "title": "File"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "title": "Resource",
+                          "description": "The message body loaded from a file resource."
+                        }
+                      },
+                      "required": [
+                        "resource"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "script": {
+                          "type": "object",
+                          "properties": {
+                            "charset": {
+                              "type": "string",
+                              "title": "Charset",
+                              "description": "The charset used to load the file resource.",
+                              "$comment": "group:advanced"
+                            },
+                            "content": {
+                              "type": "string",
+                              "title": "Content",
+                              "description": "The script content as inline data."
+                            },
+                            "file": {
+                              "type": "string",
+                              "title": "File",
+                              "description": "The script content loaded as a file resource."
+                            },
+                            "type": {
+                              "type": "string",
+                              "title": "Type",
+                              "description": "The script type.",
+                              "default": "groovy"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "title": "Script",
+                          "description": "The message body set via script."
+                        }
+                      },
+                      "required": [
+                        "script"
+                      ]
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ],
+              "title": "Body",
+              "description": "The message body."
+            },
+            "dataDictionary": {
+              "type": "string",
+              "title": "DataDictionary",
+              "description": "Sets a data dictionary that transforms message content before it is being processed.",
+              "$comment": "group:dictionary"
+            },
+            "expression": {
+              "title": "Expression",
+              "description": "List of path expressions to evaluate on the message content before processing the message.",
+              "$comment": "group:advanced",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "The path expression to evaluate."
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The expected expression result value."
+                  }
+                },
+                "required": [
+                  "path",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "title": "Expression",
+                "description": "List of path expressions to evaluate on the message content before processing the message.",
+                "$comment": "group:advanced"
+              }
+            },
+            "headerIgnoreCase": {
+              "type": "boolean",
+              "title": "HeaderIgnoreCase",
+              "description": "When enabled the header case is not verified.",
+              "$comment": "group:advanced"
+            },
+            "headers": {
+              "title": "Headers",
+              "description": "The message headers.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "The message header name."
+                  },
+                  "resource": {
+                  },
+                  "type": {
+                    "type": "string",
+                    "title": "Type",
+                    "description": "The message header type to create typed message headers.",
+                    "$comment": "group:advanced"
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
+                  }
+                },
+                "additionalProperties": false,
+                "anyOf": [
+                  {
+                    "oneOf": [
+                      {
+                        "required": [
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "resource": {
+                            "type": "object",
+                            "properties": {
+                              "charset": {
+                                "type": "string",
+                                "title": "Charset",
+                                "description": "Optional file resource charset used to read the file content.",
+                                "$comment": "group:advanced"
+                              },
+                              "file": {
+                                "type": "string",
+                                "title": "File",
+                                "description": "The file resource path."
+                              }
+                            },
+                            "required": [
+                              "file"
+                            ],
+                            "additionalProperties": false,
+                            "title": "Resource",
+                            "description": "The header data loaded from a file resource."
+                          }
+                        },
+                        "required": [
+                          "resource"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "title": "Headers",
+                "description": "The message headers."
+              }
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The message name. Named messages may be referenced in subsequent test steps."
+            },
+            "schema": {
+              "type": "string",
+              "title": "Schema",
+              "description": "The reference to a schema in the bean registry that should be used for validation.",
+              "$comment": "group:schema"
+            },
+            "schemaRepository": {
+              "type": "string",
+              "title": "SchemaRepository",
+              "description": "The schema repository holding the schema.",
+              "$comment": "group:schema"
+            },
+            "schemaValidation": {
+              "type": "boolean",
+              "title": "SchemaValidation",
+              "description": "Enables the schema validation.",
+              "$comment": "group:schema"
+            },
+            "type": {
+              "type": "string",
+              "title": "Type",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
+              "$comment": "group:advanced"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Message",
+          "description": "Additional message settings such as headers.",
+          "$comment": "group:advanced"
+        },
+        "method": {
+          "type": "string",
+          "title": "Method",
+          "description": "The request method, POST (default) or GET."
+        },
+        "operationName": {
+          "type": "string",
+          "title": "OperationName",
+          "description": "The operation to execute."
+        },
+        "query": {
+          "type": "string",
+          "title": "Query",
+          "description": "The GraphQL document."
+        },
+        "queryResource": {
+          "type": "string",
+          "title": "QueryResource",
+          "description": "Resource path of the GraphQL document."
+        },
+        "strict": {
+          "type": "boolean",
+          "title": "Strict",
+          "description": "Enables or disables the GraphQL document checks.",
+          "default": true        },
+        "uri": {
+          "type": "string",
+          "title": "Uri",
+          "description": "Endpoint URI overwrite.",
+          "$comment": "group:advanced"
+        },
+        "variable": {
+          "title": "Variable",
+          "description": "Single variables.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "title": "Name",
+                "description": "The variable name."
+              },
+              "value": {
+                "type": "string",
+                "title": "Value",
+                "description": "The variable value; sent as string. Use 'variables' for typed values."
+              }
+            },
+            "required": [
+              "name",
+              "value"
+            ],
+            "additionalProperties": false,
+            "title": "Variable",
+            "description": "Single variables."
+          }
+        },
+        "variables": {
+          "type": "string",
+          "title": "Variables",
+          "description": "The variables as JSON object; Citrus expressions are resolved before parsing."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "graphql-sendResponse": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "graphql-sendResponse",
+    "group": "graphql",
+    "module": "citrus-graphql",
+    "title": "SendResponse",
+    "description": "Replies with GraphQL data and errors as server.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "title": "Data",
+          "description": "Reply data as JSON."
+        },
+        "error": {
+          "title": "Error",
+          "description": "Reply errors.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "title": "Code",
+                "description": "The error code in extensions.code."
+              },
+              "message": {
+                "type": "string",
+                "title": "Message",
+                "description": "The error message; validation matchers are supported when expecting errors."
+              },
+              "path": {
+                "type": "string",
+                "title": "Path",
+                "description": "The error path, e.g. books[1].title."
+              }
+            },
+            "additionalProperties": false,
+            "title": "Error",
+            "description": "Reply errors."
+          }
+        },
+        "extract": {
+          "type": "object",
+          "properties": {
+            "body": {
+              "title": "Body",
+              "description": "Extract elements from the message body into test variables.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "The path expression to evaluate."
+                  },
+                  "resultType": {
+                    "type": "string",
+                    "title": "ResultType",
+                    "description": "The expression result type. By default the path expression evaluate to String values.With this setting you can force another expression result type.",
+                    "$comment": "group:advanced"
+                  },
+                  "variable": {
+                    "type": "string",
+                    "title": "Variable",
+                    "description": "The test variable name."
+                  }
+                },
+                "required": [
+                  "variable"
+                ],
+                "additionalProperties": false,
+                "title": "Body",
+                "description": "Extract elements from the message body into test variables."
+              }
+            },
+            "header": {
+              "title": "Header",
+              "description": "Extract elements from the message header into test variables.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "The name of the message header."
+                  },
+                  "variable": {
+                    "type": "string",
+                    "title": "Variable",
+                    "description": "The test variable name."
+                  }
+                },
+                "required": [
+                  "name",
+                  "variable"
+                ],
+                "additionalProperties": false,
+                "title": "Header",
+                "description": "Extract elements from the message header into test variables."
+              }
+            }
+          },
+          "additionalProperties": false,
+          "title": "Extract",
+          "description": "Extract message content to test variables.",
+          "$comment": "group:advanced"
+        },
+        "message": {
+          "type": "object",
+          "properties": {
+            "body": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "The message body content as inline data."
+                },
+                "resource": {
+                },
+                "script": {
+                }
+              },
+              "additionalProperties": false,
+              "anyOf": [
+                {
+                  "oneOf": [
+                    {
+                      "required": [
+                        "data"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "resource": {
+                          "type": "object",
+                          "properties": {
+                            "charset": {
+                              "type": "string",
+                              "title": "Charset",
+                              "$comment": "group:advanced"
+                            },
+                            "file": {
+                              "type": "string",
+                              "title": "File"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "title": "Resource",
+                          "description": "The message body loaded from a file resource."
+                        }
+                      },
+                      "required": [
+                        "resource"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "script": {
+                          "type": "object",
+                          "properties": {
+                            "charset": {
+                              "type": "string",
+                              "title": "Charset",
+                              "description": "The charset used to load the file resource.",
+                              "$comment": "group:advanced"
+                            },
+                            "content": {
+                              "type": "string",
+                              "title": "Content",
+                              "description": "The script content as inline data."
+                            },
+                            "file": {
+                              "type": "string",
+                              "title": "File",
+                              "description": "The script content loaded as a file resource."
+                            },
+                            "type": {
+                              "type": "string",
+                              "title": "Type",
+                              "description": "The script type.",
+                              "default": "groovy"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "title": "Script",
+                          "description": "The message body set via script."
+                        }
+                      },
+                      "required": [
+                        "script"
+                      ]
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "data"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "resource"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "script"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ],
+              "title": "Body",
+              "description": "The message body."
+            },
+            "dataDictionary": {
+              "type": "string",
+              "title": "DataDictionary",
+              "description": "Sets a data dictionary that transforms message content before it is being processed.",
+              "$comment": "group:dictionary"
+            },
+            "expression": {
+              "title": "Expression",
+              "description": "List of path expressions to evaluate on the message content before processing the message.",
+              "$comment": "group:advanced",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "The path expression to evaluate."
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The expected expression result value."
+                  }
+                },
+                "required": [
+                  "path",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "title": "Expression",
+                "description": "List of path expressions to evaluate on the message content before processing the message.",
+                "$comment": "group:advanced"
+              }
+            },
+            "headerIgnoreCase": {
+              "type": "boolean",
+              "title": "HeaderIgnoreCase",
+              "description": "When enabled the header case is not verified.",
+              "$comment": "group:advanced"
+            },
+            "headers": {
+              "title": "Headers",
+              "description": "The message headers.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "string",
+                    "title": "Data",
+                    "description": "The message header value as inline data."
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "The message header name."
+                  },
+                  "resource": {
+                  },
+                  "type": {
+                    "type": "string",
+                    "title": "Type",
+                    "description": "The message header type to create typed message headers.",
+                    "$comment": "group:advanced"
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "The message header value."
+                  }
+                },
+                "additionalProperties": false,
+                "anyOf": [
+                  {
+                    "oneOf": [
+                      {
+                        "required": [
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "resource": {
+                            "type": "object",
+                            "properties": {
+                              "charset": {
+                                "type": "string",
+                                "title": "Charset",
+                                "description": "Optional file resource charset used to read the file content.",
+                                "$comment": "group:advanced"
+                              },
+                              "file": {
+                                "type": "string",
+                                "title": "File",
+                                "description": "The file resource path."
+                              }
+                            },
+                            "required": [
+                              "file"
+                            ],
+                            "additionalProperties": false,
+                            "title": "Resource",
+                            "description": "The header data loaded from a file resource."
+                          }
+                        },
+                        "required": [
+                          "resource"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "data"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "resource"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "data"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "title": "Headers",
+                "description": "The message headers."
+              }
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The message name. Named messages may be referenced in subsequent test steps."
+            },
+            "schema": {
+              "type": "string",
+              "title": "Schema",
+              "description": "The reference to a schema in the bean registry that should be used for validation.",
+              "$comment": "group:schema"
+            },
+            "schemaRepository": {
+              "type": "string",
+              "title": "SchemaRepository",
+              "description": "The schema repository holding the schema.",
+              "$comment": "group:schema"
+            },
+            "schemaValidation": {
+              "type": "boolean",
+              "title": "SchemaValidation",
+              "description": "Enables the schema validation.",
+              "$comment": "group:schema"
+            },
+            "type": {
+              "type": "string",
+              "title": "Type",
+              "description": "The message type. Gives the test action a hint which validators are capable of performing proper message validation for this message.",
+              "$comment": "group:advanced"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Message",
+          "description": "Additional message settings such as headers or a raw body.",
+          "$comment": "group:advanced"
+        },
+        "status": {
+          "type": "integer",
+          "title": "Status",
+          "description": "HTTP status code of the reply."
+        },
+        "strict": {
+          "type": "boolean",
+          "title": "Strict",
+          "description": "Enables or disables the GraphQL reply check.",
+          "default": true        }
+      },
+      "additionalProperties": false    }
   }
 }
