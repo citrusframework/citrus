@@ -221,6 +221,7 @@
     <floci.version>1.4.0</floci.version>
     <ftpserver.version>1.2.1</ftpserver.version>
     <groovy.version>3.0.25</groovy.version>
+    <graphql-java.version>25.0</graphql-java.version>
     <greenmail.version>2.1.11</greenmail.version>
     <hamcrest.version>3.0</hamcrest.version>
     <htmlunit.version>4.13.0</htmlunit.version>
@@ -278,6 +279,7 @@
     <spring.boot.version>4.1.0</spring.boot.version>
     <spring.ws.version>5.0.2</spring.ws.version>
     <spring.integration.version>7.1.0</spring.integration.version>
+    <spring.graphql.version>2.0.5</spring.graphql.version>
     <spring.restdocs.version>4.0.1</spring.restdocs.version>
     <sshd.version>2.19.0</sshd.version>
     <swagger.version>2.2.37</swagger.version>
@@ -843,6 +845,16 @@
         <groupId>com.jayway.jsonpath</groupId>
         <artifactId>json-path</artifactId>
         <version>${json-path.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.graphql-java</groupId>
+        <artifactId>graphql-java</artifactId>
+        <version>${graphql-java.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.graphql</groupId>
+        <artifactId>spring-graphql</artifactId>
+        <version>${spring.graphql.version}</version>
       </dependency>
 
       <dependency>
