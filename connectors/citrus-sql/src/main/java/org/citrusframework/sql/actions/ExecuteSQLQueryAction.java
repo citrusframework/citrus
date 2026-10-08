@@ -288,6 +288,11 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     private void performValidation(final Map<String, List<String>> columnValuesMap,
             List<Map<String, Object>> allResultRows, TestContext context)
             throws UnknownElementException, ValidationException {
+        // apply plain-Java result set validation if specified (needs no script context)
+        if (resultSetValidator != null) {
+            resultSetValidator.validateSqlResultSet(allResultRows, context);
+        }
+
         // apply script validation if specified
         if (scriptValidationContext != null) {
             getScriptValidator(context).validateSqlResultSet(allResultRows, scriptValidationContext, context);
