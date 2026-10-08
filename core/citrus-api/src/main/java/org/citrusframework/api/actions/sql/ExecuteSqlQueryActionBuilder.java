@@ -24,6 +24,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
+import org.citrusframework.validation.script.sql.SqlResultSetValidator;
 
 public interface ExecuteSqlQueryActionBuilder<T extends TestAction, B extends ExecuteSqlQueryActionBuilder<T, B>>
         extends DatabaseConnectingActionBuilder<T, B> {
@@ -80,6 +81,14 @@ public interface ExecuteSqlQueryActionBuilder<T extends TestAction, B extends Ex
      * @param validator the validator to set
      */
     B validator(SqlResultSetScriptValidator validator);
+
+    /**
+     * Sets an explicit plain-Java validator implementation for this action. In contrast
+     * to the script validator this validator runs with or without a script validation
+     * context.
+     * @param validator the validator to set
+     */
+    B validator(SqlResultSetValidator validator);
 
     interface BuilderFactory {
 
