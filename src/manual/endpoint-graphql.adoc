@@ -1,0 +1,441 @@
+[[graphql]]
+= GraphQL support
+
+GraphQL APIs are usually served over HTTP: a client posts a query or mutation with variables and the server answers with
+`data` and/or `errors`. Citrus is able to call GraphQL APIs as a client and to simulate GraphQL APIs as a server. GraphQL
+endpoints run on top of the Citrus Http client and server, so every Http setting (request factory, timeouts, interceptors,
+TLS, authentication) keeps working.
+
+NOTE: The GraphQL support is located in the module *citrus-graphql*. The module builds on Spring GraphQL, so adding it
+brings `spring-graphql`, `graphql-java` and `reactor-core` to your test classpath. Projects that already use Spring
+GraphQL should keep both on compatible versions.
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-graphql</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+The GraphQL test actions are available as `graphql()` in the Citrus Java DSL, as `<graphql>` element in XML tests and as
+`graphql:` in YAML tests.
+
+[[graphql-endpoints]]
+== GraphQL client and server
+
+A GraphQL client needs the request URL of the API. The GraphQL path defaults to `/graphql`. When the request URL already
+has a path of its own (e.g. `http://localhost:8080/api/graphql`) the URL is used as it is.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+private final GraphQlServer bookServer = GraphQlEndpoints.graphql().server()
+        .port(8080)
+        .autoStart(true)
+        .schema("classpath:graphql/schema.graphqls")
+        .build();
+
+@BindToRegistry
+private final GraphQlClient bookClient = GraphQlEndpoints.graphql().client()
+        .requestUrl("http://localhost:8080")
+        .schema("classpath:graphql/schema.graphqls")
+        .build();
+----
+
+.Annotations
+[source,java,indent=0,role="secondary"]
+----
+@CitrusEndpoint
+@GraphQlServerConfig(port = 8080, autoStart = true, schema = "classpath:graphql/schema.graphqls")
+private GraphQlServer bookServer;
+
+@CitrusEndpoint
+@GraphQlClientConfig(requestUrl = "http://localhost:8080", schema = "classpath:graphql/schema.graphqls")
+private GraphQlClient bookClient;
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<endpoints>
+  <graphql>
+    <server name="bookServer" port="8080" auto-start="true"/>
+  </graphql>
+  <graphql>
+    <client name="bookClient" request-url="http://localhost:8080"/>
+  </graphql>
+</endpoints>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+endpoints:
+  - graphql:
+      server:
+        name: "bookServer"
+        port: 8080
+        autoStart: true
+  - graphql:
+      client:
+        name: "bookClient"
+        requestUrl: "http://localhost:8080"
+----
+
+Clients can also be created from endpoint URIs, `graphql://localhost:8080/graphql` for Http and
+`graphqls://api.example.com/graphql` for Https. URI parameters such as `strict=false` or `requestMethod=GET` set the
+respective client settings. The endpoint catalog offers the builders as `CitrusEndpoints.graphql().client()` and
+`CitrusEndpoints.graphql().server()`.
+
+[cols="1,1,3"]
+|===
+|Setting |Default |Description
+
+|path |`/graphql` |GraphQL path. On the client it is appended to the request URL unless the URL has a path of its own.
+|schema |none |One or more SDL resources. Queries are validated against the merged schema (see <<graphql-schema>>).
+|strict |`true` |GraphQL checks (see <<graphql-strict>>). Each action can override the setting.
+|requestMethod |`POST` |Client only: `POST` with a JSON body or `GET` with query parameters.
+|===
+
+All other client and server settings are the ones of the Citrus Http client and server.
+
+TIP: In a test class that implements `TestActionSupport` the method `graphql()` refers to the GraphQL test actions. Use
+the fully qualified `GraphQlEndpoints.graphql()` to create endpoints there.
+
+[[graphql-client]]
+== Calling a GraphQL API
+
+The client sends a GraphQL document with an optional operation name and variables. The document is given inline or as a
+resource. Citrus expressions such as `${id}` are resolved in the document, the operation name and the variables.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void readBook() {
+    variable("id", "42");
+
+    $(graphql().client(bookClient)
+        .send()
+        .query("query Book($id: ID!) { book(id: $id) { title } }")
+        .operationName("Book")
+        .variable("id", "${id}"));
+
+    $(graphql().client(bookClient)
+        .receive()
+        .data("$.book.title", "Dune")
+        .message()
+        .status(200));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<graphql client="bookClient">
+  <send-request operation-name="Book">
+    <query>query Book($id: ID!) { book(id: $id) { title } }</query>
+    <variable name="id" value="${id}"/>
+  </send-request>
+</graphql>
+
+<graphql client="bookClient">
+  <receive-response status="200">
+    <data path="$.book.title" value="Dune"/>
+  </receive-response>
+</graphql>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+- graphql:
+    client: "bookClient"
+    sendRequest:
+      operationName: "Book"
+      query: "query Book($id: ID!) { book(id: $id) { title } }"
+      variable:
+        - name: "id"
+          value: "${id}"
+- graphql:
+    client: "bookClient"
+    receiveResponse:
+      status: 200
+      data:
+        - path: "$.book.title"
+          value: "Dune"
+----
+
+The request is a POST with the JSON body `{"query": ..., "operationName": ..., "variables": ...}`, the
+`Content-Type: application/json` header and `Accept: application/graphql-response+json, application/json`. Use
+`queryResource("classpath:graphql/book.graphql")` (XML: `<query file="..."/>`, YAML: `queryResource`) to load the
+document from a file.
+
+Queries can also be sent with Http GET. The client then encodes `query`, `operationName` and `variables` as query
+parameters. Only queries can be sent with GET, mutations are rejected before anything is sent.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+$(graphql().client(bookClient)
+    .send()
+    .get()
+    .query("query Books($first: Int) { books(first: $first) { title } }")
+    .variable("first", 10));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<graphql client="bookClient">
+  <send-request method="GET">
+    <query>query Books($first: Int) { books(first: $first) { title } }</query>
+    <variables>{"first": 10}</variables>
+  </send-request>
+</graphql>
+----
+
+NOTE: With GET the variables are part of the request URI and therefore appear in logs and reports.
+
+On the response, `data(path, value)` checks a value by JSONPath relative to `$.data` and `data(json)` compares the whole
+`data` object. Validation matchers and `@ignore@` work as in any JSON validation, and so do `jsonPath()` validations on
+the whole response, variable extraction, header and status checks. Check the Http status with `.message().status(...)`.
+
+TIP: `method(...)`, `path(...)` and other Http builder methods return the Http builder type. Call the GraphQL methods
+such as `query(...)` or `operationName(...)` first in a chain.
+
+[[graphql-variables]]
+=== Variables and their JSON type
+
+Variables keep their JSON type: `variable("first", 10)` sends the number `10`, `variable("draft", true)` the boolean
+`true` and strings stay strings. A value taken from a Citrus variable is a string, so `variable("first", "${n}")` sends
+`"10"`, which a server expecting `Int` rejects. To send a typed value from a Citrus variable use the variables JSON
+object: it is resolved first and parsed afterwards.
+
+[source,java]
+----
+$(graphql().client(bookClient)
+    .send()
+    .query("query Books($first: Int) { books(first: $first) { title } }")
+    .variables("{\"first\": ${n}}"));
+----
+
+In XML and YAML the single `variable` values are strings; use `variables` for numbers, booleans, lists and objects.
+
+[[graphql-errors]]
+== GraphQL errors
+
+GraphQL servers usually answer with Http 200 even when the `errors` array is filled. Citrus therefore fails a GraphQL
+receive action when the response contains errors the test did not expect, whatever the Http status:
+
+----
+GraphQL response contains 1 unexpected error: [NOT_FOUND] Book not found at book - use expectError(...) or expectErrors() if errors are intended
+----
+
+A test that expects errors says so. `expectErrors()` passes when at least one error is present. `expectError(...)` passes
+when any error of the response matches every field that is set: `message`, `path` and the `extensions.code`. The fields
+support validation matchers, and the expectation can be repeated. When nothing matches, the failure lists all received
+errors. Data checks and error expectations can be combined for partial results.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+$(graphql().client(bookClient)
+    .receive()
+    .expectError(error().code("NOT_FOUND").message("@contains('not found')@").path("book"))
+    .data("{\"book\": null}"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<graphql client="bookClient">
+  <receive-response>
+    <expect-error code="NOT_FOUND" message="@contains('not found')@" path="book"/>
+    <data>{"book": null}</data>
+  </receive-response>
+</graphql>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+- graphql:
+    client: "bookClient"
+    receiveResponse:
+      expectError:
+        - code: "NOT_FOUND"
+          message: "@contains('not found')@"
+          path: "book"
+      data:
+        - json: '{"book": null}'
+----
+
+The `error()` factory is `org.citrusframework.api.graphql.GraphQlError.error()`. Paths are given as segments in Java
+(`path("books", 1, "title")`) and as string (`books[1].title`) in XML and YAML.
+
+[[graphql-simulator]]
+== Simulating a GraphQL API
+
+The GraphQL server receives the operations of the client under test and replies with data and/or errors. GET and POST
+requests look the same to the test: a GET request is presented as the equivalent JSON body, the Http method and the
+original query string stay available in the `citrus_http_method` and `citrus_http_query_params` headers.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+$(graphql().server(bookServer)
+    .receive()
+    .operationName("Book")
+    .query("query Book($id: ID!) { book(id: $id) { title } }")
+    .variable("id", "@isNumber()@"));
+
+$(graphql().server(bookServer)
+    .send()
+    .data("{\"book\": {\"title\": \"Dune\", \"author\": null}}")
+    .error(error().message("Author unavailable").path("book", "author").code("PARTIAL")));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<graphql server="bookServer">
+  <receive-request operation-name="Book">
+    <query>query Book($id: ID!) { book(id: $id) { title } }</query>
+    <variable name="id" value="@isNumber()@"/>
+  </receive-request>
+</graphql>
+
+<graphql server="bookServer">
+  <send-response>
+    <data>{"book": {"title": "Dune", "author": null}}</data>
+    <error message="Author unavailable" path="book.author" code="PARTIAL"/>
+  </send-response>
+</graphql>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+- graphql:
+    server: "bookServer"
+    receiveRequest:
+      operationName: "Book"
+      query: "query Book($id: ID!) { book(id: $id) { title } }"
+      variable:
+        - name: "id"
+          value: "@isNumber()@"
+- graphql:
+    server: "bookServer"
+    sendResponse:
+      data: '{"book": {"title": "Dune", "author": null}}'
+      error:
+        - message: "Author unavailable"
+          path: "book.author"
+          code: "PARTIAL"
+----
+
+The expected operation name is the name of the operation the request executes: the given `operationName`, or the name
+of the single operation in the document when the client omits it. Queries are compared ignoring whitespace, comments
+and formatting. Variables that the test does not check are ignored; `variables(json)` compares the whole object.
+
+The reply has Http status 200 unless the test sets another one. Its content type is
+`application/graphql-response+json` when the client accepts it and `application/json` otherwise; a content type set on
+the message wins.
+
+[[graphql-schema]]
+== Schema validation
+
+When an endpoint has a schema, GraphQL documents are validated against it: on the client before the request is sent, on
+the server when the request arrives. The schema may be split across several SDL files; types and type extensions are
+merged. Custom scalars need no configuration. The schema is loaded once per endpoint, a missing file or an SDL syntax
+error fails the first action that needs the schema with the file name and position.
+
+----
+GraphQL document does not match the schema: (line 1, column 17) Validation error (FieldUndefined@[book/isbn]) : Field 'isbn' in type 'Book' is undefined
+----
+
+NOTE: Federation SDL that uses directives such as `@key` without declaring them does not load. Add the directive
+declarations to the schema files or disable the checks for the action with `strict(false)`.
+
+[[graphql-strict]]
+== Strict checks
+
+The `strict` setting enforces the GraphQL rules on everything Citrus sends or receives. It is enabled by default, set on
+the endpoint and can be overridden per action with `strict(false)` (XML and YAML: `strict="false"` / `strict: false`).
+
+[cols="1,3,3"]
+|===
+|Action |strict (default) |not strict
+
+|Client send
+|Parses the document, checks the operation name and the schema, rejects mutations over GET. Fails before anything is sent.
+|Sends the document as written, e.g. to test the server's own validation.
+
+|Client receive
+|The body must be a JSON object with `data` and/or `errors`, every error with a `message`.
+|No shape check, e.g. for an Html error page of a proxy; check the Http status instead.
+
+|Server receive
+|Parses the incoming document and checks it against the schema.
+|Accepts any request; the raw query can be checked with validation matchers.
+
+|Server send
+|The reply must have `data` and/or `errors`, every error with a `message`.
+|Sends the message body as set, e.g. to test how the client under test copes with a malformed reply.
+|===
+
+Unexpected GraphQL errors fail a client receive in both modes.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+$(graphql().client(bookClient)
+    .send()
+    .strict(false)
+    .query("{ book(id: 1) { isbn } }"));
+
+$(graphql().client(bookClient)
+    .receive()
+    .expectError(error().message("@contains('isbn')@"))
+    .message()
+    .status(400));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<graphql client="bookClient">
+  <send-request strict="false">
+    <query>{ book(id: 1) { isbn } }</query>
+  </send-request>
+</graphql>
+
+<graphql client="bookClient">
+  <receive-response status="400">
+    <expect-error message="@contains('isbn')@"/>
+  </receive-response>
+</graphql>
+----
+
+[[graphql-headers]]
+== GraphQL message headers
+
+[cols="2,3"]
+|===
+|Header |Description
+
+|`citrus_graphql_operation_name`
+|Name of the executed operation, on sent and received requests.
+
+|`citrus_graphql_operation_type`
+|`query` or `mutation`, set when the document was parsed (strict checks enabled).
+
+|`citrus_graphql_kind`
+|`request` or `response`, set on messages received through GraphQL actions.
+|===
+
+The headers can be validated and extracted like any other message header.
