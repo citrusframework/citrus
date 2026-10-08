@@ -1,0 +1,2 @@
+client=org.citrusframework.graphql.config.annotation.GraphQlClientConfigParser
+server=org.citrusframework.graphql.config.annotation.GraphQlServerConfigParser
