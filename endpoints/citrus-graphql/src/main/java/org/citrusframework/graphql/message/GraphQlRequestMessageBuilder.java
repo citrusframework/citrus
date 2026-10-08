@@ -97,7 +97,9 @@ public class GraphQlRequestMessageBuilder extends HttpMessageBuilder {
         String path = getMessage().getPath() != null ? message.getPath() : settings.path();
 
         message.method(httpMethod);
-        message.accept(ACCEPT);
+        if (message.getAccept() == null) {
+            message.accept(ACCEPT);
+        }
         if (get) {
             message.setPayload("");
             target(message, path, "?" + GraphQlMessages.toQueryString(request), settings);
