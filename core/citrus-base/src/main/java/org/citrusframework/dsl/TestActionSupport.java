@@ -21,6 +21,7 @@ import org.citrusframework.TestActions;
 import org.citrusframework.dsl.agent.AgentTestActionSupport;
 import org.citrusframework.dsl.camel.CamelTestActionSupport;
 import org.citrusframework.dsl.docker.DockerTestActionSupport;
+import org.citrusframework.dsl.graphql.GraphQlTestActionSupport;
 import org.citrusframework.dsl.http.HttpTestActionSupport;
 import org.citrusframework.dsl.jbang.JBangTestActionSupport;
 import org.citrusframework.dsl.jms.JmsTestActionSupport;
@@ -49,6 +50,7 @@ public interface TestActionSupport extends TestActions, TestActionContainers,
         AgentTestActionSupport,
         CamelTestActionSupport,
         DockerTestActionSupport,
+        GraphQlTestActionSupport,
         HttpTestActionSupport,
         JBangTestActionSupport,
         JmsTestActionSupport,

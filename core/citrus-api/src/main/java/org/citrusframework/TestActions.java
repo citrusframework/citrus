@@ -20,6 +20,7 @@ import org.citrusframework.api.actions.BaseTestActions;
 import org.citrusframework.api.actions.agent.AgentTestActions;
 import org.citrusframework.api.actions.camel.CamelTestActions;
 import org.citrusframework.api.actions.docker.DockerTestActions;
+import org.citrusframework.api.actions.graphql.GraphQlTestActions;
 import org.citrusframework.api.actions.http.HttpTestActions;
 import org.citrusframework.api.actions.jbang.JBangTestActions;
 import org.citrusframework.api.actions.jms.JmsTestActions;
@@ -40,6 +41,7 @@ public interface TestActions extends
         AgentTestActions,
         CamelTestActions,
         DockerTestActions,
+        GraphQlTestActions,
         HttpTestActions,
         JBangTestActions,
         JmsTestActions,
