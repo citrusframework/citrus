@@ -1,0 +1,2 @@
+name=defaultGraphQlMessageValidator
+type=org.citrusframework.graphql.validation.GraphQlMessageValidator
