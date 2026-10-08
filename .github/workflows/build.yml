@@ -45,7 +45,11 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          java-version: '17'
+          # Camel JBang requires Java 21+, so provide it locally instead of letting
+          # JBang download one at runtime. The last version listed stays the default.
+          java-version: |
+            21
+            17
           distribution: 'temurin'
       - name: Checkout code
         uses: actions/checkout@v6
@@ -81,6 +85,7 @@ jobs:
           sdk install jbang
           
           jbang --version
+          jbang jdk install 21 "$JAVA_HOME_21_X64"
           
           # On a pull request, build only the modules this branch touched plus
           # everything downstream of them. Pushes to main always build in full.
