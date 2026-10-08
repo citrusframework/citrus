@@ -2045,6 +2045,7 @@
   <xs:element name="groovy" type="tns:Groovy"/>
   <xs:element name="http" type="tns:Http"/>
   <xs:element name="openapi" type="tns:OpenApi"/>
+  <xs:element name="graphql" type="tns:GraphQl"/>
   <xs:element name="soap" type="tns:Soap"/>
   <xs:element name="camel" type="tns:Camel"/>
   <xs:element name="selenium" type="tns:Selenium"/>
@@ -3601,6 +3602,128 @@
     <xs:attribute name="client" type="xs:string"/>
     <xs:attribute name="server" type="xs:string"/>
   </xs:complexType>
+
+  <xs:complexType name="GraphQl">
+    <xs:annotation>
+      <xs:documentation>Calls a GraphQL API as client or simulates one as server.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="send-request">
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="query" type="tns:GraphQlQuery"/>
+              <xs:element name="variables" type="xs:string"/>
+              <xs:element name="variable" type="tns:GraphQlVariable"/>
+              <xs:element name="message" type="tns:MessageType"/>
+              <xs:element name="extract" type="tns:Extract"/>
+            </xs:choice>
+            <xs:attribute name="operation-name" type="xs:string"/>
+            <xs:attribute name="method" type="tns:GraphQlMethod"/>
+            <xs:attribute name="strict" type="xs:boolean"/>
+            <xs:attribute name="uri" type="xs:string"/>
+            <xs:attribute name="fork" type="xs:boolean"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="receive-response">
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="data" type="tns:GraphQlData"/>
+              <xs:element name="expect-errors">
+                <xs:complexType/>
+              </xs:element>
+              <xs:element name="expect-error" type="tns:GraphQlErrorType"/>
+              <xs:element name="selector" type="xs:string"/>
+              <xs:element name="message" type="tns:MessageType"/>
+              <xs:element name="validate" type="tns:Validate"/>
+              <xs:element name="extract" type="tns:Extract"/>
+            </xs:choice>
+            <xs:attribute name="status" type="xs:int"/>
+            <xs:attribute name="strict" type="xs:boolean"/>
+            <xs:attribute name="timeout" type="xs:int"/>
+            <xs:attribute name="select" type="xs:string"/>
+            <xs:attribute name="validator" type="xs:string"/>
+            <xs:attribute name="validators" type="xs:string"/>
+            <xs:attribute name="header-validator" type="xs:string"/>
+            <xs:attribute name="header-validators" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="receive-request">
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="query" type="xs:string"/>
+              <xs:element name="variables" type="xs:string"/>
+              <xs:element name="variable" type="tns:GraphQlVariable"/>
+              <xs:element name="selector" type="xs:string"/>
+              <xs:element name="message" type="tns:MessageType"/>
+              <xs:element name="validate" type="tns:Validate"/>
+              <xs:element name="extract" type="tns:Extract"/>
+            </xs:choice>
+            <xs:attribute name="operation-name" type="xs:string"/>
+            <xs:attribute name="method" type="tns:GraphQlMethod"/>
+            <xs:attribute name="strict" type="xs:boolean"/>
+            <xs:attribute name="timeout" type="xs:int"/>
+            <xs:attribute name="select" type="xs:string"/>
+            <xs:attribute name="validator" type="xs:string"/>
+            <xs:attribute name="validators" type="xs:string"/>
+            <xs:attribute name="header-validator" type="xs:string"/>
+            <xs:attribute name="header-validators" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="send-response">
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="data" type="xs:string"/>
+              <xs:element name="error" type="tns:GraphQlErrorType"/>
+              <xs:element name="message" type="tns:MessageType"/>
+              <xs:element name="extract" type="tns:Extract"/>
+            </xs:choice>
+            <xs:attribute name="status" type="xs:int"/>
+            <xs:attribute name="strict" type="xs:boolean"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="actor" type="xs:string"/>
+    <xs:attribute name="client" type="xs:string"/>
+    <xs:attribute name="server" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="GraphQlQuery">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="file" type="xs:string"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="GraphQlVariable">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="GraphQlData">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="path" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="GraphQlErrorType">
+    <xs:attribute name="message" type="xs:string"/>
+    <xs:attribute name="path" type="xs:string"/>
+    <xs:attribute name="code" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:simpleType name="GraphQlMethod">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GET"/>
+      <xs:enumeration value="POST"/>
+    </xs:restriction>
+  </xs:simpleType>
 
   <xs:complexType name="Agent">
     <xs:annotation>

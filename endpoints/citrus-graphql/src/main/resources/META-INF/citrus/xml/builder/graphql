@@ -1,0 +1,2 @@
+type=org.citrusframework.graphql.xml.GraphQl
+ns=http://citrusframework.org/schema/xml/testcase
