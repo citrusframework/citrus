@@ -22,6 +22,7 @@ import org.citrusframework.dsl.endpoint.docker.DockerEndpointCatalog;
 import org.citrusframework.dsl.endpoint.ftp.FtpEndpointCatalog;
 import org.citrusframework.dsl.endpoint.ftp.ScpEndpointCatalog;
 import org.citrusframework.dsl.endpoint.ftp.SftpEndpointCatalog;
+import org.citrusframework.dsl.endpoint.graphql.GraphQlEndpointCatalog;
 import org.citrusframework.dsl.endpoint.http.HttpEndpointCatalog;
 import org.citrusframework.dsl.endpoint.jms.JmsEndpointCatalog;
 import org.citrusframework.dsl.endpoint.jmx.JmxEndpointCatalog;
@@ -79,6 +80,14 @@ public abstract class CitrusEndpoints {
      */
     public static HttpEndpointCatalog http() {
         return HttpEndpointCatalog.http();
+    }
+
+    /**
+     * Creates new GraphQlClient or GraphQlServer builder.
+     * @return
+     */
+    public static GraphQlEndpointCatalog graphql() {
+        return GraphQlEndpointCatalog.graphql();
     }
 
     /**
