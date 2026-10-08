@@ -104,7 +104,7 @@ $(waitFor()
 ----
 
 When `waitFor` times out, its error message contains the last AssertJ failure description. A value that cannot be
-converted to the given type is logged as a warning and counts as `false`.
+converted to the given type is logged at debug level and counts as `false`.
 
 [[assertj-validation-matcher]]
 === The @assertj()@ validation matcher
