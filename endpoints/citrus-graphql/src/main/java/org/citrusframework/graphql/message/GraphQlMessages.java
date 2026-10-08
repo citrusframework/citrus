@@ -106,6 +106,35 @@ public final class GraphQlMessages {
     }
 
     /**
+     * Checks the response shape of GraphQL over HTTP: a JSON object with {@code data} and/or
+     * {@code errors}, every error having a {@code message}.
+     * @return the violation, {@code null} when the shape is valid
+     */
+    public static String shapeViolation(String payload) {
+        Map<String, Object> body = toJsonObject(payload);
+        if (body == null) {
+            return NOT_A_JSON_OBJECT;
+        }
+
+        if (!body.containsKey("data") && !body.containsKey("errors")) {
+            return "body has neither 'data' nor 'errors'";
+        }
+
+        if (body.get("errors") instanceof java.util.List<?> errors) {
+            for (int i = 0; i < errors.size(); i++) {
+                if (!(errors.get(i) instanceof Map<?, ?> error) || !(error.get("message") instanceof String)) {
+                    return "error %d has no 'message'".formatted(i);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /** Shape violation of a body that is not a JSON object. */
+    public static final String NOT_A_JSON_OBJECT = "body is not a JSON object";
+
+    /**
      * Serializes a value as JSON.
      */
     public static String toJson(Object value) {
@@ -115,7 +144,7 @@ public final class GraphQlMessages {
     /**
      * Parses JSON text; {@code null} when the text is empty or not valid JSON.
      */
-    static Object parseOrNull(String json) {
+    public static Object parseOrNull(String json) {
         if (json == null || json.isBlank()) {
             return null;
         }

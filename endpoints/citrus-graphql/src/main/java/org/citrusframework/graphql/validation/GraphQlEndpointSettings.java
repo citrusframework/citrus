@@ -19,30 +19,46 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.document.GraphQlSchemaLoader;
+import org.citrusframework.graphql.client.GraphQlEndpointConfiguration;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * GraphQL settings of the endpoint a test action uses: whether checks are strict and which schema
- * validates documents. Plain HTTP endpoints get the defaults: strict, no schema.
+ * GraphQL settings of the endpoint a test action uses. Plain HTTP endpoints get the defaults: strict,
+ * no schema, POST to {@code /graphql} (or to the request URL as is when it has a path).
  * @param strict whether GraphQL checks are strict
  * @param schemaLoader schema of the endpoint, {@code null} when none is configured
+ * @param requestUrl request URL of a client endpoint, {@code null} otherwise
+ * @param path GraphQL path, empty when the request URL is used as is
+ * @param requestMethod default request method of a client endpoint
  */
-public record GraphQlEndpointSettings(boolean strict, GraphQlSchemaLoader schemaLoader) {
+public record GraphQlEndpointSettings(boolean strict, GraphQlSchemaLoader schemaLoader, String requestUrl, String path,
+                                      RequestMethod requestMethod) {
 
-    public static final GraphQlEndpointSettings DEFAULTS = new GraphQlEndpointSettings(true, null);
+    public static final GraphQlEndpointSettings DEFAULTS = new GraphQlEndpointSettings(true, null, null,
+            GraphQlEndpointConfiguration.DEFAULT_PATH, RequestMethod.POST);
 
     /**
      * Reads the settings of an endpoint.
      */
     public static GraphQlEndpointSettings of(Endpoint endpoint) {
         if (endpoint instanceof GraphQlClient client) {
-            return new GraphQlEndpointSettings(client.getEndpointConfiguration().isStrict(),
-                    client.getEndpointConfiguration().getSchemaLoader());
+            GraphQlEndpointConfiguration configuration = client.getEndpointConfiguration();
+            return new GraphQlEndpointSettings(configuration.isStrict(), configuration.getSchemaLoader(),
+                    configuration.getRequestUrl(), configuration.getPath(), configuration.getRequestMethod());
         }
 
         if (endpoint instanceof GraphQlServer server) {
-            return new GraphQlEndpointSettings(server.isStrict(), server.getSchemaLoader());
+            return new GraphQlEndpointSettings(server.isStrict(), server.getSchemaLoader(), null, server.getPath(),
+                    RequestMethod.POST);
+        }
+
+        if (endpoint instanceof HttpClient client) {
+            String requestUrl = client.getEndpointConfiguration().getRequestUrl();
+            return new GraphQlEndpointSettings(true, null, requestUrl, GraphQlEndpointConfiguration.defaultPath(requestUrl),
+                    RequestMethod.POST);
         }
 
         return DEFAULTS;
@@ -67,6 +83,6 @@ public record GraphQlEndpointSettings(boolean strict, GraphQlSchemaLoader schema
      * Applies an action's {@code strict} override, if any.
      */
     public GraphQlEndpointSettings withStrict(Boolean strictOverride) {
-        return strictOverride == null ? this : new GraphQlEndpointSettings(strictOverride, schemaLoader);
+        return strictOverride == null ? this : new GraphQlEndpointSettings(strictOverride, schemaLoader, requestUrl, path, requestMethod);
     }
 }
