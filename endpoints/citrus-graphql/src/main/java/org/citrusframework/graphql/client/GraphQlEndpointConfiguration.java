@@ -45,7 +45,15 @@ public class GraphQlEndpointConfiguration extends HttpEndpointConfiguration {
             return path;
         }
 
-        return hasPath(getRequestUrl()) ? "" : DEFAULT_PATH;
+        return defaultPath(getRequestUrl());
+    }
+
+    /**
+     * Gets the default GraphQL path for a request URL: {@value DEFAULT_PATH}, or empty when the request
+     * URL already has a path of its own.
+     */
+    public static String defaultPath(String requestUrl) {
+        return hasPath(requestUrl) ? "" : DEFAULT_PATH;
     }
 
     public void setPath(String path) {

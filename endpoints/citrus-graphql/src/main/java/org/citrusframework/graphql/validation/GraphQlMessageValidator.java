@@ -69,12 +69,12 @@ public class GraphQlMessageValidator extends AbstractMessageValidator<GraphQlMes
 
     private static void validateResponse(Message message, TestContext context,
                                          GraphQlMessageValidationContext validationContext, GraphQlEndpointSettings settings) {
-        String shapeViolation = shapeViolation(message.getPayload(String.class));
+        String shapeViolation = GraphQlMessages.shapeViolation(message.getPayload(String.class));
         if (shapeViolation != null) {
             boolean hasExpectations = validationContext.isErrorsExpected()
                     || !validationContext.getDataExpressions().isEmpty()
                     || validationContext.getData() != null;
-            boolean unreadable = shapeViolation.equals(NOT_A_JSON_OBJECT);
+            boolean unreadable = shapeViolation.equals(GraphQlMessages.NOT_A_JSON_OBJECT);
             if (settings.strict() || (unreadable && hasExpectations)) {
                 throw new ValidationException("Expected GraphQL response but got content type '%s' with status %s: %s"
                         .formatted(header(message, HttpMessageHeaders.HTTP_CONTENT_TYPE),
@@ -138,34 +138,6 @@ public class GraphQlMessageValidator extends AbstractMessageValidator<GraphQlMes
                             GraphQlMessages.toJson(responseMap.get("data")),
                             context.replaceDynamicContentInString(validationContext.getData())));
         }
-    }
-
-    private static final String NOT_A_JSON_OBJECT = "body is not a JSON object";
-
-    /**
-     * Checks the response shape of GraphQL over HTTP: a JSON object with {@code data} and/or
-     * {@code errors}, every error having a {@code message}.
-     * @return the violation, {@code null} when the shape is valid
-     */
-    private static String shapeViolation(String payload) {
-        Map<String, Object> body = GraphQlMessages.toJsonObject(payload);
-        if (body == null) {
-            return NOT_A_JSON_OBJECT;
-        }
-
-        if (!body.containsKey("data") && !body.containsKey("errors")) {
-            return "body has neither 'data' nor 'errors'";
-        }
-
-        if (body.get("errors") instanceof List<?> errors) {
-            for (int i = 0; i < errors.size(); i++) {
-                if (!(errors.get(i) instanceof Map<?, ?> error) || !(error.get("message") instanceof String)) {
-                    return "error %d has no 'message'".formatted(i);
-                }
-            }
-        }
-
-        return null;
     }
 
     private static boolean matches(GraphQlError expected, ResponseError actual, TestContext context) {
