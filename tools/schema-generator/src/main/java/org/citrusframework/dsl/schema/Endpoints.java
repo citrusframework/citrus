@@ -27,6 +27,7 @@ import org.citrusframework.ftp.endpoint.builder.SftpEndpointBuilder;
 import org.citrusframework.http.endpoint.builder.HttpEndpointBuilder;
 import org.citrusframework.jms.endpoint.JmsEndpointsBuilder;
 import org.citrusframework.kafka.endpoint.builder.KafkaEndpointsBuilder;
+import org.citrusframework.graphql.endpoint.builder.GraphQlEndpointBuilder;
 import org.citrusframework.kubernetes.endpoint.builder.KubernetesEndpointBuilder;
 import org.citrusframework.mail.endpoint.builder.MailEndpointBuilder;
 import org.citrusframework.selenium.endpoint.SeleniumEndpointBuilder;
@@ -38,6 +39,7 @@ import org.citrusframework.api.yaml.SchemaType;
 
 @SchemaType(oneOf = {
     "http",
+    "graphql",
     "soap",
     "webSocket",
     "context",
@@ -59,6 +61,10 @@ public interface Endpoints {
 
     @SchemaProperty(description = "Http client and server endpoints", module = "citrus-http")
     default void setHttp(HttpEndpointBuilder builder) {
+    }
+
+    @SchemaProperty(description = "GraphQL client and server endpoints", module = "citrus-graphql")
+    default void setGraphql(GraphQlEndpointBuilder builder) {
     }
 
     @SchemaProperty(description = "SOAP WebService client and server endpoints", module = "citrus-ws")
