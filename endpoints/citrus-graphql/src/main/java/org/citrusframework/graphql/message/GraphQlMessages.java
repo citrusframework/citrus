@@ -90,12 +90,19 @@ public final class GraphQlMessages {
      * @throws ValidationException when the body is not a JSON object
      */
     public static GraphQlResponse toResponse(Message message) {
-        Object body = parseOrNull(message.getPayload(String.class));
-        if (!(body instanceof Map<?, ?> map)) {
+        Map<String, Object> body = toJsonObject(message.getPayload(String.class));
+        if (body == null) {
             throw new ValidationException("GraphQL response body is not a JSON object");
         }
 
-        return new MapGraphQlResponse(stringKeys(map));
+        return new MapGraphQlResponse(body);
+    }
+
+    /**
+     * Parses JSON text into a map; {@code null} when the text is empty, not valid JSON or not an object.
+     */
+    public static Map<String, Object> toJsonObject(String json) {
+        return parseOrNull(json) instanceof Map<?, ?> map ? stringKeys(map) : null;
     }
 
     /**
