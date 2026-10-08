@@ -20,8 +20,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import graphql.GraphQLError;
-import graphql.language.SourceLocation;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.UnExecutableSchemaGenerator;
 import graphql.schema.idl.errors.SchemaProblem;
@@ -126,20 +124,7 @@ public class GraphQlSchemaLoader {
 
     private static String describe(SchemaProblem problem) {
         return problem.getErrors().stream()
-                .map(GraphQlSchemaLoader::describe)
+                .map(GraphQlDocuments::describe)
                 .collect(Collectors.joining("; "));
-    }
-
-    /**
-     * Describes a GraphQL error with the location of its first source position, if any.
-     */
-    static String describe(GraphQLError error) {
-        List<SourceLocation> locations = error.getLocations();
-        if (locations == null || locations.isEmpty()) {
-            return error.getMessage();
-        }
-
-        SourceLocation location = locations.get(0);
-        return "(line %d, column %d) %s".formatted(location.getLine(), location.getColumn(), error.getMessage());
     }
 }
