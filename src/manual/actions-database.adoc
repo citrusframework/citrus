@@ -564,6 +564,65 @@ As you can see Groovy provides fantastic access methods to the SQL result set. W
 
 NOTE: In general other script languages do also support this kind of list and map access. For now we just have implemented the Groovy script support, but the framework is ready to work with all other great script languages out there, too (e.g. Scala, Clojure, Fantom, etc.). So if you prefer to work with another language join and help us implement those features.
 
+[[java-sql-result-set-validation]]
+=== Java SQL result set validation
+
+When plain Java assertions are preferred over a script, bind a `SqlResultSetValidator`
+to the query action. In contrast to the script validator this validator runs with or
+without a validation script — no `validateScript(...)` is required to trigger it:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+$(sql()
+    .dataSource(myDataSource)
+    .query()
+    .statement("select ORDERTYPE, STATUS from ORDERS where ID='${orderId}'")
+    .validator((resultSet, context) -> {
+        Assert.assertEquals(resultSet.size(), 2);
+        Assert.assertEquals(resultSet.get(0).get("STATUS"), "in progress");
+    })
+);
+----
+
+The validator receives every result row in execution order as a `List<Map<String,
+Object>>`; an empty result arrives as an empty list. A `ValidationException` (or an
+`AssertionError` from your assertion library) fails the action. The Java validator
+composes with the other paths: when a script validation and control result set are
+configured as well, all of them run. For script-based validation use
+`SqlResultSetScriptValidator` as before — that remains the hook scripts execute through.
+
+Rows can also be asserted as typed POJOs instead of raw column maps. The
+`SqlPojoValidationCallback` maps each row to your class with case-insensitive,
+underscore-folded column-to-property matching, then checks every row until one satisfies
+the assertion:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+$(sql()
+    .dataSource(myDataSource)
+    .query()
+    .statement("select ORDERTYPE, STATUS from ORDERS where ID='${orderId}'")
+    .validator(new SqlPojoValidationCallback<Order>(Order.class) {
+        @Override
+        protected void validate(Order order, TestContext context) {
+            Assert.assertEquals(order.getStatus(), "in progress");
+        }
+    })
+);
+----
+
+The POJO needs a no-argument constructor and JavaBean setters for the asserted
+properties. With several rows the assertion holds when ANY row satisfies it ("the table
+contains a row like this"); when none does, the failure lists the rows seen. A row that
+cannot be mapped fails loudly, naming the column, the row index and the columns present.
+To take over multi-row semantics, override `validate(List<T>, TestContext)` instead —
+the empty list still reaches that override.
+
+NOTE: The builder has two `validator(...)` overloads (plain-Java and script). A literal
+`validator(null)` is ambiguous between them and needs a cast to the intended type.
+
 [[save-result-set-values]]
 === Save result set values
 
