@@ -1,0 +1,73 @@
+name: "GraphQlYamlIT"
+author: "Citrus"
+status: "FINAL"
+endpoints:
+  - graphql:
+      server:
+        name: "yamlGraphQlServer"
+        port: 19280
+        autoStart: true
+        timeout: 5000
+  - graphql:
+      client:
+        name: "yamlGraphQlClient"
+        requestUrl: "http://localhost:19280"
+        timeout: 5000
+variables:
+  - name: "id"
+    value: "42"
+actions:
+  - graphql:
+      client: "yamlGraphQlClient"
+      sendRequest:
+        operationName: "Book"
+        fork: true
+        query: "query Book($id: ID!) { book(id: $id) { title } }"
+        variable:
+          - name: "id"
+            value: "${id}"
+  - graphql:
+      server: "yamlGraphQlServer"
+      receiveRequest:
+        operationName: "Book"
+        method: "POST"
+        query: "query Book($id:ID!){book(id:$id){title}}"
+        variable:
+          - name: "id"
+            value: "${id}"
+  - graphql:
+      server: "yamlGraphQlServer"
+      sendResponse:
+        data: '{"book":{"title":"Dune"}}'
+  - graphql:
+      client: "yamlGraphQlClient"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.book.title"
+            value: "Dune"
+
+  - graphql:
+      client: "yamlGraphQlClient"
+      sendRequest:
+        method: "GET"
+        fork: true
+        query: '{ book(id: "7") { title } }'
+  - graphql:
+      server: "yamlGraphQlServer"
+      receiveRequest:
+        method: "GET"
+  - graphql:
+      server: "yamlGraphQlServer"
+      sendResponse:
+        error:
+          - message: "Book 7 not found"
+            path: "book"
+            code: "NOT_FOUND"
+  - graphql:
+      client: "yamlGraphQlClient"
+      receiveResponse:
+        expectError:
+          - code: "NOT_FOUND"
+            message: "@contains('not found')@"
+            path: "book"
