@@ -1,0 +1,38 @@
+name: "GraphQlClientTest"
+author: "Citrus"
+status: "FINAL"
+variables:
+  - name: "id"
+    value: "42"
+actions:
+  - graphql:
+      client: "graphQlClient"
+      sendRequest:
+        operationName: "Book"
+        query: "query Book($id: ID!) { book(id: $id) { title } }"
+        variable:
+          - name: "id"
+            value: "${id}"
+  - graphql:
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.book.title"
+            value: "Dune"
+      client: "graphQlClient"
+  - graphql:
+      client: "graphQlClient"
+      sendRequest:
+        method: "GET"
+        strict: false
+        queryResource: "classpath:org/citrusframework/graphql/actions/book.graphql"
+        variables: '{"id": "7"}'
+  - graphql:
+      client: "graphQlClient"
+      receiveResponse:
+        expectError:
+          - code: "NOT_FOUND"
+            message: "@contains('not found')@"
+            path: "book"
+        data:
+          - json: '{"book": null}'

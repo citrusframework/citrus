@@ -1,0 +1,33 @@
+name: "GraphQlServerTest"
+author: "Citrus"
+status: "FINAL"
+actions:
+  - graphql:
+      server: "graphQlServer"
+      receiveRequest:
+        operationName: "Book"
+        method: "POST"
+        query: "query Book($id:ID!){book(id:$id){title}}"
+        variable:
+          - name: "id"
+            value: "@isNumber()@"
+        extract:
+          header:
+            - name: "citrus_graphql_operation_type"
+              variable: "operationType"
+  - graphql:
+      server: "graphQlServer"
+      sendResponse:
+        status: 200
+        data: '{"book":{"title":"Dune","author":null}}'
+        error:
+          - message: "Author unavailable (${operationType})"
+            path: "book.author"
+            code: "PARTIAL"
+  - graphql:
+      server: "graphQlServer"
+      sendResponse:
+        strict: false
+        message:
+          body:
+            data: '{"unexpected":true}'
