@@ -4811,13 +4811,13 @@
       <xs:choice>
         <xs:element name="start">
           <xs:complexType>
-            <xs:attribute name="browser-type" type="xs:string"/>
-            <xs:attribute name="headless" type="xs:boolean"/>
             <xs:attribute name="allow-already-started" type="xs:boolean"/>
             <xs:attribute name="base-url" type="xs:string"/>
-            <xs:attribute name="start-page-url" type="xs:string"/>
-            <xs:attribute name="default-timeout" type="xs:long"/>
+            <xs:attribute name="browser-type" type="xs:string"/>
             <xs:attribute name="default-navigation-timeout" type="xs:long"/>
+            <xs:attribute name="default-timeout" type="xs:long"/>
+            <xs:attribute name="headless" type="xs:boolean"/>
+            <xs:attribute name="start-page-url" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="stop">
@@ -4838,6 +4838,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="double-click">
@@ -4845,6 +4846,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="right-click">
@@ -4852,6 +4854,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="hover">
@@ -4859,6 +4862,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="focus">
@@ -4866,6 +4870,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="tap">
@@ -4873,6 +4878,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="fill">
@@ -4880,6 +4886,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
             <xs:attribute name="value" type="xs:string"/>
             <xs:attribute name="values" type="xs:string"/>
             <xs:attribute name="key" type="xs:string"/>
@@ -4890,6 +4897,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
             <xs:attribute name="value" type="xs:string"/>
             <xs:attribute name="values" type="xs:string"/>
           </xs:complexType>
@@ -4899,6 +4907,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
             <xs:attribute name="value" type="xs:string"/>
             <xs:attribute name="values" type="xs:string"/>
             <xs:attribute name="key" type="xs:string"/>
@@ -4909,6 +4918,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
             <xs:attribute name="value" type="xs:string"/>
             <xs:attribute name="values" type="xs:string"/>
           </xs:complexType>
@@ -4918,6 +4928,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
             <xs:attribute name="value" type="xs:string"/>
             <xs:attribute name="values" type="xs:string"/>
           </xs:complexType>
@@ -4927,6 +4938,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
             <xs:attribute name="value" type="xs:string"/>
             <xs:attribute name="values" type="xs:string"/>
           </xs:complexType>
@@ -4936,6 +4948,7 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
             <xs:attribute name="value" type="xs:string"/>
             <xs:attribute name="values" type="xs:string"/>
             <xs:attribute name="file" type="xs:string"/>
@@ -4947,11 +4960,55 @@
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
             <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="function" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="screencast">
+          <xs:complexType>
+            <xs:attribute name="chapter-description" type="xs:string"/>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="duration" type="xs:double"/>
+            <xs:attribute name="font-size" type="xs:int"/>
+            <xs:attribute name="html" type="xs:string"/>
+            <xs:attribute name="path" type="xs:string"/>
+            <xs:attribute name="position" type="xs:string"/>
+            <xs:attribute name="quality" type="xs:int"/>
+            <xs:attribute name="size-height" type="xs:int"/>
+            <xs:attribute name="size-width" type="xs:int"/>
+            <xs:attribute name="title" type="xs:string"/>
+            <xs:attribute name="variable" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="credentials">
+          <xs:complexType>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="id" type="xs:string"/>
+            <xs:attribute name="origin" type="xs:string"/>
+            <xs:attribute name="private-key" type="xs:string"/>
+            <xs:attribute name="public-key" type="xs:string"/>
+            <xs:attribute name="user-handle" type="xs:string"/>
+            <xs:attribute name="variable" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="drop">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="content-type" type="xs:string"/>
+            <xs:attribute name="file" type="xs:string"/>
+            <xs:attribute name="position-x" type="xs:double"/>
+            <xs:attribute name="position-y" type="xs:double"/>
+            <xs:attribute name="timeout" type="xs:double"/>
+            <xs:attribute name="value" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="screenshot">
           <xs:complexType>
+            <xs:attribute name="full-page" type="xs:boolean"/>
             <xs:attribute name="path" type="xs:string"/>
+            <xs:attribute name="quality" type="xs:int"/>
+            <xs:attribute name="type" type="xs:string"/>
             <xs:attribute name="variable" type="xs:string"/>
           </xs:complexType>
         </xs:element>
@@ -4966,17 +5023,18 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
-            <xs:attribute name="check" type="xs:string"/>
-            <xs:attribute name="expected" type="xs:string"/>
             <xs:attribute name="attribute" type="xs:string"/>
+            <xs:attribute name="check" type="xs:string"/>
             <xs:attribute name="count" type="xs:int"/>
             <xs:attribute name="css-property" type="xs:string"/>
-            <xs:attribute name="key" type="xs:string"/>
+            <xs:attribute name="expected" type="xs:string"/>
             <xs:attribute name="frame-selector" type="xs:string"/>
+            <xs:attribute name="height" type="xs:double"/>
+            <xs:attribute name="key" type="xs:string"/>
+            <xs:attribute name="timeout" type="xs:double"/>
+            <xs:attribute name="width" type="xs:double"/>
             <xs:attribute name="x" type="xs:double"/>
             <xs:attribute name="y" type="xs:double"/>
-            <xs:attribute name="width" type="xs:double"/>
-            <xs:attribute name="height" type="xs:double"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="extract">
@@ -4984,12 +5042,187 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
-            <xs:attribute name="value" type="xs:string"/>
-            <xs:attribute name="variable" type="xs:string"/>
             <xs:attribute name="attribute" type="xs:string"/>
             <xs:attribute name="css-property" type="xs:string"/>
-            <xs:attribute name="key" type="xs:string"/>
             <xs:attribute name="frame-selector" type="xs:string"/>
+            <xs:attribute name="key" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="variable" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="console">
+          <xs:complexType>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="filter" type="xs:string"/>
+            <xs:attribute name="text" type="xs:string"/>
+            <xs:attribute name="variable" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="context">
+          <xs:complexType>
+            <xs:attribute name="alias" type="xs:string"/>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="storage-state" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="cookies">
+          <xs:complexType>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="domain" type="xs:string"/>
+            <xs:attribute name="expires" type="xs:double"/>
+            <xs:attribute name="http-only" type="xs:boolean"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="path" type="xs:string"/>
+            <xs:attribute name="same-site" type="xs:string"/>
+            <xs:attribute name="secure" type="xs:boolean"/>
+            <xs:attribute name="url" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="variable" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dialog">
+          <xs:complexType>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="message" type="xs:string"/>
+            <xs:attribute name="prompt-text" type="xs:string"/>
+            <xs:attribute name="trigger-script" type="xs:string"/>
+            <xs:attribute name="type" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="download">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="filename-variable" type="xs:string"/>
+            <xs:attribute name="path-variable" type="xs:string"/>
+            <xs:attribute name="save-as" type="xs:string"/>
+            <xs:attribute name="trigger-script" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="emulate">
+          <xs:complexType>
+            <xs:attribute name="accuracy" type="xs:double"/>
+            <xs:attribute name="color-scheme" type="xs:string"/>
+            <xs:attribute name="context" type="xs:string"/>
+            <xs:attribute name="height" type="xs:int"/>
+            <xs:attribute name="latitude" type="xs:double"/>
+            <xs:attribute name="locale" type="xs:string"/>
+            <xs:attribute name="longitude" type="xs:double"/>
+            <xs:attribute name="timezone" type="xs:string"/>
+            <xs:attribute name="user-agent" type="xs:string"/>
+            <xs:attribute name="width" type="xs:int"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="enter">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="scroll" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="values" type="xs:string"/>
+            <xs:attribute name="key" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="frame">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="selector" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="network">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
+              <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="value" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="body" type="xs:string"/>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="content-type" type="xs:string"/>
+            <xs:attribute name="header-name" type="xs:string"/>
+            <xs:attribute name="header-value" type="xs:string"/>
+            <xs:attribute name="include-body" type="xs:boolean"/>
+            <xs:attribute name="pattern" type="xs:string"/>
+            <xs:attribute name="security-protocol" type="xs:string"/>
+            <xs:attribute name="server-ip" type="xs:string"/>
+            <xs:attribute name="server-port" type="xs:int"/>
+            <xs:attribute name="status" type="xs:int"/>
+            <xs:attribute name="text" type="xs:string"/>
+            <xs:attribute name="timeout" type="xs:double"/>
+            <xs:attribute name="trigger-script" type="xs:string"/>
+            <xs:attribute name="url" type="xs:string"/>
+            <xs:attribute name="url-contains" type="xs:string"/>
+            <xs:attribute name="url-matches" type="xs:string"/>
+            <xs:attribute name="variable" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="page">
+          <xs:complexType>
+            <xs:attribute name="alias" type="xs:string"/>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="context" type="xs:string"/>
+            <xs:attribute name="index" type="xs:int"/>
+            <xs:attribute name="title" type="xs:string"/>
+            <xs:attribute name="url-contains" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="page-object">
+          <xs:complexType>
+            <xs:attribute name="arguments" type="xs:string"/>
+            <xs:attribute name="method" type="xs:string"/>
+            <xs:attribute name="type" type="xs:string"/>
+            <xs:attribute name="validator" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pdf">
+          <xs:complexType>
+            <xs:attribute name="path" type="xs:string"/>
+            <xs:attribute name="print-background" type="xs:boolean"/>
+            <xs:attribute name="variable" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="permissions">
+          <xs:complexType>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="permissions" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="storage">
+          <xs:complexType>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="credentials" type="xs:boolean"/>
+            <xs:attribute name="indexed-db" type="xs:boolean"/>
+            <xs:attribute name="key" type="xs:string"/>
+            <xs:attribute name="opfs" type="xs:boolean"/>
+            <xs:attribute name="path" type="xs:string"/>
+            <xs:attribute name="scope" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="variable" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="tracing">
+          <xs:complexType>
+            <xs:attribute name="aria-snapshots" type="xs:boolean"/>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="har-content" type="xs:string"/>
+            <xs:attribute name="har-mode" type="xs:string"/>
+            <xs:attribute name="har-url-filter" type="xs:string"/>
+            <xs:attribute name="path" type="xs:string"/>
+            <xs:attribute name="screen-snapshots" type="xs:boolean"/>
+            <xs:attribute name="screenshots" type="xs:boolean"/>
+            <xs:attribute name="snapshots" type="xs:boolean"/>
+            <xs:attribute name="sources" type="xs:boolean"/>
+            <xs:attribute name="variable" type="xs:string"/>
           </xs:complexType>
         </xs:element>
       </xs:choice>
@@ -5008,6 +5241,7 @@
     <xs:attribute name="nth" type="xs:int"/>
     <xs:attribute name="first" type="xs:boolean"/>
     <xs:attribute name="last" type="xs:boolean"/>
+    <xs:attribute name="visible" type="xs:boolean"/>
   </xs:complexType>
 
 </xs:schema>
