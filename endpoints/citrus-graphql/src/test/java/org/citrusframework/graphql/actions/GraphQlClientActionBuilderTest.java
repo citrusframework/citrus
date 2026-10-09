@@ -30,6 +30,7 @@ import org.citrusframework.graphql.client.GraphQlEndpointConfiguration;
 import org.citrusframework.graphql.message.GraphQlMessageHeaders;
 import org.citrusframework.graphql.message.GraphQlMessages;
 import org.citrusframework.graphql.validation.GraphQlMessageProcessor;
+import org.citrusframework.graphql.validation.GraphQlMessageValidationContext;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.SelectiveConsumer;
@@ -284,5 +285,34 @@ public class GraphQlClientActionBuilderTest extends AbstractTestNGUnitTest {
             params.put(pair.substring(0, separator), URLDecoder.decode(pair.substring(separator + 1), UTF_8));
         }
         return params;
+    }
+
+    @Test
+    public void shouldMergeGetQueryWithQueryParamsOfPathAndMessage() {
+        var builder = graphql().client(client).send()
+                .get()
+                .query("{ books { title } }");
+        builder.path("/graphql?tenant=a");
+        builder.message().queryParam("lang", "en");
+
+        HttpMessage sent = send(builder);
+
+        assertThat(sent.getPath()).startsWith("/graphql?tenant=a&lang=en&query=");
+        assertThat(sent.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME)).isNull();
+        assertThat(decodeQuery(sent.getPath().substring(sent.getPath().indexOf('?') + 1)))
+                .containsEntry("tenant", "a")
+                .containsEntry("lang", "en")
+                .containsEntry("query", "{ books { title } }");
+    }
+
+    @Test
+    public void shouldRejectExpectationsCombinedWithExplicitValidationContext() {
+        var builder = graphql().client(client).receive()
+                .data("$.book.title", "Dune");
+        builder.validate(GraphQlMessageValidationContext.Builder.response().expectErrors());
+
+        assertThatThrownBy(builder::build)
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("cannot be combined with an explicit GraphQlMessageValidationContext");
     }
 }

@@ -15,8 +15,6 @@
  */
 package org.citrusframework.graphql.server;
 
-import java.util.Map;
-
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.EndpointConfiguration;
@@ -26,8 +24,8 @@ import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.message.Message;
 import org.springframework.graphql.GraphQlRequest;
 import org.springframework.graphql.MediaTypes;
+import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Decorates the endpoint adapter of a {@link GraphQlServer}. For requests on the GraphQL path it
@@ -51,7 +49,7 @@ public class GraphQlEndpointAdapter implements EndpointAdapter {
             return delegate.handleMessage(request);
         }
 
-        if (isGet(request)) {
+        if (GraphQlMessages.isGet(request)) {
             presentAsJsonBody(request);
         }
 
@@ -79,12 +77,18 @@ public class GraphQlEndpointAdapter implements EndpointAdapter {
 
     private boolean isGraphQlPath(Message request) {
         Object requestPath = request.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI);
-        return requestPath != null && normalize(requestPath.toString()).equals(normalize(path));
-    }
+        if (requestPath == null) {
+            return false;
+        }
 
-    private static boolean isGet(Message request) {
-        Object method = request.getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD);
-        return method != null && RequestMethod.GET.name().equalsIgnoreCase(method.toString());
+        String requestUri = normalize(requestPath.toString());
+        Object contextPath = request.getHeader(HttpMessageHeaders.HTTP_CONTEXT_PATH);
+        String context = contextPath == null ? "" : normalize(contextPath.toString());
+        if (!"/".equals(context) && requestUri.startsWith(context + "/")) {
+            requestUri = requestUri.substring(context.length());
+        }
+
+        return requestUri.equals(normalize(path));
     }
 
     /**
@@ -101,21 +105,22 @@ public class GraphQlEndpointAdapter implements EndpointAdapter {
     }
 
     private static String negotiateContentType(Message request) {
-        String accept = header(request, HttpMessageHeaders.HTTP_ACCEPT);
-        if (accept != null && accept.contains(MediaTypes.APPLICATION_GRAPHQL_RESPONSE.toString())) {
+        String accept = GraphQlMessages.header(request, HttpMessageHeaders.HTTP_ACCEPT);
+        if (accept != null && acceptsGraphQlResponse(accept)) {
             return MediaTypes.APPLICATION_GRAPHQL_RESPONSE.toString();
         }
 
         return MediaType.APPLICATION_JSON_VALUE;
     }
 
-    private static String header(Message message, String name) {
-        return message.getHeaders().entrySet().stream()
-                .filter(entry -> entry.getKey().equalsIgnoreCase(name))
-                .map(Map.Entry::getValue)
-                .map(String::valueOf)
-                .findFirst()
-                .orElse(null);
+    private static boolean acceptsGraphQlResponse(String accept) {
+        try {
+            return MediaType.parseMediaTypes(accept).stream()
+                    .anyMatch(mediaType -> mediaType.getQualityValue() > 0
+                            && mediaType.equalsTypeAndSubtype(MediaTypes.APPLICATION_GRAPHQL_RESPONSE));
+        } catch (InvalidMediaTypeException e) {
+            return false;
+        }
     }
 
     private static String normalize(String urlPath) {

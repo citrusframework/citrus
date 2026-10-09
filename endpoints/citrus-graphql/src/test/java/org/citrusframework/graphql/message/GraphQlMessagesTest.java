@@ -202,4 +202,18 @@ public class GraphQlMessagesTest {
         assertThat(GraphQlMessages.toJson(Map.of("data", Map.of("ids", List.of(1, 2)))))
                 .isEqualTo("{\"data\":{\"ids\":[1,2]}}");
     }
+
+    @Test
+    public void shouldReportErrorsThatAreNotAnArray() {
+        assertThat(GraphQlMessages.shapeViolation("{\"errors\":{\"message\":\"Unauthorized\"}}"))
+                .isEqualTo("'errors' is not an array");
+        assertThat(GraphQlMessages.shapeViolation("{\"errors\":\"boom\"}")).isEqualTo("'errors' is not an array");
+    }
+
+    @Test
+    public void shouldKeepErrorsThatAreNotObjects() {
+        GraphQlResponse response = GraphQlMessages.toResponse(new HttpMessage("{\"data\":null,\"errors\":[\"boom\"]}"));
+
+        assertThat(response.getErrors()).extracting(ResponseError::getMessage).containsExactly("boom");
+    }
 }

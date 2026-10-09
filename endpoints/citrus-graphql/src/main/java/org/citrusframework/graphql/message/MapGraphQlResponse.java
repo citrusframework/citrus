@@ -35,8 +35,9 @@ public class MapGraphQlResponse extends AbstractGraphQlResponse {
         this.responseMap = responseMap;
         this.errors = responseMap.get("errors") instanceof List<?> list
                 ? list.stream()
-                    .filter(Map.class::isInstance)
-                    .map(error -> (ResponseError) new MapResponseError((Map<String, Object>) error))
+                    .map(error -> (ResponseError) new MapResponseError(error instanceof Map<?, ?> map
+                            ? (Map<String, Object>) map
+                            : Map.of("message", String.valueOf(error))))
                     .toList()
                 : List.of();
     }

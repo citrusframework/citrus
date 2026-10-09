@@ -223,6 +223,15 @@ public class GraphQlMessageValidationContext extends DefaultValidationContext {
             return this;
         }
 
+        /**
+         * Whether any expectation or the strict switch has been set.
+         */
+        public boolean hasExpectations() {
+            return strict != null || errorsExpected || !expectedErrors.isEmpty() || !dataExpressions.isEmpty()
+                    || data != null || operationName != null || query != null || !variables.isEmpty()
+                    || variablesJson != null;
+        }
+
         @Override
         public GraphQlMessageValidationContext build() {
             return new GraphQlMessageValidationContext(this);

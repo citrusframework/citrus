@@ -16,8 +16,10 @@
 package org.citrusframework.graphql.message;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import graphql.language.Document;
 import org.citrusframework.context.TestContext;
@@ -30,6 +32,7 @@ import org.citrusframework.graphql.validation.GraphQlEndpointSettings;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
@@ -94,7 +97,7 @@ public class GraphQlRequestMessageBuilder extends HttpMessageBuilder {
         }
 
         GraphQlRequest request = new DefaultGraphQlRequest(document, resolvedOperationName, resolvedVariables, Map.of());
-        String path = getMessage().getPath() != null ? message.getPath() : settings.path();
+        String path = message.getPath() != null ? message.getPath() : settings.path();
 
         message.method(httpMethod);
         if (message.getAccept() == null) {
@@ -102,7 +105,7 @@ public class GraphQlRequestMessageBuilder extends HttpMessageBuilder {
         }
         if (get) {
             message.setPayload("");
-            target(message, path, "?" + GraphQlMessages.toQueryString(request), settings);
+            target(message, path, withMessageQueryParams(message, GraphQlMessages.toQueryString(request)), settings);
         } else {
             message.setPayload(GraphQlMessages.toRequestBody(request));
             message.contentType(MediaType.APPLICATION_JSON_VALUE);
@@ -118,10 +121,35 @@ public class GraphQlRequestMessageBuilder extends HttpMessageBuilder {
      */
     private static void target(HttpMessage message, String path, String queryString, GraphQlEndpointSettings settings) {
         if (path != null && !path.isEmpty()) {
-            message.path(path + queryString);
+            message.path(appendQuery(path, queryString));
         } else if (!queryString.isEmpty() && settings.requestUrl() != null) {
-            message.setHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, settings.requestUrl() + queryString);
+            message.setHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, appendQuery(settings.requestUrl(), queryString));
         }
+    }
+
+    /**
+     * Moves query parameters set on the message into the GET query string, as the endpoint URI
+     * resolver would otherwise append them with a second {@code ?}.
+     */
+    private static String withMessageQueryParams(HttpMessage message, String queryString) {
+        Object queryParams = message.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME);
+        if (queryParams == null || queryParams.toString().isBlank()) {
+            return queryString;
+        }
+
+        message.removeHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME);
+        return Arrays.stream(queryParams.toString().split(","))
+                .filter(param -> !param.isEmpty())
+                .map(MessageHeaderUtils::decodeQueryParam)
+                .collect(Collectors.joining("&", "", "&")) + queryString;
+    }
+
+    private static String appendQuery(String target, String queryString) {
+        if (queryString.isEmpty()) {
+            return target;
+        }
+
+        return target + (target.contains("?") ? "&" : "?") + queryString;
     }
 
     private String resolveDocument(TestContext context) {

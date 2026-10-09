@@ -65,7 +65,7 @@ public class GraphQlClientResponseActionBuilder extends HttpClientResponseAction
     @Override
     protected void reconcileValidationContexts() {
         super.reconcileValidationContexts();
-        validationContext = GraphQlActions.reconcile(this, expectations, endpoint, endpointUri, hasControlBody());
+        validationContext = GraphQlActions.reconcile(this, expectations, endpoint, endpointUri, hasControlBody(), validationContext);
     }
 
     private boolean hasControlBody() {
