@@ -1,0 +1,6 @@
+query ListPhotos($options: PageQueryOptions) {
+  photos(options: $options) {
+    data { id }
+    meta { totalCount }
+  }
+}

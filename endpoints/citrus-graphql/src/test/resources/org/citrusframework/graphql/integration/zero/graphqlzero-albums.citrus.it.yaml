@@ -1,0 +1,110 @@
+name: "GraphQlZeroAlbumsYamlIT"
+author: "Citrus"
+status: "FINAL"
+description: "GraphQLZero albums: get, list, create, update and delete (YAML DSL)."
+endpoints:
+  - graphql:
+      client:
+        name: "zeroAlbums"
+        requestUrl: "http://localhost:19381"
+        schema:
+          - "classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls"
+        timeout: 5000
+actions:
+  # query GetAlbum
+  - graphql:
+      client: "zeroAlbums"
+      sendRequest:
+        query: |
+          query GetAlbum($id: ID!) {
+            album(id: $id) {
+              id
+              title
+              user { id }
+            }
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroAlbums"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.album.title"
+            value: "quidem molestiae enim"
+          - path: "$.album.user.id"
+            value: "1"
+  # query ListAlbums
+  - graphql:
+      client: "zeroAlbums"
+      sendRequest:
+        query: |
+          query ListAlbums($options: PageQueryOptions) {
+            albums(options: $options) {
+              data { id }
+              meta { totalCount }
+            }
+          }
+        variables: '{"options": {"paginate": {"page": 1, "limit": 2}}}'
+  - graphql:
+      client: "zeroAlbums"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.albums.meta.totalCount"
+            value: "100"
+          - path: "$.albums.data.length()"
+            value: "2"
+          - path: "$.albums.data[0].id"
+            value: "1"
+  # mutation CreateAlbum
+  - graphql:
+      client: "zeroAlbums"
+      sendRequest:
+        query: |
+          mutation CreateAlbum($input: CreateAlbumInput!) {
+            createAlbum(input: $input) { id title }
+          }
+        variables: '{"input": {"title": "Citrus album", "userId": "1"}}'
+  - graphql:
+      client: "zeroAlbums"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.createAlbum.id"
+            value: "101"
+          - path: "$.createAlbum.title"
+            value: "Citrus album"
+  # mutation UpdateAlbum
+  - graphql:
+      client: "zeroAlbums"
+      sendRequest:
+        query: |
+          mutation UpdateAlbum($id: ID!, $input: UpdateAlbumInput!) {
+            updateAlbum(id: $id, input: $input) { id title }
+          }
+        variables: '{"id": "1", "input": {"title": "Renamed by Citrus"}}'
+  - graphql:
+      client: "zeroAlbums"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.updateAlbum.id"
+            value: "1"
+          - path: "$.updateAlbum.title"
+            value: "Renamed by Citrus"
+  # mutation DeleteAlbum
+  - graphql:
+      client: "zeroAlbums"
+      sendRequest:
+        query: |
+          mutation DeleteAlbum($id: ID!) {
+            deleteAlbum(id: $id)
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroAlbums"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.deleteAlbum"
+            value: "true"

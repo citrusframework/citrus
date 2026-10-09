@@ -1,0 +1,120 @@
+name: "GraphQlZeroUsersYamlIT"
+author: "Citrus"
+status: "FINAL"
+description: "GraphQLZero users: get, list, create, update and delete (YAML DSL)."
+endpoints:
+  - graphql:
+      client:
+        name: "zeroUsers"
+        requestUrl: "http://localhost:19381"
+        schema:
+          - "classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls"
+        timeout: 5000
+actions:
+  # query GetUser
+  - graphql:
+      client: "zeroUsers"
+      sendRequest:
+        query: |
+          query GetUser($id: ID!) {
+            user(id: $id) {
+              id
+              name
+              username
+              email
+              address { city }
+            }
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroUsers"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.user.name"
+            value: "Leanne Graham"
+          - path: "$.user.username"
+            value: "Bret"
+          - path: "$.user.email"
+            value: "Sincere@april.biz"
+          - path: "$.user.address.city"
+            value: "Gwenborough"
+  # query ListUsers
+  - graphql:
+      client: "zeroUsers"
+      sendRequest:
+        query: |
+          query ListUsers($options: PageQueryOptions) {
+            users(options: $options) {
+              data { id name }
+              meta { totalCount }
+            }
+          }
+        variables: '{"options": {"paginate": {"page": 1, "limit": 2}}}'
+  - graphql:
+      client: "zeroUsers"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.users.meta.totalCount"
+            value: "10"
+          - path: "$.users.data.length()"
+            value: "2"
+          - path: "$.users.data[0].id"
+            value: "1"
+          - path: "$.users.data[1].name"
+            value: "Ervin Howell"
+  # mutation CreateUser
+  - graphql:
+      client: "zeroUsers"
+      sendRequest:
+        query: |
+          mutation CreateUser($input: CreateUserInput!) {
+            createUser(input: $input) { id name username email }
+          }
+        variables: '{"input": {"name": "Citrus Tester", "username": "citrus", "email": "citrus@example.org"}}'
+  - graphql:
+      client: "zeroUsers"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.createUser.id"
+            value: "11"
+          - path: "$.createUser.username"
+            value: "citrus"
+          - path: "$.createUser.email"
+            value: "citrus@example.org"
+  # mutation UpdateUser
+  - graphql:
+      client: "zeroUsers"
+      sendRequest:
+        query: |
+          mutation UpdateUser($id: ID!, $input: UpdateUserInput!) {
+            updateUser(id: $id, input: $input) { id name }
+          }
+        variables: '{"id": "1", "input": {"name": "Leanne Citrus"}}'
+  - graphql:
+      client: "zeroUsers"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.updateUser.id"
+            value: "1"
+          - path: "$.updateUser.name"
+            value: "Leanne Citrus"
+  # mutation DeleteUser
+  - graphql:
+      client: "zeroUsers"
+      sendRequest:
+        query: |
+          mutation DeleteUser($id: ID!) {
+            deleteUser(id: $id)
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroUsers"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.deleteUser"
+            value: "true"
