@@ -1,0 +1,3 @@
+mutation UpdatePhoto($id: ID!, $input: UpdatePhotoInput!) {
+  updatePhoto(id: $id, input: $input) { id title }
+}

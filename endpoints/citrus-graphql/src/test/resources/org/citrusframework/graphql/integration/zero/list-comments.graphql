@@ -1,0 +1,6 @@
+query ListComments($options: PageQueryOptions) {
+  comments(options: $options) {
+    data { id }
+    meta { totalCount }
+  }
+}

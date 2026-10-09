@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<test name="GraphQlZeroPostsXmlIT" author="Citrus" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>GraphQLZero posts: get, list, create, update and delete (XML DSL).</description>
+  <endpoints>
+    <graphql>
+      <client name="zeroPosts" request-url="http://localhost:19380" schema="classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls" timeout="5000"/>
+    </graphql>
+  </endpoints>
+  <actions>
+    <!-- query GetPost -->
+    <graphql client="zeroPosts">
+      <send-request>
+        <query>
+          query GetPost($id: ID!) {
+            post(id: $id) {
+              id
+              title
+              user { id name }
+            }
+          }
+        </query>
+        <variables>{&quot;id&quot;: &quot;1&quot;}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroPosts">
+      <receive-response status="200">
+        <data path="$.post.id" value="1"/>
+        <data path="$.post.title" value="sunt aut facere repellat provident occaecati excepturi optio reprehenderit"/>
+        <data path="$.post.user.name" value="Leanne Graham"/>
+      </receive-response>
+    </graphql>
+
+    <!-- query ListPosts -->
+    <graphql client="zeroPosts">
+      <send-request>
+        <query>
+          query ListPosts($options: PageQueryOptions) {
+            posts(options: $options) {
+              data { id title }
+              meta { totalCount }
+            }
+          }
+        </query>
+        <variables>{&quot;options&quot;: {&quot;paginate&quot;: {&quot;page&quot;: 1, &quot;limit&quot;: 2}}}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroPosts">
+      <receive-response status="200">
+        <data path="$.posts.meta.totalCount" value="100"/>
+        <data path="$.posts.data.length()" value="2"/>
+        <data path="$.posts.data[0].id" value="1"/>
+        <data path="$.posts.data[1].title" value="qui est esse"/>
+      </receive-response>
+    </graphql>
+
+    <!-- mutation CreatePost -->
+    <graphql client="zeroPosts">
+      <send-request>
+        <query>
+          mutation CreatePost($input: CreatePostInput!) {
+            createPost(input: $input) { id title body }
+          }
+        </query>
+        <variables>{&quot;input&quot;: {&quot;title&quot;: &quot;Citrus&quot;, &quot;body&quot;: &quot;GraphQL rocks&quot;}}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroPosts">
+      <receive-response status="200">
+        <data path="$.createPost.id" value="101"/>
+        <data path="$.createPost.title" value="Citrus"/>
+        <data path="$.createPost.body" value="GraphQL rocks"/>
+      </receive-response>
+    </graphql>
+
+    <!-- mutation UpdatePost -->
+    <graphql client="zeroPosts">
+      <send-request>
+        <query>
+          mutation UpdatePost($id: ID!, $input: UpdatePostInput!) {
+            updatePost(id: $id, input: $input) { id body }
+          }
+        </query>
+        <variables>{&quot;id&quot;: &quot;1&quot;, &quot;input&quot;: {&quot;body&quot;: &quot;Updated by Citrus&quot;}}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroPosts">
+      <receive-response status="200">
+        <data path="$.updatePost.id" value="1"/>
+        <data path="$.updatePost.body" value="Updated by Citrus"/>
+      </receive-response>
+    </graphql>
+
+    <!-- mutation DeletePost -->
+    <graphql client="zeroPosts">
+      <send-request>
+        <query>
+          mutation DeletePost($id: ID!) {
+            deletePost(id: $id)
+          }
+        </query>
+        <variables>{&quot;id&quot;: &quot;1&quot;}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroPosts">
+      <receive-response status="200">
+        <data path="$.deletePost" value="true"/>
+      </receive-response>
+    </graphql>
+
+  </actions>
+</test>

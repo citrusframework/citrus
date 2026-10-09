@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<test name="GraphQlZeroPhotosXmlIT" author="Citrus" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>GraphQLZero photos: get, list, create, update and delete (XML DSL).</description>
+  <endpoints>
+    <graphql>
+      <client name="zeroPhotos" request-url="http://localhost:19380" schema="classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls" timeout="5000"/>
+    </graphql>
+  </endpoints>
+  <actions>
+    <!-- query GetPhoto -->
+    <graphql client="zeroPhotos">
+      <send-request>
+        <query>
+          query GetPhoto($id: ID!) {
+            photo(id: $id) {
+              id
+              title
+              url
+              album { id }
+            }
+          }
+        </query>
+        <variables>{&quot;id&quot;: &quot;1&quot;}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroPhotos">
+      <receive-response status="200">
+        <data path="$.photo.title" value="accusamus beatae ad facilis cum similique qui sunt"/>
+        <data path="$.photo.url" value="https://picsum.photos/seed/1/600"/>
+        <data path="$.photo.album.id" value="1"/>
+      </receive-response>
+    </graphql>
+
+    <!-- query ListPhotos -->
+    <graphql client="zeroPhotos">
+      <send-request>
+        <query>
+          query ListPhotos($options: PageQueryOptions) {
+            photos(options: $options) {
+              data { id }
+              meta { totalCount }
+            }
+          }
+        </query>
+        <variables>{&quot;options&quot;: {&quot;paginate&quot;: {&quot;page&quot;: 1, &quot;limit&quot;: 2}}}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroPhotos">
+      <receive-response status="200">
+        <data path="$.photos.meta.totalCount" value="5000"/>
+        <data path="$.photos.data.length()" value="2"/>
+        <data path="$.photos.data[0].id" value="1"/>
+      </receive-response>
+    </graphql>
+
+    <!-- mutation CreatePhoto -->
+    <graphql client="zeroPhotos">
+      <send-request>
+        <query>
+          mutation CreatePhoto($input: CreatePhotoInput!) {
+            createPhoto(input: $input) { id title url }
+          }
+        </query>
+        <variables>{&quot;input&quot;: {&quot;title&quot;: &quot;Citrus&quot;, &quot;url&quot;: &quot;https://example.org/citrus.png&quot;, &quot;thumbnailUrl&quot;: &quot;https://example.org/citrus-t.png&quot;}}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroPhotos">
+      <receive-response status="200">
+        <data path="$.createPhoto.id" value="5001"/>
+        <data path="$.createPhoto.url" value="https://example.org/citrus.png"/>
+      </receive-response>
+    </graphql>
+
+    <!-- mutation UpdatePhoto -->
+    <graphql client="zeroPhotos">
+      <send-request>
+        <query>
+          mutation UpdatePhoto($id: ID!, $input: UpdatePhotoInput!) {
+            updatePhoto(id: $id, input: $input) { id title }
+          }
+        </query>
+        <variables>{&quot;id&quot;: &quot;1&quot;, &quot;input&quot;: {&quot;title&quot;: &quot;Retitled by Citrus&quot;}}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroPhotos">
+      <receive-response status="200">
+        <data path="$.updatePhoto.id" value="1"/>
+        <data path="$.updatePhoto.title" value="Retitled by Citrus"/>
+      </receive-response>
+    </graphql>
+
+    <!-- mutation DeletePhoto -->
+    <graphql client="zeroPhotos">
+      <send-request>
+        <query>
+          mutation DeletePhoto($id: ID!) {
+            deletePhoto(id: $id)
+          }
+        </query>
+        <variables>{&quot;id&quot;: &quot;1&quot;}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroPhotos">
+      <receive-response status="200">
+        <data path="$.deletePhoto" value="true"/>
+      </receive-response>
+    </graphql>
+
+  </actions>
+</test>

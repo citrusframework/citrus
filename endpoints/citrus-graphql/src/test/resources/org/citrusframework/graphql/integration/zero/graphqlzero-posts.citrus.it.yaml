@@ -1,0 +1,116 @@
+name: "GraphQlZeroPostsYamlIT"
+author: "Citrus"
+status: "FINAL"
+description: "GraphQLZero posts: get, list, create, update and delete (YAML DSL)."
+endpoints:
+  - graphql:
+      client:
+        name: "zeroPosts"
+        requestUrl: "http://localhost:19381"
+        schema:
+          - "classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls"
+        timeout: 5000
+actions:
+  # query GetPost
+  - graphql:
+      client: "zeroPosts"
+      sendRequest:
+        query: |
+          query GetPost($id: ID!) {
+            post(id: $id) {
+              id
+              title
+              user { id name }
+            }
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroPosts"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.post.id"
+            value: "1"
+          - path: "$.post.title"
+            value: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"
+          - path: "$.post.user.name"
+            value: "Leanne Graham"
+  # query ListPosts
+  - graphql:
+      client: "zeroPosts"
+      sendRequest:
+        query: |
+          query ListPosts($options: PageQueryOptions) {
+            posts(options: $options) {
+              data { id title }
+              meta { totalCount }
+            }
+          }
+        variables: '{"options": {"paginate": {"page": 1, "limit": 2}}}'
+  - graphql:
+      client: "zeroPosts"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.posts.meta.totalCount"
+            value: "100"
+          - path: "$.posts.data.length()"
+            value: "2"
+          - path: "$.posts.data[0].id"
+            value: "1"
+          - path: "$.posts.data[1].title"
+            value: "qui est esse"
+  # mutation CreatePost
+  - graphql:
+      client: "zeroPosts"
+      sendRequest:
+        query: |
+          mutation CreatePost($input: CreatePostInput!) {
+            createPost(input: $input) { id title body }
+          }
+        variables: '{"input": {"title": "Citrus", "body": "GraphQL rocks"}}'
+  - graphql:
+      client: "zeroPosts"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.createPost.id"
+            value: "101"
+          - path: "$.createPost.title"
+            value: "Citrus"
+          - path: "$.createPost.body"
+            value: "GraphQL rocks"
+  # mutation UpdatePost
+  - graphql:
+      client: "zeroPosts"
+      sendRequest:
+        query: |
+          mutation UpdatePost($id: ID!, $input: UpdatePostInput!) {
+            updatePost(id: $id, input: $input) { id body }
+          }
+        variables: '{"id": "1", "input": {"body": "Updated by Citrus"}}'
+  - graphql:
+      client: "zeroPosts"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.updatePost.id"
+            value: "1"
+          - path: "$.updatePost.body"
+            value: "Updated by Citrus"
+  # mutation DeletePost
+  - graphql:
+      client: "zeroPosts"
+      sendRequest:
+        query: |
+          mutation DeletePost($id: ID!) {
+            deletePost(id: $id)
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroPosts"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.deletePost"
+            value: "true"

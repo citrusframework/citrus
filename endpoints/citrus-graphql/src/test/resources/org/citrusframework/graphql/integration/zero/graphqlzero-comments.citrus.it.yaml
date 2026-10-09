@@ -1,0 +1,113 @@
+name: "GraphQlZeroCommentsYamlIT"
+author: "Citrus"
+status: "FINAL"
+description: "GraphQLZero comments: get, list, create, update and delete (YAML DSL)."
+endpoints:
+  - graphql:
+      client:
+        name: "zeroComments"
+        requestUrl: "http://localhost:19381"
+        schema:
+          - "classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls"
+        timeout: 5000
+actions:
+  # query GetComment
+  - graphql:
+      client: "zeroComments"
+      sendRequest:
+        query: |
+          query GetComment($id: ID!) {
+            comment(id: $id) {
+              id
+              name
+              email
+              post { id }
+            }
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroComments"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.comment.name"
+            value: "id labore ex et quam laborum"
+          - path: "$.comment.email"
+            value: "Eliseo@gardner.biz"
+          - path: "$.comment.post.id"
+            value: "1"
+  # query ListComments
+  - graphql:
+      client: "zeroComments"
+      sendRequest:
+        query: |
+          query ListComments($options: PageQueryOptions) {
+            comments(options: $options) {
+              data { id }
+              meta { totalCount }
+            }
+          }
+        variables: '{"options": {"paginate": {"page": 1, "limit": 2}}}'
+  - graphql:
+      client: "zeroComments"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.comments.meta.totalCount"
+            value: "500"
+          - path: "$.comments.data.length()"
+            value: "2"
+          - path: "$.comments.data[0].id"
+            value: "1"
+  # mutation CreateComment
+  - graphql:
+      client: "zeroComments"
+      sendRequest:
+        query: |
+          mutation CreateComment($input: CreateCommentInput!) {
+            createComment(input: $input) { id name email body }
+          }
+        variables: '{"input": {"name": "Citrus", "email": "citrus@example.org", "body": "Nice post"}}'
+  - graphql:
+      client: "zeroComments"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.createComment.id"
+            value: "501"
+          - path: "$.createComment.body"
+            value: "Nice post"
+  # mutation UpdateComment
+  - graphql:
+      client: "zeroComments"
+      sendRequest:
+        query: |
+          mutation UpdateComment($id: ID!, $input: UpdateCommentInput!) {
+            updateComment(id: $id, input: $input) { id body }
+          }
+        variables: '{"id": "1", "input": {"body": "Edited by Citrus"}}'
+  - graphql:
+      client: "zeroComments"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.updateComment.id"
+            value: "1"
+          - path: "$.updateComment.body"
+            value: "Edited by Citrus"
+  # mutation DeleteComment
+  - graphql:
+      client: "zeroComments"
+      sendRequest:
+        query: |
+          mutation DeleteComment($id: ID!) {
+            deleteComment(id: $id)
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroComments"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.deleteComment"
+            value: "true"

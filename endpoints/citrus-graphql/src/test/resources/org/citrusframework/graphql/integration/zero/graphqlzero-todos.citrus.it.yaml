@@ -1,0 +1,115 @@
+name: "GraphQlZeroTodosYamlIT"
+author: "Citrus"
+status: "FINAL"
+description: "GraphQLZero todos: get, list, create, update and delete (YAML DSL)."
+endpoints:
+  - graphql:
+      client:
+        name: "zeroTodos"
+        requestUrl: "http://localhost:19381"
+        schema:
+          - "classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls"
+        timeout: 5000
+actions:
+  # query GetTodo
+  - graphql:
+      client: "zeroTodos"
+      sendRequest:
+        query: |
+          query GetTodo($id: ID!) {
+            todo(id: $id) {
+              id
+              title
+              completed
+              user { id }
+            }
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroTodos"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.todo.title"
+            value: "delectus aut autem"
+          - path: "$.todo.completed"
+            value: "false"
+          - path: "$.todo.user.id"
+            value: "1"
+  # query ListTodos
+  - graphql:
+      client: "zeroTodos"
+      sendRequest:
+        query: |
+          query ListTodos($options: PageQueryOptions) {
+            todos(options: $options) {
+              data { id }
+              meta { totalCount }
+            }
+          }
+        variables: '{"options": {"paginate": {"page": 1, "limit": 2}}}'
+  - graphql:
+      client: "zeroTodos"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.todos.meta.totalCount"
+            value: "200"
+          - path: "$.todos.data.length()"
+            value: "2"
+          - path: "$.todos.data[0].id"
+            value: "1"
+  # mutation CreateTodo
+  - graphql:
+      client: "zeroTodos"
+      sendRequest:
+        query: |
+          mutation CreateTodo($input: CreateTodoInput!) {
+            createTodo(input: $input) { id title completed }
+          }
+        variables: '{"input": {"title": "Write GraphQL tests", "completed": false}}'
+  - graphql:
+      client: "zeroTodos"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.createTodo.id"
+            value: "201"
+          - path: "$.createTodo.title"
+            value: "Write GraphQL tests"
+          - path: "$.createTodo.completed"
+            value: "false"
+  # mutation UpdateTodo
+  - graphql:
+      client: "zeroTodos"
+      sendRequest:
+        query: |
+          mutation UpdateTodo($id: ID!, $input: UpdateTodoInput!) {
+            updateTodo(id: $id, input: $input) { id completed }
+          }
+        variables: '{"id": "1", "input": {"completed": true}}'
+  - graphql:
+      client: "zeroTodos"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.updateTodo.id"
+            value: "1"
+          - path: "$.updateTodo.completed"
+            value: "true"
+  # mutation DeleteTodo
+  - graphql:
+      client: "zeroTodos"
+      sendRequest:
+        query: |
+          mutation DeleteTodo($id: ID!) {
+            deleteTodo(id: $id)
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroTodos"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.deleteTodo"
+            value: "true"
