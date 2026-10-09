@@ -17,6 +17,7 @@
 package org.citrusframework.playwright.endpoint;
 
 import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.options.HttpCredentials;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Playwright;
 
@@ -62,6 +63,7 @@ public class PlaywrightBrowserConfiguration extends AbstractEndpointConfiguratio
     private BrowserType.ConnectOverCDPOptions connectOverCdpOptions;
     private Browser.NewContextOptions contextOptions;
     private List<String> secretPatterns = List.of();
+    private List<HttpCredentials> httpCredentials = List.of();
 
     /**
      * Returns the configured Playwright browser type.
@@ -547,5 +549,24 @@ public class PlaywrightBrowserConfiguration extends AbstractEndpointConfiguratio
      */
     public void setSecretPatterns(List<String> secretPatterns) {
         this.secretPatterns = secretPatterns == null ? List.of() : List.copyOf(secretPatterns);
+    }
+
+    /**
+     * Origin scoped HTTP basic auth credentials applied to new browser contexts.
+     *
+     * @return configured credentials, never null
+     */
+    public List<HttpCredentials> getHttpCredentials() {
+        return httpCredentials;
+    }
+
+    /**
+     * Sets origin scoped HTTP basic auth credentials. The first entry matching a request origin
+     * is used; an entry without an origin matches any request.
+     *
+     * @param httpCredentials credentials to apply
+     */
+    public void setHttpCredentials(List<HttpCredentials> httpCredentials) {
+        this.httpCredentials = httpCredentials == null ? List.of() : List.copyOf(httpCredentials);
     }
 }

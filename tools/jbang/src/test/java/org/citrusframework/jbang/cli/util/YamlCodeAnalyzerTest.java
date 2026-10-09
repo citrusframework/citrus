@@ -46,11 +46,12 @@ public class YamlCodeAnalyzerTest {
         Assert.assertEquals(foundModules[5], "citrus-kafka");
         Assert.assertEquals(foundModules[6], "citrus-testcontainers");
 
-        Assert.assertEquals(scanResult.dependencies().length, 3L);
+        Assert.assertEquals(scanResult.dependencies().length, 4L);
         String[] foundDeps = Arrays.stream(scanResult.dependencies()).sorted().toArray(String[]::new);
         Assert.assertEquals(foundDeps[0], "org.apache.camel:camel-aws2-s3:${camel.version}");
         Assert.assertEquals(foundDeps[1], "org.apache.camel:camel-paho-mqtt5:" + CAMEL_VERSION_DEFAULT);
-        Assert.assertEquals(foundDeps[2], "org.apache.camel:camel-test-infra-kafka:" + CAMEL_VERSION_DEFAULT);
+        Assert.assertEquals(foundDeps[2], "org.apache.camel:camel-test-infra-aws-v2:" + CAMEL_VERSION_DEFAULT);
+        Assert.assertEquals(foundDeps[3], "org.apache.camel:camel-test-infra-kafka:" + CAMEL_VERSION_DEFAULT);
 
         Assert.assertEquals(scanResult.actions().length, 5L);
         String[] foundActions = Arrays.stream(scanResult.actions()).sorted().toArray(String[]::new);

@@ -149,11 +149,17 @@ public class SegmentVariableExtractorRegistry {
          * @return
          */
         private Object getIndexedElement(VariableExpressionSegmentMatcher matcher, Object indexedValue) {
-            if (indexedValue.getClass().isArray()) {
+            if (indexedValue == null) {
+                throw new CitrusRuntimeException(
+                        String.format("Unknown segment-value for segment '%s' of variable expression '%s'",
+                                matcher.getSegmentExpression(), matcher.getVariableExpression()));
+            } else if (indexedValue.getClass().isArray()) {
                 return  Array.get(indexedValue, matcher.getSegmentIndex());
+            } else if (indexedValue instanceof List<?> list) {
+                return list.get(matcher.getSegmentIndex());
             } else {
                 throw new CitrusRuntimeException(
-                        String.format("Expected an instance of Array type. Cannot retrieve indexed property %s from %s ",
+                        String.format("Expected an instance of Array or List type. Cannot retrieve indexed property %s from %s ",
                                 matcher.getSegmentExpression(), indexedValue.getClass().getName()));
             }
         }

@@ -155,6 +155,55 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testReceiveMessageTimeoutWithCustomTimeout() throws JMSException {
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        endpoint.getEndpointConfiguration().setDestination(destination);
+
+        reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+        when(session.getTransacted()).thenReturn(false);
+        when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
+
+        when(session.createConsumer(destination, null)).thenReturn(messageConsumer);
+
+        when(messageConsumer.receive(10000L)).thenReturn(null);
+
+        try {
+            endpoint.createConsumer().receive(context, 10000L);
+            Assert.fail("Missing " + CitrusRuntimeException.class + " because of receiving message timeout");
+        } catch(ActionTimeoutException e) {
+            Assert.assertTrue(e.getMessage().startsWith("Action timeout after 10000 milliseconds. Failed to receive message on endpoint"),
+                    "Expected timeout of 10000 milliseconds but got: " + e.getMessage());
+            verify(connection).start();
+        }
+    }
+
+    @Test
+    public void testReceiveMessageTimeoutWithJmsTemplateAndCustomTimeout() {
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
+
+        reset(jmsTemplate);
+
+        when(jmsTemplate.getDefaultDestination()).thenReturn(destination);
+        when(jmsTemplate.receive(destination)).thenReturn(null);
+
+        try {
+            endpoint.createConsumer().receive(context, 10000L);
+            Assert.fail("Missing " + CitrusRuntimeException.class + " because of receiving message timeout");
+        } catch(ActionTimeoutException e) {
+            Assert.assertTrue(e.getMessage().startsWith("Action timeout after 10000 milliseconds. Failed to receive message on endpoint"),
+                    "Expected timeout of 10000 milliseconds but got: " + e.getMessage());
+        }
+
+        verify(jmsTemplate).setReceiveTimeout(10000L);
+    }
+
+    @Test
     public void testWithCustomTimeout() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);

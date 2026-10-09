@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="AssertJValidationMatcherIT">
+    <meta-info>
+      <author>Citrus</author>
+      <creationdate>2026-10-06</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Citrus</last-updated-by>
+      <last-updated-on>2026-10-06T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Tests the @assertj()@ validation matcher on headers, XPath and JSONPath values</description>
+
+    <variables>
+      <variable name="prefix" value="OK"/>
+    </variables>
+
+    <actions>
+      <send endpoint="helloEndpoint">
+        <message>
+          <data><![CDATA[<Order><Status>OK-123</Status><Item>a</Item><Item>b</Item><Item>c</Item></Order>]]></data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+          <element name="Count" value="42"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <validate>
+            <xpath expression="/Order/Status" value="@assertj(isNotBlank().startsWith('${prefix}').endsWith('123'))@"/>
+            <xpath expression="/Order/Item" value="@assertj(asList().hasSize(3).contains('b'))@" result-type="node-set"/>
+            <xpath expression="count(/Order/Item)" value="@assertj(asDouble().isEqualTo(3))@" result-type="number"/>
+          </validate>
+        </message>
+        <header>
+          <element name="Operation" value="@assertj(isIn('sayHello', 'sayHi'))@"/>
+          <element name="Count" value="@assertj(asInt().isBetween(40, 50))@"/>
+        </header>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message type="json">
+          <data>{ "qty": 7, "status": "OK-1", "tags": ["a", "b"] }</data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="json">
+          <validate>
+            <json-path expression="$.qty" value="@assertj(asInt().isBetween(1, 10))@"/>
+            <json-path expression="$.status" value="@assertj('${prefix}-1', 'startsWith('OK').endsWith('1')')@"/>
+            <json-path expression="$.tags" value="@assertj(asList().containsExactly('a', 'b'))@"/>
+          </validate>
+        </message>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>Hello Citrus!</data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHowdy"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message type="plaintext">
+              <data>Hello Citrus!</data>
+            </message>
+            <header>
+              <element name="Operation" value="@assertj(isIn('sayHello', 'sayHi'))@"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+    </actions>
+  </testcase>
+</spring:beans>

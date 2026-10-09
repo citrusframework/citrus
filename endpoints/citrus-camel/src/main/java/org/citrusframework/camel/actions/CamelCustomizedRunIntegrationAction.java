@@ -305,7 +305,7 @@ public class CamelCustomizedRunIntegrationAction extends AbstractCamelCliAction 
                 Properties props = new Properties();
                 try {
                     props.load(systemPropertiesFile.getInputStream());
-                    props.forEach((k, v) -> withSystemProperty(k.toString(), v.toString()));
+                    props.forEach((k, v) -> systemProperties.putIfAbsent(k.toString(), v.toString()));
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to read properties file", e);
                 }
@@ -315,7 +315,7 @@ public class CamelCustomizedRunIntegrationAction extends AbstractCamelCliAction 
                 Properties props = new Properties();
                 try {
                     props.load(envVarsFile.getInputStream());
-                    props.forEach((k, v) -> withEnv(k.toString(), v.toString()));
+                    props.forEach((k, v) -> envVars.putIfAbsent(k.toString(), v.toString()));
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to read properties file", e);
                 }

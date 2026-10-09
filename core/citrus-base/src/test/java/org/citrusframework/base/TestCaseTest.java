@@ -139,8 +139,8 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
         testcase.setVariableDefinitions(variables);
 
         testcase.addTestAction(action(context -> {
-            Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase");
-            Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), DefaultTestCase.class.getPackage().getName());
+            Assert.assertEquals(context.getVariables().get(CitrusSettings.getTestNameVariable()), "MyTestCase");
+            Assert.assertEquals(context.getVariables().get(CitrusSettings.getTestPackageVariable()), DefaultTestCase.class.getPackage().getName());
             Assert.assertEquals(context.getVariable("${name}"), "Citrus");
             Assert.assertEquals(context.getVariable("${framework}"), "Citrus");
             Assert.assertEquals(context.getVariable("${hello}"), "Hello Citrus!");

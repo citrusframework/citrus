@@ -18,6 +18,7 @@ package org.citrusframework.playwright.actions;
 
 import com.microsoft.playwright.FrameLocator;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.PlaywrightException;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -55,19 +56,62 @@ public class FrameAction extends AbstractPlaywrightAction {
 
     @Override
     protected void execute(PlaywrightBrowser browser, TestContext context) {
-        FrameLocator frame = browser.getCurrentPage().frameLocator(LocatorResolver.resolve(frameSelector, context));
-        Locator element = LocatorResolver.resolve(frame, locator, context);
-        switch (command) {
-            case FILL -> element.fill(LocatorResolver.resolve(value, context));
-            case CLICK -> element.click();
-            case VERIFY_TEXT -> {
-                String actual = element.textContent();
-                String expected = LocatorResolver.resolve(value, context);
-                if (!expected.equals(actual)) {
-                    throw new ValidationException("Expected frame locator text '%s' but got '%s'".formatted(expected, actual));
+        Locator element = LocatorResolver.resolve(resolveFrame(browser, context), locator, context);
+        try {
+            switch (command) {
+                case FILL -> element.fill(LocatorResolver.resolve(value, context));
+                case CLICK -> element.click();
+                case VERIFY_TEXT -> {
+                    String actual = element.textContent();
+                    String expected = LocatorResolver.resolve(value, context);
+                    if (!expected.equals(actual)) {
+                        throw new ValidationException("Expected frame locator text '%s' but got '%s'".formatted(expected, actual));
+                    }
                 }
             }
+        } catch (PlaywrightException e) {
+            throw new CitrusRuntimeException(("Failed to resolve Playwright frame locator '%s' while searching %s. "
+                    + "When no frame selector is set the locator must match in exactly one frame")
+                    .formatted(locator.getSelector(), describeFrameScope(context)), e);
         }
+    }
+
+    /**
+     * Resolves the frame locator to operate on. Without an explicit frame selector the locator is
+     * searched in every frame of the page subtree.
+     *
+     * @param browser resolved browser endpoint
+     * @param context test context used for variable substitution
+     * @return frame locator holding the target element
+     */
+    private FrameLocator resolveFrame(PlaywrightBrowser browser, TestContext context) {
+        if (frameSelector == null || frameSelector.isBlank()) {
+            return browser.getCurrentPage().frameLocator();
+        }
+        return browser.getCurrentPage().frameLocator(LocatorResolver.resolve(frameSelector, context));
+    }
+
+    private String describeFrameScope(TestContext context) {
+        if (frameSelector == null || frameSelector.isBlank()) {
+            return "all frames";
+        }
+        return "frame '%s'".formatted(LocatorResolver.resolve(frameSelector, context));
+    }
+
+    public String getFrameSelector() {
+        return frameSelector;
+    }
+
+    public LocatorSpec getLocator() {
+        return locator;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     /**
@@ -80,7 +124,9 @@ public class FrameAction extends AbstractPlaywrightAction {
         private String value;
 
         /**
-         * Selects the frame locator that contains the target element.
+         * Selects the frame locator that contains the target element. Optional - when omitted the
+         * inner locator is searched in every frame of the page subtree and must match in exactly
+         * one of them.
          *
          * @param selector CSS selector for the frame locator
          * @return this builder
@@ -97,8 +143,17 @@ public class FrameAction extends AbstractPlaywrightAction {
          * @return this builder
          */
         public Builder fill(String locator) {
+            return fill(LocatorSpec.css(locator));
+        }
+
+        /**
+         * Fill the element described by the given locator inside the frame.
+         * @param locator element locator
+         * @return this builder
+         */
+        public Builder fill(LocatorSpec locator) {
             this.command = Command.FILL;
-            this.locator = LocatorSpec.css(locator);
+            this.locator = locator;
             return this;
         }
 
@@ -109,8 +164,17 @@ public class FrameAction extends AbstractPlaywrightAction {
          * @return this builder
          */
         public Builder click(String locator) {
+            return click(LocatorSpec.css(locator));
+        }
+
+        /**
+         * Click the element described by the given locator inside the frame.
+         * @param locator element locator
+         * @return this builder
+         */
+        public Builder click(LocatorSpec locator) {
             this.command = Command.CLICK;
-            this.locator = LocatorSpec.css(locator);
+            this.locator = locator;
             return this;
         }
 
@@ -122,8 +186,18 @@ public class FrameAction extends AbstractPlaywrightAction {
          * @return this builder
          */
         public Builder verifyText(String locator, String text) {
+            return verifyText(LocatorSpec.css(locator), text);
+        }
+
+        /**
+         * Verify the text of the element described by the given locator inside the frame.
+         * @param locator element locator
+         * @param text expected text
+         * @return this builder
+         */
+        public Builder verifyText(LocatorSpec locator, String text) {
             this.command = Command.VERIFY_TEXT;
-            this.locator = LocatorSpec.css(locator);
+            this.locator = locator;
             this.value = text;
             return this;
         }
@@ -141,8 +215,8 @@ public class FrameAction extends AbstractPlaywrightAction {
 
         @Override
         public FrameAction build() {
-            if (frameSelector == null || frameSelector.isBlank() || locator == null || command == null) {
-                throw new CitrusRuntimeException("Missing Playwright frame selector, locator, or command");
+            if (locator == null || command == null) {
+                throw new CitrusRuntimeException("Missing Playwright frame locator or command");
             }
             if (command == Command.FILL && (value == null || value.isBlank())) {
                 throw new CitrusRuntimeException("Missing Playwright frame fill value");

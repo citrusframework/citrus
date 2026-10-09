@@ -25,6 +25,7 @@ import org.citrusframework.TestActionBuilder;
 public interface BaseTestActions extends
         AntRunActionBuilder.BuilderFactory,
         ApplyTestBehaviorActionBuilder.BuilderFactory,
+        AskActionBuilder.BuilderFactory,
         CreateEndpointActionBuilder.BuilderFactory,
         CreateVariablesActionBuilder.BuilderFactory,
         EchoActionBuilder.BuilderFactory,

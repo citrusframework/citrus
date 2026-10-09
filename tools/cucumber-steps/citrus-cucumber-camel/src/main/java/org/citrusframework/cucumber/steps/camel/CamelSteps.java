@@ -75,7 +75,7 @@ public class CamelSteps {
 
     private Map<String, Object> headers = new HashMap<>();
     private String body;
-    private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
+    private String messageType = CitrusSettings.getDefaultMessageType();
 
     private long timeout = CamelSettings.getTimeout();
 

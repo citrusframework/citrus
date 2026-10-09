@@ -21,8 +21,6 @@ import org.citrusframework.TestAction;
 public interface CamelVerifyRouteActionBuilder<T extends TestAction, B extends CamelVerifyRouteActionBuilder<T, B>>
         extends CamelRouteActionBuilderBase<T, B> {
 
-    B route(String routeId);
-
     B status(Enum<?> status);
 
     B status(String status);

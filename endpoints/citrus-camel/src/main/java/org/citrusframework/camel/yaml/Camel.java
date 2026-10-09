@@ -124,6 +124,12 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         this.delegate = builder;
     }
 
+    @SchemaProperty(kind = ACTION, group = CAMEL_GROUP, module=CAMEL_MODULE,
+            description = "Reset Camel route statistics.")
+    public void setResetRouteStats(ResetRouteStats builder) {
+        this.delegate = builder;
+    }
+
     @SchemaProperty(kind = GROUP, group = CAMEL_GROUP, module=CAMEL_MODULE,
             description = "Manage Camel infra services.")
     public void setInfra(Infra builder) {

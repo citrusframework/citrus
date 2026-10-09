@@ -569,6 +569,14 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         this.builder = builder;
     }
 
+    @XmlElement(name = "reset-route-stats")
+    public void setResetRouteStats(ResetRouteStats resetRouteStats) {
+        CamelResetRouteStatsAction.Builder builder = new CamelResetRouteStatsAction.Builder()
+                .route(resetRouteStats.getRoute());
+
+        this.builder = builder;
+    }
+
     @XmlElement(name = "remove-routes")
     public void setRemoveRoutes(Routes removeRoutes) {
         RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder();

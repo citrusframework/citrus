@@ -301,6 +301,39 @@ public class PlaywrightActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     /**
+     * Records the current page as a video and annotates the recording.
+     *
+     * @return screencast action builder
+     */
+    public ScreencastAction.Builder screencast() {
+        ScreencastAction.Builder builder = new ScreencastAction.Builder().browser(browser);
+        register(builder);
+        return builder;
+    }
+
+    /**
+     * Manages the WebAuthn virtual authenticator for passkey flows.
+     *
+     * @return credentials action builder
+     */
+    public CredentialsAction.Builder credentials() {
+        CredentialsAction.Builder builder = new CredentialsAction.Builder().browser(browser);
+        register(builder);
+        return builder;
+    }
+
+    /**
+     * Simulates an external drag and drop of files or clipboard data onto an element.
+     *
+     * @return drop action builder
+     */
+    public DropAction.Builder drop() {
+        DropAction.Builder builder = new DropAction.Builder().browser(browser);
+        register(builder);
+        return builder;
+    }
+
+    /**
      * Captures a screenshot of the current page.
      *
      * @return screenshot action builder

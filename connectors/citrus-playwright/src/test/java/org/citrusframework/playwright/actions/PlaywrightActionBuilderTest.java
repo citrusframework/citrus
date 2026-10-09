@@ -157,7 +157,7 @@ class PlaywrightActionBuilderTest {
         expectThrows(CitrusRuntimeException.class, () -> playwright().javascript().build());
         expectThrows(CitrusRuntimeException.class, () -> playwright().context().build());
         expectThrows(CitrusRuntimeException.class, () -> playwright().page().build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().frame().fill("#name").value("Citrus").build());
+        expectThrows(CitrusRuntimeException.class, () -> playwright().frame().build());
         expectThrows(CitrusRuntimeException.class, () -> playwright().download().build());
         expectThrows(CitrusRuntimeException.class, () -> playwright().pageObject().execute("open").build());
         expectThrows(CitrusRuntimeException.class, () -> playwright().network().abort().build());

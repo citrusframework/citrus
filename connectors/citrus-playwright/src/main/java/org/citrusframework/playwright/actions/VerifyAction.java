@@ -16,10 +16,14 @@
 
 package org.citrusframework.playwright.actions;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.assertions.LocatorAssertions;
 
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -84,6 +88,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
         BOUNDING_BOX,
         BOUNDS,
         ARIA_SNAPSHOT_CONTAINS,
+        ARIA_SNAPSHOT_MATCHES,
         URL,
         TITLE,
         PAGE_COUNT,
@@ -110,7 +115,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
          * @throws IllegalArgumentException when the name matches no check
          */
         public static Check fromName(String name) {
-            String normalized = name.trim().toUpperCase(Locale.ENGLISH).replace('-', '_');
+            String normalized = name.trim().toUpperCase(Locale.ROOT).replace('-', '_');
             Check alias = ALIASES.get(normalized);
             if (alias != null) {
                 return alias;
@@ -150,6 +155,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
     private final Double y;
     private final Double width;
     private final Double height;
+    private final Double timeout;
 
     /**
      * Creates a verify action from its fluent builder.
@@ -171,6 +177,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
         this.y = builder.y;
         this.width = builder.width;
         this.height = builder.height;
+        this.timeout = builder.timeout;
     }
 
     /**
@@ -180,6 +187,15 @@ public class VerifyAction extends AbstractPlaywrightAction {
      */
     public Check getCheck() {
         return check;
+    }
+
+    /**
+     * Returns the ARIA snapshot assertion timeout in milliseconds.
+     *
+     * @return timeout, or null for the driver default
+     */
+    public Double getTimeout() {
+        return timeout;
     }
 
     @Override
@@ -217,6 +233,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
             case BOUNDS -> assertBounds(browser, locatorReader.boundingBox(element));
             case ARIA_SNAPSHOT_CONTAINS -> assertContains(browser, "locator ARIA snapshot", resolve(expected, context),
                     locatorReader.ariaSnapshot(element));
+            case ARIA_SNAPSHOT_MATCHES -> assertAriaSnapshotMatches(element, resolve(expected, context), timeout, locatorReader);
             case URL -> assertEquals(browser, "page URL", resolve(expected, context), page.url());
             case TITLE -> assertEquals(browser, "page title", resolve(expected, context), page.title());
             case PAGE_COUNT -> assertEquals(browser, "page count", count, pageReader.pageCount(browser));
@@ -265,6 +282,44 @@ public class VerifyAction extends AbstractPlaywrightAction {
         if (!Objects.equals(expectedValue, actualValue)) {
             fail(browser, label, expectedValue, actualValue, secretName);
         }
+    }
+
+    /**
+     * Matches the locator against an expected ARIA snapshot using Playwright's own matcher.
+     *
+     * <p>The driver raises an {@link AssertionError} carrying a diff of the actual snapshot,
+     * which can contain page content. It is converted into a Citrus {@link ValidationException}
+     * with the configured secret patterns redacted first.</p>
+     *
+     * @param element resolved locator
+     * @param expectedSnapshot expected ARIA snapshot
+     * @param timeoutMs assertion timeout in milliseconds, or null for the driver default
+     * @param locatorReader reader supplying the configured secret redaction
+     */
+    private void assertAriaSnapshotMatches(Locator element, String expectedSnapshot, Double timeoutMs,
+            LocatorStateReader locatorReader) {
+        try {
+            if (timeoutMs == null) {
+                assertThat(element).matchesAriaSnapshot(expectedSnapshot);
+            } else {
+                assertThat(element).matchesAriaSnapshot(expectedSnapshot,
+                        new LocatorAssertions.MatchesAriaSnapshotOptions().setTimeout(timeoutMs));
+            }
+        } catch (AssertionError e) {
+            throw ariaSnapshotFailure(e, locatorReader::sanitizeText);
+        }
+    }
+
+    /**
+     * Converts a driver ARIA snapshot assertion failure into a redacted Citrus validation error.
+     *
+     * @param failure assertion error raised by the driver
+     * @param redactor redaction function applied to the message
+     * @return validation exception carrying the redacted message
+     */
+    static ValidationException ariaSnapshotFailure(AssertionError failure, UnaryOperator<String> redactor) {
+        String message = failure.getMessage() == null ? "ARIA snapshot did not match" : failure.getMessage();
+        return new ValidationException(redactor.apply(message));
     }
 
     private void assertContains(PlaywrightBrowser browser, String label, String expectedValue, String actualValue) {
@@ -365,6 +420,7 @@ public class VerifyAction extends AbstractPlaywrightAction {
         private Double y;
         private Double width;
         private Double height;
+        private Double timeout;
 
         /**
          * Sets the verification check, deriving the target scope from it.
@@ -735,6 +791,33 @@ public class VerifyAction extends AbstractPlaywrightAction {
         public Builder ariaSnapshotContains(String expected) {
             this.check = Check.ARIA_SNAPSHOT_CONTAINS;
             this.expected = expected;
+            return this;
+        }
+
+        /**
+         * Verifies the locator against an expected ARIA snapshot using Playwright's own
+         * snapshot matcher. Unlike {@link #ariaSnapshotContains(String)} this performs a
+         * structural match rather than a substring comparison.
+         *
+         * @param expected expected ARIA snapshot in Playwright's YAML-like syntax
+         * @return this builder
+         */
+        public Builder ariaSnapshotMatches(String expected) {
+            this.check = Check.ARIA_SNAPSHOT_MATCHES;
+            this.expected = expected;
+            return this;
+        }
+
+        /**
+         * Sets the assertion timeout applied to the ARIA snapshot match.
+         * Only the {@code ARIA_SNAPSHOT_MATCHES} check reads it; every other
+         * check ignores the value.
+         *
+         * @param timeoutMs timeout in milliseconds, or null for the driver default
+         * @return this builder
+         */
+        public Builder timeout(Double timeoutMs) {
+            this.timeout = timeoutMs;
             return this;
         }
 

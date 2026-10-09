@@ -43,7 +43,7 @@ public class StaticResponseEndpointAdapter extends StaticEndpointAdapter {
     private String messagePayloadResource;
 
     /** Charset applied to payload resource */
-    private String messagePayloadResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
+    private String messagePayloadResourceCharset = CitrusSettings.getFileEncoding();
 
     /** Response message header */
     private Map<String, Object> messageHeader = new HashMap<>();

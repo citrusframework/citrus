@@ -443,8 +443,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      */
     private void initializeTestParameters(Map<String, Object> parameters, TestContext context) {
         // add default variables for test
-        context.setVariable(CitrusSettings.TEST_NAME_VARIABLE, getName());
-        context.setVariable(CitrusSettings.TEST_PACKAGE_VARIABLE, packageName);
+        context.setVariable(CitrusSettings.getTestNameVariable(), getName());
+        context.setVariable(CitrusSettings.getTestPackageVariable(), packageName);
 
         for (final Map.Entry<String, Object> paramEntry : parameters.entrySet()) {
             logger.debug("Initializing test parameter '{}' as variable", paramEntry.getKey());

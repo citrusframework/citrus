@@ -360,7 +360,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
             String charsetName = org.apache.commons.lang3.StringUtils.substringAfter(contentType, charsetPrefix);
             return org.apache.commons.lang3.StringUtils.substringBefore(charsetName, ";");
         } else {
-            return CitrusSettings.CITRUS_FILE_ENCODING;
+            return CitrusSettings.getFileEncoding();
         }
     }
 }

@@ -19,13 +19,20 @@ package org.citrusframework.playwright.config.annotation;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowserConfiguration;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.expectThrows;
+
+import java.util.List;
+
+import com.microsoft.playwright.options.HttpCredentialsSend;
 
 class PlaywrightBrowserConfigParserTest {
 
@@ -40,6 +47,19 @@ class PlaywrightBrowserConfigParserTest {
             defaultNavigationTimeout = 7_500L,
             tracingEnabled = true)
     private PlaywrightBrowser browser;
+
+    @PlaywrightBrowserConfig(httpCredentials = {
+            @HttpCredential(origin = "https://api.example.com", username = "u", password = "p", send = "always"),
+            @HttpCredential(username = "fallback", password = "p") })
+    private PlaywrightBrowser credentialBrowser;
+
+    @PlaywrightBrowserConfig(httpCredentials = {
+            @HttpCredential(username = "u", password = "p", send = "sometimes") })
+    private PlaywrightBrowser brokenCredentialBrowser;
+
+    @PlaywrightBrowserConfig(httpCredentials = {
+            @HttpCredential(username = "u", password = "p", send = "${mode}") })
+    private PlaywrightBrowser variableCredentialBrowser;
 
     @Test
     void shouldLookupParserByQualifier() {
@@ -68,5 +88,54 @@ class PlaywrightBrowserConfigParserTest {
         assertEquals(5_000L, configuration.getDefaultTimeout());
         assertEquals(7_500L, configuration.getDefaultNavigationTimeout());
         assertTrue(configuration.isTracingEnabled());
+    }
+
+    @Test
+    void shouldParseCredentialSendMode() throws Exception {
+        PlaywrightBrowserConfig annotation = getClass()
+                .getDeclaredField("credentialBrowser")
+                .getAnnotation(PlaywrightBrowserConfig.class);
+
+        TestContext context = TestContextFactory.newInstance().getObject();
+        PlaywrightBrowser endpoint =
+                new PlaywrightBrowserConfigParser().parse(annotation, new SimpleReferenceResolver(), context);
+
+        List<com.microsoft.playwright.options.HttpCredentials> credentials =
+                endpoint.getEndpointConfiguration().getHttpCredentials();
+        assertEquals(2, credentials.size());
+        assertEquals(HttpCredentialsSend.ALWAYS, credentials.get(0).send);
+        assertEquals("https://api.example.com", credentials.get(0).origin);
+        assertNull(credentials.get(1).send);
+    }
+
+    @Test
+    void shouldRejectUnknownCredentialSendMode() throws Exception {
+        PlaywrightBrowserConfig annotation = getClass()
+                .getDeclaredField("brokenCredentialBrowser")
+                .getAnnotation(PlaywrightBrowserConfig.class);
+
+        TestContext context = TestContextFactory.newInstance().getObject();
+
+        CitrusRuntimeException exception = expectThrows(
+                CitrusRuntimeException.class,
+                () -> new PlaywrightBrowserConfigParser().parse(annotation, new SimpleReferenceResolver(), context));
+        assertTrue(exception.getMessage().contains("sometimes"));
+    }
+
+    @Test
+    void shouldResolveCredentialSendModeFromVariable() throws Exception {
+        PlaywrightBrowserConfig annotation = getClass()
+                .getDeclaredField("variableCredentialBrowser")
+                .getAnnotation(PlaywrightBrowserConfig.class);
+
+        TestContext context = TestContextFactory.newInstance().getObject();
+        context.setVariable("mode", "unauthorized");
+        PlaywrightBrowser endpoint =
+                new PlaywrightBrowserConfigParser().parse(annotation, new SimpleReferenceResolver(), context);
+
+        List<com.microsoft.playwright.options.HttpCredentials> credentials =
+                endpoint.getEndpointConfiguration().getHttpCredentials();
+        assertEquals(1, credentials.size());
+        assertEquals(HttpCredentialsSend.UNAUTHORIZED, credentials.get(0).send);
     }
 }

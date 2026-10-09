@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
@@ -204,13 +205,21 @@ public interface CodeAnalyzer {
 
         for (String serviceName : serviceNames) {
             String baseName = serviceName.contains(".") ? serviceName.substring(0, serviceName.indexOf(".")) : serviceName;
-            if (catalog.containsKey(serviceName)) {
-                dependencies.add("%s:%s".formatted(catalog.get(serviceName).module, camelVersion));
-            } else if (catalog.containsKey(baseName)) {
-                dependencies.add("%s:%s".formatted(catalog.get(baseName).module, camelVersion));
-            } else {
-                dependencies.add("org.apache.camel:camel-test-infra-%s:%s".formatted(baseName, camelVersion));
-            }
+            Stream.of(
+                    Optional.ofNullable(catalog.get(serviceName)),
+                    Optional.ofNullable(catalog.get(baseName)),
+                    catalog.entrySet().stream()
+                            .filter(e -> e.getKey().startsWith(baseName + "."))
+                            .map(Map.Entry::getValue)
+                            .findFirst()
+            )
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .findFirst()
+            .ifPresentOrElse(
+                    entry -> dependencies.add("%s:%s".formatted(entry.module(), camelVersion)),
+                    () -> dependencies.add("org.apache.camel:camel-test-infra-%s:%s".formatted(baseName, camelVersion))
+            );
         }
 
         return dependencies;

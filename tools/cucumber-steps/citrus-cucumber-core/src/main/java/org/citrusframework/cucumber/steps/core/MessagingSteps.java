@@ -125,7 +125,7 @@ public class MessagingSteps {
     @When("^endpoint ([^\\s]+) receives message \\$([^\\s]+)$")
     @Then("^endpoint ([^\\s]+) should receive message \\$([^\\s]+)$")
     public void receiveMessage(final String endpoint, final String messageName) {
-        receiveMessage(endpoint, CitrusSettings.DEFAULT_MESSAGE_TYPE, messageName);
+        receiveMessage(endpoint, CitrusSettings.getDefaultMessageType(), messageName);
     }
 
     @When("^endpoint ([^\\s]+) receives ([^\\s]+) body ([\\w\\W]+)$")
@@ -141,13 +141,13 @@ public class MessagingSteps {
     @When("^endpoint ([^\\s]+) receives body ([\\w\\W]+)$")
     @Then("^endpoint ([^\\s]+) should receive body ([\\w\\W]+)$")
     public void receiveDefault(String endpoint, String body) {
-        receiveBody(endpoint, CitrusSettings.DEFAULT_MESSAGE_TYPE, body);
+        receiveBody(endpoint, CitrusSettings.getDefaultMessageType(), body);
     }
 
     @When("^endpoint ([^\\s]+) receives body$")
     @Then("^endpoint ([^\\s]+) should receive body$")
     public void receiveMultilineBody(String endpoint, String body) {
-        receiveBody(endpoint, CitrusSettings.DEFAULT_MESSAGE_TYPE, body);
+        receiveBody(endpoint, CitrusSettings.getDefaultMessageType(), body);
     }
 
     @When("^endpoint ([^\\s]+) receives ([^\\s]+) body$")

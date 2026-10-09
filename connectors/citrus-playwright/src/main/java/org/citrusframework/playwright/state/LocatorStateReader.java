@@ -40,6 +40,17 @@ public class LocatorStateReader {
     }
 
     /**
+     * Applies the configured secret patterns to arbitrary text, for callers that obtain page
+     * content from the driver rather than through this reader.
+     *
+     * @param text text to sanitize
+     * @return text with configured secret patterns masked
+     */
+    public String sanitizeText(String text) {
+        return redactor.sanitizeText(text);
+    }
+
+    /**
      * Reads the current locator bounding box as a stable record.
      *
      * @param locator locator to inspect

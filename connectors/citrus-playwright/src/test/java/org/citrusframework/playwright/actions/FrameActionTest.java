@@ -18,6 +18,7 @@ package org.citrusframework.playwright.actions;
 
 import static org.testng.Assert.expectThrows;
 import static org.testng.Assert.assertTrue;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,6 +34,7 @@ import org.testng.annotations.Test;
 
 import com.microsoft.playwright.FrameLocator;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.PlaywrightException;
 
 class FrameActionTest {
 
@@ -93,7 +95,35 @@ class FrameActionTest {
     }
 
     @Test
-    void shouldFailFastWhenSelectorLocatorCommandMissing() {
+    void shouldSearchAllFramesWhenSelectorOmitted() {
+        FrameLocator anyFrame = mock(FrameLocator.class);
+        Locator anyFrameElement = mock(Locator.class);
+        when(browser.page().frameLocator()).thenReturn(anyFrame);
+        when(anyFrame.locator("#submit")).thenReturn(anyFrameElement);
+
+        new FrameAction.Builder().click("#submit").build().execute(context);
+
+        verify(browser.page()).frameLocator();
+        verify(anyFrameElement).click();
+    }
+
+    @Test
+    void shouldReportLocatorWhenMatchIsAmbiguousAcrossFrames() {
+        FrameLocator anyFrame = mock(FrameLocator.class);
+        Locator ambiguous = mock(Locator.class);
+        when(browser.page().frameLocator()).thenReturn(anyFrame);
+        when(anyFrame.locator("#submit")).thenReturn(ambiguous);
+        doThrow(new PlaywrightException("strict mode violation: resolved to 2 elements in different frames"))
+                .when(ambiguous).click();
+
+        FrameAction action = new FrameAction.Builder().click("#submit").build();
+
+        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        assertTrue(exception.getMessage().contains("#submit"), exception.getMessage());
+    }
+
+    @Test
+    void shouldFailFastWhenLocatorAndCommandMissing() {
         expectThrows(CitrusRuntimeException.class, () -> new FrameAction.Builder().build());
     }
 

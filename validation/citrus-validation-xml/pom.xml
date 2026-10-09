@@ -81,6 +81,12 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-validation-text</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-validation-hamcrest</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>

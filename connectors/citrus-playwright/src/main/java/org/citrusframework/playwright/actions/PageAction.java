@@ -69,6 +69,22 @@ public class PageAction extends AbstractPlaywrightAction {
         }
     }
 
+    public Command getCommand() {
+        return command;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public String getContextAlias() {
+        return contextAlias;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
     /**
      * Fluent builder for page create, switch, and close commands.
      */

@@ -40,7 +40,7 @@ public class StringSource extends StreamSource {
      * @param content the content
      */
     public StringSource(String content) {
-        this(content, CitrusSettings.CITRUS_FILE_ENCODING);
+        this(content, CitrusSettings.getFileEncoding());
     }
 
     /**

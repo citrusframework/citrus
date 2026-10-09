@@ -27,6 +27,7 @@ The `PlaywrightBrowser` endpoint manages the Playwright runtime, browser launch,
 @BindToRegistry
 public PlaywrightBrowser playwrightBrowser() {
     return PlaywrightEndpoints.playwright()
+            .browser()
             .browserType("chromium")
             .headless(true)
             .baseUrl("http://localhost:8080")
@@ -40,6 +41,7 @@ public PlaywrightBrowser playwrightBrowser() {
 @Bean
 public PlaywrightBrowser playwrightBrowser() {
     return PlaywrightEndpoints.playwright()
+            .browser()
             .browserType("chromium")
             .headless(true)
             .baseUrl("http://localhost:8080")
@@ -132,7 +134,47 @@ Locators accept CSS selectors by default and richer variants via locator specs:
 $(playwright().click().locator(LocatorSpec.text("Save")));
 $(playwright().click().locator(LocatorSpec.role("button").name("Submit")));
 $(playwright().click().locator(LocatorSpec.testId("submit-button").last()));
+$(playwright().click().locator(LocatorSpec.css("button.action").visible()));
 ----
+
+`visible()` narrows a locator to visible elements only. It is the recommended replacement for the
+`:visible` CSS pseudo-class. Unlike `first()`, `last()` and `nth(...)` it is a *filter* rather
+than a positional selection, so it combines with them and is applied first — `.visible().nth(1)`
+selects the second *visible* match.
+
+Pointer actions can opt out of Playwright's automatic scroll-into-view:
+
+[source,java]
+----
+$(playwright().click().locator("#save").scroll("none"));
+$(playwright().check().locator("#agree").scroll("none"));
+----
+
+`scroll` accepts `auto` (the default) and `none`, and is supported by `click`, `doubleClick`,
+`rightClick`, `hover`, `tap`, `check` and `uncheck`. Setting it on any other command fails at
+build time, because the underlying Playwright option does not exist for them.
+
+Waiting can also be driven by a predicate evaluated against the matched element:
+
+[source,java]
+----
+$(playwright().waitFor().locator("#grid").function("el => el.children.length > 10"));
+----
+
+[[playwright-frames]]
+== Frames
+
+A frame selector targets one iframe. Omitting it searches every frame in the page subtree, which
+avoids chaining through nested iframes:
+
+[source,java]
+----
+$(playwright().frame().frame("#checkout").click("#submit"));
+$(playwright().frame().click("#submit"));
+----
+
+Without a selector the inner locator must match in exactly one frame; an ambiguous match fails
+with an error naming the locator and the scope that was searched.
 
 [[playwright-verification]]
 == Verify and extract
@@ -145,6 +187,28 @@ $(playwright().verify().locator("#message").text("Citrus:ready"));
 $(playwright().verify().url("http://localhost:8080/home"));
 $(playwright().verify().storageLocal("theme", "dark"));
 $(playwright().verify().consoleContains("Started"));
+----
+
+Two ARIA snapshot checks are available and they differ in kind. `ariaSnapshotContains` compares a
+substring of the rendered snapshot; `ariaSnapshotMatches` uses Playwright's own structural
+matcher:
+
+[source,java]
+----
+$(playwright().verify().locator("#panel").ariaSnapshotContains("heading"));
+$(playwright().verify().locator("#panel").ariaSnapshotMatches("""
+    - heading "Title"
+    - button "Save"
+    """));
+----
+
+Both route their failure message through the configured secret redaction before it is reported.
+`ariaSnapshotMatches` accepts a `timeout` in milliseconds for slow-rendering regions; the
+substring check has no timeout because it reads an already captured snapshot:
+
+[source,java]
+----
+$(playwright().verify().locator("#panel").ariaSnapshotMatches("- heading \"Title\"").timeout(5000));
 ----
 
 Extract values into test variables:
@@ -164,6 +228,536 @@ $(playwright().extract().cookie("session").variable("sessionCookie"));
 $(playwright().javascript().script("window.title").variable("jsResult"));
 $(playwright().screenshot().path("target/playwright/screen.png").variable("screenshotPath"));
 ----
+
+Screenshots support PNG, JPEG and WebP. The format is taken from the file extension unless `type`
+is set explicitly, in which case the explicit value wins. `quality` applies to the lossy formats
+only — 100 is lossless for WebP — and setting it for a PNG fails at build time:
+
+[source,java]
+----
+$(playwright().screenshot().path("target/playwright/screen.webp").quality(50));
+$(playwright().screenshot().path("target/playwright/full.png").fullPage(true));
+$(playwright().screenshot().path("target/playwright/shot.bin").type("webp"));
+----
+
+[[playwright-drop]]
+== Drag and drop
+
+`drop` dispatches `dragenter`, `dragover` and `drop` with a synthetic data transfer, so upload
+zones can be exercised without a real file manager. Supply either a file or clipboard-like data,
+not both:
+
+[source,java]
+----
+$(playwright().drop().locator("#dropzone").file("note.txt", "text/plain", "hello"));
+$(playwright().drop().locator("#dropzone")
+        .data("text/plain", "hello world")
+        .data("text/uri-list", "https://example.com"));
+----
+
+A drop can carry the driver's own options: a `timeout` in milliseconds and a drop `position`
+relative to the element's top-left corner. Both are unset by default, which keeps the
+no-options `drop` call:
+
+[source,java]
+----
+$(playwright().drop().locator("#dropzone").file("note.txt", "text/plain", "hello").timeout(5000));
+$(playwright().drop().locator("#dropzone").data("text/plain", "hello").position(10, 20));
+----
+
+[[playwright-tracing]]
+== Tracing, HAR and screencast
+
+Tracing can additionally capture an aria snapshot and a screenshot on *every* action. Both are
+off by default because they add a capture to each step and make traces substantially larger —
+turn them on for a failing scenario rather than for a whole suite:
+
+[source,java]
+----
+$(playwright().tracing().start().screenshots(true).snapshots(true)
+        .ariaSnapshots(true).screenSnapshots(true));
+$(playwright().tracing().stop().path("target/playwright/trace.zip"));
+----
+
+HAR recording is a first-class tracing command. Response bodies are **omitted by default** so
+that credentials and payloads are not written into the artifact; widening that is deliberate:
+
+[source,java]
+----
+$(playwright().tracing().startHar("target/playwright/session.har").harUrlFilter("**/api/**"));
+$(playwright().tracing().stopHar());
+$(playwright().tracing().startHar("target/playwright/full.har").harContent("embed"));
+----
+
+A screencast records the page as a video and can annotate it as a walkthrough. Nothing is
+recorded until the action starts it:
+
+[source,java]
+----
+$(playwright().screencast().start("target/playwright/run.webm"));
+$(playwright().screencast().showActions().position("top-right").fontSize(18));
+$(playwright().screencast().showChapter("Checkout").chapterDescription("Applies the coupon"));
+$(playwright().screencast().stop());
+----
+
+NOTE: The chapter text is set with `chapterDescription(...)`, not `description(...)`. The latter
+is the standard Citrus action description shared by every action builder.
+
+A recording can carry custom HTML overlays, for example to narrate a walkthrough, and the
+recording size can be chosen up front. Overlay content is test-supplied HTML rendered into the
+page — do not interpolate untrusted data into it. Overlays stay visible until they are hidden
+again:
+
+[source,java]
+----
+$(playwright().screencast().start("target/playwright/run.webm").size(1280, 720));
+$(playwright().screencast().showOverlay("<div>Step 3 — checkout</div>"));
+$(playwright().screencast().showOverlays());
+$(playwright().screencast().hideOverlays());
+$(playwright().screencast().stop());
+----
+
+Recording is expensive. Keep it to the scenarios whose output you intend to review. The real-time
+frame callback is Java DSL only, because a callback has no declarative representation:
+
+[source,java]
+----
+$(playwright().screencast().start("target/playwright/run.webm")
+        .onFrame(frame -> sendToVisionModel(frame.data())));
+----
+
+[[playwright-storage-state]]
+== Storage state
+
+Saved storage state can include the origin private file system so it can be restored into a later
+browser context:
+
+[source,java]
+----
+$(playwright().storage().saveState("target/state.json").opfs(true));
+$(playwright().storage().saveState("target/state.json").indexedDB(true).credentials(true));
+$(playwright().storage().restoreState("target/state.json"));
+----
+
+`indexedDB` and `credentials` default to off, like `opfs`. Note that `credentials(true)` writes
+credential material into the storage-state file on disk — keep it off unless the restored
+session genuinely needs those credentials.
+
+[[playwright-dialogs]]
+== Dialogs
+
+Besides accepting and dismissing a dialog, a test can assert that one was closed:
+
+[source,java]
+----
+$(playwright().dialog().accept().triggerScript("window.confirm('Delete?')"));
+$(playwright().dialog().verifyClosed().triggerScript("window.alert('Saved')"));
+----
+
+[[playwright-console-network]]
+== Console messages, page errors and response details
+
+Uncaught page JavaScript errors are read directly from the page — there is no capture step, the
+call observes the errors present at that moment. Assert that a page stayed clean, match an
+error, or extract the report into a variable:
+
+[source,java]
+----
+$(playwright().console().verifyNoPageErrors());
+$(playwright().console().verifyPageErrorsContain("TypeError"));
+$(playwright().console().pageErrors().variable("pageErrors"));
+----
+
+Console message retrieval reads the capture registry by default. With `filter` set to
+`since-navigation` it instead reads directly from the page, returning only messages since the
+last navigation:
+
+[source,java]
+----
+$(playwright().console().report().variable("consoleReport"));
+$(playwright().console().report().filter("since-navigation").variable("recentConsole"));
+$(playwright().console().verifyContains("Started"));
+----
+
+[source,xml,indent=0,role="secondary"]
+----
+<playwright>
+  <console command="verify-no-page-errors"/>
+  <console command="page-errors-report" variable="pageErrors"/>
+  <console command="report" filter="since-navigation" variable="recentConsole"/>
+</playwright>
+----
+
+A waited-for page response can additionally verify which server answered and over which TLS
+protocol, and the structured snapshot stored in a variable carries the same details. On plain
+HTTP the driver reports no security details, so the TLS fields are absent rather than empty:
+
+[source,java]
+----
+$(playwright().network().waitForResponse().urlContains("/api/orders")
+        .triggerScript("() => fetch('/api/orders')")
+        .verifyServerAddress("127.0.0.1", 8080)
+        .verifySecurityDetails("TLSv1.3")
+        .variable("response"));
+----
+
+[source,xml,indent=0,role="secondary"]
+----
+<playwright>
+  <network command="wait-for-response" url-contains="/api/orders" server-ip="127.0.0.1"
+      server-port="8080" security-protocol="TLSv1.3" variable="response"/>
+</playwright>
+----
+
+[[playwright-credentials]]
+== HTTP credentials and passkeys
+
+A browser endpoint can carry several origin-scoped HTTP credentials. The first entry matching the
+request origin is used, and an entry without an origin matches any request:
+
+[source,java]
+----
+@CitrusEndpoint
+@PlaywrightBrowserConfig(
+    browserType = "chromium",
+    httpCredentials = {
+        @HttpCredential(origin = "https://api.example.com", username = "api", password = "${apiPassword}"),
+        @HttpCredential(username = "fallback", password = "${fallbackPassword}")
+    })
+private PlaywrightBrowser browser;
+----
+
+An explicitly configured `contextOptions` still wins, so the raw driver escape hatch keeps working
+unchanged.
+
+Each credential can control when it is sent with `send`: `always` or `unauthorized`. Unset
+means the driver default. Use `unauthorized` against servers that require an unauthenticated
+first request:
+
+[source,java]
+----
+@HttpCredential(origin = "https://api.example.com", username = "api",
+        password = "${apiPassword}", send = "unauthorized")
+----
+
+WebAuthn passkeys are driven through a virtual authenticator, so passkey login flows need no
+hardware:
+
+[source,java]
+----
+$(playwright().credentials().create("example.com")
+        .id("${credentialId}").userHandle("${userHandle}")
+        .privateKey("${privateKey}").publicKey("${publicKey}"));
+$(playwright().credentials().install());
+$(playwright().credentials().read("storedCredential"));
+$(playwright().credentials().delete("example.com"));
+----
+
+Only the credential id is written to the test variable. Private key material never reaches the
+test context, the logs, or the failure evidence.
+
+[[playwright-api-requests]]
+== API requests with the browser session
+
+A test often needs to call the application's HTTP API *as the user the browser is logged in as*:
+to seed data before a UI step, or to check through the API what the UI claims to have saved. The
+connector provides a Citrus `HttpClient` whose requests travel through a Playwright browser
+context, the same way Playwright's own `APIRequestContext` (`context.request()`) does. You write the
+requests and verify the responses with the standard <<http-rest-client,`http()` actions>>; only the
+client is different.
+
+*When to use which.* Use a browser-session client when the request must carry the browser's
+session, or must hand a session back to the browser (an API login that the UI then continues).
+Use a plain `HttpClient` for everything else. The two are used the same way in a test, and you can
+mix them freely.
+
+[[playwright-api-requests-client]]
+=== Declaring the client
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+private final PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
+        .browser()
+        .baseUrl("http://localhost:8080")
+        .build();
+
+@BindToRegistry
+private final HttpClient browserApi = PlaywrightEndpoints.playwright()
+        .apiClient()
+        .browser(browser)
+        .build();
+----
+
+.Annotation
+[source,java,indent=0,role="secondary"]
+----
+@CitrusEndpoint
+@PlaywrightApiClientConfig(browser = "browser")
+private HttpClient browserApi;
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<bean id="browserTransport" class="org.citrusframework.playwright.http.PlaywrightClientHttpRequestFactory">
+  <constructor-arg ref="browser"/>
+</bean>
+
+<citrus-http:client id="browserApi"
+                    request-url="http://localhost:8080"
+                    request-factory="browserTransport"/>
+----
+
+The builder and the annotation offer the same options, except where the table shows no attribute.
+Building the client fails when no browser
+is bound, when a browser name cannot be resolved, or when there is neither a request URL nor a
+browser `baseUrl`.
+
+[cols="3,2,5",options="header"]
+|===
+|Builder method |Annotation attribute |Effect and default
+
+|`browser(PlaywrightBrowser)` / `browser(String)` |`browser` |The browser endpoint whose context carries the requests. Required; a name is resolved as a bean
+|`context(String)` |`context` |Binds every request to a named browser context. Default: the browser's *current* context at the time each request is sent
+|`requestUrl(String)` |`requestUrl` |Base URL that request paths are appended to. Default: the browser endpoint's `baseUrl`
+|`timeout(long)` |`timeout` |Request timeout in milliseconds, also used as the client timeout. Default: the driver's 30 seconds
+|`maxRedirects(int)` |`maxRedirects` |Redirects to follow. `0` returns the redirect response itself. Default: 20
+|`maxRetries(int)` |`maxRetries` |Retries after a connection reset (`ECONNRESET`), with a backoff starting at 250 ms. Other failures are never retried. Default: 0
+|`ignoreHttpsErrors(boolean)` |`ignoreHttpsErrors` |Accepts invalid TLS certificates for this client. It can only widen the browser context's own `ignoreHTTPSErrors` setting, never narrow it. Default: false
+|`handleCookies(boolean)` |`handleCookies` |Maps `Set-Cookie` response headers to message cookies, as on any Http client. Default: false
+|`errorHandlingStrategy(...)` |— |What a non-2xx response does, as on any Http client. Default: `PROPAGATE`, the response is delivered for the test to verify
+|`name(String)` |the field name |Endpoint name
+|===
+
+For full control over the Http client, plug the transport into the regular builder. The request
+URL is then yours to set:
+
+[source,java]
+----
+HttpClient custom = new HttpClientBuilder()
+        .requestUrl("http://localhost:8080")
+        .requestFactory(new PlaywrightClientHttpRequestFactory(browser)
+                .context("admin")
+                .timeout(10_000)
+                .maxRedirects(0)
+                .maxRetries(2)
+                .ignoreHttpsErrors(true))
+        .defaultAcceptHeader(false)
+        .build();
+----
+
+[[playwright-api-requests-usage]]
+=== Sending requests and verifying responses
+
+Log in through the UI, then call the API as that user:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+$(playwright().open().url("http://localhost:8080/login"));
+$(playwright().fill().locator("#username").value("alice"));
+$(playwright().click().locator("#submit"));
+
+$(http().client(browserApi)
+        .send()
+        .post("/api/orders")
+        .message()
+        .contentType("application/json")
+        .body("{\"item\":\"${item}\"}"));
+
+$(http().client(browserApi)
+        .receive()
+        .response(HttpStatus.CREATED)
+        .message()
+        .type(MessageType.JSON)
+        .validate(validation().jsonPath().expression("$.item", "${item}")));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<http client="browserApi">
+  <send-request>
+    <GET path="/api/me"/>
+  </send-request>
+</http>
+
+<http client="browserApi">
+  <receive-response>
+    <response status="200" content-type="application/json">
+      <body>
+        <data>{"user":"alice"}</data>
+      </body>
+    </response>
+  </receive-response>
+</http>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+- http:
+    client: "browserApi"
+    sendRequest:
+      GET:
+        path: "/api/me"
+- http:
+    client: "browserApi"
+    receiveResponse:
+      response:
+        status: "200"
+        contentType: "application/json"
+        body:
+          data: |
+            {"user":"alice"}
+----
+
+Form and multipart bodies are encoded by the Http client before they reach the browser, so they
+work exactly as on a plain client:
+
+[source,java]
+----
+MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+parts.add("name", "citrus");
+parts.add("file", new ClassPathResource("uploads/avatar.png"));
+
+$(http().client(browserApi)
+        .send()
+        .post("/api/upload")
+        .message()
+        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+        .body(parts));
+----
+
+[[playwright-api-requests-session]]
+=== What travels with a request
+
+The browser context's cookies, including HttpOnly ones, go out with every request, and a
+`Set-Cookie` on a response is stored in the context, so the next page navigation sends it. The
+browser context's HTTP settings apply as well: extra HTTP headers, user agent, HTTP credentials,
+proxy, client certificates and `ignoreHTTPSErrors`. Configure them on the browser endpoint
+(`contextOptions(...)`, `httpCredentials(...)`), and they hold for pages and API requests alike.
+Bind a client to a named context with `context("admin")` to test several users side by side.
+
+Web storage is *not* part of the session. If the application keeps a bearer token in
+`localStorage`, read it and send it yourself:
+
+[source,java]
+----
+$(playwright().storage().local().read("token").variable("token"));
+$(http().client(browserApi)
+        .send()
+        .get("/api/profile")
+        .message()
+        .header("Authorization", "Bearer ${token}"));
+----
+
+A request that sets a `Cookie` header fails before it is sent. The driver would use that header
+*instead of* the browser's cookies and silently drop the session, so add cookies to the context
+with `playwright().cookies().add(...)` instead.
+
+Browser-session requests are not part of the page's network traffic. `network().route(...)` stubs
+do not intercept them, network capture and HAR recording do not list them, and the context trace
+does not record them. To stub the backend an API request talks to, use a Citrus
+<<http-rest-server,Http server>>.
+
+[[playwright-api-requests-transport]]
+=== Transport details
+
+Each response carries the details the driver reports as headers you can verify or extract like
+any other. A detail the driver does not report, such as TLS over plain HTTP or the DNS phase for
+an IP address, is left out rather than faked.
+
+[cols="2,3",options="header"]
+|===
+|Header |Value
+
+|`citrus_playwright_api_url` |Final URL of the response, after the redirects the driver followed
+|`citrus_playwright_api_server_ip`, `citrus_playwright_api_server_port` |Address of the server that answered
+|`citrus_playwright_api_tls_protocol`, `_tls_subject_name`, `_tls_issuer` |TLS details of the connection
+|`citrus_playwright_api_tls_valid_from`, `_tls_valid_to` |Certificate validity, in epoch seconds
+|`citrus_playwright_api_timing_start_time` |Request start, in epoch milliseconds
+|`citrus_playwright_api_timing_domain_lookup_start`, `_domain_lookup_end`, `_connect_start`, `_secure_connection_start`, `_connect_end`, `_request_start`, `_response_start`, `_response_end` |Phases in milliseconds relative to the start time; `_response_end` is the total duration
+|===
+
+[source,java]
+----
+$(http().client(browserApi)
+        .receive()
+        .response(HttpStatus.OK)
+        .message()
+        .header("citrus_playwright_api_tls_protocol", "@startsWith('TLS')@")
+        .header("citrus_playwright_api_timing_response_end", "@lowerThan(500)@")
+        .extract(extractor().fromHeaders().header("citrus_playwright_api_url", "finalUrl")));
+----
+
+[[playwright-api-requests-mapping]]
+=== Playwright API requests in Citrus
+
+Every capability of Playwright's `APIRequestContext` and `APIResponse` has a Citrus counterpart,
+except where the table says otherwise.
+
+[cols="2,3",options="header"]
+|===
+|Playwright |Citrus browser-session client
+
+2+|*Requests*
+|`get`, `post`, `put`, `patch`, `delete`, `head`, `fetch` with a method |`http().client(browserApi).send().get(...)`, `.post(...)`, `.put(...)`, `.patch(...)`, `.delete(...)`, `.head(...)`, `.options(...)`, `.trace(...)`
+|Request URL and `baseURL` |Client `requestUrl` (default: the browser `baseUrl`) plus the request path; `.uri(...)` sends to another absolute URL
+|`setQueryParam(...)` |`.queryParam(name, value)`
+|`setHeader(...)` |`.message().header(name, value)`, `.contentType(...)`, `.accept(...)`
+|`setData(...)` |`.message().body(...)` with text, a resource or a JSON document
+|`setForm(...)` |`.message().contentType("application/x-www-form-urlencoded").body(multiValueMap)`
+|`setMultipart(...)` |`.message().contentType("multipart/form-data").body(multiValueMap)`
+|`setTimeout(...)` |Client `timeout(...)`
+|`setMaxRedirects(...)` |Client `maxRedirects(...)`
+|`setMaxRetries(...)` |Client `maxRetries(...)`
+|`setIgnoreHTTPSErrors(...)` |Client `ignoreHttpsErrors(true)`, or the browser context's `ignoreHTTPSErrors`
+|`setFailOnStatusCode(true)` |Client `errorHandlingStrategy(ErrorHandlingStrategy.THROWS_EXCEPTION)`
+|`fetch(Request)`, replaying a captured page request |Not supported
+2+|*Session*
+|Cookies of the browser context, in both directions |Automatic
+|Context `extraHTTPHeaders`, `userAgent`, `httpCredentials`, `proxy`, `clientCertificates` |Automatic, from the browser endpoint's context configuration
+|`storageState()` |`playwright().storage().saveState(...)`; it holds the same cookies
+|`Playwright.request().newContext()`, a request without the browser session |A plain `HttpClient`
+2+|*Responses*
+|`status()`, `ok()` |`.response(HttpStatus.CREATED)`, or the `citrus_http_status_code` header
+|`statusText()` |Not available. `citrus_http_reason_phrase` holds the standard reason phrase of the status code, as on any Http client
+|`headers()`, `headersArray()` |Message headers: `.message().header(...)`, `extractor().fromHeaders()`. Repeated headers arrive comma-joined (`Set-Cookie: A=1; Path=/,B=2; Path=/`), or as separate cookies with `handleCookies(true)`
+|`body()`, `text()` |The message body, validated and extracted like any other; binary bodies follow the client's binary media types, as on any Http client. A compressed body arrives decompressed, without `Content-Encoding` and with a `Content-Length` that matches it
+|`url()` |`citrus_playwright_api_url`
+|`serverAddr()` |`citrus_playwright_api_server_ip`, `citrus_playwright_api_server_port`
+|`securityDetails()` |`citrus_playwright_api_tls_*`
+|`timing()` |`citrus_playwright_api_timing_*`
+|`dispose()` |Automatic after each response
+2+|*Context*
+|`tracing()` |Not supported. The context trace does not record API requests; Citrus message tracing and reports do
+|`dispose()` |Follows the browser endpoint's lifecycle
+|===
+
+[[playwright-api-requests-limits]]
+=== Http client settings, threads and logging
+
+The client is a regular `HttpClient`, so message conversion, header mapping, interceptors, the
+error handling strategy and `handleCookies` behave exactly as on any other client. Settings of the
+replaced transport do not apply: the HttpComponents `httpClient`, connection pooling and a custom
+`restTemplate`. Replacing the `requestFactory` detaches the client from the browser.
+
+NOTE: A browser-session client runs on the browser endpoint's thread, like every Playwright action.
+A forked send (`fork(true)`) runs on another thread and therefore fails.
+
+The cookies and credentials that the browser adds never appear in Citrus logs: the driver
+attaches them after Citrus has logged the request, and a failed request is reported without the
+driver's call log, which lists them. The rest of the exchange is logged like any Http exchange,
+masked by the Citrus-wide `citrus.logger.mask.keywords` (see <<playwright-browser>>). Add keywords
+such as `token` for response bodies that carry credentials.
+
+Request URLs are not secret. As with every Http client, the request URL, query parameters
+included, appears in the request log and in the message of a failed request (Spring's
+`I/O error on GET request for "…"`). Keep secrets out of query parameters and send them in
+headers or bodies instead.
 
 [[playwright-dsl]]
 == XML and YAML DSL
@@ -196,6 +790,34 @@ actions:
         check: "hidden"
 
   - playwright:
+      click:
+        element:
+          css: ".action"
+          visible: true
+        scroll: "none"
+
+  - playwright:
+      screenshot:
+        path: "target/playwright/screen.webp"
+        quality: 50
+
+  - playwright:
+      drop:
+        element:
+          css: "#dropzone"
+        content-type: "text/plain"
+        value: "hello world"
+
+  - playwright:
+      screencast:
+        command: "start"
+        path: "target/playwright/run.webm"
+
+  - playwright:
+      credentials:
+        command: "install"
+
+  - playwright:
       stop: {}
 ----
 
@@ -219,7 +841,131 @@ actions:
 </playwright>
 ----
 
-Supported action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`) or `test-id`, narrowed by `nth`, `first` or `last`.
+Supported element action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `screencast`, `credentials`, `drop`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`) or `test-id`, narrowed by `nth`, `first` or `last`.
+
+The same applies to XML:
+
+[source,xml,indent=0]
+----
+<playwright>
+  <click scroll="none">
+    <element css=".action" visible="true"/>
+  </click>
+</playwright>
+
+<playwright>
+  <screenshot path="target/playwright/screen.webp" quality="50"/>
+</playwright>
+
+<playwright>
+  <drop content-type="text/plain" value="hello world">
+    <element css="#dropzone"/>
+  </drop>
+</playwright>
+
+<playwright>
+  <screencast command="start" path="target/playwright/run.webm"/>
+</playwright>
+
+<playwright>
+  <credentials command="install"/>
+</playwright>
+----
+
+Browser context, page, network and diagnostics actions are available declaratively as well.
+Actions with several modes take a `command`; commands and option values are case-insensitive and
+accept `_` in place of `-`. The attribute or key names are the same in XML and YAML:
+
+[cols="1,2,3",options="header"]
+|===
+|Key |Commands |Options
+
+|`console` |`capture`, `clear`, `report`, `verify-contains` |`text`, `variable`
+|`context` |`create`, `switch`, `close` |`alias`, `storage-state`
+|`cookies` |`add`, `clear`, `read`, `verify` |`name`, `value`, `url`, `domain`, `path`, `expires`, `http-only`, `secure`, `same-site`, `variable`
+|`dialog` |`accept`, `dismiss`, `verify-closed` |`prompt-text`, `message`, `type`, `trigger-script`
+|`download` |— |`element`, `trigger-script`, `save-as`, `path-variable`, `filename-variable`
+|`emulate` |— |`width` + `height`, `latitude` + `longitude`, `accuracy`, `color-scheme`, `locale`, `timezone`, `user-agent`, `context`
+|`enter` |— |Alias of `fill`
+|`frame` |`fill`, `click`, `verify-text` |`selector`, `element`, `value`
+|`network` |`capture`, `clear`, `report`, `verify-url-contains`, `route-abort`, `route-fulfill`, `route-continue-header`, `unroute`, `wait-for-response` |`pattern`, `text`, `body`, `content-type`, `status`, `header` (XML) / `headers` (YAML), `header-name`, `header-value`, `url`, `url-contains`, `url-matches`, `timeout`, `element`, `trigger-script`, `include-body`, `variable`
+|`page` |`create`, `switch`, `close` |`alias`, `context`, `index`, `title`, `url-contains`
+|`page-object` |— |`type`, `method`, `arguments`, `validator`
+|`pdf` |— |`path`, `print-background`, `variable`
+|`permissions` |`grant`, `clear` |`permissions`
+|`storage` |`set`, `read`, `verify`, `remove`, `clear`, `save-state`, `restore-state` |`scope` (`local`, `session`), `key`, `value`, `path`, `opfs`, `variable`
+|`tracing` |`start`, `stop`, `start-har`, `stop-har` |`path`, `screenshots`, `snapshots`, `sources`, `aria-snapshots`, `screen-snapshots`, `har-content`, `har-mode`, `har-url-filter`, `variable`
+|===
+
+`page` with `command="switch"` takes exactly one of `alias`, `index`, `title` or `url-contains`. For `tracing`, `path` is the trace archive written on `stop` and the HAR file
+written on `start-har`. On `network`, `status` is the fulfilled response status for
+`route-fulfill` and the expected response status for `wait-for-response`.
+
+.YAML
+[source,yaml,indent=0]
+----
+actions:
+  - playwright:
+      network:
+        command: "route-fulfill"
+        pattern: "**/api/users"
+        body: "[]"
+        content-type: "application/json"
+        headers:
+          - name: "X-Test"
+            value: "1"
+
+  - playwright:
+      tracing:
+        command: "start-har"
+        path: "target/playwright/session.har"
+        har-url-filter: "**/api/**"
+
+  - playwright:
+      permissions:
+        command: "grant"
+        permissions:
+          - "geolocation"
+          - "clipboard-read"
+
+  - playwright:
+      page-object:
+        type: "com.example.LoginPage"
+        method: "login"
+        arguments:
+          - "${username}"
+----
+
+.XML
+[source,xml,indent=0]
+----
+<playwright>
+  <network command="route-fulfill" pattern="**/api/users" body="[]" content-type="application/json">
+    <header name="X-Test" value="1"/>
+  </network>
+</playwright>
+
+<playwright>
+  <frame command="click" selector="#checkout">
+    <element role="button" name="Pay"/>
+  </frame>
+</playwright>
+
+<playwright>
+  <storage command="save-state" path="target/state.json" opfs="true"/>
+</playwright>
+
+<playwright>
+  <permissions command="grant" permissions="geolocation, clipboard-read"/>
+</playwright>
+----
+
+In XML, list values such as `select` and `upload` `values`, `permissions` and `page-object`
+`arguments` are separated by commas; each entry is trimmed, so values may contain spaces.
+Page-object and validator types are fully qualified class names.
+
+NOTE: Options that take a Java object or a callback stay Java DSL only: `context().options(...)`
+with a `Browser.NewContextOptions`, raw function locators, and the screencast frame callback.
 
 [[playwright-failure-evidence]]
 == Failure evidence
@@ -229,6 +975,7 @@ On test failure the endpoint can persist diagnostic artifacts to `target/playwri
 [source,java]
 ----
 PlaywrightEndpoints.playwright()
+        .browser()
         .captureFailureScreenshot(true)
         .captureFailurePageSource(true)
         .captureFailureTrace(true)

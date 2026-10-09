@@ -1,0 +1,16 @@
+name: HttpPlaintextValidationTest
+author: Test
+status: FINAL
+actions:
+  - http:
+      client: httpClient
+      sendRequest:
+        GET: {}
+  - http:
+      client: httpClient
+      receiveResponse:
+        response:
+          status: "200"
+          type: plaintext
+          body:
+            data: "@contains('granite4:3b')@"

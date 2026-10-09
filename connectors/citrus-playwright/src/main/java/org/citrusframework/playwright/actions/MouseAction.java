@@ -17,8 +17,14 @@
 package org.citrusframework.playwright.actions;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.options.ScrollMode;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.playwright.util.ScrollModes;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.util.LocatorResolver;
 
@@ -35,23 +41,54 @@ public class MouseAction extends AbstractPlaywrightAction {
 
     private final Command command;
     private final org.citrusframework.playwright.model.LocatorSpec locator;
+    private final ScrollMode scroll;
 
     public MouseAction(Builder builder) {
         super(builder.command.name().toLowerCase().replace('_', '-'), builder);
         this.command = builder.command;
         this.locator = builder.locator;
+        this.scroll = builder.scroll;
     }
 
     @Override
     protected void execute(PlaywrightBrowser browser, TestContext context) {
         Locator element = LocatorResolver.resolve(browser.getCurrentPage(), locator, context);
+        boolean suppressScroll = scroll == ScrollMode.NONE;
         switch (command) {
-            case CLICK -> element.click();
-            case DOUBLE_CLICK -> element.dblclick();
-            case RIGHT_CLICK -> element.click(new Locator.ClickOptions().setButton(com.microsoft.playwright.options.MouseButton.RIGHT));
-            case HOVER -> element.hover();
+            case CLICK -> {
+                if (suppressScroll) {
+                    element.click(new Locator.ClickOptions().setScroll(scroll));
+                } else {
+                    element.click();
+                }
+            }
+            case DOUBLE_CLICK -> {
+                if (suppressScroll) {
+                    element.dblclick(new Locator.DblclickOptions().setScroll(scroll));
+                } else {
+                    element.dblclick();
+                }
+            }
+            case RIGHT_CLICK -> {
+                Locator.ClickOptions options = new Locator.ClickOptions()
+                        .setButton(com.microsoft.playwright.options.MouseButton.RIGHT);
+                element.click(suppressScroll ? options.setScroll(scroll) : options);
+            }
+            case HOVER -> {
+                if (suppressScroll) {
+                    element.hover(new Locator.HoverOptions().setScroll(scroll));
+                } else {
+                    element.hover();
+                }
+            }
             case FOCUS -> element.focus();
-            case TAP -> element.tap();
+            case TAP -> {
+                if (suppressScroll) {
+                    element.tap(new Locator.TapOptions().setScroll(scroll));
+                } else {
+                    element.tap();
+                }
+            }
         }
     }
 
@@ -60,15 +97,36 @@ public class MouseAction extends AbstractPlaywrightAction {
     }
 
     public static class Builder extends ElementActionBuilder<MouseAction, Builder> {
+
+        private static final Set<Command> SCROLL_AWARE = EnumSet.of(Command.CLICK, Command.DOUBLE_CLICK,
+                Command.RIGHT_CLICK, Command.HOVER, Command.TAP);
+
         private final Command command;
+        private ScrollMode scroll = ScrollMode.AUTO;
 
         public Builder(Command command) {
             this.command = command;
         }
 
+        /**
+         * Controls whether Playwright scrolls the element into view before acting on it.
+         * Supported values are {@code auto} (default) and {@code none}.
+         *
+         * @param mode scroll mode name
+         * @return this builder
+         */
+        public Builder scroll(String mode) {
+            this.scroll = ScrollModes.parse(mode);
+            return this;
+        }
+
         @Override
         public MouseAction build() {
             requireLocator();
+            if (scroll != ScrollMode.AUTO && !SCROLL_AWARE.contains(command)) {
+                throw new CitrusRuntimeException(
+                        "Playwright command %s does not support the scroll option".formatted(command));
+            }
             return new MouseAction(this);
         }
     }

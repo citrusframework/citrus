@@ -29,19 +29,17 @@ public class CamelVerifyRouteAction extends AbstractCamelRouteAction {
 
     private static final Logger logger = LoggerFactory.getLogger(CamelVerifyRouteAction.class);
 
-    private final String routeId;
     private final String status;
 
     public CamelVerifyRouteAction(Builder builder) {
         super("verify-route", builder);
 
-        this.routeId = builder.routeId;
         this.status = builder.status;
     }
 
     @Override
     public void doExecute(TestContext context) {
-        String resolvedRouteId = context.replaceDynamicContentInString(routeId);
+        String resolvedRouteId = context.replaceDynamicContentInString(getRouteId());
 
         if (camelContext.getRoute(resolvedRouteId) == null) {
             throw new CitrusRuntimeException(
@@ -66,10 +64,6 @@ public class CamelVerifyRouteAction extends AbstractCamelRouteAction {
         }
     }
 
-    public String getRouteId() {
-        return routeId;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -77,14 +71,7 @@ public class CamelVerifyRouteAction extends AbstractCamelRouteAction {
     public static final class Builder extends AbstractCamelRouteAction.Builder<CamelVerifyRouteAction, Builder>
             implements CamelVerifyRouteActionBuilder<CamelVerifyRouteAction, Builder> {
 
-        private String routeId;
         private String status;
-
-        @Override
-        public Builder route(String routeId) {
-            this.routeId = routeId;
-            return this;
-        }
 
         public Builder status(ServiceStatus status) {
             this.status = status.name();

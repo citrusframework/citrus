@@ -42,7 +42,7 @@ public class FileResourcePayloadBuilder implements MessagePayloadBuilder, Messag
      * @param resource
      */
     public FileResourcePayloadBuilder(Resource resource) {
-        this(resource, CitrusSettings.CITRUS_FILE_ENCODING);
+        this(resource, CitrusSettings.getFileEncoding());
     }
 
     /**
@@ -61,7 +61,7 @@ public class FileResourcePayloadBuilder implements MessagePayloadBuilder, Messag
      * @param resourcePath
      */
     public FileResourcePayloadBuilder(String resourcePath) {
-        this(resourcePath, CitrusSettings.CITRUS_FILE_ENCODING);
+        this(resourcePath, CitrusSettings.getFileEncoding());
     }
 
     /**

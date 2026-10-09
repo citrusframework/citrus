@@ -298,6 +298,16 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
     private void performControlResultSetValidation(final Map<String, List<String>> columnValuesMap, TestContext context)
             throws CitrusRuntimeException {
+        if (columnValuesMap.isEmpty()) {
+            for (Entry<String, List<String>> controlEntry : controlResultSet.entrySet()) {
+                if (!controlEntry.getValue().isEmpty()) {
+                    throw new CitrusRuntimeException("Validation failed for column: '" + controlEntry.getKey() + "' " +
+                            "expected rows count: " + controlEntry.getValue().size() + " but was 0");
+                }
+            }
+            return;
+        }
+
         for (Entry<String, List<String>> controlEntry : controlResultSet.entrySet()) {
             String columnName = controlEntry.getKey();
 

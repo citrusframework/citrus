@@ -41,6 +41,21 @@ public class Screenshot extends AbstractPlaywrightAction.Builder<ScreenshotActio
         delegate.variable(variable);
     }
 
+    @XmlAttribute
+    public void setType(String type) {
+        delegate.type(type);
+    }
+
+    @XmlAttribute
+    public void setQuality(Integer quality) {
+        delegate.quality(quality);
+    }
+
+    @XmlAttribute(name = "full-page")
+    public void setFullPage(Boolean fullPage) {
+        delegate.fullPage(fullPage);
+    }
+
     @Override
     public Screenshot description(String description) {
         delegate.description(description);

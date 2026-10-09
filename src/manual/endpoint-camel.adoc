@@ -908,6 +908,92 @@ actions:
 
 You can combine individual metric checks with JSON stats comparison in a single action.
 
+[[camel-route-reset-stats]]
+== Camel route statistics reset
+
+The reset route stats action resets Camel route statistics using the `camel-management` dependency (`ManagedCamelContext`).
+It performs a deep reset via `ManagedRouteMBean.reset(true)`, which clears all counters including processor-level statistics.
+This is useful when you need a clean baseline before verifying route statistics in tests that share a Camel context.
+
+NOTE: The `camel-management` dependency must be on the classpath to use this action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+public class CamelResetRouteStatsIT extends TestNGCitrusSpringSupport {
+
+    @Autowired
+    private CamelContext camelContext;
+
+    @Test
+    @CitrusTest
+    public void resetRouteStats() {
+        $(camel().camelContext(camelContext)
+            .route()
+            .resetRouteStats("route_1"));
+    }
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="CamelResetRouteStatsIT">
+  <actions>
+      <camel:reset-route-stats route="route_1"/>
+  </actions>
+</testcase>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+actions:
+  - camel:
+      resetRouteStats:
+        route: "route_1"
+----
+
+You can combine the reset action with the verify action to ensure a clean baseline before making assertions:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+$(camel().camelContext(camelContext)
+    .route()
+    .resetRouteStats("route_1"));
+
+// ... trigger some exchanges ...
+
+$(camel().camelContext(camelContext)
+    .route()
+    .verifyRouteStats("route_1")
+    .completed(1)
+    .failed(0));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<camel:reset-route-stats route="route_1"/>
+<!-- ... trigger some exchanges ... -->
+<camel:verify-route-stats route="route_1" completed="1" failed="0"/>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+- camel:
+    resetRouteStats:
+      route: "route_1"
+# ... trigger some exchanges ...
+- camel:
+    verifyRouteStats:
+      route: "route_1"
+      completed: 1
+      failed: 0
+----
+
 [[camel-controlbus-actions]]
 == Camel controlbus actions
 

@@ -28,6 +28,7 @@ import org.citrusframework.dsl.endpoint.jmx.JmxEndpointCatalog;
 import org.citrusframework.dsl.endpoint.kafka.KafkaEndpointCatalog;
 import org.citrusframework.dsl.endpoint.kubernetes.KubernetesEndpointCatalog;
 import org.citrusframework.dsl.endpoint.mail.MailEndpointCatalog;
+import org.citrusframework.dsl.endpoint.playwright.PlaywrightEndpointCatalog;
 import org.citrusframework.dsl.endpoint.rmi.RmiEndpointCatalog;
 import org.citrusframework.dsl.endpoint.selenium.SeleniumEndpointCatalog;
 import org.citrusframework.dsl.endpoint.ssh.SshEndpointCatalog;
@@ -182,6 +183,14 @@ public abstract class CitrusEndpoints {
      */
     public static SeleniumEndpointCatalog selenium() {
         return SeleniumEndpointCatalog.selenium();
+    }
+
+    /**
+     * Creates new PlaywrightBrowser or PlaywrightApiClient builder.
+     * @return
+     */
+    public static PlaywrightEndpointCatalog playwright() {
+        return PlaywrightEndpointCatalog.playwright();
     }
 
     /**

@@ -113,11 +113,10 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
 
     @Override
     public CamelControlBusAction.Builder controlBus() {
-        CamelControlBusAction.Builder builder = new CamelControlBusAction.Builder()
-                .context(camelContext);
-
-        this.delegate = builder;
-        return builder;
+        return new CamelControlBusAction.Builder()
+                .context(camelContextName)
+                .context(camelContext)
+                .withReferenceResolver(referenceResolver);
     }
 
     @Override
@@ -153,6 +152,16 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
     @Override
     public CamelVerifyRouteStatsAction.Builder verifyRouteStats(String routeId) {
         CamelVerifyRouteStatsAction.Builder builder = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route(routeId);
+
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
+    public CamelResetRouteStatsAction.Builder resetRouteStats(String routeId) {
+        CamelResetRouteStatsAction.Builder builder = new CamelResetRouteStatsAction.Builder()
                 .context(camelContext)
                 .route(routeId);
 

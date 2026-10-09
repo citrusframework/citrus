@@ -1,0 +1,64 @@
+name: AssertJValidationTest
+author: Citrus
+status: FINAL
+description: "@assertj()@ validation matcher in a YAML test"
+variables:
+  - name: prefix
+    value: "OK"
+endpoints:
+  - type: "direct"
+    name: "orders"
+    properties:
+      queueName: "orders"
+actions:
+  - send:
+      endpoint: orders
+      message:
+        headers:
+          - name: status
+            value: "OK-1"
+          - name: count
+            value: "42"
+        body:
+          data: |
+            { "qty": 7, "tags": ["a", "b"] }
+  - receive:
+      endpoint: orders
+      message:
+        type: "json"
+        headers:
+          - name: status
+            value: "@assertj(startsWith('${prefix}').endsWith('1'))@"
+          - name: count
+            value: "@assertj(asInt().isBetween(40, 50))@"
+      validate:
+        - jsonPath:
+            - expression: "$.qty"
+              value: "@assertj(asInt().isBetween(1, 10))@"
+            - expression: "$.tags"
+              value: "@assertj(asList().containsExactly('a', 'b'))@"
+  - iterate:
+      condition: "@assertj(asInt().isLessThan(3))@"
+      index: "i"
+      actions:
+        - echo:
+            message: "iteration ${i}"
+  - send:
+      endpoint: orders
+      message:
+        headers:
+          - name: status
+            value: "FAILED"
+        body:
+          data: "{}"
+  - assert:
+      exception: "org.citrusframework.exceptions.ValidationException"
+      message: "@assertj(contains('AssertJValidationMatcher failed for field').contains('to start with'))@"
+      when:
+        - receive:
+            endpoint: orders
+            message:
+              type: "json"
+              headers:
+                - name: status
+                  value: "@assertj(startsWith('OK'))@"

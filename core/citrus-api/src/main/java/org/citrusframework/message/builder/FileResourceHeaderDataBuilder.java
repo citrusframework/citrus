@@ -35,7 +35,7 @@ public class FileResourceHeaderDataBuilder implements MessageHeaderDataBuilder {
      * @param resourcePath
      */
     public FileResourceHeaderDataBuilder(String resourcePath) {
-        this(resourcePath, CitrusSettings.CITRUS_FILE_ENCODING);
+        this(resourcePath, CitrusSettings.getFileEncoding());
     }
 
     /**

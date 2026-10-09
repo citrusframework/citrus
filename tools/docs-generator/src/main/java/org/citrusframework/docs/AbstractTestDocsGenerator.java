@@ -56,7 +56,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
 
     private static final String OUTPUT_DIRECTORY = "target" + File.separator + "docs";
 
-    String srcDirectory = CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY;
+    String srcDirectory = CitrusSettings.getDefaultTestSrcDirectory();
     private String testDocTemplate;
     String outputFile;
 

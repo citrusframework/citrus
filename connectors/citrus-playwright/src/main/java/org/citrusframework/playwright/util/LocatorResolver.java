@@ -43,16 +43,7 @@ public final class LocatorResolver {
             case RAW -> spec.getRawLocator().apply(page);
         };
 
-        if (spec.getNth() != null) {
-            return locator.nth(spec.getNth());
-        }
-        if (spec.isFirst()) {
-            return locator.first();
-        }
-        if (spec.isLast()) {
-            return locator.last();
-        }
-        return locator;
+        return applyModifiers(locator, spec);
     }
 
     public static Locator resolve(FrameLocator frame, LocatorSpec spec, TestContext context) {
@@ -66,16 +57,31 @@ public final class LocatorResolver {
             case RAW -> throw new CitrusRuntimeException("Raw page locators are not supported inside Playwright frame actions");
         };
 
+        return applyModifiers(locator, spec);
+    }
+
+    /**
+     * Applies the modifiers declared on the locator spec. Shared by the page and frame resolution
+     * paths so both stay in sync. The visibility filter narrows the match set first, so any
+     * positional modifier then selects within the visible elements only.
+     *
+     * @param locator resolved base locator
+     * @param spec locator spec holding the modifiers
+     * @return narrowed locator
+     */
+    private static Locator applyModifiers(Locator locator, LocatorSpec spec) {
+        Locator resolved = spec.isVisible() ? locator.visible() : locator;
+
         if (spec.getNth() != null) {
-            return locator.nth(spec.getNth());
+            return resolved.nth(spec.getNth());
         }
         if (spec.isFirst()) {
-            return locator.first();
+            return resolved.first();
         }
         if (spec.isLast()) {
-            return locator.last();
+            return resolved.last();
         }
-        return locator;
+        return resolved;
     }
 
     private static AriaRole resolveRole(String role, TestContext context) {

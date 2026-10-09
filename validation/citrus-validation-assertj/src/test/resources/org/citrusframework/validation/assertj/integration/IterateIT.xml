@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="IterateIT">
+    <meta-info>
+      <author>Citrus</author>
+      <creationdate>2026-10-06</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Citrus</last-updated-by>
+      <last-updated-on>2026-10-06T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Iterate with @assertj()@ conditions</description>
+
+    <actions>
+      <iterate condition="@assertj(asInt().isLessThan(5))@" index="i">
+        <echo>
+          <message>index is: ${i}</message>
+        </echo>
+      </iterate>
+
+      <iterate condition="@assertj('${i}', 'asInt().isLessThan(5)')@" index="i">
+        <echo>
+          <message>index is: ${i}</message>
+        </echo>
+      </iterate>
+    </actions>
+  </testcase>
+</spring:beans>

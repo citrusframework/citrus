@@ -26,6 +26,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 public class ApplyTestBehaviorActionTest extends UnitTestSupport {
 
@@ -48,7 +50,9 @@ public class ApplyTestBehaviorActionTest extends UnitTestSupport {
                 .build();
         applyBehavior.execute(context);
 
-        verify(runner).run(mock);
+        verify(mock).execute(context);
+        assertEquals(applyBehavior.getExecutedActions().size(), 1);
+        assertSame(applyBehavior.getExecutedActions().get(0), mock);
     }
 
     private class FooBehavior implements TestBehavior {

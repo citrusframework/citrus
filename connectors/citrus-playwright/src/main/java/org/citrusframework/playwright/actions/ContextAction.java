@@ -61,6 +61,18 @@ public class ContextAction extends AbstractPlaywrightAction {
         }
     }
 
+    public Command getCommand() {
+        return command;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public String getStorageStatePath() {
+        return options == null || options.storageStatePath == null ? null : options.storageStatePath.toString();
+    }
+
     /**
      * Fluent builder for context create, switch, and close commands.
      */

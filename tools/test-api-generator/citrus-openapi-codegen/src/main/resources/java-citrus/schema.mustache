@@ -122,7 +122,7 @@
             </xs:sequence>
             <xs:attribute name="schema-validation" type="xs:boolean" default="true"/>
             <xs:attribute name="name" type="xs:string"/>
-            <xs:attribute name="type" default="xml" type="xs:string"/>
+            <xs:attribute name="type" type="xs:string"/>
             <xs:attribute name="data-dictionary" type="xs:string"/>
         </xs:complexType>
     </xs:element>
@@ -152,7 +152,7 @@
         <xs:attribute name="status" type="xs:int" default="200"/>
         <xs:attribute name="reason-phrase" type="xs:string" default="OK"/>
         <xs:attribute name="version" type="xs:string" default="HTTP/1.1"/>
-        <xs:attribute name="type" default="json">
+        <xs:attribute name="type">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="xml"/>

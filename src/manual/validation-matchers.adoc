@@ -269,6 +269,26 @@ The matcher implementation will check on numeric values to be greater than a min
 <value>@greaterThan(5)@</value>
 ----
 
+[[matcher-greaterthanorequalto]]
+== greaterThanOrEqualTo()
+
+The matcher implementation will check on numeric values to be greater than or equal to a minimum value.
+
+[source,xml]
+----
+<value>@greaterThanOrEqualTo(5)@</value>
+----
+
+[[matcher-lowerthanorequalto]]
+== lowerThanOrEqualTo()
+
+This matcher checks a number to be lower than or equal to a given threshold value.
+
+[source,xml]
+----
+<value>@lowerThanOrEqualTo(5)@</value>
+----
+
 [[matcher-isweekday]]
 == isWeekday()
 
@@ -468,3 +488,184 @@ Given the `<variable name="validUuid" value="653ce6fd-dca4-4672-bbc0-16e2b74b8b8
     </receive>
 </actions>
 ----
+
+[[matcher-allof]]
+== allOf()
+
+The `allOf` matcher is a conjunction combinator — it takes two or more sub-matcher expressions and passes only when *all* of them pass. If any sub-matcher fails, the validation reports every individual failure in a single error message.
+
+This is useful when a field value must simultaneously satisfy several conditions.
+
+.Syntax
+[source]
+----
+@allOf(matcher1('param'), matcher2('param'), ...)@
+----
+
+.XML DSL example
+[source,xml]
+----
+<receive endpoint="helloEndpoint">
+    <message>
+        <data>
+            <![CDATA[
+            {
+                "version": "@allOf(startsWith('v'), contains('.'), matches('v[0-9]+\\.[0-9]+'))@"
+            }
+            ]]>
+        </data>
+    </message>
+</receive>
+----
+
+.YAML DSL example
+[source,yaml]
+----
+- receive:
+    endpoint: "helloEndpoint"
+    message:
+      type: json
+      body:
+        data: "{\"version\": \"@allOf(startsWith('v'), contains('.'))@\"}"
+----
+
+If any sub-matcher fails, the error lists all failing sub-matchers:
+
+[source]
+----
+allOf() failed for field 'version' with value 'hello': ['startsWith('v')' -> ..., 'contains('.')' -> ...]
+----
+
+NOTE: `allOf()` requires at least two sub-expressions. Providing zero or one sub-expression raises a `CitrusRuntimeException`.
+
+[[matcher-anyof]]
+== anyOf()
+
+The `anyOf` matcher is a disjunction combinator — it takes two or more sub-matcher expressions and passes when *at least one* of them passes. Evaluation short-circuits as soon as one sub-matcher passes. If all sub-matchers fail, all individual failures are reported.
+
+This is useful when a field value may take one of several valid forms.
+
+.Syntax
+[source]
+----
+@anyOf(matcher1('param'), matcher2('param'), ...)@
+----
+
+.XML DSL example
+[source,xml]
+----
+<receive endpoint="helloEndpoint">
+    <message>
+        <data>
+            <![CDATA[
+            {
+                "status": "@anyOf(equalsIgnoreCase('ok'), equalsIgnoreCase('success'))@"
+            }
+            ]]>
+        </data>
+    </message>
+</receive>
+----
+
+.YAML DSL example
+[source,yaml]
+----
+- receive:
+    endpoint: "helloEndpoint"
+    message:
+      type: json
+      body:
+        data: "{\"status\": \"@anyOf(equalsIgnoreCase('ok'), equalsIgnoreCase('success'))@\"}"
+----
+
+If all sub-matchers fail, the error lists each failure:
+
+[source]
+----
+anyOf() failed for field 'status' with value 'error': all matchers failed: ['equalsIgnoreCase('ok')' -> ..., 'equalsIgnoreCase('success')' -> ...]
+----
+
+NOTE: `anyOf()` requires at least two sub-expressions. Providing zero or one sub-expression raises a `CitrusRuntimeException`.
+
+[[matcher-not]]
+== not()
+
+The `not` matcher is a negation combinator — it takes exactly one sub-matcher expression and inverts its result: it passes when the inner matcher *fails*, and fails when the inner matcher *passes*.
+
+.Syntax
+[source]
+----
+@not(matcher('param'))@
+----
+
+.XML DSL example
+[source,xml]
+----
+<receive endpoint="helloEndpoint">
+    <message>
+        <data>
+            <![CDATA[
+            {
+                "message": "@not(contains('error'))@"
+            }
+            ]]>
+        </data>
+    </message>
+</receive>
+----
+
+.YAML DSL example
+[source,yaml]
+----
+- receive:
+    endpoint: "helloEndpoint"
+    message:
+      type: json
+      body:
+        data: "{\"message\": \"@not(contains('error'))@\"}"
+----
+
+If the inner matcher passes (meaning `not()` fails), the error is:
+
+[source]
+----
+not() failed for field 'message': 'contains('error')' matched value 'fatal error' but was expected not to
+----
+
+NOTE: `not()` requires exactly one sub-expression. Providing zero or more than one sub-expression raises a `CitrusRuntimeException`.
+
+[[matcher-combinators-nesting]]
+== Nesting combinators
+
+All three combinators — `allOf`, `anyOf`, and `not` — can be nested inside each other to arbitrary depth. Any sub-expression that is itself a combinator is evaluated recursively.
+
+.Example: allOf with nested anyOf and not
+[source,xml]
+----
+<receive endpoint="helloEndpoint">
+    <message>
+        <data>
+            <![CDATA[
+            {
+                "result": "@allOf(anyOf(startsWith('foo'), startsWith('bar')), not(contains('error')))@"
+            }
+            ]]>
+        </data>
+    </message>
+</receive>
+----
+
+This validates that `result` starts with either `foo` or `bar`, AND does not contain `error`.
+
+.Equivalent YAML
+[source,yaml]
+----
+- receive:
+    endpoint: "helloEndpoint"
+    message:
+      type: json
+      body:
+        data: "{\"result\": \"@allOf(anyOf(startsWith('foo'), startsWith('bar')), not(contains('error')))@\"}"
+----
+
+TIP: For users who need richer matching logic (numeric comparisons, collection matchers, etc.), Citrus also provides Hamcrest integration via `@assertThat(allOf(...))@`. The built-in combinators described here are the simpler, zero-dependency alternative for string-based validations.

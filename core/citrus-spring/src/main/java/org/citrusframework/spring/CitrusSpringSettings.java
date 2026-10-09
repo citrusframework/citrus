@@ -42,6 +42,6 @@ public class CitrusSpringSettings {
     public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY = "citrus.spring.java.config";
     public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_ENV = "CITRUS_SPRING_JAVA_CONFIG";
     public static final String DEFAULT_APPLICATION_CONTEXT_CLASS = System.getProperty(DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY,
-            System.getenv(DEFAULT_APPLICATION_CONTEXT_CLASS_ENV) != null ? System.getenv(DEFAULT_APPLICATION_CONTEXT_CLASS_ENV) : CitrusSettings.DEFAULT_CONFIG_CLASS);
+            System.getenv(DEFAULT_APPLICATION_CONTEXT_CLASS_ENV) != null ? System.getenv(DEFAULT_APPLICATION_CONTEXT_CLASS_ENV) : CitrusSettings.getDefaultConfigClass());
 
 }

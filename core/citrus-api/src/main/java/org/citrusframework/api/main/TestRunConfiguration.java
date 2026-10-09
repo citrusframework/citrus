@@ -178,6 +178,24 @@ public class TestRunConfiguration {
         this.defaultProperties.putAll(defaultProperties);
     }
 
+    /**
+     * Adds a default property.
+     */
+    public void addDefaultProperty(String key, String value) {
+        addDefaultProperty(key, value, true);
+    }
+
+    /**
+     * Adds a default property.
+     */
+    public void addDefaultProperty(String key, String value, boolean overwrite) {
+        if (overwrite) {
+            this.defaultProperties.put(key, value);
+        } else {
+            this.defaultProperties.putIfAbsent(key, value);
+        }
+    }
+
     public boolean hasTests() {
         return !getTestSources().isEmpty() || !getPackages().isEmpty() || getTestJar() != null;
     }

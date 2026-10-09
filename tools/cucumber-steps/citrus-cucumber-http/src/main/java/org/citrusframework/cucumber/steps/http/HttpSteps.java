@@ -60,7 +60,7 @@ public interface HttpSteps {
             return MessageType.BINARY.name();
         }
 
-        return CitrusSettings.DEFAULT_MESSAGE_TYPE;
+        return CitrusSettings.getDefaultMessageType();
     }
 
     /**

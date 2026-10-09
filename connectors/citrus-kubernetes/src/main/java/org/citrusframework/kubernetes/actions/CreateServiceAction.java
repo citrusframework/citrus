@@ -246,7 +246,7 @@ public class CreateServiceAction extends AbstractKubernetesAction {
             if (podSelector.isEmpty()) {
                 // Add default selector to the very specific Pod that is running the test right now.
                 // This way the service will route all traffic to the currently running test
-                podSelector.put("citrusframework.org/test-id", "${%s}".formatted(CitrusSettings.TEST_NAME_VARIABLE));
+                podSelector.put("citrusframework.org/test-id", "${%s}".formatted(CitrusSettings.getTestNameVariable()));
             }
 
             String serverName = Optional.ofNullable(httpServerName).orElse(serviceName);

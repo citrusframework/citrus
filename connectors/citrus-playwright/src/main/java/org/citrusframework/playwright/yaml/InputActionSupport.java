@@ -42,6 +42,11 @@ abstract class InputActionSupport<B extends InputActionSupport<B>> extends Abstr
     }
 
     @SchemaProperty
+    public void setScroll(String scroll) {
+        delegate.scroll(scroll);
+    }
+
+    @SchemaProperty
     public void setValue(String value) {
         delegate.value(value);
     }

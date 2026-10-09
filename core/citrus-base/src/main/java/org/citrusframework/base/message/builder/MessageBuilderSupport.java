@@ -68,10 +68,10 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
 
     protected final B delegate;
 
-    protected String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
+    protected String messageType = CitrusSettings.getDefaultMessageType();
 
     /**
-     * Set to true, if explicitly set. Can be used to distinguish from CitrusSettings.DEFAULT_MESSAGE_TYPE
+     * Set to true, if explicitly set. Can be used to distinguish from CitrusSettings.getDefaultMessageType()
      */
     private boolean isExplicitMessageType = false;
 

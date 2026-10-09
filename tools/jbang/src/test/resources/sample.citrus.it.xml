@@ -80,6 +80,11 @@
         <run service="kafka" auto-remove="true"/>
       </infra>
     </camel>
+    <camel>
+      <infra>
+        <run service="aws" implementation="sqs" fixed-port="true"/>
+      </infra>
+    </camel>
     <iterate condition="i &lt; 10">
       <actions>
         <print>

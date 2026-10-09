@@ -16,6 +16,11 @@
 
 package org.citrusframework.camel.actions;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
 import jakarta.xml.bind.JAXBException;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dsl.yaml.YamlRoutesBuilderLoader;
@@ -23,6 +28,7 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
 import org.apache.camel.support.ResourceHelper;
 import org.citrusframework.api.actions.camel.CamelCreateRouteActionBuilder;
+import org.citrusframework.api.xml.StringSource;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -31,14 +37,8 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.api.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @since 2.4
@@ -183,6 +183,11 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
      */
     public String getRouteSpec() {
         return routeSpec;
+    }
+
+    @Override
+    public String getRouteId() {
+        return routeId;
     }
 
     /**

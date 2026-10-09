@@ -79,7 +79,7 @@ public class SoapJmsMessageConverter extends JmsMessageConverter implements Init
     public org.citrusframework.message.Message convertInbound(Message jmsMessage, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
         try {
             org.citrusframework.message.Message message = super.convertInbound(jmsMessage, endpointConfiguration, context);
-            ByteArrayInputStream in = new ByteArrayInputStream(message.getPayload(String.class).getBytes(CitrusSettings.CITRUS_FILE_ENCODING));
+            ByteArrayInputStream in = new ByteArrayInputStream(message.getPayload(String.class).getBytes(CitrusSettings.getFileEncoding()));
             SoapMessage soapMessage = soapMessageFactory.createWebServiceMessage(in);
 
             StringResult payload = new StringResult();

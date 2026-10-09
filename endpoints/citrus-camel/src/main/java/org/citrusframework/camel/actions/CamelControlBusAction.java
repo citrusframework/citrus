@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @since 2.4
  */
-public class CamelControlBusAction extends AbstractCamelRouteAction {
+public class CamelControlBusAction extends AbstractCamelAction {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CamelControlBusAction.class);
@@ -141,7 +141,7 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractCamelRouteAction.Builder<CamelControlBusAction, CamelControlBusAction.Builder>
+    public static final class Builder extends AbstractCamelAction.Builder<CamelControlBusAction, CamelControlBusAction.Builder>
             implements CamelControlBusActionBuilder<CamelControlBusAction, Builder> {
 
         private String action;

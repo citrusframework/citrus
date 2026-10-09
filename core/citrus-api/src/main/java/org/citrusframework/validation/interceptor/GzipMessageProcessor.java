@@ -77,7 +77,7 @@ public class GzipMessageProcessor extends AbstractMessageProcessor {
      */
     public static final class Builder implements GzipMessageProcessorBuilder<GzipMessageProcessor, Builder> {
 
-        private Charset encoding = Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING);
+        private Charset encoding = Charset.forName(CitrusSettings.getFileEncoding());
 
         public static Builder toGzip() {
             return new Builder();

@@ -92,6 +92,30 @@ public class EmulationAction extends AbstractPlaywrightAction {
         }
     }
 
+    public Integer getViewportWidth() {
+        return viewportWidth;
+    }
+
+    public Integer getViewportHeight() {
+        return viewportHeight;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public String getColorScheme() {
+        return colorScheme;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
     /**
      * Fluent builder for browser emulation settings.
      */

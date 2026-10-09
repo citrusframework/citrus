@@ -47,7 +47,7 @@ public class XsdJavaTestGeneratorTest {
 
         generator.create();
 
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/HelloIT.java");
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/HelloIT.java");
         Assert.assertTrue(javaFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
@@ -85,7 +85,7 @@ public class XsdJavaTestGeneratorTest {
 
         generator.create();
 
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/HelloIT.java");
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/HelloIT.java");
         Assert.assertTrue(javaFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);

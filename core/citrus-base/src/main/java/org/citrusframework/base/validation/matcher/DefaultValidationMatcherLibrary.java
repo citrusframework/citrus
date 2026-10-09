@@ -19,6 +19,8 @@ package org.citrusframework.base.validation.matcher;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
+import org.citrusframework.base.validation.matcher.core.AllOfValidationMatcher;
+import org.citrusframework.base.validation.matcher.core.AnyOfValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.ContainsIgnoreCaseValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.ContainsValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.CreateVariableValidationMatcher;
@@ -27,10 +29,12 @@ import org.citrusframework.base.validation.matcher.core.DateRangeValidationMatch
 import org.citrusframework.base.validation.matcher.core.EmptyValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.EndsWithValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.EqualsIgnoreCaseValidationMatcher;
+import org.citrusframework.base.validation.matcher.core.GreaterThanOrEqualToValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.GreaterThanValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.IgnoreNewLineValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.IgnoreValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.IsNumberValidationMatcher;
+import org.citrusframework.base.validation.matcher.core.LowerThanOrEqualToValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.LowerThanValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.MatchesValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.NotEmptyValidationMatcher;
@@ -41,6 +45,7 @@ import org.citrusframework.base.validation.matcher.core.StringLengthValidationMa
 import org.citrusframework.base.validation.matcher.core.TrimAllWhitespacesValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.TrimValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.UuidV4ValidationMatcher;
+import org.citrusframework.base.validation.matcher.core.NotValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.WeekdayValidationMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +63,8 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
     public DefaultValidationMatcherLibrary() {
         setName("citrusValidationMatcherLibrary");
 
+        addMember("allOf", new AllOfValidationMatcher());
+        addMember("anyOf", new AnyOfValidationMatcher());
         addMember("equalsIgnoreCase", new EqualsIgnoreCaseValidationMatcher());
         addMember("ignoreNewLine", new IgnoreNewLineValidationMatcher());
         addMember("trim", new TrimValidationMatcher());
@@ -65,7 +72,9 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
         addMember("contains", new ContainsValidationMatcher());
         addMember("containsIgnoreCase", new ContainsIgnoreCaseValidationMatcher());
         addMember("greaterThan", new GreaterThanValidationMatcher());
+        addMember("greaterThanOrEqualTo", new GreaterThanOrEqualToValidationMatcher());
         addMember("lowerThan", new LowerThanValidationMatcher());
+        addMember("lowerThanOrEqualTo", new LowerThanOrEqualToValidationMatcher());
         addMember("startsWith", new StartsWithValidationMatcher());
         addMember("endsWith", new EndsWithValidationMatcher());
         addMember("isNumber", new IsNumberValidationMatcher());
@@ -76,6 +85,7 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
         addMember("dateRange", new DateRangeValidationMatcher());
         addMember("empty", new EmptyValidationMatcher());
         addMember("notEmpty", new NotEmptyValidationMatcher());
+        addMember("not", new NotValidationMatcher());
         addMember("null", new NullValidationMatcher());
         addMember("notNull", new NotNullValidationMatcher());
         addMember("ignore", new IgnoreValidationMatcher());

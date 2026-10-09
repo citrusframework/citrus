@@ -63,8 +63,8 @@ public class TestContextTest extends UnitTestSupport {
         testContext.setGlobalVariables(globalVariables);
         testcase.execute(testContext);
 
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase");
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), DefaultTestCase.class.getPackage().getName());
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestNameVariable()), "MyTestCase");
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestPackageVariable()), DefaultTestCase.class.getPackage().getName());
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
         Assert.assertTrue(testContext.getVariables().containsKey("test1Var"));
@@ -80,8 +80,8 @@ public class TestContextTest extends UnitTestSupport {
         testContext.setGlobalVariables(globalVariables);
         testcase2.execute(testContext);
 
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase2");
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestNameVariable()), "MyTestCase2");
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestPackageVariable()), TestCase.class.getPackage().getName());
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
         Assert.assertTrue(testContext.getVariables().containsKey("test2Var"));
@@ -165,6 +165,24 @@ public class TestContextTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("${container.data.CONSTANT}"), "FOO");
         Assert.assertEquals(context.getVariable("${container.intVals[1]}"), "1");
         Assert.assertEquals(context.getVariable("${containerArray[3].data[1].data}"), "B");
+     }
+
+    @Test
+    public void testGetVariableFromListPathExpression() {
+        context.setVariable("listContainer", new DataContainer("hello"));
+        context.setVariable("manyArr", new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
+
+        Assert.assertEquals(context.getVariable("${listContainer.strVals[1]}"), "B");
+        Assert.assertEquals(context.getVariable("${listContainer.intList[0]}"), "1");
+        Assert.assertEquals(context.getVariable("${listContainer.items[1].code}"), "Y");
+        Assert.assertEquals(context.getVariable("${listContainer.manyVals[12]}"), "v12");
+        Assert.assertEquals(context.getVariable("${manyArr[12]}"), "12");
+        Assert.assertThrows(IndexOutOfBoundsException.class, () -> context.getVariable("${listContainer.strVals[9]}"));
+
+        context.setVariable("mapVar", Map.of("list", List.of("A", "B")));
+        Assert.assertEquals(context.getVariable("${mapVar.list[0]}"), "A");
+
+        Assert.assertThrows(CitrusRuntimeException.class, () -> context.getVariable("${listContainer.nullList[0]}"));
      }
 
     @Test
@@ -458,6 +476,16 @@ public class TestContextTest extends UnitTestSupport {
 
         private final int[] intVals =  new int[] {0, 1, 2, 3, 4};
 
+        private final List<String> strVals = List.of("A", "B", "C");
+
+        private final List<Integer> intList = List.of(1, 2, 3);
+
+        private final List<Item> items = List.of(new Item("X"), new Item("Y"));
+
+        private final List<String> manyVals = List.of("v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12");
+
+        private final List<String> nullList = null;
+
         private static final String CONSTANT = "FOO";
 
         /**
@@ -471,6 +499,17 @@ public class TestContextTest extends UnitTestSupport {
         @Override
         public String toString() {
             return DataContainer.class.getName();
+        }
+    }
+
+    /**
+     * Simple holder for list element field traversal.
+     */
+    private static class Item {
+        private final String code;
+
+        Item(String code) {
+            this.code = code;
         }
     }
 }

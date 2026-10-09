@@ -32,6 +32,11 @@
       <groupId>com.microsoft.playwright</groupId>
       <artifactId>playwright</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-http</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Test scoped dependencies -->
     <dependency>
@@ -55,6 +60,12 @@
     <dependency>
       <groupId>org.citrusframework</groupId>
       <artifactId>citrus-xml</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-validation-json</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>

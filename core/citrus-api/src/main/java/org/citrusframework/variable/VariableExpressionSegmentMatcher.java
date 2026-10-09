@@ -20,6 +20,8 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
+
 /**
  * Matcher that matches segments of variable expressions. The matcher is capable to match the following segments:<br>
  * <br>
@@ -54,7 +56,7 @@ public class VariableExpressionSegmentMatcher {
     /**
      * Pattern to parse a variable expression
      */
-    private static final Pattern VAR_PATH_PATTERN = Pattern.compile("(xpath\\((.*)\\)$)|(jsonPath\\((\\$[.\\[].*)\\)$)|(([^\\[\\].]+)(\\[([0-9])])?)(\\.|$)");
+    private static final Pattern VAR_PATH_PATTERN = Pattern.compile("(xpath\\((.*)\\)$)|(jsonPath\\((\\$[.\\[].*)\\)$)|(([^\\[\\].]+)(\\[([0-9]+)])?)(\\.|$)");
 
     /**
      * The regex group index for the full xpath segment
@@ -164,7 +166,16 @@ public class VariableExpressionSegmentMatcher {
                 currentSegmentExpression = matcher.group(XPATH_GROUP);
             } else {
                 currentSegmentExpression = matcher.group(VAR_PROP_NAME_GROUP);
-                currentSegmentIndex = matcher.group(INDEX_GROUP) != null ? Integer.parseInt(matcher.group(INDEX_GROUP)) : -1;
+                if (matcher.group(INDEX_GROUP) != null) {
+                    try {
+                        currentSegmentIndex = Integer.parseInt(matcher.group(INDEX_GROUP));
+                    } catch (NumberFormatException e) {
+                        throw new CitrusRuntimeException(String.format("Invalid index '%s' in segment '%s' of variable expression '%s'",
+                                matcher.group(INDEX_GROUP), matcher.group(VAR_PROP_SEGMENT_GROUP), variableExpression), e);
+                    }
+                } else {
+                    currentSegmentIndex = -1;
+                }
            }
         }
         return matches;

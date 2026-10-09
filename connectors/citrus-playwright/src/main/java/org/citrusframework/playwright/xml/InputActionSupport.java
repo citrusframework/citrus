@@ -18,11 +18,13 @@ package org.citrusframework.playwright.xml;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.util.List;
 import org.citrusframework.TestActor;
 import org.citrusframework.playwright.actions.AbstractPlaywrightAction;
 import org.citrusframework.playwright.actions.InputAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
+import org.citrusframework.playwright.util.DslCommands;
 
 /**
  * Base class for XML input action wrappers sharing the element, value, and
@@ -42,11 +44,30 @@ abstract class InputActionSupport<B extends InputActionSupport<B>> extends Abstr
     }
 
     @XmlAttribute
+    public void setScroll(String scroll) {
+        delegate.scroll(scroll);
+    }
+
+    @XmlAttribute
     public void setValue(String value) {
         delegate.value(value);
     }
 
-    @XmlAttribute
+    /**
+     * Values separated by commas.
+     *
+     * <p>Deliberately not an overload of {@link #setValues(List)}: JAXB picks between overloaded
+     * setters by reflection order, which is unspecified, so the attribute could be dropped.</p>
+     */
+    @XmlAttribute(name = "values")
+    public void setValueList(String values) {
+        delegate.values(DslCommands.split(values));
+    }
+
+    /**
+     * Programmatic variant kept for Java callers; XML uses the comma separated attribute.
+     */
+    @XmlTransient
     public void setValues(List<String> values) {
         delegate.values(values.toArray(String[]::new));
     }

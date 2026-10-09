@@ -55,7 +55,7 @@ public class TestGeneratorMain {
                     .withAuthor(cmd.getOptionValue("author", "Unknown"))
                     .withDescription(cmd.getOptionValue("description", "TODO: Description"))
                     .usePackage(cmd.getOptionValue("package", "org.citrusframework"))
-                    .useSrcDirectory(cmd.getOptionValue("srcdir", CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY))
+                    .useSrcDirectory(cmd.getOptionValue("srcdir", CitrusSettings.getDefaultTestSrcDirectory()))
                     .withFramework(UnitFramework.fromString(cmd.getOptionValue("framework", "junit-jupiter")));
 
             generator.create();

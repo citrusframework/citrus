@@ -37,6 +37,13 @@ import org.citrusframework.annotations.CitrusEndpointConfig;
 public @interface PlaywrightBrowserConfig {
 
     /**
+     * Origin scoped HTTP basic auth credentials. The first entry matching the request origin is
+     * used; an entry without an origin matches any request.
+     * @return HTTP credentials
+     */
+    HttpCredential[] httpCredentials() default {};
+
+    /**
      * Playwright browser engine such as chromium, firefox, or webkit.
      * @return browser type
      */

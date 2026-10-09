@@ -154,6 +154,13 @@
     <project.docs.version>${project.version}</project.docs.version>
     <java.version>17</java.version>
 
+    <!--
+      gitflow-incremental-builder (registered in .mvn/extensions.xml) is off
+      unless the `gib` profile activates it. Kept here rather than only in the
+      profile so that a build without -Pgib always covers the full reactor.
+    -->
+    <gib.disable>true</gib.disable>
+
     <maven.version>3.9.16</maven.version>
     <maven.compiler.version>3.14.1</maven.compiler.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
@@ -219,9 +226,9 @@
     <htmlunit.version>4.13.0</htmlunit.version>
     <httpclient.version>5.6.3</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
-    <jackson.version>3.2.1</jackson.version>
+    <jackson.version>3.2.3</jackson.version>
     <jackson-databind-nullable.version>0.2.10</jackson-databind-nullable.version>
-    <jackson2.version>2.22.1</jackson2.version>
+    <jackson2.version>2.22.3</jackson2.version>
     <jackson2.annotations.version>2.22</jackson2.annotations.version>
     <jakarta-activation.version>2.1.4</jakarta-activation.version>
     <jakarta-activation-api.version>2.1.4</jakarta-activation-api.version>
@@ -263,11 +270,11 @@
     <quarkus.mcp-server.version>1.13.1</quarkus.mcp-server.version>
     <saaj.version>3.0.6</saaj.version>
     <selenium.version>4.44.0</selenium.version>
-    <playwright.version>1.61.0</playwright.version>
+    <playwright.version>1.63.0</playwright.version>
     <slf4j.version>2.0.18</slf4j.version>
     <snappy.version>1.1.10.8</snappy.version>
     <snakeyaml.version>2.6</snakeyaml.version>
-    <spring.version>7.0.8</spring.version>
+    <spring.version>7.0.9</spring.version>
     <spring.boot.version>4.1.0</spring.boot.version>
     <spring.ws.version>5.0.2</spring.ws.version>
     <spring.integration.version>7.1.0</spring.integration.version>
@@ -1126,11 +1133,6 @@
       <dependency>
         <groupId>tools.jackson.jaxrs</groupId>
         <artifactId>jackson-jaxrs-json-provider</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>tools.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jakarta-jsonp</artifactId>
         <version>${jackson.version}</version>
       </dependency>
 
@@ -2135,5 +2137,35 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <!--
+        Incremental build: restrict the reactor to the modules changed on this
+        branch plus everything downstream of them. Used by the pull request CI
+        job (`./mvnw ... -Pgib`); pushes to main, release builds and local
+        builds keep building the full reactor.
+      -->
+      <id>gib</id>
+      <properties>
+        <gib.disable>false</gib.disable>
+        <gib.referenceBranch>refs/remotes/origin/main</gib.referenceBranch>
+        <gib.fetchReferenceBranch>false</gib.fetchReferenceBranch>
+        <gib.compareToMergeBase>true</gib.compareToMergeBase>
+        <!-- Downstream is what keeps this correct: a changed module always drags its dependents in. -->
+        <gib.buildDownstream>true</gib.buildDownstream>
+        <!-- Upstream modules are rebuilt (not taken from a possibly stale cached SNAPSHOT) but not re-tested. -->
+        <gib.buildUpstream>true</gib.buildUpstream>
+        <gib.buildUpstreamMode>changed</gib.buildUpstreamMode>
+        <gib.skipTestsForUpstreamModules>true</gib.skipTestsForUpstreamModules>
+        <!--
+          Documentation lives at the repository root, so without this every doc
+          edit maps onto the root module and drags the whole reactor in.
+        -->
+        <gib.excludePathsMatching>^src/manual/.*|.*\.adoc$|.*\.md$</gib.excludePathsMatching>
+        <gib.buildAllIfNoChanges>false</gib.buildAllIfNoChanges>
+        <gib.logImpactedTo>target/gib-impacted-modules.log</gib.logImpactedTo>
+      </properties>
+    </profile>
+
   </profiles>
+
 </project>

@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  *
  * @since 2.4
  */
-public class CamelControlBusActionParser extends AbstractCamelRouteActionParser {
+public class CamelControlBusActionParser extends AbstractCamelActionParser {
 
     @Override
     public void parse(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
@@ -57,7 +57,7 @@ public class CamelControlBusActionParser extends AbstractCamelRouteActionParser 
     /**
      * Test action factory bean.
      */
-    public static class CamelControlBusActionFactoryBean extends AbstractCamelRouteActionFactoryBean<CamelControlBusAction, CamelControlBusAction.Builder> {
+    public static class CamelControlBusActionFactoryBean extends AbstractCamelActionFactoryBean<CamelControlBusAction, CamelControlBusAction.Builder> {
 
         private final CamelControlBusAction.Builder builder = new CamelControlBusAction.Builder();
 

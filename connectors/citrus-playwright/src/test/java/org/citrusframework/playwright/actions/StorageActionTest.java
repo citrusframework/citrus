@@ -17,6 +17,7 @@
 package org.citrusframework.playwright.actions;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.expectThrows;
 import static org.testng.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,6 +34,7 @@ import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.mockito.ArgumentCaptor;
 import org.testng.annotations.Test;
 
 import com.microsoft.playwright.BrowserContext;
@@ -150,5 +152,48 @@ class StorageActionTest {
     void shouldFailFastWhenReadVariableMissing() {
         expectThrows(CitrusRuntimeException.class,
                 () -> new StorageAction.Builder().local().read("theme").build());
+    }
+
+    @Test
+    void shouldIncludeOriginPrivateFileSystemInStorageState() {
+        new StorageAction.Builder().saveState("target/state.json").opfs(true).build().execute(context);
+
+        ArgumentCaptor<BrowserContext.StorageStateOptions> captor =
+                ArgumentCaptor.forClass(BrowserContext.StorageStateOptions.class);
+        verify(browser.context()).storageState(captor.capture());
+        assertEquals(Boolean.TRUE, captor.getValue().opfs);
+    }
+
+    @Test
+    void shouldLeaveOpfsUnsetByDefault() {
+        new StorageAction.Builder().saveState("target/state.json").build().execute(context);
+
+        ArgumentCaptor<BrowserContext.StorageStateOptions> captor =
+                ArgumentCaptor.forClass(BrowserContext.StorageStateOptions.class);
+        verify(browser.context()).storageState(captor.capture());
+        assertNull(captor.getValue().opfs);
+    }
+
+    @Test
+    void shouldIncludeIndexedDBAndCredentialsInStorageState() {
+        new StorageAction.Builder().saveState("target/state.json").indexedDB(true).credentials(true)
+                .build().execute(context);
+
+        ArgumentCaptor<BrowserContext.StorageStateOptions> captor =
+                ArgumentCaptor.forClass(BrowserContext.StorageStateOptions.class);
+        verify(browser.context()).storageState(captor.capture());
+        assertEquals(Boolean.TRUE, captor.getValue().indexedDB);
+        assertEquals(Boolean.TRUE, captor.getValue().credentials);
+    }
+
+    @Test
+    void shouldLeaveIndexedDBAndCredentialsUnsetByDefault() {
+        new StorageAction.Builder().saveState("target/state.json").build().execute(context);
+
+        ArgumentCaptor<BrowserContext.StorageStateOptions> captor =
+                ArgumentCaptor.forClass(BrowserContext.StorageStateOptions.class);
+        verify(browser.context()).storageState(captor.capture());
+        assertNull(captor.getValue().indexedDB);
+        assertNull(captor.getValue().credentials);
     }
 }

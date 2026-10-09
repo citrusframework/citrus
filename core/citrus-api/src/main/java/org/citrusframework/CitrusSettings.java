@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.config.CitrusConfigProperties;
+import org.citrusframework.config.CitrusConfigProperty;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.validation.CustomValidatorStrategy;
 import org.slf4j.Logger;
@@ -44,9 +46,6 @@ import static org.citrusframework.api.common.TestLoader.JAVA;
 import static org.citrusframework.api.common.TestLoader.SPRING;
 import static org.citrusframework.api.common.TestLoader.YAML;
 import static org.citrusframework.message.MessageType.XML;
-
-import org.citrusframework.config.CitrusConfigProperties;
-import org.citrusframework.config.CitrusConfigProperty;
 
 @CitrusConfigProperties(prefix = "citrus", description = "Core Citrus framework settings.")
 public final class CitrusSettings {
@@ -126,18 +125,24 @@ public final class CitrusSettings {
     @CitrusConfigProperty(description = "Name of the test name variable.", defaultValue = "citrus.test.name")
     public static final String TEST_NAME_VARIABLE_PROPERTY = "citrus.test.name.variable";
     public static final String TEST_NAME_VARIABLE_ENV = "CITRUS_TEST_NAME_VARIABLE";
-    public static final String TEST_NAME_VARIABLE = getPropertyEnvOrDefault(
-            TEST_NAME_VARIABLE_PROPERTY,
-            TEST_NAME_VARIABLE_ENV,
-            "citrus.test.name");
+    public static final String TEST_NAME_VARIABLE_DEFAULT = "citrus.test.name";
+    /**
+     * @deprecated Use {@link #getTestNameVariable()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
+    public static final String TEST_NAME_VARIABLE = getTestNameVariable();
 
     @CitrusConfigProperty(description = "Name of the test package variable.", defaultValue = "citrus.test.package")
     public static final String TEST_PACKAGE_VARIABLE_PROPERTY = "citrus.test.package.variable";
     public static final String TEST_PACKAGE_VARIABLE_ENV = "CITRUS_TEST_PACKAGE_VARIABLE";
-    public static final String TEST_PACKAGE_VARIABLE = getPropertyEnvOrDefault(
-            TEST_PACKAGE_VARIABLE_PROPERTY,
-            TEST_PACKAGE_VARIABLE_ENV,
-            "citrus.test.package");
+    public static final String TEST_PACKAGE_VARIABLE_DEFAULT = "citrus.test.package";
+    /**
+     * @deprecated Use {@link #getTestPackageVariable()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
+    public static final String TEST_PACKAGE_VARIABLE = getTestPackageVariable();
 
     /**
      * File encoding system property
@@ -145,10 +150,13 @@ public final class CitrusSettings {
     @CitrusConfigProperty(description = "File encoding used by Citrus.")
     public static final String CITRUS_FILE_ENCODING_PROPERTY = "citrus.file.encoding";
     public static final String CITRUS_FILE_ENCODING_ENV = "CITRUS_FILE_ENCODING";
-    public static final String CITRUS_FILE_ENCODING = getPropertyEnvOrDefault(
-            CITRUS_FILE_ENCODING_PROPERTY,
-            CITRUS_FILE_ENCODING_ENV,
-            defaultCharset().displayName());
+    public static final String CITRUS_FILE_ENCODING_DEFAULT = defaultCharset().displayName();
+    /**
+     * @deprecated Use {@link #getFileEncoding()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
+    public static final String CITRUS_FILE_ENCODING = getFileEncoding();
 
     /**
      * Prefix/sufix used to identify variable expressions
@@ -163,10 +171,12 @@ public final class CitrusSettings {
     @CitrusConfigProperty(description = "Default application context configuration class.")
     public static final String DEFAULT_CONFIG_CLASS_PROPERTY = "citrus.java.config";
     public static final String DEFAULT_CONFIG_CLASS_ENV = "CITRUS_JAVA_CONFIG";
-    public static final String DEFAULT_CONFIG_CLASS = getPropertyEnvOrDefault(
-            DEFAULT_CONFIG_CLASS_PROPERTY,
-            DEFAULT_CONFIG_CLASS_ENV,
-            null);
+    /**
+     * @deprecated Use {@link #getDefaultConfigClass()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
+    public static final String DEFAULT_CONFIG_CLASS = getDefaultConfigClass();
 
     /**
      * Default test directories
@@ -174,10 +184,13 @@ public final class CitrusSettings {
     @CitrusConfigProperty(description = "Default test source directory.")
     public static final String DEFAULT_TEST_SRC_DIRECTORY_PROPERTY = "citrus.default.src.directory";
     public static final String DEFAULT_TEST_SRC_DIRECTORY_ENV = "CITRUS_DEFAULT_SRC_DIRECTORY";
-    public static final String DEFAULT_TEST_SRC_DIRECTORY = getPropertyEnvOrDefault(
-            DEFAULT_TEST_SRC_DIRECTORY_PROPERTY,
-            DEFAULT_TEST_SRC_DIRECTORY_ENV,
-            "src" + File.separator + "test" + File.separator);
+    public static final String DEFAULT_TEST_SRC_DIRECTORY_DEFAULT = "src" + File.separator + "test" + File.separator;
+    /**
+     * @deprecated Use {@link #getDefaultTestSrcDirectory()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
+    public static final String DEFAULT_TEST_SRC_DIRECTORY = getDefaultTestSrcDirectory();
 
     /**
      * Placeholder used in messages to ignore elements
@@ -193,34 +206,58 @@ public final class CitrusSettings {
     @CitrusConfigProperty(description = "Comma-separated file name patterns for Groovy test files.", defaultValue = ".*\\.citrus\\.groovy,.*\\.citrus\\.test\\.groovy,.*\\.citrus\\.it\\.groovy,.*\\.citrus-test\\.groovy,.*\\.citrus-it\\.groovy")
     public static final String GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.groovy.file.name.pattern";
     public static final String GROOVY_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_GROOVY_FILE_NAME_PATTERN";
+    public static final String GROOVY_TEST_FILE_NAME_PATTERN_DEFAULT = ".*\\.citrus\\.groovy,.*\\.citrus\\.test\\.groovy,.*\\.citrus\\.it\\.groovy,.*\\.citrus-test\\.groovy,.*\\.citrus-it\\.groovy";
+    /**
+     * @deprecated Use {@link #getGroovyTestFileNamePattern()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
     public static final String GROOVY_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
             GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY,
             GROOVY_TEST_FILE_NAME_PATTERN_ENV,
-            ".*\\.citrus\\.groovy,.*\\.citrus\\.test\\.groovy,.*\\.citrus\\.it\\.groovy,.*\\.citrus-test\\.groovy,.*\\.citrus-it\\.groovy");
+            GROOVY_TEST_FILE_NAME_PATTERN_DEFAULT);
 
     @CitrusConfigProperty(description = "Comma-separated file name patterns for YAML test files.", defaultValue = ".*\\.citrus\\.yaml,.*\\.citrus\\.test\\.yaml,.*\\.citrus\\.it\\.yaml,.*\\.citrus-test\\.yaml,.*\\.citrus-it\\.yaml")
     public static final String YAML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.yaml.file.name.pattern";
     public static final String YAML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_YAML_FILE_NAME_PATTERN";
+    public static final String YAML_TEST_FILE_NAME_PATTERN_DEFAULT = ".*\\.citrus\\.yaml,.*\\.citrus\\.test\\.yaml,.*\\.citrus\\.it\\.yaml,.*\\.citrus-test\\.yaml,.*\\.citrus-it\\.yaml";
+    /**
+     * @deprecated Use {@link #getYamlTestFileNamePattern()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
     public static final String YAML_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
             YAML_TEST_FILE_NAME_PATTERN_PROPERTY,
             YAML_TEST_FILE_NAME_PATTERN_ENV,
-            ".*\\.citrus\\.yaml,.*\\.citrus\\.test\\.yaml,.*\\.citrus\\.it\\.yaml,.*\\.citrus-test\\.yaml,.*\\.citrus-it\\.yaml");
+            YAML_TEST_FILE_NAME_PATTERN_DEFAULT);
 
     @CitrusConfigProperty(description = "Comma-separated file name patterns for XML test files.", defaultValue = ".*Test\\.xml,.*IT\\.xml,.*\\.citrus\\.xml,.*\\.citrus\\.test\\.xml,.*\\.citrus\\.it\\.xml,.*\\.citrus-test\\.xml,.*\\.citrus-it\\.xml")
     public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
     public static final String XML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_XML_FILE_NAME_PATTERN";
+    public static final String XML_TEST_FILE_NAME_PATTERN_DEFAULT = ".*Test\\.xml,.*IT\\.xml,.*\\.citrus\\.xml,.*\\.citrus\\.test\\.xml,.*\\.citrus\\.it\\.xml,.*\\.citrus-test\\.xml,.*\\.citrus-it\\.xml";
+    /**
+     * @deprecated Use {@link #getXmlTestFileNamePattern()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
     public static final String XML_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
             XML_TEST_FILE_NAME_PATTERN_PROPERTY,
             XML_TEST_FILE_NAME_PATTERN_ENV,
-            ".*Test\\.xml,.*IT\\.xml,.*\\.citrus\\.xml,.*\\.citrus\\.test\\.xml,.*\\.citrus\\.it\\.xml,.*\\.citrus-test\\.xml,.*\\.citrus-it\\.xml");
+            XML_TEST_FILE_NAME_PATTERN_DEFAULT);
 
     @CitrusConfigProperty(description = "Comma-separated file name patterns for Java test files.", defaultValue = ".*Test\\.java,.*IT\\.java")
     public static final String JAVA_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.java.file.name.pattern";
     public static final String JAVA_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_JAVA_FILE_NAME_PATTERN";
+    public static final String JAVA_TEST_FILE_NAME_PATTERN_DEFAULT = ".*Test\\.java,.*IT\\.java";
+    /**
+     * @deprecated Use {@link #getJavaTestFileNamePattern()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
     public static final String JAVA_TEST_FILE_NAME_PATTERN = getPropertyEnvOrDefault(
             JAVA_TEST_FILE_NAME_PATTERN_PROPERTY,
             JAVA_TEST_FILE_NAME_PATTERN_ENV,
-            ".*Test\\.java,.*IT\\.java");
+            JAVA_TEST_FILE_NAME_PATTERN_DEFAULT);
 
     /**
      * Default message type used in message validation mechanism
@@ -228,10 +265,13 @@ public final class CitrusSettings {
     @CitrusConfigProperty(description = "Default message type used in message validation.", defaultValue = "XML")
     public static final String DEFAULT_MESSAGE_TYPE_PROPERTY = "citrus.default.message.type";
     public static final String DEFAULT_MESSAGE_TYPE_ENV = "CITRUS_DEFAULT_MESSAGE_TYPE";
-    public static final String DEFAULT_MESSAGE_TYPE = getPropertyEnvOrDefault(
-            DEFAULT_MESSAGE_TYPE_PROPERTY,
-            DEFAULT_MESSAGE_TYPE_ENV,
-            XML.toString());
+    public static final String DEFAULT_MESSAGE_TYPE_DEFAULT = XML.name();
+    /**
+     * @deprecated Use {@link #getDefaultMessageType()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
+    public static final String DEFAULT_MESSAGE_TYPE = getDefaultMessageType();
 
     /**
      * Flag to allow deactivation of the http message builder citrus header update. See <a href="https://github.com/citrusframework/citrus/issues/1143">ISSUE-1143</a> for details.
@@ -255,10 +295,12 @@ public final class CitrusSettings {
     @CitrusConfigProperty(description = "Enable environment variable based component configuration.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String COMPONENT_PROPERTY_BINDING_ENABLED_PROPERTY = "citrus.component.property.binding.enabled";
     public static final String COMPONENT_PROPERTY_BINDING_ENABLED_ENV = "CITRUS_COMPONENT_PROPERTY_BINDING_ENABLED";
-    public static final String COMPONENT_PROPERTY_BINDING_ENABLED_DEFAULT = getPropertyEnvOrDefault(
-            ENV_VAR_PROPERTY_BINDING_ENABLED_PROPERTY,
-            ENV_VAR_PROPERTY_BINDING_ENABLED_ENV,
-            TRUE.toString());
+    /**
+     * @deprecated Use {@link #isComponentPropertyBindingEnabled()} ()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
+    public static final String COMPONENT_PROPERTY_BINDING_ENABLED_DEFAULT = String.valueOf(isEnvVarPropertyBindingEnabled());
 
     /**
      * Flag to enable/disable environment variable based endpoint and component configuration.
@@ -266,10 +308,12 @@ public final class CitrusSettings {
     @CitrusConfigProperty(description = "Enable environment variable based endpoint configuration.", type = "java.lang.Boolean", defaultValue = "true")
     public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_PROPERTY = "citrus.endpoint.property.binding.enabled";
     public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_ENV = "CITRUS_ENDPOINT_PROPERTY_BINDING_ENABLED";
-    public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_DEFAULT = getPropertyEnvOrDefault(
-            ENV_VAR_PROPERTY_BINDING_ENABLED_PROPERTY,
-            ENV_VAR_PROPERTY_BINDING_ENABLED_ENV,
-            TRUE.toString());
+    /**
+     * @deprecated Use {@link #isEndpointPropertyBindingEnabled()} ()} instead. This static field captures the value
+     * at class-load time and does not reflect runtime property changes.
+     */
+    @Deprecated(since = "5.1.0")
+    public static final String ENDPOINT_PROPERTY_BINDING_ENABLED_DEFAULT = String.valueOf(isEnvVarPropertyBindingEnabled());
 
     /**
      * Default message trace output directory
@@ -392,28 +436,40 @@ public final class CitrusSettings {
      * Gets set of file name patterns for Groovy test files.
      */
     public static Set<String> getGroovyTestFileNamePattern() {
-        return Stream.of(GROOVY_TEST_FILE_NAME_PATTERN.split(",")).collect(toSet());
+        return Stream.of(getPropertyEnvOrDefault(
+                GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY,
+                GROOVY_TEST_FILE_NAME_PATTERN_ENV,
+                GROOVY_TEST_FILE_NAME_PATTERN_DEFAULT).split(",")).collect(toSet());
     }
 
     /**
      * Gets set of file name patterns for YAML test files.
      */
     public static Set<String> getYamlTestFileNamePattern() {
-        return Stream.of(YAML_TEST_FILE_NAME_PATTERN.split(",")).collect(toSet());
+        return Stream.of(getPropertyEnvOrDefault(
+                YAML_TEST_FILE_NAME_PATTERN_PROPERTY,
+                YAML_TEST_FILE_NAME_PATTERN_ENV,
+                YAML_TEST_FILE_NAME_PATTERN_DEFAULT).split(",")).collect(toSet());
     }
 
     /**
      * Gets set of file name patterns for XML test files.
      */
     public static Set<String> getXmlTestFileNamePattern() {
-        return Stream.of(XML_TEST_FILE_NAME_PATTERN.split(",")).collect(toSet());
+        return Stream.of(getPropertyEnvOrDefault(
+                XML_TEST_FILE_NAME_PATTERN_PROPERTY,
+                XML_TEST_FILE_NAME_PATTERN_ENV,
+                XML_TEST_FILE_NAME_PATTERN_DEFAULT).split(",")).collect(toSet());
     }
 
     /**
      * Gets set of file name patterns for Java test files.
      */
     public static Set<String> getJavaTestFileNamePattern() {
-        return Stream.of(JAVA_TEST_FILE_NAME_PATTERN.split(",")).collect(toSet());
+        return Stream.of(getPropertyEnvOrDefault(
+                JAVA_TEST_FILE_NAME_PATTERN_PROPERTY,
+                JAVA_TEST_FILE_NAME_PATTERN_ENV,
+                JAVA_TEST_FILE_NAME_PATTERN_DEFAULT).split(",")).collect(toSet());
     }
 
     /**
@@ -540,7 +596,7 @@ public final class CitrusSettings {
         return parseBoolean(getPropertyEnvOrDefault(
                 COMPONENT_PROPERTY_BINDING_ENABLED_PROPERTY,
                 COMPONENT_PROPERTY_BINDING_ENABLED_ENV,
-                COMPONENT_PROPERTY_BINDING_ENABLED_DEFAULT));
+                String.valueOf(isEnvVarPropertyBindingEnabled())));
     }
 
     /**
@@ -551,7 +607,7 @@ public final class CitrusSettings {
         return parseBoolean(getPropertyEnvOrDefault(
                 ENDPOINT_PROPERTY_BINDING_ENABLED_PROPERTY,
                 ENDPOINT_PROPERTY_BINDING_ENABLED_ENV,
-                ENDPOINT_PROPERTY_BINDING_ENABLED_DEFAULT));
+                String.valueOf(isEnvVarPropertyBindingEnabled())));
     }
 
     /**
@@ -672,5 +728,62 @@ public final class CitrusSettings {
                         ALLOW_VALIDATION_MATCHER_OVERRIDE_DEFAULT
                 )
         );
+    }
+
+    public static String getDefaultMessageType() {
+        return getPropertyEnvOrDefault(
+                DEFAULT_MESSAGE_TYPE_PROPERTY,
+                DEFAULT_MESSAGE_TYPE_ENV,
+                DEFAULT_MESSAGE_TYPE_DEFAULT);
+    }
+
+    /**
+     * Gets the test name variable name dynamically from system properties or environment.
+     */
+    public static String getTestNameVariable() {
+        return getPropertyEnvOrDefault(
+                TEST_NAME_VARIABLE_PROPERTY,
+                TEST_NAME_VARIABLE_ENV,
+                TEST_NAME_VARIABLE_DEFAULT);
+    }
+
+    /**
+     * Gets the test package variable name dynamically from system properties or environment.
+     */
+    public static String getTestPackageVariable() {
+        return getPropertyEnvOrDefault(
+                TEST_PACKAGE_VARIABLE_PROPERTY,
+                TEST_PACKAGE_VARIABLE_ENV,
+                TEST_PACKAGE_VARIABLE_DEFAULT);
+    }
+
+    /**
+     * Gets the file encoding dynamically from system properties or environment.
+     */
+    public static String getFileEncoding() {
+        return getPropertyEnvOrDefault(
+                CITRUS_FILE_ENCODING_PROPERTY,
+                CITRUS_FILE_ENCODING_ENV,
+                CITRUS_FILE_ENCODING_DEFAULT);
+    }
+
+    /**
+     * Gets the default config class dynamically from system properties or environment.
+     */
+    public static String getDefaultConfigClass() {
+        return getPropertyEnvOrDefault(
+                DEFAULT_CONFIG_CLASS_PROPERTY,
+                DEFAULT_CONFIG_CLASS_ENV,
+                null);
+    }
+
+    /**
+     * Gets the default test source directory dynamically from system properties or environment.
+     */
+    public static String getDefaultTestSrcDirectory() {
+        return getPropertyEnvOrDefault(
+                DEFAULT_TEST_SRC_DIRECTORY_PROPERTY,
+                DEFAULT_TEST_SRC_DIRECTORY_ENV,
+                DEFAULT_TEST_SRC_DIRECTORY_DEFAULT);
     }
 }

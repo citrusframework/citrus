@@ -76,7 +76,7 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
                 .orElse(MediaType.ALL);
 
         Charset charset = Optional.ofNullable(contentType.getCharset())
-                                  .orElse(Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING));
+                                  .orElse(Charset.forName(CitrusSettings.getFileEncoding()));
 
         if (RequestMethod.POST.name().equals(getMethod()) || RequestMethod.PUT.name().equals(getMethod())) {
             if (new MediaType(contentType.getType(), contentType.getSubtype()).equals(MediaType.APPLICATION_FORM_URLENCODED)) {

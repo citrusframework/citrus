@@ -1,2 +1,3 @@
 type=org.citrusframework.playwright.endpoint.PlaywrightEndpointBuilder
 browser=org.citrusframework.playwright.endpoint.PlaywrightEndpointBuilder
+api-client=org.citrusframework.playwright.http.PlaywrightApiClientBuilder

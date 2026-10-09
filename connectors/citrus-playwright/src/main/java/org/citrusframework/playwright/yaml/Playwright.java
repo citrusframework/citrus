@@ -156,6 +156,21 @@ public class Playwright implements TestActionBuilder<PlaywrightAction>, Referenc
         this.builder = builder;
     }
 
+    @SchemaProperty
+    public void setScreencast(Screencast builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty
+    public void setCredentials(Credentials builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty
+    public void setDrop(Drop builder) {
+        this.builder = builder;
+    }
+
     @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setScreenshot(Screenshot builder) {
         this.builder = builder;
@@ -173,6 +188,81 @@ public class Playwright implements TestActionBuilder<PlaywrightAction>, Referenc
 
     @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
     public void setExtract(Extract builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setConsole(Console builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setContext(Context builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setCookies(Cookies builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setDialog(Dialog builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setDownload(Download builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setEmulate(Emulate builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setEnter(Fill builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setFrame(Frame builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setNetwork(Network builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setPage(Page builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setPageObject(PageObject builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setPdf(Pdf builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setPermissions(Permissions builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setStorage(Storage builder) {
+        this.builder = builder;
+    }
+
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    public void setTracing(Tracing builder) {
         this.builder = builder;
     }
 

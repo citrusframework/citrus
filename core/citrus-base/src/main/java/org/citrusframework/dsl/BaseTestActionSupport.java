@@ -17,6 +17,7 @@
 package org.citrusframework.dsl;
 
 import org.citrusframework.AbstractTestContainerBuilder;
+import org.citrusframework.Question;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionContainerBuilder;
 import org.citrusframework.TestActionContainers;
@@ -63,6 +64,11 @@ public interface BaseTestActionSupport extends BaseTestActions, TestActionContai
     @Override
     default ApplyTestBehaviorAction.Builder apply() {
         return new ApplyTestBehaviorAction.Builder();
+    }
+
+    @Override
+    default <V> AskAction.Builder<V> ask(Question<V> question) {
+        return new AskAction.Builder<V>().question(question);
     }
 
     @Override

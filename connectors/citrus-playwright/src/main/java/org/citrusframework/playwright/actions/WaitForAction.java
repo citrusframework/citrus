@@ -22,7 +22,9 @@ import com.microsoft.playwright.options.WaitForSelectorState;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.util.LocatorResolver;
+import org.citrusframework.util.StringUtils;
 
 public class WaitForAction extends AbstractPlaywrightAction {
 
@@ -33,16 +35,19 @@ public class WaitForAction extends AbstractPlaywrightAction {
         DETACHED,
         LOAD,
         DOM_CONTENT_LOADED,
-        NETWORK_IDLE
+        NETWORK_IDLE,
+        FUNCTION
     }
 
     private final Condition condition;
     private final org.citrusframework.playwright.model.LocatorSpec locator;
+    private final String expression;
 
     public WaitForAction(Builder builder) {
         super("wait", builder);
         this.condition = builder.condition;
         this.locator = builder.locator;
+        this.expression = builder.expression;
     }
 
     @Override
@@ -53,6 +58,12 @@ public class WaitForAction extends AbstractPlaywrightAction {
         }
 
         Locator element = LocatorResolver.resolve(browser.getCurrentPage(), locator, context);
+
+        if (condition == Condition.FUNCTION) {
+            element.waitForFunction(LocatorResolver.resolve(expression, context));
+            return;
+        }
+
         element.waitFor(new Locator.WaitForOptions().setState(resolveSelectorState(condition)));
     }
 
@@ -78,8 +89,13 @@ public class WaitForAction extends AbstractPlaywrightAction {
         return condition;
     }
 
+    public String getExpression() {
+        return expression;
+    }
+
     public static class Builder extends ElementActionBuilder<WaitForAction, Builder> {
         private Condition condition = Condition.VISIBLE;
+        private String expression;
 
         public Builder visible() {
             this.condition = Condition.VISIBLE;
@@ -116,10 +132,26 @@ public class WaitForAction extends AbstractPlaywrightAction {
             return this;
         }
 
+        /**
+         * Waits until the given JavaScript predicate, called with the matched element, returns a
+         * truthy value. Requires a locator and supports Citrus variables inside the expression.
+         *
+         * @param expression JavaScript expression receiving the matched element
+         * @return this builder
+         */
+        public Builder function(String expression) {
+            this.condition = Condition.FUNCTION;
+            this.expression = expression;
+            return this;
+        }
+
         @Override
         public WaitForAction build() {
             if (condition != Condition.LOAD && condition != Condition.DOM_CONTENT_LOADED && condition != Condition.NETWORK_IDLE) {
                 requireLocator();
+            }
+            if (condition == Condition.FUNCTION && !StringUtils.hasText(expression)) {
+                throw new CitrusRuntimeException("Missing Playwright wait predicate - call function(...) with a JavaScript expression");
             }
             return new WaitForAction(this);
         }

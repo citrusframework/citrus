@@ -22,15 +22,9 @@ import static org.testng.Assert.expectThrows;
 import static org.testng.Assert.assertTrue;
 
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Playwright;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Proxy;
-import java.net.InetSocketAddress;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,6 +46,8 @@ import org.citrusframework.playwright.model.NetworkRecord;
 import org.citrusframework.playwright.model.NetworkResponseResult;
 import org.citrusframework.playwright.model.PlaywrightTarget;
 import org.citrusframework.playwright.support.FailureEvidenceListener;
+import org.citrusframework.playwright.support.FixtureServer;
+import org.citrusframework.playwright.support.PlaywrightRuntime;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
@@ -65,7 +61,7 @@ class PlaywrightBrowserIT {
 
     @BeforeClass
     public void configureMaskKeywords() {
-        if (!chromiumAvailable()) {
+        if (!PlaywrightRuntime.chromiumAvailable()) {
             throw new SkipException("Chromium is not installed for Playwright - install it with -Pplaywright-runtimes");
         }
 
@@ -469,58 +465,159 @@ class PlaywrightBrowserIT {
         }
     }
 
-    static class FixtureServer implements AutoCloseable {
-        private final HttpServer server;
-
-        private FixtureServer(HttpServer server) {
-            this.server = server;
-        }
-
-        static FixtureServer start() throws IOException {
-            HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
-            server.createContext("/", FixtureServer::handle);
-            server.start();
-            return new FixtureServer(server);
-        }
-
-        String url(String path) {
-            return "http://127.0.0.1:%d%s".formatted(server.getAddress().getPort(), path);
-        }
-
-        @Override
-        public void close() {
-            server.stop(0);
-        }
-
-        private static void handle(HttpExchange exchange) throws IOException {
-            String path = exchange.getRequestURI().getPath();
-            try (InputStream stream = PlaywrightBrowserIT.class.getResourceAsStream("/fixtures" + path)) {
-                if (stream == null) {
-                    exchange.sendResponseHeaders(404, -1);
-                    return;
-                }
-                byte[] body = stream.readAllBytes();
-                exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
-                exchange.sendResponseHeaders(200, body.length);
-                exchange.getResponseBody().write(body);
-            } finally {
-                exchange.close();
-            }
-        }
-    }
-
     private TestCase testCase(String name) {
         return (TestCase) Proxy.newProxyInstance(TestCase.class.getClassLoader(), new Class<?>[]{TestCase.class},
                 (proxy, method, args) -> "getName".equals(method.getName()) ? name : null);
     }
 
-    private boolean chromiumAvailable() {
-        try (Playwright playwright = Playwright.create()) {
-            try (com.microsoft.playwright.Browser ignored = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true))) {
-                return true;
-            }
-        } catch (RuntimeException e) {
+    @Test
+    void shouldDriveUpliftCapabilitiesAgainstLocalFixture() throws Exception {
+        URL fixture = getClass().getResource("/fixtures/uplift.html");
+        Path screenshot = Path.of("target", "playwright-uplift-it.webp");
+        Path har = Path.of("target", "playwright", "uplift-it.har");
+        Path video = Path.of("target", "playwright", "uplift-it.webm");
+        Files.deleteIfExists(screenshot);
+        Files.deleteIfExists(har);
+
+        PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
+                .browser()
+                .browserType("chromium")
+                .headless(true)
+                .defaultTimeout(5000)
+                .build();
+
+        TestContext context = new TestContext();
+        try {
+            playwright().browser(browser).start().build().execute(context);
+
+            // HAR and screencast recording bracket the run.
+            playwright().browser(browser).tracing().startHar(har.toString()).build().execute(context);
+            playwright().browser(browser).screencast().start(video.toString()).build().execute(context);
+
+            playwright().browser(browser).open().url(fixture.toExternalForm()).build().execute(context);
+
+            // G5 - a plain ".action" locator is ambiguous; visible() disambiguates it.
+            playwright().browser(browser).click()
+                    .locator(org.citrusframework.playwright.model.LocatorSpec.css(".action").visible())
+                    .build().execute(context);
+            playwright().browser(browser).verify().locator("#saved").text("visible-save-clicked")
+                    .build().execute(context);
+
+            // G2 - acting without scrolling the element into view.
+            playwright().browser(browser).click()
+                    .locator(org.citrusframework.playwright.model.LocatorSpec.css(".action").visible())
+                    .scroll("none").build().execute(context);
+
+            // G3 - wait until the grid has grown, using a predicate on the element.
+            playwright().browser(browser).waitFor().locator("#grid")
+                    .function("el => el.children.length >= 5").build().execute(context);
+
+            // G4 - reach into the nested frame without naming the iframe.
+            playwright().browser(browser).frame().click("#framed").build().execute(context);
+            playwright().browser(browser).frame().verifyText("#framed-result", "framed-clicked")
+                    .build().execute(context);
+
+            // G12 - synthetic drag and drop of clipboard data onto the upload zone.
+            playwright().browser(browser).drop().locator("#dropzone")
+                    .data("text/plain", "dropped-payload").build().execute(context);
+            playwright().browser(browser).verify().locator("#dropped").text("dropped-payload")
+                    .build().execute(context);
+
+            // G1 - WebP screenshot inferred from the file extension.
+            playwright().browser(browser).screenshot().path(screenshot.toString()).quality(60)
+                    .build().execute(context);
+
+            playwright().browser(browser).screencast().stop().build().execute(context);
+            playwright().browser(browser).tracing().stopHar().build().execute(context);
+
+            assertTrue(Files.exists(screenshot), "expected a WebP screenshot at " + screenshot);
+            assertTrue(Files.size(screenshot) > 0, "expected a non-empty WebP screenshot");
+            assertTrue(isWebp(screenshot), "expected WebP magic bytes in " + screenshot);
+            assertTrue(Files.exists(har), "expected a HAR recording at " + har);
+        } finally {
+            playwright().browser(browser).stop().build().execute(context);
+        }
+    }
+
+    @Test
+    void shouldDriveDriverOptionCoverageAgainstLocalFixture() throws Exception {
+        URL fixture = getClass().getResource("/fixtures/option-coverage.html");
+        Path video = Path.of("target", "playwright", "option-coverage.webm");
+        Path state = Path.of("target", "playwright", "option-coverage-state.json");
+        Files.deleteIfExists(video);
+        Files.deleteIfExists(state);
+
+        PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
+                .browser()
+                .browserType("chromium")
+                .headless(true)
+                .defaultTimeout(5000)
+                .build();
+
+        TestContext context = new TestContext();
+        try (FixtureServer server = FixtureServer.start()) {
+            String apiUrl = server.url("/phase2.html");
+            int apiPort = java.net.URI.create(apiUrl).getPort();
+
+            playwright().browser(browser).start().build().execute(context);
+            playwright().browser(browser).open().url(fixture.toExternalForm()).build().execute(context);
+
+            // O1 - the fixture throws an uncaught error on load.
+            playwright().browser(browser).console().verifyPageErrorsContain("option-coverage-boom")
+                    .build().execute(context);
+            playwright().browser(browser).console().pageErrors().variable("pageErrors")
+                    .build().execute(context);
+            assertTrue(context.getVariable("pageErrors").contains("option-coverage-boom"));
+            expectThrows(ValidationException.class,
+                    () -> playwright().browser(browser).console().verifyNoPageErrors()
+                            .build().execute(context));
+
+            // O2 + O3 - sized recording with a custom overlay.
+            playwright().browser(browser).screencast().start(video.toString()).size(640, 480)
+                    .build().execute(context);
+            playwright().browser(browser).screencast().showOverlay("<div>Option coverage</div>")
+                    .build().execute(context);
+            playwright().browser(browser).screencast().showOverlays().build().execute(context);
+            playwright().browser(browser).screencast().hideOverlays().build().execute(context);
+            playwright().browser(browser).screencast().stop().build().execute(context);
+            assertTrue(Files.exists(video), "expected a screencast recording at " + video);
+
+            // O4 - storage state with the full browser state flags.
+            playwright().browser(browser).storage().saveState(state.toString()).indexedDB(true)
+                    .credentials(true).build().execute(context);
+            assertTrue(Files.exists(state), "expected a storage state at " + state);
+
+            // O9 - page-side response carries server address; plain HTTP has no TLS details.
+            playwright().browser(browser).open().url(apiUrl).build().execute(context);
+            playwright().browser(browser).network().waitForResponse().urlContains("/phase2.html")
+                    .triggerScript("() => fetch('/phase2.html')")
+                    .verifyServerAddress("127.0.0.1", apiPort)
+                    .variable("resp").build().execute(context);
+
+            NetworkResponseResult result =
+                    (NetworkResponseResult) context.getVariableObject("resp");
+            assertEquals("127.0.0.1", result.serverIp());
+            assertEquals(Integer.valueOf(apiPort), result.serverPort());
+            assertEquals(null, result.tlsProtocol());
+        } finally {
+            playwright().browser(browser).stop().build().execute(context);
+        }
+    }
+
+    /**
+     * Checks the RIFF/WEBP container signature so the assertion proves the format, not just that
+     * some bytes were written.
+     *
+     * @param file screenshot file to inspect
+     * @return true when the file carries WebP magic bytes
+     * @throws IOException when the file cannot be read
+     */
+    private static boolean isWebp(Path file) throws IOException {
+        byte[] header = Files.readAllBytes(file);
+        if (header.length < 12) {
             return false;
         }
+        return header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F'
+                && header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P';
     }
 }

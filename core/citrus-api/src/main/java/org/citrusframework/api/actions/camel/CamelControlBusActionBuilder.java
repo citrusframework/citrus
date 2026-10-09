@@ -19,7 +19,7 @@ package org.citrusframework.api.actions.camel;
 import org.citrusframework.TestAction;
 
 public interface CamelControlBusActionBuilder<T extends TestAction, B extends CamelControlBusActionBuilder<T, B>>
-        extends CamelRouteActionBuilderBase<T, B> {
+        extends CamelActionBuilderBase<T, B> {
 
     /**
      * Sets route action to execute.

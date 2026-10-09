@@ -195,3 +195,90 @@ The Hamcrest expression evaluation in Citrus gets added with this module:
 ----
 
 You need to add this module to your project accordingly when using the Hamcrest matcher support.
+
+=== AssertJ conditions
+
+Alternatively, you can use AssertJ assertions in conditions. This is way more powerful than the basic boolean
+expression evaluation described above.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void repeatTest() {
+    $(repeat().until(conditionOf(i -> assertThat(i).isGreaterThanOrEqualTo(5)))
+        .index("i")
+        .actions(
+            echo("index is: ${i}")
+        )
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="RepeatTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <repeat index="i" until="@assertj(asInt().isGreaterThanOrEqualTo(5))@">
+            <actions>
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </actions>
+        </repeat>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: RepeatTest
+actions:
+  - repeat:
+      index: "i"
+      until: "@assertj(asInt().isGreaterThanOrEqualTo(5))@"
+      actions:
+        - echo:
+            message: "index is: ${i}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="RepeatTest">
+        <actions>
+            <repeat-until-true index="i" condition="@assertj(asInt().isGreaterThanOrEqualTo(5))@">
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </repeat-until-true>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+In the example above we use the `@assertj()@` validation matcher as a condition expression. The matcher receives
+the iteration index as a String, so the chain starts with `asInt()`. In Java you may use the
+`org.citrusframework.validation.assertj.AssertJ.conditionOf(...)` method instead.
+
+To assert on another value than the iteration index, give the value first and the chain second, for instance
+`@assertj('${count}', 'asInt().isGreaterThanOrEqualTo(5)')@`.
+
+The AssertJ expression evaluation in Citrus gets added with this module:
+
+.citrus-validation-assertj Module
+[source,xml]
+----
+<dependency>
+    <groupId>org.citrusframework</groupId>
+    <artifactId>citrus-validation-assertj</artifactId>
+    <version>${citrus.version}</version>
+</dependency>
+----
+
+You need to add this module to your project accordingly when using the AssertJ support. See
+link:#assertj-container-conditions[AssertJ container conditions] for details.

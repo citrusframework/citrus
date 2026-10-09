@@ -99,6 +99,100 @@ class ConsoleActionTest {
     }
 
     @Test
+    void shouldPassPageErrorCheckWhenNoErrors() {
+        when(browser.page().pageErrors()).thenReturn(java.util.List.of());
+
+        new ConsoleAction.Builder().verifyNoPageErrors().build().execute(context);
+    }
+
+    @Test
+    void shouldFailPageErrorCheckWhenErrorsPresent() {
+        when(browser.page().pageErrors()).thenReturn(java.util.List.of("TypeError: x is not a function"));
+
+        ConsoleAction action = new ConsoleAction.Builder().verifyNoPageErrors().build();
+
+        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        assertTrue(exception.getMessage().contains("1"));
+        assertTrue(exception.getMessage().contains("not a function"));
+    }
+
+    @Test
+    void shouldVerifyPageErrorsContainText() {
+        when(browser.page().pageErrors()).thenReturn(java.util.List.of("TypeError: x is not a function"));
+
+        new ConsoleAction.Builder().verifyPageErrorsContain("not a function").build().execute(context);
+    }
+
+    @Test
+    void shouldFailValidationWhenPageErrorDoesNotContainText() {
+        when(browser.page().pageErrors()).thenReturn(java.util.List.of("unrelated"));
+
+        ConsoleAction action = new ConsoleAction.Builder().verifyPageErrorsContain("TypeError").build();
+
+        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        assertTrue(exception.getMessage().contains("TypeError"));
+    }
+
+    @Test
+    void shouldReportPageErrorsToVariable() {
+        when(browser.page().pageErrors()).thenReturn(java.util.List.of("TypeError: boom"));
+
+        new ConsoleAction.Builder().pageErrors().variable("pageErrors").build().execute(context);
+
+        String report = context.getVariable("pageErrors");
+        assertTrue(report.contains("TypeError: boom"));
+    }
+
+    @Test
+    void shouldFailFastWhenPageErrorTextMissing() {
+        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+                () -> new ConsoleAction.Builder().verifyPageErrorsContain(null).build());
+        assertTrue(exception.getMessage().contains("page error verification text"));
+    }
+
+    @Test
+    void shouldReadRegistryWhenFilterUnset() {
+        seedConsole("engine", "app ready");
+
+        new ConsoleAction.Builder().verifyContains("app ready").build().execute(context);
+
+        org.mockito.Mockito.verify(browser.page(), org.mockito.Mockito.never())
+                .consoleMessages(any(com.microsoft.playwright.Page.ConsoleMessagesOptions.class));
+    }
+
+    @Test
+    void shouldRetrieveSinceNavigationFromDriver() {
+        ConsoleMessage recent = mock(ConsoleMessage.class);
+        when(recent.type()).thenReturn("log");
+        when(recent.text()).thenReturn("after navigation");
+        when(recent.location()).thenReturn("app.js:2");
+        when(recent.timestamp()).thenReturn(1.0);
+        when(browser.page().consoleMessages(any(com.microsoft.playwright.Page.ConsoleMessagesOptions.class)))
+                .thenReturn(java.util.List.of(recent));
+
+        new ConsoleAction.Builder().report().filter("since-navigation").variable("consoleReport")
+                .build().execute(context);
+
+        String report = context.getVariable("consoleReport");
+        assertTrue(report.contains("after navigation"));
+
+        org.mockito.ArgumentCaptor<com.microsoft.playwright.Page.ConsoleMessagesOptions> captor =
+                org.mockito.ArgumentCaptor.forClass(com.microsoft.playwright.Page.ConsoleMessagesOptions.class);
+        org.mockito.Mockito.verify(browser.page()).consoleMessages(captor.capture());
+        assertEquals(com.microsoft.playwright.options.ConsoleMessagesFilter.SINCE_NAVIGATION,
+                captor.getValue().filter);
+    }
+
+    @Test
+    void shouldRejectUnknownFilter() {
+        ConsoleAction action = new ConsoleAction.Builder().report().filter("errors-only").build();
+
+        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+                () -> action.execute(context));
+        assertTrue(exception.getMessage().contains("errors-only"));
+    }
+
+    @Test
     void shouldFailFastWhenCommandMissing() {
         expectThrows(CitrusRuntimeException.class, () -> new ConsoleAction.Builder().build());
     }

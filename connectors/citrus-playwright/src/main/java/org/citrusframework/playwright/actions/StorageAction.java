@@ -56,6 +56,9 @@ public class StorageAction extends AbstractPlaywrightAction {
     private final String value;
     private final String variable;
     private final String path;
+    private final Boolean opfs;
+    private final Boolean indexedDB;
+    private final Boolean credentials;
 
     public StorageAction(Builder builder) {
         super("storage", builder);
@@ -65,6 +68,9 @@ public class StorageAction extends AbstractPlaywrightAction {
         this.value = builder.value;
         this.variable = builder.variable;
         this.path = builder.path;
+        this.opfs = builder.opfs;
+        this.indexedDB = builder.indexedDB;
+        this.credentials = builder.credentials;
     }
 
     @Override
@@ -82,15 +88,55 @@ public class StorageAction extends AbstractPlaywrightAction {
             }
             case REMOVE -> storage(browser).removeItem(LocatorResolver.resolve(key, context));
             case CLEAR -> storage(browser).clear();
-            case SAVE_STATE -> browser.getCurrentContext()
-                    .storageState(new com.microsoft.playwright.BrowserContext.StorageStateOptions()
-                            .setPath(Path.of(LocatorResolver.resolve(path, context))));
+            case SAVE_STATE -> browser.getCurrentContext().storageState(storageStateOptions(context));
             case RESTORE_STATE -> browser.getCurrentContext().setStorageState(Path.of(LocatorResolver.resolve(path, context)));
         }
     }
 
+    private com.microsoft.playwright.BrowserContext.StorageStateOptions storageStateOptions(TestContext context) {
+        com.microsoft.playwright.BrowserContext.StorageStateOptions options =
+                new com.microsoft.playwright.BrowserContext.StorageStateOptions()
+                        .setPath(Path.of(LocatorResolver.resolve(path, context)));
+
+        if (opfs != null) {
+            options.setOpfs(opfs);
+        }
+        if (indexedDB != null) {
+            options.setIndexedDB(indexedDB);
+        }
+        if (credentials != null) {
+            options.setCredentials(credentials);
+        }
+
+        return options;
+    }
+
     private WebStorage storage(PlaywrightBrowser browser) {
         return scope == Scope.SESSION ? browser.getCurrentPage().sessionStorage() : browser.getCurrentPage().localStorage();
+    }
+
+    public Scope getScope() {
+        return scope;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public Boolean getOpfs() {
+        return opfs;
+    }
+
+    public Boolean getIndexedDB() {
+        return indexedDB;
+    }
+
+    public Boolean getCredentials() {
+        return credentials;
     }
 
     /**
@@ -103,6 +149,9 @@ public class StorageAction extends AbstractPlaywrightAction {
         private String value;
         private String variable;
         private String path;
+        private Boolean opfs;
+        private Boolean indexedDB;
+        private Boolean credentials;
 
         /**
          * Targets local storage.
@@ -207,6 +256,44 @@ public class StorageAction extends AbstractPlaywrightAction {
         public Builder restoreState(String path) {
             this.command = Command.RESTORE_STATE;
             this.path = path;
+            return this;
+        }
+
+        /**
+         * Includes the origin private file system in the saved storage state so it can be
+         * restored into a later browser context.
+         *
+         * @param opfs true to include the origin private file system
+         * @return this builder
+         */
+        public Builder opfs(boolean opfs) {
+            this.opfs = opfs;
+            return this;
+        }
+
+        /**
+         * Includes IndexedDB in the saved storage state so it can be
+         * restored into a later browser context.
+         *
+         * @param indexedDB true to include IndexedDB
+         * @return this builder
+         */
+        public Builder indexedDB(boolean indexedDB) {
+            this.indexedDB = indexedDB;
+            return this;
+        }
+
+        /**
+         * Includes stored credentials in the saved storage state so they can be
+         * restored into a later browser context. The credentials are written into
+         * the storage-state file on disk — keep the flag off unless the restored
+         * session needs them.
+         *
+         * @param credentials true to include stored credentials
+         * @return this builder
+         */
+        public Builder credentials(boolean credentials) {
+            this.credentials = credentials;
             return this;
         }
 

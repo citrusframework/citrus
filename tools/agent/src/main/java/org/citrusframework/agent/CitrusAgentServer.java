@@ -27,9 +27,11 @@ import java.util.function.Consumer;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.ext.web.Router;
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.agent.util.ConfigurationHelper;
 import org.citrusframework.api.agent.CitrusAgentConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.message.MessageType;
 import org.citrusframework.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,7 +137,7 @@ public class CitrusAgentServer implements Server {
                 )
                 .deployVerticle(application);
 
-        configuration.getDefaultProperties().putIfAbsent("citrus.default.message.type", "JSON");
+        configuration.addDefaultProperty(CitrusSettings.DEFAULT_MESSAGE_TYPE_PROPERTY, MessageType.JSON.name(), false);
         configuration.setDefaultProperties();
 
         if (configuration.isSkipTests()) {
