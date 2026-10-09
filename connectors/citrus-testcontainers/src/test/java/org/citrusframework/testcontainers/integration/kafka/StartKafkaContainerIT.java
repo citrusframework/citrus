@@ -58,7 +58,7 @@ public class StartKafkaContainerIT extends AbstractTestcontainersIT implements T
         when(testcontainers()
                 .kafka()
                 .start()
-                .implementation(KafkaImplementation.APACHE_NATIVE.name())
+                .implementation(KafkaImplementation.APACHE.name())
                 .topics("test-topic-1", "test-topic-2"));
 
         then(this::verifyTopics);
