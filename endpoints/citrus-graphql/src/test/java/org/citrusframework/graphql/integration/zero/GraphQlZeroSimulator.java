@@ -16,11 +16,20 @@
 
 package org.citrusframework.graphql.integration.zero;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import graphql.language.Definition;
 import graphql.language.Document;
+import graphql.language.Field;
+import graphql.language.FragmentDefinition;
+import graphql.language.FragmentSpread;
+import graphql.language.InlineFragment;
+import graphql.language.OperationDefinition;
+import graphql.language.Selection;
+import graphql.language.SelectionSet;
 import org.citrusframework.base.endpoint.adapter.StaticEndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.graphql.document.GraphQlDocuments;
@@ -50,8 +59,94 @@ public class GraphQlZeroSimulator extends StaticEndpointAdapter {
             throw new CitrusRuntimeException("GraphQLZero simulator requires a named operation");
         }
 
+        if ("DeleteUser".equals(operation.name()) && !"1".equals(String.valueOf(graphQlRequest.getVariables().get("id")))) {
+            return unknownUser(graphQlRequest.getVariables().get("id"));
+        }
+
         Map<String, Object> data = respond(operation.name(), graphQlRequest.getVariables());
-        return new HttpMessage(GraphQlMessages.toJson(Map.of("data", data))).status(HttpStatus.OK);
+        Map<String, Object> projected = project(document, operation.name(), data);
+        return new HttpMessage(GraphQlMessages.toJson(Map.of("data", projected))).status(HttpStatus.OK);
+    }
+
+    private Message unknownUser(Object id) {
+        Map<String, Object> error = new LinkedHashMap<>();
+        error.put("message", "User %s not found".formatted(id));
+        error.put("path", List.of("deleteUser"));
+        error.put("extensions", Map.of("code", "NOT_FOUND"));
+        return new HttpMessage(GraphQlMessages.toJson(Map.of("errors", List.of(error)))).status(HttpStatus.OK);
+    }
+
+    /**
+     * Keeps only the fields the operation selected — aliases answer under their alias, fragments
+     * are inlined — mirroring a real GraphQL server. Unselected canned fields are dropped, so
+     * whole-object comparisons only see what was requested.
+     */
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> project(Document document, String operationName, Map<String, Object> data) {
+        Map<String, FragmentDefinition> fragments = new LinkedHashMap<>();
+        List<OperationDefinition> operations = new ArrayList<>();
+        for (Definition<?> definition : document.getDefinitions()) {
+            if (definition instanceof FragmentDefinition fragment) {
+                fragments.put(fragment.getName(), fragment);
+            } else if (definition instanceof OperationDefinition operation) {
+                operations.add(operation);
+            }
+        }
+
+        OperationDefinition selected = operations.size() == 1 ? operations.get(0)
+                : operations.stream()
+                        .filter(operation -> operationName.equals(operation.getName()))
+                        .findFirst()
+                        .orElseThrow(() -> new CitrusRuntimeException(
+                                "GraphQLZero simulator cannot select operation '%s'".formatted(operationName)));
+
+        Object projected = projectValue(selected.getSelectionSet(), data, fragments);
+        return projected instanceof Map<?, ?> projectedMap ? (Map<String, Object>) projectedMap : Map.of();
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object projectValue(SelectionSet selections, Object value, Map<String, FragmentDefinition> fragments) {
+        if (value instanceof List<?> list) {
+            return list.stream().map(item -> projectValue(selections, item, fragments)).toList();
+        }
+
+        if (!(value instanceof Map<?, ?> map)) {
+            return value;
+        }
+
+        Map<String, Object> projected = new LinkedHashMap<>();
+        for (Selection<?> selection : selections.getSelections()) {
+            if (selection instanceof Field field) {
+                String responseKey = field.getAlias() != null ? field.getAlias() : field.getName();
+                // Canned data is usually field-shaped, but may already be response-shaped (aliases).
+                Object fieldValue = map.containsKey(field.getName()) ? map.get(field.getName()) : map.get(responseKey);
+                if (field.getSelectionSet() != null) {
+                    projected.put(responseKey, projectValue(field.getSelectionSet(), fieldValue, fragments));
+                } else {
+                    projected.put(responseKey, fieldValue);
+                }
+            } else if (selection instanceof FragmentSpread spread) {
+                merge(projected, projectValue(fragmentSelections(spread, fragments), map, fragments));
+            } else if (selection instanceof InlineFragment inline) {
+                merge(projected, projectValue(inline.getSelectionSet(), map, fragments));
+            }
+        }
+        return projected;
+    }
+
+    private SelectionSet fragmentSelections(FragmentSpread spread, Map<String, FragmentDefinition> fragments) {
+        FragmentDefinition fragment = fragments.get(spread.getName());
+        if (fragment == null) {
+            throw new CitrusRuntimeException("GraphQLZero simulator cannot resolve fragment '%s'".formatted(spread.getName()));
+        }
+        return fragment.getSelectionSet();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void merge(Map<String, Object> target, Object nested) {
+        if (nested instanceof Map<?, ?> nestedMap) {
+            nestedMap.forEach((key, value) -> target.put(String.valueOf(key), value));
+        }
     }
 
     private Map<String, Object> respond(String operation, Map<String, Object> variables) {
@@ -108,6 +203,18 @@ public class GraphQlZeroSimulator extends StaticEndpointAdapter {
                     Map.of("id", "5001", "title", input(variables).get("title"), "url", input(variables).get("url")));
             case "UpdatePhoto" -> Map.of("updatePhoto", Map.of("id", id(variables), "title", input(variables).get("title")));
             case "DeletePhoto" -> Map.of("deletePhoto", true);
+
+            case "Users" -> Map.of(
+                    "first", Map.of("name", "Leanne Graham", "username", "Bret"),
+                    "second", Map.of("name", "Ervin Howell", "username", "Antonette"));
+            case "PostWithComments" -> Map.of("post", Map.of(
+                    "title", "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+                    "comments", Map.of(
+                            "data", List.of(
+                                    Map.of("id", "1", "email", "Eliseo@gardner.biz"),
+                                    Map.of("id", "2", "email", "Jayne_Kuhic@sydney.com"),
+                                    Map.of("id", "3", "email", "Nikita@garfield.biz")),
+                            "meta", Map.of("totalCount", 5))));
 
             default -> throw new CitrusRuntimeException("GraphQLZero simulator has no data for operation '%s'".formatted(operation));
         };
