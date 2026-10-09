@@ -34,7 +34,7 @@
         <xs:complexType>
           <xs:choice>
             <xs:element name="data" type="xs:string"/>
-            <xs:element name="script" type="ScriptType"/>
+            <xs:element name="script" type="tns:ScriptType"/>
           </xs:choice>
         </xs:complexType>
       </xs:element>
@@ -208,7 +208,7 @@
         <xs:element name="websocket" type="tns:WebsocketEndpoints"/>
         <xs:element name="vertx" type="tns:VertxEndpoints"/>
       </xs:choice>
-      <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -269,7 +269,7 @@
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
-            <xs:restriction base="SpringMessageChannelEndpointType"/>
+            <xs:restriction base="tns:SpringMessageChannelEndpointType"/>
           </xs:complexContent>
         </xs:complexType>
       </xs:element>
@@ -279,7 +279,7 @@
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
-            <xs:extension base="SpringMessageChannelEndpointType">
+            <xs:extension base="tns:SpringMessageChannelEndpointType">
               <xs:attribute name="polling-interval" type="xs:string"/>
               <xs:attribute name="message-correlator" type="xs:string"/>
             </xs:extension>
@@ -312,7 +312,7 @@
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
-            <xs:restriction base="DirectEndpointType"/>
+            <xs:restriction base="tns:DirectEndpointType"/>
           </xs:complexContent>
         </xs:complexType>
       </xs:element>
@@ -322,7 +322,7 @@
         </xs:annotation>
         <xs:complexType>
           <xs:complexContent>
-            <xs:extension base="DirectEndpointType">
+            <xs:extension base="tns:DirectEndpointType">
               <xs:attribute name="polling-interval" type="xs:string"/>
               <xs:attribute name="message-correlator" type="xs:string"/>
             </xs:extension>
@@ -1431,41 +1431,9 @@
 
   <xs:complexType name="TestActions">
     <xs:sequence>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="tns:action"/>
-        <xs:element ref="tns:echo"/>
-        <xs:element ref="tns:print"/>
-        <xs:element ref="tns:sleep"/>
-        <xs:element ref="tns:delay"/>
-        <xs:element ref="tns:receive"/>
-        <xs:element ref="tns:create-variables"/>
-        <xs:element ref="tns:create-endpoint"/>
-        <xs:element ref="tns:load"/>
-        <xs:element ref="tns:expect-timeout"/>
-        <xs:element ref="tns:fail"/>
-        <xs:element ref="tns:iterate"/>
-        <xs:element ref="tns:sequential"/>
-        <xs:element ref="tns:finally"/>
-        <xs:element ref="tns:parallel"/>
-        <xs:element ref="tns:repeat"/>
-        <xs:element ref="tns:repeat-on-error"/>
-        <xs:element ref="tns:conditional"/>
-        <xs:element ref="tns:assert"/>
-        <xs:element ref="tns:catch"/>
-        <xs:element ref="tns:wait-for"/>
-        <xs:element ref="tns:async"/>
-        <xs:element ref="tns:timer"/>
-        <xs:element ref="tns:stop-timer"/>
-        <xs:element ref="tns:stop-time"/>
-        <xs:element ref="tns:start"/>
-        <xs:element ref="tns:stop"/>
-        <xs:element ref="tns:trace-variables"/>
-        <xs:element ref="tns:trace"/>
-        <xs:element ref="tns:purge-endpoint"/>
-        <xs:element ref="tns:transform"/>
-        <xs:element ref="tns:apply-template"/>
-        <xs:any processContents="lax"/>
-      </xs:choice>
+      <!-- Test actions are declared as global elements and get validated through the lax wildcard.
+           Listing them next to the wildcard would violate the Unique Particle Attribution constraint. -->
+      <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -1651,7 +1619,6 @@
     <xs:complexContent>
       <xs:extension base="tns:TestEndpoint">
         <xs:sequence>
-          <xs:element name="description" type="xs:string" minOccurs="0"/>
           <xs:choice minOccurs="0">
             <xs:element name="camel" type="tns:CamelEndpoints"/>
             <xs:element name="channel" type="tns:SpringMessageChannelEndpoints"/>
@@ -1674,7 +1641,7 @@
             <xs:element name="websocket" type="tns:WebsocketEndpoints"/>
             <xs:element name="vertx" type="tns:VertxEndpoints"/>
           </xs:choice>
-          <xs:any processContents="lax" minOccurs="0"/>
+          <xs:any namespace="##other" processContents="lax" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -2349,12 +2316,12 @@
               <xs:any processContents="skip" namespace="http://camel.apache.org/schema/spring"/>
               <xs:element name="route">
                 <xs:complexType>
-                  <xs:complexContent>
+                  <xs:simpleContent>
                     <xs:extension base="xs:string">
                       <xs:attribute name="id" type="xs:string"/>
                       <xs:attribute name="file" type="xs:string"/>
                     </xs:extension>
-                  </xs:complexContent>
+                  </xs:simpleContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -3853,7 +3820,7 @@
               </xs:element>
             </xs:sequence>
             <xs:attribute name="resource" use="required" type="xs:string"/>
-            <xs:attribute name="type" use="required" default="DEPLOYMENT">
+            <xs:attribute name="type" use="required">
               <xs:simpleType>
                 <xs:restriction base="xs:string">
                   <xs:enumeration value="POD"/>
@@ -3882,7 +3849,7 @@
               </xs:element>
             </xs:sequence>
             <xs:attribute name="resource" use="required" type="xs:string"/>
-            <xs:attribute name="type" use="required" default="DEPLOYMENT">
+            <xs:attribute name="type" use="required">
               <xs:simpleType>
                 <xs:restriction base="xs:string">
                   <xs:enumeration value="POD"/>
@@ -4525,11 +4492,11 @@
                     </xs:element>
                     <xs:element name="init-script" minOccurs="0">
                       <xs:complexType>
-                        <xs:complexContent>
+                        <xs:simpleContent>
                           <xs:extension base="xs:string">
                             <xs:attribute name="file" type="xs:string"/>
                           </xs:extension>
-                        </xs:complexContent>
+                        </xs:simpleContent>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
@@ -4578,7 +4545,7 @@
         <xs:element name="find">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="element" type="WebElementType"/>
+              <xs:element name="element" type="tns:WebElementType"/>
               <xs:element name="validate">
                 <xs:complexType>
                   <xs:sequence>
@@ -4638,7 +4605,7 @@
         <xs:element name="click">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="element" type="WebElementType"/>
+              <xs:element name="element" type="tns:WebElementType"/>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -4646,7 +4613,7 @@
         <xs:element name="hover">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="element" type="WebElementType"/>
+              <xs:element name="element" type="tns:WebElementType"/>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -4654,7 +4621,7 @@
         <xs:element name="set-input">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="element" type="WebElementType"/>
+              <xs:element name="element" type="tns:WebElementType"/>
             </xs:sequence>
             <xs:attribute name="value" type="xs:string" use="required"/>
           </xs:complexType>
@@ -4663,7 +4630,7 @@
         <xs:element name="check-input">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="element" type="WebElementType"/>
+              <xs:element name="element" type="tns:WebElementType"/>
             </xs:sequence>
             <xs:attribute name="checked" type="xs:boolean" use="required"/>
           </xs:complexType>
@@ -4696,7 +4663,7 @@
         <xs:element name="dropdown-select">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="element" type="WebElementType"/>
+              <xs:element name="element" type="tns:WebElementType"/>
               <xs:element name="options" minOccurs="0">
                 <xs:complexType>
                   <xs:sequence>
@@ -4712,7 +4679,7 @@
         <xs:element name="wait">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="element" type="WebElementType"/>
+              <xs:element name="element" type="tns:WebElementType"/>
             </xs:sequence>
             <xs:attribute name="until" type="xs:string" use="required"/>
           </xs:complexType>
