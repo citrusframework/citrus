@@ -18,6 +18,7 @@ package org.citrusframework.graphql.validation;
 import java.util.Map;
 import java.util.Set;
 
+import graphql.language.AstPrinter;
 import graphql.language.Document;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
@@ -54,8 +55,8 @@ final class GraphQlRequestValidation {
             return;
         }
 
-        if (settings.strict()) {
-            Document document = GraphQlDocuments.parse(request.getDocument());
+        Document document = settings.strict() ? GraphQlDocuments.parse(request.getDocument()) : null;
+        if (document != null) {
             GraphQlDocuments.selectOperation(document, request.getOperationName());
             if (settings.schemaLoader() != null) {
                 GraphQlDocuments.validate(settings.schemaLoader().getSchema(), document);
@@ -63,13 +64,13 @@ final class GraphQlRequestValidation {
         }
 
         if (validationContext.getOperationName() != null) {
-            ValidationUtils.validateValues(effectiveOperationName(request),
+            ValidationUtils.validateValues(effectiveOperationName(request, document),
                     context.replaceDynamicContentInString(validationContext.getOperationName()), "operationName", context);
         }
 
         if (validationContext.getQuery() != null) {
-            validateQuery(request.getDocument(), context.replaceDynamicContentInString(validationContext.getQuery()),
-                    settings.strict(), context);
+            validateQuery(request.getDocument(), document, context.replaceDynamicContentInString(validationContext.getQuery()),
+                    context);
         }
 
         validateVariables(request.getVariables(), validationContext, context);
@@ -79,22 +80,22 @@ final class GraphQlRequestValidation {
      * The operation the request executes: the given operation name, or the name of the document's
      * single operation (the value of the operation name header).
      */
-    private static String effectiveOperationName(GraphQlRequest request) {
+    private static String effectiveOperationName(GraphQlRequest request, Document document) {
         if (request.getOperationName() != null) {
             return request.getOperationName();
         }
 
         try {
-            return GraphQlDocuments.selectOperation(GraphQlDocuments.parse(request.getDocument()), null).name();
+            return GraphQlDocuments.selectOperation(document != null ? document : GraphQlDocuments.parse(request.getDocument()), null).name();
         } catch (ValidationException e) {
             return null;
         }
     }
 
-    private static void validateQuery(String actual, String expected, boolean strict, TestContext context) {
-        if (strict && !ValidationMatcherUtils.isValidationMatcherExpression(expected)) {
+    private static void validateQuery(String actual, Document actualDocument, String expected, TestContext context) {
+        if (actualDocument != null && !ValidationMatcherUtils.isValidationMatcherExpression(expected)) {
             String expectedNormalized = GraphQlDocuments.normalize(expected);
-            String actualNormalized = GraphQlDocuments.normalize(actual);
+            String actualNormalized = AstPrinter.printAstCompact(actualDocument);
             if (!expectedNormalized.equals(actualNormalized)) {
                 throw new ValidationException("GraphQL query does not match - expected: %s but was: %s"
                         .formatted(expectedNormalized, actualNormalized));

@@ -17,6 +17,7 @@ package org.citrusframework.graphql.message;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -120,7 +121,12 @@ public final class GraphQlMessages {
             return "body has neither 'data' nor 'errors'";
         }
 
-        if (body.get("errors") instanceof java.util.List<?> errors) {
+        Object errorsField = body.get("errors");
+        if (errorsField != null && !(errorsField instanceof List<?>)) {
+            return "'errors' is not an array";
+        }
+
+        if (errorsField instanceof List<?> errors) {
             for (int i = 0; i < errors.size(); i++) {
                 if (!(errors.get(i) instanceof Map<?, ?> error) || !(error.get("message") instanceof String)) {
                     return "error %d has no 'message'".formatted(i);
@@ -156,9 +162,23 @@ public final class GraphQlMessages {
         }
     }
 
-    private static boolean isGet(Message message) {
+    /**
+     * Whether the message is an HTTP GET request.
+     */
+    public static boolean isGet(Message message) {
         Object method = message.getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD);
         return method != null && RequestMethod.GET.name().equalsIgnoreCase(method.toString());
+    }
+
+    /**
+     * Reads a header ignoring the case of its name; {@code null} when absent.
+     */
+    public static String header(Message message, String name) {
+        return message.getHeaders().entrySet().stream()
+                .filter(entry -> entry.getKey().equalsIgnoreCase(name))
+                .map(entry -> String.valueOf(entry.getValue()))
+                .findFirst()
+                .orElse(null);
     }
 
     private static Map<String, Object> fromBody(String body) {

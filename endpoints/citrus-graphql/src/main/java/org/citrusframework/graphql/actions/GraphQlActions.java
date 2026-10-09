@@ -17,6 +17,7 @@ package org.citrusframework.graphql.actions;
 
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.graphql.validation.GraphQlMessageProcessor;
 import org.citrusframework.graphql.validation.GraphQlMessageValidationContext;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
@@ -38,7 +39,8 @@ final class GraphQlActions {
      */
     static GraphQlMessageValidationContext reconcile(ReceiveMessageAction.ReceiveMessageActionBuilder<?, ?, ?> builder,
                                                      GraphQlMessageValidationContext.Builder expectations,
-                                                     Endpoint endpoint, String endpointUri, boolean hasControlBody) {
+                                                     Endpoint endpoint, String endpointUri, boolean hasControlBody,
+                                                     GraphQlMessageValidationContext previous) {
         if (!hasControlBody) {
             builder.getValidationContextBuilders()
                     .removeIf(contextBuilder -> contextBuilder.build().getClass() == DefaultMessageValidationContext.class);
@@ -50,6 +52,11 @@ final class GraphQlActions {
                 .findFirst()
                 .orElse(null);
         if (existing != null) {
+            if (existing != previous && expectations.hasExpectations()) {
+                throw new CitrusRuntimeException("GraphQL expectations on the action cannot be combined with an explicit " +
+                        "GraphQlMessageValidationContext - set them on one of both");
+            }
+
             return existing;
         }
 

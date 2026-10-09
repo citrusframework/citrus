@@ -77,7 +77,7 @@ public class GraphQlMessageValidator extends AbstractMessageValidator<GraphQlMes
             boolean unreadable = shapeViolation.equals(GraphQlMessages.NOT_A_JSON_OBJECT);
             if (settings.strict() || (unreadable && hasExpectations)) {
                 throw new ValidationException("Expected GraphQL response but got content type '%s' with status %s: %s"
-                        .formatted(header(message, HttpMessageHeaders.HTTP_CONTENT_TYPE),
+                        .formatted(Objects.requireNonNullElse(GraphQlMessages.header(message, HttpMessageHeaders.HTTP_CONTENT_TYPE), "unknown"),
                                 statusCode(message), shapeViolation));
             }
 
@@ -194,14 +194,6 @@ public class GraphQlMessageValidator extends AbstractMessageValidator<GraphQlMes
 
     private static Object resolve(Object expected, TestContext context) {
         return expected instanceof String text ? context.replaceDynamicContentInString(text) : expected;
-    }
-
-    private static String header(Message message, String name) {
-        return message.getHeaders().entrySet().stream()
-                .filter(entry -> entry.getKey().equalsIgnoreCase(name))
-                .map(entry -> String.valueOf(entry.getValue()))
-                .findFirst()
-                .orElse("unknown");
     }
 
     private static String statusCode(Message message) {

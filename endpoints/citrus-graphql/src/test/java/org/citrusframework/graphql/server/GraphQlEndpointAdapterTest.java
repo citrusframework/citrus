@@ -174,4 +174,22 @@ public class GraphQlEndpointAdapterTest {
     private static HttpMessage postRequest() {
         return new HttpMessage("{\"query\":\"{ a }\"}").method(HttpMethod.POST).path("/graphql");
     }
+
+    @Test
+    public void shouldMatchGraphQlPathBelowContextPath() {
+        HttpMessage request = getRequest("/api/graphql", "query=%7B+a+%7D").contextPath("/api");
+
+        adapter(new HttpMessage()).handleMessage(request);
+
+        assertThat(handled.get(0).getPayload(String.class)).isEqualTo("{\"query\":\"{ a }\"}");
+    }
+
+    @Test
+    public void shouldNotNegotiateRefusedGraphQlResponseMediaType() {
+        HttpMessage request = postRequest().accept("application/json, application/graphql-response+json;q=0");
+
+        Message reply = adapter(new HttpMessage("{\"data\":{}}")).handleMessage(request);
+
+        assertThat(reply.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE)).isEqualTo("application/json");
+    }
 }
