@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<test name="GraphQlZeroAlbumsXmlIT" author="Citrus" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>GraphQLZero albums: get, list, create, update and delete (XML DSL).</description>
+  <endpoints>
+    <graphql>
+      <client name="zeroAlbums" request-url="http://localhost:19380" schema="classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls" timeout="5000"/>
+    </graphql>
+  </endpoints>
+  <actions>
+    <!-- query GetAlbum -->
+    <graphql client="zeroAlbums">
+      <send-request>
+        <query>
+          query GetAlbum($id: ID!) {
+            album(id: $id) {
+              id
+              title
+              user { id }
+            }
+          }
+        </query>
+        <variables>{&quot;id&quot;: &quot;1&quot;}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroAlbums">
+      <receive-response status="200">
+        <data path="$.album.title" value="quidem molestiae enim"/>
+        <data path="$.album.user.id" value="1"/>
+      </receive-response>
+    </graphql>
+
+    <!-- query ListAlbums -->
+    <graphql client="zeroAlbums">
+      <send-request>
+        <query>
+          query ListAlbums($options: PageQueryOptions) {
+            albums(options: $options) {
+              data { id }
+              meta { totalCount }
+            }
+          }
+        </query>
+        <variables>{&quot;options&quot;: {&quot;paginate&quot;: {&quot;page&quot;: 1, &quot;limit&quot;: 2}}}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroAlbums">
+      <receive-response status="200">
+        <data path="$.albums.meta.totalCount" value="100"/>
+        <data path="$.albums.data.length()" value="2"/>
+        <data path="$.albums.data[0].id" value="1"/>
+      </receive-response>
+    </graphql>
+
+    <!-- mutation CreateAlbum -->
+    <graphql client="zeroAlbums">
+      <send-request>
+        <query>
+          mutation CreateAlbum($input: CreateAlbumInput!) {
+            createAlbum(input: $input) { id title }
+          }
+        </query>
+        <variables>{&quot;input&quot;: {&quot;title&quot;: &quot;Citrus album&quot;, &quot;userId&quot;: &quot;1&quot;}}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroAlbums">
+      <receive-response status="200">
+        <data path="$.createAlbum.id" value="101"/>
+        <data path="$.createAlbum.title" value="Citrus album"/>
+      </receive-response>
+    </graphql>
+
+    <!-- mutation UpdateAlbum -->
+    <graphql client="zeroAlbums">
+      <send-request>
+        <query>
+          mutation UpdateAlbum($id: ID!, $input: UpdateAlbumInput!) {
+            updateAlbum(id: $id, input: $input) { id title }
+          }
+        </query>
+        <variables>{&quot;id&quot;: &quot;1&quot;, &quot;input&quot;: {&quot;title&quot;: &quot;Renamed by Citrus&quot;}}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroAlbums">
+      <receive-response status="200">
+        <data path="$.updateAlbum.id" value="1"/>
+        <data path="$.updateAlbum.title" value="Renamed by Citrus"/>
+      </receive-response>
+    </graphql>
+
+    <!-- mutation DeleteAlbum -->
+    <graphql client="zeroAlbums">
+      <send-request>
+        <query>
+          mutation DeleteAlbum($id: ID!) {
+            deleteAlbum(id: $id)
+          }
+        </query>
+        <variables>{&quot;id&quot;: &quot;1&quot;}</variables>
+      </send-request>
+    </graphql>
+    <graphql client="zeroAlbums">
+      <receive-response status="200">
+        <data path="$.deleteAlbum" value="true"/>
+      </receive-response>
+    </graphql>
+
+  </actions>
+</test>

@@ -1,0 +1,6 @@
+query ListAlbums($options: PageQueryOptions) {
+  albums(options: $options) {
+    data { id }
+    meta { totalCount }
+  }
+}

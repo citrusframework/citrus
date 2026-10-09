@@ -1,0 +1,7 @@
+query GetAlbum($id: ID!) {
+  album(id: $id) {
+    id
+    title
+    user { id }
+  }
+}
