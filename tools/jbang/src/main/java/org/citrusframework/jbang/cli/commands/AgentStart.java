@@ -28,70 +28,89 @@ import org.citrusframework.server.Server;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.StringUtils;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.Option;
+import org.aesh.command.option.OptionList;
+import org.aesh.command.option.ParentCommand;
 
-@Command(name = "start", description = "Starts the Citrus agent as a server")
+@CommandDefinition(name = "start", description = "Starts the Citrus agent as a server", generateHelp = true)
 public class AgentStart extends CitrusCommand {
 
-    @Option(names = { "--engine" }, description = "Name of the test engine that is used ti run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
-    private String engine;
+    @Option(name = "engine", description = "Name of the test engine that is used ti run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
+    String engine;
 
-    @Option(names = { "--port" }, description = "Server port.")
-    private String port;
+    @Option(name = "port", description = "Server port.")
+    String port;
 
-    @Option(names = { "--verbose" }, defaultValue = "true", description = "Should the test engine print verbose test summary information.")
-    private String verbose;
+    @Option(name = "verbose", defaultValue = "true", description = "Should the test engine print verbose test summary information.")
+    String verbose;
 
-    @Option(names = { "--reset" }, defaultValue = "true", description = "Should the test engine reset the suite state for each run.")
-    private String reset;
+    @Option(name = "reset", defaultValue = "true", description = "Should the test engine reset the suite state for each run.")
+    String reset;
 
-    @Option(names = { "--system-exit" }, description = "Should the server exit based on success or failure of the test run.")
-    private String systemExit;
+    @Option(name = "system-exit", description = "Should the server exit based on success or failure of the test run.")
+    String systemExit;
 
-    @Option(names = { "--skip-tests" }, description = "Should the server skip the test run at startup.")
-    private String skipTests;
+    @Option(name = "skip-tests", description = "Should the server skip the test run at startup.")
+    String skipTests;
 
-    @Option(names = { "--config-class" }, description = "Configuration class name.")
-    private String configClass;
+    @Option(name = "config-class", description = "Configuration class name.")
+    String configClass;
 
-    @Option(names = { "--time-to-live" }, description = "If this time is set the server automatically terminates after the given time.")
-    private String timeToLive;
+    @Option(name = "time-to-live", description = "If this time is set the server automatically terminates after the given time.")
+    String timeToLive;
 
-    @Option(names = { "--test-jar" }, description = "Path to a Java archive that holds tests to run.")
-    private String testJar;
+    @Option(name = "test-jar", description = "Path to a Java archive that holds tests to run.")
+    String testJar;
 
-    @Option(names = { "--packages" }, arity = "0..*", description = "Test package name to include in the test run.")
-    private String[] packages;
+    @OptionList(name = "packages", description = "Test package name to include in the test run.")
+    List<String> packages;
 
-    @Option(names = { "--includes" }, arity = "0..*", description = "Includes test name pattern.")
-    private String[] includes;
+    @OptionList(name = "includes", description = "Includes test name pattern.")
+    List<String> includes;
 
-    @Option(names = { "--modules" }, description = "Comma delimited list of additional Citrus modules that should be loaded with the agent.")
-    private String modules;
+    @Option(name = "modules", description = "Comma delimited list of additional Citrus modules that should be loaded with the agent.")
+    String modules;
 
-    @Option(names = { "--dep" }, arity = "0..*", description = "Set of additional Maven dependencies that should be loaded with the agent.")
-    private String[] dependencies;
+    @OptionList(name = "dep", description = "Set of additional Maven dependencies that should be loaded with the agent.")
+    List<String> dependencies;
 
-    @Option(names = { "--offline" }, description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
-    private String offline;
+    @Option(name = "offline", description = "When enabled there will be no attempts to resolve Maven artifacts via internet connection.")
+    String offline;
 
-    @Option(names = { "--inspect-code" }, defaultValue = "true", description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
-    private String inspectCode;
+    @Option(name = "inspect-code", defaultValue = "true", description = "When enabled the source code gets analyzed for required modules and dependencies that are added to the classpath.")
+    String inspectCode;
 
-    @Option(names = { "--property" }, arity = "0..*", description = "Default System property to set before the test run.")
-    private String[] properties;
+    @OptionList(name = "property", description = "Default System property to set before the test run.")
+    List<String> properties;
 
-    @Option(names = { "--work-directory" }, description = "The working directory used by the file based test engines to load file resources from.")
-    private String workDir;
+    @Option(name = "work-directory", description = "The working directory used by the file based test engines to load file resources from.")
+    String workDir;
+
+    @ParentCommand
+    Agent parent;
+
+    public AgentStart() {
+        super(null);
+    }
 
     public AgentStart(CitrusJBangMain main) {
         super(main);
     }
 
     @Override
-    public Integer call() {
-        return start();
+    public CitrusJBangMain getMain() {
+        if (super.getMain() == null && parent != null) {
+            setMain(parent.getMain());
+        }
+        return super.getMain();
+    }
+
+    @Override
+    public CommandResult execute(CommandInvocation invocation) throws org.aesh.command.CommandException, InterruptedException {
+        return result(start());
     }
 
     private int start() {
@@ -166,7 +185,7 @@ public class AgentStart extends CitrusCommand {
         }
 
         if (includes != null) {
-            configuration.setIncludes(includes);
+            configuration.setIncludes(includes.toArray(String[]::new));
         }
 
         if (workDir != null) {
@@ -174,11 +193,11 @@ public class AgentStart extends CitrusCommand {
         }
 
         if (packages != null) {
-            configuration.setPackages(List.of(packages));
+            configuration.setPackages(packages);
         }
 
         if (properties != null) {
-            configuration.addDefaultProperties(Arrays.stream(properties)
+            configuration.addDefaultProperties(properties.stream()
                     .filter(p -> p.contains("="))
                     .map(p -> p.split("=", 2))
                     .collect(Collectors.toMap(p -> p[0], p -> p[1])));
@@ -192,7 +211,7 @@ public class AgentStart extends CitrusCommand {
         }
 
         if (dependencies != null) {
-            configuration.setDependencies(Arrays.stream(dependencies)
+            configuration.setDependencies(dependencies.stream()
                     .map(String::trim)
                     .filter(StringUtils::hasText)
                     .collect(Collectors.toSet()));

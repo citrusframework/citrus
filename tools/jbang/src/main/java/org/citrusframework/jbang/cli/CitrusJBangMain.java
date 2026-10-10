@@ -16,28 +16,34 @@
 
 package org.citrusframework.jbang.cli;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
+import org.aesh.AeshRuntimeRunner;
+import org.aesh.command.Command;
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.GroupCommand;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.Option;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.CitrusVersion;
 import org.citrusframework.jbang.cli.commands.Agent;
-import org.citrusframework.jbang.cli.commands.AgentRun;
-import org.citrusframework.jbang.cli.commands.AgentStart;
-import org.citrusframework.jbang.cli.commands.AgentStop;
 import org.citrusframework.jbang.cli.commands.Complete;
 import org.citrusframework.jbang.cli.commands.Init;
 import org.citrusframework.jbang.cli.commands.Inspect;
 import org.citrusframework.jbang.cli.commands.ListTests;
 import org.citrusframework.jbang.cli.commands.Run;
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
 
-@Command(name = "citrus", description = "Citrus JBang CLI", mixinStandardHelpOptions = true)
-public class CitrusJBangMain implements Callable<Integer> {
-    private static CommandLine commandLine;
+@CommandDefinition(name = "citrus", description = "Citrus JBang CLI", generateHelp = true,
+        groupCommands = {Init.class, Inspect.class, Run.class, ListTests.class, Agent.class, Complete.class})
+public class CitrusJBangMain implements GroupCommand<CommandInvocation> {
 
     private Printer out = new Printer.SystemOutPrinter();
+
+    @Option(name = "version", shortName = 'V', hasValue = false, description = "Display version information")
+    boolean versionRequested;
 
     public static void run(String... args) {
         run(new CitrusJBangMain(), args);
@@ -49,20 +55,40 @@ public class CitrusJBangMain implements Callable<Integer> {
     }
 
     public int execute(String... args) {
-        commandLine = new CommandLine(this)
-                .addSubcommand("init", new CommandLine(new Init(this)))
-                .addSubcommand("inspect", new CommandLine(new Inspect(this)))
-                .addSubcommand("run", new CommandLine(new Run(this)))
-                .addSubcommand("ls", new CommandLine(new ListTests(this)))
-                .addSubcommand("agent", new CommandLine(new Agent(this))
-                        .addSubcommand("start", new CommandLine(new AgentStart(this)))
-                        .addSubcommand("run", new CommandLine(new AgentRun(this)))
-                        .addSubcommand("stop", new CommandLine(new AgentStop(this))))
-                .addSubcommand("completion", new CommandLine(new Complete(this)));
+        // Dispatch through a canonical root so subclasses (e.g. test doubles
+        // overriding quit/getOut, which do not inherit @CommandDefinition)
+        // still resolve command metadata. Only mutable state is the printer.
+        CitrusJBangMain root = new CitrusJBangMain().withPrinter(getOut());
+        CommandResult result = AeshRuntimeRunner.builder()
+                .command(root)
+                .args(args)
+                .execute();
+        return result.getExitCode();
+    }
 
-        commandLine.getCommandSpec().versionProvider(() -> new String[] { "5.1.0-SNAPSHOT" });
+    @Override
+    public CommandResult execute(CommandInvocation invocation) {
+        if (versionRequested) {
+            printer().println(CitrusVersion.version());
+            return CommandResult.SUCCESS;
+        }
+        printer().println(invocation.getHelpInfo());
+        return CommandResult.SUCCESS;
+    }
 
-        return commandLine.execute(args);
+    @Override
+    public List<Command<CommandInvocation>> getCommands() {
+        return List.of(
+                new Init(this),
+                new Inspect(this),
+                new Run(this),
+                new ListTests(this),
+                new Agent(this),
+                new Complete(this));
+    }
+
+    private Printer printer() {
+        return out;
     }
 
     /**
@@ -71,12 +97,6 @@ public class CitrusJBangMain implements Callable<Integer> {
      */
     protected void quit(int exitCode) {
         System.exit(exitCode);
-    }
-
-    @Override
-    public Integer call() {
-        commandLine.execute("--help");
-        return 0;
     }
 
     /**

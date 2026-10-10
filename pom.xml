@@ -264,7 +264,7 @@
     <netty.version>4.2.16.Final</netty.version>
     <okhttp.version>5.4.0</okhttp.version>
     <org.openapitools.version>7.23.0</org.openapitools.version>
-    <picoli-version>4.7.7</picoli-version>
+    <aesh.version>3.18.2</aesh.version>
     <postgresql.version>42.7.13</postgresql.version>
     <quarkus.platform.version>3.38.0</quarkus.platform.version>
     <quarkus.mcp-server.version>1.13.1</quarkus.mcp-server.version>
@@ -1145,9 +1145,14 @@
 
       <!-- Citrus JBang -->
       <dependency>
-        <groupId>info.picocli</groupId>
-        <artifactId>picocli</artifactId>
-        <version>${picoli-version}</version>
+        <groupId>org.aesh</groupId>
+        <artifactId>aesh</artifactId>
+        <version>${aesh.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.aesh</groupId>
+        <artifactId>aesh-processor</artifactId>
+        <version>${aesh.version}</version>
       </dependency>
       <dependency>
         <groupId>com.github.freva</groupId>

@@ -15,22 +15,46 @@
  */
 package org.citrusframework.jbang.cli.commands;
 
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.ParentCommand;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
-import picocli.CommandLine;
 
-@CommandLine.Command(name = "agent",
-                     description = "Manage Citrus agents (use agent --help to see sub commands)",
-                     sortOptions = false, showDefaultValues = true)
-public class Agent extends CitrusCommand {
+@CommandDefinition(name = "agent", description = "Manage Citrus agents (use agent --help to see sub commands)", generateHelp = true,
+        groupCommands = {AgentStart.class, AgentRun.class, AgentStop.class})
+public class Agent extends CitrusCommand implements org.aesh.command.GroupCommand<CommandInvocation> {
+
+    @ParentCommand
+    CitrusJBangMain parent;
+
+    public Agent() {
+        super(null);
+    }
 
     public Agent(CitrusJBangMain main) {
         super(main);
     }
 
     @Override
-    public Integer call() {
-        new CommandLine(this).execute("--help");
-        return 0;
+    public CitrusJBangMain getMain() {
+        if (super.getMain() == null) {
+            setMain(parent);
+        }
+        return super.getMain();
     }
 
+    @Override
+    public CommandResult execute(CommandInvocation invocation) {
+        printer().println(invocation.getHelpInfo());
+        return CommandResult.SUCCESS;
+    }
+
+    @Override
+    public java.util.List<org.aesh.command.Command<CommandInvocation>> getCommands() {
+        return java.util.List.of(
+                new AgentStart(getMain()),
+                new AgentRun(getMain()),
+                new AgentStop(getMain()));
+    }
 }
