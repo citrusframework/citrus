@@ -693,4 +693,24 @@ public class SendMessageActionTest extends UnitTestSupport {
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
         validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext.Builder().build());
     }
+
+    @Test
+    public void testSendMessageIsDoneWhenMessageCreationFails() {
+        DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("${unknownVariable}"));
+
+        reset(endpoint, producer, endpointConfiguration);
+        when(endpoint.createProducer()).thenReturn(producer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+
+        SendMessageAction sendAction = new SendMessageAction.Builder()
+                .endpoint(endpoint)
+                .message(messageBuilder)
+                .build();
+
+        Assert.assertThrows(CitrusRuntimeException.class, () -> sendAction.execute(context));
+        Assert.assertTrue(sendAction.isDone(context));
+        verify(producer, org.mockito.Mockito.never()).send(any(Message.class), any(TestContext.class));
+    }
+
 }
