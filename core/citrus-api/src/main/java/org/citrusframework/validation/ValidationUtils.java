@@ -64,7 +64,13 @@ public abstract class ValidationUtils {
 
                 Optional<ValueMatcher> matcher = getValueMatcher(expectedValue, context);
                 if (matcher.isPresent()) {
-                    if (!matcher.get().validate(actualValue, expectedValue, context)) {
+                    boolean matched;
+                    try {
+                        matched = matcher.get().validate(actualValue, expectedValue, context);
+                    } catch (ValidationException e) {
+                        throw new ValidationException("Values not matching for element '" + pathExpression + "':", e);
+                    }
+                    if (!matched) {
                             throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
                                     "Values not matching for element '" + pathExpression + "'", expectedValue, actualValue));
                     }
@@ -126,7 +132,13 @@ public abstract class ValidationUtils {
             } else if (expectedValue != null) {
                 Optional<ValueMatcher> matcher = getValueMatcher(expectedValue, context);
                 if (matcher.isPresent()) {
-                    if (!matcher.get().validate(actualValue, expectedValue, context)) {
+                    boolean matched;
+                    try {
+                        matched = matcher.get().validate(actualValue, expectedValue, context);
+                    } catch (ValidationException e) {
+                        throw new ValidationException("Values not matching for element '" + pathExpression + "':", e);
+                    }
+                    if (!matched) {
                         throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
                                 "Values not matching for element '" + pathExpression + "'", expectedValue, null));
                     }
@@ -148,7 +160,7 @@ public abstract class ValidationUtils {
                 }
             }
         } catch (IllegalArgumentException | AssertionError e) {
-            throw new ValidationException("Validation failed:", e);
+            throw new ValidationException("Validation failed for element '" + pathExpression + "':", e);
         }
     }
 
