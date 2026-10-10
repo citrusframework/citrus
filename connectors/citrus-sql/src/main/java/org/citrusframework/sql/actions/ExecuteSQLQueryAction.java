@@ -41,6 +41,7 @@ import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
+import org.citrusframework.validation.script.sql.SqlResultSetValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -71,6 +72,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     /** SQL result set script validator */
     private final SqlResultSetScriptValidator validator;
 
+    /** SQL result set validator with plain Java, runs with or without a script validation context */
+    private final SqlResultSetValidator resultSetValidator;
+
     /** NULL value representation in SQL */
     private static final String NULL_VALUE = "NULL";
 
@@ -89,6 +93,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         this.extractVariables = builder.extractVariables;
         this.scriptValidationContext = builder.scriptValidationContext;
         this.validator = builder.validator;
+        this.resultSetValidator = builder.resultSetValidator;
     }
 
     @Override
@@ -283,6 +288,11 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     private void performValidation(final Map<String, List<String>> columnValuesMap,
             List<Map<String, Object>> allResultRows, TestContext context)
             throws UnknownElementException, ValidationException {
+        // apply plain-Java result set validation if specified (needs no script context)
+        if (resultSetValidator != null) {
+            resultSetValidator.validateSqlResultSet(allResultRows, context);
+        }
+
         // apply script validation if specified
         if (scriptValidationContext != null) {
             getScriptValidator(context).validateSqlResultSet(allResultRows, scriptValidationContext, context);
@@ -401,6 +411,14 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     }
 
     /**
+     * Gets the plain-Java result set validator.
+     * @return the validator, null when none was set
+     */
+    public SqlResultSetValidator getResultSetValidator() {
+        return resultSetValidator;
+    }
+
+    /**
      * Gets the controlResultSet.
      * @return the controlResultSet
      */
@@ -434,6 +452,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         private final Map<String, String> extractVariables = new HashMap<>();
         private ScriptValidationContext scriptValidationContext;
         private SqlResultSetScriptValidator validator;
+        private SqlResultSetValidator resultSetValidator;
 
         public static Builder query() {
             return new Builder();
@@ -511,6 +530,12 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         @Override
         public Builder validator(SqlResultSetScriptValidator validator) {
             this.validator = validator;
+            return this;
+        }
+
+        @Override
+        public Builder validator(SqlResultSetValidator validator) {
+            this.resultSetValidator = validator;
             return this;
         }
 
