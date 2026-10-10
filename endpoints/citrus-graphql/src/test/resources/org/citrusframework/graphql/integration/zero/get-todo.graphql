@@ -1,0 +1,8 @@
+query GetTodo($id: ID!) {
+  todo(id: $id) {
+    id
+    title
+    completed
+    user { id }
+  }
+}

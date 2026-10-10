@@ -3774,5 +3774,510 @@
         }
       },
       "additionalProperties": false    }
+  },
+  "graphql-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "graphql-client",
+    "group": "graphql",
+    "module": "citrus-graphql",
+    "title": "GraphqlClient",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "authentication": {
+          "type": "string",
+          "title": "Authentication",
+          "description": "Use given authentication mechanism.",
+          "$comment": "group:security"
+        },
+        "binaryMediaTypes": {
+          "title": "BinaryMediaTypes",
+          "description": "Sets the list of binary media types.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "BinaryMediaTypes",
+            "description": "Sets the list of binary media types.",
+            "$comment": "group:advanced"
+          }
+        },
+        "charset": {
+          "type": "string",
+          "title": "Charset",
+          "description": "The default charset.",
+          "$comment": "group:advanced"
+        },
+        "contentType": {
+          "type": "string",
+          "title": "ContentType",
+          "description": "Sets the default content type header set for each request.",
+          "$comment": "group:advanced"
+        },
+        "correlator": {
+          "type": "string",
+          "title": "Correlator",
+          "description": "Sets the message correlator.",
+          "$comment": "group:advanced"
+        },
+        "defaultAcceptHeader": {
+          "type": "boolean",
+          "title": "DefaultAcceptHeader",
+          "description": "When enabled the client adds the default accept header to requests.",
+          "$comment": "group:advanced"
+        },
+        "disableRedirectHandling": {
+          "type": "boolean",
+          "title": "DisableRedirectHandling",
+          "description": "Disables the redirect handling for this client.",
+          "$comment": "group:advanced"
+        },
+        "endpointResolver": {
+          "type": "string",
+          "title": "EndpointResolver",
+          "description": "Sets the endpoint URI resolver.",
+          "$comment": "group:advanced"
+        },
+        "errorHandler": {
+          "type": "string",
+          "title": "ErrorHandler",
+          "description": "Sets a custom error handler.",
+          "$comment": "group:errorHandling"
+        },
+        "errorHandlingStrategy": {
+          "type": "string",
+          "title": "ErrorHandlingStrategy",
+          "description": "Sets the error handling strategy.",
+          "$comment": "group:errorHandling"
+        },
+        "handleCookies": {
+          "type": "boolean",
+          "title": "HandleCookies",
+          "description": "When enabled the client handles cookies.",
+          "$comment": "group:advanced"
+        },
+        "headerMapper": {
+          "type": "string",
+          "title": "HeaderMapper",
+          "description": "Sets a custom header mapper bean reference.",
+          "$comment": "group:advanced"
+        },
+        "interceptor": {
+          "type": "string",
+          "title": "Interceptor",
+          "description": "Sets a client interceptor.",
+          "$comment": "group:intercept"
+        },
+        "interceptors": {
+          "title": "Interceptors",
+          "description": "Sets the list of client interceptor bean references.",
+          "$comment": "group:intercept",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Interceptors",
+            "description": "Sets the list of client interceptor bean references.",
+            "$comment": "group:intercept"
+          }
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Bean reference to a message converter.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "path": {
+          "type": "string",
+          "title": "Path",
+          "description": "The GraphQL path appended to the request URL. Defaults to /graphql unless the request URL has a path."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "title": "PollingInterval",
+          "description": "Sets the polling interval when consuming messages.",
+          "$comment": "group:advanced"
+        },
+        "requestFactory": {
+          "type": "string",
+          "title": "RequestFactory",
+          "description": "Reference to a request factory.",
+          "$comment": "group:advanced"
+        },
+        "requestMethod": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "HEAD",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS",
+            "TRACE"
+          ],
+          "title": "RequestMethod",
+          "description": "The default request method to use"
+        },
+        "requestUrl": {
+          "type": "string",
+          "title": "RequestUrl",
+          "description": "Sets the Http client request URL."
+        },
+        "restTemplate": {
+          "type": "string",
+          "title": "RestTemplate",
+          "description": "The reference to a REST template bean.",
+          "$comment": "group:advanced"
+        },
+        "schema": {
+          "title": "Schema",
+          "description": "The SDL schema resources used to validate GraphQL documents.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Schema",
+            "description": "The SDL schema resources used to validate GraphQL documents."
+          }
+        },
+        "securedConnection": {
+          "type": "string",
+          "title": "SecuredConnection",
+          "description": "Secure the connection with given security mechanism.",
+          "$comment": "group:security"
+        },
+        "strict": {
+          "type": "boolean",
+          "title": "Strict",
+          "description": "Enables or disables GraphQL document and response checks.",
+          "default": true        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "The Http request timeout while waiting for a response",
+          "default": 5000
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "graphql-server": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "graphql-server",
+    "group": "graphql",
+    "module": "citrus-graphql",
+    "title": "GraphqlServer",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "authentication": {
+          "type": "string",
+          "title": "Authentication",
+          "description": "Use given authentication mechanism for all request paths.",
+          "$comment": "group:security"
+        },
+        "autoStart": {
+          "type": "boolean",
+          "title": "AutoStart",
+          "description": "When enabled the server is automatically started after creation."
+        },
+        "binaryMediaTypes": {
+          "title": "BinaryMediaTypes",
+          "description": "List of supported media types on this server.",
+          "$comment": "group:advanced",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "BinaryMediaTypes",
+            "description": "List of supported media types on this server.",
+            "$comment": "group:advanced"
+          }
+        },
+        "connector": {
+          "type": "string",
+          "title": "Connector",
+          "description": "Add a connector to this server.",
+          "$comment": "group:servlet"
+        },
+        "connectors": {
+          "title": "Connectors",
+          "description": "Sets a list of connectors for this server.",
+          "$comment": "group:servlet",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Connectors",
+            "description": "Sets a list of connectors for this server.",
+            "$comment": "group:servlet"
+          }
+        },
+        "contextConfigLocation": {
+          "type": "string",
+          "title": "ContextConfigLocation",
+          "description": "Sets the Spring context configuration loaded for this Http server.",
+          "$comment": "group:advanced"
+        },
+        "contextPath": {
+          "type": "string",
+          "title": "ContextPath",
+          "description": "Sets the context path on this server.",
+          "$comment": "group:servlet"
+        },
+        "debugLogging": {
+          "type": "boolean",
+          "title": "DebugLogging",
+          "description": "When enabled the server prints debug logging output.",
+          "$comment": "group:advanced"
+        },
+        "defaultStatus": {
+          "type": "string",
+          "enum": [
+            "CONTINUE",
+            "SWITCHING_PROTOCOLS",
+            "PROCESSING",
+            "EARLY_HINTS",
+            "OK",
+            "CREATED",
+            "ACCEPTED",
+            "NON_AUTHORITATIVE_INFORMATION",
+            "NO_CONTENT",
+            "RESET_CONTENT",
+            "PARTIAL_CONTENT",
+            "MULTI_STATUS",
+            "ALREADY_REPORTED",
+            "IM_USED",
+            "MULTIPLE_CHOICES",
+            "MOVED_PERMANENTLY",
+            "FOUND",
+            "SEE_OTHER",
+            "NOT_MODIFIED",
+            "TEMPORARY_REDIRECT",
+            "PERMANENT_REDIRECT",
+            "BAD_REQUEST",
+            "UNAUTHORIZED",
+            "PAYMENT_REQUIRED",
+            "FORBIDDEN",
+            "NOT_FOUND",
+            "METHOD_NOT_ALLOWED",
+            "NOT_ACCEPTABLE",
+            "PROXY_AUTHENTICATION_REQUIRED",
+            "REQUEST_TIMEOUT",
+            "CONFLICT",
+            "GONE",
+            "LENGTH_REQUIRED",
+            "PRECONDITION_FAILED",
+            "CONTENT_TOO_LARGE",
+            "PAYLOAD_TOO_LARGE",
+            "URI_TOO_LONG",
+            "UNSUPPORTED_MEDIA_TYPE",
+            "REQUESTED_RANGE_NOT_SATISFIABLE",
+            "EXPECTATION_FAILED",
+            "I_AM_A_TEAPOT",
+            "MISDIRECTED_REQUEST",
+            "UNPROCESSABLE_CONTENT",
+            "UNPROCESSABLE_ENTITY",
+            "LOCKED",
+            "FAILED_DEPENDENCY",
+            "TOO_EARLY",
+            "UPGRADE_REQUIRED",
+            "PRECONDITION_REQUIRED",
+            "TOO_MANY_REQUESTS",
+            "REQUEST_HEADER_FIELDS_TOO_LARGE",
+            "UNAVAILABLE_FOR_LEGAL_REASONS",
+            "INTERNAL_SERVER_ERROR",
+            "NOT_IMPLEMENTED",
+            "BAD_GATEWAY",
+            "SERVICE_UNAVAILABLE",
+            "GATEWAY_TIMEOUT",
+            "HTTP_VERSION_NOT_SUPPORTED",
+            "VARIANT_ALSO_NEGOTIATES",
+            "INSUFFICIENT_STORAGE",
+            "LOOP_DETECTED",
+            "BANDWIDTH_LIMIT_EXCEEDED",
+            "NOT_EXTENDED",
+            "NETWORK_AUTHENTICATION_REQUIRED"
+          ],
+          "title": "DefaultStatus",
+          "description": "Sets the default status returned by the server.",
+          "$comment": "group:advanced"
+        },
+        "endpointAdapter": {
+          "type": "string",
+          "title": "EndpointAdapter",
+          "description": "Sets a custom endpoint adapter to handle requests.",
+          "$comment": "group:advanced"
+        },
+        "filterMappings": {
+          "type": "object",
+          "title": "FilterMappings",
+          "description": "Filter mapping used on this server.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "FilterMappings",
+            "description": "Filter mapping used on this server.",
+            "$comment": "group:filter"
+          },
+          "$comment": "group:filter"
+        },
+        "filters": {
+          "type": "object",
+          "title": "Filters",
+          "description": "Map of Http filters used on this server.",
+          "additionalProperties": {
+            "type": "string",
+            "title": "Filters",
+            "description": "Map of Http filters used on this server.",
+            "$comment": "group:filter"
+          },
+          "$comment": "group:filter"
+        },
+        "handleAttributeHeaders": {
+          "type": "boolean",
+          "title": "HandleAttributeHeaders",
+          "description": "When enabled the server handles attribute headers.",
+          "$comment": "group:advanced"
+        },
+        "handleCookies": {
+          "type": "boolean",
+          "title": "HandleCookies",
+          "description": "When enabled the server handles cookies.",
+          "$comment": "group:advanced"
+        },
+        "interceptor": {
+          "type": "string",
+          "title": "Interceptor",
+          "description": "Sets a handler interceptor.",
+          "$comment": "group:intercept"
+        },
+        "interceptors": {
+          "title": "Interceptors",
+          "description": "Sets the list of handler interceptor bean references.",
+          "$comment": "group:intercept",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Interceptors",
+            "description": "Sets the list of handler interceptor bean references.",
+            "$comment": "group:intercept"
+          }
+        },
+        "messageConverter": {
+          "type": "string",
+          "title": "MessageConverter",
+          "description": "Sets the Http message converter bean reference.",
+          "$comment": "group:advanced"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        },
+        "path": {
+          "type": "string",
+          "title": "Path",
+          "description": "The GraphQL path.",
+          "default": "/graphql"
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port",
+          "description": "The Http server port."
+        },
+        "removeSemicolonPathContent": {
+          "type": "boolean",
+          "title": "RemoveSemicolonPathContent",
+          "description": "When enabled the server removes semicolon path content from headers.",
+          "$comment": "group:advanced"
+        },
+        "resourceBase": {
+          "type": "string",
+          "title": "ResourceBase",
+          "description": "The server resource base path where resources get loaded from.",
+          "$comment": "group:advanced"
+        },
+        "responseCacheSize": {
+          "type": "integer",
+          "title": "ResponseCacheSize",
+          "description": "Sets the response cache size.",
+          "$comment": "group:advanced"
+        },
+        "rootParentContext": {
+          "type": "boolean",
+          "title": "RootParentContext",
+          "description": "When enabled the server uses the root Spring application context.",
+          "$comment": "group:advanced"
+        },
+        "schema": {
+          "title": "Schema",
+          "description": "The SDL schema resources used to validate incoming GraphQL documents.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Schema",
+            "description": "The SDL schema resources used to validate incoming GraphQL documents."
+          }
+        },
+        "securePort": {
+          "type": "integer",
+          "title": "SecurePort",
+          "description": "The secured port.",
+          "$comment": "group:security"
+        },
+        "securedConnection": {
+          "type": "string",
+          "title": "SecuredConnection",
+          "description": "Secure the connections on given secured port with given security mechanism.",
+          "$comment": "group:security"
+        },
+        "securityHandler": {
+          "type": "string",
+          "title": "SecurityHandler",
+          "description": "Sets the security handler as a bean reference.",
+          "$comment": "group:security"
+        },
+        "servletHandler": {
+          "type": "string",
+          "title": "ServletHandler",
+          "description": "Sets a custom servlet handler as a bean reference.",
+          "$comment": "group:servlet"
+        },
+        "servletMappingPath": {
+          "type": "string",
+          "title": "ServletMappingPath",
+          "description": "Sets the servlet mapping path.",
+          "$comment": "group:servlet"
+        },
+        "servletName": {
+          "type": "string",
+          "title": "ServletName",
+          "description": "Sets the servlet name.",
+          "$comment": "group:servlet"
+        },
+        "strict": {
+          "type": "boolean",
+          "title": "Strict",
+          "description": "Enables or disables GraphQL document and reply checks.",
+          "default": true        },
+        "timeout": {
+          "type": "integer",
+          "title": "Timeout",
+          "description": "Sets the server timeout while waiting for incoming requests.",
+          "default": 5000
+        },
+        "useDefaultFilters": {
+          "type": "boolean",
+          "title": "UseDefaultFilters",
+          "description": "When enabled the server uses the default set of Http servlet filters.",
+          "$comment": "group:filter"
+        }
+      },
+      "additionalProperties": false    }
   }
 }

@@ -1,0 +1,6 @@
+query ListTodos($options: PageQueryOptions) {
+  todos(options: $options) {
+    data { id }
+    meta { totalCount }
+  }
+}

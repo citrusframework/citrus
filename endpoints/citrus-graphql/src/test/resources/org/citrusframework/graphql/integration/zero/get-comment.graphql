@@ -1,0 +1,8 @@
+query GetComment($id: ID!) {
+  comment(id: $id) {
+    id
+    name
+    email
+    post { id }
+  }
+}

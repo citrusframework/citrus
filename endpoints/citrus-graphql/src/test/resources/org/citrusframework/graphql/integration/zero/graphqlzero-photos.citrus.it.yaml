@@ -1,0 +1,113 @@
+name: "GraphQlZeroPhotosYamlIT"
+author: "Citrus"
+status: "FINAL"
+description: "GraphQLZero photos: get, list, create, update and delete (YAML DSL)."
+endpoints:
+  - graphql:
+      client:
+        name: "zeroPhotos"
+        requestUrl: "http://localhost:19381"
+        schema:
+          - "classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls"
+        timeout: 5000
+actions:
+  # query GetPhoto
+  - graphql:
+      client: "zeroPhotos"
+      sendRequest:
+        query: |
+          query GetPhoto($id: ID!) {
+            photo(id: $id) {
+              id
+              title
+              url
+              album { id }
+            }
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroPhotos"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.photo.title"
+            value: "accusamus beatae ad facilis cum similique qui sunt"
+          - path: "$.photo.url"
+            value: "https://picsum.photos/seed/1/600"
+          - path: "$.photo.album.id"
+            value: "1"
+  # query ListPhotos
+  - graphql:
+      client: "zeroPhotos"
+      sendRequest:
+        query: |
+          query ListPhotos($options: PageQueryOptions) {
+            photos(options: $options) {
+              data { id }
+              meta { totalCount }
+            }
+          }
+        variables: '{"options": {"paginate": {"page": 1, "limit": 2}}}'
+  - graphql:
+      client: "zeroPhotos"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.photos.meta.totalCount"
+            value: "5000"
+          - path: "$.photos.data.length()"
+            value: "2"
+          - path: "$.photos.data[0].id"
+            value: "1"
+  # mutation CreatePhoto
+  - graphql:
+      client: "zeroPhotos"
+      sendRequest:
+        query: |
+          mutation CreatePhoto($input: CreatePhotoInput!) {
+            createPhoto(input: $input) { id title url }
+          }
+        variables: '{"input": {"title": "Citrus", "url": "https://example.org/citrus.png", "thumbnailUrl": "https://example.org/citrus-t.png"}}'
+  - graphql:
+      client: "zeroPhotos"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.createPhoto.id"
+            value: "5001"
+          - path: "$.createPhoto.url"
+            value: "https://example.org/citrus.png"
+  # mutation UpdatePhoto
+  - graphql:
+      client: "zeroPhotos"
+      sendRequest:
+        query: |
+          mutation UpdatePhoto($id: ID!, $input: UpdatePhotoInput!) {
+            updatePhoto(id: $id, input: $input) { id title }
+          }
+        variables: '{"id": "1", "input": {"title": "Retitled by Citrus"}}'
+  - graphql:
+      client: "zeroPhotos"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.updatePhoto.id"
+            value: "1"
+          - path: "$.updatePhoto.title"
+            value: "Retitled by Citrus"
+  # mutation DeletePhoto
+  - graphql:
+      client: "zeroPhotos"
+      sendRequest:
+        query: |
+          mutation DeletePhoto($id: ID!) {
+            deletePhoto(id: $id)
+          }
+        variables: '{"id": "1"}'
+  - graphql:
+      client: "zeroPhotos"
+      receiveResponse:
+        status: 200
+        data:
+          - path: "$.deletePhoto"
+            value: "true"

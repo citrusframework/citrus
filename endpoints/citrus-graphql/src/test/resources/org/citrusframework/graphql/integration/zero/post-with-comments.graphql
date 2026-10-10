@@ -1,0 +1,9 @@
+query PostWithComments($id: ID!, $options: PageQueryOptions) {
+  post(id: $id) {
+    title
+    comments(options: $options) {
+      data { id email }
+      meta { totalCount }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+mutation CreatePhoto($input: CreatePhotoInput!) {
+  createPhoto(input: $input) { id title url }
+}

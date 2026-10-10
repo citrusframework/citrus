@@ -1,0 +1,6 @@
+query ListUsers($options: PageQueryOptions) {
+  users(options: $options) {
+    data { id name }
+    meta { totalCount }
+  }
+}

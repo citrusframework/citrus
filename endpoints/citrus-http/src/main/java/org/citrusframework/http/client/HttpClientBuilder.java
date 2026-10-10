@@ -48,7 +48,7 @@ import org.springframework.web.client.RestTemplate;
 public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
 
     /** Endpoint target */
-    private final HttpClient endpoint = new HttpClient();
+    private final HttpClient endpoint;
 
     private String restTemplate;
     private String requestFactory;
@@ -60,6 +60,17 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     private String authentication;
     private String securedConnection;
     private final List<String> interceptors = new ArrayList<>();
+
+    public HttpClientBuilder() {
+        this(new HttpClient());
+    }
+
+    /**
+     * Builds the given client, e.g. a subclass of {@link HttpClient}.
+     */
+    protected HttpClientBuilder(HttpClient endpoint) {
+        this.endpoint = endpoint;
+    }
 
     @Override
     @SuppressWarnings("unchecked")

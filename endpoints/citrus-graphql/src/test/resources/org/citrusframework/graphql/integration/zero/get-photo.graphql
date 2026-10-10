@@ -1,0 +1,8 @@
+query GetPhoto($id: ID!) {
+  photo(id: $id) {
+    id
+    title
+    url
+    album { id }
+  }
+}

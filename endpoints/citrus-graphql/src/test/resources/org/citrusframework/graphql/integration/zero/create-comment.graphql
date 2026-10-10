@@ -1,0 +1,3 @@
+mutation CreateComment($input: CreateCommentInput!) {
+  createComment(input: $input) { id name email body }
+}

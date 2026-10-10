@@ -1,0 +1,6 @@
+query ListPosts($options: PageQueryOptions) {
+  posts(options: $options) {
+    data { id title }
+    meta { totalCount }
+  }
+}

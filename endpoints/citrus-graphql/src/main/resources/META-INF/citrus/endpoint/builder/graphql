@@ -1,0 +1,3 @@
+type=org.citrusframework.graphql.endpoint.builder.GraphQlEndpointBuilder
+client=org.citrusframework.graphql.client.GraphQlClientBuilder
+server=org.citrusframework.graphql.server.GraphQlServerBuilder
