@@ -53,6 +53,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -710,7 +711,7 @@ public class SendMessageActionTest extends UnitTestSupport {
 
         Assert.assertThrows(CitrusRuntimeException.class, () -> sendAction.execute(context));
         Assert.assertTrue(sendAction.isDone(context));
-        verify(producer, org.mockito.Mockito.never()).send(any(Message.class), any(TestContext.class));
+        verify(producer, never()).send(any(Message.class), any(TestContext.class));
     }
 
 }

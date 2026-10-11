@@ -138,7 +138,8 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         try {
             message = createMessage(context, messageType);
         } catch (RuntimeException e) {
-            // nothing is sent, so the action is done
+            // Nothing was sent, but the action is done - complete normally so isDone() returns true.
+            // The failure propagates via the rethrown exception (consistent with fork/non-fork paths below).
             finished.complete(context);
             throw e;
         }
