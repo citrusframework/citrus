@@ -64,16 +64,7 @@ public abstract class ValidationUtils {
 
                 Optional<ValueMatcher> matcher = getValueMatcher(expectedValue, context);
                 if (matcher.isPresent()) {
-                    boolean matched;
-                    try {
-                        matched = matcher.get().validate(actualValue, expectedValue, context);
-                    } catch (ValidationException e) {
-                        throw new ValidationException("Values not matching for element '" + pathExpression + "':", e);
-                    }
-                    if (!matched) {
-                            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
-                                    "Values not matching for element '" + pathExpression + "'", expectedValue, actualValue));
-                    }
+                    validateWithValueMatcher(matcher.get(), actualValue, expectedValue, pathExpression, context, actualValue);
                     return;
                 }
 
@@ -132,16 +123,7 @@ public abstract class ValidationUtils {
             } else if (expectedValue != null) {
                 Optional<ValueMatcher> matcher = getValueMatcher(expectedValue, context);
                 if (matcher.isPresent()) {
-                    boolean matched;
-                    try {
-                        matched = matcher.get().validate(actualValue, expectedValue, context);
-                    } catch (ValidationException e) {
-                        throw new ValidationException("Values not matching for element '" + pathExpression + "':", e);
-                    }
-                    if (!matched) {
-                        throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
-                                "Values not matching for element '" + pathExpression + "'", expectedValue, null));
-                    }
+                    validateWithValueMatcher(matcher.get(), actualValue, expectedValue, pathExpression, context, null);
                 } else if (expectedValue instanceof String) {
                     String expectedValueString = expectedValue.toString();
 
@@ -161,6 +143,24 @@ public abstract class ValidationUtils {
             }
         } catch (IllegalArgumentException | AssertionError e) {
             throw new ValidationException("Validation failed for element '" + pathExpression + "':", e);
+        }
+    }
+
+    /**
+     * Validates values with the given matcher, naming the path expression on failure.
+     * Centralizes the wrapping so future fixes cannot update one call site and forget the other.
+     */
+    private static void validateWithValueMatcher(ValueMatcher matcher, Object actualValue,
+            Object expectedValue, String pathExpression, TestContext context, Object actualForError) {
+        final boolean matched;
+        try {
+            matched = matcher.validate(actualValue, expectedValue, context);
+        } catch (ValidationException e) {
+            throw new ValidationException("Values not matching for element '" + pathExpression + "':", e);
+        }
+        if (!matched) {
+            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                    "Values not matching for element '" + pathExpression + "'", expectedValue, actualForError));
         }
     }
 
