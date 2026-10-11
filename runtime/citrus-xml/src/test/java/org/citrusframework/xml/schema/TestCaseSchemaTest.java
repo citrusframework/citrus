@@ -24,6 +24,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -39,18 +40,18 @@ public class TestCaseSchemaTest {
 
     private static final String SCHEMA_PATH = "org/citrusframework/schema/xml/testcase/";
     private static final String SCHEMA = SCHEMA_PATH + "citrus-testcase.xsd";
-    private static final String VERSIONED_SCHEMA = SCHEMA_PATH + "citrus-testcase-5.1.0-SNAPSHOT.xsd";
+    private static final Pattern VERSIONED_SCHEMA_PATTERN = Pattern.compile("citrus-testcase-.*\\.xsd");
     private static final String TEST_CASE_NAMESPACE = "http://citrusframework.org/schema/xml/testcase";
     private static final String SAMPLE ="org/citrusframework/xml/schema/schema-sample.xml";
 
     @Test
-    public void shouldKeepSchemaCopiesIdentical() throws IOException {
-        Assert.assertEquals(readResource(VERSIONED_SCHEMA), readResource(SCHEMA));
+    public void shouldKeepSchemaCopiesIdentical() throws IOException, URISyntaxException {
+        Assert.assertEquals(readResource(findVersionedSchema()), readResource(SCHEMA));
     }
 
     @Test
-    public void shouldCompileVersionedSchema() throws SAXException {
-        Assert.assertNotNull(loadSchema(VERSIONED_SCHEMA));
+    public void shouldCompileVersionedSchema() throws SAXException, IOException, URISyntaxException {
+        Assert.assertNotNull(loadSchema(findVersionedSchema()));
     }
 
     @Test
@@ -75,6 +76,24 @@ public class TestCaseSchemaTest {
                     .toList();
             Assert.assertFalse(testCases.isEmpty());
             return testCases.stream().map(testCase -> new Object[] { testCase }).toArray(Object[][]::new);
+        }
+    }
+
+    /**
+     * The versioned schema copy is renamed on every version bump
+     * (e.g. citrus-testcase-5.1.0-SNAPSHOT.xsd), so resolve it by pattern
+     * instead of a hardcoded name.
+     */
+    private String findVersionedSchema() throws URISyntaxException, IOException {
+        Path dir = Path.of(getResource(SCHEMA).toURI()).getParent();
+        try (Stream<Path> files = Files.list(dir)) {
+            List<String> candidates = files.map(path -> path.getFileName().toString())
+                    .filter(name -> VERSIONED_SCHEMA_PATTERN.matcher(name).matches())
+                    .sorted()
+                    .toList();
+            Assert.assertEquals(candidates.size(), 1,
+                    "Expected exactly one versioned testcase schema, found: " + candidates);
+            return SCHEMA_PATH + candidates.get(0);
         }
     }
 
