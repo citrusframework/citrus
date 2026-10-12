@@ -79,6 +79,11 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-cucumber-playwright</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-cucumber-testcontainers</artifactId>
       <version>${project.version}</version>
     </dependency>

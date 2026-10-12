@@ -1,0 +1,46 @@
+{
+  "groups": [
+    {
+      "name": "citrus.playwright",
+      "type": "org.citrusframework.cucumber.steps.playwright.PlaywrightSettings",
+      "description": "Playwright cucumber steps settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "citrus.playwright.browser.name",
+      "type": "java.lang.String",
+      "description": "Browser component name used for context lookups.",
+      "sourceType": "org.citrusframework.cucumber.steps.playwright.PlaywrightSettings",
+      "defaultValue": "playwrightBrowser"
+    },
+    {
+      "name": "citrus.playwright.browser.type",
+      "type": "java.lang.String",
+      "description": "Browser type for creating new browser instances.",
+      "sourceType": "org.citrusframework.cucumber.steps.playwright.PlaywrightSettings",
+      "defaultValue": "chromium"
+    },
+    {
+      "name": "citrus.playwright.headless",
+      "type": "java.lang.Boolean",
+      "description": "Run the browser in headless mode.",
+      "sourceType": "org.citrusframework.cucumber.steps.playwright.PlaywrightSettings",
+      "defaultValue": "true"
+    },
+    {
+      "name": "citrus.playwright.base.url",
+      "type": "java.lang.String",
+      "description": "Base URL used for relative navigation.",
+      "sourceType": "org.citrusframework.cucumber.steps.playwright.PlaywrightSettings"
+    },
+    {
+      "name": "citrus.playwright.default.timeout.ms",
+      "type": "java.lang.Long",
+      "description": "Default action timeout in milliseconds.",
+      "sourceType": "org.citrusframework.cucumber.steps.playwright.PlaywrightSettings",
+      "defaultValue": "30000"
+    }
+  ],
+  "hints": []
+}
