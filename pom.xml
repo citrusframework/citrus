@@ -223,7 +223,8 @@
     <groovy.version>3.0.25</groovy.version>
     <greenmail.version>2.1.11</greenmail.version>
     <hamcrest.version>3.0</hamcrest.version>
-    <htmlunit.version>4.13.0</htmlunit.version>
+    <!-- htmlunit3-driver releases follow Selenium, keep in line with ${selenium.version} -->
+    <htmlunit.version>4.44.0</htmlunit.version>
     <httpclient.version>5.6.3</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
     <jackson.version>3.2.3</jackson.version>
@@ -1047,17 +1048,17 @@
         <artifactId>selenium-java</artifactId>
         <version>${selenium.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>htmlunit3-driver</artifactId>
+        <version>${htmlunit.version}</version>
+      </dependency>
 
       <!-- Citrus Playwright dependencies -->
       <dependency>
         <groupId>com.microsoft.playwright</groupId>
         <artifactId>playwright</artifactId>
         <version>${playwright.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.seleniumhq.selenium</groupId>
-        <artifactId>htmlunit-driver</artifactId>
-        <version>${htmlunit.version}</version>
       </dependency>
       <dependency>
         <groupId>net.bytebuddy</groupId>

@@ -16,7 +16,6 @@
 
 package org.citrusframework.selenium.endpoint;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
@@ -29,6 +28,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
+import org.htmlunit.BrowserVersion;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -59,10 +59,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static com.gargoylesoftware.htmlunit.BrowserVersion.CHROME;
-import static com.gargoylesoftware.htmlunit.BrowserVersion.FIREFOX;
-import static com.gargoylesoftware.htmlunit.BrowserVersion.FIREFOX_ESR;
-import static com.gargoylesoftware.htmlunit.BrowserVersion.INTERNET_EXPLORER;
+import static org.htmlunit.BrowserVersion.CHROME;
+import static org.htmlunit.BrowserVersion.EDGE;
+import static org.htmlunit.BrowserVersion.FIREFOX;
+import static org.htmlunit.BrowserVersion.FIREFOX_ESR;
 
 /**
  * Selenium browser provides access to web driver and initializes Selenium environment from endpoint configuration.
@@ -237,13 +237,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
     }
 
     private HtmlUnitDriver getHtmlUnitDriver() {
-        BrowserVersion browserVersion = switch (getEndpointConfiguration().getVersion()) {
-            case "FIREFOX" -> FIREFOX;
-            case "FIREFOX_78", "FIREFOX_ESR" -> FIREFOX_ESR;
-            case "INTERNET_EXPLORER" -> INTERNET_EXPLORER;
-            case "CHROME" -> CHROME;
-            default -> null;
-        };
+        BrowserVersion browserVersion = htmlUnitBrowserVersion(getEndpointConfiguration().getVersion());
 
         HtmlUnitDriver htmlUnitDriver;
         if (browserVersion != null) {
@@ -253,6 +247,29 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
         }
 
         return htmlUnitDriver;
+    }
+
+    /**
+     * Maps the configured browser version to the HtmlUnit browser emulation.
+     * @param version the configured browser version
+     * @return the HtmlUnit browser version or null to use the HtmlUnit default browser
+     */
+    static BrowserVersion htmlUnitBrowserVersion(String version) {
+        if (version == null) {
+            return null;
+        }
+
+        return switch (version) {
+            case "FIREFOX" -> FIREFOX;
+            case "FIREFOX_78", "FIREFOX_ESR" -> FIREFOX_ESR;
+            case "CHROME" -> CHROME;
+            case "EDGE" -> EDGE;
+            case "INTERNET_EXPLORER" -> {
+                logger.warn("HtmlUnit browser version '{}' is no longer supported - using HtmlUnit default browser emulation", version);
+                yield null;
+            }
+            default -> null;
+        };
     }
 
     /**
