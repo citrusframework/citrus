@@ -1,0 +1,161 @@
+[[steps-tools-cucumber-steps-playwright]]
+== Playwright steps
+
+Playwright is a modern browser automation toolkit that drives Chromium, Firefox and WebKit
+through a single API. Citrus provides ready-to-use Cucumber steps that leverage the
+`connectors/citrus-playwright` browser endpoint with Cloud-native BDD, mirroring the
+link:#steps-tools-cucumber-steps-selenium[Selenium steps] phrasing where it makes sense.
+
+Add the module to your project:
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-cucumber-playwright</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+The glue package `org.citrusframework.cucumber.steps.playwright` is discovered
+automatically when the module is on the test classpath.
+
+[[steps-playwright-browser]]
+=== Browser selection and lifecycle
+
+Citrus creates a fallback browser from the settings below when no
+`PlaywrightBrowser` bean is configured. You can also declare the endpoint
+yourself and reference it by name.
+
+.@Given("^(?:Playwright|playwright) browser \"([^\"]+)\"$")
+[source,gherkin]
+----
+Given Playwright browser "shopBrowser"
+----
+
+This loads the `PlaywrightBrowser` component with the given name from the
+configuration (e.g. Spring application context). Unknown ids fail with
+`CitrusRuntimeException: Unable to find playwright browser for id: ...`.
+
+NOTE: lifecycle and selection phrases carry a `playwright` qualifier on
+purpose: the Selenium steps module defines `Browser "…"`, `start browser` and
+`stop browser` with different meaning, and Cucumber-JVM rejects identical
+expressions when both glues share a classpath (e.g. via
+`citrus-cucumber-all`).
+
+With several named browsers configured and none matching the default name,
+pick one explicitly with this step — no default browser is auto-created while
+any bean exists, and any other step fails fast naming the available ids.
+
+.Start and stop
+[source,gherkin]
+----
+When start playwright browser
+When stop playwright browser
+----
+
+[[steps-playwright-settings]]
+=== Settings
+
+[cols="1,1,2",options="header"]
+|===
+|Property |Env|Default
+|`citrus.playwright.browser.name` |`CITRUS_PLAYWRIGHT_BROWSER_NAME` |`playwrightBrowser`
+|`citrus.playwright.browser.type` |`CITRUS_PLAYWRIGHT_BROWSER_TYPE` |`chromium`
+|`citrus.playwright.headless` |`CITRUS_PLAYWRIGHT_HEADLESS` |`true`
+|`citrus.playwright.base.url` |`CITRUS_PLAYWRIGHT_BASE_URL` |(unset)
+|`citrus.playwright.default.timeout.ms` |`CITRUS_PLAYWRIGHT_DEFAULT_TIMEOUT_MS` |`30000`
+|===
+
+[[steps-playwright-navigation]]
+=== Navigation
+
+[source,gherkin]
+----
+When user opens "https://example.com/login"
+----
+
+Every value supports Citrus variables (`${baseUrl}/login`).
+
+[[steps-playwright-input]]
+=== Element interaction
+
+Locators are CSS selectors by default. Every element step also accepts an
+explicit locator type (`css`, `xpath`, `text`, `role` or `test-id`):
+
+[source,gherkin]
+----
+When user clicks "#login"
+When user clicks xpath "//button[@id='go']"
+When user clicks role "button" named "Login"
+When user fills "alice" to "#username"
+When user fills "alice" to text "Username"
+When user enters text "${who}" to "#username"
+When user clears "#username"
+When user clears xpath "//input[@id='name']"
+When user presses key "Enter" on "#username"
+When user checks "#remember"
+When user unchecks test-id "remember"
+When user selects option "blue" on "#color"
+When user hovers over "#menu"
+When user hovers over role "menu"
+----
+
+Accessible-name selection (`role "…" named "…"`) is available on the click,
+fill and verification steps; all other steps accept a bare `role "…"`.
+
+[[steps-playwright-verify]]
+=== Verification
+
+[source,gherkin]
+----
+Then browser should display element "#welcome"
+Then browser should display element test-id "welcome"
+Then element "#welcome" should have text "Hello"
+Then element xpath "//h1" should have text "Hello"
+Then page title should be "Shop"
+Then page url should be "https://example.com/shop"
+----
+
+A mismatch raises a validation error naming the check, locator and
+expected/actual values.
+
+[[steps-playwright-page-objects]]
+=== Page objects
+
+Page-object classes are instantiated by name and bridged to the Playwright
+`pageObject()` action. Methods may take `String` arguments (resolved through
+Citrus variables) and can declare `Page`, `BrowserContext`, `PlaywrightBrowser`
+or `TestContext` parameters, which Citrus injects automatically.
+
+[source,gherkin]
+----
+When playwright page com.example.LoginPage performs submit
+When playwright page com.example.LoginPage performs setUserName with arguments
+  | alice |
+Then playwright page com.example.LoginPage should validate with com.example.LoginValidator
+----
+
+Page-object phrases carry the same `playwright` qualifier: the Selenium
+module defines `browser page … performs …` for pre-registered page ids, while
+these steps load a class by name.
+
+The validator must implement `PlaywrightPageValidator` and provide a
+no-argument constructor; the page type should implement `PlaywrightPage`
+(validators receive it as such). `performs` steps accept any class whose
+methods take `String` arguments and/or injected `Page`, `BrowserContext`,
+`PlaywrightBrowser` or `TestContext` parameters. Unknown class names fail with a
+`CitrusRuntimeException` naming the type.
+
+[[steps-playwright-dialog-screenshot]]
+=== Dialogs and screenshots
+
+[source,gherkin]
+----
+When user accepts dialog
+When user dismisses dialog
+When take screenshot "target/shot.png"
+----
+
+NOTE: dialog steps register a one-shot handler for the next dialog. Place the
+step before the action that opens the dialog in the same scenario.
