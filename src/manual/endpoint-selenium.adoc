@@ -74,7 +74,10 @@ The Selenium browser component supports different browser types for the commonly
 * *edge*
 * *custom*
 
-Html unit is the default browser type and represents a headless browser that executed without displaying the graphical user interface. In case you need a totally different browser or
+Html unit is the default browser type and represents a headless browser that executed without displaying the graphical user interface.
+The optional *version* setting chooses which browser Html unit emulates: *FIREFOX* (default), *FIREFOX_ESR*, *CHROME* or *EDGE*.
+
+In case you need a totally different browser or
 you need to customize the Selenium web driver you can use the _type="custom"_ in combination with a web driver reference:
 
 .Citrus Bean
