@@ -21,36 +21,59 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Stack;
 
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.Argument;
+import org.aesh.command.option.Option;
+import org.aesh.command.option.ParentCommand;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.util.ClassLoaderHelper;
 import org.citrusframework.util.FileUtils;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
 import static java.nio.file.Files.writeString;
 
-@Command(name = "init", description = "Creates a new Citrus test")
+@CommandDefinition(name = "init", description = "Creates a new Citrus test", generateHelp = true)
 public class Init extends CitrusCommand {
 
-    @Parameters(description = "Name of test file (or a github link)", arity = "1",
-                paramLabel = "<file>", parameterConsumer = FileConsumer.class)
-    private Path filePath; // Defined only for file path completion; the field never used
+    @Argument(description = "Name of test file (or a github link)", paramLabel = "<file>", required = true)
+    String file;
 
-    private String file;
+    @Option(name = "directory", description = "Directory where the files will be created", defaultValue = ".")
+    String directory;
 
-    @Option(names = {"--directory" }, description = "Directory where the files will be created", defaultValue = ".")
-    private String directory;
+    @ParentCommand
+    CitrusJBangMain parent;
+
+    public Init() {
+        super(null);
+    }
 
     public Init(CitrusJBangMain main) {
         super(main);
     }
 
     @Override
-    public Integer call() throws Exception {
+    public CitrusJBangMain getMain() {
+        if (super.getMain() == null) {
+            setMain(parent);
+        }
+        return super.getMain();
+    }
+
+    @Override
+    public CommandResult execute(CommandInvocation invocation) throws org.aesh.command.CommandException, InterruptedException {
+        try {
+            return result(call());
+        } catch (Exception e) {
+            printer().println("Error: Failed to initialize test: %s %s".formatted(e.getClass().getName(), e.getMessage()));
+            return CommandResult.FAILURE;
+        }
+    }
+
+    int call() throws Exception {
         String ext = FileUtils.getFileExtension(file);
         try (InputStream is = ClassLoaderHelper.getClassLoader().getResourceAsStream("templates/" + ext + ".tmpl")) {
             if (is == null) {
@@ -118,12 +141,5 @@ public class Init extends CitrusCommand {
      * Subclasses may add additional files in working dir.
      */
     protected void initAdditionalFiles(Path workingDir) {
-    }
-
-    static class FileConsumer extends ParameterConsumer<Init> {
-        @Override
-        protected void doConsumeParameters(Stack<String> args, Init cmd) {
-            cmd.file = args.pop();
-        }
     }
 }

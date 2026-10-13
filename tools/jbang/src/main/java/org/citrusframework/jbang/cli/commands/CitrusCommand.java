@@ -16,29 +16,20 @@
 package org.citrusframework.jbang.cli.commands;
 
 import java.io.File;
-import java.util.Stack;
-import java.util.concurrent.Callable;
 
+import org.aesh.command.Command;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.jbang.cli.Printer;
-import picocli.CommandLine;
-import picocli.CommandLine.IParameterConsumer;
-import picocli.CommandLine.Model.ArgSpec;
-import picocli.CommandLine.Model.CommandSpec;
-import picocli.CommandLine.ParameterException;
 
-public abstract class CitrusCommand implements Callable<Integer> {
+public abstract class CitrusCommand implements Command<CommandInvocation> {
 
-    @CommandLine.Spec
-    CommandSpec spec;
-
-    private final CitrusJBangMain main;
+    private CitrusJBangMain main;
     private File userDir;
 
-    //CHECKSTYLE:OFF
-    @CommandLine.Option(names = { "-h", "--help" }, usageHelp = true, description = "Display the help and sub-commands")
-    private boolean helpRequested = false;
-    //CHECKSTYLE:ON
+    protected CitrusCommand() {
+    }
 
     public CitrusCommand(CitrusJBangMain main) {
         this.main = main;
@@ -46,6 +37,10 @@ public abstract class CitrusCommand implements Callable<Integer> {
 
     public CitrusJBangMain getMain() {
         return main;
+    }
+
+    protected void setMain(CitrusJBangMain main) {
+        this.main = main;
     }
 
     public File getStatusFile(String pid) {
@@ -65,21 +60,10 @@ public abstract class CitrusCommand implements Callable<Integer> {
     }
 
     protected Printer printer() {
-        return main.getOut();
+        return getMain().getOut();
     }
 
-    protected abstract static class ParameterConsumer<T> implements IParameterConsumer {
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public void consumeParameters(Stack<String> args, ArgSpec argSpec, CommandSpec cmdSpec) {
-            if (args.isEmpty()) {
-                throw new ParameterException(cmdSpec.commandLine(), "Error: missing required parameter");
-            }
-            T cmd = (T) cmdSpec.userObject();
-            doConsumeParameters(args, cmd);
-        }
-
-        protected abstract void doConsumeParameters(Stack<String> args, T cmd);
+    protected CommandResult result(int exitCode) {
+        return exitCode == 0 ? CommandResult.SUCCESS : CommandResult.FAILURE;
     }
 }
