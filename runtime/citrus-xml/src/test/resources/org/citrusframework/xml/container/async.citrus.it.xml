@@ -36,12 +36,12 @@
           <message>Try</message>
         </echo>
       </actions>
-      <success>
-        <echo><message>Success!</message></echo>
-      </success>
       <error>
         <echo><message>Failed!</message></echo>
       </error>
+      <success>
+        <echo><message>Success!</message></echo>
+      </success>
     </async>
   </actions>
 </test>
