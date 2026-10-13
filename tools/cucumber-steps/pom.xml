@@ -31,8 +31,8 @@
     <module>citrus-cucumber-kubernetes</module>
     <module>citrus-cucumber-knative</module>
     <module>citrus-cucumber-openapi</module>
-    <module>citrus-cucumber-selenium</module>
     <module>citrus-cucumber-playwright</module>
+    <module>citrus-cucumber-selenium</module>
     <module>citrus-cucumber-testcontainers</module>
     <module>citrus-cucumber-all</module>
   </modules>
