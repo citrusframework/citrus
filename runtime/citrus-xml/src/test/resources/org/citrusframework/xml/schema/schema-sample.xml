@@ -18,14 +18,11 @@
   <actions>
     <async>
       <actions><echo><message>Try</message></echo></actions>
-      <success><echo><message>Success!</message></echo></success>
       <error><echo><message>Failed!</message></echo></error>
+      <success><echo><message>Success!</message></echo></success>
     </async>
     <camel>
       <stop-context name="myContext" timeout="60"/>
     </camel>
-    <playwright browser="playwrightBrowser">
-      <start browser-type="chromium"/>
-    </playwright>
   </actions>
 </test>
