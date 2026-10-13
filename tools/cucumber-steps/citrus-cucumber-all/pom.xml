@@ -74,12 +74,12 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-cucumber-selenium</artifactId>
+      <artifactId>citrus-cucumber-playwright</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-cucumber-playwright</artifactId>
+      <artifactId>citrus-cucumber-selenium</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
