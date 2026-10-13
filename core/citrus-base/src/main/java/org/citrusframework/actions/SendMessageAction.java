@@ -122,7 +122,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      */
     @Override
     public void doExecute(final TestContext context) {
-        final Message message = createMessage(context, messageType);
         finished = new CompletableFuture<>();
 
         finished.whenComplete((ctx, ex) -> {
@@ -134,6 +133,16 @@ public class SendMessageAction extends AbstractTestAction implements Completable
                 }
             }
         });
+
+        final Message message;
+        try {
+            message = createMessage(context, messageType);
+        } catch (RuntimeException e) {
+            // Nothing was sent, but the action is done - complete normally so isDone() returns true.
+            // The failure propagates via the rethrown exception (consistent with fork/non-fork paths below).
+            finished.complete(context);
+            throw e;
+        }
 
         // extract variables from before sending message so we can save dynamic message ids
         for (VariableExtractor variableExtractor : variableExtractors) {
