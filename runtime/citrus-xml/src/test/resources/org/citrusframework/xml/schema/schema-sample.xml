@@ -24,5 +24,8 @@
     <camel>
       <stop-context name="myContext" timeout="60"/>
     </camel>
+    <playwright browser="playwrightBrowser">
+      <start browser-type="chromium"/>
+    </playwright>
   </actions>
 </test>
