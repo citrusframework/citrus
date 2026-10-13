@@ -276,12 +276,13 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     }
 
     /**
-     * Validates the database result set. At first script validation is done (if any was given).
-     * Afterwards the control result set validation is performed.
+     * Validates the database result set. At first plain-Java validation is done (if any was given).
+     * Afterwards script validation is performed (if any was given).
+     * Finally the control result set validation is performed.
      *
      * @param columnValuesMap map containing column names as keys and list of string as retrieved values from db
      * @param allResultRows list of all result rows retrieved from database
-     * @return success flag
+     * @param context the current test context
      * @throws UnknownElementException
      * @throws ValidationException
      */
