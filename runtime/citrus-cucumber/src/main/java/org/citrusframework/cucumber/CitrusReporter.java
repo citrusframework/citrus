@@ -20,15 +20,13 @@ import org.citrusframework.CitrusInstanceManager;
 import io.cucumber.core.plugin.DefaultSummaryPrinter;
 import io.cucumber.plugin.ColorAware;
 import io.cucumber.plugin.ConcurrentEventListener;
-import io.cucumber.plugin.SummaryPrinter;
 import io.cucumber.plugin.event.EventPublisher;
 import io.cucumber.plugin.event.TestRunFinished;
 
 /**
  * @since 2.6
  */
-@SuppressWarnings("deprecation")
-public class CitrusReporter implements SummaryPrinter, ColorAware, ConcurrentEventListener {
+public class CitrusReporter implements ColorAware, ConcurrentEventListener {
 
     public static final String SUITE_NAME = "cucumber-suite";
 

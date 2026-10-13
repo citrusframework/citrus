@@ -219,7 +219,9 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
             /* set custom download folder */
             firefoxProfile.setPreference("browser.download.dir", temporaryStorage.toFile().getAbsolutePath());
 
-            return new FirefoxDriver(new FirefoxOptions().setProfile(firefoxProfile));
+            FirefoxOptions firefoxOptions = new FirefoxOptions().setProfile(firefoxProfile);
+            firefoxOptions.setAcceptInsecureCerts(true);
+            return new FirefoxDriver(firefoxOptions);
         } else if (Browser.IE.is(browserType)) {
             return new InternetExplorerDriver();
         } else if (Browser.EDGE.is(browserType)) {
@@ -283,7 +285,9 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
         try {
             MutableCapabilities options;
             if (Browser.FIREFOX.is(browserType)) {
-                options = new FirefoxOptions().setProfile(getEndpointConfiguration().getFirefoxProfile());
+                FirefoxOptions firefoxOptions = new FirefoxOptions().setProfile(getEndpointConfiguration().getFirefoxProfile());
+                firefoxOptions.setAcceptInsecureCerts(true);
+                options = firefoxOptions;
             } else if (Browser.IE.is(browserType)) {
                 options = new InternetExplorerOptions();
                 options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);

@@ -175,9 +175,6 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
         if (firefoxProfile == null) {
             firefoxProfile = new FirefoxProfile();
 
-            firefoxProfile.setAcceptUntrustedCertificates(true);
-            firefoxProfile.setAssumeUntrustedCertificateIssuer(false);
-
             /* default download folder, set to 2 to use custom download folder */
             firefoxProfile.setPreference("browser.download.folderList", 2);
 

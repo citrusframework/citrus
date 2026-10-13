@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.util.List;
 
 import io.cucumber.plugin.EventListener;
-import io.cucumber.plugin.SummaryPrinter;
 import io.cucumber.plugin.event.EventPublisher;
 import io.cucumber.plugin.event.TestRunFinished;
 import org.citrusframework.cucumber.CucumberSettings;
@@ -29,8 +28,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("deprecation")
-public class ReportVerifyPlugin implements SummaryPrinter, EventListener {
+public class ReportVerifyPlugin implements EventListener {
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(ReportVerifyPlugin.class);
