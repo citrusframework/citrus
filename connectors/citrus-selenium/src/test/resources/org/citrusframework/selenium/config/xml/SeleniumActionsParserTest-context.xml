@@ -18,7 +18,7 @@
             </selenium:alert>
 
             <selenium:find>
-                <selenium:element class-name="clickable" tag-name="button" text="Ok" displayed="true" enabled="false">
+                <selenium:element class-name="clickable" validate-tag-name="button" text="Ok" displayed="true" enabled="false">
                     <selenium:attributes>
                         <selenium:attribute name="type" value="submit"/>
                     </selenium:attributes>
@@ -26,6 +26,10 @@
                         <selenium:style name="color" value="#000000"/>
                     </selenium:styles>
                 </selenium:element>
+            </selenium:find>
+
+            <selenium:find>
+                <selenium:element tag-name="span"/>
             </selenium:find>
 
             <selenium:page name="userForm" action="setUserName">

@@ -29,7 +29,7 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
 
     @Test
     public void testActionParser() {
-        assertActionCount(23);
+        assertActionCount(24);
 
         StartBrowserAction startAction = (StartBrowserAction) getNextTestActionFromTest();
         Assert.assertNotNull(startAction.getBrowser());
@@ -60,6 +60,13 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
         Assert.assertEquals(findElementAction.getStyles().get("color"), "#000000");
         Assert.assertTrue(findElementAction.isDisplayed());
         Assert.assertFalse(findElementAction.isEnabled());
+
+        findElementAction = (FindElementAction) getNextTestActionFromTest();
+        Assert.assertNull(findElementAction.getBrowser());
+        Assert.assertEquals(findElementAction.getName(), "selenium:find");
+        Assert.assertEquals(findElementAction.getProperty(), "tag-name");
+        Assert.assertEquals(findElementAction.getPropertyValue(), "span");
+        Assert.assertNull(findElementAction.getTagName());
 
         PageAction pageAction = (PageAction) getNextTestActionFromTest();
         Assert.assertNull(pageAction.getBrowser());
