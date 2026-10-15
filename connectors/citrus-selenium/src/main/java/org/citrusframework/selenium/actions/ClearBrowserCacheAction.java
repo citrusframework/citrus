@@ -20,6 +20,7 @@ import org.citrusframework.api.actions.selenium.SeleniumClearBrowserCacheActionB
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +65,11 @@ public class ClearBrowserCacheAction extends AbstractSeleniumAction {
         browser.getWebDriver().manage().deleteAllCookies();
 
         if (browser.getWebDriver() instanceof JavascriptExecutor jsEngine) {
-            jsEngine.executeScript(CLEAR_WEB_STORAGE_SCRIPT, new Object[]{});
+            try {
+                jsEngine.executeScript(CLEAR_WEB_STORAGE_SCRIPT, new Object[]{});
+            } catch (WebDriverException e) {
+                logger.warn("Skip clearing web storage because it is not accessible on the current page", e);
+            }
         } else {
             logger.warn("Skip clearing web storage because web driver is missing javascript features");
         }

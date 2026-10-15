@@ -465,6 +465,11 @@ The element selector and the expected tag name are independent settings. The sel
 is looked up on the page, while the _tagName_ / _validate-tag-name_ setting asserts the tag name of the element that has been found. In Java you use the `tagName` method on the
 find builder, in the Spring XML configuration you set the `validate-tag-name` attribute on the `selenium:element` (for example `<selenium:element id="ok-button" validate-tag-name="button"/>`).
 
+NOTE: In earlier versions the `tag-name` attribute of the Spring XML `selenium:element` also acted as the expected tag name when combined with another selector
+(for example `<selenium:element class-name="clickable" tag-name="button"/>`).
+That dual meaning no longer applies: `tag-name` is only a selector now, so move the expected tag name to `validate-tag-name` to keep the assertion
+(for example `<selenium:element class-name="clickable" validate-tag-name="button"/>`). Without this change the tag name is no longer validated.
+
 .Java
 [source,java,indent=0,role="primary"]
 ----

@@ -52,20 +52,23 @@ public class JavaScriptAction extends AbstractSeleniumAction {
 
     /** Installs the JavaScript error collector on the current page */
     static final String ERROR_COLLECTOR_SCRIPT = """
-            if (!Array.isArray(window._selenide_jsErrors)) {
-                window._selenide_jsErrors = [];
-            }
-            window.addEventListener('error', function(event) {
-                window._selenide_jsErrors.push(event.message || String(event));
-            });
-            var previousOnError = window.onerror;
-            window.onerror = function(message) {
-                window._selenide_jsErrors.push(String(message));
-                if (typeof previousOnError === 'function') {
-                    return previousOnError.apply(this, arguments);
+            if (!window._selenide_collectorInstalled) {
+                window._selenide_collectorInstalled = true;
+                if (!Array.isArray(window._selenide_jsErrors)) {
+                    window._selenide_jsErrors = [];
                 }
-                return false;
-            };
+                window.addEventListener('error', function(event) {
+                    window._selenide_jsErrors.push(event.message || String(event));
+                });
+                var previousOnError = window.onerror;
+                window.onerror = function(message) {
+                    window._selenide_jsErrors.push(String(message));
+                    if (typeof previousOnError === 'function') {
+                        return previousOnError.apply(this, arguments);
+                    }
+                    return false;
+                };
+            }
             """;
 
     /** JavaScript code */
