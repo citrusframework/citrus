@@ -139,6 +139,26 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
         }
     }
 
+        @Test
+    public void testExecuteInstallsErrorCollectorOnlyOnce() {
+        HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(true);
+        try {
+            htmlUnitDriver.get("about:blank");
+            seleniumBrowser.setWebDriver(htmlUnitDriver);
+
+            JavaScriptAction action =  new JavaScriptAction.Builder()
+                    .browser(seleniumBrowser)
+                    .script("window.onerror('This went totally wrong!', 'test.js', 1, 1, null)")
+                    .build();
+            action.execute(context);
+            action.execute(context);
+
+            Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 2L);
+        } finally {
+            htmlUnitDriver.quit();
+        }
+    }
+
     @Test(expectedExceptions = ValidationException.class)
     public void testExecuteMissingPageErrorValidationFailed() {
         HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(true);

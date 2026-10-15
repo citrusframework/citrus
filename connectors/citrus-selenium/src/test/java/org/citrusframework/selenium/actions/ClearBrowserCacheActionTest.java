@@ -19,6 +19,7 @@ package org.citrusframework.selenium.actions;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
+import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -72,6 +73,22 @@ public class ClearBrowserCacheActionTest extends AbstractTestNGUnitTest {
         verify(webDriverOptions).deleteAllCookies();
         verify(chromeDriver).executeScript(contains("window.localStorage.clear()"));
         verify(chromeDriver).executeScript(contains("window.sessionStorage.clear()"));
+    }
+
+    @Test
+    public void testExecuteInaccessibleWebStorageIsBestEffort() {
+        ChromeDriver chromeDriver = Mockito.mock(ChromeDriver.class);
+        when(chromeDriver.manage()).thenReturn(webDriverOptions);
+        when(chromeDriver.executeScript(anyString(), any())).thenThrow(new JavascriptException("Storage is not accessible on this page"));
+
+        seleniumBrowser.setWebDriver(chromeDriver);
+
+        ClearBrowserCacheAction action =  new ClearBrowserCacheAction.Builder()
+                .browser(seleniumBrowser)
+                .build();
+        action.execute(context);
+
+        verify(webDriverOptions).deleteAllCookies();
     }
 
     @Test
