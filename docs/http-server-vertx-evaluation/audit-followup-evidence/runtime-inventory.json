@@ -1,0 +1,247 @@
+{
+  "scope": "runtime",
+  "jarCount": 40,
+  "jarBytes": 24697854,
+  "artifacts": [
+    {
+      "artifact": "org.citrusframework:citrus-base:5.1.0-SNAPSHOT",
+      "file": "citrus-base-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-base/5.1.0-SNAPSHOT/citrus-base-5.1.0-SNAPSHOT.jar",
+      "bytes": 519078
+    },
+    {
+      "artifact": "org.citrusframework:citrus-api:5.1.0-SNAPSHOT",
+      "file": "citrus-api-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-api/5.1.0-SNAPSHOT/citrus-api-5.1.0-SNAPSHOT.jar",
+      "bytes": 821483
+    },
+    {
+      "artifact": "jakarta.annotation:jakarta.annotation-api:3.0.0",
+      "file": "jakarta.annotation-api-3.0.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/annotation/jakarta.annotation-api/3.0.0/jakarta.annotation-api-3.0.0.jar",
+      "bytes": 26378
+    },
+    {
+      "artifact": "org.apache.commons:commons-lang3:3.20.0",
+      "file": "commons-lang3-3.20.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/commons/commons-lang3/3.20.0/commons-lang3-3.20.0.jar",
+      "bytes": 713862
+    },
+    {
+      "artifact": "commons-codec:commons-codec:1.22.1",
+      "file": "commons-codec-1.22.1.jar",
+      "path": "/Users/asuruceanu/.m2/repository/commons-codec/commons-codec/1.22.1/commons-codec-1.22.1.jar",
+      "bytes": 422738
+    },
+    {
+      "artifact": "com.github.mifmif:generex:1.0.2",
+      "file": "generex-1.0.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/github/mifmif/generex/1.0.2/generex-1.0.2.jar",
+      "bytes": 14395
+    },
+    {
+      "artifact": "dk.brics.automaton:automaton:1.11-8",
+      "file": "automaton-1.11-8.jar",
+      "path": "/Users/asuruceanu/.m2/repository/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8.jar",
+      "bytes": 176285
+    },
+    {
+      "artifact": "org.springframework:spring-beans:7.0.9",
+      "file": "spring-beans-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-beans/7.0.9/spring-beans-7.0.9.jar",
+      "bytes": 928155
+    },
+    {
+      "artifact": "org.springframework:spring-context:7.0.9",
+      "file": "spring-context-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-context/7.0.9/spring-context-7.0.9.jar",
+      "bytes": 1399435
+    },
+    {
+      "artifact": "tools.jackson.core:jackson-core:3.2.3",
+      "file": "jackson-core-3.2.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/tools/jackson/core/jackson-core/3.2.3/jackson-core-3.2.3.jar",
+      "bytes": 609986
+    },
+    {
+      "artifact": "tools.jackson.core:jackson-databind:3.2.3",
+      "file": "jackson-databind-3.2.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/tools/jackson/core/jackson-databind/3.2.3/jackson-databind-3.2.3.jar",
+      "bytes": 1982578
+    },
+    {
+      "artifact": "com.fasterxml.jackson.core:jackson-annotations:2.22",
+      "file": "jackson-annotations-2.22.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar",
+      "bytes": 84211
+    },
+    {
+      "artifact": "org.springframework:spring-core:7.0.9",
+      "file": "spring-core-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-core/7.0.9/spring-core-7.0.9.jar",
+      "bytes": 2035755
+    },
+    {
+      "artifact": "org.jspecify:jspecify:1.0.0",
+      "file": "jspecify-1.0.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar",
+      "bytes": 3819
+    },
+    {
+      "artifact": "org.springframework:spring-web:7.0.9",
+      "file": "spring-web-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-web/7.0.9/spring-web-7.0.9.jar",
+      "bytes": 2226342
+    },
+    {
+      "artifact": "io.micrometer:micrometer-observation:1.16.7",
+      "file": "micrometer-observation-1.16.7.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/micrometer/micrometer-observation/1.16.7/micrometer-observation-1.16.7.jar",
+      "bytes": 83914
+    },
+    {
+      "artifact": "io.micrometer:micrometer-commons:1.16.7",
+      "file": "micrometer-commons-1.16.7.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/micrometer/micrometer-commons/1.16.7/micrometer-commons-1.16.7.jar",
+      "bytes": 51745
+    },
+    {
+      "artifact": "org.springframework:spring-webmvc:7.0.9",
+      "file": "spring-webmvc-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-webmvc/7.0.9/spring-webmvc-7.0.9.jar",
+      "bytes": 1107415
+    },
+    {
+      "artifact": "org.springframework:spring-aop:7.0.9",
+      "file": "spring-aop-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-aop/7.0.9/spring-aop-7.0.9.jar",
+      "bytes": 426204
+    },
+    {
+      "artifact": "org.springframework:spring-expression:7.0.9",
+      "file": "spring-expression-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-expression/7.0.9/spring-expression-7.0.9.jar",
+      "bytes": 327140
+    },
+    {
+      "artifact": "org.springframework.integration:spring-integration-http:7.1.0",
+      "file": "spring-integration-http-7.1.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/integration/spring-integration-http/7.1.0/spring-integration-http-7.1.0.jar",
+      "bytes": 144740
+    },
+    {
+      "artifact": "org.springframework.integration:spring-integration-core:7.1.0",
+      "file": "spring-integration-core-7.1.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/integration/spring-integration-core/7.1.0/spring-integration-core-7.1.0.jar",
+      "bytes": 1749036
+    },
+    {
+      "artifact": "org.springframework:spring-messaging:7.0.9",
+      "file": "spring-messaging-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-messaging/7.0.9/spring-messaging-7.0.9.jar",
+      "bytes": 613714
+    },
+    {
+      "artifact": "org.springframework:spring-tx:7.0.9",
+      "file": "spring-tx-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-tx/7.0.9/spring-tx-7.0.9.jar",
+      "bytes": 292080
+    },
+    {
+      "artifact": "io.projectreactor:reactor-core:3.8.6",
+      "file": "reactor-core-3.8.6.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/projectreactor/reactor-core/3.8.6/reactor-core-3.8.6.jar",
+      "bytes": 1938752
+    },
+    {
+      "artifact": "org.reactivestreams:reactive-streams:1.0.4",
+      "file": "reactive-streams-1.0.4.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/reactivestreams/reactive-streams/1.0.4/reactive-streams-1.0.4.jar",
+      "bytes": 11640
+    },
+    {
+      "artifact": "org.apache.httpcomponents.client5:httpclient5:5.6.3",
+      "file": "httpclient5-5.6.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/httpcomponents/client5/httpclient5/5.6.3/httpclient5-5.6.3.jar",
+      "bytes": 1056844
+    },
+    {
+      "artifact": "org.apache.httpcomponents.core5:httpcore5:5.4.3",
+      "file": "httpcore5-5.4.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/httpcomponents/core5/httpcore5/5.4.3/httpcore5-5.4.3.jar",
+      "bytes": 955121
+    },
+    {
+      "artifact": "org.apache.httpcomponents.core5:httpcore5-h2:5.4.3",
+      "file": "httpcore5-h2-5.4.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/httpcomponents/core5/httpcore5-h2/5.4.3/httpcore5-h2-5.4.3.jar",
+      "bytes": 263675
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-server:12.1.11",
+      "file": "jetty-server-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-server/12.1.11/jetty-server-12.1.11.jar",
+      "bytes": 705283
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-http:12.1.11",
+      "file": "jetty-http-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-http/12.1.11/jetty-http-12.1.11.jar",
+      "bytes": 480143
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-util:12.1.11",
+      "file": "jetty-util-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-util/12.1.11/jetty-util-12.1.11.jar",
+      "bytes": 731248
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-io:12.1.11",
+      "file": "jetty-io-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-io/12.1.11/jetty-io-12.1.11.jar",
+      "bytes": 386264
+    },
+    {
+      "artifact": "org.eclipse.jetty.ee11:jetty-ee11-servlet:12.1.11",
+      "file": "jetty-ee11-servlet-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/ee11/jetty-ee11-servlet/12.1.11/jetty-ee11-servlet-12.1.11.jar",
+      "bytes": 456213
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-security:12.1.11",
+      "file": "jetty-security-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-security/12.1.11/jetty-security-12.1.11.jar",
+      "bytes": 166552
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-session:12.1.11",
+      "file": "jetty-session-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-session/12.1.11/jetty-session-12.1.11.jar",
+      "bytes": 118626
+    },
+    {
+      "artifact": "jakarta.servlet:jakarta.servlet-api:6.1.0",
+      "file": "jakarta.servlet-api-6.1.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/servlet/jakarta.servlet-api/6.1.0/jakarta.servlet-api-6.1.0.jar",
+      "bytes": 398424
+    },
+    {
+      "artifact": "jakarta.xml.bind:jakarta.xml.bind-api:4.0.5",
+      "file": "jakarta.xml.bind-api-4.0.5.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.5/jakarta.xml.bind-api-4.0.5.jar",
+      "bytes": 131219
+    },
+    {
+      "artifact": "jakarta.activation:jakarta.activation-api:2.1.4",
+      "file": "jakarta.activation-api-2.1.4.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.4/jakarta.activation-api-2.1.4.jar",
+      "bytes": 67380
+    },
+    {
+      "artifact": "org.slf4j:slf4j-api:2.0.18",
+      "file": "slf4j-api-2.0.18.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/slf4j/slf4j-api/2.0.18/slf4j-api-2.0.18.jar",
+      "bytes": 69982
+    }
+  ]
+}

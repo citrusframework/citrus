@@ -1,0 +1,109 @@
+[
+  {
+    "module": "endpoints/citrus-http",
+    "surefire": {
+      "tests": 281,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "javaHomes": [
+        "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+      ],
+      "source": "final-clean-http-reports/surefire/TEST-TestSuite.xml"
+    },
+    "failsafe": {
+      "tests": 79,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "javaHomes": [
+        "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+      ],
+      "source": "final-clean-http-reports/failsafe/TEST-TestSuite.xml"
+    }
+  },
+  {
+    "module": "endpoints/citrus-websocket",
+    "surefire": {
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "javaHomes": [
+        "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+      ]
+    },
+    "failsafe": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "javaHomes": [
+        "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+      ]
+    }
+  },
+  {
+    "module": "endpoints/citrus-ws",
+    "surefire": {
+      "tests": 206,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "javaHomes": [
+        "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+      ]
+    },
+    "failsafe": {
+      "tests": 35,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "javaHomes": [
+        "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+      ]
+    }
+  },
+  {
+    "module": "connectors/citrus-openapi",
+    "surefire": {
+      "tests": 351,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "javaHomes": [
+        "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+      ]
+    },
+    "failsafe": {
+      "tests": 60,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "javaHomes": [
+        "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+      ]
+    }
+  },
+  {
+    "module": "tools/cucumber-steps/citrus-cucumber-http",
+    "surefire": {
+      "tests": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "javaHomes": []
+    },
+    "failsafe": {
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "javaHomes": [
+        "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+      ],
+      "source": "regression-resumed.log",
+      "note": "JUnit executed 23 scenarios and 259 steps successfully. A subsequent TestNG provider pass ran zero tests and overwrote the XML; the Maven and Cucumber console summaries retain the executed result."
+    }
+  }
+]
