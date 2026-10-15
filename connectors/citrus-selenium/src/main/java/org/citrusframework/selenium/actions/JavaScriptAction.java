@@ -38,12 +38,35 @@ import org.slf4j.LoggerFactory;
 /**
  * Executes javascript code on current page and validates errors.
  *
+ * <p>Before the script gets executed an error collector is installed on the page that records
+ * JavaScript errors in the
+ * {@code window._selenide_jsErrors} list. This way errors raised by page scripts are available
+ * for validation with the expected error messages.</p>
+ *
  * @since 2.7
  */
 public class JavaScriptAction extends AbstractSeleniumAction {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(JavaScriptAction.class);
+
+    /** Installs the JavaScript error collector on the current page */
+    static final String ERROR_COLLECTOR_SCRIPT = """
+            if (!Array.isArray(window._selenide_jsErrors)) {
+                window._selenide_jsErrors = [];
+            }
+            window.addEventListener('error', function(event) {
+                window._selenide_jsErrors.push(event.message || String(event));
+            });
+            var previousOnError = window.onerror;
+            window.onerror = function(message) {
+                window._selenide_jsErrors.push(String(message));
+                if (typeof previousOnError === 'function') {
+                    return previousOnError.apply(this, arguments);
+                }
+                return false;
+            };
+            """;
 
     /** JavaScript code */
     private final String script;
@@ -70,6 +93,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     protected void execute(SeleniumBrowser browser, TestContext context) {
         try {
             if (browser.getWebDriver() instanceof JavascriptExecutor jsEngine) {
+                jsEngine.executeScript(ERROR_COLLECTOR_SCRIPT, new Object[]{});
                 jsEngine.executeScript(context.replaceDynamicContentInString(script), context.resolveDynamicValuesInArray(arguments.toArray()));
 
                 List<String> errors = new ArrayList<>();
