@@ -21,6 +21,7 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Coordinates;
 import org.openqa.selenium.remote.RemoteWebElement;
@@ -69,7 +70,7 @@ public class HoverActionTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find element 'By.id: myButton' on page")
     public void testElementNotFound() {
-        when(webDriver.findElement(any(By.class))).thenReturn(null);
+        when(webDriver.findElement(any(By.class))).thenThrow(new NoSuchElementException("no such element: Unable to locate element"));
 
         HoverAction action =  new HoverAction.Builder()
                 .browser(seleniumBrowser)

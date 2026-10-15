@@ -22,6 +22,7 @@ import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -178,15 +179,22 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         };
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find element 'By.id: myButton' on page")
+    @Test
     public void testElementNotFound() {
-        when(webDriver.findElement(any(By.class))).thenReturn(null);
+        when(webDriver.findElement(any(By.class))).thenThrow(new NoSuchElementException("no such element: Unable to locate element"));
 
         FindElementAction action =  new FindElementAction.Builder()
                 .browser(seleniumBrowser)
                 .element("id", "myButton")
                 .build();
-        action.execute(context);
+
+        try {
+            action.execute(context);
+            Assert.fail("Missing CitrusRuntimeException on missing element");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertEquals(e.getMessage(), "Failed to find element 'By.id: myButton' on page");
+            Assert.assertTrue(e.getCause() instanceof NoSuchElementException, e.getCause().getClass().getName());
+        }
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unknown selector type: unsupported")

@@ -29,6 +29,7 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -83,10 +84,12 @@ public class FindElementAction extends AbstractSeleniumAction {
     @Override
     protected final void execute(SeleniumBrowser browser, TestContext context) {
         By findBy = createBy(context);
-        WebElement element = browser.getWebDriver().findElement(findBy);
 
-        if (element == null) {
-            throw new CitrusRuntimeException(String.format("Failed to find element '%s' on page", findBy));
+        WebElement element;
+        try {
+            element = browser.getWebDriver().findElement(findBy);
+        } catch (NoSuchElementException e) {
+            throw new CitrusRuntimeException(String.format("Failed to find element '%s' on page", findBy), e);
         }
 
         validate(element, browser, context);
