@@ -23,13 +23,16 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -66,6 +69,22 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testExecuteInstallsErrorCollector() {
+        when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
+
+        JavaScriptAction action =  new JavaScriptAction.Builder()
+                .browser(seleniumBrowser)
+                .script("alert('Hello')")
+                .build();
+        action.execute(context);
+
+        InOrder inOrder = inOrder(webDriver);
+        inOrder.verify(webDriver).executeScript(eq(JavaScriptAction.ERROR_COLLECTOR_SCRIPT));
+        inOrder.verify(webDriver).executeScript(eq("alert('Hello')"));
+        inOrder.verify(webDriver).executeScript(eq("return window._selenide_jsErrors"));
+    }
+
+    @Test
     public void testExecuteVariableSupport() {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
 
@@ -98,6 +117,44 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 1L);
 
         verify(webDriver).executeScript(eq("alert('Hello')"));
+    }
+
+    @Test
+    public void testExecuteCollectsPageErrors() {
+        HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(true);
+        try {
+            htmlUnitDriver.get("about:blank");
+            seleniumBrowser.setWebDriver(htmlUnitDriver);
+
+            JavaScriptAction action =  new JavaScriptAction.Builder()
+                    .browser(seleniumBrowser)
+                    .script("window.onerror('This went totally wrong!', 'test.js', 1, 1, null)")
+                    .error("This went totally wrong!")
+                    .build();
+            action.execute(context);
+
+            Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 1L);
+        } finally {
+            htmlUnitDriver.quit();
+        }
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testExecuteMissingPageErrorValidationFailed() {
+        HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(true);
+        try {
+            htmlUnitDriver.get("about:blank");
+            seleniumBrowser.setWebDriver(htmlUnitDriver);
+
+            JavaScriptAction action =  new JavaScriptAction.Builder()
+                    .browser(seleniumBrowser)
+                    .script("window.onerror('This went totally wrong!', 'test.js', 1, 1, null)")
+                    .error("A completely different error")
+                    .build();
+            action.execute(context);
+        } finally {
+            htmlUnitDriver.quit();
+        }
     }
 
     @Test(expectedExceptions = ValidationException.class)
