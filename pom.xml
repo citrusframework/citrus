@@ -241,6 +241,7 @@
     <jakarta.xml.soap-api.version>3.0.2</jakarta.xml.soap-api.version>
     <jansi.version>2.4.3</jansi.version>
     <javapoet.version>1.13.0</javapoet.version>
+    <javassist.version>3.33.0-GA</javassist.version>
     <jaxb.version>4.0.9</jaxb.version>
     <jetty.version>12.1.14</jetty.version>
     <jetty.websocket-api.version>2.0.0</jetty.websocket-api.version>
@@ -954,6 +955,11 @@
         <groupId>io.vertx</groupId>
         <artifactId>vertx-web-templ-thymeleaf</artifactId>
         <version>${vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>${javassist.version}</version>
       </dependency>
 
       <!-- Citrus camel dependencies -->
