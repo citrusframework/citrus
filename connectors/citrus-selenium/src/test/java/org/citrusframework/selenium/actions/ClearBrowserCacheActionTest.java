@@ -20,9 +20,13 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.*;
 
 /**
@@ -36,7 +40,7 @@ public class ClearBrowserCacheActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(webDriver);
+        reset(webDriver, webDriverOptions);
 
         seleniumBrowser.setWebDriver(webDriver);
 
@@ -51,5 +55,43 @@ public class ClearBrowserCacheActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         verify(webDriverOptions).deleteAllCookies();
+    }
+
+    @Test
+    public void testExecuteClearsWebStorage() {
+        ChromeDriver chromeDriver = Mockito.mock(ChromeDriver.class);
+        when(chromeDriver.manage()).thenReturn(webDriverOptions);
+
+        seleniumBrowser.setWebDriver(chromeDriver);
+
+        ClearBrowserCacheAction action =  new ClearBrowserCacheAction.Builder()
+                .browser(seleniumBrowser)
+                .build();
+        action.execute(context);
+
+        verify(webDriverOptions).deleteAllCookies();
+        verify(chromeDriver).executeScript(contains("window.localStorage.clear()"));
+        verify(chromeDriver).executeScript(contains("window.sessionStorage.clear()"));
+    }
+
+    @Test
+    public void testExecuteClearsWebStorageWithRealDriver() {
+        HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(true);
+        try {
+            htmlUnitDriver.get("about:blank");
+            htmlUnitDriver.executeScript("window.localStorage.setItem('key', 'value'); window.sessionStorage.setItem('key', 'value');", new Object[]{});
+
+            seleniumBrowser.setWebDriver(htmlUnitDriver);
+
+            ClearBrowserCacheAction action =  new ClearBrowserCacheAction.Builder()
+                    .browser(seleniumBrowser)
+                    .build();
+            action.execute(context);
+
+            Assert.assertNull(htmlUnitDriver.executeScript("return window.localStorage.getItem('key');", new Object[]{}));
+            Assert.assertNull(htmlUnitDriver.executeScript("return window.sessionStorage.getItem('key');", new Object[]{}));
+        } finally {
+            htmlUnitDriver.quit();
+        }
     }
 }
