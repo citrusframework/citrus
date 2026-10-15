@@ -56,9 +56,6 @@ public class JUnitCitrusTest {
     @CitrusResource
     TestCaseRunner runner;
 
-    @CitrusResource
-    TestContext context;
-
     @CitrusTestFactory
     public Stream<DynamicTest> execute() {
         return sources.entrySet().stream()
@@ -80,6 +77,7 @@ public class JUnitCitrusTest {
                         sourceAwareTestLoader.setSource(entry.getValue());
                     }
 
+                    TestContext context = citrus.getCitrusContext().createTestContext();
                     CitrusAnnotations.injectAll(testLoader, citrus, context);
                     CitrusAnnotations.injectTestRunner(testLoader, runner);
 
