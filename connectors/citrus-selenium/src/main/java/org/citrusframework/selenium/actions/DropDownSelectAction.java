@@ -38,6 +38,9 @@ import org.openqa.selenium.support.ui.Select;
  */
 public class DropDownSelectAction extends FindElementAction {
 
+    /** Modifier key pressed while adding options to an existing selection */
+    private static final Keys MULTI_SELECT_KEY = multiSelectKey(System.getProperty("os.name"));
+
     /** Option to select */
     private final String option;
 
@@ -72,7 +75,7 @@ public class DropDownSelectAction extends FindElementAction {
             } else {
                 List<WebElement> optionElements = dropdown.getOptions();
                 Actions builder = new Actions(browser.getWebDriver());
-                builder.keyDown(Keys.CONTROL);
+                builder.keyDown(MULTI_SELECT_KEY);
                 for (String optionValue : options) {
                     for (WebElement option : optionElements) {
                         if (!option.isSelected() && isSameValue(option, context.replaceDynamicContentInString(optionValue))) {
@@ -80,7 +83,7 @@ public class DropDownSelectAction extends FindElementAction {
                         }
                     }
                 }
-                builder.keyUp(Keys.CONTROL);
+                builder.keyUp(MULTI_SELECT_KEY);
                 Action multiple = builder.build();
                 multiple.perform();
             }
@@ -93,6 +96,17 @@ public class DropDownSelectAction extends FindElementAction {
         } else {
             return value.equals(option.getAttribute("value"));
         }
+    }
+
+    /**
+     * Gets the modifier key used to add options to an existing selection. Mac OS uses the
+     * command key because the control key does not extend a selection there, all other
+     * operating systems use the control key.
+     * @param osName
+     * @return
+     */
+    static Keys multiSelectKey(String osName) {
+        return osName != null && osName.startsWith("Mac") ? Keys.COMMAND : Keys.CONTROL;
     }
 
     /**
