@@ -69,7 +69,7 @@ public class ClickActionTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find element 'By.id: myButton' on page")
     public void testElementNotFound() {
-        when(webDriver.findElement(any(By.class))).thenReturn(null);
+        when(webDriver.findElement(any(By.class))).thenThrow(new NoSuchElementException("no such element: Unable to locate element"));
 
         ClickAction action =  new ClickAction.Builder()
                 .browser(seleniumBrowser)
