@@ -408,9 +408,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             }
         }
 
-        /* test context may also have some actions to run finally */
-        for (final TestActionBuilder<?> actionBuilder : context.getFinalActions()) {
-            TestAction action = actionBuilder.build();
+        /* test context may also have some actions to run finally, they belong to this test only,
+           so consume them as the context may be shared with other tests (e.g. dynamic tests of a test factory) */
+        List<TestActionBuilder<?>> contextFinalActions = context.getFinalActions();
+        while (!contextFinalActions.isEmpty()) {
+            TestAction action = contextFinalActions.remove(0).build();
             try {
                 if (!action.isDisabled(context)) {
                     context.getTestActionListeners().onTestActionStart(this, action);

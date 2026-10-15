@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import org.citrusframework.CitrusSettings;
@@ -59,6 +60,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertThrows;
+import static org.testng.Assert.assertTrue;
 
 public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSupport {
 
@@ -389,6 +391,48 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         fixture.finish(context);
 
         verifyDurationHasBeenMeasured(fixture.getTestResult());
+    }
+
+    @Test
+    public void testContextFinalActionsRunOnceWhenContextIsShared() {
+        AtomicInteger finalActionCount = new AtomicInteger();
+
+        fixture.setName("FirstTestCase");
+        fixture.addTestAction(action(ctx -> ctx.doFinally(action(c -> finalActionCount.incrementAndGet()))).build());
+
+        fixture.execute(context);
+        fixture.finish(context);
+
+        assertEquals(finalActionCount.get(), 1);
+        assertTrue(context.getFinalActions().isEmpty());
+
+        // next test runs with the same test context, e.g. as dynamic test of a test factory
+        DefaultTestCase nextTestCase = new DefaultTestCase();
+        nextTestCase.setName("NextTestCase");
+        nextTestCase.addTestAction(new EchoAction.Builder().build());
+
+        nextTestCase.execute(context);
+        nextTestCase.finish(context);
+
+        assertEquals(finalActionCount.get(), 1);
+        assertTrue(nextTestCase.getTestResult().isSuccess());
+    }
+
+    @Test
+    public void testContextFinalActionsRegisteredByFinalAction() {
+        AtomicInteger finalActionCount = new AtomicInteger();
+
+        fixture.setName("MyTestCase");
+        fixture.addTestAction(action(ctx -> ctx.doFinally(action(c -> {
+            finalActionCount.incrementAndGet();
+            c.doFinally(action(nested -> finalActionCount.incrementAndGet()));
+        }))).build());
+
+        fixture.execute(context);
+        fixture.finish(context);
+
+        assertEquals(finalActionCount.get(), 2);
+        assertTrue(context.getFinalActions().isEmpty());
     }
 
     @Test
