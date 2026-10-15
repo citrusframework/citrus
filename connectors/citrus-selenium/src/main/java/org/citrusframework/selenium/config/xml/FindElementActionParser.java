@@ -42,7 +42,8 @@ public class FindElementActionParser extends AbstractBrowserActionParser {
     protected void parseElement(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
         Element webElement = DomUtils.getChildElementByTagName(element, "element");
         if (webElement != null) {
-            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("tag-name"), "tagName");
+            /* Expected tag decoupled from the tag-name element selector */
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("validate-tag-name"), "tagName");
             BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("text"), "text");
             BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("displayed"), "displayed");
             BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("enabled"), "enabled");
