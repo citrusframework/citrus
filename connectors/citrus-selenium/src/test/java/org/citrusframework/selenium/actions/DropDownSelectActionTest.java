@@ -22,9 +22,11 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.Browser;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -69,6 +71,15 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         verify(option).click();
+    }
+
+    @Test
+    public void testMultiSelectKeyPerOperatingSystem() {
+        Assert.assertEquals(DropDownSelectAction.multiSelectKey("Mac OS X"), Keys.COMMAND);
+        Assert.assertEquals(DropDownSelectAction.multiSelectKey("Mac"), Keys.COMMAND);
+        Assert.assertEquals(DropDownSelectAction.multiSelectKey("Windows 11"), Keys.CONTROL);
+        Assert.assertEquals(DropDownSelectAction.multiSelectKey("Linux"), Keys.CONTROL);
+        Assert.assertEquals(DropDownSelectAction.multiSelectKey(null), Keys.CONTROL);
     }
 
     @Test
