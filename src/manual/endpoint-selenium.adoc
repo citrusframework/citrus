@@ -364,7 +364,7 @@ selenium:screenshot:: Makes screenshot of current page
 selenium:store-file:: Store file to temporary browser directory
 selenium:get-stored-file:: Gets stored file from temporary browser directory
 selenium:javascript:: Execute Javascript code in browser
-selenium:clear-cache:: Clear browser cache and all cookies
+selenium:clear-cache:: Clears cookies and web storage in current browser
 selenium:stop:: Stops the browser instance
 
 Now let's have a closer look at the different Selenium test actions supported in Citrus.
@@ -460,6 +460,10 @@ xpath:: finds element based on XPath evaluation in the DOM
 
 The find element action will automatically fail in case there is no such element on the current page. In case the element is found you can add additional attributes and properties
 for further element validation:
+
+The element selector and the expected tag name are independent settings. The selector (one of _id_, _name_, _tag-name_, _class-name_, _link-text_ or _xpath_) decides which element
+is looked up on the page, while the _tagName_ / _validate-tag-name_ setting asserts the tag name of the element that has been found. In Java you use the `tagName` method on the
+find builder, in the Spring XML configuration you set the `validate-tag-name` attribute on the `selenium:element` (for example `<selenium:element id="ok-button" validate-tag-name="button"/>`).
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -807,6 +811,9 @@ actions:
 
 The actions above select dropdown options and set user input on text fields and checkboxes. As usual the form elements are selected by some properties such as
 ids, names or xpath expressions.
+
+When selecting multiple dropdown options Citrus holds the platform specific modifier key: *Command* on macOS and *Control* on all other operating systems. So multiple selection behaves
+the same way on every platform.
 
 [[form-fill-actions]]
 == Fill form
@@ -1631,10 +1638,85 @@ temporary storage is not capable of subdirectories all files are stored directly
 In case the stored file is not found by that name the test action fails with respective errors. On the other hand when the file is found in temporary storage
 Citrus will automatically create a new test variable *selenium_download_file* which contains the file name as value.
 
+[[javascript]]
+== Javascript
+
+The javascript action executes a given piece of Javascript code in the current browser. Optionally the action validates that the browser reported expected Javascript errors
+while the script was running.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().javascript("alert('This is awesome!')")
+        .errors("Something went wrong");
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <javascript>
+          <script>alert('This is awesome!')</script>
+          <errors>
+            <error>Something went wrong</error>
+          </errors>
+        </javascript>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      javaScript:
+        script: "alert('This is awesome!')"
+        errors:
+          - Something went wrong
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/selenium/testcase
+          http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+  <testcase name="SeleniumTest">
+    <actions>
+        <selenium:javascript>
+          <selenium:script>alert('This is awesome!')</selenium:script>
+          <selenium:errors>
+            <selenium:error>Something went wrong</selenium:error>
+          </selenium:errors>
+        </selenium:javascript>
+    </actions>
+  </testcase>
+</spring:beans>
+----
+
+Before executing the script Citrus installs a small error collector in the current page. Any Javascript error raised while the script is running is collected and exposed to the test as the
+*selenium_jsErrors* test variable. When the action declares expected errors with the _errors_ setting the test automatically fails in case one of these expected errors has not been raised
+by the browser.
+
 [[clear-browser-cache]]
 == Clear browser cache
 
-When clearing the browser cache all cookies and temporary files will be deleted.
+Clearing the browser cache deletes all cookies of the current session and clears the browser's local and session web storage for the current origin. Please note that the browser
+HTTP cache cannot be cleared through the WebDriver API, so previously cached responses may still be served.
 
 .Java
 [source,java,indent=0,role="primary"]
