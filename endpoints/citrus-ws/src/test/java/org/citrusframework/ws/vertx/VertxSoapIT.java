@@ -32,7 +32,7 @@ import org.citrusframework.http.vertx.VertxHttpServer;
 import org.citrusframework.http.vertx.VertxPrototypeAdapters;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.TestNGCitrusSupport;
+import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.ws.client.WebServiceClient;
 import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
 import org.citrusframework.ws.message.SoapAttachment;
@@ -52,7 +52,7 @@ import org.testng.annotations.Test;
  * adapter and serializes the reply. Explicitly rejected inputs never reach the adapter.
  */
 @Test
-public class VertxSoapIT extends TestNGCitrusSupport implements TestActionSupport {
+public class VertxSoapIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     private static final String REQUEST = "<greet xmlns=\"urn:test\">hello</greet>";
     private static final String REPLY = "<greetResponse xmlns=\"urn:test\">world</greetResponse>";
