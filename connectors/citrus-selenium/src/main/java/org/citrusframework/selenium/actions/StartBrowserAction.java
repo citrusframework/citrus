@@ -60,9 +60,9 @@ public class StartBrowserAction extends AbstractSeleniumAction {
         logger.info("Opening browser of type {}", browser.getEndpointConfiguration().getBrowserType());
         browser.start();
 
-        if (StringUtils.hasText(getBrowser().getEndpointConfiguration().getStartPageUrl())) {
+        if (StringUtils.hasText(browser.getEndpointConfiguration().getStartPageUrl())) {
             NavigateAction openStartPage = new NavigateAction.Builder()
-                    .page(getBrowser().getEndpointConfiguration().getStartPageUrl())
+                    .page(browser.getEndpointConfiguration().getStartPageUrl())
                     .build();
             openStartPage.execute(browser, context);
         }

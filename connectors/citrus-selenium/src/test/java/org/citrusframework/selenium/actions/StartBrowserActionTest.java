@@ -89,6 +89,29 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testStartWithStartPageFromResolvedBrowser() {
+        when(seleniumBrowser.isStarted()).thenReturn(false);
+        when(seleniumBrowserConfiguration.getStartPageUrl()).thenReturn("http://localhost:8080");
+
+        context.setVariable(SeleniumHeaders.SELENIUM_BROWSER, "ChromeBrowser");
+        context.getReferenceResolver().bind("ChromeBrowser", seleniumBrowser);
+
+        doAnswer((Answer<Object>) invocation -> {
+            Assert.assertEquals(invocation.getArguments()[0].toString(), "http://localhost:8080");
+            return null;
+        }).when(navigation).to(any(URL.class));
+
+        StartBrowserAction action =  new StartBrowserAction.Builder()
+                .build();
+        action.execute(context);
+
+        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
+
+        verify(seleniumBrowser).start();
+        verify(navigation).to(any(URL.class));
+    }
+
+    @Test
     public void testStartAlreadyStarted() {
         when(seleniumBrowser.isStarted()).thenReturn(true);
 
