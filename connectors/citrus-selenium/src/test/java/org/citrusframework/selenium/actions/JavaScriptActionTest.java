@@ -128,7 +128,9 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
 
             JavaScriptAction action =  new JavaScriptAction.Builder()
                     .browser(seleniumBrowser)
-                    .script("window.onerror('This went totally wrong!', 'test.js', 1, 1, null)")
+                    // NB: HtmlUnit ignores the ErrorEvent init dict, so build the error event the old way.
+                    // Real browsers also accept: window.dispatchEvent(new ErrorEvent('error', {message: '...'}))
+                    .script("var e = document.createEvent('Event'); e.initEvent('error', false, false); e.message = 'This went totally wrong!'; window.dispatchEvent(e);")
                     .error("This went totally wrong!")
                     .build();
             action.execute(context);
@@ -139,7 +141,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
         }
     }
 
-        @Test
+    @Test
     public void testExecuteInstallsErrorCollectorOnlyOnce() {
         HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(true);
         try {
@@ -148,7 +150,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
 
             JavaScriptAction action =  new JavaScriptAction.Builder()
                     .browser(seleniumBrowser)
-                    .script("window.onerror('This went totally wrong!', 'test.js', 1, 1, null)")
+                    .script("var e = document.createEvent('Event'); e.initEvent('error', false, false); e.message = 'This went totally wrong!'; window.dispatchEvent(e);")
                     .build();
             action.execute(context);
             action.execute(context);
@@ -168,7 +170,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
 
             JavaScriptAction action =  new JavaScriptAction.Builder()
                     .browser(seleniumBrowser)
-                    .script("window.onerror('This went totally wrong!', 'test.js', 1, 1, null)")
+                    .script("var e = document.createEvent('Event'); e.initEvent('error', false, false); e.message = 'This went totally wrong!'; window.dispatchEvent(e);")
                     .error("A completely different error")
                     .build();
             action.execute(context);

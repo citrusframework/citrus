@@ -60,14 +60,6 @@ public class JavaScriptAction extends AbstractSeleniumAction {
                 window.addEventListener('error', function(event) {
                     window._selenide_jsErrors.push(event.message || String(event));
                 });
-                var previousOnError = window.onerror;
-                window.onerror = function(message) {
-                    window._selenide_jsErrors.push(String(message));
-                    if (typeof previousOnError === 'function') {
-                        return previousOnError.apply(this, arguments);
-                    }
-                    return false;
-                };
             }
             """;
 
