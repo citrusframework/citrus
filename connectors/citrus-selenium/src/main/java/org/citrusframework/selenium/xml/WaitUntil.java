@@ -20,8 +20,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
+import org.citrusframework.api.actions.selenium.SeleniumElementActionBuilderBase;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
-import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.actions.WaitUntilAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 
@@ -57,7 +57,7 @@ public class WaitUntil extends AbstractSeleniumAction.Builder<WaitUntilAction, W
     }
 
     @Override
-    public FindElementAction.ElementActionBuilder<?, ?> getElementBuilder() {
+    public SeleniumElementActionBuilderBase<?, ?> getElementBuilder() {
         return delegate;
     }
 
