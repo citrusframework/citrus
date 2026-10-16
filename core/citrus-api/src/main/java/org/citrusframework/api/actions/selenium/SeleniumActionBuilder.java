@@ -150,6 +150,16 @@ public interface SeleniumActionBuilder<T extends TestAction, B extends TestActio
     SeleniumHoverActionBuilder<?, ?> hover();
 
     /**
+     * Double click element.
+     */
+    SeleniumDoubleClickActionBuilder<?, ?> doubleClick();
+
+    /**
+     * Right click element.
+     */
+    SeleniumRightClickActionBuilder<?, ?> rightClick();
+
+    /**
      * Clear browser cache.
      */
     SeleniumClearBrowserCacheActionBuilder<?, ?> clearCache();
