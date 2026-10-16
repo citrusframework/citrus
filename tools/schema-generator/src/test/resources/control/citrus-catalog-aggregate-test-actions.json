@@ -17567,6 +17567,196 @@
       },
       "additionalProperties": false    }
   },
+  "selenium-doubleClick": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "selenium-doubleClick",
+    "group": "selenium",
+    "module": "citrus-selenium",
+    "title": "DoubleClick",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "className": {
+              "type": "string",
+              "title": "ClassName"
+            },
+            "cssSelector": {
+              "type": "string",
+              "title": "CssSelector"
+            },
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "linkText": {
+              "type": "string",
+              "title": "LinkText"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "partialLinkText": {
+              "type": "string",
+              "title": "PartialLinkText"
+            },
+            "property": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "title": "Name"
+                },
+                "value": {
+                  "type": "string",
+                  "title": "Value"
+                }
+              },
+              "additionalProperties": false,
+              "title": "Property"
+            },
+            "tagName": {
+              "type": "string",
+              "title": "TagName"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "selenium-dragAndDrop": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "selenium-dragAndDrop",
+    "group": "selenium",
+    "module": "citrus-selenium",
+    "title": "DragAndDrop",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "className": {
+              "type": "string",
+              "title": "ClassName"
+            },
+            "cssSelector": {
+              "type": "string",
+              "title": "CssSelector"
+            },
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "linkText": {
+              "type": "string",
+              "title": "LinkText"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "partialLinkText": {
+              "type": "string",
+              "title": "PartialLinkText"
+            },
+            "property": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "title": "Name"
+                },
+                "value": {
+                  "type": "string",
+                  "title": "Value"
+                }
+              },
+              "additionalProperties": false,
+              "title": "Property"
+            },
+            "tagName": {
+              "type": "string",
+              "title": "TagName"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "target": {
+          "type": "object",
+          "properties": {
+            "className": {
+              "type": "string",
+              "title": "ClassName"
+            },
+            "cssSelector": {
+              "type": "string",
+              "title": "CssSelector"
+            },
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "linkText": {
+              "type": "string",
+              "title": "LinkText"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "partialLinkText": {
+              "type": "string",
+              "title": "PartialLinkText"
+            },
+            "property": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "title": "Name"
+                },
+                "value": {
+                  "type": "string",
+                  "title": "Value"
+                }
+              },
+              "additionalProperties": false,
+              "title": "Property"
+            },
+            "tagName": {
+              "type": "string",
+              "title": "TagName"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Target"
+        }
+      },
+      "additionalProperties": false    }
+  },
   "selenium-dropdownSelect": {
     "kind": "testAction",
     "version": "${citrus.version}",
@@ -17578,6 +17768,22 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "properties": {
+        "by": {
+          "type": "string",
+          "title": "By"
+        },
+        "deselectAll": {
+          "type": "boolean",
+          "title": "DeselectAll"
+        },
+        "deselectOptions": {
+          "title": "DeselectOptions",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "DeselectOptions"
+          }
+        },
         "element": {
           "type": "object",
           "properties": {
@@ -18051,6 +18257,146 @@
       },
       "additionalProperties": false    }
   },
+  "selenium-press": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "selenium-press",
+    "group": "selenium",
+    "module": "citrus-selenium",
+    "title": "Press",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "className": {
+              "type": "string",
+              "title": "ClassName"
+            },
+            "cssSelector": {
+              "type": "string",
+              "title": "CssSelector"
+            },
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "linkText": {
+              "type": "string",
+              "title": "LinkText"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "partialLinkText": {
+              "type": "string",
+              "title": "PartialLinkText"
+            },
+            "property": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "title": "Name"
+                },
+                "value": {
+                  "type": "string",
+                  "title": "Value"
+                }
+              },
+              "additionalProperties": false,
+              "title": "Property"
+            },
+            "tagName": {
+              "type": "string",
+              "title": "TagName"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "keys": {
+          "type": "string",
+          "title": "Keys"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "selenium-rightClick": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "selenium-rightClick",
+    "group": "selenium",
+    "module": "citrus-selenium",
+    "title": "RightClick",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "className": {
+              "type": "string",
+              "title": "ClassName"
+            },
+            "cssSelector": {
+              "type": "string",
+              "title": "CssSelector"
+            },
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "linkText": {
+              "type": "string",
+              "title": "LinkText"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "partialLinkText": {
+              "type": "string",
+              "title": "PartialLinkText"
+            },
+            "property": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "title": "Name"
+                },
+                "value": {
+                  "type": "string",
+                  "title": "Value"
+                }
+              },
+              "additionalProperties": false,
+              "title": "Property"
+            },
+            "tagName": {
+              "type": "string",
+              "title": "TagName"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        }
+      },
+      "additionalProperties": false    }
+  },
   "selenium-screenshot": {
     "kind": "testAction",
     "version": "${citrus.version}",
@@ -18291,6 +18637,10 @@
           },
           "additionalProperties": false,
           "title": "Element"
+        },
+        "expected": {
+          "type": "string",
+          "title": "Expected"
         },
         "timeout": {
           "type": "integer",
