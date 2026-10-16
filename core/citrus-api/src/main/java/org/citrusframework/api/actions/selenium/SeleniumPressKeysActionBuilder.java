@@ -28,6 +28,7 @@ public interface SeleniumPressKeysActionBuilder<T extends TestAction, B extends 
 
     /**
      * Sets the keys to press (e.g. "ENTER" or "CONTROL+A").
+     * Note: "+" separates key combinations, so a literal "+" key cannot be expressed.
      */
     B keys(String keys);
 }

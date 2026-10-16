@@ -109,4 +109,14 @@ public class DragAndDropActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,
+            expectedExceptionsMessageRegExp = "Invalid element identifier object, expected By object but got null")
+    public void testNullTargetObject() {
+        new DragAndDropAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "source")
+                .target((Object) null)
+                .build();
+    }
 }
