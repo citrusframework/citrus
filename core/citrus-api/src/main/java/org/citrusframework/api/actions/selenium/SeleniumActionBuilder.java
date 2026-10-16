@@ -160,6 +160,11 @@ public interface SeleniumActionBuilder<T extends TestAction, B extends TestActio
     SeleniumRightClickActionBuilder<?, ?> rightClick();
 
     /**
+     * Drag and drop source element onto target element.
+     */
+    SeleniumDragAndDropActionBuilder<?, ?> dragAndDrop();
+
+    /**
      * Clear browser cache.
      */
     SeleniumClearBrowserCacheActionBuilder<?, ?> clearCache();

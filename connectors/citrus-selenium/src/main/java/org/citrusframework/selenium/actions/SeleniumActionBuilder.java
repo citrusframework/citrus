@@ -216,6 +216,14 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
     }
 
     @Override
+    public DragAndDropAction.Builder dragAndDrop() {
+        DragAndDropAction.Builder builder = new DragAndDropAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public ClearBrowserCacheAction.Builder clearCache() {
         ClearBrowserCacheAction.Builder builder = new ClearBrowserCacheAction.Builder()
                 .browser(seleniumBrowser);
