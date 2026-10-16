@@ -74,6 +74,35 @@
     </selenium>
 
     <selenium>
+      <double-click>
+        <element id="double-click-me"/>
+      </double-click>
+    </selenium>
+
+    <selenium>
+      <right-click>
+        <element id="right-click-me"/>
+      </right-click>
+    </selenium>
+
+    <selenium>
+      <drag-and-drop>
+        <element id="source"/>
+        <target id="target"/>
+      </drag-and-drop>
+    </selenium>
+
+    <selenium>
+      <press keys="ENTER">
+        <element id="username"/>
+      </press>
+    </selenium>
+
+    <selenium>
+      <press keys="TAB"/>
+    </selenium>
+
+    <selenium>
       <set-input value="new-value">
         <element tag-name="input"/>
       </set-input>
@@ -98,6 +127,34 @@
           <option>Mr.</option>
           <option>Dr.</option>
         </options>
+      </dropdown-select>
+    </selenium>
+
+    <selenium>
+      <dropdown-select option="Mr." by="text">
+        <element id="title"/>
+      </dropdown-select>
+    </selenium>
+
+    <selenium>
+      <dropdown-select option="1" by="index">
+        <element id="title"/>
+      </dropdown-select>
+    </selenium>
+
+    <selenium>
+      <dropdown-select deselect-all="true">
+        <element id="title"/>
+      </dropdown-select>
+    </selenium>
+
+    <selenium>
+      <dropdown-select>
+        <element id="title"/>
+        <deselect-options>
+          <option>Mr.</option>
+          <option>Dr.</option>
+        </deselect-options>
       </dropdown-select>
     </selenium>
 
@@ -127,6 +184,32 @@
       <wait until="hidden">
         <element id="dialog"/>
       </wait>
+    </selenium>
+
+    <selenium>
+      <wait until="present">
+        <element id="dialog"/>
+      </wait>
+    </selenium>
+
+    <selenium>
+      <wait until="clickable" timeout="10000">
+        <element id="submit-button"/>
+      </wait>
+    </selenium>
+
+    <selenium>
+      <wait until="text" expected="Ok">
+        <element id="dialog"/>
+      </wait>
+    </selenium>
+
+    <selenium>
+      <wait until="url" expected="selenium"/>
+    </selenium>
+
+    <selenium>
+      <wait until="title" expected="Selenium"/>
     </selenium>
 
     <selenium>

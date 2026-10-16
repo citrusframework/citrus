@@ -41,6 +41,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 public class SeleniumTest extends AbstractXmlActionTest {
@@ -64,6 +65,9 @@ public class SeleniumTest extends AbstractXmlActionTest {
     private WebElement option;
 
     @Mock
+    private WebElement dialog;
+
+    @Mock
     private WebPage webPage;
 
     @Mock
@@ -85,21 +89,30 @@ public class SeleniumTest extends AbstractXmlActionTest {
         when(browser.getName()).thenReturn("seleniumBrowser");
         when(browser.getWebDriver()).thenReturn(webDriver);
         when(webDriver.switchTo()).thenReturn(targetLocator);
+        when(targetLocator.activeElement()).thenReturn(webElement);
         when(targetLocator.alert()).thenReturn(alert);
         when(alert.getText()).thenReturn("This is a warning message!");
         when(webDriver.findElement(any(By.class))).thenReturn(webElement);
+        when(webDriver.getCurrentUrl()).thenReturn("https://citrusframework.org/selenium");
+        when(webDriver.getTitle()).thenReturn("Selenium page");
+        when(webDriver.findElement(By.id("dialog"))).thenReturn(dialog);
+        when(dialog.isDisplayed()).thenReturn(false);
+        when(dialog.getText()).thenReturn("Ok");
         when(webElement.getText()).thenReturn("Ok");
-        when(webElement.isDisplayed()).thenReturn(true, true, true, true, true, true, true, true, true, true, true, true, true)
-                .thenReturn(false);
+        when(webElement.isDisplayed()).thenReturn(true);
         when(webElement.isEnabled()).thenReturn(true);
+        when(webElement.getDomAttribute("multiple")).thenReturn("multiple");
         when(webElement.getAttribute("type")).thenReturn("submit");
         when(webElement.getAttribute("value")).thenReturn("Foo");
         when(webElement.getAttribute("enabled")).thenReturn("true");
+        when(webElement.getCssValue(anyString())).thenReturn("visible");
         when(webElement.getCssValue("color")).thenReturn("#000000");
         when(webElement.getTagName()).thenReturn("button", "select");
         when(webElement.findElements(any(By.class))).thenReturn(List.of(option));
         when(option.isEnabled()).thenReturn(true);
         when(option.getText()).thenReturn("new-value");
+        when(option.getCssValue(anyString())).thenReturn("visible");
+        when(option.getAttribute("index")).thenReturn("1");
         when(webDriver.executeScript(any(String.class), any(Object[].class))).thenReturn(Collections.emptyList()).thenReturn(List.of("Something went wrong"));
         when(webDriver.navigate()).thenReturn(navigation);
         when(webDriver.getWindowHandles()).thenReturn(Set.of("switchWindow", "closeWindow")).thenReturn(Set.of("newWindow", "switchWindow", "closeWindow"));
@@ -126,7 +139,7 @@ public class SeleniumTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getName(), "SeleniumTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 25L);
+        Assert.assertEquals(result.getActionCount(), 39L);
 
         int actionIndex = 0;
 
@@ -188,6 +201,34 @@ public class SeleniumTest extends AbstractXmlActionTest {
         Assert.assertEquals(hoverAction.getName(), "selenium:hover");
         Assert.assertEquals(hoverAction.getBy().toString(), "By.id: edit-link");
 
+        DoubleClickAction doubleClickAction = (DoubleClickAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(doubleClickAction.getBrowser());
+        Assert.assertEquals(doubleClickAction.getName(), "selenium:double-click");
+        Assert.assertEquals(doubleClickAction.getBy().toString(), "By.id: double-click-me");
+
+        RightClickAction rightClickAction = (RightClickAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(rightClickAction.getBrowser());
+        Assert.assertEquals(rightClickAction.getName(), "selenium:right-click");
+        Assert.assertEquals(rightClickAction.getBy().toString(), "By.id: right-click-me");
+
+        DragAndDropAction dragAndDropAction = (DragAndDropAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(dragAndDropAction.getBrowser());
+        Assert.assertEquals(dragAndDropAction.getName(), "selenium:drag-and-drop");
+        Assert.assertEquals(dragAndDropAction.getBy().toString(), "By.id: source");
+        Assert.assertEquals(dragAndDropAction.getTarget().resolve(context).toString(), "By.id: target");
+
+        PressKeysAction pressKeysAction = (PressKeysAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(pressKeysAction.getBrowser());
+        Assert.assertEquals(pressKeysAction.getName(), "selenium:press");
+        Assert.assertEquals(pressKeysAction.getBy().toString(), "By.id: username");
+        Assert.assertEquals(pressKeysAction.getKeys(), "ENTER");
+
+        pressKeysAction = (PressKeysAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(pressKeysAction.getBrowser());
+        Assert.assertEquals(pressKeysAction.getName(), "selenium:press");
+        Assert.assertNull(pressKeysAction.getBy());
+        Assert.assertEquals(pressKeysAction.getKeys(), "TAB");
+
         SetInputAction setInputAction = (SetInputAction) result.getTestAction(actionIndex++);
         Assert.assertNull(setInputAction.getBrowser());
         Assert.assertEquals(setInputAction.getName(), "selenium:set-input");
@@ -214,6 +255,28 @@ public class SeleniumTest extends AbstractXmlActionTest {
         Assert.assertNull(dropDownMultiSelect.getOption());
         Assert.assertEquals(dropDownMultiSelect.getOptions().size(), 2L);
 
+        DropDownSelectAction dropDownSelectByText = (DropDownSelectAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(dropDownSelectByText.getBrowser());
+        Assert.assertEquals(dropDownSelectByText.getName(), "selenium:dropdown-select");
+        Assert.assertEquals(dropDownSelectByText.getSelectionMode(), "text");
+        Assert.assertEquals(dropDownSelectByText.getOption(), "Mr.");
+
+        DropDownSelectAction dropDownSelectByIndex = (DropDownSelectAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(dropDownSelectByIndex.getBrowser());
+        Assert.assertEquals(dropDownSelectByIndex.getName(), "selenium:dropdown-select");
+        Assert.assertEquals(dropDownSelectByIndex.getSelectionMode(), "index");
+        Assert.assertEquals(dropDownSelectByIndex.getOption(), "1");
+
+        DropDownSelectAction dropDownDeselectAll = (DropDownSelectAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(dropDownDeselectAll.getBrowser());
+        Assert.assertEquals(dropDownDeselectAll.getName(), "selenium:dropdown-select");
+        Assert.assertTrue(dropDownDeselectAll.isDeselectAll());
+
+        DropDownSelectAction dropDownDeselectOptions = (DropDownSelectAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(dropDownDeselectOptions.getBrowser());
+        Assert.assertEquals(dropDownDeselectOptions.getName(), "selenium:dropdown-select");
+        Assert.assertEquals(dropDownDeselectOptions.getDeselectOptions().size(), 2L);
+
         FillFormAction fillForm = (FillFormAction) result.getTestAction(actionIndex++);
         Assert.assertNull(fillForm.getBrowser());
         Assert.assertEquals(fillForm.getName(), "selenium:fill-form");
@@ -236,6 +299,40 @@ public class SeleniumTest extends AbstractXmlActionTest {
         Assert.assertEquals(waitUntilAction.getName(), "selenium:wait");
         Assert.assertEquals(waitUntilAction.getBy().toString(), "By.id: dialog");
         Assert.assertEquals(waitUntilAction.getCondition(), "hidden");
+
+        WaitUntilAction waitPresentAction = (WaitUntilAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(waitPresentAction.getBrowser());
+        Assert.assertEquals(waitPresentAction.getName(), "selenium:wait");
+        Assert.assertEquals(waitPresentAction.getBy().toString(), "By.id: dialog");
+        Assert.assertEquals(waitPresentAction.getCondition(), "present");
+
+        WaitUntilAction waitClickableAction = (WaitUntilAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(waitClickableAction.getBrowser());
+        Assert.assertEquals(waitClickableAction.getName(), "selenium:wait");
+        Assert.assertEquals(waitClickableAction.getBy().toString(), "By.id: submit-button");
+        Assert.assertEquals(waitClickableAction.getCondition(), "clickable");
+        Assert.assertEquals(waitClickableAction.getTimeout().longValue(), 10000L);
+
+        WaitUntilAction waitTextAction = (WaitUntilAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(waitTextAction.getBrowser());
+        Assert.assertEquals(waitTextAction.getName(), "selenium:wait");
+        Assert.assertEquals(waitTextAction.getBy().toString(), "By.id: dialog");
+        Assert.assertEquals(waitTextAction.getCondition(), "text");
+        Assert.assertEquals(waitTextAction.getExpected(), "Ok");
+
+        WaitUntilAction waitUrlAction = (WaitUntilAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(waitUrlAction.getBrowser());
+        Assert.assertEquals(waitUrlAction.getName(), "selenium:wait");
+        Assert.assertNull(waitUrlAction.getBy());
+        Assert.assertEquals(waitUrlAction.getCondition(), "url");
+        Assert.assertEquals(waitUrlAction.getExpected(), "selenium");
+
+        WaitUntilAction waitTitleAction = (WaitUntilAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(waitTitleAction.getBrowser());
+        Assert.assertEquals(waitTitleAction.getName(), "selenium:wait");
+        Assert.assertNull(waitTitleAction.getBy());
+        Assert.assertEquals(waitTitleAction.getCondition(), "title");
+        Assert.assertEquals(waitTitleAction.getExpected(), "Selenium");
 
         JavaScriptAction javaScriptAction = (JavaScriptAction) result.getTestAction(actionIndex++);
         Assert.assertNull(javaScriptAction.getBrowser());

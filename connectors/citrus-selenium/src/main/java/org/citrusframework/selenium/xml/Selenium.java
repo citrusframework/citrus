@@ -157,6 +157,38 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     }
 
     /**
+     * Double click element.
+     */
+    @XmlElement(name = "double-click")
+    public void setDoubleClick(DoubleClick builder) {
+        this.builder = builder;
+    }
+
+    /**
+     * Right click element.
+     */
+    @XmlElement(name = "right-click")
+    public void setRightClick(RightClick builder) {
+        this.builder = builder;
+    }
+
+    /**
+     * Drag and drop element.
+     */
+    @XmlElement(name = "drag-and-drop")
+    public void setDragAndDrop(DragAndDrop builder) {
+        this.builder = builder;
+    }
+
+    /**
+     * Press keys.
+     */
+    @XmlElement(name = "press")
+    public void setPress(Press builder) {
+        this.builder = builder;
+    }
+
+    /**
      * Clear browser cache.
      */
     @XmlElement(name = "clear-cache")
