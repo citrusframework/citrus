@@ -249,6 +249,44 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testExecuteDeselectAllOnSingleSelect() {
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .deselectAll()
+                .build();
+
+        try {
+            action.execute(context);
+            Assert.fail("Expected action to fail when deselecting options on single-select dropdown");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("deselect is only supported for multi-select"),
+                    "Unexpected error message: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testExecuteDeselectOptionOnSingleSelect() {
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .deselect("option1")
+                .build();
+
+        try {
+            action.execute(context);
+            Assert.fail("Expected action to fail when deselecting options on single-select dropdown");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("deselect is only supported for multi-select"),
+                    "Unexpected error message: " + e.getMessage());
+        }
+    }
+
+    @Test
     public void testUnknownSelectionMode() {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 

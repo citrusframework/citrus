@@ -89,6 +89,11 @@ public class DropDownSelectAction extends FindElementAction {
 
         Select dropdown = new Select(webElement);
 
+        if ((deselectAll || (deselectOptions != null && !deselectOptions.isEmpty())) && !dropdown.isMultiple()) {
+            throw new CitrusRuntimeException(
+                    "Cannot deselect options on single-select dropdown - deselect is only supported for multi-select elements");
+        }
+
         if (deselectAll) {
             dropdown.deselectAll();
         }

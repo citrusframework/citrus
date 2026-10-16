@@ -22,6 +22,7 @@ import org.citrusframework.api.actions.selenium.SeleniumWaitUntilActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -65,6 +66,8 @@ public class WaitUntilAction extends FindElementAction {
     protected void executeWithoutElement(By by, SeleniumBrowser browser, TestContext context) {
         WebDriverWait wait = new WebDriverWait(browser.getWebDriver(), Duration.ofMillis(timeout));
 
+        String resolvedExpected = context.replaceDynamicContentInString(expected);
+
         switch (condition != null ? condition : "") {
             case "visible" -> wait.until(ExpectedConditions.visibilityOfElementLocated(requireElement(by, condition)));
             case "hidden" -> wait.until(ExpectedConditions.invisibilityOfElementLocated(requireElement(by, condition)));
@@ -72,9 +75,9 @@ public class WaitUntilAction extends FindElementAction {
             case "absent" -> wait.until(ExpectedConditions.numberOfElementsToBe(requireElement(by, condition), 0));
             case "clickable" -> wait.until(ExpectedConditions.elementToBeClickable(requireElement(by, condition)));
             case "text" -> wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                    requireElement(by, condition), context.replaceDynamicContentInString(expected)));
-            case "url" -> wait.until(ExpectedConditions.urlContains(context.replaceDynamicContentInString(expected)));
-            case "title" -> wait.until(ExpectedConditions.titleContains(context.replaceDynamicContentInString(expected)));
+                    requireElement(by, condition), requireExpected(resolvedExpected, condition)));
+            case "url" -> wait.until(ExpectedConditions.urlContains(requireExpected(resolvedExpected, condition)));
+            case "title" -> wait.until(ExpectedConditions.titleContains(requireExpected(resolvedExpected, condition)));
             default -> throw new CitrusRuntimeException(String.format(
                     "Unsupported wait condition '%s' - use one of visible, hidden, present, absent, clickable, text, url, title",
                     condition));
@@ -93,6 +96,20 @@ public class WaitUntilAction extends FindElementAction {
         }
 
         return by;
+    }
+
+    /**
+     * Checks that the expected value is set for wait conditions that compare against an expected value.
+     * @param resolvedExpected
+     * @param condition
+     * @return
+     */
+    private String requireExpected(String resolvedExpected, String condition) {
+        if (!StringUtils.hasText(resolvedExpected)) {
+            throw new CitrusRuntimeException(String.format("Missing expected value for wait condition '%s'", condition));
+        }
+
+        return resolvedExpected;
     }
 
     /**
