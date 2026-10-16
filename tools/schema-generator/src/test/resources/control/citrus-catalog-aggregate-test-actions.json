@@ -17465,6 +17465,90 @@
       },
       "additionalProperties": false    }
   },
+  "selenium-extract": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "selenium-extract",
+    "group": "selenium",
+    "module": "citrus-selenium",
+    "title": "Extract",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "attribute": {
+          "type": "string",
+          "title": "Attribute"
+        },
+        "cssProperty": {
+          "type": "string",
+          "title": "CssProperty"
+        },
+        "element": {
+          "type": "object",
+          "properties": {
+            "className": {
+              "type": "string",
+              "title": "ClassName"
+            },
+            "cssSelector": {
+              "type": "string",
+              "title": "CssSelector"
+            },
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "linkText": {
+              "type": "string",
+              "title": "LinkText"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "partialLinkText": {
+              "type": "string",
+              "title": "PartialLinkText"
+            },
+            "property": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "title": "Name"
+                },
+                "value": {
+                  "type": "string",
+                  "title": "Value"
+                }
+              },
+              "additionalProperties": false,
+              "title": "Property"
+            },
+            "tagName": {
+              "type": "string",
+              "title": "TagName"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
   "selenium-clearCache": {
     "kind": "testAction",
     "version": "${citrus.version}",
@@ -18525,6 +18609,90 @@
           "type": "string",
           "title": "Browser",
           "description": "Sets the Selenium browser.Uses an endpoint URI or references an endpoint name."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "selenium-verify": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "selenium-verify",
+    "group": "selenium",
+    "module": "citrus-selenium",
+    "title": "Verify",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "attribute": {
+          "type": "string",
+          "title": "Attribute"
+        },
+        "check": {
+          "type": "string",
+          "title": "Check"
+        },
+        "cssProperty": {
+          "type": "string",
+          "title": "CssProperty"
+        },
+        "element": {
+          "type": "object",
+          "properties": {
+            "className": {
+              "type": "string",
+              "title": "ClassName"
+            },
+            "cssSelector": {
+              "type": "string",
+              "title": "CssSelector"
+            },
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "linkText": {
+              "type": "string",
+              "title": "LinkText"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "partialLinkText": {
+              "type": "string",
+              "title": "PartialLinkText"
+            },
+            "property": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "title": "Name"
+                },
+                "value": {
+                  "type": "string",
+                  "title": "Value"
+                }
+              },
+              "additionalProperties": false,
+              "title": "Property"
+            },
+            "tagName": {
+              "type": "string",
+              "title": "TagName"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "expected": {
+          "type": "string",
+          "title": "Expected"
         }
       },
       "additionalProperties": false    }
