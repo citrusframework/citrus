@@ -349,16 +349,20 @@ selenium:start:: Start the browser instance
 selenium:find:: Finds element on current page and validates element properties
 selenium:click:: Performs click operation on element
 selenium:hover:: Performs hover operation on element
+selenium:double-click:: Performs double click operation on element
+selenium:right-click:: Performs right click (context click) operation on element
+selenium:drag-and-drop:: Drags a source element and drops it onto a target element
+selenium:press:: Presses one key or a key combination on an element or the focused element
 selenium:navigate:: Navigates to new page url (including history back, forward and refresh)
 selenium:set-input:: Finds input element and sets value
 selenium:check-input:: Finds checkbox element and sets/unsets value
-selenium:dropdown-select:: Finds dropdown element and selects single or multiple value/s
+selenium:dropdown-select:: Finds dropdown element and selects or deselects single or multiple options by value, visible text or index
 selenium:fill-form:: Fills form with given values and optionally submits form afterwards. Supports setting multiple fields at the same time.
 selenium:page:: Instantiate page object with dependency injection and execute page action with verification
 selenium:open:: Open new window
 selenium:close:: Close window by given name
 selenium:switch:: Switch focus to window with given name
-selenium:wait-until:: Wait for element to be _hidden_ or _visible_
+selenium:wait-until:: Wait for element presence, visibility, clickability, text, url or title
 selenium:alert:: Access current alert dialog (with action _access_ or _dismiss_)
 selenium:screenshot:: Makes screenshot of current page
 selenium:store-file:: Store file to temporary browser directory
@@ -714,6 +718,185 @@ actions:
 </spring:beans>
 ----
 
+[[double-click]]
+== Double click
+
+The action performs a double click operation on the element.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().doubleClick().element(By.id("double-click-me"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <double-click>
+          <element id="double-click-me"/>
+        </double-click>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      double-click:
+        element:
+          id: "double-click-me"
+----
+
+[[right-click]]
+== Right click
+
+The action performs a right click (context click) operation on the element.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().rightClick().element(By.id("right-click-me"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <right-click>
+          <element id="right-click-me"/>
+        </right-click>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      right-click:
+        element:
+          id: "right-click-me"
+----
+
+[[drag-and-drop]]
+== Drag and drop
+
+The action drags a source element and drops it onto a target element. The source element is set on the action and the target element is set as a separate target setting.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().dragAndDrop()
+            .element(By.id("drag-source"))
+            .target(By.id("drop-target"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <drag-and-drop>
+          <element id="drag-source"/>
+          <target id="drop-target"/>
+        </drag-and-drop>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      drag-and-drop:
+        element:
+          id: "drag-source"
+        target:
+          id: "drop-target"
+----
+
+NOTE: The drag and drop action uses the WebDriver mouse actions. This does not fire the native HTML5 drag events (_dragstart_, _drag_, _drop_) in the browser. Applications that rely on these events need to use Javascript actions or a dedicated WebDriver implementation.
+
+[[press]]
+== Press keys
+
+The action presses a single key or a combination of keys. The keys are sent to a located element or to the currently focused element when no element is set on the action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().press("ENTER")
+            .element(By.id("username"));
+
+    selenium().press("CONTROL+A");
+
+    selenium().press()
+            .keys("TAB");
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <press keys="ENTER">
+          <element id="username"/>
+        </press>
+      </selenium>
+
+      <selenium>
+        <press keys="TAB"/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      press:
+        keys: "ENTER"
+        element:
+          id: "username"
+  - selenium:
+      press:
+        keys: "TAB"
+----
+
+Use the Selenium key names (e.g. _ENTER_, _TAB_, _ESCAPE_, _ARROW_DOWN_) for special keys and a single character for regular text. Keys are combined with the `+` character (e.g. `CONTROL+A`). An unknown key name raises an error naming the key.
+
 [[form-input-actions]]
 == Form input actions
 
@@ -819,6 +1002,98 @@ ids, names or xpath expressions.
 
 When selecting multiple dropdown options Citrus holds the platform specific modifier key: *Command* on macOS and *Control* on all other operating systems. So multiple selection behaves
 the same way on every platform.
+
+The dropdown select action selects options by their value by default. Use the `by` setting to select options by their visible `text` or by their zero based `index` instead.
+The same setting applies when deselecting options. Use the deselect all setting to unselect all options at once or provide a list of deselect options in order to unselect a set of options.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().select("Germany")
+            .byText()
+            .element(By.id("countries"));
+
+    selenium().select("1")
+            .byIndex()
+            .element(By.id("countries"));
+
+    selenium().select()
+            .deselectAll()
+            .element(By.id("languages"));
+
+    selenium().select()
+            .byText()
+            .deselect("German")
+            .element(By.id("languages"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <dropdown-select option="Germany" by="text">
+          <element id="countries"/>
+        </dropdown-select>
+      </selenium>
+
+      <selenium>
+        <dropdown-select option="1" by="index">
+          <element id="countries"/>
+        </dropdown-select>
+      </selenium>
+
+      <selenium>
+        <dropdown-select deselect-all="true">
+          <element id="languages"/>
+        </dropdown-select>
+      </selenium>
+
+      <selenium>
+        <dropdown-select by="text">
+          <element id="languages"/>
+          <deselect-options>
+            <option>German</option>
+          </deselect-options>
+        </dropdown-select>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      dropdown-select:
+        option: "Germany"
+        by: "text"
+        element:
+          id: "countries"
+  - selenium:
+      dropdown-select:
+        option: "1"
+        by: "index"
+        element:
+          id: "countries"
+  - selenium:
+      dropdown-select:
+        deselect-all: true
+        element:
+          id: "languages"
+  - selenium:
+      dropdown-select:
+        by: "text"
+        element:
+          id: "languages"
+        deselect-options: ["German"]
+----
 
 [[form-fill-actions]]
 == Fill form
@@ -1227,7 +1502,7 @@ public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
 == Wait
 
 Sometimes it is required to wait for an element to appear or disappear on the current page. The wait action will wait a given time for the element status
-to be _visible_ or _hidden_.
+to meet a condition such as _visible_, _hidden_, _present_, _absent_ or _clickable_. The action also supports waiting for the element text, the current page url or the page title.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -1290,6 +1565,87 @@ actions:
 
 The example waits for the element _info-dialog_ to disappear. The time to wait is 5000 milliseconds by default. You can set the timeout on the action. Due
 to Selenium limitations the minimum wait time is 1000 milliseconds.
+
+The wait action supports the following conditions:
+
+[horizontal]
+_visible_:: element is present in the DOM and displayed
+_hidden_:: element is not displayed or not present at all
+_present_:: element is present in the DOM (displayed or not)
+_absent_:: element is not present in the DOM
+_clickable_:: element is displayed and enabled
+_text_:: element text contains the expected value (requires the _expected_ setting)
+_url_:: current page url contains the expected value (requires the _expected_ setting)
+_title_:: current page title contains the expected value (requires the _expected_ setting)
+
+The element is looked up while waiting, so elements that appear later on the page are found as well. The _url_ and _title_ conditions do not require an element
+at all. An unknown condition raises an error that lists the supported conditions.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().waitUntil()
+            .clickable()
+            .element(By.id("submit-button"))
+            .timeout(10000L);
+
+    selenium().waitUntil()
+            .text("Ok")
+            .element(By.id("dialog"));
+
+    selenium().waitUntil()
+            .url("citrusframework.org");
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <wait until="clickable" timeout="10000">
+          <element id="submit-button"/>
+        </wait>
+      </selenium>
+
+      <selenium>
+        <wait until="text" expected="Ok">
+          <element id="dialog"/>
+        </wait>
+      </selenium>
+
+      <selenium>
+        <wait until="url" expected="citrusframework.org"/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      wait-until:
+        condition: "clickable"
+        timeout: 10000
+        element:
+          id: "submit-button"
+  - selenium:
+      wait-until:
+        condition: "text"
+        expected: "Ok"
+        element:
+          id: "dialog"
+  - selenium:
+      wait-until:
+        condition: "url"
+        expected: "citrusframework.org"
+----
 
 [[navigate]]
 == Navigate
