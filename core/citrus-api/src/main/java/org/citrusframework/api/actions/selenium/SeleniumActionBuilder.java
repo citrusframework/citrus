@@ -182,6 +182,11 @@ public interface SeleniumActionBuilder<T extends TestAction, B extends TestActio
     SeleniumVerifyActionBuilder<?, ?> verify();
 
     /**
+     * Extract page, element or value on the page into a variable.
+     */
+    SeleniumExtractActionBuilder<?, ?> extract();
+
+    /**
      * Clear browser cache.
      */
     SeleniumClearBrowserCacheActionBuilder<?, ?> clearCache();
