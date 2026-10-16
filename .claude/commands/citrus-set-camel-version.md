@@ -68,19 +68,30 @@ When the Camel version changes, the set of available Camel test infrastructure s
 
 To discover changes, compare the Camel test infrastructure modules between the old and new version tags (e.g., list directories under `test-infra/` in the Camel repository for both versions).
 
-### 8. Build and Fix Tests
+### 8. Sync Camel Expression Language API
+
+The Citrus interface `core/citrus-api/src/main/java/org/citrusframework/message/processor/camel/CamelExpressionClause.java` mirrors the public methods of Camel's `org.apache.camel.builder.ExpressionClauseSupport`. When Camel adds or removes expression language methods, this interface must be updated to match.
+
+1. Extract `ExpressionClauseSupport.class` from the **old** Camel version's `camel-core-model` JAR (from the local Maven cache) and from the **new** version's JAR.
+2. Use `javap -p` on both to list public method signatures, then diff them.
+3. For each **removed** method: delete the corresponding method declaration (and its Javadoc) from `CamelExpressionClause.java`.
+4. For each **added** method: add a matching method declaration to `CamelExpressionClause.java`, placed next to related methods (e.g., `python3` next to `python`, `quickjs` next to `js`). Include a short Javadoc block following the style of the surrounding methods.
+5. Install `citrus-api` (`mvnw install -DskipTests -pl core/citrus-api`) so downstream modules pick up the change.
+
+### 9. Build and Fix Tests
 
 Run a module-specific build for any modules with changed files to verify compilation and tests pass. If tests fail due to the version updates (e.g., updated test expectations, changed APIs), fix them.
 
-### 9. Report Results
+### 10. Report Results
 
 After all updates are applied, produce a summary with three sections:
 
 1. **Updated versions** — table with: Property | Old Version | New Version
 2. **Newer versions in Citrus** — table with: Property | Citrus Version | Camel Version (these were intentionally kept)
-3. **Test fixes** — list any test or source files that needed adjustment beyond the version property changes
+3. **API changes** — list methods added/removed from `CamelExpressionClause.java`
+4. **Test fixes** — list any test or source files that needed adjustment beyond the version property changes
 
-### 10. Constraints
+### 11. Constraints
 
 - **Only update outdated versions** — never downgrade a version that is already newer in Citrus
 - **Module-specific builds** — always run `mvn` in the module directory where changes occurred; do NOT parallelize Maven jobs
