@@ -48,6 +48,11 @@ public class WaitUntil extends AbstractSeleniumAction.Builder<WaitUntilAction, W
         this.delegate.condition(condition);
     }
 
+    @SchemaProperty
+    public void setExpected(String expected) {
+        this.delegate.expected(expected);
+    }
+
     @Override
     public FindElementAction.ElementActionBuilder<?, ?> getElementBuilder() {
         return delegate;

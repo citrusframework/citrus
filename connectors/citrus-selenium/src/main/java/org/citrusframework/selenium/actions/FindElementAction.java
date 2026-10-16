@@ -26,6 +26,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.selenium.model.ElementLocator;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.openqa.selenium.By;
@@ -85,6 +86,11 @@ public class FindElementAction extends AbstractSeleniumAction {
     protected final void execute(SeleniumBrowser browser, TestContext context) {
         By findBy = createBy(context);
 
+        if (!requiresElementBeforeExecute()) {
+            executeWithoutElement(findBy, browser, context);
+            return;
+        }
+
         WebElement element;
         try {
             element = browser.getWebDriver().findElement(findBy);
@@ -95,6 +101,29 @@ public class FindElementAction extends AbstractSeleniumAction {
         validate(element, browser, context);
 
         execute(element, browser, context);
+    }
+
+    /**
+     * Checks if this action requires the web element to be present on the page before execution.
+     * By default, actions look up the element and fail in case it is not present. Subclasses may
+     * override this method in case they need to perform logic while the element is not yet present,
+     * e.g. waiting for the element to appear in the DOM tree.
+     * @return
+     */
+    protected boolean requiresElementBeforeExecute() {
+        return true;
+    }
+
+    /**
+     * Subclasses may override this method in order to perform logic without an element present on
+     * the page. This method is only invoked in case {@link #requiresElementBeforeExecute()} returns
+     * {@code false}.
+     * @param by
+     * @param browser
+     * @param context
+     */
+    protected void executeWithoutElement(By by, SeleniumBrowser browser, TestContext context) {
+        throw new CitrusRuntimeException("Element is required for this action to execute");
     }
 
     /**
@@ -168,16 +197,11 @@ public class FindElementAction extends AbstractSeleniumAction {
             return by;
         }
 
-        return switch (property) {
-            case "id" -> By.id(context.replaceDynamicContentInString(propertyValue));
-            case "class-name" -> By.className(context.replaceDynamicContentInString(propertyValue));
-            case "link-text" -> By.linkText(context.replaceDynamicContentInString(propertyValue));
-            case "css-selector" -> By.cssSelector(context.replaceDynamicContentInString(propertyValue));
-            case "name" -> By.name(context.replaceDynamicContentInString(propertyValue));
-            case "tag-name" -> By.tagName(context.replaceDynamicContentInString(propertyValue));
-            case "xpath" -> By.xpath(context.replaceDynamicContentInString(propertyValue));
-            default -> throw new CitrusRuntimeException("Unknown selector type: " + property);
-        };
+        if (property == null) {
+            return null;
+        }
+
+        return ElementLocator.of(property, propertyValue).resolve(context);
     }
 
     /**

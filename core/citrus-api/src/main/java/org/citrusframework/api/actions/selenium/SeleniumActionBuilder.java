@@ -150,6 +150,33 @@ public interface SeleniumActionBuilder<T extends TestAction, B extends TestActio
     SeleniumHoverActionBuilder<?, ?> hover();
 
     /**
+     * Double click element.
+     */
+    SeleniumDoubleClickActionBuilder<?, ?> doubleClick();
+
+    /**
+     * Right click element.
+     */
+    SeleniumRightClickActionBuilder<?, ?> rightClick();
+
+    /**
+     * Drag and drop source element onto target element.
+     */
+    SeleniumDragAndDropActionBuilder<?, ?> dragAndDrop();
+
+    /**
+     * Press keys on element or on currently focused element.
+     */
+    SeleniumPressKeysActionBuilder<?, ?> press();
+
+    /**
+     * Press keys on element or on currently focused element.
+     */
+    default SeleniumPressKeysActionBuilder<?, ?> press(String keys) {
+        return press().keys(keys);
+    }
+
+    /**
      * Clear browser cache.
      */
     SeleniumClearBrowserCacheActionBuilder<?, ?> clearCache();

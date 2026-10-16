@@ -28,4 +28,30 @@ public interface SeleniumDropDownSelectActionBuilder<T extends TestAction, B ext
     B options(String... options);
 
     B options(List<String> options);
+
+    /**
+     * Selects and deselects options by the given mode. Supported modes are value (default),
+     * text and index.
+     */
+    B by(String selectionMode);
+
+    /**
+     * Selects and deselects options by their visible text.
+     */
+    B byText();
+
+    /**
+     * Selects and deselects options by their index.
+     */
+    B byIndex();
+
+    /**
+     * Deselects all selected options before selecting.
+     */
+    B deselectAll();
+
+    /**
+     * Deselects the given options.
+     */
+    B deselect(String... options);
 }

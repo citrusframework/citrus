@@ -46,6 +46,16 @@ public class WaitUntil extends AbstractSeleniumAction.Builder<WaitUntilAction, W
         this.delegate.condition(condition);
     }
 
+    @XmlAttribute
+    public void setCondition(String condition) {
+        this.delegate.condition(condition);
+    }
+
+    @XmlAttribute
+    public void setExpected(String expected) {
+        this.delegate.expected(expected);
+    }
+
     @Override
     public FindElementAction.ElementActionBuilder<?, ?> getElementBuilder() {
         return delegate;

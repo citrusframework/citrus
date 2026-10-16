@@ -1,0 +1,97 @@
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<html lang="en">
+  <head>
+    <title>Interaction Test</title>
+    <script type="text/javascript">
+      function setResult(elementId, text) {
+        document.getElementById(elementId).textContent = text;
+      }
+
+      function handleRightClick(event) {
+        if (event.type === 'contextmenu' || event.button == 2) {
+          setResult('right-click-result', 'right-clicked');
+        }
+        if (event.type === 'contextmenu') {
+          return false;
+        }
+      }
+
+      function createNewElement() {
+        var element = document.createElement('span');
+        element.id = 'created-element';
+        element.textContent = 'created';
+        document.getElementById('created-container').appendChild(element);
+      }
+
+      function enableButton() {
+        document.getElementById('click-me').disabled = false;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Interaction</h1>
+
+    <p>
+      <span id="double-click-target" ondblclick="setResult('double-click-result', 'double-clicked')">Double click me!</span>
+      <span id="double-click-result"></span>
+    </p>
+
+    <p>
+      <span id="right-click-target" onmouseup="handleRightClick(event)" oncontextmenu="return handleRightClick(event)">Right click me!</span>
+      <span id="right-click-result"></span>
+    </p>
+
+    <p>
+      <span id="drag-source" onmousedown="setResult('drag-result', 'dragging')">Drag me!</span>
+      <span id="drop-target" onmouseup="setResult('drag-result', 'dropped')">Drop here!</span>
+      <span id="drag-result"></span>
+    </p>
+
+    <p>
+      <input id="press-input" type="text" onkeydown="if (event.keyCode == 13 || event.key == 'Enter') { setResult('press-result', 'ENTER pressed'); }"/>
+      <span id="press-result"></span>
+    </p>
+
+    <p>
+      <button id="create-button" onclick="createNewElement()">Create element</button>
+      <span id="created-container"></span>
+    </p>
+
+    <p>
+      <button id="click-me" disabled onclick="setResult('click-result', 'clicked')">Click me!</button>
+      <button id="enable-button" onclick="enableButton()">Enable</button>
+      <span id="click-result"></span>
+    </p>
+
+    <p>
+      <select id="countries">
+        <option id="option-at" value="at">Austria</option>
+        <option id="option-de" value="de">Germany</option>
+        <option id="option-ch" value="ch">Switzerland</option>
+      </select>
+    </p>
+
+    <p>
+      <select id="languages" multiple="multiple">
+        <option id="option-en" value="en">English</option>
+        <option id="option-de-language" value="de">German</option>
+        <option id="option-fr" value="fr">French</option>
+      </select>
+    </p>
+  </body>
+</html>

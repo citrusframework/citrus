@@ -18,6 +18,7 @@ package org.citrusframework.selenium.actions;
 
 import java.util.Collections;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
@@ -74,6 +75,238 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testExecuteSelectWithDynamicContent() {
+        WebElement option = Mockito.mock(WebElement.class);
+
+        context.setVariable("optionToSelect", "select_me");
+
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(option.isEnabled()).thenReturn(true);
+        when(option.isSelected()).thenReturn(false);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .option("${optionToSelect}")
+                .build();
+        action.execute(context);
+
+        verify(option).click();
+    }
+
+    @Test
+    public void testExecuteSelectByText() {
+        WebElement option = Mockito.mock(WebElement.class);
+
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(element.getCssValue(anyString())).thenReturn("visible");
+        when(option.getCssValue(anyString())).thenReturn("visible");
+        when(option.isEnabled()).thenReturn(true);
+        when(option.isSelected()).thenReturn(false);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .byText()
+                .option("Option 1")
+                .build();
+        action.execute(context);
+
+        verify(option).click();
+    }
+
+    @Test
+    public void testExecuteSelectByIndex() {
+        WebElement option = Mockito.mock(WebElement.class);
+
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(option.getAttribute("index")).thenReturn("1");
+        when(option.isEnabled()).thenReturn(true);
+        when(option.isSelected()).thenReturn(false);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .byIndex()
+                .option("1")
+                .build();
+        action.execute(context);
+
+        verify(option).getAttribute("index");
+        verify(option).click();
+    }
+
+    @Test
+    public void testExecuteSelectByInvalidIndex() {
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        when(element.findElements(any(By.class))).thenReturn(Collections.emptyList());
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .byIndex()
+                .option("noIndex")
+                .build();
+
+        try {
+            action.execute(context);
+            Assert.fail("Expected action to fail with invalid option index");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("Invalid option index 'noIndex'"),
+                    "Unexpected error message: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testExecuteDeselectAll() {
+        WebElement option = Mockito.mock(WebElement.class);
+
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        when(element.getDomAttribute("multiple")).thenReturn("multiple");
+        when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(option.isSelected()).thenReturn(true);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .deselectAll()
+                .build();
+        action.execute(context);
+
+        verify(option).click();
+    }
+
+    @Test
+    public void testExecuteDeselectByValue() {
+        WebElement option = Mockito.mock(WebElement.class);
+
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        when(element.getDomAttribute("multiple")).thenReturn("multiple");
+        when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(option.isSelected()).thenReturn(true);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .deselect("option1")
+                .build();
+        action.execute(context);
+
+        verify(option).click();
+    }
+
+    @Test
+    public void testExecuteDeselectByText() {
+        WebElement option = Mockito.mock(WebElement.class);
+
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        when(element.getDomAttribute("multiple")).thenReturn("multiple");
+        when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(option.isSelected()).thenReturn(true);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .byText()
+                .deselect("Option 1")
+                .build();
+        action.execute(context);
+
+        verify(option).click();
+    }
+
+    @Test
+    public void testExecuteDeselectByIndex() {
+        WebElement option = Mockito.mock(WebElement.class);
+
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        when(element.getDomAttribute("multiple")).thenReturn("multiple");
+        when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(option.getAttribute("index")).thenReturn("1");
+        when(option.isSelected()).thenReturn(true);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .byIndex()
+                .deselect("1")
+                .build();
+        action.execute(context);
+
+        verify(option).getAttribute("index");
+        verify(option).click();
+    }
+
+    @Test
+    public void testExecuteDeselectAllOnSingleSelect() {
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .deselectAll()
+                .build();
+
+        try {
+            action.execute(context);
+            Assert.fail("Expected action to fail when deselecting options on single-select dropdown");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("deselect is only supported for multi-select"),
+                    "Unexpected error message: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testExecuteDeselectOptionOnSingleSelect() {
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .deselect("option1")
+                .build();
+
+        try {
+            action.execute(context);
+            Assert.fail("Expected action to fail when deselecting options on single-select dropdown");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("deselect is only supported for multi-select"),
+                    "Unexpected error message: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUnknownSelectionMode() {
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .by("unknown")
+                .option("select_me")
+                .build();
+
+        try {
+            action.execute(context);
+            Assert.fail("Expected action to fail with unknown selection mode");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("Unknown selection mode 'unknown'"),
+                    "Unexpected error message: " + e.getMessage());
+        }
+    }
+
+    @Test
     public void testMultiSelectKeyPerOperatingSystem() {
         Assert.assertEquals(DropDownSelectAction.multiSelectKey("Mac OS X"), Keys.COMMAND);
         Assert.assertEquals(DropDownSelectAction.multiSelectKey("Mac"), Keys.COMMAND);
@@ -104,5 +337,28 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
         verify(option, times(2)).click();
     }
 
+    @Test
+    public void testExecuteMultiSelectByIndex() {
+        WebElement option = Mockito.mock(WebElement.class);
 
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.IE.browserName());
+
+        when(webDriver.findElement(any(By.class))).thenReturn(element);
+
+        when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(option.getAttribute("index")).thenReturn("0");
+        when(option.isEnabled()).thenReturn(true);
+        when(option.isSelected()).thenReturn(false);
+
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .byIndex()
+                .options("0")
+                .build();
+        action.execute(context);
+
+        verify(option).getAttribute("index");
+        verify(option).click();
+    }
 }
