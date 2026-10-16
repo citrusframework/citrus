@@ -27,6 +27,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -346,5 +347,26 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
                 .condition("unknown")
                 .build();
         action.execute(context);
+    }
+
+    @Test
+    public void testNullTimeoutKeepsDefault() {
+        WaitUntilAction action = new WaitUntilAction.Builder()
+                .browser(seleniumBrowser)
+                .timeout(null)
+                .condition("title")
+                .expected("Citrus")
+                .build();
+        Assert.assertEquals(action.getTimeout(), Long.valueOf(5000L));
+    }
+
+    @Test
+    public void testConditionIsCaseInsensitive() {
+        WaitUntilAction action = new WaitUntilAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "myButton")
+                .condition("Visible")
+                .build();
+        Assert.assertEquals(action.getCondition(), "visible");
     }
 }

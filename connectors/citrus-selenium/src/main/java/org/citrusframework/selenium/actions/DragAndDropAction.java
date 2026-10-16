@@ -87,7 +87,7 @@ public class DragAndDropAction extends FindElementAction {
                 this.target = ElementLocator.of(targetBy);
             } else {
                 throw new CitrusRuntimeException(("Invalid element identifier object, expected By object but got %s")
-                        .formatted(target.getClass().getName()));
+                        .formatted(target != null ? target.getClass().getName() : "null"));
             }
 
             return this;

@@ -163,7 +163,7 @@ public class WaitUntilAction extends FindElementAction {
 
         @Override
         public Builder condition(String condition) {
-            this.condition = condition;
+            this.condition = condition != null ? condition.toLowerCase() : null;
             return this;
         }
 
@@ -214,7 +214,9 @@ public class WaitUntilAction extends FindElementAction {
 
         @Override
         public Builder timeout(Long timeout) {
-            this.timeout = timeout;
+            if (timeout != null) {
+                this.timeout = timeout;
+            }
             return this;
         }
 
