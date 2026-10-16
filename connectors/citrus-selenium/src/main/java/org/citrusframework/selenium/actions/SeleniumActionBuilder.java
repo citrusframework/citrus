@@ -224,6 +224,14 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
     }
 
     @Override
+    public PressKeysAction.Builder press() {
+        PressKeysAction.Builder builder = new PressKeysAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public ClearBrowserCacheAction.Builder clearCache() {
         ClearBrowserCacheAction.Builder builder = new ClearBrowserCacheAction.Builder()
                 .browser(seleniumBrowser);
