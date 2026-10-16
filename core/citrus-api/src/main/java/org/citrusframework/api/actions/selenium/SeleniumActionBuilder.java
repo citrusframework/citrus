@@ -177,6 +177,11 @@ public interface SeleniumActionBuilder<T extends TestAction, B extends TestActio
     }
 
     /**
+     * Verify page, element or value on the page.
+     */
+    SeleniumVerifyActionBuilder<?, ?> verify();
+
+    /**
      * Clear browser cache.
      */
     SeleniumClearBrowserCacheActionBuilder<?, ?> clearCache();
