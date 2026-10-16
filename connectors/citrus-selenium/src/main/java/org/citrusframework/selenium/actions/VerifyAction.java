@@ -71,6 +71,10 @@ public class VerifyAction extends AbstractSeleniumAction {
     }
 
     private void executeElementCheck(Check checkToRun, SeleniumBrowser browser, TestContext context) {
+        if ((checkToRun == Check.ATTRIBUTE || checkToRun == Check.CSS_VALUE) && property == null) {
+            throw new CitrusRuntimeException(String.format("Missing attribute name for verify check '%s'", check));
+        }
+
         By by = resolveElement(context);
 
         List<WebElement> elements = browser.getWebDriver().findElements(by);
