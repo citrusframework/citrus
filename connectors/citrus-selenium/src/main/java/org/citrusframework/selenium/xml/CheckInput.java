@@ -20,9 +20,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
+import org.citrusframework.api.actions.selenium.SeleniumElementActionBuilderBase;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.CheckInputAction;
-import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 
 @XmlRootElement(name = "check-input")
@@ -42,7 +42,7 @@ public class CheckInput extends AbstractSeleniumAction.Builder<CheckInputAction,
     }
 
     @Override
-    public FindElementAction.ElementActionBuilder<?, ?> getElementBuilder() {
+    public SeleniumElementActionBuilderBase<?, ?> getElementBuilder() {
         return delegate;
     }
 

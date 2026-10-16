@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.TestActor;
+import org.citrusframework.api.actions.selenium.SeleniumElementActionBuilderBase;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
@@ -58,7 +59,7 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
     }
 
     @Override
-    public FindElementAction.ElementActionBuilder<?, ?> getElementBuilder() {
+    public SeleniumElementActionBuilderBase<?, ?> getElementBuilder() {
         return delegate;
     }
 

@@ -254,6 +254,96 @@
     </selenium>
 
     <selenium>
+      <verify check="url" expected="@endsWith('/selenium')@"/>
+    </selenium>
+
+    <selenium>
+      <verify check="title" expected="Selenium page"/>
+    </selenium>
+
+    <selenium>
+      <verify check="present">
+        <element id="dialog"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <verify check="absent">
+        <element id="missing"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <verify check="displayed">
+        <element id="hello"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <verify check="hidden">
+        <element id="dialog"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <verify check="enabled">
+        <element id="hello"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <verify check="text" expected="@contains('Ok')@">
+        <element id="dialog"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <verify check="attribute" attribute="href" expected="https://citrusframework.org">
+        <element id="hello"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <verify check="count" expected="2">
+        <element class-name="order"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <verify check="css-value" css-property="color" expected="#000000">
+        <element id="hello"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <extract value="title" variable="pageTitle"/>
+    </selenium>
+
+    <selenium>
+      <extract value="text" variable="dialogText">
+        <element id="dialog"/>
+      </extract>
+    </selenium>
+
+    <selenium>
+      <extract value="count" variable="orderCount">
+        <element class-name="order"/>
+      </extract>
+    </selenium>
+
+    <selenium>
+      <extract value="attribute" attribute="href" variable="docsHref">
+        <element id="hello"/>
+      </extract>
+    </selenium>
+
+    <selenium>
+      <click>
+        <element partial-link-text="Click"/>
+      </click>
+    </selenium>
+
+    <selenium>
       <stop browser="seleniumBrowser"/>
     </selenium>
   </actions>

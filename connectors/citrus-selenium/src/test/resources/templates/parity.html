@@ -1,0 +1,53 @@
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<html lang="en">
+  <head>
+    <title>Parity Test</title>
+    <script type="text/javascript">
+      function scheduleRedirect() {
+        setTimeout(function () {
+          window.location.href = 'http://localhost:19090/form';
+        }, 250);
+      }
+    </script>
+  </head>
+  <body>
+    <h1 id="greeting">Hello Citrus</h1>
+
+    <table>
+      <tr class="order"><td>1</td><td>Apple</td></tr>
+      <tr class="order"><td>2</td><td>Orange</td></tr>
+      <tr class="order"><td>3</td><td>Banana</td></tr>
+    </table>
+
+    <p>
+      <button id="submit" type="button" disabled>Submit</button>
+    </p>
+
+    <p>
+      <a id="docs" href="https://citrusframework.org">Documentation</a>
+    </p>
+
+    <p>
+      <span id="hidden-element" style="display: none">Hidden content</span>
+    </p>
+
+    <p>
+      <button id="redirect" type="button" onclick="scheduleRedirect()">Redirect</button>
+    </p>
+  </body>
+</html>

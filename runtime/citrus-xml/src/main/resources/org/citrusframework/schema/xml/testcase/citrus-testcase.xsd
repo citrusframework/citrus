@@ -4864,6 +4864,30 @@
           </xs:complexType>
         </xs:element>
 
+        <xs:element name="verify">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:WebElementType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="check" type="xs:string"/>
+            <xs:attribute name="expected" type="xs:string"/>
+            <xs:attribute name="attribute" type="xs:string"/>
+            <xs:attribute name="css-property" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="extract">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:WebElementType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="variable" type="xs:string"/>
+            <xs:attribute name="attribute" type="xs:string"/>
+            <xs:attribute name="css-property" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+
         <xs:element name="set-input">
           <xs:complexType>
             <xs:sequence>
@@ -5040,6 +5064,7 @@
     <xs:attribute name="class-name" type="xs:string"/>
     <xs:attribute name="css-selector" type="xs:string"/>
     <xs:attribute name="link-text" type="xs:string"/>
+    <xs:attribute name="partial-link-text" type="xs:string"/>
     <xs:attribute name="xpath" type="xs:string"/>
   </xs:complexType>
 

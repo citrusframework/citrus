@@ -28,7 +28,6 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.model.ElementLocator;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -133,8 +132,8 @@ public class FindElementAction extends AbstractSeleniumAction {
      * @param context
      */
     protected void validate(WebElement element, SeleniumBrowser browser, TestContext context) {
-        validateElementProperty("tag-name", tagName, element.getTagName(), context);
-        validateElementProperty("text", text, element.getText(), context);
+        ValueAssertions.assertValue("tag-name", tagName, element.getTagName(), context);
+        ValueAssertions.assertValue("text", text, element.getText(), context);
 
         if (!displayed == element.isDisplayed()) {
             throw new ValidationException(String.format("Selenium web element validation failed, " +
@@ -147,32 +146,11 @@ public class FindElementAction extends AbstractSeleniumAction {
         }
 
         for (Map.Entry<String, String> attributeEntry : attributes.entrySet()) {
-            validateElementProperty(String.format("attribute '%s'", attributeEntry.getKey()), attributeEntry.getValue(), element.getAttribute(attributeEntry.getKey()), context);
+            ValueAssertions.assertValue(String.format("attribute '%s'", attributeEntry.getKey()), attributeEntry.getValue(), element.getAttribute(attributeEntry.getKey()), context);
         }
 
         for (Map.Entry<String, String> styleEntry : styles.entrySet()) {
-            validateElementProperty(String.format("css style '%s'", styleEntry.getKey()), styleEntry.getValue(), element.getCssValue(styleEntry.getKey()), context);
-        }
-    }
-
-    /**
-     * Validates web element property value with validation matcher support.
-     * @param propertyName
-     * @param controlValue
-     * @param resultValue
-     * @param context
-     */
-    private void validateElementProperty(String propertyName, String controlValue, String resultValue, TestContext context) {
-        if (StringUtils.hasText(controlValue)) {
-            String control = context.replaceDynamicContentInString(controlValue);
-
-            if (ValidationMatcherUtils.isValidationMatcherExpression(control)) {
-                ValidationMatcherUtils.resolveValidationMatcher("payload", resultValue, control, context);
-            } else {
-                if (!control.equals(resultValue)) {
-                    throw new ValidationException(String.format("Selenium web element validation failed, %s expected '%s', but was '%s'", propertyName, control, resultValue));
-                }
-            }
+            ValueAssertions.assertValue(String.format("css style '%s'", styleEntry.getKey()), styleEntry.getValue(), element.getCssValue(styleEntry.getKey()), context);
         }
     }
 

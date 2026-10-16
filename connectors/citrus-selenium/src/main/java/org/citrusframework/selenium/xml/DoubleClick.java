@@ -19,9 +19,9 @@ package org.citrusframework.selenium.xml;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
+import org.citrusframework.api.actions.selenium.SeleniumElementActionBuilderBase;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.DoubleClickAction;
-import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 
 @XmlRootElement(name = "double-click")
@@ -36,7 +36,7 @@ public class DoubleClick extends AbstractSeleniumAction.Builder<DoubleClickActio
     }
 
     @Override
-    public FindElementAction.ElementActionBuilder<?, ?> getElementBuilder() {
+    public SeleniumElementActionBuilderBase<?, ?> getElementBuilder() {
         return delegate;
     }
 
