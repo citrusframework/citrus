@@ -39,6 +39,7 @@
         <entry key="/" value-ref="index"/>
         <entry key="/form" value-ref="form"/>
         <entry key="/interaction" value-ref="interaction"/>
+        <entry key="/parity" value-ref="parity"/>
         <entry key="/favicon.ico" value-ref="favicon"/>
       </map>
     </property>
@@ -64,6 +65,13 @@
 
   <citrus:static-response-adapter id="interaction">
     <citrus:resource file="templates/interaction.html"/>
+    <citrus:header>
+      <citrus:element name="Content-Type" value="text/html"/>
+    </citrus:header>
+  </citrus:static-response-adapter>
+
+  <citrus:static-response-adapter id="parity">
+    <citrus:resource file="templates/parity.html"/>
     <citrus:header>
       <citrus:element name="Content-Type" value="text/html"/>
     </citrus:header>
