@@ -16,6 +16,9 @@
 
 package org.citrusframework.selenium.yaml;
 
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
 import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.openqa.selenium.By;
@@ -33,24 +36,36 @@ public interface ElementAware {
      * @param element
      */
     default void setElement(Element element) {
+        setElement(element, by -> getElementBuilder().element(by),
+                (name, value) -> getElementBuilder().element(name, value));
+    }
+
+    /**
+     * Sets the element properties using the given consumers. Used by actions that work with
+     * more than one element, e.g. drag and drop with source and target element.
+     * @param element
+     * @param byConsumer
+     * @param propertyConsumer
+     */
+    static void setElement(Element element, Consumer<By> byConsumer, BiConsumer<String, String> propertyConsumer) {
         if (element.getId() != null) {
-            getElementBuilder().element(By.id(element.id));
+            byConsumer.accept(By.id(element.id));
         } else if (element.getName() != null) {
-            getElementBuilder().element(By.name(element.name));
+            byConsumer.accept(By.name(element.name));
         } else if (element.getLinkText() != null) {
-            getElementBuilder().element(By.linkText(element.linkText));
+            byConsumer.accept(By.linkText(element.linkText));
         } else if (element.getPartialLinkText() != null) {
-            getElementBuilder().element(By.partialLinkText(element.partialLinkText));
+            byConsumer.accept(By.partialLinkText(element.partialLinkText));
         } else if (element.getXpath() != null) {
-            getElementBuilder().element(By.xpath(element.xpath));
+            byConsumer.accept(By.xpath(element.xpath));
         } else if (element.getCssSelector() != null) {
-            getElementBuilder().element(By.cssSelector(element.cssSelector));
+            byConsumer.accept(By.cssSelector(element.cssSelector));
         } else if (element.getProperty() != null) {
-            getElementBuilder().element(element.getProperty().getName(), element.getProperty().getValue());
+            propertyConsumer.accept(element.getProperty().getName(), element.getProperty().getValue());
         } else if (element.getClassName() != null) {
-            getElementBuilder().element(By.className(element.className));
+            byConsumer.accept(By.className(element.className));
         } else if (element.getTagName() != null) {
-            getElementBuilder().element(By.tagName(element.tagName));
+            byConsumer.accept(By.tagName(element.tagName));
         }
     }
 

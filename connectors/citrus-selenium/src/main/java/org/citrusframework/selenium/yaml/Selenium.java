@@ -159,6 +159,38 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     }
 
     /**
+     * Double click element.
+     */
+    @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)
+    public void setDoubleClick(DoubleClick builder) {
+        this.builder = builder;
+    }
+
+    /**
+     * Right click element.
+     */
+    @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)
+    public void setRightClick(RightClick builder) {
+        this.builder = builder;
+    }
+
+    /**
+     * Drag and drop element.
+     */
+    @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)
+    public void setDragAndDrop(DragAndDrop builder) {
+        this.builder = builder;
+    }
+
+    /**
+     * Press keys.
+     */
+    @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)
+    public void setPress(Press builder) {
+        this.builder = builder;
+    }
+
+    /**
      * Clear browser cache.
      */
     @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)

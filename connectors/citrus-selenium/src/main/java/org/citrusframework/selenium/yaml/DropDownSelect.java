@@ -39,6 +39,23 @@ public class DropDownSelect extends AbstractSeleniumAction.Builder<DropDownSelec
         this.delegate.options(options);
     }
 
+    @SchemaProperty
+    public void setBy(String selectionMode) {
+        this.delegate.by(selectionMode);
+    }
+
+    @SchemaProperty
+    public void setDeselectAll(Boolean deselectAll) {
+        if (Boolean.TRUE.equals(deselectAll)) {
+            this.delegate.deselectAll();
+        }
+    }
+
+    @SchemaProperty
+    public void setDeselectOptions(List<String> options) {
+        this.delegate.deselect(options.toArray(new String[0]));
+    }
+
     @Override
     @SchemaProperty
     public void setElement(Element element) {

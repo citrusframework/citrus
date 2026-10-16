@@ -54,6 +54,33 @@ actions:
           id: "edit-link"
 
   - selenium:
+      double-click:
+        element:
+          id: "double-click-me"
+
+  - selenium:
+      right-click:
+        element:
+          id: "right-click-me"
+
+  - selenium:
+      drag-and-drop:
+        element:
+          id: "source"
+        target:
+          id: "target"
+
+  - selenium:
+      press:
+        keys: "ENTER"
+        element:
+          id: "username"
+
+  - selenium:
+      press:
+        keys: "TAB"
+
+  - selenium:
       set-input:
         value: "new-value"
         element:
@@ -80,6 +107,34 @@ actions:
           - "Dr."
 
   - selenium:
+      dropdown-select:
+        option: "Mr."
+        by: "text"
+        element:
+          id: "title"
+
+  - selenium:
+      dropdown-select:
+        option: "1"
+        by: "index"
+        element:
+          id: "title"
+
+  - selenium:
+      dropdown-select:
+        deselect-all: true
+        element:
+          id: "title"
+
+  - selenium:
+      dropdown-select:
+        element:
+          id: "title"
+        deselect-options:
+          - "Mr."
+          - "Dr."
+
+  - selenium:
       fill-form:
         fields:
           - id: "username"
@@ -98,6 +153,36 @@ actions:
         condition: "hidden"
         element:
           id: "dialog"
+
+  - selenium:
+      wait-until:
+        condition: "present"
+        element:
+          id: "dialog"
+
+  - selenium:
+      wait-until:
+        condition: "clickable"
+        timeout: 10000
+        element:
+          id: "submit-button"
+
+  - selenium:
+      wait-until:
+        condition: "text"
+        expected: "Ok"
+        element:
+          id: "dialog"
+
+  - selenium:
+      wait-until:
+        condition: "url"
+        expected: "selenium"
+
+  - selenium:
+      wait-until:
+        condition: "title"
+        expected: "Selenium"
 
   - selenium:
       javaScript:

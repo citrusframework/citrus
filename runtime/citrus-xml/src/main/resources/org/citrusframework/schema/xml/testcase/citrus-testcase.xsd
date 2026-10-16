@@ -4830,6 +4830,40 @@
           </xs:complexType>
         </xs:element>
 
+        <xs:element name="double-click">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:WebElementType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="right-click">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:WebElementType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="drag-and-drop">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:WebElementType"/>
+              <xs:element name="target" type="tns:WebElementType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="press">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:WebElementType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="keys" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
         <xs:element name="set-input">
           <xs:complexType>
             <xs:sequence>
@@ -4883,17 +4917,28 @@
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
+              <xs:element name="deselect-options" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="option" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
             </xs:sequence>
             <xs:attribute name="option" type="xs:string"/>
+            <xs:attribute name="by" type="xs:string"/>
+            <xs:attribute name="deselect-all" type="xs:boolean"/>
           </xs:complexType>
         </xs:element>
 
         <xs:element name="wait">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="element" type="tns:WebElementType"/>
+              <xs:element name="element" type="tns:WebElementType" minOccurs="0"/>
             </xs:sequence>
             <xs:attribute name="until" type="xs:string" use="required"/>
+            <xs:attribute name="expected" type="xs:string"/>
+            <xs:attribute name="timeout" type="xs:long"/>
           </xs:complexType>
         </xs:element>
 
