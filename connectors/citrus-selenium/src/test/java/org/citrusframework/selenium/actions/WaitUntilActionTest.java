@@ -307,6 +307,27 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
+            expectedExceptionsMessageRegExp = "Missing expected value for wait condition 'text'")
+    public void testWaitForTextWithoutExpectedValue() {
+        WaitUntilAction action =  new WaitUntilAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "myButton")
+                .condition("text")
+                .build();
+        action.execute(context);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,
+            expectedExceptionsMessageRegExp = "Missing expected value for wait condition 'url'")
+    public void testWaitForUrlWithoutExpectedValue() {
+        WaitUntilAction action =  new WaitUntilAction.Builder()
+                .browser(seleniumBrowser)
+                .condition("url")
+                .build();
+        action.execute(context);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,
             expectedExceptionsMessageRegExp = "Missing element selector for wait condition 'visible'")
     public void testWaitWithoutElementSelector() {
         WaitUntilAction action =  new WaitUntilAction.Builder()
