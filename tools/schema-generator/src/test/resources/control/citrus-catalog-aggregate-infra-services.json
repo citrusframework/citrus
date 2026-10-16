@@ -530,6 +530,15 @@
     "title": "Ollama",
     "description": "Ollama is a tool for running large language models locally"
   },
+  "opa": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "opa",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-opa",
+    "title": "Opa",
+    "description": "Open Policy Agent, a policy engine evaluating Rego policies"
+  },
   "openldap": {
     "kind": "testInfraService",
     "version": "${camel.version}",
@@ -538,6 +547,15 @@
     "module": "org.apache.camel:camel-test-infra-openldap",
     "title": "Openldap",
     "description": "OpenLDAP is an implementation of the Lightweight Directory Access Protocol"
+  },
+  "openfga": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "openfga",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-openfga",
+    "title": "Openfga",
+    "description": "OpenFGA, a relationship-based fine-grained authorization engine"
   },
   "opensearch": {
     "kind": "testInfraService",
@@ -646,6 +664,15 @@
     "module": "org.apache.camel:camel-test-infra-solr",
     "title": "Solr",
     "description": "Apache Solr is an open source search platform"
+  },
+  "spiffe": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "spiffe",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-spiffe",
+    "title": "Spiffe",
+    "description": "SPIFFE/SPIRE server and agent exposing the Workload API"
   },
   "weaviate": {
     "kind": "testInfraService",

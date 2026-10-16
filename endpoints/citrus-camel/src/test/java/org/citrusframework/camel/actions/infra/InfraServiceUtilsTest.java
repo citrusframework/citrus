@@ -193,6 +193,8 @@ public class InfraServiceUtilsTest {
              neo4j
              observability
              ollama
+             opa
+             openfga
              openldap
              opensearch
              pgvector
@@ -207,6 +209,7 @@ public class InfraServiceUtilsTest {
              sftp
              smb
              solr
+             spiffe
              weaviate
              xmpp
              zookeeper""");

@@ -1523,6 +1523,8 @@
             "neo4j",
             "observability",
             "ollama",
+            "opa",
+            "openfga",
             "openldap",
             "opensearch",
             "pgvector",
@@ -1537,6 +1539,7 @@
             "sftp",
             "smb",
             "solr",
+            "spiffe",
             "weaviate",
             "xmpp",
             "zookeeper"

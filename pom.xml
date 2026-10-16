@@ -179,7 +179,7 @@
     <maven.install.plugin.version>3.1.4</maven.install.plugin.version>
     <maven.jar.plugin.version>3.5.1</maven.jar.plugin.version>
     <maven.javadoc.plugin.version>3.12.0</maven.javadoc.plugin.version>
-    <maven.plugin.plugin.version>3.15.2</maven.plugin.plugin.version>
+    <maven.plugin.plugin.version>3.16.0</maven.plugin.plugin.version>
     <maven.plugin.annotations.version>3.15.2</maven.plugin.annotations.version>
     <maven.plugin.testing.harness.version>3.3.0</maven.plugin.testing.harness.version>
     <maven.release.plugin.version>3.3.1</maven.release.plugin.version>
@@ -200,7 +200,7 @@
     <angus-activation.version>2.0.3</angus-activation.version>
     <angus-mail.version>2.0.5</angus-mail.version>
     <apache.ant.version>1.10.18</apache.ant.version>
-    <apache.camel.version>4.22.1</apache.camel.version>
+    <apache.camel.version>4.23.0</apache.camel.version>
     <apicurio.data-models.version>1.1.33</apicurio.data-models.version>
     <ascii-table-version>1.13.0</ascii-table-version>
     <assertj.version>3.27.7</assertj.version>
@@ -223,7 +223,7 @@
     <groovy.version>3.0.25</groovy.version>
     <greenmail.version>2.1.14</greenmail.version>
     <hamcrest.version>3.0</hamcrest.version>
-    <httpclient.version>5.6.3</httpclient.version>
+    <httpclient.version>5.6.4</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
     <jackson.version>3.2.3</jackson.version>
     <jackson-databind-nullable.version>0.2.12</jackson-databind-nullable.version>
@@ -271,18 +271,18 @@
     <saaj.version>3.0.6</saaj.version>
     <selenium.version>4.51.0</selenium.version>
     <playwright.version>1.63.0</playwright.version>
-    <slf4j.version>2.0.18</slf4j.version>
+    <slf4j.version>2.0.20</slf4j.version>
     <snappy.version>1.1.10.12</snappy.version>
     <snakeyaml.version>2.7</snakeyaml.version>
     <spring.version>7.0.9</spring.version>
-    <spring.boot.version>4.1.0</spring.boot.version>
+    <spring.boot.version>4.1.1</spring.boot.version>
     <spring.ws.version>5.0.2</spring.ws.version>
     <spring.integration.version>7.1.0</spring.integration.version>
     <spring.graphql.version>2.0.5</spring.graphql.version>
     <spring.restdocs.version>4.0.1</spring.restdocs.version>
-    <sshd.version>2.19.0</sshd.version>
+    <sshd.version>2.20.0</sshd.version>
     <swagger.version>2.2.37</swagger.version>
-    <swagger.parser.version>2.1.45</swagger.parser.version>
+    <swagger.parser.version>2.1.48</swagger.parser.version>
     <swagger-request-validator.version>2.46.1</swagger-request-validator.version>
     <system-stubs.version>2.1.8</system-stubs.version>
     <testcontainers.version>2.0.5</testcontainers.version>

@@ -237,23 +237,21 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T js(String text, Class<?> resultType);
 
     /**
-     * Evaluates an JOOR expression
+     * Evaluates a QuickJS expression.
      *
      * @param  text the expression to be evaluated
      * @return      the builder to continue processing the DSL
      */
-    @Deprecated(since = "4.3.0")
-    T joor(String text);
+    T quickjs(String text);
 
     /**
-     * Evaluates an JOOR expression
+     * Evaluates a QuickJS expression
      *
      * @param  text       the expression to be evaluated
      * @param  resultType the return type expected by the expression
      * @return            the builder to continue processing the DSL
      */
-    @Deprecated(since = "4.3.0")
-    T joor(String text, Class<?> resultType);
+    T quickjs(String text, Class<?> resultType);
 
     /**
      * Evaluates an Java expression
@@ -436,6 +434,23 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
     T python(String text, Class<?> resultType);
 
     /**
+     * Evaluates a Python 3 expression.
+     *
+     * @param  text the expression to be evaluated
+     * @return      the builder to continue processing the DSL
+     */
+    T python3(String text);
+
+    /**
+     * Evaluates a Python 3 expression
+     *
+     * @param  text       the expression to be evaluated
+     * @param  resultType the return type expected by the expression
+     * @return            the builder to continue processing the DSL
+     */
+    T python3(String text, Class<?> resultType);
+
+    /**
      * Evaluates a <a href="http://camel.apache.org/mvel.html">MVEL expression</a>
      *
      * @param  text the expression to be evaluated
@@ -459,23 +474,6 @@ public interface CamelExpressionClause<T extends MessageProcessor.Builder<?, ?>,
      * @return      the builder to continue processing the DSL
      */
     T spel(String text);
-
-    /**
-     * Evaluates a compiled simple expression
-     *
-     * @param  text the expression to be evaluated
-     * @return      the builder to continue processing the DSL
-     */
-    T csimple(String text);
-
-    /**
-     * Evaluates a compiled simple expression
-     *
-     * @param  text       the expression to be evaluated
-     * @param  resultType the return type expected by the expression
-     * @return            the builder to continue processing the DSL
-     */
-    T csimple(String text, Class<?> resultType);
 
     /**
      * Evaluates a <a href="http://camel.apache.org/simple.html">Simple expression</a>
