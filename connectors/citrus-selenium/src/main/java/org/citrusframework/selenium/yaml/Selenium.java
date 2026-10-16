@@ -191,6 +191,22 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     }
 
     /**
+     * Verify page, element or value on the page.
+     */
+    @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)
+    public void setVerify(Verify builder) {
+        this.builder = builder;
+    }
+
+    /**
+     * Extract page, element or value on the page into a variable.
+     */
+    @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)
+    public void setExtract(Extract builder) {
+        this.builder = builder;
+    }
+
+    /**
      * Clear browser cache.
      */
     @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)
