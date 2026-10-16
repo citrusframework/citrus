@@ -19,9 +19,9 @@ package org.citrusframework.selenium.xml;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import org.citrusframework.TestActor;
+import org.citrusframework.api.actions.selenium.SeleniumElementActionBuilderBase;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
 import org.citrusframework.selenium.actions.DragAndDropAction;
-import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 
 @XmlRootElement(name = "drag-and-drop")
@@ -37,11 +37,11 @@ public class DragAndDrop extends AbstractSeleniumAction.Builder<DragAndDropActio
 
     @XmlElement
     public void setTarget(Element target) {
-        ElementAware.setElement(target, by -> delegate.target(by), delegate::target);
+        ElementAware.setElement(target, delegate::target);
     }
 
     @Override
-    public FindElementAction.ElementActionBuilder<?, ?> getElementBuilder() {
+    public SeleniumElementActionBuilderBase<?, ?> getElementBuilder() {
         return delegate;
     }
 
