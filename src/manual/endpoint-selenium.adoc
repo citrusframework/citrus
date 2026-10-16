@@ -347,6 +347,8 @@ Citrus supports the following Selenium commands with respective test actions:
 [horizontal]
 selenium:start:: Start the browser instance
 selenium:find:: Finds element on current page and validates element properties
+selenium:verify:: Verifies page url, title, element state or value on the current page
+selenium:extract:: Extracts page url, title, element state or value into a test variable
 selenium:click:: Performs click operation on element
 selenium:hover:: Performs hover operation on element
 selenium:double-click:: Performs double click operation on element
@@ -587,6 +589,233 @@ actions:
 The example above finds the *h1* element by its tag name and validates the text and css style attributes. Secondly the *ok-button* is validated with expected
 enabled, displayed, text, style and attribute values. The elements must be present on the current page and all expected element properties have to match. Otherwise the test action and the test case
 is failing with validation errors.
+
+[[verify]]
+== Verify
+
+The verify action checks the current page or a web element. In contrast to the find action the verify action focuses on a single check that is
+selected with the *check* setting. The expected value supports Citrus validation matchers (e.g. `@endsWith('index.html')@`).
+
+Supported checks are:
+
+[horizontal]
+url:: current page url matches the expected value (requires the _expected_ setting)
+title:: current page title matches the expected value (requires the _expected_ setting)
+present:: element is present in the DOM (displayed or not)
+absent:: element is not present in the DOM
+displayed:: element is present in the DOM and displayed
+hidden:: element is not displayed or not present at all
+enabled:: element is enabled
+disabled:: element is disabled
+selected:: element is selected (e.g. a checkbox or radio button)
+not-selected:: element is not selected
+text:: element text matches the expected value (requires the _expected_ setting)
+value:: element value matches the expected value (requires the _expected_ setting)
+attribute:: element attribute matches the expected value (requires the _attribute_ and _expected_ settings)
+css-value:: element css style property matches the expected value (requires the _css-property_ and _expected_ settings)
+count:: number of elements that match the element selector matches the expected value (requires the _expected_ setting)
+
+The element to check is selected with one of the usual element selectors. The _url_ and _title_ checks do not require an element at all.
+Every failing check reports what has been checked, the expected value and the actual value.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().verify()
+            .url("@endsWith('/index.html')@");
+
+    selenium().verify()
+            .title("Citrus");
+
+    selenium().verify()
+            .text("Welcome!")
+            .element(By.id("header"));
+
+    selenium().verify()
+            .attribute("href", "https://citrusframework.org")
+            .element(By.id("docs"));
+
+    selenium().verify()
+            .count("3")
+            .element(By.className("order"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <verify check="url" expected="@endsWith('/index.html')@"/>
+      </selenium>
+
+      <selenium>
+        <verify check="title" expected="Citrus"/>
+      </selenium>
+
+      <selenium>
+        <verify check="text" expected="Welcome!">
+          <element id="header"/>
+        </verify>
+      </selenium>
+
+      <selenium>
+        <verify check="attribute" attribute="href" expected="https://citrusframework.org">
+          <element id="docs"/>
+        </verify>
+      </selenium>
+
+      <selenium>
+        <verify check="count" expected="3">
+          <element class-name="order"/>
+        </verify>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      verify:
+        check: "url"
+        expected: "@endsWith('/index.html')@"
+  - selenium:
+      verify:
+        check: "text"
+        expected: "Welcome!"
+        element:
+          id: "header"
+  - selenium:
+      verify:
+        check: "attribute"
+        attribute: "href"
+        expected: "https://citrusframework.org"
+        element:
+          id: "docs"
+  - selenium:
+      verify:
+        check: "count"
+        expected: "3"
+        element:
+          class-name: "order"
+----
+
+[[extract]]
+== Extract
+
+The extract action reads the current page or a web element and stores the value in a test variable. The variable is then available in the
+test context with the usual Citrus variable syntax `${variable-name}`.
+
+Supported values are:
+
+[horizontal]
+url:: current page url
+title:: current page title
+page-source:: current page source
+text:: element text
+value:: element value
+attribute:: element attribute value (requires the _attribute_ setting)
+css-value:: element css style property value (requires the _css-property_ setting)
+count:: number of elements that match the element selector
+
+The element to extract from is selected with one of the usual element selectors. The _url_, _title_ and _page-source_ values do not require
+an element at all.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().extract()
+            .title()
+            .variable("pageTitle");
+
+    selenium().extract()
+            .text()
+            .variable("headerText")
+            .element(By.id("header"));
+
+    selenium().extract()
+            .count()
+            .variable("orderCount")
+            .element(By.className("order"));
+
+    selenium().extract()
+            .attribute("href")
+            .variable("docsHref")
+            .element(By.id("docs"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <extract value="title" variable="pageTitle"/>
+      </selenium>
+
+      <selenium>
+        <extract value="text" variable="headerText">
+          <element id="header"/>
+        </extract>
+      </selenium>
+
+      <selenium>
+        <extract value="count" variable="orderCount">
+          <element class-name="order"/>
+        </extract>
+      </selenium>
+
+      <selenium>
+        <extract value="attribute" attribute="href" variable="docsHref">
+          <element id="docs"/>
+        </extract>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      extract:
+        value: "title"
+        variable: "pageTitle"
+  - selenium:
+      extract:
+        value: "text"
+        variable: "headerText"
+        element:
+          id: "header"
+  - selenium:
+      extract:
+        value: "count"
+        variable: "orderCount"
+        element:
+          class-name: "order"
+  - selenium:
+      extract:
+        value: "attribute"
+        attribute: "href"
+        variable: "docsHref"
+        element:
+          id: "docs"
+----
+
+NOTE: In XML and YAML test cases the element selectors resolve test variables, so a dynamic locator value such as `<element id="${element-id}"/>` uses
+the current value of the variable when the action is executed.
 
 [[click]]
 == Click
