@@ -17,8 +17,8 @@
 package org.citrusframework.selenium.yaml;
 
 import org.citrusframework.TestActor;
+import org.citrusframework.api.actions.selenium.SeleniumElementActionBuilderBase;
 import org.citrusframework.selenium.actions.AbstractSeleniumAction;
-import org.citrusframework.selenium.actions.FindElementAction;
 import org.citrusframework.selenium.actions.WaitUntilAction;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.api.yaml.SchemaProperty;
@@ -54,7 +54,7 @@ public class WaitUntil extends AbstractSeleniumAction.Builder<WaitUntilAction, W
     }
 
     @Override
-    public FindElementAction.ElementActionBuilder<?, ?> getElementBuilder() {
+    public SeleniumElementActionBuilderBase<?, ?> getElementBuilder() {
         return delegate;
     }
 

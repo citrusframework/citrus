@@ -17,15 +17,13 @@
 package org.citrusframework.selenium.xml;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.selenium.actions.FindElementAction;
-import org.openqa.selenium.By;
+import org.citrusframework.api.actions.selenium.SeleniumElementActionBuilderBase;
 
 public interface ElementAware {
 
@@ -33,43 +31,42 @@ public interface ElementAware {
      * Gets the element aware builder to work with.
      * @return the element aware builder.
      */
-    FindElementAction.ElementActionBuilder<?, ?> getElementBuilder();
+    SeleniumElementActionBuilderBase<?, ?> getElementBuilder();
 
     /**
-     * Sets the element properties on the element aware builder.
+     * Sets the element properties on the element aware builder. Locator values may use test variables
+     * which are resolved when the action is executed.
      * @param element
      */
     default void setElement(Element element) {
-        setElement(element, by -> getElementBuilder().element(by),
-                (name, value) -> getElementBuilder().element(name, value));
+        setElement(element, (name, value) -> getElementBuilder().element(name, value));
     }
 
     /**
-     * Sets the element properties using the given consumers. Used by actions that work with
+     * Sets the element properties using the given consumer. Used by actions that work with
      * more than one element, e.g. drag and drop with source and target element.
      * @param element
-     * @param byConsumer
      * @param propertyConsumer
      */
-    static void setElement(Element element, Consumer<By> byConsumer, BiConsumer<String, String> propertyConsumer) {
+    static void setElement(Element element, BiConsumer<String, String> propertyConsumer) {
         if (element.getId() != null) {
-            byConsumer.accept(By.id(element.id));
+            propertyConsumer.accept("id", element.id);
         } else if (element.getName() != null) {
-            byConsumer.accept(By.name(element.name));
+            propertyConsumer.accept("name", element.name);
         } else if (element.getLinkText() != null) {
-            byConsumer.accept(By.linkText(element.linkText));
+            propertyConsumer.accept("link-text", element.linkText);
         } else if (element.getPartialLinkText() != null) {
-            byConsumer.accept(By.partialLinkText(element.partialLinkText));
+            propertyConsumer.accept("partial-link-text", element.partialLinkText);
         } else if (element.getXpath() != null) {
-            byConsumer.accept(By.xpath(element.xpath));
+            propertyConsumer.accept("xpath", element.xpath);
         } else if (element.getCssSelector() != null) {
-            byConsumer.accept(By.cssSelector(element.cssSelector));
+            propertyConsumer.accept("css-selector", element.cssSelector);
         } else if (element.getProperty() != null) {
             propertyConsumer.accept(element.getProperty().getName(), element.getProperty().getValue());
         } else if (element.getClassName() != null) {
-            byConsumer.accept(By.className(element.className));
+            propertyConsumer.accept("class-name", element.className);
         } else if (element.getTagName() != null) {
-            byConsumer.accept(By.tagName(element.tagName));
+            propertyConsumer.accept("tag-name", element.tagName);
         }
     }
 
