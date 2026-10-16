@@ -200,6 +200,22 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
     }
 
     @Override
+    public DoubleClickAction.Builder doubleClick() {
+        DoubleClickAction.Builder builder = new DoubleClickAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
+    public RightClickAction.Builder rightClick() {
+        RightClickAction.Builder builder = new RightClickAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public ClearBrowserCacheAction.Builder clearCache() {
         ClearBrowserCacheAction.Builder builder = new ClearBrowserCacheAction.Builder()
                 .browser(seleniumBrowser);
