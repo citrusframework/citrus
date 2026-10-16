@@ -37,6 +37,41 @@ public interface SeleniumWaitUntilActionBuilder<T extends TestAction, B extends 
     B condition(String condition);
 
     /**
+     * Add present condition.
+     */
+    B present();
+
+    /**
+     * Add absent condition.
+     */
+    B absent();
+
+    /**
+     * Add clickable condition.
+     */
+    B clickable();
+
+    /**
+     * Add text condition with expected text.
+     */
+    B text(String expected);
+
+    /**
+     * Add url condition with expected url.
+     */
+    B url(String expected);
+
+    /**
+     * Add title condition with expected title.
+     */
+    B title(String expected);
+
+    /**
+     * Add expected value used by wait conditions such as text, url and title.
+     */
+    B expected(String expected);
+
+    /**
      * Add timeout condition.
      */
     B timeout(Long timeout);

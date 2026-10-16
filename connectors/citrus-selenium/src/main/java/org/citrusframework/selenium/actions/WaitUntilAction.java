@@ -22,12 +22,15 @@ import org.citrusframework.api.actions.selenium.SeleniumWaitUntilActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
- * Waits until element is visible or hidden.
+ * Waits for the element to meet a condition. The element is looked up while waiting so the wait
+ * action is able to wait for elements that appear in the DOM tree later on. Supported conditions
+ * are {@code visible}, {@code hidden}, {@code present}, {@code absent}, {@code clickable},
+ * {@code text}, {@code url} and {@code title}.
  *
  * @since 2.7
  */
@@ -39,6 +42,9 @@ public class WaitUntilAction extends FindElementAction {
     /** Wait condition on element */
     private final String condition;
 
+    /** Expected value used by wait conditions such as text, url and title */
+    private final String expected;
+
     /**
      * Default constructor.
      */
@@ -47,23 +53,46 @@ public class WaitUntilAction extends FindElementAction {
 
         this.timeout = builder.timeout;
         this.condition = builder.condition;
+        this.expected = builder.expected;
     }
 
     @Override
-    protected void execute(WebElement webElement, SeleniumBrowser browser, TestContext context) {
-        WebDriverWait q = new WebDriverWait(browser.getWebDriver(), Duration.ofMillis(timeout));
+    protected boolean requiresElementBeforeExecute() {
+        return false;
+    }
 
-        if (condition.equals("hidden")) {
-            q.until(ExpectedConditions.invisibilityOf(webElement));
-        } else if (condition.equals("visible")) {
-            q.until(ExpectedConditions.visibilityOf(webElement));
-        } else {
-            throw new CitrusRuntimeException("Unknown wait condition");
+    @Override
+    protected void executeWithoutElement(By by, SeleniumBrowser browser, TestContext context) {
+        WebDriverWait wait = new WebDriverWait(browser.getWebDriver(), Duration.ofMillis(timeout));
+
+        switch (condition != null ? condition : "") {
+            case "visible" -> wait.until(ExpectedConditions.visibilityOfElementLocated(requireElement(by, condition)));
+            case "hidden" -> wait.until(ExpectedConditions.invisibilityOfElementLocated(requireElement(by, condition)));
+            case "present" -> wait.until(ExpectedConditions.presenceOfElementLocated(requireElement(by, condition)));
+            case "absent" -> wait.until(ExpectedConditions.numberOfElementsToBe(requireElement(by, condition), 0));
+            case "clickable" -> wait.until(ExpectedConditions.elementToBeClickable(requireElement(by, condition)));
+            case "text" -> wait.until(ExpectedConditions.textToBePresentInElementLocated(
+                    requireElement(by, condition), context.replaceDynamicContentInString(expected)));
+            case "url" -> wait.until(ExpectedConditions.urlContains(context.replaceDynamicContentInString(expected)));
+            case "title" -> wait.until(ExpectedConditions.titleContains(context.replaceDynamicContentInString(expected)));
+            default -> throw new CitrusRuntimeException(String.format(
+                    "Unsupported wait condition '%s' - use one of visible, hidden, present, absent, clickable, text, url, title",
+                    condition));
         }
     }
 
-    @Override
-    protected void validate(WebElement element, SeleniumBrowser browser, TestContext context) {
+    /**
+     * Checks that the selector is set on this action for wait conditions that require an element.
+     * @param by
+     * @param condition
+     * @return
+     */
+    private By requireElement(By by, String condition) {
+        if (by == null) {
+            throw new CitrusRuntimeException(String.format("Missing element selector for wait condition '%s'", condition));
+        }
+
+        return by;
     }
 
     /**
@@ -85,6 +114,15 @@ public class WaitUntilAction extends FindElementAction {
     }
 
     /**
+     * Gets the expected value.
+     *
+     * @return
+     */
+    public String getExpected() {
+        return expected;
+    }
+
+    /**
      * Action builder.
      */
     public static class Builder extends ElementActionBuilder<WaitUntilAction, Builder>
@@ -92,6 +130,7 @@ public class WaitUntilAction extends FindElementAction {
 
         private Long timeout = 5000L;
         private String condition;
+        private String expected;
 
         @Override
         public Builder visible() {
@@ -108,6 +147,51 @@ public class WaitUntilAction extends FindElementAction {
         @Override
         public Builder condition(String condition) {
             this.condition = condition;
+            return this;
+        }
+
+        @Override
+        public Builder present() {
+            condition("present");
+            return this;
+        }
+
+        @Override
+        public Builder absent() {
+            condition("absent");
+            return this;
+        }
+
+        @Override
+        public Builder clickable() {
+            condition("clickable");
+            return this;
+        }
+
+        @Override
+        public Builder text(String expected) {
+            this.condition = "text";
+            this.expected = expected;
+            return this;
+        }
+
+        @Override
+        public Builder url(String expected) {
+            this.condition = "url";
+            this.expected = expected;
+            return this;
+        }
+
+        @Override
+        public Builder title(String expected) {
+            this.condition = "title";
+            this.expected = expected;
+            return this;
+        }
+
+        @Override
+        public Builder expected(String expected) {
+            this.expected = expected;
             return this;
         }
 
