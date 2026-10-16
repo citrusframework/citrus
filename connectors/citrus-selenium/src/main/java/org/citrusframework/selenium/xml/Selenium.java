@@ -189,6 +189,22 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     }
 
     /**
+     * Verify page, element or value on the page.
+     */
+    @XmlElement
+    public void setVerify(Verify builder) {
+        this.builder = builder;
+    }
+
+    /**
+     * Extract page, element or value on the page into a variable.
+     */
+    @XmlElement
+    public void setExtract(Extract builder) {
+        this.builder = builder;
+    }
+
+    /**
      * Clear browser cache.
      */
     @XmlElement(name = "clear-cache")

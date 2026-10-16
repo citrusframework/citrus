@@ -120,6 +120,11 @@ public class SeleniumTest extends AbstractXmlActionTest {
         when(targetLocator.window(any(String.class))).thenReturn(webDriver);
         when(browser.getStoredFile(any(String.class))).thenReturn("file.txt");
         when(webDriver.manage()).thenReturn(options);
+        when(webDriver.findElements(any(By.class))).thenReturn(Collections.singletonList(webElement));
+        when(webDriver.findElements(By.id("dialog"))).thenReturn(List.of(dialog));
+        when(webDriver.findElements(By.id("missing"))).thenReturn(Collections.emptyList());
+        when(webDriver.findElements(By.className("order"))).thenReturn(List.of(webElement, webElement));
+        when(webElement.getDomAttribute("href")).thenReturn("https://citrusframework.org");
     }
 
     @Test
@@ -139,7 +144,7 @@ public class SeleniumTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getName(), "SeleniumTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 39L);
+        Assert.assertEquals(result.getActionCount(), 54L);
 
         int actionIndex = 0;
 
@@ -394,6 +399,121 @@ public class SeleniumTest extends AbstractXmlActionTest {
         ClearBrowserCacheAction clearCacheAction = (ClearBrowserCacheAction) result.getTestAction(actionIndex++);
         Assert.assertNull(clearCacheAction.getBrowser());
         Assert.assertEquals(clearCacheAction.getName(), "selenium:clear-cache");
+
+        VerifyAction verifyUrlAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyUrlAction.getBrowser());
+        Assert.assertEquals(verifyUrlAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyUrlAction.getCheck(), "url");
+        Assert.assertEquals(verifyUrlAction.getExpected(), "@endsWith('/selenium')@");
+        Assert.assertNull(verifyUrlAction.getElement());
+
+        VerifyAction verifyTitleAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyTitleAction.getBrowser());
+        Assert.assertEquals(verifyTitleAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyTitleAction.getCheck(), "title");
+        Assert.assertEquals(verifyTitleAction.getExpected(), "Selenium page");
+        Assert.assertNull(verifyTitleAction.getElement());
+
+        VerifyAction verifyPresentAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyPresentAction.getBrowser());
+        Assert.assertEquals(verifyPresentAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyPresentAction.getCheck(), "present");
+        Assert.assertEquals(verifyPresentAction.getElement().getProperty(), "id");
+        Assert.assertEquals(verifyPresentAction.getElement().getPropertyValue(), "dialog");
+
+        VerifyAction verifyAbsentAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyAbsentAction.getBrowser());
+        Assert.assertEquals(verifyAbsentAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyAbsentAction.getCheck(), "absent");
+        Assert.assertEquals(verifyAbsentAction.getElement().getProperty(), "id");
+        Assert.assertEquals(verifyAbsentAction.getElement().getPropertyValue(), "missing");
+
+        VerifyAction verifyDisplayedAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyDisplayedAction.getBrowser());
+        Assert.assertEquals(verifyDisplayedAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyDisplayedAction.getCheck(), "displayed");
+        Assert.assertEquals(verifyDisplayedAction.getElement().getProperty(), "id");
+        Assert.assertEquals(verifyDisplayedAction.getElement().getPropertyValue(), "hello");
+
+        VerifyAction verifyHiddenAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyHiddenAction.getBrowser());
+        Assert.assertEquals(verifyHiddenAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyHiddenAction.getCheck(), "hidden");
+        Assert.assertEquals(verifyHiddenAction.getElement().getProperty(), "id");
+        Assert.assertEquals(verifyHiddenAction.getElement().getPropertyValue(), "dialog");
+
+        VerifyAction verifyEnabledAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyEnabledAction.getBrowser());
+        Assert.assertEquals(verifyEnabledAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyEnabledAction.getCheck(), "enabled");
+        Assert.assertEquals(verifyEnabledAction.getElement().getProperty(), "id");
+        Assert.assertEquals(verifyEnabledAction.getElement().getPropertyValue(), "hello");
+
+        VerifyAction verifyTextAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyTextAction.getBrowser());
+        Assert.assertEquals(verifyTextAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyTextAction.getCheck(), "text");
+        Assert.assertEquals(verifyTextAction.getExpected(), "@contains('Ok')@");
+        Assert.assertEquals(verifyTextAction.getElement().getProperty(), "id");
+        Assert.assertEquals(verifyTextAction.getElement().getPropertyValue(), "dialog");
+
+        VerifyAction verifyAttributeAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyAttributeAction.getBrowser());
+        Assert.assertEquals(verifyAttributeAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyAttributeAction.getCheck(), "attribute");
+        Assert.assertEquals(verifyAttributeAction.getProperty(), "href");
+        Assert.assertEquals(verifyAttributeAction.getExpected(), "https://citrusframework.org");
+        Assert.assertEquals(verifyAttributeAction.getElement().getProperty(), "id");
+        Assert.assertEquals(verifyAttributeAction.getElement().getPropertyValue(), "hello");
+
+        VerifyAction verifyCountAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyCountAction.getBrowser());
+        Assert.assertEquals(verifyCountAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyCountAction.getCheck(), "count");
+        Assert.assertEquals(verifyCountAction.getExpected(), "2");
+        Assert.assertEquals(verifyCountAction.getElement().getProperty(), "class-name");
+        Assert.assertEquals(verifyCountAction.getElement().getPropertyValue(), "order");
+
+        VerifyAction verifyCssValueAction = (VerifyAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(verifyCssValueAction.getBrowser());
+        Assert.assertEquals(verifyCssValueAction.getName(), "selenium:verify");
+        Assert.assertEquals(verifyCssValueAction.getCheck(), "css-value");
+        Assert.assertEquals(verifyCssValueAction.getProperty(), "color");
+        Assert.assertEquals(verifyCssValueAction.getExpected(), "#000000");
+        Assert.assertEquals(verifyCssValueAction.getElement().getProperty(), "id");
+        Assert.assertEquals(verifyCssValueAction.getElement().getPropertyValue(), "hello");
+
+        ExtractAction extractTitleAction = (ExtractAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(extractTitleAction.getBrowser());
+        Assert.assertEquals(extractTitleAction.getName(), "selenium:extract");
+        Assert.assertEquals(extractTitleAction.getValue(), "title");
+        Assert.assertEquals(extractTitleAction.getVariable(), "pageTitle");
+        Assert.assertNull(extractTitleAction.getElement());
+
+        ExtractAction extractTextAction = (ExtractAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(extractTextAction.getBrowser());
+        Assert.assertEquals(extractTextAction.getName(), "selenium:extract");
+        Assert.assertEquals(extractTextAction.getValue(), "text");
+        Assert.assertEquals(extractTextAction.getVariable(), "dialogText");
+        Assert.assertEquals(extractTextAction.getElement().getProperty(), "id");
+        Assert.assertEquals(extractTextAction.getElement().getPropertyValue(), "dialog");
+
+        ExtractAction extractCountAction = (ExtractAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(extractCountAction.getBrowser());
+        Assert.assertEquals(extractCountAction.getName(), "selenium:extract");
+        Assert.assertEquals(extractCountAction.getValue(), "count");
+        Assert.assertEquals(extractCountAction.getVariable(), "orderCount");
+        Assert.assertEquals(extractCountAction.getElement().getProperty(), "class-name");
+        Assert.assertEquals(extractCountAction.getElement().getPropertyValue(), "order");
+
+        ExtractAction extractAttributeAction = (ExtractAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(extractAttributeAction.getBrowser());
+        Assert.assertEquals(extractAttributeAction.getName(), "selenium:extract");
+        Assert.assertEquals(extractAttributeAction.getValue(), "attribute");
+        Assert.assertEquals(extractAttributeAction.getProperty(), "href");
+        Assert.assertEquals(extractAttributeAction.getVariable(), "docsHref");
+        Assert.assertEquals(extractAttributeAction.getElement().getProperty(), "id");
+        Assert.assertEquals(extractAttributeAction.getElement().getPropertyValue(), "hello");
 
         StopBrowserAction stopAction = (StopBrowserAction) result.getTestAction(actionIndex);
         Assert.assertNotNull(stopAction.getBrowser());

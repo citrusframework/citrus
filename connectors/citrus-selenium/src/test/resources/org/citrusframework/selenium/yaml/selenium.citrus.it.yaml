@@ -220,5 +220,102 @@ actions:
       clear-cache: {}
 
   - selenium:
+      verify:
+        check: "url"
+        expected: "@endsWith('/selenium')@"
+
+  - selenium:
+      verify:
+        check: "title"
+        expected: "Selenium page"
+
+  - selenium:
+      verify:
+        check: "present"
+        element:
+          id: "dialog"
+
+  - selenium:
+      verify:
+        check: "absent"
+        element:
+          id: "missing"
+
+  - selenium:
+      verify:
+        check: "displayed"
+        element:
+          id: "hello"
+
+  - selenium:
+      verify:
+        check: "hidden"
+        element:
+          id: "dialog"
+
+  - selenium:
+      verify:
+        check: "enabled"
+        element:
+          id: "hello"
+
+  - selenium:
+      verify:
+        check: "text"
+        expected: "@contains('Ok')@"
+        element:
+          id: "dialog"
+
+  - selenium:
+      verify:
+        check: "attribute"
+        attribute: "href"
+        expected: "https://citrusframework.org"
+        element:
+          id: "hello"
+
+  - selenium:
+      verify:
+        check: "count"
+        expected: "2"
+        element:
+          class-name: "order"
+
+  - selenium:
+      verify:
+        check: "css-value"
+        css-property: "color"
+        expected: "#000000"
+        element:
+          id: "hello"
+
+  - selenium:
+      extract:
+        value: "title"
+        variable: "pageTitle"
+
+  - selenium:
+      extract:
+        value: "text"
+        variable: "dialogText"
+        element:
+          id: "dialog"
+
+  - selenium:
+      extract:
+        value: "count"
+        variable: "orderCount"
+        element:
+          class-name: "order"
+
+  - selenium:
+      extract:
+        value: "attribute"
+        attribute: "href"
+        variable: "docsHref"
+        element:
+          id: "hello"
+
+  - selenium:
       stop:
         browser: "seleniumBrowser"
