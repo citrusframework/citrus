@@ -144,7 +144,7 @@ public class SeleniumTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getName(), "SeleniumTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 54L);
+        Assert.assertEquals(result.getActionCount(), 55L);
 
         int actionIndex = 0;
 
@@ -514,6 +514,12 @@ public class SeleniumTest extends AbstractYamlActionTest {
         Assert.assertEquals(extractAttributeAction.getVariable(), "docsHref");
         Assert.assertEquals(extractAttributeAction.getElement().getProperty(), "id");
         Assert.assertEquals(extractAttributeAction.getElement().getPropertyValue(), "hello");
+
+        ClickAction partialLinkTextClickAction = (ClickAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(partialLinkTextClickAction.getBrowser());
+        Assert.assertEquals(partialLinkTextClickAction.getName(), "selenium:click");
+        Assert.assertEquals(partialLinkTextClickAction.getProperty(), "partial-link-text");
+        Assert.assertEquals(partialLinkTextClickAction.getPropertyValue(), "Click");
 
         StopBrowserAction stopAction = (StopBrowserAction) result.getTestAction(actionIndex);
         Assert.assertNotNull(stopAction.getBrowser());

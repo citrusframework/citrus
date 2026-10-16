@@ -5064,6 +5064,7 @@
     <xs:attribute name="class-name" type="xs:string"/>
     <xs:attribute name="css-selector" type="xs:string"/>
     <xs:attribute name="link-text" type="xs:string"/>
+    <xs:attribute name="partial-link-text" type="xs:string"/>
     <xs:attribute name="xpath" type="xs:string"/>
   </xs:complexType>
 

@@ -80,6 +80,10 @@ public class ExtractAction extends AbstractSeleniumAction {
     }
 
     private String extractElementValue(Value valueToExtract, SeleniumBrowser browser, TestContext context) {
+        if ((valueToExtract == Value.ATTRIBUTE || valueToExtract == Value.CSS_VALUE) && property == null) {
+            throw new CitrusRuntimeException(String.format("Missing attribute name for extract value '%s'", value));
+        }
+
         By by = resolveElement(context);
 
         List<WebElement> elements = browser.getWebDriver().findElements(by);
@@ -87,12 +91,21 @@ public class ExtractAction extends AbstractSeleniumAction {
 
         return switch (valueToExtract) {
             case TEXT -> requireElement(elementToExtract, by).getText();
-            case VALUE -> requireElement(elementToExtract, by).getDomProperty("value");
+            case VALUE -> {
+                String actual = requireElement(elementToExtract, by).getDomProperty("value");
+                if (actual == null) {
+                    throw new CitrusRuntimeException(String.format("Failed to extract value from element '%s'", by));
+                }
+                yield actual;
+            }
             case ATTRIBUTE -> {
                 WebElement found = requireElement(elementToExtract, by);
                 String actual = found.getDomAttribute(property);
                 if (actual == null) {
                     actual = found.getAttribute(property);
+                }
+                if (actual == null) {
+                    throw new CitrusRuntimeException(String.format("Failed to extract attribute '%s' from element '%s'", property, by));
                 }
                 yield actual;
             }

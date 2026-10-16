@@ -434,4 +434,24 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
                 .build()
                 .execute(context);
     }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing attribute name for verify check 'attribute'")
+    public void shouldFailOnAttributeWithoutName() {
+        new VerifyAction.Builder()
+                .browser(seleniumBrowser)
+                .check("attribute")
+                .element("id", "docs")
+                .build()
+                .execute(context);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing attribute name for verify check 'css-value'")
+    public void shouldFailOnCssValueWithoutName() {
+        new VerifyAction.Builder()
+                .browser(seleniumBrowser)
+                .check("css-value")
+                .element("id", "docs")
+                .build()
+                .execute(context);
+    }
 }

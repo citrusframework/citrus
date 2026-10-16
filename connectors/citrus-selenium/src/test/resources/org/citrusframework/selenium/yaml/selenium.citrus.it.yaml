@@ -317,5 +317,10 @@ actions:
           id: "hello"
 
   - selenium:
+      click:
+        element:
+          partial-link-text: "Click"
+
+  - selenium:
       stop:
         browser: "seleniumBrowser"

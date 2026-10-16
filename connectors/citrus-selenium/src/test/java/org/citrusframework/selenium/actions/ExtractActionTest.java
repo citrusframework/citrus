@@ -294,4 +294,57 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,
+            expectedExceptionsMessageRegExp = "Failed to extract attribute 'href' from element 'By\\.id: docs'")
+    public void shouldFailOnMissingAttribute() {
+        when(element.getDomAttribute("href")).thenReturn(null);
+        when(element.getAttribute("href")).thenReturn(null);
+
+        new ExtractAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "docs")
+                .attribute("href")
+                .variable("href")
+                .build()
+                .execute(context);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,
+            expectedExceptionsMessageRegExp = "Failed to extract value from element 'By\\.id: username'")
+    public void shouldFailOnMissingExtractedValue() {
+        when(element.getDomProperty("value")).thenReturn(null);
+
+        new ExtractAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "username")
+                .value()
+                .variable("usernameValue")
+                .build()
+                .execute(context);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,
+            expectedExceptionsMessageRegExp = "Missing attribute name for extract value 'attribute'")
+    public void shouldFailOnAttributeWithoutName() {
+        new ExtractAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "docs")
+                .value("attribute")
+                .variable("href")
+                .build()
+                .execute(context);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,
+            expectedExceptionsMessageRegExp = "Missing attribute name for extract value 'css-value'")
+    public void shouldFailOnCssValueWithoutName() {
+        new ExtractAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "docs")
+                .value("css-value")
+                .variable("color")
+                .build()
+                .execute(context);
+    }
 }

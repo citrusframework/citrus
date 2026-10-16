@@ -338,6 +338,12 @@
     </selenium>
 
     <selenium>
+      <click>
+        <element partial-link-text="Click"/>
+      </click>
+    </selenium>
+
+    <selenium>
       <stop browser="seleniumBrowser"/>
     </selenium>
   </actions>
