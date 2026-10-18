@@ -77,10 +77,14 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
 
         Object payload = httpMessage.getPayload();
         if (httpMessage.getStatusCode() != null) {
+            addDefaultContentTypeHeaderIfAbsent(httpHeaders, endpointConfiguration);
             return new ResponseEntity<>(payload, httpHeaders, httpMessage.getStatusCode());
         }
 
         RequestMethod method = determineRequestMethod(endpointConfiguration, httpMessage);
+        if (httpMethodSupportsBody(method)) {
+            addDefaultContentTypeHeaderIfAbsent(httpHeaders, endpointConfiguration);
+        }
 
         return createHttpEntity(httpHeaders, payload, method);
     }
@@ -187,11 +191,19 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             }
         }
 
+        return httpHeaders;
+    }
+
+    /**
+     * Adds the endpoint default content type if the message did not provide one.
+     * @param httpHeaders The headers to add the content type to
+     * @param endpointConfiguration The endpoint configuration to get the content type from
+     */
+    private void addDefaultContentTypeHeaderIfAbsent(HttpHeaders httpHeaders,
+                                                      HttpEndpointConfiguration endpointConfiguration) {
         if (httpHeaders.getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE) == null) {
             httpHeaders.add(HttpMessageHeaders.HTTP_CONTENT_TYPE, composeContentTypeHeaderValue(endpointConfiguration));
         }
-
-        return httpHeaders;
     }
 
     /**

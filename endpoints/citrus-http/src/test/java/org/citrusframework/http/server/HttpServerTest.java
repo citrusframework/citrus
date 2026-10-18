@@ -99,7 +99,7 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
 
             Assert.assertTrue(request instanceof HttpMessage);
             Assert.assertEquals(request.getPayload(String.class), "");
-            Assert.assertEquals(request.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/plain;charset=utf-8");
+            Assert.assertNull(request.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
             Assert.assertEquals(request.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI), "/test/hello");
 
             return new HttpMessage("Hello user")

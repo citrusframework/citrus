@@ -76,6 +76,10 @@ The *request-method* defines the Http method to use. In addition to that we can 
 we are about to send. The charset is also added to the content-type header. In case you do not want to set the charset at
 all please specify an empty string as the default value is _UTF-8_.
 
+NOTE: The endpoint's default content type is applied only to request methods that carry a body (POST, PUT, DELETE,
+PATCH). Requests using GET, HEAD, OPTIONS or TRACE are sent without a content type header unless the test explicitly
+sets one.
+
 The client builds the Http request and sends it to the Http server. While the client is waiting for the synchronous Http
 response to arrive we are able to poll several times for the response message in our test case. As usual you can use the
 same client endpoint in your test case to send and receive messages synchronously. In case the reply message comes in too
