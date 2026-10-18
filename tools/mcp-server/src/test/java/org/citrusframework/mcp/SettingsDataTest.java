@@ -119,6 +119,19 @@ class SettingsDataTest {
     }
 
     @Test
+    void shouldContainTestFlowReportHistorySetting() {
+        SettingsData.SettingsGroup reporting = settingsData.getGroup("reporting");
+
+        assertThat(reporting).isNotNull();
+        assertThat(reporting.settings()).anySatisfy(entry -> {
+            assertThat(entry.property()).isEqualTo("citrus.test.flow.report.history");
+            assertThat(entry.envVariable()).isEqualTo("CITRUS_TEST_FLOW_REPORT_HISTORY");
+            assertThat(entry.defaultValue()).isEqualTo("true");
+            assertThat(entry.type()).isEqualTo("boolean");
+        });
+    }
+
+    @Test
     void shouldGetModuleNames() {
         List<String> moduleNames = settingsData.getModuleNames();
 
