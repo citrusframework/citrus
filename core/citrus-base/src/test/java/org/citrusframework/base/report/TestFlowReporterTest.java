@@ -36,7 +36,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +69,10 @@ public class TestFlowReporterTest {
     private Sequence sequence;
 
     private AutoCloseable mocks;
+
+    private static final String REPORT_DIRECTORY_PROPERTY = "citrus.report.directory";
+
+    private static final String REPORT_HISTORY_PROPERTY = "citrus.test.flow.report.history";
 
     @BeforeClass
     public void setupMocks() {
@@ -1041,6 +1050,148 @@ public class TestFlowReporterTest {
               payload: |
                 Citrus rocks!
         """.formatted(messageSent.getId(), messageSent.getHeader(MessageHeaders.TIMESTAMP), messageReceived.getId(), messageReceived.getHeader(MessageHeaders.TIMESTAMP)));
+    }
+
+    @Test
+    public void shouldWriteFlowReportIntoRunLocation() throws IOException {
+        Path reportDirectory = prepareReportDirectory("run-location");
+        String previousReportDirectory = System.getProperty(REPORT_DIRECTORY_PROPERTY);
+        String previousHistory = System.getProperty(REPORT_HISTORY_PROPERTY);
+
+        try {
+            System.setProperty(REPORT_DIRECTORY_PROPERTY, reportDirectory.toString());
+            System.clearProperty(REPORT_HISTORY_PROPERTY);
+
+            TestFlowReporter reporter = new TestFlowReporter();
+            generateReportForSuccessfulTest(reporter, "fooTest");
+
+            List<Path> runLocations = listRunLocations(reportDirectory);
+            assertThat(runLocations).hasSize(1);
+            assertThat(runLocations.get(0).getFileName().toString())
+                    .matches("\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2}(-\\d+)?");
+            assertThat(runLocations.get(0).resolve("fooTest-flow.json")).exists();
+        } finally {
+            restoreProperty(REPORT_DIRECTORY_PROPERTY, previousReportDirectory);
+            restoreProperty(REPORT_HISTORY_PROPERTY, previousHistory);
+        }
+    }
+
+    @Test
+    public void shouldKeepRunLocationsForEachGeneration() throws IOException {
+        Path reportDirectory = prepareReportDirectory("run-location-multiple-generations");
+        String previousReportDirectory = System.getProperty(REPORT_DIRECTORY_PROPERTY);
+        String previousHistory = System.getProperty(REPORT_HISTORY_PROPERTY);
+
+        try {
+            System.setProperty(REPORT_DIRECTORY_PROPERTY, reportDirectory.toString());
+            System.clearProperty(REPORT_HISTORY_PROPERTY);
+
+            TestFlowReporter reporter = new TestFlowReporter();
+            generateReportForSuccessfulTest(reporter, "fooTest");
+            List<Path> runLocations = listRunLocations(reportDirectory);
+            assertThat(runLocations).hasSize(1);
+
+            generateReportForSuccessfulTest(reporter, "barTest");
+
+            List<Path> runLocationsAfterSecondGeneration = listRunLocations(reportDirectory);
+            assertThat(runLocationsAfterSecondGeneration).hasSize(2);
+            assertThat(runLocations.get(0).resolve("fooTest-flow.json")).exists();
+            assertThat(runLocationsAfterSecondGeneration.get(1).resolve("fooTest-flow.json")).exists();
+            assertThat(runLocationsAfterSecondGeneration.get(1).resolve("barTest-flow.json")).exists();
+        } finally {
+            restoreProperty(REPORT_DIRECTORY_PROPERTY, previousReportDirectory);
+            restoreProperty(REPORT_HISTORY_PROPERTY, previousHistory);
+        }
+    }
+
+    @Test
+    public void shouldWriteFlowReportsFlatWhenHistoryIsDisabled() throws IOException {
+        Path reportDirectory = prepareReportDirectory("run-location-disabled");
+        String previousReportDirectory = System.getProperty(REPORT_DIRECTORY_PROPERTY);
+        String previousHistory = System.getProperty(REPORT_HISTORY_PROPERTY);
+
+        try {
+            System.setProperty(REPORT_DIRECTORY_PROPERTY, reportDirectory.toString());
+            System.setProperty(REPORT_HISTORY_PROPERTY, "false");
+
+            TestFlowReporter reporter = new TestFlowReporter();
+            generateReportForSuccessfulTest(reporter, "fooTest");
+
+            assertThat(listRunLocations(reportDirectory)).isEmpty();
+            assertThat(reportDirectory.resolve("fooTest-flow.json")).exists();
+        } finally {
+            restoreProperty(REPORT_DIRECTORY_PROPERTY, previousReportDirectory);
+            restoreProperty(REPORT_HISTORY_PROPERTY, previousHistory);
+        }
+    }
+
+    @Test
+    public void shouldAppendSuffixWhenRunLocationAlreadyExists() throws IOException {
+        Path reportDirectory = prepareReportDirectory("run-location-collision");
+        TestFlowReporter reporter = new TestFlowReporter();
+
+        File firstRunLocation = reporter.createRunDirectory(reportDirectory.toFile(), "2000-01-01_00-00-00");
+        File secondRunLocation = reporter.createRunDirectory(reportDirectory.toFile(), "2000-01-01_00-00-00");
+
+        assertThat(firstRunLocation).isDirectory().hasName("2000-01-01_00-00-00");
+        assertThat(secondRunLocation).isDirectory().hasName("2000-01-01_00-00-00-1");
+    }
+
+    private void generateReportForSuccessfulTest(TestFlowReporter reporter, String testName) {
+        TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
+        metaInfo.setAuthor("theAuthor");
+        metaInfo.setStatus(TestCaseMetaInfo.Status.FINAL);
+
+        TestResults results = new TestResults();
+        TestResult result = TestResult.success(testName, "FooTest");
+        result.withDuration(Duration.ofSeconds(2));
+        results.addResult(result);
+        reset(test);
+
+        when(test.getName()).thenReturn(testName);
+        when(test.getMetaInfo()).thenReturn(metaInfo);
+        when(test.getTestResult()).thenReturn(result);
+        when(test.getActionIndex(echo)).thenReturn(0);
+
+        reporter.onTestStart(test);
+        reporter.onTestActionStart(test, echo);
+        reporter.onTestActionFinish(test, echo);
+        reporter.onTestSuccess(test);
+
+        reporter.generate(results);
+    }
+
+    private static Path prepareReportDirectory(String name) throws IOException {
+        Path reportDirectory = Path.of("target", "test-reports", name);
+        deleteRecursively(reportDirectory);
+        Files.createDirectories(reportDirectory);
+        return reportDirectory;
+    }
+
+    private static List<Path> listRunLocations(Path reportDirectory) throws IOException {
+        try (var paths = Files.list(reportDirectory)) {
+            return paths.filter(Files::isDirectory).sorted().toList();
+        }
+    }
+
+    private static void deleteRecursively(Path path) throws IOException {
+        if (Files.notExists(path)) {
+            return;
+        }
+
+        try (var paths = Files.walk(path)) {
+            for (Path file : paths.sorted(Comparator.reverseOrder()).toList()) {
+                Files.delete(file);
+            }
+        }
+    }
+
+    private static void restoreProperty(String propertyName, String previousValue) {
+        if (previousValue == null) {
+            System.clearProperty(propertyName);
+        } else {
+            System.setProperty(propertyName, previousValue);
+        }
     }
 
 }

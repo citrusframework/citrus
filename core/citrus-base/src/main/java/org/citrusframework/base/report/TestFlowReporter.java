@@ -20,8 +20,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,6 +67,8 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
 
     private final boolean enabled = TestFlowReporterSettings.isReportEnabled();
 
+    private static final String RUN_DIRECTORY_NAME_PATTERN = "yyyy-MM-dd_HH-mm-ss";
+
     @Override
     protected void generate(TestResults testResults) {
         testResults.doWithResults(result -> {
@@ -77,17 +85,49 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
                 }
             }
 
+            File reportDirectory = TestFlowReporterSettings.isHistoryEnabled() ? createRunDirectory(targetDirectory) : targetDirectory;
+
             flowReport.getEntries()
                 .forEach(reportEntry -> {
                     if (TestFlowReporterSettings.isJsonReport()) {
-                        writeTestFlowReport(targetDirectory, "%s-flow.json".formatted(reportEntry.getName()), MessagePayloadUtils.prettyPrintJson(reportEntry.toJson()));
+                        writeTestFlowReport(reportDirectory, "%s-flow.json".formatted(reportEntry.getName()), MessagePayloadUtils.prettyPrintJson(reportEntry.toJson()));
                     }
 
                     if (TestFlowReporterSettings.isYamlReport()) {
-                        writeTestFlowReport(targetDirectory, "%s-flow.yaml".formatted(reportEntry.getName()), reportEntry.toYaml());
+                        writeTestFlowReport(reportDirectory, "%s-flow.yaml".formatted(reportEntry.getName()), reportEntry.toYaml());
                     }
                 });
         }
+    }
+
+    /**
+     * Create a new run directory for the current report generation. The directory name uses a timestamp
+     * so that run directories sort chronologically by name.
+     */
+    File createRunDirectory(File reportDirectory) {
+        return createRunDirectory(reportDirectory, LocalDateTime.now().format(DateTimeFormatter.ofPattern(RUN_DIRECTORY_NAME_PATTERN, Locale.ROOT)));
+    }
+
+    /**
+     * Create a run directory with the given name within the report directory. The name gets a numeric
+     * suffix when the directory already exists.
+     */
+    File createRunDirectory(File reportDirectory, String runDirectoryName) {
+        for (int attempt = 0; attempt < 100; attempt++) {
+            Path runDirectory = reportDirectory.toPath()
+                    .resolve(attempt == 0 ? runDirectoryName : "%s-%d".formatted(runDirectoryName, attempt));
+
+            try {
+                Files.createDirectory(runDirectory);
+                return runDirectory.toFile();
+            } catch (FileAlreadyExistsException e) {
+                // try again with next suffix
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Unable to create report output directory: " + runDirectory, e);
+            }
+        }
+
+        throw new CitrusRuntimeException("Unable to create report output directory: " + reportDirectory);
     }
 
     private void writeTestFlowReport(File targetDirectory, String fileName, String content) {
