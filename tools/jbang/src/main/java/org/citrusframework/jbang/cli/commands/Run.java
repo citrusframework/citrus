@@ -128,9 +128,10 @@ public class Run extends CitrusCommand {
 
     private int run() {
         File work = new File(CitrusJBangMain.Settings.getWorkDir());
-        TestReporterSettings.setReportDirectory(CitrusJBangMain.Settings.getReportDirectory());
-        removeDir(work);
-        if (!work.mkdirs()) {
+        String reportDirectory = CitrusJBangMain.Settings.getReportDirectory();
+        TestReporterSettings.setReportDirectory(reportDirectory);
+        cleanWorkDir(work, new File(reportDirectory).getName());
+        if (!work.exists() && !work.mkdirs()) {
             printer().printErr("Failed to create working directory " + CitrusJBangMain.Settings.getWorkDir());
             return 1;
         }
@@ -530,6 +531,24 @@ public class Run extends CitrusCommand {
         }
 
         return FileUtils.getBaseName(name).equalsIgnoreCase("readme");
+    }
+
+    private static void cleanWorkDir(File workDir, String preserveDirName) {
+        String[] list = workDir.list();
+        if (list == null) {
+            return;
+        }
+        for (String s : list) {
+            if (s.equals(preserveDirName)) {
+                continue;
+            }
+            File f = new File(workDir, s);
+            if (f.isDirectory()) {
+                removeDir(f);
+            } else {
+                delete(f);
+            }
+        }
     }
 
     private static void removeDir(File d) {

@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,14 +78,15 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
                 }
             }
 
+            long timestamp = Instant.now().getEpochSecond();
             flowReport.getEntries()
                 .forEach(reportEntry -> {
                     if (TestFlowReporterSettings.isJsonReport()) {
-                        writeTestFlowReport(targetDirectory, "%s-flow.json".formatted(reportEntry.getName()), MessagePayloadUtils.prettyPrintJson(reportEntry.toJson()));
+                        writeTestFlowReport(targetDirectory, "%s-flow-%d.json".formatted(reportEntry.getName(), timestamp), MessagePayloadUtils.prettyPrintJson(reportEntry.toJson()));
                     }
 
                     if (TestFlowReporterSettings.isYamlReport()) {
-                        writeTestFlowReport(targetDirectory, "%s-flow.yaml".formatted(reportEntry.getName()), reportEntry.toYaml());
+                        writeTestFlowReport(targetDirectory, "%s-flow-%d.yaml".formatted(reportEntry.getName(), timestamp), reportEntry.toYaml());
                     }
                 });
         }

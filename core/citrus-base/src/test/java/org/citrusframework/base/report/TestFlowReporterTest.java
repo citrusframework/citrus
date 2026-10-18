@@ -36,7 +36,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1041,6 +1046,54 @@ public class TestFlowReporterTest {
               payload: |
                 Citrus rocks!
         """.formatted(messageSent.getId(), messageSent.getHeader(MessageHeaders.TIMESTAMP), messageReceived.getId(), messageReceived.getHeader(MessageHeaders.TIMESTAMP)));
+    }
+
+    @Test
+    public void shouldWriteFlowReportWithTimestampedFilename() throws IOException {
+        Path tempDir = Files.createTempDirectory("citrus-flow-report-test");
+        try {
+            TestFlowReporter reporter = new TestFlowReporter();
+            reporter.setReportDirectory(tempDir.toString());
+
+            TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
+            metaInfo.setAuthor("theAuthor");
+            metaInfo.setStatus(TestCaseMetaInfo.Status.FINAL);
+
+            TestResults results = new TestResults();
+            TestResult result = TestResult.success("fooTest", "FooTest");
+            result.withDuration(Duration.ofSeconds(2));
+            results.addResult(result);
+            reset(test);
+
+            when(test.getName()).thenReturn("fooTest");
+            when(test.getMetaInfo()).thenReturn(metaInfo);
+            when(test.getTestResult()).thenReturn(result);
+            when(test.getActionIndex(echo)).thenReturn(0);
+
+            reporter.onTestStart(test);
+
+            reporter.onTestActionStart(test, echo);
+            reporter.onTestActionFinish(test, echo);
+
+            reporter.onTestSuccess(test);
+
+            reporter.generate(results);
+
+            File[] files = tempDir.toFile().listFiles((dir, name) -> name.startsWith("fooTest-flow-") && name.endsWith(".json"));
+            assertThat(files).isNotNull().hasSize(1);
+
+            String fileName = files[0].getName();
+            String timestamp = fileName.replace("fooTest-flow-", "").replace(".json", "");
+            assertThat(Long.parseLong(timestamp)).isGreaterThan(0);
+
+            String content = Files.readString(files[0].toPath());
+            assertThat(content).contains("\"name\": \"fooTest\"");
+        } finally {
+            Files.walk(tempDir)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
     }
 
 }
