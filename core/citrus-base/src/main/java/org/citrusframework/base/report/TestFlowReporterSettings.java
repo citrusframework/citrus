@@ -39,7 +39,7 @@ public class TestFlowReporterSettings {
     private static final String REPORT_ENABLED_ENV = "CITRUS_TEST_FLOW_REPORT_ENABLED";
     private static final String REPORT_ENABLED_DEFAULT = Boolean.TRUE.toString();
 
-    @CitrusConfigProperty(description = "Keep flow reports of previous test runs by writing each report generation to its own directory", type = "java.lang.Boolean", defaultValue = "true")
+    @CitrusConfigProperty(description = "Keep flow reports of previous test runs by adding a timestamp suffix to the report file names", type = "java.lang.Boolean", defaultValue = "true")
     private static final String REPORT_HISTORY_PROPERTY = "citrus.test.flow.report.history";
     private static final String REPORT_HISTORY_ENV = "CITRUS_TEST_FLOW_REPORT_HISTORY";
     private static final String REPORT_HISTORY_DEFAULT = Boolean.TRUE.toString();

@@ -492,7 +492,7 @@ set of test actions.
 
 An applied behavior is a test action container, reported under the name of the behavior.
 
-The test flow report written to `target/citrus-reports/<timestamp>/<TestClass>.<method>-flow.json` lists the behavior as one entry,
+The test flow report written to `target/citrus-reports/<TestClass>.<method>-flow-<timestamp>.json` lists the behavior as one entry,
 with the actions it runs nested underneath:
 
 [source,json]

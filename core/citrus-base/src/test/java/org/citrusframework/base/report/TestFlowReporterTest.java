@@ -36,7 +36,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1053,8 +1052,8 @@ public class TestFlowReporterTest {
     }
 
     @Test
-    public void shouldWriteFlowReportIntoRunLocation() throws IOException {
-        Path reportDirectory = prepareReportDirectory("run-location");
+    public void shouldWriteFlowReportsWithTimestampSuffix() throws IOException {
+        Path reportDirectory = prepareReportDirectory("flow-report-history");
         String previousReportDirectory = System.getProperty(REPORT_DIRECTORY_PROPERTY);
         String previousHistory = System.getProperty(REPORT_HISTORY_PROPERTY);
 
@@ -1065,11 +1064,13 @@ public class TestFlowReporterTest {
             TestFlowReporter reporter = new TestFlowReporter();
             generateReportForSuccessfulTest(reporter, "fooTest");
 
-            List<Path> runLocations = listRunLocations(reportDirectory);
-            assertThat(runLocations).hasSize(1);
-            assertThat(runLocations.get(0).getFileName().toString())
-                    .matches("\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2}(-\\d+)?");
-            assertThat(runLocations.get(0).resolve("fooTest-flow.json")).exists();
+            List<Path> reportFiles = listReportFiles(reportDirectory);
+            assertThat(reportFiles).hasSize(1);
+            assertThat(reportFiles.get(0).getFileName().toString()).matches("fooTest-flow-\\d+\\.json");
+
+            try (var entries = Files.list(reportDirectory)) {
+                assertThat(entries.filter(Files::isDirectory).toList()).isEmpty();
+            }
         } finally {
             restoreProperty(REPORT_DIRECTORY_PROPERTY, previousReportDirectory);
             restoreProperty(REPORT_HISTORY_PROPERTY, previousHistory);
@@ -1077,8 +1078,8 @@ public class TestFlowReporterTest {
     }
 
     @Test
-    public void shouldKeepRunLocationsForEachGeneration() throws IOException {
-        Path reportDirectory = prepareReportDirectory("run-location-multiple-generations");
+    public void shouldKeepFlowReportsFromEachGeneration() throws IOException {
+        Path reportDirectory = prepareReportDirectory("flow-report-history-multiple-generations");
         String previousReportDirectory = System.getProperty(REPORT_DIRECTORY_PROPERTY);
         String previousHistory = System.getProperty(REPORT_HISTORY_PROPERTY);
 
@@ -1088,16 +1089,18 @@ public class TestFlowReporterTest {
 
             TestFlowReporter reporter = new TestFlowReporter();
             generateReportForSuccessfulTest(reporter, "fooTest");
-            List<Path> runLocations = listRunLocations(reportDirectory);
-            assertThat(runLocations).hasSize(1);
+            List<Path> reportFiles = listReportFiles(reportDirectory);
+            assertThat(reportFiles).hasSize(1);
+            Path firstReportFile = reportFiles.get(0);
 
-            generateReportForSuccessfulTest(reporter, "barTest");
+            generateReportForSuccessfulTest(reporter, "fooTest");
 
-            List<Path> runLocationsAfterSecondGeneration = listRunLocations(reportDirectory);
-            assertThat(runLocationsAfterSecondGeneration).hasSize(2);
-            assertThat(runLocations.get(0).resolve("fooTest-flow.json")).exists();
-            assertThat(runLocationsAfterSecondGeneration.get(1).resolve("fooTest-flow.json")).exists();
-            assertThat(runLocationsAfterSecondGeneration.get(1).resolve("barTest-flow.json")).exists();
+            List<Path> reportFilesAfterSecondGeneration = listReportFiles(reportDirectory);
+            assertThat(reportFilesAfterSecondGeneration).hasSize(2);
+            assertThat(firstReportFile).exists();
+            assertThat(reportFilesAfterSecondGeneration)
+                    .allSatisfy(reportFile -> assertThat(reportFile.getFileName().toString()).matches("fooTest-flow-\\d+(-\\d+)?\\.json"))
+                    .doesNotHaveDuplicates();
         } finally {
             restoreProperty(REPORT_DIRECTORY_PROPERTY, previousReportDirectory);
             restoreProperty(REPORT_HISTORY_PROPERTY, previousHistory);
@@ -1105,8 +1108,8 @@ public class TestFlowReporterTest {
     }
 
     @Test
-    public void shouldWriteFlowReportsFlatWhenHistoryIsDisabled() throws IOException {
-        Path reportDirectory = prepareReportDirectory("run-location-disabled");
+    public void shouldWriteFlowReportsWithoutTimestampWhenHistoryIsDisabled() throws IOException {
+        Path reportDirectory = prepareReportDirectory("flow-report-history-disabled");
         String previousReportDirectory = System.getProperty(REPORT_DIRECTORY_PROPERTY);
         String previousHistory = System.getProperty(REPORT_HISTORY_PROPERTY);
 
@@ -1116,9 +1119,10 @@ public class TestFlowReporterTest {
 
             TestFlowReporter reporter = new TestFlowReporter();
             generateReportForSuccessfulTest(reporter, "fooTest");
+            generateReportForSuccessfulTest(reporter, "fooTest");
 
-            assertThat(listRunLocations(reportDirectory)).isEmpty();
             assertThat(reportDirectory.resolve("fooTest-flow.json")).exists();
+            assertThat(listReportFiles(reportDirectory)).hasSize(1);
         } finally {
             restoreProperty(REPORT_DIRECTORY_PROPERTY, previousReportDirectory);
             restoreProperty(REPORT_HISTORY_PROPERTY, previousHistory);
@@ -1126,20 +1130,18 @@ public class TestFlowReporterTest {
     }
 
     @Test
-    public void shouldAppendSuffixWhenRunLocationAlreadyExists() throws IOException {
-        Path reportDirectory = prepareReportDirectory("run-location-collision");
+    public void shouldAppendSuffixWhenTimestampedReportFileExists() throws IOException {
+        Path reportDirectory = prepareReportDirectory("flow-report-history-collision");
         TestFlowReporter reporter = new TestFlowReporter();
+        Files.createFile(reportDirectory.resolve("fooTest-flow-2000.json"));
 
-        File firstRunLocation = reporter.createRunDirectory(reportDirectory.toFile(), "2000-01-01_00-00-00");
-        File secondRunLocation = reporter.createRunDirectory(reportDirectory.toFile(), "2000-01-01_00-00-00");
-
-        assertThat(firstRunLocation).isDirectory().hasName("2000-01-01_00-00-00");
-        assertThat(secondRunLocation).isDirectory().hasName("2000-01-01_00-00-00-1");
+        assertThat(reporter.createReportFileSuffix(reportDirectory.toFile(), List.of("fooTest"), 2000L)).isEqualTo("-2000-1");
+        assertThat(reporter.createReportFileSuffix(reportDirectory.toFile(), List.of("fooTest"), 2001L)).isEqualTo("-2001");
     }
 
     @Test
-    public void shouldNotCreateRunLocationWhenNoFlowEntriesExist() throws IOException {
-        Path reportDirectory = prepareReportDirectory("run-location-empty");
+    public void shouldNotWriteFlowReportsWhenNoFlowEntriesExist() throws IOException {
+        Path reportDirectory = prepareReportDirectory("flow-report-history-empty");
         String previousReportDirectory = System.getProperty(REPORT_DIRECTORY_PROPERTY);
         String previousHistory = System.getProperty(REPORT_HISTORY_PROPERTY);
 
@@ -1150,7 +1152,7 @@ public class TestFlowReporterTest {
             TestFlowReporter reporter = new TestFlowReporter();
             reporter.generate(new TestResults());
 
-            assertThat(listRunLocations(reportDirectory)).isEmpty();
+            assertThat(listReportFiles(reportDirectory)).isEmpty();
         } finally {
             restoreProperty(REPORT_DIRECTORY_PROPERTY, previousReportDirectory);
             restoreProperty(REPORT_HISTORY_PROPERTY, previousHistory);
@@ -1188,9 +1190,9 @@ public class TestFlowReporterTest {
         return reportDirectory;
     }
 
-    private static List<Path> listRunLocations(Path reportDirectory) throws IOException {
+    private static List<Path> listReportFiles(Path reportDirectory) throws IOException {
         try (var paths = Files.list(reportDirectory)) {
-            return paths.filter(Files::isDirectory).sorted().toList();
+            return paths.filter(Files::isRegularFile).sorted().toList();
         }
     }
 
