@@ -284,7 +284,7 @@ The test flow reporter outputs a detailed trace of the test execution flow inclu
 | Output format for the test flow report: `json`, `yaml`, or comma-separated combination (default="json")
 
 | citrus.test.flow.report.history
-| Keep flow reports of previous test runs by writing each report generation to its own directory (default="true")
+| Keep flow reports of previous test runs by adding a timestamp suffix to the report file names (default="true")
 |===
 
 .Environment variables
@@ -298,9 +298,9 @@ The test flow reporter outputs a detailed trace of the test execution flow inclu
 | Output format for the test flow report: `json`, `yaml`, or comma-separated combination (default="json")
 
 | CITRUS_TEST_FLOW_REPORT_HISTORY
-| Keep flow reports of previous test runs by writing each report generation to its own directory (default="true")
+| Keep flow reports of previous test runs by adding a timestamp suffix to the report file names (default="true")
 |===
 
-Each report generation is written to a new run directory (for example `2026-10-18_18-02-58`) inside the report directory,
-so reports of previous test runs are preserved. Run directories sort chronologically by name, so the newest run is the last one.
-Set `citrus.test.flow.report.history` to `false` to keep the previous flat layout.
+With history preservation enabled, each report generation writes its flow report files with a timestamp suffix
+(for example `MyTest-flow-1729266600.json`) directly into the report directory, so reports of previous test runs are preserved.
+Set `citrus.test.flow.report.history` to `false` to write report files without the timestamp suffix like before.

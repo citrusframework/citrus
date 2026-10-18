@@ -96,10 +96,9 @@ public class RunTest extends CommandTest {
             CitrusJBangMain main = createCitrusJBangMain();
             main.execute("run", source.toString());
 
-            List<Path> runLocations = listRunLocations(reportDirectory);
-            Assert.assertEquals(runLocations.size(), 1, "Expected one run location after the first run");
-            Path firstRunLocation = runLocations.get(0);
-            Assert.assertTrue(containsFlowReport(firstRunLocation), "Expected flow reports in the first run location");
+            List<Path> flowReports = listFlowReports(reportDirectory);
+            Assert.assertEquals(flowReports.size(), 1, "Expected one flow report after the first run");
+            Path firstFlowReport = flowReports.get(0);
 
             Path sentinel = Files.writeString(workDir.resolve("sentinel.txt"), "sentinel");
 
@@ -107,11 +106,10 @@ public class RunTest extends CommandTest {
             main.execute("run", source.toString());
 
             Assert.assertFalse(Files.exists(sentinel), "Expected the next run to clean up the JBang work directory");
-            Assert.assertTrue(Files.exists(firstRunLocation), "Expected the previous run location to be preserved");
-            Assert.assertTrue(containsFlowReport(firstRunLocation), "Expected flow reports of the previous run to be preserved");
+            Assert.assertTrue(Files.exists(firstFlowReport), "Expected the previous run's flow report to be preserved");
 
-            List<Path> runLocationsAfterSecondRun = listRunLocations(reportDirectory);
-            Assert.assertEquals(runLocationsAfterSecondRun.size(), 2, "Expected a second run location after the second run");
+            List<Path> flowReportsAfterSecondRun = listFlowReports(reportDirectory);
+            Assert.assertEquals(flowReportsAfterSecondRun.size(), 2, "Expected a second flow report after the second run");
         } finally {
             restoreProperty("citrus.jbang.work.dir", previousWorkDir);
             restoreProperty("citrus.jbang.report.directory", previousReportDirectory);
@@ -119,21 +117,15 @@ public class RunTest extends CommandTest {
         }
     }
 
-    private static boolean containsFlowReport(Path runLocation) throws IOException {
-        try (var files = Files.list(runLocation)) {
-            return files.anyMatch(file -> file.getFileName().toString().endsWith("-flow.json"));
-        }
-    }
-
-    private static List<Path> listRunLocations(Path reportDirectory) throws IOException {
+    private static List<Path> listFlowReports(Path reportDirectory) throws IOException {
         if (!Files.isDirectory(reportDirectory)) {
             return List.of();
         }
 
         try (var paths = Files.list(reportDirectory)) {
-            return paths.filter(Files::isDirectory)
+            return paths.filter(Files::isRegularFile)
                     .filter(path -> path.getFileName().toString()
-                            .matches("\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2}(-\\d+)?"))
+                            .matches(".*-flow-\\d+(-\\d+)?\\.(json|yaml)"))
                     .sorted().toList();
         }
     }

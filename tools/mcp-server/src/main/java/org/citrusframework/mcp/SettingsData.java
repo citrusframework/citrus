@@ -309,7 +309,7 @@ public class SettingsData {
                 "Test flow report output format"));
         settings.add(new SettingEntry("citrus.test.flow.report.history", "CITRUS_TEST_FLOW_REPORT_HISTORY",
                 "true", BOOLEAN,
-                "Keep flow reports of previous test runs in separate run directories"));
+                "Keep flow reports of previous test runs in timestamped files"));
 
         return new SettingsGroup("reporting", "Reporting Settings",
                 "Test report settings from SummaryReporterSettings, TestReporterSettings, HtmlReporterSettings, " +

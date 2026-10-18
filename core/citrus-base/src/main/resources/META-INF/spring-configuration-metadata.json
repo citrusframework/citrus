@@ -124,7 +124,7 @@
     {
       "name": "citrus.test.flow.report.history",
       "type": "java.lang.Boolean",
-      "description": "Keep flow reports of previous test runs by writing each report generation to its own directory",
+      "description": "Keep flow reports of previous test runs by adding a timestamp suffix to the report file names",
       "sourceType": "org.citrusframework.base.report.TestFlowReporterSettings",
       "defaultValue": true
     }

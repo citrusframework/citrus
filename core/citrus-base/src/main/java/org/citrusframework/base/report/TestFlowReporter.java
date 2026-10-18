@@ -20,14 +20,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,8 +62,6 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
 
     private final boolean enabled = TestFlowReporterSettings.isReportEnabled();
 
-    private static final String RUN_DIRECTORY_NAME_PATTERN = "yyyy-MM-dd_HH-mm-ss";
-
     @Override
     protected void generate(TestResults testResults) {
         testResults.doWithResults(result -> {
@@ -86,49 +79,48 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
                 }
             }
 
-            File reportDirectory = TestFlowReporterSettings.isHistoryEnabled() ? createRunDirectory(targetDirectory) : targetDirectory;
+            String reportFileSuffix = TestFlowReporterSettings.isHistoryEnabled()
+                    ? createReportFileSuffix(targetDirectory, flowReport.getEntries().stream().map(reportEntry -> reportEntry.getName()).toList(), Instant.now().getEpochSecond())
+                    : "";
 
             flowReport.getEntries()
                 .forEach(reportEntry -> {
                     if (TestFlowReporterSettings.isJsonReport()) {
-                        writeTestFlowReport(reportDirectory, "%s-flow.json".formatted(reportEntry.getName()), MessagePayloadUtils.prettyPrintJson(reportEntry.toJson()));
+                        writeTestFlowReport(targetDirectory, "%s-flow%s.json".formatted(reportEntry.getName(), reportFileSuffix), MessagePayloadUtils.prettyPrintJson(reportEntry.toJson()));
                     }
 
                     if (TestFlowReporterSettings.isYamlReport()) {
-                        writeTestFlowReport(reportDirectory, "%s-flow.yaml".formatted(reportEntry.getName()), reportEntry.toYaml());
+                        writeTestFlowReport(targetDirectory, "%s-flow%s.yaml".formatted(reportEntry.getName(), reportFileSuffix), reportEntry.toYaml());
                     }
                 });
         }
     }
 
     /**
-     * Create a new run directory for the current report generation. The directory name uses a timestamp
-     * so that run directories sort chronologically by name.
+     * Create a unique file name suffix for the current report generation. The suffix contains a timestamp
+     * and gets a numeric suffix when report files with the timestamp already exist.
      */
-    File createRunDirectory(File reportDirectory) {
-        return createRunDirectory(reportDirectory, LocalDateTime.now().format(DateTimeFormatter.ofPattern(RUN_DIRECTORY_NAME_PATTERN, Locale.ROOT)));
-    }
-
-    /**
-     * Create a run directory with the given name within the report directory. The name gets a numeric
-     * suffix when the directory already exists.
-     */
-    File createRunDirectory(File reportDirectory, String runDirectoryName) {
+    String createReportFileSuffix(File targetDirectory, List<String> reportNames, long timestamp) {
         for (int attempt = 0; attempt < 100; attempt++) {
-            Path runDirectory = reportDirectory.toPath()
-                    .resolve(attempt == 0 ? runDirectoryName : "%s-%d".formatted(runDirectoryName, attempt));
+            String suffix = attempt == 0 ? "-%d".formatted(timestamp) : "-%d-%d".formatted(timestamp, attempt);
 
-            try {
-                Files.createDirectory(runDirectory);
-                return runDirectory.toFile();
-            } catch (FileAlreadyExistsException e) {
-                // try again with next suffix
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Unable to create report output directory: " + runDirectory, e);
+            if (!reportFilesExist(targetDirectory, reportNames, suffix)) {
+                return suffix;
             }
         }
 
-        throw new CitrusRuntimeException("Unable to create report output directory: " + reportDirectory);
+        throw new CitrusRuntimeException("Unable to determine unique flow report file names for report directory: " + targetDirectory);
+    }
+
+    private boolean reportFilesExist(File targetDirectory, List<String> reportNames, String suffix) {
+        return reportNames.stream()
+                .anyMatch(reportName -> {
+                    if (TestFlowReporterSettings.isJsonReport() && new File(targetDirectory, "%s-flow%s.json".formatted(reportName, suffix)).exists()) {
+                        return true;
+                    }
+
+                    return TestFlowReporterSettings.isYamlReport() && new File(targetDirectory, "%s-flow%s.yaml".formatted(reportName, suffix)).exists();
+                });
     }
 
     private void writeTestFlowReport(File targetDirectory, String fileName, String content) {
