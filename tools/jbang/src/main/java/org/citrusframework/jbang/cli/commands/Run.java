@@ -129,8 +129,8 @@ public class Run extends CitrusCommand {
     private int run() {
         File work = new File(CitrusJBangMain.Settings.getWorkDir());
         TestReporterSettings.setReportDirectory(CitrusJBangMain.Settings.getReportDirectory());
-        removeDir(work);
-        if (!work.mkdirs()) {
+        removeDir(work, new File(CitrusJBangMain.Settings.getReportDirectory()));
+        if (!work.exists() && !work.mkdirs()) {
             printer().printErr("Failed to create working directory " + CitrusJBangMain.Settings.getWorkDir());
             return 1;
         }
@@ -546,6 +546,40 @@ public class Run extends CitrusCommand {
             }
         }
         delete(d);
+    }
+
+    /**
+     * Removes the given directory while keeping the preserved directory (and all of its parents) intact.
+     * Used to recreate the JBang work directory without deleting flow reports of previous test runs.
+     */
+    private static void removeDir(File d, File preserve) {
+        Path directoryPath = d.toPath().toAbsolutePath().normalize();
+        Path preservedPath = preserve.toPath().toAbsolutePath().normalize();
+
+        if (directoryPath.equals(preservedPath)) {
+            return;
+        }
+
+        String[] list = d.list();
+        if (list == null) {
+            list = new String[0];
+        }
+        for (String s : list) {
+            File f = new File(d, s);
+            if (f.isDirectory()) {
+                if (preservedPath.startsWith(f.toPath().toAbsolutePath().normalize())) {
+                    removeDir(f, preserve);
+                } else {
+                    removeDir(f);
+                }
+            } else {
+                delete(f);
+            }
+        }
+
+        if (!preservedPath.startsWith(directoryPath)) {
+            delete(d);
+        }
     }
 
     private static void delete(File f) {
