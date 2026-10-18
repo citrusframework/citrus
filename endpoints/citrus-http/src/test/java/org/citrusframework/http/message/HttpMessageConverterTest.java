@@ -37,6 +37,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.messaging.MessageHeaders;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -178,6 +179,81 @@ public class HttpMessageConverterTest {
         assert contentTypeHeader != null;
         assertEquals(1, contentTypeHeader.size());
         assertEquals("foobar", contentTypeHeader.get(0));
+    }
+
+    @DataProvider(name = "bodylessRequestMethods")
+    public static Object[][] bodylessRequestMethods() {
+        return new Object[][] {
+            new Object[] { HttpMethod.GET },
+            new Object[] { HttpMethod.HEAD },
+            new Object[] { HttpMethod.OPTIONS },
+            new Object[] { HttpMethod.TRACE }
+        };
+    }
+
+    @DataProvider(name = "bodyRequestMethods")
+    public static Object[][] bodyRequestMethods() {
+        return new Object[][] {
+            new Object[] { HttpMethod.POST },
+            new Object[] { HttpMethod.PUT },
+            new Object[] { HttpMethod.DELETE },
+            new Object[] { HttpMethod.PATCH }
+        };
+    }
+
+    @Test(dataProvider = "bodylessRequestMethods")
+    public void testHttpContentTypeIsNotSetForBodylessRequestMethodsOnOutbound(HttpMethod method) {
+        // GIVEN
+        message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, method);
+        message.setPayload(payload);
+
+        // WHEN
+        final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
+
+        // THEN
+        assertNull(httpEntity.getHeaders().getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+    }
+
+    @Test(dataProvider = "bodyRequestMethods")
+    public void testHttpContentTypeIsSetForBodyRequestMethodsOnOutbound(HttpMethod method) {
+        // GIVEN
+        message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, method);
+        message.setPayload(payload);
+
+        // WHEN
+        final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
+
+        // THEN
+        assertEquals("text/plain;charset=UTF-8", httpEntity.getHeaders().getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+    }
+
+    @Test
+    public void testExplicitHttpContentTypeIsPreservedForGetOnOutbound() {
+        // GIVEN
+        message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.GET);
+        message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, "application/json");
+        message.setPayload(payload);
+
+        // WHEN
+        final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
+
+        // THEN
+        assertEquals("application/json", httpEntity.getHeaders().getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+        assertNull(httpEntity.getBody());
+    }
+
+    @Test
+    public void testHttpContentTypeIsSetForResponseWithoutExplicitContentType() {
+        // GIVEN
+        message.setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, "200");
+        message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.GET);
+
+        // WHEN
+        final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
+
+        // THEN
+        assertTrue(httpEntity instanceof ResponseEntity<?>);
+        assertEquals("text/plain;charset=UTF-8", httpEntity.getHeaders().getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE));
     }
 
     @Test

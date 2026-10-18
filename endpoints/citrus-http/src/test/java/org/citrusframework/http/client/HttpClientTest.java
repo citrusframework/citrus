@@ -242,9 +242,9 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
             Assert.assertNull(httpRequest.getBody()); // null because of GET
-            Assert.assertEquals(httpRequest.getHeaders().size(), 1);
+            Assert.assertEquals(httpRequest.getHeaders().size(), 0);
 
-            Assert.assertEquals(httpRequest.getHeaders().getContentType().toString(), "text/plain;charset=UTF-8");
+            Assert.assertNull(httpRequest.getHeaders().getContentType());
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class));
@@ -276,9 +276,9 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
             Assert.assertNull(httpRequest.getBody()); // null because of GET
-            Assert.assertEquals(httpRequest.getHeaders().size(), 1);
+            Assert.assertEquals(httpRequest.getHeaders().size(), 0);
 
-            Assert.assertEquals(httpRequest.getHeaders().getContentType().toString(), "text/plain;charset=UTF-8");
+            Assert.assertNull(httpRequest.getHeaders().getContentType());
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class));
