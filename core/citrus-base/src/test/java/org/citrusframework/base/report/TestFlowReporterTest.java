@@ -1137,6 +1137,26 @@ public class TestFlowReporterTest {
         assertThat(secondRunLocation).isDirectory().hasName("2000-01-01_00-00-00-1");
     }
 
+    @Test
+    public void shouldNotCreateRunLocationWhenNoFlowEntriesExist() throws IOException {
+        Path reportDirectory = prepareReportDirectory("run-location-empty");
+        String previousReportDirectory = System.getProperty(REPORT_DIRECTORY_PROPERTY);
+        String previousHistory = System.getProperty(REPORT_HISTORY_PROPERTY);
+
+        try {
+            System.setProperty(REPORT_DIRECTORY_PROPERTY, reportDirectory.toString());
+            System.clearProperty(REPORT_HISTORY_PROPERTY);
+
+            TestFlowReporter reporter = new TestFlowReporter();
+            reporter.generate(new TestResults());
+
+            assertThat(listRunLocations(reportDirectory)).isEmpty();
+        } finally {
+            restoreProperty(REPORT_DIRECTORY_PROPERTY, previousReportDirectory);
+            restoreProperty(REPORT_HISTORY_PROPERTY, previousHistory);
+        }
+    }
+
     private void generateReportForSuccessfulTest(TestFlowReporter reporter, String testName) {
         TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
         metaInfo.setAuthor("theAuthor");

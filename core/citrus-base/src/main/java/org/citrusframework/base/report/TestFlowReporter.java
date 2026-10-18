@@ -77,7 +77,8 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
             }
         });
 
-        if (enabled) {
+        if (enabled && !flowReport.getEntries().isEmpty()
+                && (TestFlowReporterSettings.isJsonReport() || TestFlowReporterSettings.isYamlReport())) {
             File targetDirectory = new File(getReportDirectory());
             if (!targetDirectory.exists()) {
                 if (!targetDirectory.mkdirs()) {
