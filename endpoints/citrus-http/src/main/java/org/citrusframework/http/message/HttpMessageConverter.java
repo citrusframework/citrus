@@ -82,11 +82,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         }
 
         RequestMethod method = determineRequestMethod(endpointConfiguration, httpMessage);
-        if (httpMethodSupportsBody(method)) {
-            addDefaultContentTypeHeaderIfAbsent(httpHeaders, endpointConfiguration);
-        }
-
-        return createHttpEntity(httpHeaders, payload, method);
+        return createHttpEntity(httpHeaders, payload, method, endpointConfiguration);
     }
 
     @Override
@@ -226,10 +222,13 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
      * @param httpHeaders The headers to set
      * @param payload The payload to set
      * @param method The HttpMethod to use
-     * @return The composed HttpEntitiy
+     * @param endpointConfiguration The endpoint configuration to get the default content type from
+     * @return The composed HttpEntity
      */
-    private HttpEntity<?> createHttpEntity(HttpHeaders httpHeaders, Object payload, RequestMethod method) {
+    private HttpEntity<?> createHttpEntity(HttpHeaders httpHeaders, Object payload, RequestMethod method,
+                                           HttpEndpointConfiguration endpointConfiguration) {
         if (httpMethodSupportsBody(method)) {
+            addDefaultContentTypeHeaderIfAbsent(httpHeaders, endpointConfiguration);
             return new HttpEntity<>(payload, httpHeaders);
         } else {
             return new HttpEntity<>(httpHeaders);
