@@ -16,10 +16,15 @@
 
 package org.citrusframework.jbang.cli.commands;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.List;
 
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.spi.Resources;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class RunTest extends CommandTest {
@@ -70,5 +75,86 @@ public class RunTest extends CommandTest {
 
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("run", source.toString());
+    }
+
+    @Test
+    public void shouldKeepFlowReportHistoryAcrossRuns() throws IOException {
+        Path source = Resources.fromClasspath("runnable/yaml-sample.citrus.it.yaml").file().toPath();
+        Path workDir = workingDir.resolve("flow-report-history");
+        Path reportDirectory = workDir.resolve("citrus-reports");
+
+        deleteRecursively(workDir);
+
+        String previousWorkDir = System.getProperty("citrus.jbang.work.dir");
+        String previousReportDirectory = System.getProperty("citrus.jbang.report.directory");
+        String previousCitrusReportDirectory = System.getProperty("citrus.report.directory");
+
+        try {
+            System.setProperty("citrus.jbang.work.dir", workDir.toString());
+            System.setProperty("citrus.jbang.report.directory", reportDirectory.toString());
+
+            CitrusJBangMain main = createCitrusJBangMain();
+            main.execute("run", source.toString());
+
+            List<Path> runLocations = listRunLocations(reportDirectory);
+            Assert.assertEquals(runLocations.size(), 1, "Expected one run location after the first run");
+            Path firstRunLocation = runLocations.get(0);
+            Assert.assertTrue(containsFlowReport(firstRunLocation), "Expected flow reports in the first run location");
+
+            Path sentinel = Files.writeString(workDir.resolve("sentinel.txt"), "sentinel");
+
+            main = createCitrusJBangMain();
+            main.execute("run", source.toString());
+
+            Assert.assertFalse(Files.exists(sentinel), "Expected the next run to clean up the JBang work directory");
+            Assert.assertTrue(Files.exists(firstRunLocation), "Expected the previous run location to be preserved");
+            Assert.assertTrue(containsFlowReport(firstRunLocation), "Expected flow reports of the previous run to be preserved");
+
+            List<Path> runLocationsAfterSecondRun = listRunLocations(reportDirectory);
+            Assert.assertEquals(runLocationsAfterSecondRun.size(), 2, "Expected a second run location after the second run");
+        } finally {
+            restoreProperty("citrus.jbang.work.dir", previousWorkDir);
+            restoreProperty("citrus.jbang.report.directory", previousReportDirectory);
+            restoreProperty("citrus.report.directory", previousCitrusReportDirectory);
+        }
+    }
+
+    private static boolean containsFlowReport(Path runLocation) throws IOException {
+        try (var files = Files.list(runLocation)) {
+            return files.anyMatch(file -> file.getFileName().toString().endsWith("-flow.json"));
+        }
+    }
+
+    private static List<Path> listRunLocations(Path reportDirectory) throws IOException {
+        if (!Files.isDirectory(reportDirectory)) {
+            return List.of();
+        }
+
+        try (var paths = Files.list(reportDirectory)) {
+            return paths.filter(Files::isDirectory)
+                    .filter(path -> path.getFileName().toString()
+                            .matches("\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2}(-\\d+)?"))
+                    .sorted().toList();
+        }
+    }
+
+    private static void deleteRecursively(Path path) throws IOException {
+        if (Files.notExists(path)) {
+            return;
+        }
+
+        try (var files = Files.walk(path)) {
+            for (Path file : files.sorted(Comparator.reverseOrder()).toList()) {
+                Files.delete(file);
+            }
+        }
+    }
+
+    private static void restoreProperty(String propertyName, String previousValue) {
+        if (previousValue == null) {
+            System.clearProperty(propertyName);
+        } else {
+            System.setProperty(propertyName, previousValue);
+        }
     }
 }
