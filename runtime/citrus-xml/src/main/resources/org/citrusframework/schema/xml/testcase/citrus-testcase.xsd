@@ -4987,6 +4987,35 @@
             </xs:sequence>
             <xs:attribute name="argument" type="xs:string"/>
             <xs:attribute name="error" type="xs:string"/>
+            <xs:attribute name="variable" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="frame">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="tns:WebElementType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="index" type="xs:int"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="parent" type="xs:boolean"/>
+            <xs:attribute name="default" type="xs:boolean"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="cookies">
+          <xs:complexType>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="variable" type="xs:string"/>
+            <xs:attribute name="expected" type="xs:string"/>
+            <xs:attribute name="domain" type="xs:string"/>
+            <xs:attribute name="path" type="xs:string"/>
+            <xs:attribute name="expiry" type="xs:string"/>
+            <xs:attribute name="secure" type="xs:boolean"/>
+            <xs:attribute name="http-only" type="xs:boolean"/>
+            <xs:attribute name="same-site" type="xs:string"/>
           </xs:complexType>
         </xs:element>
 
