@@ -200,6 +200,74 @@ public FirefoxProfile firefoxProfile() {
 
 Now Citrus is able to execute Selenium operations as a user.
 
+=== Browser options
+
+The Selenium browser supports headless mode, custom browser arguments, a fixed window size as well as page load and script timeouts.
+Headless mode and browser arguments apply to Chrome, Edge and Firefox and are passed to the browser via its driver options.
+The window size and the timeouts are applied to the started web driver, so these settings work for any browser type.
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public SeleniumBrowser seleniumBrowser() {
+    return new SeleniumBrowserBuilder()
+            .type("chrome")
+            .headless(true)
+            .argument("--disable-gpu")
+            .argument("--no-sandbox")
+            .windowSize("1280x800")
+            .pageLoadTimeout(10000L)
+            .scriptTimeout(5000L)
+            .build();
+}
+----
+
+.Spring Bean
+[source,java,indent=0,role="secondary"]
+----
+@Bean
+public SeleniumBrowser seleniumBrowser() {
+    return new SeleniumBrowserBuilder()
+            .type("chrome")
+            .headless(true)
+            .argument("--disable-gpu")
+            .argument("--no-sandbox")
+            .windowSize("1280x800")
+            .pageLoadTimeout(10000L)
+            .scriptTimeout(5000L)
+            .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-selenium="http://www.citrusframework.org/schema/selenium/config"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/selenium/config
+           http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
+
+  <citrus-selenium:browser id="seleniumBrowser"
+                type="chrome"
+                headless="true"
+                arguments="--disable-gpu,--no-sandbox"
+                window-size="1280x800"
+                page-load-timeout="10000"
+                script-timeout="5000"/>
+</beans>
+----
+
+The browser arguments are comma-separated in the XML configuration.
+The window size uses the form `WIDTHxHEIGHT` (e.g. `1280x800`).
+Both timeouts are given in milliseconds.
+
+NOTE: Safari does not support headless mode or custom browser arguments. When these options are set on a Safari browser Citrus logs a warning and ignores the options. The window size and timeout settings work with Safari as usual.
+
 [[selenium-actions]]
 == Selenium actions
 
