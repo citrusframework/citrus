@@ -25,6 +25,7 @@ import org.citrusframework.jms.yaml.PurgeQueues;
 import org.citrusframework.knative.yaml.Knative;
 import org.citrusframework.kubernetes.yaml.Kubernetes;
 import org.citrusframework.graphql.yaml.GraphQl;
+import org.citrusframework.grpc.yaml.Grpc;
 import org.citrusframework.openapi.yaml.OpenApi;
 import org.citrusframework.selenium.yaml.Selenium;
 import org.citrusframework.sql.yaml.Plsql;
@@ -202,6 +203,10 @@ public class TestActions {
 
     @SchemaProperty(kind = GROUP, description = "GraphQL related test actions.", module = "citrus-graphql")
     public void setGraphql(GraphQl builder) {
+    }
+
+    @SchemaProperty(kind = GROUP, description = "gRPC related test actions.", module = "citrus-grpc")
+    public void setGrpc(Grpc builder) {
     }
 
     @SchemaProperty(kind = GROUP, description = "SOAP Web Services related test actions.", module = "citrus-ws")
