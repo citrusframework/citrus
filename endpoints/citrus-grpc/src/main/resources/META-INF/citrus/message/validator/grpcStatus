@@ -1,0 +1,2 @@
+name=grpcStatusValidator
+type=org.citrusframework.grpc.validation.GrpcStatusValidator
