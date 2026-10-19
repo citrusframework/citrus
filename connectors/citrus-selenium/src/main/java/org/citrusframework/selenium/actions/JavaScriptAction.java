@@ -30,6 +30,7 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
@@ -95,7 +96,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
                 jsEngine.executeScript(ERROR_COLLECTOR_SCRIPT, new Object[]{});
                 Object result = jsEngine.executeScript(context.replaceDynamicContentInString(script), context.resolveDynamicValuesInArray(arguments.toArray()));
 
-                if (variable != null) {
+                if (StringUtils.hasText(variable)) {
                     context.setVariable(variable, result != null ? String.valueOf(result) : "");
                 }
 

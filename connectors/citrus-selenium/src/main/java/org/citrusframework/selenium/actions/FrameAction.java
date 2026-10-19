@@ -149,6 +149,27 @@ public class FrameAction extends AbstractSeleniumAction {
 
         @Override
         public FrameAction build() {
+            int targetCount = 0;
+            if (element != null) {
+                targetCount++;
+            }
+            if (index != null) {
+                targetCount++;
+            }
+            if (nameOrId != null) {
+                targetCount++;
+            }
+            if (parent) {
+                targetCount++;
+            }
+            if (defaultContent) {
+                targetCount++;
+            }
+
+            if (targetCount > 1) {
+                throw new CitrusRuntimeException("Invalid frame target - set exactly one of element, index, name, parent or default");
+            }
+
             return new FrameAction(this);
         }
     }
