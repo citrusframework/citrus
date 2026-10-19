@@ -304,7 +304,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
     void applyWindowSize() {
         if (StringUtils.hasText(getEndpointConfiguration().getWindowSize())) {
             String windowSize = getEndpointConfiguration().getWindowSize().trim();
-            String[] size = windowSize.split("x");
+            String[] size = windowSize.split("x", -1);
             if (size.length != 2) {
                 throw new CitrusRuntimeException(String.format(
                         "Invalid browser window size '%s' - expected format WIDTHxHEIGHT (e.g. 1280x800)", windowSize));
