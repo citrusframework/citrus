@@ -8,7 +8,7 @@ Citrus is a Java-based integration testing framework for message-based enterpris
 It supports testing various message transports (HTTP, Kafka, JMS, SOAP, etc.) and validation of different data formats (XML, JSON, YAML, etc.).
 
 **Key Technologies**: 
-- Java 17+ 
+- Java 21+ 
 - Maven 3.9+ 
 - JUnit Jupiter 
 - Apache Camel 

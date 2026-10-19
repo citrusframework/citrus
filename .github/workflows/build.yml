@@ -45,11 +45,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          # Camel JBang requires Java 21+, so provide it locally instead of letting
-          # JBang download one at runtime. The last version listed stays the default.
-          java-version: |
-            21
-            17
+          # Java 21 is the minimum requirement to build Citrus.
+          java-version: '21'
           distribution: 'temurin'
       - name: Checkout code
         uses: actions/checkout@v6
