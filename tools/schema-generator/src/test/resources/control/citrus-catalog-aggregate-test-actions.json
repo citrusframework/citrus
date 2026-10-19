@@ -17651,6 +17651,64 @@
       },
       "additionalProperties": false    }
   },
+"selenium-cookies": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "selenium-cookies",
+    "group": "selenium",
+    "module": "citrus-selenium",
+    "title": "Cookies",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "domain": {
+          "type": "string",
+          "title": "Domain"
+        },
+        "expected": {
+          "type": "string",
+          "title": "Expected"
+        },
+        "expiry": {
+          "type": "string",
+          "title": "Expiry"
+        },
+        "http-only": {
+          "type": "boolean",
+          "title": "Http-only"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "path": {
+          "type": "string",
+          "title": "Path"
+        },
+        "same-site": {
+          "type": "string",
+          "title": "Same-site"
+        },
+        "secure": {
+          "type": "boolean",
+          "title": "Secure"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
   "selenium-doubleClick": {
     "kind": "testAction",
     "version": "${citrus.version}",
@@ -18129,6 +18187,90 @@
       },
       "additionalProperties": false    }
   },
+"selenium-frame": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "selenium-frame",
+    "group": "selenium",
+    "module": "citrus-selenium",
+    "title": "Frame",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "default": {
+          "type": "boolean",
+          "title": "Default"
+        },
+        "element": {
+          "type": "object",
+          "properties": {
+            "className": {
+              "type": "string",
+              "title": "ClassName"
+            },
+            "cssSelector": {
+              "type": "string",
+              "title": "CssSelector"
+            },
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "linkText": {
+              "type": "string",
+              "title": "LinkText"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "partialLinkText": {
+              "type": "string",
+              "title": "PartialLinkText"
+            },
+            "property": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "title": "Name"
+                },
+                "value": {
+                  "type": "string",
+                  "title": "Value"
+                }
+              },
+              "additionalProperties": false,
+              "title": "Property"
+            },
+            "tagName": {
+              "type": "string",
+              "title": "TagName"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "index": {
+          "type": "integer",
+          "title": "Index"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "parent": {
+          "type": "boolean",
+          "title": "Parent"
+        }
+      },
+      "additionalProperties": false    }
+  },
   "selenium-getStoredFile": {
     "kind": "testAction",
     "version": "${citrus.version}",
@@ -18251,6 +18393,10 @@
         "script": {
           "type": "string",
           "title": "Script"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
         }
       },
       "additionalProperties": false    }
