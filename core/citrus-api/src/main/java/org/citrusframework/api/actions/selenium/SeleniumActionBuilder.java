@@ -238,6 +238,16 @@ public interface SeleniumActionBuilder<T extends TestAction, B extends TestActio
     SeleniumJavaScriptActionBuilder<?, ?> javascript();
 
     /**
+     * Switch into and out of frames.
+     */
+    SeleniumFrameActionBuilder<?, ?> frame();
+
+    /**
+     * Manage browser cookies.
+     */
+    SeleniumCookieActionBuilder<?, ?> cookies();
+
+    /**
      * Execute JavaScript.
      */
     default SeleniumJavaScriptActionBuilder<?, ?> javascript(String script) {

@@ -296,6 +296,22 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
     }
 
     @Override
+    public FrameAction.Builder frame() {
+        FrameAction.Builder builder = new FrameAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
+    public CookieAction.Builder cookies() {
+        CookieAction.Builder builder = new CookieAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public OpenWindowAction.Builder open() {
         OpenWindowAction.Builder builder = new OpenWindowAction.Builder()
                 .browser(seleniumBrowser);
