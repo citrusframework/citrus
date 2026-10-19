@@ -29,6 +29,7 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.htmlunit.BrowserVersion;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -58,6 +59,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 
 import static org.htmlunit.BrowserVersion.CHROME;
 import static org.htmlunit.BrowserVersion.EDGE;
@@ -122,6 +124,9 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
                 logger.debug("Add event listeners to web driver: {}", getEndpointConfiguration().getEventListeners().size());
                 webDriver = new EventFiringDecorator(getEndpointConfiguration().getEventListeners().toArray(new WebDriverListener[0])).decorate(webDriver);
             }
+
+            applyWindowSize();
+            applyTimeouts();
         } else {
             logger.debug("Browser already started");
         }
@@ -219,23 +224,118 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
             /* set custom download folder */
             firefoxProfile.setPreference("browser.download.dir", temporaryStorage.toFile().getAbsolutePath());
 
-            FirefoxOptions firefoxOptions = new FirefoxOptions().setProfile(firefoxProfile);
+            FirefoxOptions firefoxOptions = firefoxOptions();
             firefoxOptions.setAcceptInsecureCerts(true);
             return new FirefoxDriver(firefoxOptions);
         } else if (Browser.IE.is(browserType)) {
             return new InternetExplorerDriver();
         } else if (Browser.EDGE.is(browserType)) {
-            return new EdgeDriver();
+            return new EdgeDriver(edgeOptions());
         } else if (Browser.SAFARI.is(browserType)) {
+            warnOnUnsupportedBrowserOptions(browserType);
             return new SafariDriver();
         } else if (Browser.CHROME.is(browserType)) {
-            return new ChromeDriver();
+            return new ChromeDriver(chromeOptions());
         } else if (Browser.HTMLUNIT.is(browserType)) {
             HtmlUnitDriver htmlUnitDriver = getHtmlUnitDriver();
             return htmlUnitDriver;
         }
 
         throw new CitrusRuntimeException("Unsupported local browser type: " + browserType);
+    }
+
+    /**
+     * Creates Chrome options from the endpoint configuration.
+     * Applies headless mode and additional browser arguments.
+     * @return
+     */
+    ChromeOptions chromeOptions() {
+        ChromeOptions options = new ChromeOptions();
+        if (getEndpointConfiguration().isHeadless()) {
+            options.addArguments("--headless=new");
+        }
+        options.addArguments(getEndpointConfiguration().getArguments());
+        return options;
+    }
+
+    /**
+     * Creates Edge options from the endpoint configuration.
+     * Applies headless mode and additional browser arguments.
+     * @return
+     */
+    EdgeOptions edgeOptions() {
+        EdgeOptions options = new EdgeOptions();
+        if (getEndpointConfiguration().isHeadless()) {
+            options.addArguments("--headless=new");
+        }
+        options.addArguments(getEndpointConfiguration().getArguments());
+        return options;
+    }
+
+    /**
+     * Creates Firefox options from the endpoint configuration.
+     * Applies headless mode and additional browser arguments.
+     * @return
+     */
+    FirefoxOptions firefoxOptions() {
+        FirefoxOptions options = new FirefoxOptions().setProfile(getEndpointConfiguration().getFirefoxProfile());
+        if (getEndpointConfiguration().isHeadless()) {
+            options.addArguments("-headless");
+        }
+        options.addArguments(getEndpointConfiguration().getArguments());
+        return options;
+    }
+
+    /**
+     * Logs a warning when headless mode or browser arguments are configured for a browser type
+     * that does not support these options. The configured options are ignored in this case.
+     * @param browserType
+     */
+    void warnOnUnsupportedBrowserOptions(String browserType) {
+        if (getEndpointConfiguration().isHeadless() || !getEndpointConfiguration().getArguments().isEmpty()) {
+            logger.warn("Browser type '{}' does not support headless mode or browser arguments - configured browser options are ignored", browserType);
+        }
+    }
+
+    /**
+     * Applies the configured browser window size to the started web driver.
+     * Expects the window size in the form WIDTHxHEIGHT (e.g. 1280x800).
+     */
+    void applyWindowSize() {
+        if (StringUtils.hasText(getEndpointConfiguration().getWindowSize())) {
+            String windowSize = getEndpointConfiguration().getWindowSize().trim();
+            String[] size = windowSize.split("x");
+            if (size.length != 2) {
+                throw new CitrusRuntimeException(String.format(
+                        "Invalid browser window size '%s' - expected format WIDTHxHEIGHT (e.g. 1280x800)", windowSize));
+            }
+
+            try {
+                Dimension dimension = new Dimension(Integer.parseInt(size[0].trim()), Integer.parseInt(size[1].trim()));
+                logger.debug("Set browser window size to {}", windowSize);
+                webDriver.manage().window().setSize(dimension);
+            } catch (NumberFormatException e) {
+                throw new CitrusRuntimeException(String.format(
+                        "Invalid browser window size '%s' - expected format WIDTHxHEIGHT (e.g. 1280x800)", windowSize), e);
+            }
+        }
+    }
+
+    /**
+     * Applies the configured page load and script timeouts to the started web driver.
+     */
+    void applyTimeouts() {
+        if (getEndpointConfiguration().getPageLoadTimeout() != null) {
+            Duration pageLoadTimeout = Duration.ofMillis(getEndpointConfiguration().getPageLoadTimeout());
+            logger.debug("Set browser page load timeout to {}", pageLoadTimeout);
+            webDriver.manage().timeouts().pageLoadTimeout(pageLoadTimeout);
+        }
+
+        if (getEndpointConfiguration().getScriptTimeout() != null) {
+            Duration scriptTimeout = Duration.ofMillis(getEndpointConfiguration().getScriptTimeout());
+            logger.debug("Set browser script timeout to {}", scriptTimeout);
+            webDriver.manage().timeouts().scriptTimeout(scriptTimeout);
+        }
     }
 
     private HtmlUnitDriver getHtmlUnitDriver() {
@@ -285,7 +385,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
         try {
             MutableCapabilities options;
             if (Browser.FIREFOX.is(browserType)) {
-                FirefoxOptions firefoxOptions = new FirefoxOptions().setProfile(getEndpointConfiguration().getFirefoxProfile());
+                FirefoxOptions firefoxOptions = firefoxOptions();
                 firefoxOptions.setAcceptInsecureCerts(true);
                 options = firefoxOptions;
             } else if (Browser.IE.is(browserType)) {
@@ -293,11 +393,11 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
                 options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
                 return new RemoteWebDriver(new URL(serverAddress), options);
             } else if (Browser.EDGE.is(browserType)) {
-                options = new EdgeOptions();
+                options = edgeOptions();
                 options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
                 return new RemoteWebDriver(new URL(serverAddress), options);
             } else if (Browser.CHROME.is(browserType)) {
-                options = new ChromeOptions();
+                options = chromeOptions();
                 options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
             } else {
                 throw new CitrusRuntimeException("Unsupported remote browser type: " + browserType);
