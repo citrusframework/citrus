@@ -81,7 +81,7 @@ public class TestCaseSchemaTest {
 
     /**
      * The versioned schema copy is renamed on every version bump
-     * (e.g. citrus-testcase-5.1.0-SNAPSHOT.xsd), so resolve it by pattern
+     * (e.g. citrus-testcase-5.1.0.xsd), so resolve it by pattern
      * instead of a hardcoded name.
      */
     private String findVersionedSchema() throws URISyntaxException, IOException {
