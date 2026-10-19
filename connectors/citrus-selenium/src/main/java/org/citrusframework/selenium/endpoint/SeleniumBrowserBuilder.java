@@ -231,7 +231,9 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
      * Adds a single browser command-line argument.
      */
     public SeleniumBrowserBuilder argument(String argument) {
-        endpoint.getEndpointConfiguration().getArguments().add(argument);
+        if (StringUtils.hasText(argument)) {
+            endpoint.getEndpointConfiguration().getArguments().add(argument);
+        }
         return this;
     }
 
