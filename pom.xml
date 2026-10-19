@@ -195,6 +195,7 @@
     <asciidoctor.maven.plugin.version>3.2.0</asciidoctor.maven.plugin.version>
     <exec.maven.plugin.version>3.6.4</exec.maven.plugin.version>
     <jaxb.maven.plugin.version>4.2.0</jaxb.maven.plugin.version>
+    <protobuf-maven-plugin.version>5.1.11</protobuf-maven-plugin.version>
 
     <apache.artemis.version>2.57.0</apache.artemis.version>
     <angus-activation.version>2.0.3</angus-activation.version>
@@ -222,6 +223,7 @@
     <ftpserver.version>1.2.1</ftpserver.version>
     <groovy.version>3.0.25</groovy.version>
     <greenmail.version>2.1.14</greenmail.version>
+    <grpc.version>1.84.0</grpc.version>
     <hamcrest.version>3.0</hamcrest.version>
     <httpclient.version>5.6.4</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
@@ -258,6 +260,7 @@
     <k8s.client.version>7.9.0</k8s.client.version>
     <kafka.version>4.4.0</kafka.version>
     <knative-client.version>7.9.0</knative-client.version>
+    <kotlin.version>2.3.20</kotlin.version>
     <log4j2.version>2.25.5</log4j2.version>
     <mockito.version>5.24.0</mockito.version>
     <mockftpserver.version>3.2.0</mockftpserver.version>
@@ -266,6 +269,7 @@
     <org.openapitools.version>7.26.0</org.openapitools.version>
     <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.14</postgresql.version>
+    <protobuf.version>4.36.2</protobuf.version>
     <quarkus.platform.version>3.40.1</quarkus.platform.version>
     <quarkus.mcp-server.version>2.0.2</quarkus.mcp-server.version>
     <saaj.version>3.0.6</saaj.version>
@@ -289,6 +293,7 @@
     <testng.version>7.12.0</testng.version>
     <!-- bound to https://mvnrepository.com/artifact/io.fabric8/kubernetes-httpclient-vertx/${k8s.client.version} -->
     <vertx.version>4.5.35</vertx.version>
+    <wire.version>7.1.0</wire.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
     <xbean-spring.version>5.0.0</xbean-spring.version>
     <xmlbeans.version>5.2.1</xmlbeans.version>
@@ -309,6 +314,40 @@
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
         <version>${xerces.version}</version>
+      </dependency>
+
+      <!-- gRPC -->
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-bom</artifactId>
+        <version>${grpc.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>${protobuf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java-util</artifactId>
+        <version>${protobuf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.squareup.wire</groupId>
+        <artifactId>wire-schema-jvm</artifactId>
+        <version>${wire.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-stdlib</artifactId>
+        <version>${kotlin.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-reflect</artifactId>
+        <version>${kotlin.version}</version>
       </dependency>
 
       <!-- JMS -->
@@ -1810,6 +1849,11 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <version>${exec.maven.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>io.github.ascopes</groupId>
+          <artifactId>protobuf-maven-plugin</artifactId>
+          <version>${protobuf-maven-plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
