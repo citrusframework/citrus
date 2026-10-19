@@ -1,0 +1,2 @@
+type=org.citrusframework.grpc.xml.Grpc
+ns=http://citrusframework.org/schema/xml/testcase
