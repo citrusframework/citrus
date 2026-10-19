@@ -90,7 +90,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
             }
 
             if (StringUtils.hasText(securedConnection)) {
-                secured(referenceResolver.resolve(messageConverter, HttpSecureConnection.class));
+                secured(referenceResolver.resolve(securedConnection, HttpSecureConnection.class));
             }
 
             if (!filters.isEmpty()) {
