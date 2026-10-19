@@ -56,6 +56,9 @@ public class GrpcMessageHeaders {
     /** Marks the final message of a call or stream */
     public static final String END_OF_STREAM = GRPC_PREFIX + "end_of_stream";
 
+    /** Call deadline for a single client send, overriding the endpoint default */
+    public static final String DEADLINE = GRPC_PREFIX + "deadline";
+
     /** Prefix for gRPC trailer headers */
     public static final String TRAILER_PREFIX = GRPC_PREFIX + "trailer_";
 

@@ -24,6 +24,7 @@ import "google/protobuf/timestamp.proto";
 
 service Prices {
   rpc Subscribe (PriceSubscription) returns (stream Price);
+  rpc Watch (PriceSubscription) returns (stream Price);
 }
 
 message PriceSubscription {
