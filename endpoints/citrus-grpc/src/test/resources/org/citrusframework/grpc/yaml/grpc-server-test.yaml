@@ -1,0 +1,37 @@
+name: "GrpcServerTest"
+author: "Citrus"
+status: "FINAL"
+actions:
+  - grpc:
+      server: "grpcServer"
+      receive:
+        call: "helloworld.Greeter/SayHello"
+        metadata:
+          - name: "authorization"
+            value: "Bearer token"
+        message:
+          body:
+            data: '{"name": "Ada"}'
+  - grpc:
+      server: "grpcServer"
+      send:
+        response:
+          status: "OK"
+        trailer:
+          - name: "x-trailer"
+            value: "42"
+        message:
+          body:
+            data: '{"message": "Hello Ada"}'
+  - grpc:
+      server: "grpcServer"
+      send:
+        streamMessage: true
+        message:
+          body:
+            data: '{"symbol": "ACME"}'
+  - grpc:
+      server: "grpcServer"
+      send:
+        streamCompleted:
+          status: "OK"

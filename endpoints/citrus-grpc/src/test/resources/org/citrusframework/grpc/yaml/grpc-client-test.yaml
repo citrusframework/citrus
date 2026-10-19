@@ -1,0 +1,29 @@
+name: "GrpcClientTest"
+author: "Citrus"
+status: "FINAL"
+variables:
+  - name: "user"
+    value: "Ada"
+actions:
+  - grpc:
+      client: "grpcClient"
+      send:
+        call: "helloworld.Greeter/SayHello"
+        metadata:
+          - name: "authorization"
+            value: "Bearer token"
+        deadline: 2000
+        message:
+          body:
+            data: '{"name": "${user}"}'
+  - grpc:
+      client: "grpcClient"
+      receive:
+        response:
+          status: "OK"
+        trailer:
+          - name: "x-trailer"
+            value: "42"
+        message:
+          body:
+            data: '{"message": "Hello Ada"}'
