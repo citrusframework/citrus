@@ -27,6 +27,7 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.config.Property;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -149,19 +150,32 @@ public class SeleniumBrowserOptionsTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private static List<String> chromeArgs(ChromeOptions options) {
-        return (List<String>) ((Map<String, Object>) options.asMap().get(ChromeOptions.CAPABILITY)).get("args");
+        return capabilityArgs(options, ChromeOptions.CAPABILITY);
     }
 
-    @SuppressWarnings("unchecked")
     private static List<String> edgeArgs(EdgeOptions options) {
-        return (List<String>) ((Map<String, Object>) options.asMap().get(EdgeOptions.CAPABILITY)).get("args");
+        return capabilityArgs(options, EdgeOptions.CAPABILITY);
+    }
+
+    private static List<String> firefoxArgs(FirefoxOptions options) {
+        return capabilityArgs(options, "moz:firefoxOptions");
     }
 
     @SuppressWarnings("unchecked")
-    private static List<String> firefoxArgs(FirefoxOptions options) {
-        return (List<String>) ((Map<String, Object>) options.asMap().get("moz:firefoxOptions")).get("args");
+    private static List<String> capabilityArgs(MutableCapabilities options, String capability) {
+        // Selenium currently includes an "args" entry even when empty - guard against future versions omitting it.
+        Object capabilityValue = options.asMap().get(capability);
+        if (!(capabilityValue instanceof Map)) {
+            return List.of();
+        }
+
+        Object args = ((Map<String, Object>) capabilityValue).get("args");
+        if (!(args instanceof List)) {
+            return List.of();
+        }
+
+        return (List<String>) args;
     }
 
     private static final class CapturingAppender extends AbstractAppender {

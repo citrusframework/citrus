@@ -125,6 +125,8 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
                 webDriver = new EventFiringDecorator(getEndpointConfiguration().getEventListeners().toArray(new WebDriverListener[0])).decorate(webDriver);
             }
 
+            // Apply window size and timeouts universally: covers custom, remote and local
+            // drivers, and runs after event-listener decoration so manage() calls reach the decorated driver.
             applyWindowSize();
             applyTimeouts();
         } else {
@@ -224,6 +226,8 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
             /* set custom download folder */
             firefoxProfile.setPreference("browser.download.dir", temporaryStorage.toFile().getAbsolutePath());
 
+            // NB: firefoxOptions() reuses the same FirefoxProfile instance from the configuration,
+            // so the download directory preference set above is preserved.
             FirefoxOptions firefoxOptions = firefoxOptions();
             firefoxOptions.setAcceptInsecureCerts(true);
             return new FirefoxDriver(firefoxOptions);
