@@ -70,7 +70,9 @@ public class SeleniumBrowserConfigParser implements AnnotationConfigParser<Selen
         builder.headless(annotation.headless());
 
         if (annotation.arguments().length > 0) {
-            builder.arguments(Arrays.asList(annotation.arguments()));
+            builder.arguments(Arrays.stream(annotation.arguments())
+                    .map(context::replaceDynamicContentInString)
+                    .toList());
         }
 
         if (StringUtils.hasText(annotation.windowSize())) {
