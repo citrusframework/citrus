@@ -26,6 +26,14 @@
   <citrus-selenium:browser id="htmlUnitBrowser"
                            type="htmlunit"/>
 
+  <citrus-selenium:browser id="optionsBrowser"
+                           type="chrome"
+                           headless="true"
+                           arguments="--lang=de,--no-sandbox"
+                           window-size="1280x800"
+                           page-load-timeout="10000"
+                           script-timeout="5000"/>
+
   <util:list id="eventListeners">
     <ref bean="eventListener"/>
   </util:list>

@@ -85,4 +85,34 @@ public @interface SeleniumBrowserConfig {
      */
     long timeout() default 5000L;
 
+    /**
+     * Headless mode.
+     * @return
+     */
+    boolean headless() default false;
+
+    /**
+     * Browser command-line arguments.
+     * @return
+     */
+    String[] arguments() default {};
+
+    /**
+     * Window size in the form WIDTHxHEIGHT.
+     * @return
+     */
+    String windowSize() default "";
+
+    /**
+     * Page load timeout in milliseconds. Values below zero keep the driver default.
+     * @return
+     */
+    long pageLoadTimeout() default -1L;
+
+    /**
+     * Script timeout in milliseconds. Values below zero keep the driver default.
+     * @return
+     */
+    long scriptTimeout() default -1L;
+
 }

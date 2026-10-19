@@ -16,6 +16,8 @@
 
 package org.citrusframework.selenium.config.annotation;
 
+import java.util.Arrays;
+
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
@@ -64,6 +66,24 @@ public class SeleniumBrowserConfigParser implements AnnotationConfigParser<Selen
         builder.javaScript(annotation.javaScript());
 
         builder.timeout(annotation.timeout());
+
+        builder.headless(annotation.headless());
+
+        if (annotation.arguments().length > 0) {
+            builder.arguments(Arrays.asList(annotation.arguments()));
+        }
+
+        if (StringUtils.hasText(annotation.windowSize())) {
+            builder.windowSize(context.replaceDynamicContentInString(annotation.windowSize()));
+        }
+
+        if (annotation.pageLoadTimeout() >= 0L) {
+            builder.pageLoadTimeout(annotation.pageLoadTimeout());
+        }
+
+        if (annotation.scriptTimeout() >= 0L) {
+            builder.scriptTimeout(annotation.scriptTimeout());
+        }
 
         return builder.build();
     }

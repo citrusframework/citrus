@@ -16,12 +16,15 @@
 
 package org.citrusframework.selenium.config.xml;
 
+import java.util.Arrays;
+
 import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.spring.config.xml.AbstractEndpointParser;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumBrowserConfiguration;
+import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
@@ -42,6 +45,15 @@ public class SeleniumBrowserParser extends AbstractEndpointParser {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("start-page"), "startPageUrl");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("remote-server"), "remoteServerUrl");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("javascript"), "javaScript");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("headless"), "headless");
+
+        if (StringUtils.hasText(element.getAttribute("arguments"))) {
+            endpointConfiguration.addPropertyValue("arguments", Arrays.asList(element.getAttribute("arguments").split(",")));
+        }
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("window-size"), "windowSize");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("page-load-timeout"), "pageLoadTimeout");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("script-timeout"), "scriptTimeout");
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("web-driver"), "webDriver");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("firefox-profile"), "firefoxProfile");
