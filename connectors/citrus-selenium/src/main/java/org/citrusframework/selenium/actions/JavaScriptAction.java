@@ -72,6 +72,9 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     /** JavaScript errors to validate */
     private final List<String> expectedErrors;
 
+    /** Optional variable to store the script return value */
+    private final String variable;
+
     /**
      * Default constructor.
      */
@@ -81,6 +84,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
         this.script = builder.script;
         this.arguments = builder.arguments;
         this.expectedErrors = builder.expectedErrors;
+        this.variable = builder.variable;
     }
 
     @Override
@@ -89,7 +93,11 @@ public class JavaScriptAction extends AbstractSeleniumAction {
         try {
             if (browser.getWebDriver() instanceof JavascriptExecutor jsEngine) {
                 jsEngine.executeScript(ERROR_COLLECTOR_SCRIPT, new Object[]{});
-                jsEngine.executeScript(context.replaceDynamicContentInString(script), context.resolveDynamicValuesInArray(arguments.toArray()));
+                Object result = jsEngine.executeScript(context.replaceDynamicContentInString(script), context.resolveDynamicValuesInArray(arguments.toArray()));
+
+                if (variable != null) {
+                    context.setVariable(variable, result != null ? String.valueOf(result) : "");
+                }
 
                 List<String> errors = new ArrayList<>();
                 List<Object> errorObjects = (List<Object>) jsEngine.executeScript("return window._selenide_jsErrors", new Object[]{});
@@ -142,6 +150,15 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     }
 
     /**
+     * Gets the variable.
+     *
+     * @return
+     */
+    public String getVariable() {
+        return variable;
+    }
+
+    /**
      * Action builder.
      */
     public static class Builder extends AbstractSeleniumAction.Builder<JavaScriptAction, Builder>
@@ -150,6 +167,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
         private String script;
         private final List<Object> arguments = new ArrayList<>();
         private final List<String> expectedErrors = new ArrayList<>();
+        private String variable;
 
         @Override
         public Builder script(String script) {
@@ -202,6 +220,12 @@ public class JavaScriptAction extends AbstractSeleniumAction {
         @Override
         public Builder error(String error) {
             this.expectedErrors.add(error);
+            return this;
+        }
+
+        @Override
+        public Builder variable(String variable) {
+            this.variable = variable;
             return this;
         }
 

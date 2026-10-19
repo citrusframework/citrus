@@ -103,6 +103,64 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testExecuteStoresStringResultInVariable() {
+        when(webDriver.executeScript(eq("return document.title;"))).thenReturn("Frames Test");
+        when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
+
+        JavaScriptAction action =  new JavaScriptAction.Builder()
+                .browser(seleniumBrowser)
+                .script("return document.title;")
+                .variable("pageTitle")
+                .build();
+        action.execute(context);
+
+        Assert.assertEquals(context.getVariable("pageTitle"), "Frames Test");
+    }
+
+    @Test
+    public void testExecuteStoresNumberResultInVariable() {
+        when(webDriver.executeScript(eq("return document.images.length;"))).thenReturn(42L);
+        when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
+
+        JavaScriptAction action =  new JavaScriptAction.Builder()
+                .browser(seleniumBrowser)
+                .script("return document.images.length;")
+                .variable("imageCount")
+                .build();
+        action.execute(context);
+
+        Assert.assertEquals(context.getVariable("imageCount"), "42");
+    }
+
+    @Test
+    public void testExecuteStoresEmptyStringForNullResult() {
+        when(webDriver.executeScript(eq("return undefined;"))).thenReturn(null);
+        when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
+
+        JavaScriptAction action =  new JavaScriptAction.Builder()
+                .browser(seleniumBrowser)
+                .script("return undefined;")
+                .variable("nothing")
+                .build();
+        action.execute(context);
+
+        Assert.assertEquals(context.getVariable("nothing"), "");
+    }
+
+    @Test
+    public void testExecuteWithoutVariableStoresNothing() {
+        when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
+
+        JavaScriptAction action =  new JavaScriptAction.Builder()
+                .browser(seleniumBrowser)
+                .script("alert('Hello')")
+                .build();
+        action.execute(context);
+
+        Assert.assertFalse(context.getVariables().containsKey("pageTitle"));
+    }
+
+    @Test
     public void testExecuteWithErrorValidation() {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.singletonList("This went totally wrong!"));
 
