@@ -75,7 +75,7 @@ public class AgentRun extends CitrusCommand {
 
     private String file;
 
-    @Option(names = { "--engine" }, description = "Name of the test engine that is used ti run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
+    @Option(names = { "--engine" }, description = "Name of the test engine that is used to run tests. One of junit, junit-jupiter, junit4, testng, cucumber")
     private String engine;
 
     @Option(names = { "--url" }, description = "Server endpoint URL to connect to.")
@@ -90,7 +90,7 @@ public class AgentRun extends CitrusCommand {
     @Option(names = { "--timeout" }, defaultValue = "60000", description = "Http request timeout.")
     private String timeout;
 
-    @Option(names = { "--async" }, description = "Should the test engine print verbose test summary information.")
+    @Option(names = { "--async" }, description = "Run the tests asynchronously and poll the agent for the test results (see --polling-interval).")
     private boolean async;
 
     @Option(names = { "--background" }, description = "When enabled the command is not blocking for the test result response.")
