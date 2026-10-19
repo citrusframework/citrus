@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<test name="GrpcXmlIT" author="Citrus" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <actions>
+    <grpc client="client">
+      <send>
+        <call>helloworld.Greeter/SayHello</call>
+        <message>
+          <body><data>{"name": "Ada"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc server="simulator">
+      <receive>
+        <call>helloworld.Greeter/SayHello</call>
+        <message>
+          <body><data>{"name": "Ada", "userId": 0}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc server="simulator">
+      <send>
+        <response status="OK"/>
+        <message>
+          <body><data>{"message": "Hello Ada"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc client="client">
+      <receive>
+        <response status="OK"/>
+        <message>
+          <body><data>{"message": "Hello Ada"}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc client="client">
+      <send>
+        <call>helloworld.Greeter/GetUser</call>
+        <message>
+          <body><data>{"id": "unknown"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc server="simulator">
+      <receive>
+        <call>helloworld.Greeter/GetUser</call>
+        <message>
+          <body><data>{"id": "unknown"}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc server="simulator">
+      <send>
+        <response status="NOT_FOUND"/>
+        <status-description>unknown user</status-description>
+      </send>
+    </grpc>
+
+    <grpc client="client">
+      <receive>
+        <response status="NOT_FOUND"/>
+        <status-description>@contains('unknown')@</status-description>
+      </receive>
+    </grpc>
+
+    <grpc client="client">
+      <send>
+        <call>market.Prices/Subscribe</call>
+        <message>
+          <body><data>{"symbol": "ACME"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc server="simulator">
+      <receive>
+        <call>market.Prices/Subscribe</call>
+        <message>
+          <body><data>{"symbol": "ACME"}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc server="simulator">
+      <send>
+        <stream-message/>
+        <message>
+          <body><data>{"symbol": "ACME", "amount": {"currency": "EUR", "amount": "0"}}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc server="simulator">
+      <send>
+        <stream-completed status="OK"/>
+      </send>
+    </grpc>
+
+    <grpc client="client">
+      <receive>
+        <stream-message/>
+        <message>
+          <body><data>{"symbol": "ACME", "amount": {"currency": "EUR", "amount": "0"}}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc client="client">
+      <receive>
+        <stream-completed status="OK"/>
+      </receive>
+    </grpc>
+  </actions>
+</test>
