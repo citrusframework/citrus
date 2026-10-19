@@ -2423,29 +2423,21 @@ or all cookies.
 @CitrusTest
 public void seleniumTest() {
     selenium().cookies()
-            .add()
-            .name("session")
-            .value("citrus")
+            .add("session", "citrus")
             .path("/")
             .httpOnly(true);
 
     selenium().cookies()
-            .read()
-            .name("session")
-            .variable("sessionValue");
+            .read("session", "sessionValue");
 
     selenium().cookies()
-            .verify()
-            .name("session")
-            .expected("citrus");
+            .verify("session", "citrus");
 
     selenium().cookies()
-            .verifyAbsent()
-            .name("unknown-cookie");
+            .verifyAbsent("unknown-cookie");
 
     selenium().cookies()
-            .delete()
-            .name("session");
+            .delete("session");
 
     selenium().cookies()
             .deleteAll();
