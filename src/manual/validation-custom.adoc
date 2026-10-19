@@ -98,6 +98,7 @@ To address this, Citrus introduces a configurable validator strategy with two mo
   - Both custom validators and the default Citrus validators run.
   - Useful when custom validation should extend - not replace - the default behavior.
 
+[[validation-custom-configuration]]
 ==== Configuration
 
 The strategy can be globally configured using either a system property or an environment variable:

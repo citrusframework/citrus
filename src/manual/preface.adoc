@@ -1,5 +1,4 @@
 [[preface]]
-[[preface]]
 = Preface
 
 Integration tests are a critical part of software testing. In contrast to unit tests where the primary goal is to verify a

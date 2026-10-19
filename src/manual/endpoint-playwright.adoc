@@ -359,26 +359,25 @@ $(playwright().dialog().verifyClosed().triggerScript("window.alert('Saved')"));
 
 Uncaught page JavaScript errors are read directly from the page — there is no capture step, the
 call observes the errors present at that moment. Assert that a page stayed clean, match an
-error, or extract the report into a variable:
-
-[source,java]
-----
-$(playwright().console().verifyNoPageErrors());
-$(playwright().console().verifyPageErrorsContain("TypeError"));
-$(playwright().console().pageErrors().variable("pageErrors"));
-----
+error, or extract the report into a variable.
 
 Console message retrieval reads the capture registry by default. With `filter` set to
 `since-navigation` it instead reads directly from the page, returning only messages since the
 last navigation:
 
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
+$(playwright().console().verifyNoPageErrors());
+$(playwright().console().verifyPageErrorsContain("TypeError"));
+$(playwright().console().pageErrors().variable("pageErrors"));
+
 $(playwright().console().report().variable("consoleReport"));
 $(playwright().console().report().filter("since-navigation").variable("recentConsole"));
 $(playwright().console().verifyContains("Started"));
 ----
 
+.XML
 [source,xml,indent=0,role="secondary"]
 ----
 <playwright>
@@ -392,7 +391,8 @@ A waited-for page response can additionally verify which server answered and ove
 protocol, and the structured snapshot stored in a variable carries the same details. On plain
 HTTP the driver reports no security details, so the TLS fields are absent rather than empty:
 
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 $(playwright().network().waitForResponse().urlContains("/api/orders")
         .triggerScript("() => fetch('/api/orders')")
@@ -401,6 +401,7 @@ $(playwright().network().waitForResponse().urlContains("/api/orders")
         .variable("response"));
 ----
 
+.XML
 [source,xml,indent=0,role="secondary"]
 ----
 <playwright>

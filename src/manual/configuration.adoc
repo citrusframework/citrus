@@ -478,8 +478,7 @@ citrus.xml.file.name.pattern=/**/*Test.xml,/**/*IT.xml
 
 Citrus automatically loads these application properties at the startup. All properties are also settable with Java system
 properties directly. The location of the `citrus-application.properties` file is customizable with the system property
-`citrus.application.properties or environment variable `CITRUS_APPLICATION_PROPERTIES`.
-          `
+`citrus.application.properties` or environment variable `CITRUS_APPLICATION_PROPERTIES`.
 .Custom property file location.
 [source,shell]
 ----
