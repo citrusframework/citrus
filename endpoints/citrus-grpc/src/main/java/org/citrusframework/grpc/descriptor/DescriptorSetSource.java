@@ -24,21 +24,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.protobuf.Any;
-import com.google.protobuf.Api;
-import com.google.protobuf.DescriptorProtos;
 import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
 import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
 import com.google.protobuf.Descriptors.DescriptorValidationException;
 import com.google.protobuf.Descriptors.FileDescriptor;
-import com.google.protobuf.Duration;
-import com.google.protobuf.Empty;
-import com.google.protobuf.FieldMask;
-import com.google.protobuf.Int32Value;
-import com.google.protobuf.SourceContext;
-import com.google.protobuf.Struct;
-import com.google.protobuf.Timestamp;
-import com.google.protobuf.Type;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 
@@ -49,7 +38,7 @@ import org.citrusframework.spi.Resources;
  */
 public class DescriptorSetSource implements DescriptorSource {
 
-    private static final Map<String, FileDescriptor> WELL_KNOWN_TYPES = wellKnownTypes();
+    private static final Map<String, FileDescriptor> WELL_KNOWN_TYPES = WellKnownTypes.all();
 
     private final String resourcePath;
 
@@ -125,19 +114,4 @@ public class DescriptorSetSource implements DescriptorSource {
         return files;
     }
 
-    private static Map<String, FileDescriptor> wellKnownTypes() {
-        Map<String, FileDescriptor> types = new LinkedHashMap<>();
-        types.put("google/protobuf/any.proto", Any.getDescriptor().getFile());
-        types.put("google/protobuf/api.proto", Api.getDescriptor().getFile());
-        types.put("google/protobuf/descriptor.proto", DescriptorProtos.getDescriptor());
-        types.put("google/protobuf/duration.proto", Duration.getDescriptor().getFile());
-        types.put("google/protobuf/empty.proto", Empty.getDescriptor().getFile());
-        types.put("google/protobuf/field_mask.proto", FieldMask.getDescriptor().getFile());
-        types.put("google/protobuf/source_context.proto", SourceContext.getDescriptor().getFile());
-        types.put("google/protobuf/struct.proto", Struct.getDescriptor().getFile());
-        types.put("google/protobuf/timestamp.proto", Timestamp.getDescriptor().getFile());
-        types.put("google/protobuf/type.proto", Type.getDescriptor().getFile());
-        types.put("google/protobuf/wrappers.proto", Int32Value.getDescriptor().getFile());
-        return types;
-    }
 }

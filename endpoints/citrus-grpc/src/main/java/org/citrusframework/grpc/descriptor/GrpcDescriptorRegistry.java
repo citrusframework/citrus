@@ -139,6 +139,9 @@ public class GrpcDescriptorRegistry {
     }
 
     private DescriptorSource source(String value) {
+        if (value.endsWith(".proto")) {
+            return new ProtoFileSource(value, protoPaths);
+        }
         if (value.endsWith(".desc") || value.endsWith(".pb") || value.endsWith(".binpb")
                 || value.endsWith(".protoset")) {
             return new DescriptorSetSource(value);
