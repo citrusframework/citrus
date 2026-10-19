@@ -445,7 +445,7 @@ selenium:stop:: Stops the browser instance
 
 Now let's have a closer look at the different Selenium test actions supported in Citrus.
 
-[[start-stop-browser]]
+[[selenium-actions-start-stop]]
 == Start/stop browser
 
 You can start and stop the browser instance with a test action. This instantiates a new browser window and prepares everything for interacting with the web
@@ -521,7 +521,7 @@ a different browser instance than the active instance you can add the *browser* 
 NOTE: It is a good idea to start and stop the browser instance before each test case. This makes sure that tests are also executable in single run and it always sets up a new browser instance so tests
 will not influence each other.
 
-[[find]]
+[[selenium-actions-find]]
 == Find
 
 The find element test action searches for an element on the current page. The element is specified by one of the following settings:
@@ -660,7 +660,7 @@ The example above finds the *h1* element by its tag name and validates the text 
 enabled, displayed, text, style and attribute values. The elements must be present on the current page and all expected element properties have to match. Otherwise the test action and the test case
 is failing with validation errors.
 
-[[verify]]
+[[selenium-actions-verify]]
 == Verify
 
 The verify action checks the current page or a web element. In contrast to the find action the verify action focuses on a single check that is
@@ -777,7 +777,7 @@ actions:
           class-name: "order"
 ----
 
-[[extract]]
+[[selenium-actions-extract]]
 == Extract
 
 The extract action reads the current page or a web element and stores the value in a test variable. The variable is then available in the
@@ -887,7 +887,7 @@ actions:
 NOTE: In XML and YAML test cases the element selectors resolve test variables, so a dynamic locator value such as `<element id="${element-id}"/>` uses
 the current value of the variable when the action is executed.
 
-[[click]]
+[[selenium-actions-click]]
 == Click
 
 The action performs a click operation on the element.
@@ -952,7 +952,7 @@ actions:
 </spring:beans>
 ----
 
-[[hover]]
+[[selenium-actions-hover]]
 == Hover
 
 The action performs a hover operation on the element.
@@ -1017,7 +1017,7 @@ actions:
 </spring:beans>
 ----
 
-[[double-click]]
+[[selenium-actions-double-click]]
 == Double click
 
 The action performs a double click operation on the element.
@@ -1056,7 +1056,7 @@ actions:
           id: "double-click-me"
 ----
 
-[[right-click]]
+[[selenium-actions-right-click]]
 == Right click
 
 The action performs a right click (context click) operation on the element.
@@ -1095,7 +1095,7 @@ actions:
           id: "right-click-me"
 ----
 
-[[drag-and-drop]]
+[[selenium-actions-drag-and-drop]]
 == Drag and drop
 
 The action drags a source element and drops it onto a target element. The source element is set on the action and the target element is set as a separate target setting.
@@ -1141,7 +1141,7 @@ actions:
 
 NOTE: The drag and drop action uses the WebDriver mouse actions. This does not fire the native HTML5 drag events (_dragstart_, _drag_, _drop_) in the browser. Applications that rely on these events need to use Javascript actions or a dedicated WebDriver implementation.
 
-[[press]]
+[[selenium-actions-press]]
 == Press keys
 
 The action presses a single key or a combination of keys. The keys are sent to a located element or to the currently focused element when no element is set on the action.
@@ -1196,7 +1196,7 @@ actions:
 
 Use the Selenium key names (e.g. _ENTER_, _TAB_, _ESCAPE_, _ARROW_DOWN_) for special keys and a single character for regular text. Keys are combined with the `+` character (e.g. `CONTROL+A`). An unknown key name raises an error naming the key.
 
-[[form-input-actions]]
+[[selenium-actions-form-input]]
 == Form input actions
 
 The following actions are used to access form input elements such as text fields, checkboxes and dropdown lists.
@@ -1394,7 +1394,7 @@ actions:
         deselect-options: ["German"]
 ----
 
-[[form-fill-actions]]
+[[selenium-actions-fill-form]]
 == Fill form
 
 The fill form action sets multiple form fields with given values and optionally submits the form afterwards.
@@ -1551,7 +1551,7 @@ actions:
 
 This will set the form fields `username` and `password` with the given values before submitting the form.
 
-[[page-actions]]
+[[selenium-actions-page]]
 == Page actions
 
 Page objects are a well known pattern when using Selenium. The page objects define elements that the page is working with. In addition to that the
@@ -1675,7 +1675,7 @@ The action methods can also have method parameters as seen in _setUserName_. The
 Methods can also use the optional parameter _TestContext_. With this context you can access the current test context with all test variables for instance. This method parameter
 should always be the last parameter.
 
-[[page-validation]]
+[[selenium-actions-page-validation]]
 == Page validation
 
 We can also use page object for validation purpose. The page object is loaded and instantiated as described in previous section. Then the page validator
@@ -1797,7 +1797,7 @@ public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
 }
 ----
 
-[[wait]]
+[[selenium-actions-wait]]
 == Wait
 
 Sometimes it is required to wait for an element to appear or disappear on the current page. The wait action will wait a given time for the element status
@@ -1946,7 +1946,7 @@ actions:
         expected: "citrusframework.org"
 ----
 
-[[navigate]]
+[[selenium-actions-navigate]]
 == Navigate
 
 The action navigates to a new page either by using a new relative path or a complete new Http URL.
@@ -2018,7 +2018,7 @@ page. The second navigation action opens the relative page _help_ so the new pag
 
 Navigation is always done on the active browser window. You can manage the opened windows as described in next section.
 
-[[window-actions]]
+[[selenium-actions-window]]
 == Window actions
 
 Selenium is able to manage multiple windows. So you can open, close and switch active windows in a Citrus test.
@@ -2094,7 +2094,7 @@ name is missing. Citrus uses default window names that are automatically used as
 selenium_active_window:: the active window handle
 selenium_last_window:: the last window handle when switched to other window
 
-[[frame]]
+[[selenium-actions-frame]]
 == Frame
 
 Web pages may embed other pages in frames. The frame action switches the focus to a frame so that all
@@ -2182,7 +2182,7 @@ actions:
 In case the frame element or the frame with the given index, name or id cannot be found the test
 action fails with an error. The action also fails when no frame target has been set at all.
 
-[[alert]]
+[[selenium-actions-alert]]
 == Alert
 
 We are able to access the alert dialog on the current page. Citrus will validate the displayed dialog text and accept or dismiss of the dialog.
@@ -2246,7 +2246,7 @@ actions:
 The alert dialog text is validated when expected text is given on the test action. The user can decide to accept or dismiss the dialog. After that the dialog should be closed.
 In case the test action fails to find an open alert dialog the test action raises runtime errors and the test will fail.
 
-[[make-screenshot]]
+[[selenium-actions-screenshot]]
 == Make screenshot
 
 You can execute this action in case you want to take a screenshot of the current page. This action only works with browsers that actually display the user interface. The action will not have any effect
@@ -2315,7 +2315,7 @@ actions:
 
 The test action has an optional parameter _output-dir_ which represents the output directory where the screenshot is saved to.
 
-[[temporary-storage-firefox]]
+[[selenium-actions-temporary-storage]]
 == Temporary storage (Firefox)
 
 *Important* This action only works with Firefox web driver! Other browsers are not working with the temporary download storage.
@@ -2386,7 +2386,7 @@ temporary storage is not capable of subdirectories all files are stored directly
 In case the stored file is not found by that name the test action fails with respective errors. On the other hand when the file is found in temporary storage
 Citrus will automatically create a new test variable *selenium_download_file* which contains the file name as value.
 
-[[javascript]]
+[[selenium-actions-javascript]]
 == Javascript
 
 The javascript action executes a given piece of Javascript code in the current browser. Optionally the action validates that the browser reported expected Javascript errors
@@ -2478,7 +2478,7 @@ by the browser.
 
 When the action declares a _variable_ name the script result is stored as a test variable. A script result of `null` or `undefined` is stored as an empty string.
 
-[[cookies]]
+[[selenium-actions-cookies]]
 == Cookies
 
 The cookies action manages the browser cookies of the current session. It adds a cookie, reads a
@@ -2584,7 +2584,7 @@ and _same-site_ settings control the cookie attributes. The verify command check
 and supports validation matchers (e.g. `@contains('citrus')@`). Reading or verifying a missing
 cookie fails the test with an error naming the cookie.
 
-[[clear-browser-cache]]
+[[selenium-actions-clear-cache]]
 == Clear browser cache
 
 Clearing the browser cache deletes all cookies of the current session and clears the browser's local and session web storage for the current origin. Please note that the browser
