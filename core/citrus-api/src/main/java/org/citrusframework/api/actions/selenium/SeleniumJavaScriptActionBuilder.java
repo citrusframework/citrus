@@ -63,4 +63,9 @@ public interface SeleniumJavaScriptActionBuilder<T extends TestAction, B extends
      * Add expected error.
      */
     B error(String error);
+
+    /**
+     * Store the script return value in a test variable.
+     */
+    B variable(String variable);
 }
