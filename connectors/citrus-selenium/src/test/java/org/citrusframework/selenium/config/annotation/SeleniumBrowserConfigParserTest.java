@@ -16,6 +16,7 @@
 
 package org.citrusframework.selenium.config.annotation;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
@@ -71,6 +72,15 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     @SeleniumBrowserConfig(type="htmlunit")
     private SeleniumBrowser browser4;
 
+    @CitrusEndpoint
+    @SeleniumBrowserConfig(type="chrome",
+            headless=true,
+            arguments={"--lang=de", "--no-sandbox"},
+            windowSize="1280x800",
+            pageLoadTimeout=10000L,
+            scriptTimeout=5000L)
+    private SeleniumBrowser browser5;
+
     @Mock
     private ReferenceResolver referenceResolver;
     @Mock
@@ -108,6 +118,11 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(browser1.getEndpointConfiguration().getFirefoxProfile());
         Assert.assertNull(browser1.getEndpointConfiguration().getRemoteServerUrl());
         Assert.assertEquals(browser1.getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertFalse(browser1.getEndpointConfiguration().isHeadless());
+        Assert.assertTrue(browser1.getEndpointConfiguration().getArguments().isEmpty());
+        Assert.assertNull(browser1.getEndpointConfiguration().getWindowSize());
+        Assert.assertNull(browser1.getEndpointConfiguration().getPageLoadTimeout());
+        Assert.assertNull(browser1.getEndpointConfiguration().getScriptTimeout());
     }
 
     @Test
@@ -141,6 +156,19 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(browser4);
         Assert.assertEquals(browser4.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
+    }
+
+    @Test
+    public void parseBrowserConfig_browserWithOptions_shouldParseConfigurationSuccessfully() {
+        CitrusAnnotations.injectEndpoints(this, context);
+
+        Assert.assertNotNull(browser5);
+        Assert.assertEquals(browser5.getEndpointConfiguration().getBrowserType(), Browser.CHROME.browserName());
+        Assert.assertTrue(browser5.getEndpointConfiguration().isHeadless());
+        Assert.assertEquals(browser5.getEndpointConfiguration().getArguments(), Arrays.asList("--lang=de", "--no-sandbox"));
+        Assert.assertEquals(browser5.getEndpointConfiguration().getWindowSize(), "1280x800");
+        Assert.assertEquals(browser5.getEndpointConfiguration().getPageLoadTimeout(), Long.valueOf(10000L));
+        Assert.assertEquals(browser5.getEndpointConfiguration().getScriptTimeout(), Long.valueOf(5000L));
     }
 
     @Test

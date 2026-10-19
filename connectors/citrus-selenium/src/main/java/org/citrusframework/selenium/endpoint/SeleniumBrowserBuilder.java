@@ -204,4 +204,87 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
     public void setTimeout(long timeout) {
         timeout(timeout);
     }
+
+    /**
+     * Sets the browser headless mode.
+     */
+    public SeleniumBrowserBuilder headless(boolean enabled) {
+        endpoint.getEndpointConfiguration().setHeadless(enabled);
+        return this;
+    }
+
+    @SchemaProperty(description = "When enabled the browser runs without a visible window.", defaultValue = "false")
+    @XmlAttribute
+    public void setHeadless(boolean enabled) {
+        headless(enabled);
+    }
+
+    /**
+     * Sets the browser command-line arguments.
+     */
+    public SeleniumBrowserBuilder arguments(List<String> arguments) {
+        endpoint.getEndpointConfiguration().setArguments(arguments);
+        return this;
+    }
+
+    /**
+     * Adds a single browser command-line argument.
+     */
+    public SeleniumBrowserBuilder argument(String argument) {
+        endpoint.getEndpointConfiguration().getArguments().add(argument);
+        return this;
+    }
+
+    @SchemaProperty(description = "Additional browser command-line arguments.")
+    @XmlTransient
+    public void setArguments(List<String> arguments) {
+        arguments(arguments);
+    }
+
+    @XmlAttribute(name = "arguments")
+    public void setArguments(String arguments) {
+        setArguments(Arrays.asList(arguments.split(",")));
+    }
+
+    /**
+     * Sets the browser window size.
+     */
+    public SeleniumBrowserBuilder windowSize(String windowSize) {
+        endpoint.getEndpointConfiguration().setWindowSize(windowSize);
+        return this;
+    }
+
+    @SchemaProperty(description = "The browser window size in the form WIDTHxHEIGHT.")
+    @XmlAttribute(name = "window-size")
+    public void setWindowSize(String windowSize) {
+        windowSize(windowSize);
+    }
+
+    /**
+     * Sets the browser page load timeout.
+     */
+    public SeleniumBrowserBuilder pageLoadTimeout(long timeout) {
+        endpoint.getEndpointConfiguration().setPageLoadTimeout(timeout);
+        return this;
+    }
+
+    @SchemaProperty(description = "The page load timeout in milliseconds.")
+    @XmlAttribute(name = "page-load-timeout")
+    public void setPageLoadTimeout(long timeout) {
+        pageLoadTimeout(timeout);
+    }
+
+    /**
+     * Sets the browser script timeout.
+     */
+    public SeleniumBrowserBuilder scriptTimeout(long timeout) {
+        endpoint.getEndpointConfiguration().setScriptTimeout(timeout);
+        return this;
+    }
+
+    @SchemaProperty(description = "The script timeout in milliseconds.")
+    @XmlAttribute(name = "script-timeout")
+    public void setScriptTimeout(long timeout) {
+        scriptTimeout(timeout);
+    }
 }

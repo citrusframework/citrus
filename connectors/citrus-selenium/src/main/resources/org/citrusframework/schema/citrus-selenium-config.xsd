@@ -48,6 +48,11 @@
       <xs:attribute name="web-driver" type="xs:string"/>
       <xs:attribute name="firefox-profile" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>
+      <xs:attribute name="headless" type="xs:boolean"/>
+      <xs:attribute name="arguments" type="xs:string"/>
+      <xs:attribute name="window-size" type="xs:string"/>
+      <xs:attribute name="page-load-timeout" type="xs:string"/>
+      <xs:attribute name="script-timeout" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

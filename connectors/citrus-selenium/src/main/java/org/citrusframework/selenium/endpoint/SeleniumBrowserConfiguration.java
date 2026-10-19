@@ -51,6 +51,21 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
     /** Custom web driver instance */
     private WebDriver webDriver;
 
+    /** Run the browser without a visible window (Chrome, Edge, Firefox) */
+    private boolean headless;
+
+    /** Additional browser command-line arguments (Chrome, Edge, Firefox) */
+    private List<String> arguments = new ArrayList<>();
+
+    /** Browser window size in the form WIDTHxHEIGHT, applied after the browser starts */
+    private String windowSize;
+
+    /** Page load timeout in milliseconds, applied after the browser starts (null keeps the driver default) */
+    private Long pageLoadTimeout;
+
+    /** Script timeout in milliseconds, applied after the browser starts (null keeps the driver default) */
+    private Long scriptTimeout;
+
     /** Optional firefox profile */
     private FirefoxProfile firefoxProfile;
 
@@ -164,6 +179,86 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
      */
     public void setWebDriver(WebDriver webDriver) {
         this.webDriver = webDriver;
+    }
+
+    /**
+     * Gets the headless flag.
+     * @return
+     */
+    public boolean isHeadless() {
+        return headless;
+    }
+
+    /**
+     * Sets the headless flag.
+     * @param headless
+     */
+    public void setHeadless(boolean headless) {
+        this.headless = headless;
+    }
+
+    /**
+     * Gets the browser command-line arguments.
+     * @return
+     */
+    public List<String> getArguments() {
+        return arguments;
+    }
+
+    /**
+     * Sets the browser command-line arguments.
+     * @param arguments
+     */
+    public void setArguments(List<String> arguments) {
+        this.arguments = arguments;
+    }
+
+    /**
+     * Gets the window size.
+     * @return
+     */
+    public String getWindowSize() {
+        return windowSize;
+    }
+
+    /**
+     * Sets the window size.
+     * @param windowSize
+     */
+    public void setWindowSize(String windowSize) {
+        this.windowSize = windowSize;
+    }
+
+    /**
+     * Gets the page load timeout.
+     * @return
+     */
+    public Long getPageLoadTimeout() {
+        return pageLoadTimeout;
+    }
+
+    /**
+     * Sets the page load timeout.
+     * @param pageLoadTimeout
+     */
+    public void setPageLoadTimeout(Long pageLoadTimeout) {
+        this.pageLoadTimeout = pageLoadTimeout;
+    }
+
+    /**
+     * Gets the script timeout.
+     * @return
+     */
+    public Long getScriptTimeout() {
+        return scriptTimeout;
+    }
+
+    /**
+     * Sets the script timeout.
+     * @param scriptTimeout
+     */
+    public void setScriptTimeout(Long scriptTimeout) {
+        this.scriptTimeout = scriptTimeout;
     }
 
     /**
