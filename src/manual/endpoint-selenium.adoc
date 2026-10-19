@@ -364,12 +364,14 @@ selenium:page:: Instantiate page object with dependency injection and execute pa
 selenium:open:: Open new window
 selenium:close:: Close window by given name
 selenium:switch:: Switch focus to window with given name
+selenium:frame:: Switch focus to frame by element, index or name, back to parent or default content
 selenium:wait-until:: Wait for element presence, visibility, clickability, text, url or title
 selenium:alert:: Access current alert dialog (with action _access_ or _dismiss_)
 selenium:screenshot:: Makes screenshot of current page
 selenium:store-file:: Store file to temporary browser directory
 selenium:get-stored-file:: Gets stored file from temporary browser directory
 selenium:javascript:: Execute Javascript code in browser
+selenium:cookies:: Add, read, verify or delete browser cookies
 selenium:clear-cache:: Clears cookies and web storage in current browser
 selenium:stop:: Stops the browser instance
 
@@ -2024,6 +2026,94 @@ name is missing. Citrus uses default window names that are automatically used as
 selenium_active_window:: the active window handle
 selenium_last_window:: the last window handle when switched to other window
 
+[[frame]]
+== Frame
+
+Web pages may embed other pages in frames. The frame action switches the focus to a frame so that all
+upcoming Selenium actions take place inside that frame. Switch back to the parent frame or to the
+default (top-level) content when done.
+
+The frame is located by a web element, by its zero-based index or by its name or id attribute. Exactly
+one target must be set on the action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().frame()
+            .element(By.id("menu-frame"));
+
+    selenium().frame()
+            .index(0);
+
+    selenium().frame()
+            .nameOrId("menu-frame");
+
+    selenium().frame()
+            .parent();
+
+    selenium().frame()
+            .defaultContent();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <frame>
+          <element id="menu-frame"/>
+        </frame>
+      </selenium>
+
+      <selenium>
+        <frame index="0"/>
+      </selenium>
+
+      <selenium>
+        <frame name="menu-frame"/>
+      </selenium>
+
+      <selenium>
+        <frame parent="true"/>
+      </selenium>
+
+      <selenium>
+        <frame default="true"/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      frame:
+        element:
+          id: "menu-frame"
+  - selenium:
+      frame:
+        index: 0
+  - selenium:
+      frame:
+        name: "menu-frame"
+  - selenium:
+      frame:
+        parent: true
+  - selenium:
+      frame:
+        default: true
+----
+
+In case the frame element or the frame with the given index, name or id cannot be found the test
+action fails with an error. The action also fails when no frame target has been set at all.
+
 [[alert]]
 == Alert
 
@@ -2241,6 +2331,9 @@ while the script was running.
 public void seleniumTest() {
     selenium().javascript("alert('This is awesome!')")
         .errors("Something went wrong");
+
+    selenium().javascript("return document.title;")
+        .variable("pageTitle");
 }
 ----
 
@@ -2257,6 +2350,12 @@ public void seleniumTest() {
           </errors>
         </javascript>
       </selenium>
+
+      <selenium>
+        <javascript variable="pageTitle">
+          <script>return document.title;</script>
+        </javascript>
+      </selenium>
     </actions>
 </test>
 ----
@@ -2271,6 +2370,10 @@ actions:
         script: "alert('This is awesome!')"
         errors:
           - Something went wrong
+  - selenium:
+      javaScript:
+        script: "return document.title;"
+        variable: "pageTitle"
 ----
 
 .Spring XML
@@ -2293,6 +2396,9 @@ actions:
             <selenium:error>Something went wrong</selenium:error>
           </selenium:errors>
         </selenium:javascript>
+        <selenium:javascript variable="pageTitle">
+          <selenium:script>return document.title;</selenium:script>
+        </selenium:javascript>
     </actions>
   </testcase>
 </spring:beans>
@@ -2301,6 +2407,122 @@ actions:
 Before executing the script Citrus installs a small error collector in the current page. Any Javascript error raised while the script is running is collected and exposed to the test as the
 *selenium_jsErrors* test variable. When the action declares expected errors with the _errors_ setting the test automatically fails in case one of these expected errors has not been raised
 by the browser.
+
+When the action declares a _variable_ name the script result is stored as a test variable. A script result of `null` or `undefined` is stored as an empty string.
+
+[[cookies]]
+== Cookies
+
+The cookies action manages the browser cookies of the current session. It adds a cookie, reads a
+cookie value into a test variable, verifies a cookie value or presence, and deletes single cookies
+or all cookies.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void seleniumTest() {
+    selenium().cookies()
+            .add()
+            .name("session")
+            .value("citrus")
+            .path("/")
+            .httpOnly(true);
+
+    selenium().cookies()
+            .read()
+            .name("session")
+            .variable("sessionValue");
+
+    selenium().cookies()
+            .verify()
+            .name("session")
+            .expected("citrus");
+
+    selenium().cookies()
+            .verifyAbsent()
+            .name("unknown-cookie");
+
+    selenium().cookies()
+            .delete()
+            .name("session");
+
+    selenium().cookies()
+            .deleteAll();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SeleniumTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <selenium>
+        <cookies command="add" name="session" value="citrus" path="/" http-only="true"/>
+      </selenium>
+
+      <selenium>
+        <cookies command="read" name="session" variable="sessionValue"/>
+      </selenium>
+
+      <selenium>
+        <cookies command="verify" name="session" expected="citrus"/>
+      </selenium>
+
+      <selenium>
+        <cookies command="verify-absent" name="unknown-cookie"/>
+      </selenium>
+
+      <selenium>
+        <cookies command="delete" name="session"/>
+      </selenium>
+
+      <selenium>
+        <cookies command="delete-all"/>
+      </selenium>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SeleniumTest
+actions:
+  - selenium:
+      cookies:
+        command: "add"
+        name: "session"
+        value: "citrus"
+        path: "/"
+        http-only: true
+  - selenium:
+      cookies:
+        command: "read"
+        name: "session"
+        variable: "sessionValue"
+  - selenium:
+      cookies:
+        command: "verify"
+        name: "session"
+        expected: "citrus"
+  - selenium:
+      cookies:
+        command: "verify-absent"
+        name: "unknown-cookie"
+  - selenium:
+      cookies:
+        command: "delete"
+        name: "session"
+  - selenium:
+      cookies:
+        command: "delete-all"
+----
+
+When adding a cookie the optional _domain_, _path_, _expiry_ (epoch seconds), _secure_, _http-only_
+and _same-site_ settings control the cookie attributes. The verify command checks the cookie value
+and supports validation matchers (e.g. `@contains('citrus')@`). Reading or verifying a missing
+cookie fails the test with an error naming the cookie.
 
 [[clear-browser-cache]]
 == Clear browser cache
