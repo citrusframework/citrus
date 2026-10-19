@@ -1,0 +1,128 @@
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<test name="SeleniumFrameCookieIT" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Integration test for frame switching, cookies and JavaScript result variables</description>
+  <actions>
+    <selenium>
+      <start browser="webBrowser"/>
+    </selenium>
+
+    <selenium>
+      <navigate page="http://localhost:19090/frames"/>
+    </selenium>
+
+    <selenium>
+      <wait until="title" expected="Frames Test"/>
+    </selenium>
+
+    <selenium>
+      <javascript variable="headingText">
+        <script>return document.getElementById('frames-heading').textContent;</script>
+      </javascript>
+    </selenium>
+
+    <echo>
+      <message>Heading from script: ${headingText}</message>
+    </echo>
+
+    <selenium>
+      <verify check="text" expected="${headingText}">
+        <element id="frames-heading"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <frame name="content-frame"/>
+    </selenium>
+
+    <selenium>
+      <verify check="text" expected="Hello from frame">
+        <element id="frame-text"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <frame parent="true"/>
+    </selenium>
+
+    <selenium>
+      <verify check="text" expected="Frames">
+        <element id="frames-heading"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <frame index="1"/>
+    </selenium>
+
+    <selenium>
+      <verify check="text" expected="Hello from frame">
+        <element id="frame-text"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <frame default="true"/>
+    </selenium>
+
+    <selenium>
+      <frame>
+        <element id="frame-one"/>
+      </frame>
+    </selenium>
+
+    <selenium>
+      <verify check="text" expected="Hello from frame">
+        <element id="frame-text"/>
+      </verify>
+    </selenium>
+
+    <selenium>
+      <frame default="true"/>
+    </selenium>
+
+    <selenium>
+      <cookies command="add" name="citrus-cookie" value="citrus-value" path="/"/>
+    </selenium>
+
+    <selenium>
+      <cookies command="read" name="citrus-cookie" variable="cookieValue"/>
+    </selenium>
+
+    <echo>
+      <message>Cookie value: ${cookieValue}</message>
+    </echo>
+
+    <selenium>
+      <cookies command="verify" name="citrus-cookie" expected="${cookieValue}"/>
+    </selenium>
+
+    <selenium>
+      <cookies command="delete" name="citrus-cookie"/>
+    </selenium>
+
+    <selenium>
+      <cookies command="verify-absent" name="citrus-cookie"/>
+    </selenium>
+
+    <selenium>
+      <stop browser="webBrowser"/>
+    </selenium>
+  </actions>
+</test>
