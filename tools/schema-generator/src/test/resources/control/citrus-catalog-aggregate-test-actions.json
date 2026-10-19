@@ -6084,6 +6084,16 @@
                     "browser": {
                       "type": "object",
                       "properties": {
+                        "arguments": {
+                          "title": "Arguments",
+                          "description": "Additional browser command-line arguments.",
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "title": "Arguments",
+                            "description": "Additional browser command-line arguments."
+                          }
+                        },
                         "eventListeners": {
                           "title": "EventListeners",
                           "description": "Sets the list of event listeners.",
@@ -6096,6 +6106,12 @@
                             "$comment": "group:advanced"
                           }
                         },
+                        "headless": {
+                          "type": "boolean",
+                          "title": "Headless",
+                          "description": "When enabled the browser runs without a visible window.",
+                          "default": false
+                        },
                         "javaScript": {
                           "type": "boolean",
                           "title": "JavaScript",
@@ -6105,6 +6121,11 @@
                           "type": "string",
                           "title": "Name",
                           "description": "The name of the endpoint"
+                        },
+                        "pageLoadTimeout": {
+                          "type": "integer",
+                          "title": "PageLoadTimeout",
+                          "description": "The page load timeout in milliseconds."
                         },
                         "profile": {
                           "type": "string",
@@ -6116,6 +6137,11 @@
                           "type": "string",
                           "title": "RemoteServerUrl",
                           "description": "The remote server URL."
+                        },
+                        "scriptTimeout": {
+                          "type": "integer",
+                          "title": "ScriptTimeout",
+                          "description": "The script timeout in milliseconds."
                         },
                         "startPage": {
                           "type": "string",
@@ -6144,6 +6170,11 @@
                           "title": "WebDriver",
                           "description": "Sets a custom web driver as a bean reference.",
                           "$comment": "group:advanced"
+                        },
+                        "windowSize": {
+                          "type": "string",
+                          "title": "WindowSize",
+                          "description": "The browser window size in the form WIDTHxHEIGHT."
                         }
                       },
                       "additionalProperties": false,
