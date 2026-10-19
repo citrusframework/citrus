@@ -325,13 +325,15 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
      * Applies the configured page load and script timeouts to the started web driver.
      */
     void applyTimeouts() {
-        if (getEndpointConfiguration().getPageLoadTimeout() != null) {
+        if (getEndpointConfiguration().getPageLoadTimeout() != null
+                && getEndpointConfiguration().getPageLoadTimeout() >= 0L) {
             Duration pageLoadTimeout = Duration.ofMillis(getEndpointConfiguration().getPageLoadTimeout());
             logger.debug("Set browser page load timeout to {}", pageLoadTimeout);
             webDriver.manage().timeouts().pageLoadTimeout(pageLoadTimeout);
         }
 
-        if (getEndpointConfiguration().getScriptTimeout() != null) {
+        if (getEndpointConfiguration().getScriptTimeout() != null
+                && getEndpointConfiguration().getScriptTimeout() >= 0L) {
             Duration scriptTimeout = Duration.ofMillis(getEndpointConfiguration().getScriptTimeout());
             logger.debug("Set browser script timeout to {}", scriptTimeout);
             webDriver.manage().timeouts().scriptTimeout(scriptTimeout);

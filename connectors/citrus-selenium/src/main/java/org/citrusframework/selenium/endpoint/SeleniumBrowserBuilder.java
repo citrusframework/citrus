@@ -243,7 +243,9 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
 
     @XmlAttribute(name = "arguments")
     public void setArguments(String arguments) {
-        setArguments(Arrays.asList(arguments.split(",")));
+        if (StringUtils.hasText(arguments)) {
+            setArguments(Arrays.asList(arguments.split(",")));
+        }
     }
 
     /**

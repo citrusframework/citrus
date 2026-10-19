@@ -210,7 +210,7 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
      * @param arguments
      */
     public void setArguments(List<String> arguments) {
-        this.arguments = arguments;
+        this.arguments = arguments == null ? new ArrayList<>() : arguments;
     }
 
     /**
