@@ -1,0 +1,98 @@
+name: "GrpcYamlIT"
+author: "Citrus"
+status: "FINAL"
+actions:
+  - grpc:
+      client: "client"
+      send:
+        call: "helloworld.Greeter/SayHello"
+        message:
+          body:
+            data: '{"name": "Ada"}'
+  - grpc:
+      server: "simulator"
+      receive:
+        call: "helloworld.Greeter/SayHello"
+        message:
+          body:
+            data: '{"name": "Ada", "userId": 0}'
+  - grpc:
+      server: "simulator"
+      send:
+        response:
+          status: "OK"
+        message:
+          body:
+            data: '{"message": "Hello Ada"}'
+  - grpc:
+      client: "client"
+      receive:
+        response:
+          status: "OK"
+        message:
+          body:
+            data: '{"message": "Hello Ada"}'
+  - grpc:
+      client: "client"
+      send:
+        call: "helloworld.Greeter/GetUser"
+        message:
+          body:
+            data: '{"id": "unknown"}'
+  - grpc:
+      server: "simulator"
+      receive:
+        call: "helloworld.Greeter/GetUser"
+        message:
+          body:
+            data: '{"id": "unknown"}'
+  - grpc:
+      server: "simulator"
+      send:
+        response:
+          status: "NOT_FOUND"
+        statusDescription: "unknown user"
+  - grpc:
+      client: "client"
+      receive:
+        response:
+          status: "NOT_FOUND"
+        statusDescription: "@contains('unknown')@"
+  - grpc:
+      client: "client"
+      send:
+        call: "market.Prices/Subscribe"
+        message:
+          body:
+            data: '{"symbol": "ACME"}'
+  - grpc:
+      server: "simulator"
+      receive:
+        call: "market.Prices/Subscribe"
+        message:
+          body:
+            data: '{"symbol": "ACME"}'
+  - grpc:
+      server: "simulator"
+      send:
+        streamMessage: true
+        message:
+          body:
+            data: '{"symbol": "ACME", "amount": {"currency": "EUR", "amount": "0"}}'
+  - grpc:
+      server: "simulator"
+      send:
+        streamCompleted:
+          status: "OK"
+  - grpc:
+      client: "client"
+      receive:
+        streamMessage: true
+        message:
+          body:
+            data: '{"symbol": "ACME", "amount": {"currency": "EUR", "amount": "0"}}'
+  - grpc:
+      client: "client"
+      receive:
+        streamCompleted:
+          status: "OK"

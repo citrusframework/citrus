@@ -75,6 +75,11 @@ public class GrpcServer extends AbstractServer {
 
     @Override
     public void initialize() {
+        if (calls != null) {
+            // already initialized - the server and its call registry are running
+            return;
+        }
+
         boolean autoStart = isAutoStart();
         setAutoStart(false);
 
