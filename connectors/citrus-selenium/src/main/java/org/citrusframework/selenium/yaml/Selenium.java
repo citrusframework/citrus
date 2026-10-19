@@ -255,6 +255,22 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     }
 
     /**
+     * Switch frame.
+     */
+    @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)
+    public void setFrame(Frame builder) {
+        this.builder = builder;
+    }
+
+    /**
+     * Cookie action.
+     */
+    @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)
+    public void setCookies(Cookies builder) {
+        this.builder = builder;
+    }
+
+    /**
      * Open window.
      */
     @SchemaProperty(kind = ACTION, group = SELENIUM_GROUP, module = SELENIUM_MODULE)

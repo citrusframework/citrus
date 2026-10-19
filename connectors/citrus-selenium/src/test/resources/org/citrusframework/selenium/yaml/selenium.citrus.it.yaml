@@ -187,6 +187,7 @@ actions:
   - selenium:
       javaScript:
         script: "alert('This is awesome!')"
+        variable: "scriptResult"
         errors:
           - Something went wrong
 
@@ -320,6 +321,28 @@ actions:
       click:
         element:
           partial-link-text: "Click"
+
+  - selenium:
+      frame:
+        name: "menu-frame"
+
+  - selenium:
+      frame:
+        index: 0
+
+  - selenium:
+      cookies:
+        command: "add"
+        name: "session"
+        value: "abc123"
+        path: "/"
+        domain: "citrusframework.org"
+
+  - selenium:
+      cookies:
+        command: "verify"
+        name: "session"
+        expected: "abc123"
 
   - selenium:
       stop:

@@ -120,6 +120,7 @@ public class SeleniumTest extends AbstractYamlActionTest {
         when(targetLocator.window(any(String.class))).thenReturn(webDriver);
         when(browser.getStoredFile(any(String.class))).thenReturn("file.txt");
         when(webDriver.manage()).thenReturn(options);
+        when(options.getCookieNamed("session")).thenReturn(new org.openqa.selenium.Cookie("session", "abc123"));
         when(webDriver.findElements(any(By.class))).thenReturn(Collections.singletonList(webElement));
         when(webDriver.findElements(By.id("dialog"))).thenReturn(List.of(dialog));
         when(webDriver.findElements(By.id("missing"))).thenReturn(Collections.emptyList());
@@ -144,7 +145,7 @@ public class SeleniumTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getName(), "SeleniumTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 55L);
+        Assert.assertEquals(result.getActionCount(), 59L);
 
         int actionIndex = 0;
 
@@ -358,6 +359,7 @@ public class SeleniumTest extends AbstractYamlActionTest {
         Assert.assertNull(javaScriptAction.getBrowser());
         Assert.assertEquals(javaScriptAction.getName(), "selenium:javascript");
         Assert.assertEquals(javaScriptAction.getScript(), "alert('This is awesome!')");
+        Assert.assertEquals(javaScriptAction.getVariable(), "scriptResult");
         Assert.assertEquals(javaScriptAction.getExpectedErrors().size(), 1L);
         Assert.assertEquals(javaScriptAction.getExpectedErrors().get(0), "Something went wrong");
 
@@ -520,6 +522,32 @@ public class SeleniumTest extends AbstractYamlActionTest {
         Assert.assertEquals(partialLinkTextClickAction.getName(), "selenium:click");
         Assert.assertEquals(partialLinkTextClickAction.getProperty(), "partial-link-text");
         Assert.assertEquals(partialLinkTextClickAction.getPropertyValue(), "Click");
+
+        FrameAction frameNameAction = (FrameAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(frameNameAction.getBrowser());
+        Assert.assertEquals(frameNameAction.getName(), "selenium:frame");
+        Assert.assertEquals(frameNameAction.getNameOrId(), "menu-frame");
+
+        FrameAction frameIndexAction = (FrameAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(frameIndexAction.getBrowser());
+        Assert.assertEquals(frameIndexAction.getName(), "selenium:frame");
+        Assert.assertEquals(frameIndexAction.getIndex(), Integer.valueOf(0));
+
+        CookieAction cookieAddAction = (CookieAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(cookieAddAction.getBrowser());
+        Assert.assertEquals(cookieAddAction.getName(), "selenium:cookies");
+        Assert.assertEquals(cookieAddAction.getCommand(), "add");
+        Assert.assertEquals(cookieAddAction.getCookieName(), "session");
+        Assert.assertEquals(cookieAddAction.getValue(), "abc123");
+        Assert.assertEquals(cookieAddAction.getPath(), "/");
+        Assert.assertEquals(cookieAddAction.getDomain(), "citrusframework.org");
+
+        CookieAction cookieVerifyAction = (CookieAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(cookieVerifyAction.getBrowser());
+        Assert.assertEquals(cookieVerifyAction.getName(), "selenium:cookies");
+        Assert.assertEquals(cookieVerifyAction.getCommand(), "verify");
+        Assert.assertEquals(cookieVerifyAction.getCookieName(), "session");
+        Assert.assertEquals(cookieVerifyAction.getExpected(), "abc123");
 
         StopBrowserAction stopAction = (StopBrowserAction) result.getTestAction(actionIndex);
         Assert.assertNotNull(stopAction.getBrowser());

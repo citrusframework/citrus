@@ -68,6 +68,14 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
         this.delegate.errors(errors);
     }
 
+    /**
+     * Store the script return value in a variable.
+     */
+    @SchemaProperty
+    public void setVariable(String variable) {
+        this.delegate.variable(variable);
+    }
+
     @Override
     public JavaScript description(String description) {
         delegate.description(description);

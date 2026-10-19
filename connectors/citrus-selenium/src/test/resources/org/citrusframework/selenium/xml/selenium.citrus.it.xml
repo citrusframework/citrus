@@ -213,7 +213,7 @@
     </selenium>
 
     <selenium>
-      <javascript>
+      <javascript variable="scriptResult">
         <script>alert('This is awesome!')</script>
         <errors>
           <error>Something went wrong</error>
@@ -341,6 +341,22 @@
       <click>
         <element partial-link-text="Click"/>
       </click>
+    </selenium>
+
+    <selenium>
+      <frame name="menu-frame"/>
+    </selenium>
+
+    <selenium>
+      <frame index="0"/>
+    </selenium>
+
+    <selenium>
+      <cookies command="add" name="session" value="abc123" path="/" domain="citrusframework.org"/>
+    </selenium>
+
+    <selenium>
+      <cookies command="verify" name="session" expected="abc123"/>
     </selenium>
 
     <selenium>

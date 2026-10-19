@@ -253,6 +253,22 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     }
 
     /**
+     * Switch frame.
+     */
+    @XmlElement(name = "frame")
+    public void setFrame(Frame builder) {
+        this.builder = builder;
+    }
+
+    /**
+     * Cookie action.
+     */
+    @XmlElement(name = "cookies")
+    public void setCookies(Cookies builder) {
+        this.builder = builder;
+    }
+
+    /**
      * Open window.
      */
     @XmlElement(name = "open-window")
