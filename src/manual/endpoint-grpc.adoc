@@ -1,0 +1,363 @@
+[[grpc]]
+= gRPC support
+
+gRPC services exchange Protobuf messages over HTTP/2. Citrus is able to call gRPC services as a
+client and to simulate gRPC services as a server, without generated stubs in the test project:
+messages are written as JSON in the test and converted with the Protobuf descriptors loaded at
+runtime.
+
+NOTE: The gRPC support is located in the module *citrus-grpc*. Adding it brings `grpc-java`,
+`protobuf-java` and Square Wire to your test classpath; projects that already use gRPC should keep
+both on compatible versions.
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-grpc</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+The gRPC test actions are available as `grpc()` in the Citrus Java DSL, as `<grpc>` element in XML
+tests and as `grpc:` in YAML tests. Unary and server streaming calls are supported.
+
+[[grpc-descriptors]]
+== Protobuf descriptors
+
+Every endpoint needs the Protobuf descriptors of the services under test. Any of the following can
+be combined in the `descriptors` setting:
+
+* `.proto` source files (proto2 and proto3), including their imports. Google well-known types are
+  always available. Declared `json_name` options are honored. Proto2 groups and editions are not
+  supported by the built-in parser - compile such files with
+  `protoc --descriptor_set_out=...` and use the descriptor set instead.
+* Descriptor set files produced by `protoc` (`*.desc`, `*.pb`, `*.binpb`, `*.protoset`).
+* Generated message or service classes from a `*-api` jar on the classpath - give the fully
+  qualified class name, e.g. `com.example.api.GreeterGrpc`.
+
+Additional import roots for `.proto` files go to the `protoPaths` setting. Descriptors are loaded
+once per endpoint and cached.
+
+[[grpc-endpoints]]
+== gRPC client and server
+
+A client needs the target of the service (`host:port`). The simulator needs the local port to bind
+to and, by default, serves all services found in its descriptors.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+private final GrpcServer greeterServer = GrpcEndpoints.grpc().server()
+        .port(50051)
+        .services("helloworld.Greeter")
+        .descriptors("classpath:proto/helloworld/greeter.proto")
+        .timeout(5000L)
+        .build();
+
+@BindToRegistry
+private final GrpcClient greeterClient = GrpcEndpoints.grpc().client()
+        .target("localhost:50051")
+        .descriptors("classpath:proto/helloworld/greeter.proto")
+        .build();
+----
+
+.Annotations
+[source,java,indent=0,role="secondary"]
+----
+@CitrusEndpoint
+@GrpcServerConfig(port = 50051, services = "helloworld.Greeter", descriptors = "classpath:proto/helloworld/greeter.proto")
+private GrpcServer greeterServer;
+
+@CitrusEndpoint
+@GrpcClientConfig(target = "localhost:50051", descriptors = "classpath:proto/helloworld/greeter.proto")
+private GrpcClient greeterClient;
+----
+
+Clients can also be created from an endpoint URI in the test:
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<grpc client="grpc://localhost:50051?descriptors=classpath:proto/helloworld/greeter.proto">
+  <send>
+    <call>helloworld.Greeter/SayHello</call>
+    <message>
+      <body><data>{"name": "Ada"}</data></body>
+    </message>
+  </send>
+</grpc>
+----
+
+[[grpc-calls]]
+== Calling a gRPC service
+
+A send calls the method given as `package.Service/Method`; the following receive returns the
+response of that call. Message bodies are JSON and accept both lowerCamelCase and original proto
+field names; Citrus variables are resolved first.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(grpc().client(greeterClient).send()
+        .call("helloworld.Greeter/SayHello")
+        .metadata("authorization", "Bearer ${token}")
+        .deadline(Duration.ofSeconds(2))
+        .message()
+        .body("{ \\"name\\": \\"${user}\\" }"));
+
+then(grpc().client(greeterClient).receive()
+        .response()
+        .message()
+        .body("{ \\"message\\": \\"Hello Ada\\" }"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<grpc client="greeterClient">
+  <send>
+    <call>helloworld.Greeter/SayHello</call>
+    <message>
+      <body><data>{"name": "${user}"}</data></body>
+    </message>
+  </send>
+</grpc>
+
+<grpc client="greeterClient">
+  <receive>
+    <response status="OK"/>
+    <message>
+      <body><data>{"message": "Hello Ada"}</data></body>
+    </message>
+  </receive>
+</grpc>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+- grpc:
+    client: "greeterClient"
+    send:
+      call: "helloworld.Greeter/SayHello"
+      message:
+        body:
+          data: '{"name": "Ada"}'
+- grpc:
+    client: "greeterClient"
+    receive:
+      response:
+        status: "OK"
+      message:
+        body:
+          data: '{"message": "Hello Ada"}'
+----
+
+Received messages are printed as JSON with every field visible - including default-valued ones - and
+enums by their name. The `omitDefaultValues` endpoint setting switches to omitting default values.
+`Any` and well-known types use their canonical JSON form.
+
+[[grpc-status]]
+== Status expectations
+
+A call that ends with a non-OK status fails the receive unless the test expects that status. The
+expected code, an optional description and trailers accept validation matchers.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(grpc().client(greeterClient).send()
+        .call("helloworld.Greeter/GetUser")
+        .message()
+        .body("{ \\"id\\": \\"unknown\\" }"));
+
+then(grpc().client(greeterClient).receive()
+        .response(Status.Code.NOT_FOUND)
+        .statusDescription("@contains('unknown')@")
+        .trailer("x-request-id", "@notEmpty()@"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<grpc client="greeterClient">
+  <receive>
+    <response status="NOT_FOUND"/>
+    <status-description>@contains('unknown')@</status-description>
+    <trailer name="x-request-id">@notEmpty()@</trailer>
+  </receive>
+</grpc>
+----
+
+[[grpc-streaming]]
+== Server streaming and cancel
+
+For server-streaming methods every `streamMessage()` receive returns the next message in arrival
+order, including its 0-based sequence number. Messages that arrive before the test receives them are
+buffered (at most `maxBufferedMessages`, default 10000; beyond that the call is cancelled).
+`streamCompleted()` waits for the end of the stream and checks its status.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(grpc().client(pricesClient).send()
+        .call("market.Prices/Subscribe")
+        .message()
+        .body("{ \\"symbol\\": \\"ACME\\" }"));
+
+then(grpc().client(pricesClient).receive()
+        .streamMessage()
+        .message()
+        .body("{ \\"symbol\\": \\"ACME\\" }"));
+
+then(grpc().client(pricesClient).receive().streamCompleted());
+
+// a subscription that never ends can be cancelled
+then(grpc().client(pricesClient).cancel());
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<grpc client="pricesClient">
+  <receive>
+    <stream-message/>
+    <message>
+      <body><data>{"symbol": "ACME"}</data></body>
+    </message>
+  </receive>
+</grpc>
+
+<grpc client="pricesClient">
+  <receive>
+    <stream-completed status="OK"/>
+  </receive>
+</grpc>
+----
+
+Calls still open when the test ends are cancelled automatically.
+
+[[grpc-simulator]]
+== Simulating a gRPC service
+
+The simulator accepts calls to its configured services and hands them to the test: a receive takes
+the next call, a send answers it.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(grpc().server(greeterServer).receive()
+        .call("helloworld.Greeter/SayHello")
+        .metadata("authorization", "@startsWith('Bearer ')@")
+        .message()
+        .body("{ \\"name\\": \\"@ignore@\\" }"));
+
+then(grpc().server(greeterServer).send()
+        .response()
+        .message()
+        .body("{ \\"message\\": \\"Hello\\" }"));
+----
+
+Error status with description and trailers:
+
+.Java
+[source,java,indent=0,role="secondary"]
+----
+then(grpc().server(greeterServer).send()
+        .response(Status.Code.NOT_FOUND)
+        .statusDescription("unknown user")
+        .trailer("x-request-id", "42"));
+----
+
+For server-streaming calls the simulator sends any number of stream messages followed by a
+completion:
+
+.Java
+[source,java,indent=0,role="secondary"]
+----
+then(grpc().server(pricesServer).send().streamMessage()
+        .message().body("{ \\"symbol\\": \\"ACME\\" }"));
+
+then(grpc().server(pricesServer).send().streamCompleted("UNAVAILABLE")
+        .statusDescription("market closed"));
+----
+
+Calls to services the simulator does not serve are answered `UNIMPLEMENTED` without a test step. A
+call that gets no reply within the server timeout ends with `INTERNAL`; the timeout restarts with
+every simulator send. A send on a call the client has cancelled fails the test.
+
+A custom endpoint adapter (e.g. a static response) answers calls without test steps: its reply
+becomes the unary response, or one stream message followed by `OK` for a streaming call.
+
+[[grpc-metadata]]
+== Metadata, deadlines and TLS
+
+Request metadata and response headers map to Citrus message headers one to one; response trailers
+carry the `citrus_grpc_trailer_` prefix, so they can be set and validated like any other header:
+
+.Java
+[source,java,indent=0,role="secondary"]
+----
+when(grpc().client(greeterClient).send()
+        .call("helloworld.Greeter/SayHello")
+        .metadata("x-request-id", "42")
+        .message()
+        .body("{ \\"name\\": \\"Ada\\" }"));
+
+then(grpc().client(greeterClient).receive()
+        .response()
+        .trailer("x-request-id", "42"));
+----
+
+`-bin` metadata values are base64 strings in Citrus and raw bytes on the wire.
+
+The client endpoint's `deadline` setting applies to every call and can be overridden per send. An
+expired call reports status `DEADLINE_EXCEEDED`, which the test can expect like any other status. A
+Citrus receive timeout is independent of the gRPC deadline and raises the usual action timeout when
+no message arrives.
+
+For TLS the client trusts a configured certificate; the simulator serves a certificate chain and
+private key:
+
+.Java
+[source,java,indent=0,role="secondary"]
+----
+GrpcEndpoints.grpc().server()
+        .port(50051)
+        .tls(true)
+        .certificateChain("classpath:certs/server.crt")
+        .privateKey("classpath:certs/server.key");
+
+GrpcEndpoints.grpc().client()
+        .target("service.example.com:443")
+        .tls(true)
+        .trustCertificate("classpath:certs/ca.crt");
+----
+
+A plaintext client calling a TLS server surfaces as `UNAVAILABLE`.
+
+[[grpc-headers]]
+== Message headers
+
+Every gRPC message carries the call's method and type, and received messages carry the call id,
+kind, status and stream position:
+
+[cols="3,5"]
+|===
+| Header | Value
+
+| `citrus_grpc_method` | `package.Service/Method`
+| `citrus_grpc_method_type` | `UNARY` or `SERVER_STREAMING`
+| `citrus_grpc_call_id` | Unique per call, on both sides
+| `citrus_grpc_kind` | `call`, `response`, `stream_message` or `stream_end`
+| `citrus_grpc_status_code` | Status name, e.g. `OK`, `NOT_FOUND`
+| `citrus_grpc_status_description` | Status description when present
+| `citrus_grpc_stream_sequence` | 0-based position of a stream message
+| `citrus_grpc_end_of_stream` | `true` on responses and stream endings
+| `citrus_grpc_trailer_<key>` | Response trailer value
+|===
+
+These headers can be validated and extracted like any other message header, and a receive can select
+a specific call with `citrus_grpc_call_id`.
