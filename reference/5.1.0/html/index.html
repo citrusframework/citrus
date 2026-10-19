@@ -13869,7 +13869,7 @@ To address this, Citrus introduces a configurable validator strategy with two mo
 </div>
 </div>
 <div class="sect4">
-<h5 id="configuration"><a class="anchor" href="#configuration"></a><a class="link" href="#configuration">Configuration</a></h5>
+<h5 id="validation-custom-configuration"><a class="anchor" href="#validation-custom-configuration"></a><a class="link" href="#validation-custom-configuration">Configuration</a></h5>
 <div class="paragraph">
 <p>The strategy can be globally configured using either a system property or an environment variable:</p>
 </div>
@@ -46868,28 +46868,27 @@ $(playwright().dialog().verifyClosed().triggerScript("window.alert('Saved')"));<
 <div class="paragraph">
 <p>Uncaught page JavaScript errors are read directly from the page — there is no capture step, the
 call observes the errors present at that moment. Assert that a page stayed clean, match an
-error, or extract the report into a variable:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">$(playwright().console().verifyNoPageErrors());
-$(playwright().console().verifyPageErrorsContain("TypeError"));
-$(playwright().console().pageErrors().variable("pageErrors"));</code></pre>
-</div>
+error, or extract the report into a variable.</p>
 </div>
 <div class="paragraph">
 <p>Console message retrieval reads the capture registry by default. With <code>filter</code> set to
 <code>since-navigation</code> it instead reads directly from the page, returning only messages since the
 last navigation:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">$(playwright().console().report().variable("consoleReport"));
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">$(playwright().console().verifyNoPageErrors());
+$(playwright().console().verifyPageErrorsContain("TypeError"));
+$(playwright().console().pageErrors().variable("pageErrors"));
+
+$(playwright().console().report().variable("consoleReport"));
 $(playwright().console().report().filter("since-navigation").variable("recentConsole"));
 $(playwright().console().verifyContains("Started"));</code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
+<div class="title">XML</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;playwright&gt;
   &lt;console command="verify-no-page-errors"/&gt;
@@ -46903,7 +46902,8 @@ $(playwright().console().verifyContains("Started"));</code></pre>
 protocol, and the structured snapshot stored in a variable carries the same details. On plain
 HTTP the driver reports no security details, so the TLS fields are absent rather than empty:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">$(playwright().network().waitForResponse().urlContains("/api/orders")
         .triggerScript("() =&gt; fetch('/api/orders')")
@@ -46913,6 +46913,7 @@ HTTP the driver reports no security details, so the TLS fields are absent rather
 </div>
 </div>
 <div class="listingblock secondary">
+<div class="title">XML</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;playwright&gt;
   &lt;network command="wait-for-response" url-contains="/api/orders" server-ip="127.0.0.1"
@@ -64865,8 +64866,7 @@ citrus.xml.file.name.pattern=/**/*Test.xml,/**/*IT.xml</code></pre>
 <div class="paragraph">
 <p>Citrus automatically loads these application properties at the startup. All properties are also settable with Java system
 properties directly. The location of the <code>citrus-application.properties</code> file is customizable with the system property
-<code>citrus.application.properties or environment variable `CITRUS_APPLICATION_PROPERTIES</code>.
-          `
+<code>citrus.application.properties</code> or environment variable <code>CITRUS_APPLICATION_PROPERTIES</code>.
 .Custom property file location.</p>
 </div>
 <div class="listingblock">
@@ -73441,7 +73441,7 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0<br>
-Last updated 2026-10-19 16:41:38 +0200
+Last updated 2026-10-19 20:30:34 +0200
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
