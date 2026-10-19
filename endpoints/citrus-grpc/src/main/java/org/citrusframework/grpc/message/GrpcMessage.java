@@ -16,6 +16,7 @@
 
 package org.citrusframework.grpc.message;
 
+import java.time.Duration;
 import java.util.Map;
 
 import org.citrusframework.message.DefaultMessage;
@@ -134,6 +135,24 @@ public class GrpcMessage extends DefaultMessage {
 
     public Boolean isEndOfStream() {
         return header(GrpcMessageHeaders.END_OF_STREAM, Boolean.class);
+    }
+
+    public GrpcMessage deadline(Duration deadline) {
+        setHeader(GrpcMessageHeaders.DEADLINE, deadline);
+        return this;
+    }
+
+    public Duration getDeadline() {
+        Object value = getHeader(GrpcMessageHeaders.DEADLINE);
+        if (value == null) {
+            return null;
+        }
+
+        if (value instanceof Duration duration) {
+            return duration;
+        }
+
+        return Duration.ofMillis(Long.parseLong(value.toString()));
     }
 
     public GrpcMessage metadata(String name, Object value) {
