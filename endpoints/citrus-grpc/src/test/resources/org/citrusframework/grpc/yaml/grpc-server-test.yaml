@@ -26,9 +26,13 @@ actions:
           status: "OK"
   - grpc:
       server: "grpcServer"
+      actor: "grpcActor"
       send:
         response:
           status: "OK"
+        metadata:
+          - name: "x-request-id"
+            value: "42"
         trailer:
           - name: "x-trailer"
             value: "42"

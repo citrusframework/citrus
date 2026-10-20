@@ -93,6 +93,7 @@ public class GrpcServerTest extends AbstractXmlActionTest {
                 .isEqualTo(GrpcMessageHeaders.KIND_RESPONSE);
         assertThat(messages.get(0).getHeader(GrpcMessageHeaders.CALL_ID)).isEqualTo("call-1");
         assertThat(messages.get(0).getHeader(GrpcMessageHeaders.STATUS_CODE)).isEqualTo("OK");
+        assertThat(messages.get(0).getHeader("x-request-id")).isEqualTo("42");
         assertThat(messages.get(0).getHeader(GrpcMessageHeaders.TRAILER_PREFIX + "x-trailer")).isEqualTo("42");
         assertThat(messages.get(0).getPayload(String.class)).isEqualTo("{\"message\": \"Hello Ada\"}");
 

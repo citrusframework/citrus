@@ -239,6 +239,7 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         if (element.statusDescription != null) {
             builder.statusDescription(trim(element.statusDescription));
         }
+        element.metadata.forEach(metadata -> builder.metadata(metadata.name, metadata.value));
         element.trailers.forEach(trailer -> builder.trailer(trailer.name, trailer.value));
     }
 

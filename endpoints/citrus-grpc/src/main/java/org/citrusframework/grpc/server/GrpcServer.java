@@ -203,7 +203,7 @@ public class GrpcServer extends AbstractServer {
     @Override
     public Consumer createConsumer() {
         if (testDriven && inboundQueue != null) {
-            return new GrpcServerConsumer(inboundQueue, correlator, correlationKeyName, configuration.getTimeout());
+            return new GrpcServerConsumer(inboundQueue, correlationKeyName, configuration.getTimeout());
         }
         return super.createConsumer();
     }
@@ -211,7 +211,7 @@ public class GrpcServer extends AbstractServer {
     @Override
     public Producer createProducer() {
         if (testDriven && inboundQueue != null) {
-            return new GrpcServerProducer(calls, codec, correlator, correlationKeyName, getName() + ":producer");
+            return new GrpcServerProducer(calls, codec, correlationKeyName, getName() + ":producer");
         }
         return super.createProducer();
     }

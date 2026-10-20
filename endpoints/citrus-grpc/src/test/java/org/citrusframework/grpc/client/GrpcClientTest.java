@@ -316,6 +316,32 @@ public class GrpcClientTest {
         assertThat(second.getPayload().toString()).contains("Hello Grace");
     }
 
+    @Test
+    public void shouldSelectCallWithPlainHeaderSelector() {
+        TestContext context = new TestContext();
+
+        client.send(new GrpcMessage("{\"name\":\"Ada\"}").method(SAY_HELLO), context);
+        String callId = (String) context.getVariables()
+                .get(GrpcMessageHeaders.callIdVariableName(client.getName()));
+
+        GrpcMessage response = (GrpcMessage) client.receive(
+                GrpcMessageHeaders.CALL_ID + " = '" + callId + "'", context, 5000);
+        assertThat(response.getCallId()).isEqualTo(callId);
+        assertThat(response.getPayload().toString()).contains("Hello Ada");
+    }
+
+    @Test
+    public void shouldFailOnUnsupportedSelector() {
+        TestContext context = new TestContext();
+
+        client.send(new GrpcMessage("{\"name\":\"Ada\"}").method(SAY_HELLO), context);
+
+        assertThatThrownBy(() -> client.receive("header:citrus_grpc_method = 'helloworld.Greeter/SayHello'",
+                context, 500))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("Unsupported gRPC message selector");
+    }
+
     private ServerCallHandler<DynamicMessage, DynamicMessage> sayHelloHandler() {
         return (call, headers) -> {
             receivedHeaders.set(headers);

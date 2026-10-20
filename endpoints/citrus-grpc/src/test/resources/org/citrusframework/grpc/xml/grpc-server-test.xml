@@ -47,6 +47,7 @@
       <send>
         <call-id>call-1</call-id>
         <response status="OK"/>
+        <metadata name="x-request-id">42</metadata>
         <trailer name="x-trailer">42</trailer>
         <message>
           <body><data>{"message": "Hello Ada"}</data></body>

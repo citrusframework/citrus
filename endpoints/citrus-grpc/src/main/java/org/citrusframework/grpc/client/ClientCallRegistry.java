@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.protobuf.DynamicMessage;
 import io.grpc.ClientCall;
@@ -110,14 +111,20 @@ public class ClientCallRegistry {
     }
 
     /**
-     * Removes the call from the registry.
+     * Removes the call from the registry. A live call is kept as a completed call in order to be
+     * able to report a proper error when the test tries to send another message on a call that
+     * has already been completed by the server.
      *
      * @param callId the Citrus call id
      */
     public void remove(String callId) {
         calls.remove(callId);
         cancellations.remove(callId);
-        liveCalls.remove(callId);
+
+        LiveCall liveCall = liveCalls.get(callId);
+        if (liveCall != null) {
+            liveCall.complete();
+        }
     }
 
     /**
@@ -132,6 +139,11 @@ public class ClientCallRegistry {
      */
     public void cancelAll() {
         for (String callId : getCallIds()) {
+            cancel(callId);
+        }
+
+        // also release the calls that have already been completed by the server
+        for (String callId : new ArrayList<>(liveCalls.keySet())) {
             cancel(callId);
         }
     }
@@ -162,6 +174,11 @@ public class ClientCallRegistry {
                     "gRPC call '%s' is not open for sending - open a client streaming call first".formatted(callId));
         }
 
+        if (liveCall.isCompleted()) {
+            throw new CitrusRuntimeException(
+                    "gRPC call '%s' already completed - the call has been closed by the server".formatted(callId));
+        }
+
         return liveCall;
     }
 
@@ -171,7 +188,35 @@ public class ClientCallRegistry {
      * @param call the gRPC client call
      * @param method the Protobuf method descriptor of the call
      */
-    public record LiveCall(ClientCall<DynamicMessage, DynamicMessage> call,
-                           com.google.protobuf.Descriptors.MethodDescriptor method) {
+    public static final class LiveCall {
+
+        private final ClientCall<DynamicMessage, DynamicMessage> call;
+        private final com.google.protobuf.Descriptors.MethodDescriptor method;
+        private final AtomicBoolean completed = new AtomicBoolean();
+
+        public LiveCall(ClientCall<DynamicMessage, DynamicMessage> call,
+                        com.google.protobuf.Descriptors.MethodDescriptor method) {
+            this.call = call;
+            this.method = method;
+        }
+
+        public ClientCall<DynamicMessage, DynamicMessage> call() {
+            return call;
+        }
+
+        public com.google.protobuf.Descriptors.MethodDescriptor method() {
+            return method;
+        }
+
+        /**
+         * @return true when the call has already been completed by the server
+         */
+        public boolean isCompleted() {
+            return completed.get();
+        }
+
+        void complete() {
+            completed.set(true);
+        }
     }
 }

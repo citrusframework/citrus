@@ -39,5 +39,6 @@ actions:
           - name: "x-trailer"
             value: "42"
         message:
+          schema: "helloSchema"
           body:
             data: '{"message": "Hello Ada"}'

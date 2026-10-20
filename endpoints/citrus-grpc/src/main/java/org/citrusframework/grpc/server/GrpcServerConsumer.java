@@ -20,7 +20,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.grpc.message.GrpcMessageHeaders;
 import org.citrusframework.message.Message;
-import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.selector.DelegatingMessageSelector;
 import org.citrusframework.messaging.SelectiveConsumer;
@@ -32,16 +31,13 @@ import org.citrusframework.messaging.SelectiveConsumer;
 public class GrpcServerConsumer implements SelectiveConsumer {
 
     private final MessageQueue queue;
-    private final MessageCorrelator correlator;
     private final String correlationKeyName;
     private final long timeout;
 
     public GrpcServerConsumer(MessageQueue queue,
-                              MessageCorrelator correlator,
                               String correlationKeyName,
                               long timeout) {
         this.queue = queue;
-        this.correlator = correlator;
         this.correlationKeyName = correlationKeyName;
         this.timeout = timeout;
     }
@@ -71,7 +67,14 @@ public class GrpcServerConsumer implements SelectiveConsumer {
             throw new MessageTimeoutException(timeout, queue.getName());
         }
 
-        context.getVariables().put(correlationKeyName, message.getHeader(GrpcMessageHeaders.CALL_ID));
+        Object callId = message.getHeader(GrpcMessageHeaders.CALL_ID);
+        if (callId != null) {
+            context.getVariables().put(correlationKeyName, callId);
+        } else {
+            // do not keep a stale call id from a previous call
+            context.getVariables().remove(correlationKeyName);
+        }
+
         return message;
     }
 

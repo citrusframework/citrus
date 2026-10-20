@@ -17,8 +17,10 @@ package org.citrusframework.grpc.yaml;
 
 import java.util.List;
 
+import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.grpc.message.GrpcMessage;
 import org.citrusframework.grpc.message.GrpcMessageHeaders;
@@ -74,6 +76,7 @@ public class GrpcServerTest extends AbstractYamlActionTest {
                         .statusCode("OK"));
 
         context.getReferenceResolver().bind("grpcServer", server);
+        context.getReferenceResolver().bind("grpcActor", new TestActor("grpcActor"));
 
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/grpc/yaml/grpc-server-test.yaml");
         testLoader.load();
@@ -85,6 +88,10 @@ public class GrpcServerTest extends AbstractYamlActionTest {
         assertThat(result.getTestAction(0).getName()).isEqualTo("grpc:receive-call");
         assertThat(result.getTestAction(3).getName()).isEqualTo("grpc:send-response");
 
+        // the actor is resolved and applied to the action
+        assertThat(((AbstractTestAction) result.getTestAction(3)).getActor()).isNotNull();
+        assertThat(((AbstractTestAction) result.getTestAction(3)).getActor().getName()).isEqualTo("grpcActor");
+
         ArgumentCaptor<Message> sent = ArgumentCaptor.forClass(Message.class);
         verify(producer, times(3)).send(sent.capture(), any(TestContext.class));
         List<Message> messages = sent.getAllValues();
@@ -92,6 +99,7 @@ public class GrpcServerTest extends AbstractYamlActionTest {
         assertThat(messages.get(0).getHeader(GrpcMessageHeaders.KIND))
                 .isEqualTo(GrpcMessageHeaders.KIND_RESPONSE);
         assertThat(messages.get(0).getHeader(GrpcMessageHeaders.STATUS_CODE)).isEqualTo("OK");
+        assertThat(messages.get(0).getHeader("x-request-id")).isEqualTo("42");
         assertThat(messages.get(0).getHeader(GrpcMessageHeaders.TRAILER_PREFIX + "x-trailer")).isEqualTo("42");
         assertThat(messages.get(0).getPayload(String.class)).isEqualTo("{\"message\": \"Hello Ada\"}");
 

@@ -33,6 +33,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.grpc.actions.GrpcClientActionBuilder;
 import org.citrusframework.grpc.descriptor.GrpcDescriptorRegistry;
 import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
+import org.citrusframework.grpc.message.GrpcMessage;
+import org.citrusframework.grpc.message.GrpcMessageHeaders;
+import org.citrusframework.message.Message;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -51,7 +54,11 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
 
     private static final String STORE_USERS = "grpc2grpc.PetStoreService/StoreUsers";
     private static final String BULK_USERS = "grpc2grpc.PetStoreService/BulkUsers";
+    private static final String LIST_USERS = "grpc2grpc.PetStoreService/ListUsers";
     private static final String DESCRIPTORS = "classpath:org/citrusframework/grpc/streaming/petstore.proto";
+
+    /** Number of messages streamed by the server */
+    private static final int STREAMED_MESSAGES = 50;
 
     private GrpcDescriptorRegistry registry;
     private Server server;
@@ -78,6 +85,9 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
                         }
                         if (BULK_USERS.equals(methodName)) {
                             return definition(registry.findMethod(BULK_USERS), bulkUsersHandler());
+                        }
+                        if (LIST_USERS.equals(methodName)) {
+                            return definition(registry.findMethod(LIST_USERS), listUsersHandler());
                         }
                         return null;
                     }
@@ -165,6 +175,30 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void shouldReceiveMoreMessagesThanTheBufferBound() {
+        GrpcClient bufferedClient = GrpcEndpoints.grpc().client()
+                .target("localhost:" + server.getPort())
+                .descriptors(DESCRIPTORS)
+                .timeout(10000L)
+                .maxBufferedMessages(10)
+                .build();
+
+        try {
+            bufferedClient.send(new GrpcMessage("{}").method(LIST_USERS), context);
+
+            // the number of messages received is not limited by the buffer bound - the bound only
+            // limits the number of messages that are buffered by the client at the same time
+            for (int i = 0; i < STREAMED_MESSAGES; i++) {
+                Message message = bufferedClient.receive(context, 10000L);
+                assertThat(message.getHeader(GrpcMessageHeaders.KIND))
+                        .isEqualTo(GrpcMessageHeaders.KIND_STREAM_MESSAGE);
+            }
+        } finally {
+            bufferedClient.destroy();
+        }
+    }
+
+    @Test
     public void shouldFailToSendOnUnknownCall() {
         GrpcClientActionBuilder clientActions = new GrpcClientActionBuilder(client);
 
@@ -199,6 +233,37 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
 
                     storeUsersResponse = response;
                     call.sendMessage(response);
+                    call.close(Status.OK, new Metadata());
+                }
+            };
+        };
+    }
+
+    private ServerCallHandler<DynamicMessage, DynamicMessage> listUsersHandler() {
+        Descriptors.Descriptor outputType = registry.findMessage("grpc2grpc.User");
+
+        return (call, headers) -> {
+            call.sendHeaders(new Metadata());
+            call.request(1);
+
+            return new ServerCall.Listener<>() {
+                @Override
+                public void onMessage(DynamicMessage message) {
+                    for (int i = 0; i < STREAMED_MESSAGES; i++) {
+                        // send the messages one by one in order to not exceed the buffer bound of
+                        // the client while the test is consuming them
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            return;
+                        }
+
+                        call.sendMessage(DynamicMessage.newBuilder(outputType)
+                                .setField(outputType.findFieldByName("username"), "user-" + i)
+                                .build());
+                    }
+
                     call.close(Status.OK, new Metadata());
                 }
             };

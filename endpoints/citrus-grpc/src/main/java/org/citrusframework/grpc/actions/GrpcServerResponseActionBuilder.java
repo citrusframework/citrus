@@ -78,6 +78,12 @@ public class GrpcServerResponseActionBuilder
     }
 
     @Override
+    public GrpcServerResponseActionBuilder metadata(String name, Object value) {
+        message().header(name, value);
+        return this;
+    }
+
+    @Override
     public GrpcServerResponseActionBuilder callId(String callId) {
         message().header(GrpcMessageHeaders.CALL_ID, callId);
         return this;
