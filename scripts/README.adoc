@@ -9,7 +9,7 @@ automated release. It requires bash and can be used on Linux or MacOS (and Windo
 
 You need following software on your machine in order to use the build scripts:
 
-* Java 11+:
+* Java 21+:
 Installed JDK plus JAVA_HOME environment variable set
 up and pointing to your Java installation directory. Used to compile and build the Citrus code.
 

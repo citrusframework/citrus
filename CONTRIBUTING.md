@@ -93,7 +93,7 @@ release date of the milestone, if specified.
 
 You need following software on your machine in order to start developing:
 
-* Java 17+
+* Java 21+
   Installed JDK plus JAVA_HOME environment variable set
   up and pointing to your Java installation directory. Used to compile and build the Citrus code.
 

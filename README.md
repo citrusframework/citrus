@@ -140,7 +140,7 @@ Developing
 The following software is recommended in order to code with the
 Citrus framework:
 
-* Java 17+
+* Java 21+
   Installed JDK plus JAVA_HOME environment variable set
   up and pointing to your Java installation directory. Used to compile and build the Citrus code.
 
