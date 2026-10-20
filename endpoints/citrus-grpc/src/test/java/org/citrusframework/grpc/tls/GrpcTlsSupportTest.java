@@ -99,6 +99,13 @@ public class GrpcTlsSupportTest {
     }
 
     @Test
+    public void shouldUseJvmTrustStoreWithoutCertificate() {
+        assertThat(GrpcTlsSupport.clientCredentials()).isNotNull();
+        assertThat(GrpcTlsSupport.clientCredentials("")).isNotNull();
+        assertThat(GrpcTlsSupport.clientCredentials(" ")).isNotNull();
+    }
+
+    @Test
     public void shouldFailForMissingCertificate() {
         assertThatThrownBy(() -> GrpcTlsSupport.clientCredentials("classpath:certs/missing.pem"))
                 .isInstanceOf(CitrusRuntimeException.class)
