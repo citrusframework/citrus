@@ -81,7 +81,7 @@ public class GrpcMessageCodec {
      */
     public DynamicMessage encode(Descriptor type, Object body) {
         if (body instanceof Message message) {
-            if (!message.getDescriptorForType().equals(type)) {
+            if (!message.getDescriptorForType().getFullName().equals(type.getFullName())) {
                 throw new GrpcMessageCodecException(String.format(
                         "Message body is of type '%s' but '%s' was expected",
                         message.getDescriptorForType().getFullName(), type.getFullName()));

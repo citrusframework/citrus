@@ -337,9 +337,6 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
         @XmlAttribute
         protected Boolean fork;
-
-        @XmlAttribute
-        protected String uri;
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
