@@ -132,7 +132,14 @@ public class ServerCallRegistry {
             return requestMetadata;
         }
 
-        public int countBufferedRequestMessage() {
+        /**
+         * Counts the request message that has been received for this call. The counter is
+         * incremented with every call and reflects the number of request messages that have been
+         * received so far.
+         *
+         * @return the number of request messages received so far
+         */
+        public int incrementBufferedRequestCount() {
             return bufferedMessages.incrementAndGet();
         }
 

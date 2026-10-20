@@ -252,7 +252,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
      * Shuts down the underlying channel.
      */
     @Override
-    public void destroy() {
+    public synchronized void destroy() {
         calls.cancelAll();
 
         if (channel != null) {

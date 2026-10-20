@@ -216,7 +216,7 @@ public class DynamicCallHandler extends HandlerRegistry {
             return false;
         }
 
-        if (active.countBufferedRequestMessage() <= maxBufferedMessages) {
+        if (active.incrementBufferedRequestCount() <= maxBufferedMessages) {
             return false;
         }
 
