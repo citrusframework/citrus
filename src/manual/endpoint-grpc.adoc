@@ -20,7 +20,8 @@ both on compatible versions.
 ----
 
 The gRPC test actions are available as `grpc()` in the Citrus Java DSL, as `<grpc>` element in XML
-tests and as `grpc:` in YAML tests. Unary and server streaming calls are supported.
+tests and as `grpc:` in YAML tests. Unary, server streaming, client streaming and bidirectional
+streaming calls are supported.
 
 [[grpc-descriptors]]
 == Protobuf descriptors
@@ -239,6 +240,87 @@ then(grpc().client(pricesClient).cancel());
 
 Calls still open when the test ends are cancelled automatically.
 
+[[grpc-client-streaming]]
+== Client streaming and bidirectional streaming
+
+For a client-streaming method the first send opens the call and sends the first request message
+without completing the request side. `streamMessage()` sends further messages and `streamCompleted()`
+completes the request side; the following receive returns the single response of the call.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(grpc().client(storeClient).send()
+        .call("grpc2grpc.PetStoreService/StoreUsers")
+        .message().body("{ \"id\": 1, \"username\": \"ada\", \"email\": \"ada@example.com\", \"phone\": \"555-1\" }"));
+
+when(grpc().client(storeClient).send()
+        .streamMessage()
+        .message().body("{ \"id\": 2, \"username\": \"bob\", \"email\": \"bob@example.com\", \"phone\": \"555-2\" }"));
+
+when(grpc().client(storeClient).send().streamCompleted());
+
+then(grpc().client(storeClient).receive()
+        .response()
+        .message().body("{ \"msg\": \"received 2\" }"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<grpc client="storeClient">
+  <send>
+    <call>grpc2grpc.PetStoreService/StoreUsers</call>
+    <message>
+      <body><data>{"id": 1, "username": "ada", "email": "ada@example.com", "phone": "555-1"}</data></body>
+    </message>
+  </send>
+</grpc>
+
+<grpc client="storeClient">
+  <send>
+    <stream-message/>
+    <message>
+      <body><data>{"id": 2, "username": "bob", "email": "bob@example.com", "phone": "555-2"}</data></body>
+    </message>
+  </send>
+</grpc>
+
+<grpc client="storeClient">
+  <send>
+    <stream-completed/>
+  </send>
+</grpc>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+- grpc:
+    client: "storeClient"
+    send:
+      call: "grpc2grpc.PetStoreService/StoreUsers"
+      message:
+        body:
+          data: '{"id": 1, "username": "ada", "email": "ada@example.com", "phone": "555-1"}'
+- grpc:
+    client: "storeClient"
+    send:
+      streamMessage: true
+      message:
+        body:
+          data: '{"id": 2, "username": "bob", "email": "bob@example.com", "phone": "555-2"}'
+- grpc:
+    client: "storeClient"
+    send:
+      streamCompleted:
+        status: "OK"
+----
+
+For a bidirectional-streaming method messages can be sent and received while the call is open.
+Complete the request side with `streamCompleted()` on a send and wait for the server completion with
+`streamCompleted()` on a receive; both directions end independently.
+
 [[grpc-simulator]]
 == Simulating a gRPC service
 
@@ -284,12 +366,38 @@ then(grpc().server(pricesServer).send().streamCompleted("UNAVAILABLE")
         .statusDescription("market closed"));
 ----
 
+For client-streaming and bidirectional calls the simulator hands every request message to the test:
+the first as a normal call, further messages as stream messages, and the end of the request side as
+a stream completion.
+
+.Java
+[source,java,indent=0,role="secondary"]
+----
+when(grpc().server(storeServer).receive()
+        .call("grpc2grpc.PetStoreService/StoreUsers")
+        .message().body("{ \"id\": 1, \"username\": \"ada\", \"email\": \"ada@example.com\", \"phone\": \"555-1\" }"));
+
+when(grpc().server(storeServer).receive()
+        .streamMessage()
+        .message().body("{ \"id\": 2, \"username\": \"bob\", \"email\": \"bob@example.com\", \"phone\": \"555-2\" }"));
+
+when(grpc().server(storeServer).receive().streamCompleted());
+
+then(grpc().server(storeServer).send()
+        .response()
+        .message().body("{ \"msg\": \"received 2\" }"));
+----
+
 Calls to services the simulator does not serve are answered `UNIMPLEMENTED` without a test step. A
 call that gets no reply within the server timeout ends with `INTERNAL`; the timeout restarts with
-every simulator send. A send on a call the client has cancelled fails the test.
+every simulator send. A send on a call the client has cancelled fails the test. The simulator
+buffers at most `maxBufferedMessages` request messages per call (default 10 000); beyond that the
+call ends with `RESOURCE_EXHAUSTED`.
 
 A custom endpoint adapter (e.g. a static response) answers calls without test steps: its reply
-becomes the unary response, or one stream message followed by `OK` for a streaming call.
+becomes the unary response, or one stream message followed by `OK` for a server-streaming call. A
+client-streaming call is answered from the first request message only; the remaining messages are
+not passed to the adapter. The default test-driven mode delivers every request message.
 
 [[grpc-metadata]]
 == Metadata, deadlines and TLS
@@ -349,7 +457,7 @@ kind, status and stream position:
 | Header | Value
 
 | `citrus_grpc_method` | `package.Service/Method`
-| `citrus_grpc_method_type` | `UNARY` or `SERVER_STREAMING`
+| `citrus_grpc_method_type` | `UNARY`, `SERVER_STREAMING`, `CLIENT_STREAMING` or `BIDI_STREAMING`
 | `citrus_grpc_call_id` | Unique per call, on both sides
 | `citrus_grpc_kind` | `call`, `response`, `stream_message` or `stream_end`
 | `citrus_grpc_status_code` | Status name, e.g. `OK`, `NOT_FOUND`
