@@ -78,6 +78,12 @@ public class GrpcServerResponseActionBuilder
     }
 
     @Override
+    public GrpcServerResponseActionBuilder callId(String callId) {
+        message().header(GrpcMessageHeaders.CALL_ID, callId);
+        return this;
+    }
+
+    @Override
     public GrpcServerResponseActionBuilderSupport getMessageBuilderSupport() {
         if (messageBuilderSupport == null) {
             messageBuilderSupport = new GrpcServerResponseActionBuilderSupport(this);

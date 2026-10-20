@@ -224,16 +224,6 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         this.referenceResolver = referenceResolver;
     }
 
-    private static void applyResponse(GrpcClientResponseActionBuilder builder, SendElement element) {
-        if (element.response != null) {
-            builder.response(status(element.response.status));
-        } else if (element.streamMessage != null) {
-            builder.streamMessage();
-        } else if (element.streamCompleted != null) {
-            builder.streamCompleted(status(element.streamCompleted.status));
-        }
-    }
-
     private static void applyResponse(GrpcServerResponseActionBuilder builder, SendElement element) {
         if (element.response != null) {
             builder.response(status(element.response.status));
@@ -243,6 +233,9 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             builder.streamCompleted(status(element.streamCompleted.status));
         }
 
+        if (element.callId != null) {
+            builder.callId(trim(element.callId));
+        }
         if (element.statusDescription != null) {
             builder.statusDescription(trim(element.statusDescription));
         }
@@ -326,6 +319,9 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
         @XmlElement(name = "stream-completed")
         protected Status streamCompleted;
+
+        @XmlElement(name = "call-id")
+        protected String callId;
 
         @XmlElement(name = "status-description")
         protected String statusDescription;

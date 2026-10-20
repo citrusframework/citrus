@@ -18,6 +18,7 @@ package org.citrusframework.grpc.yaml;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
@@ -34,6 +35,7 @@ import org.citrusframework.grpc.actions.GrpcServerRequestActionBuilder;
 import org.citrusframework.grpc.actions.GrpcServerResponseActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
 import org.citrusframework.yaml.actions.Send;
@@ -228,6 +230,24 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         if (receive.selector != null) {
             receiveAction.setSelect(receive.selector);
         }
+        if (receive.validator != null) {
+            builder.validator(receive.validator);
+        }
+        if (receive.validators != null) {
+            Stream.of(receive.validators.split(","))
+                    .map(String::trim)
+                    .filter(StringUtils::hasText)
+                    .forEach(builder::validator);
+        }
+        if (receive.headerValidator != null) {
+            builder.getHeaderValidationContext().validator(receive.headerValidator);
+        }
+        if (receive.headerValidators != null) {
+            Stream.of(receive.headerValidators.split(","))
+                    .map(String::trim)
+                    .filter(StringUtils::hasText)
+                    .forEach(builder.getHeaderValidationContext()::validator);
+        }
         if (receive.extract != null) {
             receiveAction.setExtract(receive.extract);
         }
@@ -247,16 +267,6 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
     }
 
-    private static void applyResponse(GrpcClientResponseActionBuilder builder, SendElement element) {
-        if (element.response != null) {
-            builder.response(status(element.response.status));
-        } else if (Boolean.TRUE.equals(element.streamMessage)) {
-            builder.streamMessage();
-        } else if (element.streamCompleted != null) {
-            builder.streamCompleted(status(element.streamCompleted.status));
-        }
-    }
-
     private static void applyResponse(GrpcServerResponseActionBuilder builder, SendElement element) {
         if (element.response != null) {
             builder.response(status(element.response.status));
@@ -266,6 +276,9 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             builder.streamCompleted(status(element.streamCompleted.status));
         }
 
+        if (element.callId != null) {
+            builder.callId(element.callId);
+        }
         if (element.statusDescription != null) {
             builder.statusDescription(element.statusDescription);
         }
@@ -305,6 +318,7 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         private Status response;
         private Boolean streamMessage;
         private Status streamCompleted;
+        private String callId;
         private String statusDescription;
         private List<Metadata> trailers = new ArrayList<>();
         private Message message;
@@ -339,6 +353,11 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         @SchemaProperty(description = "Completes the stream with an optional status code.")
         public void setStreamCompleted(Status streamCompleted) {
             this.streamCompleted = streamCompleted;
+        }
+
+        @SchemaProperty(description = "The id of the call to respond to.")
+        public void setCallId(String callId) {
+            this.callId = callId;
         }
 
         @SchemaProperty(description = "The status description.")
@@ -379,6 +398,10 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         private Message.Extract extract;
         private Integer timeout;
         private String selector;
+        private String validator;
+        private String validators;
+        private String headerValidator;
+        private String headerValidators;
 
         @SchemaProperty(description = "The expected gRPC method, e.g. package.Service/Method.")
         public void setCall(String call) {
@@ -433,6 +456,42 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         @SchemaProperty(description = "Message selector expression.")
         public void setSelector(String selector) {
             this.selector = selector;
+        }
+
+        public String getValidator() {
+            return validator;
+        }
+
+        @SchemaProperty(advanced = true, description = "Explicit message validator.")
+        public void setValidator(String validator) {
+            this.validator = validator;
+        }
+
+        public String getValidators() {
+            return validators;
+        }
+
+        @SchemaProperty(advanced = true, description = "List of message validators used to validate the message.")
+        public void setValidators(String validators) {
+            this.validators = validators;
+        }
+
+        public String getHeaderValidator() {
+            return headerValidator;
+        }
+
+        @SchemaProperty(advanced = true, description = "Explicit message header validator.")
+        public void setHeaderValidator(String headerValidator) {
+            this.headerValidator = headerValidator;
+        }
+
+        public String getHeaderValidators() {
+            return headerValidators;
+        }
+
+        @SchemaProperty(advanced = true, description = "List of message header validators used to validate the message.")
+        public void setHeaderValidators(String headerValidators) {
+            this.headerValidators = headerValidators;
         }
     }
 

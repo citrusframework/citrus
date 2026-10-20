@@ -39,6 +39,7 @@ public class GrpcServerConfigParserTest {
         when(config.omitDefaultValues()).thenReturn(true);
         when(config.maxBufferedMessages()).thenReturn(25);
         when(config.timeout()).thenReturn(2000L);
+        when(config.responseTimeout()).thenReturn(3000L);
         when(config.autoStart()).thenReturn(false);
         when(config.endpointAdapter()).thenReturn("");
         when(config.actor()).thenReturn("");
@@ -53,6 +54,7 @@ public class GrpcServerConfigParserTest {
         assertThat(server.getEndpointConfiguration().isOmitDefaultValues()).isTrue();
         assertThat(server.getEndpointConfiguration().getMaxBufferedMessages()).isEqualTo(25);
         assertThat(server.getEndpointConfiguration().getTimeout()).isEqualTo(2000L);
+        assertThat(server.getEndpointConfiguration().getResponseTimeout()).isEqualTo(3000L);
         assertThat(server.isAutoStart()).isFalse();
         assertThat(server.isRunning()).isFalse();
         assertThat(server.getEndpointAdapter()).isNotNull();

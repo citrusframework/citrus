@@ -17,14 +17,18 @@ package org.citrusframework.grpc.yaml;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.grpc.client.GrpcClient;
 import org.citrusframework.grpc.client.GrpcClientEndpointConfiguration;
 import org.citrusframework.grpc.message.GrpcMessage;
 import org.citrusframework.grpc.message.GrpcMessageHeaders;
+import org.citrusframework.grpc.validation.GrpcStatusValidator;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
+import org.citrusframework.validation.DefaultHeaderValidator;
+import org.citrusframework.validation.json.JsonTextMessageValidator;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.Test;
@@ -62,6 +66,8 @@ public class GrpcClientTest extends AbstractYamlActionTest {
                         .trailer("x-trailer", "42"));
 
         context.getReferenceResolver().bind("grpcClient", client);
+        context.getReferenceResolver().bind("grpcStatusValidator", new GrpcStatusValidator());
+        context.getReferenceResolver().bind("grpcHeaderValidator", new DefaultHeaderValidator());
 
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/grpc/yaml/grpc-client-test.yaml");
         testLoader.load();
@@ -72,6 +78,10 @@ public class GrpcClientTest extends AbstractYamlActionTest {
         assertThat(result.getActionCount()).isEqualTo(4L);
         assertThat(result.getTestAction(0).getName()).isEqualTo("grpc:send-request");
         assertThat(result.getTestAction(3).getName()).isEqualTo("grpc:receive-response");
+        assertThat(((ReceiveMessageAction) result.getTestAction(3)).getValidators())
+                .hasSize(2)
+                .anyMatch(GrpcStatusValidator.class::isInstance)
+                .anyMatch(JsonTextMessageValidator.class::isInstance);
 
         ArgumentCaptor<Message> sent = ArgumentCaptor.forClass(Message.class);
         verify(producer, times(3)).send(sent.capture(), any(TestContext.class));

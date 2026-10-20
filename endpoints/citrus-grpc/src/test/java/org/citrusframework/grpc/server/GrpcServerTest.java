@@ -334,6 +334,7 @@ public class GrpcServerTest {
         configuration.setPort(findAvailableTcpPort());
         configuration.setDescriptors(List.of(DESCRIPTORS));
         configuration.setTimeout(timeout);
+        configuration.setResponseTimeout(timeout);
         return configuration;
     }
 

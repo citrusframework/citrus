@@ -96,7 +96,7 @@ public class GrpcServerProducer implements Producer {
         if (status.isOk()) {
             call.sendHeaders(headers);
             call.sendMessage(encode(grpcMessage, call.getMethod().getOutputType()));
-            call.close(Status.OK, trailers);
+            call.close(status, trailers);
         } else {
             call.close(status, trailers);
         }
@@ -105,11 +105,7 @@ public class GrpcServerProducer implements Producer {
     }
 
     private DynamicMessage encode(GrpcMessage message, Descriptors.Descriptor outputType) {
-        Object payload = message.getPayload();
-        if (payload == null || (payload instanceof String value && value.isBlank())) {
-            return DynamicMessage.getDefaultInstance(outputType);
-        }
-        return codec.encode(outputType, payload);
+        return codec.encode(outputType, message.getPayload());
     }
 
     @Override

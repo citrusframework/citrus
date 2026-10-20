@@ -24,6 +24,7 @@ import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.EndpointAdapter;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
  * Builds a {@link GrpcServer} endpoint.
@@ -152,10 +153,21 @@ public class GrpcServerBuilder extends AbstractEndpointBuilder<GrpcServer> {
         return this;
     }
 
-    @SchemaProperty(description = "Idle timeout in milliseconds before the simulator answers INTERNAL.")
+    @SchemaProperty(description = "Timeout in milliseconds when waiting for incoming calls.")
     @XmlAttribute(name = "timeout")
     public void setTimeout(long timeout) {
         timeout(timeout);
+    }
+
+    public GrpcServerBuilder responseTimeout(long responseTimeout) {
+        configuration().setResponseTimeout(responseTimeout);
+        return this;
+    }
+
+    @SchemaProperty(description = "Server side response deadline in milliseconds before the simulator answers INTERNAL.")
+    @XmlAttribute(name = "response-timeout")
+    public void setResponseTimeout(long responseTimeout) {
+        responseTimeout(responseTimeout);
     }
 
     public GrpcServerBuilder autoStart(boolean autoStart) {
@@ -185,7 +197,12 @@ public class GrpcServerBuilder extends AbstractEndpointBuilder<GrpcServer> {
         configuration().setCertificateChain(certificateChain);
         configuration().setPrivateKey(privateKey);
 
-        if (referenceResolver != null && endpointAdapter != null) {
+        if (endpointAdapter != null) {
+            if (referenceResolver == null) {
+                throw new CitrusRuntimeException("Missing reference resolver - unable to resolve the endpoint adapter '%s'"
+                        .formatted(endpointAdapter));
+            }
+
             endpoint.setEndpointAdapter(referenceResolver.resolve(endpointAdapter, EndpointAdapter.class));
         }
 

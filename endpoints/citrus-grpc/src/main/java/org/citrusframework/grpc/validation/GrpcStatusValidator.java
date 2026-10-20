@@ -22,6 +22,7 @@ import org.citrusframework.grpc.message.GrpcMessageHeaders;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
+import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 
 /**
  * Validates the final gRPC status of a received response or stream end against a
@@ -53,7 +54,12 @@ public class GrpcStatusValidator extends AbstractMessageValidator<GrpcStatusVali
         String actualDescription = header(receivedMessage, GrpcMessageHeaders.STATUS_DESCRIPTION);
         String expectedCode = validationContext.getStatusCode();
 
-        if (!expectedCode.equals(actualCode)) {
+        if (expectedCode == null || expectedCode.isBlank()) {
+            // no status code expected - nothing to validate here
+            return;
+        }
+
+        if (!matches(actualCode, expectedCode, context)) {
             throw new ValidationException(failureMessage(method, actualCode, actualDescription, expectedCode));
         }
 
@@ -66,6 +72,32 @@ public class GrpcStatusValidator extends AbstractMessageValidator<GrpcStatusVali
             Object actual = receivedMessage.getHeader(GrpcMessageHeaders.TRAILER_PREFIX + name);
             ValidationUtils.validateValues(actual, expected, "trailer '" + name + "'", context);
         });
+    }
+
+    /**
+     * Matches the actual status code against the expected one. The expected value may use a Citrus
+     * validation matcher expression, e.g. {@code @startsWith('OK')@}.
+     *
+     * @param actualCode the status code received from the endpoint
+     * @param expectedCode the expected status code
+     * @param context the test context
+     * @return true if the actual status code matches the expected one
+     */
+    private static boolean matches(String actualCode, String expectedCode, TestContext context) {
+        if (actualCode == null) {
+            return false;
+        }
+
+        if (ValidationMatcherUtils.isValidationMatcherExpression(expectedCode)) {
+            try {
+                ValidationMatcherUtils.resolveValidationMatcher("status code", actualCode, expectedCode, context);
+                return true;
+            } catch (ValidationException e) {
+                return false;
+            }
+        }
+
+        return expectedCode.equals(actualCode);
     }
 
     private static String header(Message message, String name) {

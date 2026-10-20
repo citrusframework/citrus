@@ -20,6 +20,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.grpc.message.GrpcMessage;
 import org.citrusframework.grpc.message.GrpcMessageHeaders;
+import org.citrusframework.grpc.validation.GrpcStatusValidationContext;
+import org.citrusframework.grpc.validation.GrpcStatusValidator;
 import org.citrusframework.message.Message;
 
 /**
@@ -64,6 +66,29 @@ public class GrpcClientReceiveAction extends ReceiveMessageAction {
                     "gRPC stream '%s' has unread messages - receive them with streamMessage() first", method));
         }
 
+        validateGrpcStatus(message, context);
         super.validateMessage(message, context);
+    }
+
+    /**
+     * Validates the gRPC status of the received message. The status validation is always performed,
+     * even when custom validators are configured on the receive action. Otherwise the status of the
+     * gRPC call would silently not be validated at all.
+     *
+     * @param message the received message
+     * @param context the test context
+     */
+    private void validateGrpcStatus(Message message, TestContext context) {
+        GrpcStatusValidationContext validationContext = getValidationContexts().stream()
+                .filter(GrpcStatusValidationContext.class::isInstance)
+                .map(GrpcStatusValidationContext.class::cast)
+                .findFirst()
+                .orElse(null);
+
+        if (validationContext == null) {
+            return;
+        }
+
+        new GrpcStatusValidator().validateMessage(message, null, context, getValidationContexts());
     }
 }

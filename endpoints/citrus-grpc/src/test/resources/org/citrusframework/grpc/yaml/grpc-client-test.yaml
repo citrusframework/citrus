@@ -33,6 +33,8 @@ actions:
       receive:
         response:
           status: "OK"
+        validator: "grpcStatusValidator"
+        headerValidator: "grpcHeaderValidator"
         trailer:
           - name: "x-trailer"
             value: "42"

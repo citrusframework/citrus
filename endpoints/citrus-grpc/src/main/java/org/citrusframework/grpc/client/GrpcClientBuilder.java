@@ -24,6 +24,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.message.MessageCorrelator;
 
 /**
  * Builds a {@link GrpcClient} endpoint.
@@ -169,15 +171,15 @@ public class GrpcClientBuilder extends AbstractEndpointBuilder<GrpcClient> {
 
     @Override
     public GrpcClient build() {
-        if (referenceResolver != null) {
-            if (trustCertificate != null) {
-                configuration().setTrustCertificate(trustCertificate);
+        configuration().setTrustCertificate(trustCertificate);
+
+        if (correlator != null) {
+            if (referenceResolver == null) {
+                throw new CitrusRuntimeException("Missing reference resolver - unable to resolve the message correlator '%s'"
+                        .formatted(correlator));
             }
-            if (correlator != null) {
-                configuration().setCorrelator(referenceResolver.resolve(correlator, org.citrusframework.message.MessageCorrelator.class));
-            }
-        } else {
-            configuration().setTrustCertificate(trustCertificate);
+
+            configuration().setCorrelator(referenceResolver.resolve(correlator, MessageCorrelator.class));
         }
 
         return super.build();

@@ -265,6 +265,7 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
                 .descriptors("classpath:descriptors/test-protos.binpb")
                 .services(services)
                 .timeout(timeout)
+                .responseTimeout(timeout)
                 .autoStart(true)
                 .initialize()
                 .build();

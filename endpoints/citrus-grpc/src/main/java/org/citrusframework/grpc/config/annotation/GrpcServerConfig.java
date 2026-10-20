@@ -50,6 +50,8 @@ public @interface GrpcServerConfig {
 
     long timeout() default 5000L;
 
+    long responseTimeout() default 5000L;
+
     boolean autoStart() default true;
 
     String endpointAdapter() default "";

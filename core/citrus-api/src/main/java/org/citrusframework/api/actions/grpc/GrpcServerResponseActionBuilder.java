@@ -71,4 +71,13 @@ public interface GrpcServerResponseActionBuilder<T extends TestAction, M extends
      * @return
      */
     B trailer(String name, Object value);
+
+    /**
+     * Targets a specific call by its call id. Use this to answer one of several calls that are
+     * currently open on the simulator. By default the response is sent to the call that was
+     * received last.
+     * @param callId the id of the call to respond to
+     * @return
+     */
+    B callId(String callId);
 }

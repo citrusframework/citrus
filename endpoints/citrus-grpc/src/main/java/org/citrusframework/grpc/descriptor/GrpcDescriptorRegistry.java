@@ -17,10 +17,12 @@
 package org.citrusframework.grpc.descriptor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FileDescriptor;
@@ -81,7 +83,8 @@ public class GrpcDescriptorRegistry {
     }
 
     /**
-     * Type registry used to resolve {@code google.protobuf.Any} messages.
+     * Type registry used to resolve {@code google.protobuf.Any} messages. Contains all known message
+     * types including the nested types of a message.
      */
     public TypeRegistry typeRegistry() {
         return snapshot().typeRegistry;
@@ -126,8 +129,11 @@ public class GrpcDescriptorRegistry {
         }
 
         TypeRegistry.Builder typeRegistry = TypeRegistry.newBuilder();
+        Set<String> registeredTypes = new HashSet<>();
         for (FileDescriptor file : files.values()) {
-            typeRegistry.add(file.getMessageTypes());
+            for (Descriptor message : file.getMessageTypes()) {
+                registerMessage(typeRegistry, registeredTypes, message);
+            }
         }
 
         List<String> serviceNames = services.stream()
@@ -175,6 +181,24 @@ public class GrpcDescriptorRegistry {
         messages.put(message.getFullName(), message);
         for (Descriptor nested : message.getNestedTypes()) {
             indexMessages(nested, messages);
+        }
+    }
+
+    /**
+     * Adds the given message type and all of its nested types to the type registry. Nested types are
+     * registered as well, so that they can be resolved as {@code google.protobuf.Any} payloads.
+     *
+     * @param typeRegistry the type registry to add the message types to
+     * @param registeredTypes the full names of the already registered message types
+     * @param message the message type to register
+     */
+    private static void registerMessage(TypeRegistry.Builder typeRegistry, Set<String> registeredTypes, Descriptor message) {
+        if (registeredTypes.add(message.getFullName())) {
+            typeRegistry.add(message);
+        }
+
+        for (Descriptor nested : message.getNestedTypes()) {
+            registerMessage(typeRegistry, registeredTypes, nested);
         }
     }
 

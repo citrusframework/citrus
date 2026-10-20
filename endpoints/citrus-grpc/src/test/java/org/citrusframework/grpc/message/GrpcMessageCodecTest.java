@@ -160,6 +160,28 @@ public class GrpcMessageCodecTest {
     }
 
     @Test
+    public void shouldEncodeMissingBodyAsDefaultInstance() {
+        GrpcMessageCodec codec = new GrpcMessageCodec(registry);
+        Descriptor type = registry.findMessage("helloworld.HelloRequest");
+
+        DynamicMessage message = codec.encode(type, null);
+
+        assertThat(message.getDescriptorForType()).isEqualTo(type);
+        assertThat(message.getField(type.findFieldByName("name"))).isEqualTo("");
+    }
+
+    @Test
+    public void shouldEncodeBlankBodyAsDefaultInstance() {
+        GrpcMessageCodec codec = new GrpcMessageCodec(registry);
+        Descriptor type = registry.findMessage("helloworld.HelloRequest");
+
+        DynamicMessage message = codec.encode(type, "   ");
+
+        assertThat(message.getDescriptorForType()).isEqualTo(type);
+        assertThat(message.getField(type.findFieldByName("name"))).isEqualTo("");
+    }
+
+    @Test
     public void shouldPrintWellKnownTypes() {
         GrpcMessageCodec codec = new GrpcMessageCodec(registry);
         Descriptor type = registry.findMessage("market.Price");

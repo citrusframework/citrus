@@ -646,6 +646,11 @@
           "description": "Bean reference to a custom endpoint adapter.",
           "$comment": "group:advanced"
         },
+        "maxBufferedMessages": {
+          "type": "integer",
+          "title": "MaxBufferedMessages",
+          "description": "Maximum number of buffered request messages per call."
+        },
         "name": {
           "type": "string",
           "title": "Name",
@@ -676,6 +681,11 @@
             "description": "Additional import paths for .proto descriptor sources."
           }
         },
+        "responseTimeout": {
+          "type": "integer",
+          "title": "ResponseTimeout",
+          "description": "Server side response deadline in milliseconds before the simulator answers INTERNAL."
+        },
         "services": {
           "title": "Services",
           "description": "Full service names served by the simulator. Defaults to all services in the descriptors.",
@@ -689,7 +699,7 @@
         "timeout": {
           "type": "integer",
           "title": "Timeout",
-          "description": "Idle timeout in milliseconds before the simulator answers INTERNAL."
+          "description": "Timeout in milliseconds when waiting for incoming calls."
         },
         "tls": {
           "type": "boolean",

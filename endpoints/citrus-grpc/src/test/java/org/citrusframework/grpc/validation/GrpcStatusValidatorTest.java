@@ -71,6 +71,32 @@ public class GrpcStatusValidatorTest {
     }
 
     @Test
+    public void shouldMatchStatusCodeWithValidationMatcher() {
+        GrpcStatusValidationContext validationContext = GrpcStatusValidationContext.Builder.status()
+                .statusCode("@startsWith('NOT')@")
+                .build();
+
+        assertThatCode(() -> validator.validateMessage(
+                message(GrpcMessageHeaders.KIND_RESPONSE, "NOT_FOUND", "unknown user"),
+                null, context, contexts(validationContext)))
+                .doesNotThrowAnyException();
+        assertThat(validationContext.getStatus()).isEqualTo(ValidationStatus.PASSED);
+    }
+
+    @Test
+    public void shouldIgnoreMissingExpectedStatusCode() {
+        GrpcStatusValidationContext validationContext = GrpcStatusValidationContext.Builder.status()
+                .statusCode(null)
+                .build();
+
+        assertThatCode(() -> validator.validateMessage(
+                message(GrpcMessageHeaders.KIND_RESPONSE, "NOT_FOUND", "unknown user"),
+                null, context, contexts(validationContext)))
+                .doesNotThrowAnyException();
+        assertThat(validationContext.getStatus()).isEqualTo(ValidationStatus.PASSED);
+    }
+
+    @Test
     public void shouldMatchDescriptionWithValidationMatcher() {
         GrpcStatusValidationContext validationContext = GrpcStatusValidationContext.Builder.status()
                 .statusCode("NOT_FOUND")

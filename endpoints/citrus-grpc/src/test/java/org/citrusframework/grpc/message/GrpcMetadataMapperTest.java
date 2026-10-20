@@ -102,6 +102,16 @@ public class GrpcMetadataMapperTest {
     }
 
     @Test
+    public void shouldJoinRepeatedMetadataValues() {
+        Metadata metadata = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("x-request-id", Metadata.ASCII_STRING_MARSHALLER);
+        metadata.put(key, "42");
+        metadata.put(key, "43");
+
+        assertThat(GrpcMetadataMapper.fromMetadata(metadata)).containsEntry("x-request-id", "42,43");
+    }
+
+    @Test
     public void shouldConvertAsciiValuesToText() {
         byte[] value = "raw".getBytes(StandardCharsets.UTF_8);
         Metadata metadata = new Metadata();

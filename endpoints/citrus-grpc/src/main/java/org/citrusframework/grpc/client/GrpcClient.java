@@ -119,6 +119,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
 
         context.getVariables().put(GrpcMessageHeaders.CALL_ID, callId);
         context.getVariables().put(correlationKeyName(), callId);
+        context.getVariables().put(GrpcMessageHeaders.callIdVariableName(getName()), callId);
     }
 
     @Override
@@ -157,7 +158,9 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
             throw new MessageTimeoutException(timeout, getName());
         }
 
-        if (GrpcMessageHeaders.KIND_STREAM_END.equals(message.getKind())) {
+        if (GrpcMessageHeaders.KIND_STREAM_END.equals(message.getKind())
+                || GrpcMessageHeaders.KIND_RESPONSE.equals(message.getKind())) {
+            // the call is terminal for unary and client streaming methods - release it right away
             calls.remove(callId);
         }
 
@@ -334,6 +337,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
         private final GrpcMessageCodec codec;
         private int sequence;
         private DynamicMessage response;
+        private Map<String, Object> responseHeaders;
 
         private ClientCallListener(ClientCallQueue queue, Descriptors.MethodDescriptor method, GrpcMessageCodec codec) {
             this.queue = queue;
@@ -343,9 +347,9 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
 
         @Override
         public void onHeaders(Metadata headers) {
-            Map<String, Object> mapped = GrpcMetadataMapper.fromMetadata(headers);
-            if (!mapped.isEmpty()) {
-                logger.debug("Received gRPC response headers for call '{}': {}", queue.getCallId(), mapped.keySet());
+            responseHeaders = GrpcMetadataMapper.fromMetadata(headers);
+            if (!responseHeaders.isEmpty()) {
+                logger.debug("Received gRPC response headers for call '{}': {}", queue.getCallId(), responseHeaders.keySet());
             }
         }
 
@@ -363,6 +367,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
                     .kind(GrpcMessageHeaders.KIND_STREAM_MESSAGE)
                     .streamSequence(sequence++);
 
+            addResponseHeaders(grpcMessage);
             queue.offer(grpcMessage);
         }
 
@@ -382,8 +387,21 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
                 grpcMessage.statusDescription(status.getDescription());
             }
 
+            addResponseHeaders(grpcMessage);
             grpcMessage.getHeaders().putAll(GrpcMetadataMapper.fromTrailers(trailers));
             queue.offer(grpcMessage);
+        }
+
+        /**
+         * Adds the response headers received with the call to the given message. Response headers are
+         * mapped to Citrus message headers one to one, just like the response trailers.
+         *
+         * @param message the message to add the headers to
+         */
+        private void addResponseHeaders(GrpcMessage message) {
+            if (responseHeaders != null) {
+                message.getHeaders().putAll(responseHeaders);
+            }
         }
     }
 }

@@ -41,6 +41,22 @@ public class GrpcMessageHeaders {
     /** Unique identifier of a gRPC call */
     public static final String CALL_ID = GRPC_PREFIX + "call_id";
 
+    /**
+     * Name of the test context variable that holds the call id of the most recent call of the given
+     * endpoint. In contrast to {@link #CALL_ID} this variable is scoped to a single endpoint, so
+     * multiple gRPC client endpoints do not overwrite each other's call id.
+     *
+     * @param endpointName the name of the gRPC client endpoint
+     * @return the name of the endpoint scoped call id variable
+     */
+    public static String callIdVariableName(String endpointName) {
+        if (endpointName == null || endpointName.isBlank()) {
+            return CALL_ID;
+        }
+
+        return CALL_ID + "_" + endpointName;
+    }
+
     /** Kind of the gRPC message, one of {@code call}, {@code response}, {@code stream_message} or {@code stream_end} */
     public static final String KIND = GRPC_PREFIX + "kind";
 
