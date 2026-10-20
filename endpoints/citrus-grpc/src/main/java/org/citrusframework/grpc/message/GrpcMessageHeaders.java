@@ -68,6 +68,16 @@ public class GrpcMessageHeaders {
     /** Method type value for server streaming calls */
     public static final String METHOD_TYPE_SERVER_STREAMING = "SERVER_STREAMING";
 
+    /**
+     * Request stream (client streaming) method
+     */
+    public static final String METHOD_TYPE_CLIENT_STREAMING = "CLIENT_STREAMING";
+
+    /**
+     * Bidirectional stream method
+     */
+    public static final String METHOD_TYPE_BIDI_STREAMING = "BIDI_STREAMING";
+
     /** Message kind value for an incoming simulator call */
     public static final String KIND_CALL = "call";
 

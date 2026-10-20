@@ -49,4 +49,16 @@ public interface GrpcClientRequestActionBuilder<T extends TestAction, M extends 
      * @return
      */
     B deadline(Duration deadline);
+
+    /**
+     * Sends another message on the currently open client streaming call.
+     * @return
+     */
+    B streamMessage();
+
+    /**
+     * Completes the request side of the currently open client streaming call.
+     * @return
+     */
+    B streamCompleted();
 }

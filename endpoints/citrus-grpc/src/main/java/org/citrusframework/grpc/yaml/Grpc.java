@@ -132,6 +132,12 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             if (send.deadline != null) {
                 builder.deadline(Duration.ofMillis(send.deadline));
             }
+            if (Boolean.TRUE.equals(send.streamMessage)) {
+                builder.streamMessage();
+            }
+            if (send.streamCompleted != null) {
+                builder.streamCompleted();
+            }
 
             sendAction = new Send(builder) {
                 @Override
@@ -191,6 +197,12 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 builder.call(receive.call);
             }
             receive.metadata.forEach(metadata -> builder.metadata(metadata.name, metadata.value));
+            if (Boolean.TRUE.equals(receive.streamMessage)) {
+                builder.streamMessage();
+            }
+            if (receive.streamCompleted != null) {
+                builder.streamCompleted();
+            }
 
             receiveAction = receive(builder);
             return builder.build();

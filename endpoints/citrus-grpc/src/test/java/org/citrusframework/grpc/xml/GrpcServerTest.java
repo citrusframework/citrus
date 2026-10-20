@@ -59,7 +59,19 @@ public class GrpcServerTest extends AbstractXmlActionTest {
                         .methodType(GrpcMessageHeaders.METHOD_TYPE_UNARY)
                         .callId("call-1")
                         .kind(GrpcMessageHeaders.KIND_CALL)
-                        .metadata("authorization", "Bearer token"));
+                        .metadata("authorization", "Bearer token"),
+                new GrpcMessage("{\"id\":2}")
+                        .method("helloworld.Greeter/SayHello")
+                        .methodType(GrpcMessageHeaders.METHOD_TYPE_CLIENT_STREAMING)
+                        .callId("call-1")
+                        .kind(GrpcMessageHeaders.KIND_STREAM_MESSAGE)
+                        .streamSequence(1),
+                new GrpcMessage("")
+                        .method("helloworld.Greeter/SayHello")
+                        .methodType(GrpcMessageHeaders.METHOD_TYPE_CLIENT_STREAMING)
+                        .callId("call-1")
+                        .kind(GrpcMessageHeaders.KIND_STREAM_END)
+                        .statusCode("OK"));
 
         context.getReferenceResolver().bind("grpcServer", server);
 
@@ -69,9 +81,9 @@ public class GrpcServerTest extends AbstractXmlActionTest {
         TestCase result = testLoader.getTestCase();
         assertThat(result.getName()).isEqualTo("GrpcServerTest");
         assertThat(result.getMetaInfo().getStatus()).isEqualTo(TestCaseMetaInfo.Status.FINAL);
-        assertThat(result.getActionCount()).isEqualTo(4L);
+        assertThat(result.getActionCount()).isEqualTo(6L);
         assertThat(result.getTestAction(0).getName()).isEqualTo("grpc:receive-call");
-        assertThat(result.getTestAction(1).getName()).isEqualTo("grpc:send-response");
+        assertThat(result.getTestAction(3).getName()).isEqualTo("grpc:send-response");
 
         ArgumentCaptor<Message> sent = ArgumentCaptor.forClass(Message.class);
         verify(producer, times(3)).send(sent.capture(), any(TestContext.class));

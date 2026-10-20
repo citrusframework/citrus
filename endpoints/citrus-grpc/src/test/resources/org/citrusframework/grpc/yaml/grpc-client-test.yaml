@@ -18,6 +18,18 @@ actions:
             data: '{"name": "${user}"}'
   - grpc:
       client: "grpcClient"
+      send:
+        streamMessage: true
+        message:
+          body:
+            data: '{"name": "Bob"}'
+  - grpc:
+      client: "grpcClient"
+      send:
+        streamCompleted:
+          status: "OK"
+  - grpc:
+      client: "grpcClient"
       receive:
         response:
           status: "OK"

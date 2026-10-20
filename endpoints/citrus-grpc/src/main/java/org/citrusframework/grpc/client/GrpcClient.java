@@ -76,6 +76,23 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
     @Override
     public void send(Message message, TestContext context) {
         GrpcMessage grpcMessage = new GrpcMessage(message);
+
+        if (GrpcMessageHeaders.KIND_STREAM_END.equals(grpcMessage.getKind())) {
+            calls.complete(currentCallId(context));
+            return;
+        }
+
+        if (GrpcMessageHeaders.KIND_STREAM_MESSAGE.equals(grpcMessage.getKind())) {
+            String callId = currentCallId(context);
+            ClientCallRegistry.LiveCall liveCall = calls.getLiveCall(callId);
+            if (liveCall == null) {
+                throw new CitrusRuntimeException("Unknown gRPC call '%s' - open a call first".formatted(callId));
+            }
+
+            calls.sendMessage(callId, codec().encode(liveCall.method().getInputType(), message.getPayload()));
+            return;
+        }
+
         String methodName = grpcMessage.getMethod();
 
         if (methodName == null || methodName.isBlank()) {
@@ -89,13 +106,16 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
         ClientCallQueue queue = new ClientCallQueue(callId, getEndpointConfiguration().getMaxBufferedMessages());
         ClientCall<DynamicMessage, DynamicMessage> call = newCall(method, grpcMessage);
 
-        calls.register(callId, queue, () -> call.cancel("cancelled by Citrus test", null));
+        calls.register(callId, queue, call, method, () -> call.cancel("cancelled by Citrus test", null));
         registerCleanup(context);
 
         call.start(new ClientCallListener(queue, method, codec()), GrpcMetadataMapper.toMetadata(grpcMessage.getHeaders()));
         call.request(Integer.MAX_VALUE);
         call.sendMessage(request);
-        call.halfClose();
+
+        if (!method.isClientStreaming()) {
+            call.halfClose();
+        }
 
         context.getVariables().put(GrpcMessageHeaders.CALL_ID, callId);
         context.getVariables().put(correlationKeyName(), callId);
@@ -150,12 +170,16 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
      * @param context the test context
      */
     public void cancel(TestContext context) {
+        calls.cancel(currentCallId(context));
+    }
+
+    private String currentCallId(TestContext context) {
         Object callId = context.getVariables().get(correlationKeyName());
         if (callId == null) {
-            throw new CitrusRuntimeException("No gRPC call to cancel");
+            throw new CitrusRuntimeException("No open gRPC call available - send a request first");
         }
 
-        calls.cancel(callId.toString());
+        return callId.toString();
     }
 
     @Override
@@ -227,9 +251,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
 
         io.grpc.MethodDescriptor<DynamicMessage, DynamicMessage> descriptor = io.grpc.MethodDescriptor
                 .<DynamicMessage, DynamicMessage>newBuilder()
-                .setType(method.isServerStreaming()
-                        ? io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING
-                        : io.grpc.MethodDescriptor.MethodType.UNARY)
+                .setType(grpcMethodType(method))
                 .setFullMethodName(method.getService().getFullName() + "/" + method.getName())
                 .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                         DynamicMessage.getDefaultInstance(method.getInputType())))
@@ -276,6 +298,32 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
         return codec;
     }
 
+    private static io.grpc.MethodDescriptor.MethodType grpcMethodType(Descriptors.MethodDescriptor method) {
+        if (method.isClientStreaming() && method.isServerStreaming()) {
+            return io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING;
+        }
+        if (method.isClientStreaming()) {
+            return io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING;
+        }
+        if (method.isServerStreaming()) {
+            return io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING;
+        }
+        return io.grpc.MethodDescriptor.MethodType.UNARY;
+    }
+
+    private static String methodType(Descriptors.MethodDescriptor method) {
+        if (method.isClientStreaming() && method.isServerStreaming()) {
+            return GrpcMessageHeaders.METHOD_TYPE_BIDI_STREAMING;
+        }
+        if (method.isClientStreaming()) {
+            return GrpcMessageHeaders.METHOD_TYPE_CLIENT_STREAMING;
+        }
+        if (method.isServerStreaming()) {
+            return GrpcMessageHeaders.METHOD_TYPE_SERVER_STREAMING;
+        }
+        return GrpcMessageHeaders.METHOD_TYPE_UNARY;
+    }
+
     /**
      * Listener translating gRPC callbacks into Citrus messages.
      */
@@ -310,7 +358,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
 
             GrpcMessage grpcMessage = new GrpcMessage(codec.decode(message))
                     .method(method.getService().getFullName() + "/" + method.getName())
-                    .methodType(GrpcMessageHeaders.METHOD_TYPE_SERVER_STREAMING)
+                    .methodType(methodType(method))
                     .callId(queue.getCallId())
                     .kind(GrpcMessageHeaders.KIND_STREAM_MESSAGE)
                     .streamSequence(sequence++);
@@ -322,9 +370,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
         public void onClose(Status status, Metadata trailers) {
             GrpcMessage grpcMessage = new GrpcMessage(response != null ? codec.decode(response) : "")
                     .method(method.getService().getFullName() + "/" + method.getName())
-                    .methodType(method.isServerStreaming()
-                            ? GrpcMessageHeaders.METHOD_TYPE_SERVER_STREAMING
-                            : GrpcMessageHeaders.METHOD_TYPE_UNARY)
+                    .methodType(methodType(method))
                     .callId(queue.getCallId())
                     .kind(method.isServerStreaming()
                             ? GrpcMessageHeaders.KIND_STREAM_END
