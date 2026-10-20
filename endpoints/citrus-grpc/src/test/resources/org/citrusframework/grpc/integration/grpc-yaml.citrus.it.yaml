@@ -96,3 +96,122 @@ actions:
       receive:
         streamCompleted:
           status: "OK"
+  # client streaming: StoreUsers
+  - grpc:
+      client: "client"
+      send:
+        call: "grpc2grpc.PetStoreService/StoreUsers"
+        message:
+          body:
+            data: '{"id": 1, "username": "ada", "email": "ada@example.com", "phone": "555-1"}'
+  - grpc:
+      client: "client"
+      send:
+        streamMessage: true
+        message:
+          body:
+            data: '{"id": 2, "username": "bob", "email": "bob@example.com", "phone": "555-2"}'
+  - grpc:
+      client: "client"
+      send:
+        streamCompleted:
+          status: "OK"
+  - grpc:
+      server: "simulator"
+      receive:
+        call: "grpc2grpc.PetStoreService/StoreUsers"
+        message:
+          body:
+            data: '{"id": 1, "username": "ada", "email": "ada@example.com", "phone": "555-1"}'
+  - grpc:
+      server: "simulator"
+      receive:
+        streamMessage: true
+        message:
+          body:
+            data: '{"id": 2, "username": "bob", "email": "bob@example.com", "phone": "555-2"}'
+  - grpc:
+      server: "simulator"
+      receive:
+        streamCompleted:
+          status: "OK"
+  - grpc:
+      server: "simulator"
+      send:
+        response:
+          status: "OK"
+        message:
+          body:
+            data: '{"msg": "received 2"}'
+  - grpc:
+      client: "client"
+      receive:
+        response:
+          status: "OK"
+        message:
+          body:
+            data: '{"msg": "received 2"}'
+
+  # bidirectional streaming: BulkUsers
+  - grpc:
+      client: "client"
+      send:
+        call: "grpc2grpc.PetStoreService/BulkUsers"
+        message:
+          body:
+            data: '{"id": 1, "username": "ada", "email": "ada@example.com", "phone": "555-1"}'
+  - grpc:
+      server: "simulator"
+      receive:
+        call: "grpc2grpc.PetStoreService/BulkUsers"
+        message:
+          body:
+            data: '{"id": 1, "username": "ada", "email": "ada@example.com", "phone": "555-1"}'
+  - grpc:
+      server: "simulator"
+      send:
+        streamMessage: true
+        message:
+          body:
+            data: '{"id": 10, "username": "echo", "email": "echo@example.com", "phone": "555-10"}'
+  - grpc:
+      client: "client"
+      receive:
+        streamMessage: true
+        message:
+          body:
+            data: '{"id": 10, "username": "echo", "email": "echo@example.com", "phone": "555-10"}'
+  - grpc:
+      client: "client"
+      send:
+        streamMessage: true
+        message:
+          body:
+            data: '{"id": 2, "username": "bob", "email": "bob@example.com", "phone": "555-2"}'
+  - grpc:
+      server: "simulator"
+      receive:
+        streamMessage: true
+        message:
+          body:
+            data: '{"id": 2, "username": "bob", "email": "bob@example.com", "phone": "555-2"}'
+  - grpc:
+      client: "client"
+      send:
+        streamCompleted:
+          status: "OK"
+  - grpc:
+      server: "simulator"
+      receive:
+        streamCompleted:
+          status: "OK"
+  - grpc:
+      server: "simulator"
+      send:
+        streamCompleted:
+          status: "OK"
+  - grpc:
+      client: "client"
+      receive:
+        streamCompleted:
+          status: "OK"

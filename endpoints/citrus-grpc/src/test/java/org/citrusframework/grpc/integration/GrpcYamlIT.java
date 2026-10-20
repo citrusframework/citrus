@@ -32,7 +32,7 @@ public class GrpcYamlIT extends TestNGCitrusSpringSupport {
     @BindToRegistry
     private final GrpcServer simulator = GrpcEndpoints.grpc().server()
             .port(18880)
-            .descriptors("classpath:descriptors/test-protos.binpb")
+            .descriptors("classpath:descriptors/test-protos.binpb", "classpath:org/citrusframework/grpc/streaming/petstore.proto")
             .timeout(5000L)
             .autoStart(true)
             .initialize()
@@ -41,7 +41,7 @@ public class GrpcYamlIT extends TestNGCitrusSpringSupport {
     @BindToRegistry
     private final GrpcClient client = GrpcEndpoints.grpc().client()
             .target("localhost:18880")
-            .descriptors("classpath:descriptors/test-protos.binpb")
+            .descriptors("classpath:descriptors/test-protos.binpb", "classpath:org/citrusframework/grpc/streaming/petstore.proto")
             .timeout(5000L)
             .build();
 

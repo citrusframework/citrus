@@ -133,5 +133,151 @@
         <stream-completed status="OK"/>
       </receive>
     </grpc>
+
+    <!-- client streaming: StoreUsers -->
+    <grpc client="client">
+      <send>
+        <call>grpc2grpc.PetStoreService/StoreUsers</call>
+        <message>
+          <body><data>{"id": 1, "username": "ada", "email": "ada@example.com", "phone": "555-1"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc client="client">
+      <send>
+        <stream-message/>
+        <message>
+          <body><data>{"id": 2, "username": "bob", "email": "bob@example.com", "phone": "555-2"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc client="client">
+      <send>
+        <stream-completed/>
+      </send>
+    </grpc>
+
+    <grpc server="simulator">
+      <receive>
+        <call>grpc2grpc.PetStoreService/StoreUsers</call>
+        <message>
+          <body><data>{"id": 1, "username": "ada", "email": "ada@example.com", "phone": "555-1"}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc server="simulator">
+      <receive>
+        <stream-message/>
+        <message>
+          <body><data>{"id": 2, "username": "bob", "email": "bob@example.com", "phone": "555-2"}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc server="simulator">
+      <receive>
+        <stream-completed/>
+      </receive>
+    </grpc>
+
+    <grpc server="simulator">
+      <send>
+        <response status="OK"/>
+        <message>
+          <body><data>{"msg": "received 2"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc client="client">
+      <receive>
+        <response status="OK"/>
+        <message>
+          <body><data>{"msg": "received 2"}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <!-- bidirectional streaming: BulkUsers -->
+    <grpc client="client">
+      <send>
+        <call>grpc2grpc.PetStoreService/BulkUsers</call>
+        <message>
+          <body><data>{"id": 1, "username": "ada", "email": "ada@example.com", "phone": "555-1"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc server="simulator">
+      <receive>
+        <call>grpc2grpc.PetStoreService/BulkUsers</call>
+        <message>
+          <body><data>{"id": 1, "username": "ada", "email": "ada@example.com", "phone": "555-1"}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc server="simulator">
+      <send>
+        <stream-message/>
+        <message>
+          <body><data>{"id": 10, "username": "echo", "email": "echo@example.com", "phone": "555-10"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc client="client">
+      <receive>
+        <stream-message/>
+        <message>
+          <body><data>{"id": 10, "username": "echo", "email": "echo@example.com", "phone": "555-10"}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc client="client">
+      <send>
+        <stream-message/>
+        <message>
+          <body><data>{"id": 2, "username": "bob", "email": "bob@example.com", "phone": "555-2"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc server="simulator">
+      <receive>
+        <stream-message/>
+        <message>
+          <body><data>{"id": 2, "username": "bob", "email": "bob@example.com", "phone": "555-2"}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc client="client">
+      <send>
+        <stream-completed/>
+      </send>
+    </grpc>
+
+    <grpc server="simulator">
+      <receive>
+        <stream-completed/>
+      </receive>
+    </grpc>
+
+    <grpc server="simulator">
+      <send>
+        <stream-completed status="OK"/>
+      </send>
+    </grpc>
+
+    <grpc client="client">
+      <receive>
+        <stream-completed status="OK"/>
+      </receive>
+    </grpc>
   </actions>
 </test>
