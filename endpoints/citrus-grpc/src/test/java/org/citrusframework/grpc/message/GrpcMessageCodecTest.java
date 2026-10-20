@@ -23,6 +23,8 @@ import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.Timestamp;
 import org.citrusframework.grpc.descriptor.GrpcDescriptorRegistry;
+import org.citrusframework.grpc.test.proto.helloworld.HelloReply;
+import org.citrusframework.grpc.test.proto.helloworld.HelloRequest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -71,6 +73,27 @@ public class GrpcMessageCodecTest {
         DynamicMessage message = codec.encode(type, body);
 
         assertThat(message.getField(type.findFieldByName("name"))).isEqualTo("Ada");
+    }
+
+    @Test
+    public void shouldEncodeGeneratedStubMessageBody() {
+        GrpcMessageCodec codec = new GrpcMessageCodec(registry);
+        Descriptor type = registry.findMessage("helloworld.HelloRequest");
+
+        DynamicMessage message = codec.encode(type, HelloRequest.newBuilder().setName("Ada").build());
+
+        assertThat(message.getField(type.findFieldByName("name"))).isEqualTo("Ada");
+    }
+
+    @Test
+    public void shouldRejectGeneratedStubMessageOfWrongType() {
+        GrpcMessageCodec codec = new GrpcMessageCodec(registry);
+        Descriptor requestType = registry.findMessage("helloworld.HelloRequest");
+
+        assertThatThrownBy(() -> codec.encode(requestType, HelloReply.newBuilder().setMessage("Hi").build()))
+                .isInstanceOf(GrpcMessageCodecException.class)
+                .hasMessageContaining("helloworld.HelloRequest")
+                .hasMessageContaining("helloworld.HelloReply");
     }
 
     @Test

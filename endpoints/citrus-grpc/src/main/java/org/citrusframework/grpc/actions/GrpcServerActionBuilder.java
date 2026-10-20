@@ -43,6 +43,7 @@ public class GrpcServerActionBuilder extends AbstractReferenceResolverAwareTestA
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public GrpcServerRequestActionBuilder receive() {
         GrpcServerRequestActionBuilder builder = new GrpcServerRequestActionBuilder();
         if (server != null) {
@@ -58,6 +59,7 @@ public class GrpcServerActionBuilder extends AbstractReferenceResolverAwareTestA
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public GrpcServerResponseActionBuilder send() {
         GrpcServerResponseActionBuilder builder = new GrpcServerResponseActionBuilder();
         if (server != null) {

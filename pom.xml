@@ -225,7 +225,7 @@
     <greenmail.version>2.1.14</greenmail.version>
     <grpc.version>1.84.0</grpc.version>
     <!-- use the jre flavour of guava - the android flavour does not contain the full api -->
-    <guava.version>33.7.1-jre</guava.version>
+    <guava.version>33.7.2-jre</guava.version>
     <hamcrest.version>3.0</hamcrest.version>
     <httpclient.version>5.6.4</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
@@ -276,7 +276,8 @@
     <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.14</postgresql.version>
     <!--
-      Protobuf 4.x is required by the Square Wire schema parser used by the gRPC endpoint module.
+      The version below is used for the protobuf-java runtime as well as for the protoc binary
+      executed by the protobuf-maven-plugin, so that code generation and runtime stay in sync.
       gRPC itself is still built against protobuf 3.x - the version below intentionally overrides
       the transitive protobuf version of io.grpc:grpc-protobuf for the whole build.
     -->

@@ -3799,7 +3799,6 @@
               <xs:element name="extract" type="tns:Extract"/>
             </xs:choice>
             <xs:attribute name="fork" type="xs:boolean"/>
-            <xs:attribute name="uri" type="xs:string"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="receive">
