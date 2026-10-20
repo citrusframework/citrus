@@ -297,7 +297,8 @@ public class DynamicCallHandler extends HandlerRegistry {
                 @Override
                 public void onHalfClose() {
                     ServerCallRegistry.ActiveCall active = activeCall.get();
-                    if (active != null && requestCompleted.compareAndSet(false, true)) {
+                    if (active != null && method.isClientStreaming()
+                            && requestCompleted.compareAndSet(false, true)) {
                         handleRequestCompleted(active, method);
                     }
                 }
