@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-//JAVA 21+
+//JAVA 17+
 //REPOS mavencentral
 //DEPS org.citrusframework:citrus-bom:${citrus.jbang.version:5.1.0}@pom
 //DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:5.1.0}
