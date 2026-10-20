@@ -135,6 +135,17 @@ public class GrpcServerBuilder extends AbstractEndpointBuilder<GrpcServer> {
         omitDefaultValues(omitDefaultValues);
     }
 
+    public GrpcServerBuilder maxBufferedMessages(int maxBufferedMessages) {
+        configuration().setMaxBufferedMessages(maxBufferedMessages);
+        return this;
+    }
+
+    @SchemaProperty(description = "Maximum number of buffered request messages per call.")
+    @XmlAttribute(name = "max-buffered-messages")
+    public void setMaxBufferedMessages(int maxBufferedMessages) {
+        maxBufferedMessages(maxBufferedMessages);
+    }
+
     public GrpcServerBuilder timeout(long timeout) {
         configuration().setTimeout(timeout);
         endpoint.setDefaultTimeout(timeout);

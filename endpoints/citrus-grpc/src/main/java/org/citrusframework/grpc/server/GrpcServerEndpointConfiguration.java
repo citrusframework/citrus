@@ -36,6 +36,8 @@ public class GrpcServerEndpointConfiguration extends AbstractEndpointConfigurati
     private boolean omitDefaultValues;
     private long pollingInterval = 50L;
 
+    private int maxBufferedMessages = 10_000;
+
     public int getPort() {
         return port;
     }
@@ -110,5 +112,13 @@ public class GrpcServerEndpointConfiguration extends AbstractEndpointConfigurati
 
     public void setPollingInterval(long pollingInterval) {
         this.pollingInterval = pollingInterval;
+    }
+
+    public int getMaxBufferedMessages() {
+        return maxBufferedMessages;
+    }
+
+    public void setMaxBufferedMessages(int maxBufferedMessages) {
+        this.maxBufferedMessages = maxBufferedMessages;
     }
 }

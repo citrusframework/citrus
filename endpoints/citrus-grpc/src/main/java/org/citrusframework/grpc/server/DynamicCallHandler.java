@@ -147,6 +147,10 @@ public class DynamicCallHandler extends HandlerRegistry {
         activeCall.set(active);
         active.startTimeout();
 
+        if (isBufferBoundExceeded(active)) {
+            return;
+        }
+
         GrpcMessage callMessage = new GrpcMessage(codec.decode(request))
                 .kind(GrpcMessageHeaders.KIND_CALL)
                 .method(fullMethodName(method))
@@ -173,6 +177,10 @@ public class DynamicCallHandler extends HandlerRegistry {
             return;
         }
 
+        if (isBufferBoundExceeded(active)) {
+            return;
+        }
+
         GrpcMessage streamMessage = new GrpcMessage(codec.decode(message))
                 .kind(GrpcMessageHeaders.KIND_STREAM_MESSAGE)
                 .method(fullMethodName(method))
@@ -182,6 +190,25 @@ public class DynamicCallHandler extends HandlerRegistry {
 
         active.restartTimeout();
         inboundQueue.send(streamMessage);
+    }
+
+    private boolean isBufferBoundExceeded(ServerCallRegistry.ActiveCall active) {
+        int maxBufferedMessages = configuration.getMaxBufferedMessages();
+        if (maxBufferedMessages <= 0) {
+            return false;
+        }
+
+        if (active.countBufferedRequestMessage() <= maxBufferedMessages) {
+            return false;
+        }
+
+        LOG.warn("gRPC call '{}' exceeded the maximum of {} buffered request messages",
+                active.getCallId(), maxBufferedMessages);
+        active.close(Status.RESOURCE_EXHAUSTED.withDescription(
+                "Citrus simulator: exceeded the maximum of " + maxBufferedMessages + " buffered request messages"),
+                new Metadata());
+        calls.remove(active.getCallId());
+        return true;
     }
 
     private void handleRequestCompleted(ServerCallRegistry.ActiveCall active, Descriptors.MethodDescriptor method) {
