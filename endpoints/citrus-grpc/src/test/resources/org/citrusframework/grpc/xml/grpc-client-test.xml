@@ -33,6 +33,21 @@
     </grpc>
 
     <grpc client="grpcClient">
+      <send>
+        <stream-message/>
+        <message>
+          <body><data>{"name": "Bob"}</data></body>
+        </message>
+      </send>
+    </grpc>
+
+    <grpc client="grpcClient">
+      <send>
+        <stream-completed/>
+      </send>
+    </grpc>
+
+    <grpc client="grpcClient">
       <receive>
         <response status="OK"/>
         <trailer name="x-trailer">42</trailer>

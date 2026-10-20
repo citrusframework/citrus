@@ -39,4 +39,16 @@ public interface GrpcServerRequestActionBuilder<T extends TestAction, M extends 
      * @return
      */
     B metadata(String name, Object value);
+
+    /**
+     * Receives another request message of the current client streaming call.
+     * @return
+     */
+    B streamMessage();
+
+    /**
+     * Receives the completion of the request side of the current client streaming call.
+     * @return
+     */
+    B streamCompleted();
 }

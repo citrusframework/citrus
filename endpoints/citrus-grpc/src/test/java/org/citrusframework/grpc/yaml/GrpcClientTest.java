@@ -33,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -68,17 +69,22 @@ public class GrpcClientTest extends AbstractYamlActionTest {
         TestCase result = testLoader.getTestCase();
         assertThat(result.getName()).isEqualTo("GrpcClientTest");
         assertThat(result.getMetaInfo().getStatus()).isEqualTo(TestCaseMetaInfo.Status.FINAL);
-        assertThat(result.getActionCount()).isEqualTo(2L);
+        assertThat(result.getActionCount()).isEqualTo(4L);
         assertThat(result.getTestAction(0).getName()).isEqualTo("grpc:send-request");
-        assertThat(result.getTestAction(1).getName()).isEqualTo("grpc:receive-response");
+        assertThat(result.getTestAction(3).getName()).isEqualTo("grpc:receive-response");
 
         ArgumentCaptor<Message> sent = ArgumentCaptor.forClass(Message.class);
-        verify(producer).send(sent.capture(), any(TestContext.class));
+        verify(producer, times(3)).send(sent.capture(), any(TestContext.class));
+        java.util.List<Message> messages = sent.getAllValues();
 
-        Message request = sent.getValue();
+        Message request = messages.get(0);
         assertThat(request.getHeader(GrpcMessageHeaders.METHOD)).isEqualTo("helloworld.Greeter/SayHello");
         assertThat(request.getHeader("authorization")).isEqualTo("Bearer token");
         assertThat(request.getHeader(GrpcMessageHeaders.DEADLINE)).isEqualTo(java.time.Duration.ofSeconds(2));
         assertThat(request.getPayload(String.class)).isEqualTo("{\"name\": \"Ada\"}");
+        assertThat(messages.get(1).getHeader(GrpcMessageHeaders.KIND))
+                .isEqualTo(GrpcMessageHeaders.KIND_STREAM_MESSAGE);
+        assertThat(messages.get(2).getHeader(GrpcMessageHeaders.KIND))
+                .isEqualTo(GrpcMessageHeaders.KIND_STREAM_END);
     }
 }

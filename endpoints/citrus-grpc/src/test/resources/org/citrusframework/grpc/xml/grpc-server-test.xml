@@ -29,6 +29,21 @@
     </grpc>
 
     <grpc server="grpcServer">
+      <receive>
+        <stream-message/>
+        <message>
+          <body><data>{"id": 2}</data></body>
+        </message>
+      </receive>
+    </grpc>
+
+    <grpc server="grpcServer">
+      <receive>
+        <stream-completed/>
+      </receive>
+    </grpc>
+
+    <grpc server="grpcServer">
       <send>
         <response status="OK"/>
         <trailer name="x-trailer">42</trailer>

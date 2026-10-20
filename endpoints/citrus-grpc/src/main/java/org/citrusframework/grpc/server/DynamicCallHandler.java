@@ -18,6 +18,8 @@ package org.citrusframework.grpc.server;
 
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -106,6 +108,19 @@ public class DynamicCallHandler extends HandlerRegistry {
         return separator > 0 ? methodName.substring(0, separator) : null;
     }
 
+    private static String methodType(Descriptors.MethodDescriptor method) {
+        if (method.isClientStreaming() && method.isServerStreaming()) {
+            return GrpcMessageHeaders.METHOD_TYPE_BIDI_STREAMING;
+        }
+        if (method.isClientStreaming()) {
+            return GrpcMessageHeaders.METHOD_TYPE_CLIENT_STREAMING;
+        }
+        if (method.isServerStreaming()) {
+            return GrpcMessageHeaders.METHOD_TYPE_SERVER_STREAMING;
+        }
+        return GrpcMessageHeaders.METHOD_TYPE_UNARY;
+    }
+
     private static String fullMethodName(Descriptors.MethodDescriptor method) {
         return method.getService().getFullName() + "/" + method.getName();
     }
@@ -135,9 +150,7 @@ public class DynamicCallHandler extends HandlerRegistry {
         GrpcMessage callMessage = new GrpcMessage(codec.decode(request))
                 .kind(GrpcMessageHeaders.KIND_CALL)
                 .method(fullMethodName(method))
-                .methodType(method.isServerStreaming()
-                        ? GrpcMessageHeaders.METHOD_TYPE_SERVER_STREAMING
-                        : GrpcMessageHeaders.METHOD_TYPE_UNARY)
+                .methodType(methodType(method))
                 .callId(callId);
         GrpcMetadataMapper.fromMetadata(headers).forEach(callMessage::setHeader);
 
@@ -148,6 +161,44 @@ public class DynamicCallHandler extends HandlerRegistry {
         } else {
             closeInternal(active, "Citrus simulator: no endpoint adapter available");
         }
+    }
+
+    private void handleStreamMessage(ServerCallRegistry.ActiveCall active,
+                                     Descriptors.MethodDescriptor method,
+                                     DynamicMessage message,
+                                     int sequence) {
+        if (!testDriven) {
+            LOG.debug("Ignoring additional request message on gRPC call '{}' handled by an endpoint adapter",
+                    active.getCallId());
+            return;
+        }
+
+        GrpcMessage streamMessage = new GrpcMessage(codec.decode(message))
+                .kind(GrpcMessageHeaders.KIND_STREAM_MESSAGE)
+                .method(fullMethodName(method))
+                .methodType(methodType(method))
+                .callId(active.getCallId())
+                .streamSequence(sequence);
+
+        active.restartTimeout();
+        inboundQueue.send(streamMessage);
+    }
+
+    private void handleRequestCompleted(ServerCallRegistry.ActiveCall active, Descriptors.MethodDescriptor method) {
+        if (!testDriven) {
+            return;
+        }
+
+        GrpcMessage completed = new GrpcMessage("")
+                .kind(GrpcMessageHeaders.KIND_STREAM_END)
+                .method(fullMethodName(method))
+                .methodType(methodType(method))
+                .callId(active.getCallId())
+                .statusCode(Status.Code.OK.name())
+                .endOfStream(true);
+
+        active.restartTimeout();
+        inboundQueue.send(completed);
     }
 
     private void handleWithAdapter(ServerCallRegistry.ActiveCall active, GrpcMessage callMessage) {
@@ -225,11 +276,30 @@ public class DynamicCallHandler extends HandlerRegistry {
                                                              Metadata headers) {
             call.request(2);
             AtomicReference<ServerCallRegistry.ActiveCall> activeCall = new AtomicReference<>();
+            AtomicBoolean requestCompleted = new AtomicBoolean(false);
+            AtomicInteger sequence = new AtomicInteger();
 
             return new ServerCall.Listener<>() {
                 @Override
                 public void onMessage(DynamicMessage message) {
-                    handleCall(call, headers, method, message, activeCall);
+                    ServerCallRegistry.ActiveCall active = activeCall.get();
+                    if (active == null) {
+                        handleCall(call, headers, method, message, activeCall);
+                    } else if (!requestCompleted.get()) {
+                        handleStreamMessage(active, method, message, sequence.incrementAndGet());
+                    }
+
+                    if (method.isClientStreaming() && !requestCompleted.get()) {
+                        call.request(1);
+                    }
+                }
+
+                @Override
+                public void onHalfClose() {
+                    ServerCallRegistry.ActiveCall active = activeCall.get();
+                    if (active != null && requestCompleted.compareAndSet(false, true)) {
+                        handleRequestCompleted(active, method);
+                    }
                 }
 
                 @Override

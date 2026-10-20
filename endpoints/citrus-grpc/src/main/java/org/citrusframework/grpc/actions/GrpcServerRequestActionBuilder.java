@@ -44,6 +44,18 @@ public class GrpcServerRequestActionBuilder
     }
 
     @Override
+    public GrpcServerRequestActionBuilder streamMessage() {
+        message().header(GrpcMessageHeaders.KIND, GrpcMessageHeaders.KIND_STREAM_MESSAGE);
+        return this;
+    }
+
+    @Override
+    public GrpcServerRequestActionBuilder streamCompleted() {
+        message().header(GrpcMessageHeaders.KIND, GrpcMessageHeaders.KIND_STREAM_END);
+        return this;
+    }
+
+    @Override
     public GrpcServerRequestActionBuilderSupport getMessageBuilderSupport() {
         if (messageBuilderSupport == null) {
             messageBuilderSupport = new GrpcServerRequestActionBuilderSupport(this);
