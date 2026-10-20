@@ -27,13 +27,14 @@ import org.citrusframework.grpc.message.GrpcMessage;
  * Bounded queue holding the messages of a single gRPC call. Messages that arrive before the test
  * reads them are buffered here. When more than {@code maxBufferedMessages} messages arrive the call
  * is marked as overflowed so the next receive fails naming the bound instead of silently dropping
- * messages.
+ * messages. A {@code maxBufferedMessages} of {@code 0} or less disables the bound and buffers
+ * messages without a limit.
  *
  * @since 5.1
  */
 public class ClientCallQueue {
 
-    private final BlockingDeque<GrpcMessage> messages = new LinkedBlockingDeque<>();
+    private final BlockingDeque<GrpcMessage> messages;
     private final int maxBufferedMessages;
     private final String callId;
 
@@ -42,6 +43,9 @@ public class ClientCallQueue {
     public ClientCallQueue(String callId, int maxBufferedMessages) {
         this.callId = callId;
         this.maxBufferedMessages = maxBufferedMessages;
+        this.messages = maxBufferedMessages > 0
+                ? new LinkedBlockingDeque<>(maxBufferedMessages)
+                : new LinkedBlockingDeque<>();
     }
 
     /**
@@ -51,12 +55,17 @@ public class ClientCallQueue {
      * @return {@code false} when the bound was exceeded and the message was not buffered
      */
     public boolean offer(GrpcMessage message) {
-        if (messages.size() >= maxBufferedMessages) {
-            overflowed = true;
-            return false;
+        if (maxBufferedMessages <= 0) {
+            // no bound configured - buffer messages without a limit
+            return messages.offer(message);
         }
 
-        return messages.offer(message);
+        if (messages.offer(message)) {
+            return true;
+        }
+
+        overflowed = true;
+        return false;
     }
 
     /**

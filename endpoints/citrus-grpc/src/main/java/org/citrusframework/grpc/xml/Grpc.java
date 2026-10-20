@@ -267,8 +267,8 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         if (element.timeout != null) {
             receive.setTimeout(element.timeout);
         }
-        if (element.selector != null) {
-            receive.setSelect(element.selector);
+        if (element.select != null) {
+            receive.setSelect(element.select);
         }
         receive.setValidator(element.validator);
         receive.setValidators(element.validators);
@@ -379,7 +379,7 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected Integer timeout;
 
         @XmlAttribute
-        protected String selector;
+        protected String select;
 
         @XmlAttribute
         protected String validator;

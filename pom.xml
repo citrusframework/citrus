@@ -224,6 +224,8 @@
     <groovy.version>3.0.25</groovy.version>
     <greenmail.version>2.1.14</greenmail.version>
     <grpc.version>1.84.0</grpc.version>
+    <!-- use the jre flavour of guava - the android flavour does not contain the full api -->
+    <guava.version>33.7.1-jre</guava.version>
     <hamcrest.version>3.0</hamcrest.version>
     <httpclient.version>5.6.4</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
@@ -260,6 +262,10 @@
     <k8s.client.version>7.9.0</k8s.client.version>
     <kafka.version>4.4.0</kafka.version>
     <knative-client.version>7.9.0</knative-client.version>
+    <!--
+      Kotlin runtime used by the Square Wire schema parser. Newer than the version shipped with
+      Wire itself but binary compatible - kotlin-reflect is required by Wire's schema encoder.
+    -->
     <kotlin.version>2.3.20</kotlin.version>
     <log4j2.version>2.25.5</log4j2.version>
     <mockito.version>5.24.0</mockito.version>
@@ -269,6 +275,11 @@
     <org.openapitools.version>7.26.0</org.openapitools.version>
     <picoli-version>4.7.7</picoli-version>
     <postgresql.version>42.7.14</postgresql.version>
+    <!--
+      Protobuf 4.x is required by the Square Wire schema parser used by the gRPC endpoint module.
+      gRPC itself is still built against protobuf 3.x - the version below intentionally overrides
+      the transitive protobuf version of io.grpc:grpc-protobuf for the whole build.
+    -->
     <protobuf.version>4.36.2</protobuf.version>
     <quarkus.platform.version>3.40.1</quarkus.platform.version>
     <quarkus.mcp-server.version>2.0.2</quarkus.mcp-server.version>
@@ -328,6 +339,15 @@
         <groupId>com.google.protobuf</groupId>
         <artifactId>protobuf-java</artifactId>
         <version>${protobuf.version}</version>
+      </dependency>
+      <!--
+        Guava is pulled in by io.grpc:grpc-netty-shaded (android flavour) and by Wire (jre flavour).
+        The jre flavour is managed explicitly so that a single and complete flavour is used.
+      -->
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.protobuf</groupId>

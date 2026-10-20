@@ -1,7 +1,7 @@
 {
   "action": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "action",
     "title": "Action",
     "description": "Generic test action.",
@@ -24,7 +24,7 @@
   },
   "agent": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "agent",
     "module": "citrus-agent-connector",
     "title": "Agent",
@@ -42,7 +42,7 @@
   },
   "agent-connect": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "agent-connect",
     "group": "agent",
     "module": "citrus-agent-connector",
@@ -64,7 +64,7 @@
   },
   "agent-run": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "agent-run",
     "group": "agent",
     "module": "citrus-agent-connector",
@@ -103,7 +103,7 @@
   },
   "ant": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "ant",
     "title": "Ant",
     "description": "Ant run test action.",
@@ -175,7 +175,7 @@
   },
   "applyTemplate": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "applyTemplate",
     "title": "ApplyTemplate",
     "description": "Apply template test action.",
@@ -228,7 +228,7 @@
   },
   "camel": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel",
     "module": "citrus-camel",
     "title": "Camel",
@@ -258,7 +258,7 @@
   },
   "camel-cli": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli",
     "group": "camel",
     "module": "citrus-camel",
@@ -283,7 +283,7 @@
   },
   "camel-cli-cmd": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-cmd",
     "group": "camel-cli",
     "title": "Cmd",
@@ -295,7 +295,7 @@
   },
   "camel-cli-cmd-receive": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-cmd-receive",
     "group": "camel-cli-cmd",
     "title": "Receive",
@@ -397,7 +397,7 @@
   },
   "camel-cli-cmd-send": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-cmd-send",
     "group": "camel-cli-cmd",
     "title": "Send",
@@ -485,7 +485,7 @@
   },
   "camel-cli-custom": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-custom",
     "group": "camel-cli",
     "title": "Custom",
@@ -666,7 +666,7 @@
   },
   "camel-cli-kubernetes": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-kubernetes",
     "group": "camel-cli",
     "title": "Kubernetes",
@@ -678,7 +678,7 @@
   },
   "camel-cli-kubernetes-delete": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-kubernetes-delete",
     "group": "camel-cli-kubernetes",
     "title": "Delete",
@@ -728,7 +728,7 @@
   },
   "camel-cli-kubernetes-run": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-kubernetes-run",
     "group": "camel-cli-kubernetes",
     "title": "Run",
@@ -859,7 +859,7 @@
   },
   "camel-cli-kubernetes-verify": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-kubernetes-verify",
     "group": "camel-cli-kubernetes",
     "title": "Verify",
@@ -926,7 +926,7 @@
   },
   "camel-cli-plugin": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-plugin",
     "group": "camel-cli",
     "title": "Plugin",
@@ -938,7 +938,7 @@
   },
   "camel-cli-plugin-add": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-plugin-add",
     "group": "camel-cli-plugin",
     "title": "Add",
@@ -979,7 +979,7 @@
   },
   "camel-cli-plugin-delete": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-plugin-delete",
     "group": "camel-cli-plugin",
     "title": "Delete",
@@ -1001,7 +1001,7 @@
   },
   "camel-cli-run": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-run",
     "group": "camel-cli",
     "title": "Run",
@@ -1177,7 +1177,7 @@
   },
   "camel-cli-stop": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-stop",
     "group": "camel-cli",
     "title": "Stop",
@@ -1196,7 +1196,7 @@
   },
   "camel-cli-verify": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-cli-verify",
     "group": "camel-cli",
     "title": "Verify",
@@ -1254,7 +1254,7 @@
   },
   "camel-controlBus": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-controlBus",
     "group": "camel",
     "module": "citrus-camel",
@@ -1313,7 +1313,7 @@
   },
   "camel-createComponent": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-createComponent",
     "group": "camel",
     "module": "citrus-camel",
@@ -1343,7 +1343,7 @@
   },
   "camel-createContext": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-createContext",
     "group": "camel",
     "module": "citrus-camel",
@@ -1369,7 +1369,7 @@
   },
   "camel-createRoutes": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-createRoutes",
     "group": "camel",
     "module": "citrus-camel",
@@ -1406,7 +1406,7 @@
   },
   "camel-infra": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-infra",
     "group": "camel",
     "module": "citrus-camel",
@@ -1419,7 +1419,7 @@
   },
   "camel-infra-run": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-infra-run",
     "group": "camel-infra",
     "title": "Run",
@@ -1550,7 +1550,7 @@
   },
   "camel-infra-stop": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-infra-stop",
     "group": "camel-infra",
     "title": "Stop",
@@ -1574,7 +1574,7 @@
   },
   "camel-jbang": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-jbang",
     "group": "camel",
     "module": "citrus-camel",
@@ -1599,7 +1599,7 @@
   },
   "camel-removeRoutes": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-removeRoutes",
     "group": "camel",
     "module": "citrus-camel",
@@ -1624,7 +1624,7 @@
   },
   "camel-resetRouteStats": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-resetRouteStats",
     "group": "camel",
     "module": "citrus-camel",
@@ -1644,7 +1644,7 @@
   },
   "camel-startContext": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-startContext",
     "group": "camel",
     "module": "citrus-camel",
@@ -1664,7 +1664,7 @@
   },
   "camel-startRoutes": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-startRoutes",
     "group": "camel",
     "module": "citrus-camel",
@@ -1689,7 +1689,7 @@
   },
   "camel-stopContext": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-stopContext",
     "group": "camel",
     "module": "citrus-camel",
@@ -1719,7 +1719,7 @@
   },
   "camel-stopRoutes": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-stopRoutes",
     "group": "camel",
     "module": "citrus-camel",
@@ -1744,7 +1744,7 @@
   },
   "camel-verifyRoute": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-verifyRoute",
     "group": "camel",
     "module": "citrus-camel",
@@ -1769,7 +1769,7 @@
   },
   "camel-verifyRouteStats": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-verifyRouteStats",
     "group": "camel",
     "module": "citrus-camel",
@@ -1804,7 +1804,7 @@
   },
   "createEndpoint": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "createEndpoint",
     "title": "CreateEndpoint",
     "description": "Create endpoints test action.",
@@ -6532,7 +6532,7 @@
   },
   "createVariables": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "createVariables",
     "title": "CreateVariables",
     "description": "Create variables test action.",
@@ -6605,7 +6605,7 @@
   },
   "delay": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "delay",
     "title": "Delay",
     "description": "Delay test action.",
@@ -6634,7 +6634,7 @@
   },
   "echo": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "echo",
     "title": "Echo",
     "description": "Echo test action.",
@@ -6661,7 +6661,7 @@
   },
   "expectTimeout": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "expectTimeout",
     "title": "ExpectTimeout",
     "description": "Expect timeout test action.",
@@ -6736,7 +6736,7 @@
   },
   "fail": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "fail",
     "title": "Fail",
     "description": "Fail test action.",
@@ -6760,7 +6760,7 @@
   },
   "graphql": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "graphql",
     "module": "citrus-graphql",
     "title": "Graphql",
@@ -6795,7 +6795,7 @@
   },
   "graphql-receiveRequest": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "graphql-receiveRequest",
     "group": "graphql",
     "module": "citrus-graphql",
@@ -7458,7 +7458,7 @@
   },
   "graphql-receiveResponse": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "graphql-receiveResponse",
     "group": "graphql",
     "module": "citrus-graphql",
@@ -8140,7 +8140,7 @@
   },
   "graphql-sendRequest": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "graphql-sendRequest",
     "group": "graphql",
     "module": "citrus-graphql",
@@ -8586,7 +8586,7 @@
   },
   "graphql-sendResponse": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "graphql-sendResponse",
     "group": "graphql",
     "module": "citrus-graphql",
@@ -9006,7 +9006,7 @@
   },
   "groovy": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "groovy",
     "module": "citrus-groovy",
     "title": "Groovy",
@@ -9117,7 +9117,7 @@
   },
   "grpc": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "grpc",
     "module": "citrus-grpc",
     "title": "Grpc",
@@ -9152,7 +9152,7 @@
   },
   "grpc-cancel": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "grpc-cancel",
     "group": "grpc",
     "module": "citrus-grpc",
@@ -9165,7 +9165,7 @@
   },
   "grpc-receive": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "grpc-receive",
     "group": "grpc",
     "module": "citrus-grpc",
@@ -9590,9 +9590,9 @@
           "title": "Response",
           "description": "Expects a unary response with an optional status code."
         },
-        "selector": {
+        "select": {
           "type": "string",
-          "title": "Selector",
+          "title": "Select",
           "description": "Message selector expression."
         },
         "statusDescription": {
@@ -9665,7 +9665,7 @@
   },
   "grpc-send": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "grpc-send",
     "group": "grpc",
     "module": "citrus-grpc",
@@ -10146,7 +10146,7 @@
   },
   "http": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "http",
     "module": "citrus-http",
     "title": "Http",
@@ -10181,7 +10181,7 @@
   },
   "http-receiveRequest": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "http-receiveRequest",
     "group": "http",
     "module": "citrus-http",
@@ -13380,7 +13380,7 @@
   },
   "http-receiveResponse": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "http-receiveResponse",
     "group": "http",
     "module": "citrus-http",
@@ -14009,7 +14009,7 @@
   },
   "http-sendRequest": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "http-sendRequest",
     "group": "http",
     "module": "citrus-http",
@@ -16988,7 +16988,7 @@
   },
   "http-sendResponse": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "http-sendResponse",
     "group": "http",
     "module": "citrus-http",
@@ -17386,7 +17386,7 @@
   },
   "jbang": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "jbang",
     "module": "citrus-jbang-connector",
     "title": "Jbang",
@@ -17484,7 +17484,7 @@
   },
   "knative": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative",
     "module": "citrus-knative",
     "title": "Knative",
@@ -17534,7 +17534,7 @@
   },
   "knative-createBroker": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-createBroker",
     "group": "knative",
     "module": "citrus-knative",
@@ -17552,7 +17552,7 @@
   },
   "knative-createChannel": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-createChannel",
     "group": "knative",
     "module": "citrus-knative",
@@ -17570,7 +17570,7 @@
   },
   "knative-createSubscription": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-createSubscription",
     "group": "knative",
     "module": "citrus-knative",
@@ -17596,7 +17596,7 @@
   },
   "knative-createTrigger": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-createTrigger",
     "group": "knative",
     "module": "citrus-knative",
@@ -17652,7 +17652,7 @@
   },
   "knative-deleteBroker": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-deleteBroker",
     "group": "knative",
     "module": "citrus-knative",
@@ -17670,7 +17670,7 @@
   },
   "knative-deleteChannel": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-deleteChannel",
     "group": "knative",
     "module": "citrus-knative",
@@ -17688,7 +17688,7 @@
   },
   "knative-deleteResource": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-deleteResource",
     "group": "knative",
     "module": "citrus-knative",
@@ -17714,7 +17714,7 @@
   },
   "knative-deleteSubscription": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-deleteSubscription",
     "group": "knative",
     "module": "citrus-knative",
@@ -17732,7 +17732,7 @@
   },
   "knative-deleteTrigger": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-deleteTrigger",
     "group": "knative",
     "module": "citrus-knative",
@@ -17750,7 +17750,7 @@
   },
   "knative-receiveEvent": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-receiveEvent",
     "group": "knative",
     "module": "citrus-knative",
@@ -17807,7 +17807,7 @@
   },
   "knative-sendEvent": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-sendEvent",
     "group": "knative",
     "module": "citrus-knative",
@@ -17864,7 +17864,7 @@
   },
   "knative-verifyBroker": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "knative-verifyBroker",
     "group": "knative",
     "module": "citrus-knative",
@@ -17890,7 +17890,7 @@
   },
   "kubernetes": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes",
     "module": "citrus-kubernetes",
     "title": "Kubernetes",
@@ -17927,7 +17927,7 @@
   },
   "kubernetes-agent": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-agent",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -17998,7 +17998,7 @@
   },
   "kubernetes-connect": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-connect",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18040,7 +18040,7 @@
   },
   "kubernetes-connectService": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-connectService",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18074,7 +18074,7 @@
   },
   "kubernetes-createAnnotations": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-createAnnotations",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18115,7 +18115,7 @@
   },
   "kubernetes-createConfigMap": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-createConfigMap",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18156,7 +18156,7 @@
   },
   "kubernetes-createCustomResource": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-createCustomResource",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18233,7 +18233,7 @@
   },
   "kubernetes-createLabels": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-createLabels",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18274,7 +18274,7 @@
   },
   "kubernetes-createResource": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-createResource",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18331,7 +18331,7 @@
   },
   "kubernetes-createSecret": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-createSecret",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18372,7 +18372,7 @@
   },
   "kubernetes-createService": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-createService",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18448,7 +18448,7 @@
   },
   "kubernetes-deleteConfigMap": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-deleteConfigMap",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18466,7 +18466,7 @@
   },
   "kubernetes-deleteCustomResource": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-deleteCustomResource",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18504,7 +18504,7 @@
   },
   "kubernetes-deleteResource": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-deleteResource",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18561,7 +18561,7 @@
   },
   "kubernetes-deleteSecret": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-deleteSecret",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18579,7 +18579,7 @@
   },
   "kubernetes-deleteService": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-deleteService",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18597,7 +18597,7 @@
   },
   "kubernetes-disconnect": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-disconnect",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18622,7 +18622,7 @@
   },
   "kubernetes-disconnectService": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-disconnectService",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18644,7 +18644,7 @@
   },
   "kubernetes-verifyCustomResource": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-verifyCustomResource",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18698,7 +18698,7 @@
   },
   "kubernetes-verifyPod": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-verifyPod",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18759,7 +18759,7 @@
   },
   "kubernetes-watchPodLogs": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-watchPodLogs",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -18804,7 +18804,7 @@
   },
   "load": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "load",
     "title": "Load",
     "description": "Load properties test action.",
@@ -18836,7 +18836,7 @@
   },
   "openapi": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "openapi",
     "module": "citrus-openapi",
     "title": "Openapi",
@@ -18879,7 +18879,7 @@
   },
   "openapi-receiveRequest": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "openapi-receiveRequest",
     "group": "openapi",
     "module": "citrus-openapi",
@@ -19163,7 +19163,7 @@
   },
   "openapi-receiveResponse": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "openapi-receiveResponse",
     "group": "openapi",
     "module": "citrus-openapi",
@@ -19342,7 +19342,7 @@
   },
   "openapi-sendRequest": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "openapi-sendRequest",
     "group": "openapi",
     "module": "citrus-openapi",
@@ -19462,7 +19462,7 @@
   },
   "openapi-sendResponse": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "openapi-sendResponse",
     "group": "openapi",
     "module": "citrus-openapi",
@@ -19575,7 +19575,7 @@
   },
   "plsql": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "plsql",
     "module": "citrus-sql",
     "title": "Plsql",
@@ -19648,7 +19648,7 @@
   },
   "print": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "print",
     "title": "Print",
     "description": "Print test action.",
@@ -19675,7 +19675,7 @@
   },
   "purge": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "purge",
     "title": "Purge",
     "description": "Purge test action.",
@@ -19774,7 +19774,7 @@
   },
   "purgeQueues": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "purgeQueues",
     "module": "citrus-jms",
     "title": "PurgeQueues",
@@ -19833,7 +19833,7 @@
   },
   "receive": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "receive",
     "title": "Receive",
     "description": "Receive message test action.",
@@ -20884,7 +20884,7 @@
   },
   "selenium": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium",
     "module": "citrus-selenium",
     "title": "Selenium",
@@ -20914,7 +20914,7 @@
   },
   "selenium-alert": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-alert",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -20940,7 +20940,7 @@
   },
   "selenium-checkInput": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-checkInput",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21012,7 +21012,7 @@
   },
   "selenium-clearCache": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-clearCache",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21024,7 +21024,7 @@
   },
   "selenium-click": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-click",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21092,7 +21092,7 @@
   },
   "selenium-closeWindow": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-closeWindow",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21114,7 +21114,7 @@
   },
   "selenium-cookies": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-cookies",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21172,7 +21172,7 @@
   },
   "selenium-doubleClick": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-doubleClick",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21240,7 +21240,7 @@
   },
   "selenium-dragAndDrop": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-dragAndDrop",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21362,7 +21362,7 @@
   },
   "selenium-dropdownSelect": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-dropdownSelect",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21458,7 +21458,7 @@
   },
   "selenium-extract": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-extract",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21542,7 +21542,7 @@
   },
   "selenium-fillForm": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-fillForm",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21583,7 +21583,7 @@
   },
   "selenium-find": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-find",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21712,7 +21712,7 @@
   },
   "selenium-focusWindow": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-focusWindow",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21734,7 +21734,7 @@
   },
   "selenium-frame": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-frame",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21818,7 +21818,7 @@
   },
   "selenium-getStoredFile": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-getStoredFile",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21836,7 +21836,7 @@
   },
   "selenium-hover": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-hover",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21904,7 +21904,7 @@
   },
   "selenium-javaScript": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-javaScript",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21948,7 +21948,7 @@
   },
   "selenium-navigate": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-navigate",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21966,7 +21966,7 @@
   },
   "selenium-openWindow": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-openWindow",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -21988,7 +21988,7 @@
   },
   "selenium-page": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-page",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22034,7 +22034,7 @@
   },
   "selenium-press": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-press",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22106,7 +22106,7 @@
   },
   "selenium-rightClick": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-rightClick",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22174,7 +22174,7 @@
   },
   "selenium-screenshot": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-screenshot",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22192,7 +22192,7 @@
   },
   "selenium-setInput": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-setInput",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22264,7 +22264,7 @@
   },
   "selenium-start": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-start",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22287,7 +22287,7 @@
   },
   "selenium-stop": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-stop",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22306,7 +22306,7 @@
   },
   "selenium-storeFile": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-storeFile",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22324,7 +22324,7 @@
   },
   "selenium-switchWindow": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-switchWindow",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22346,7 +22346,7 @@
   },
   "selenium-verify": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-verify",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22430,7 +22430,7 @@
   },
   "selenium-waitUntil": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-waitUntil",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -22514,7 +22514,7 @@
   },
   "send": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "send",
     "title": "Send",
     "description": "Send message test action.",
@@ -23286,7 +23286,7 @@
   },
   "sleep": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "sleep",
     "title": "Sleep",
     "description": "Sleep test action.",
@@ -23315,7 +23315,7 @@
   },
   "soap": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "soap",
     "module": "citrus-ws",
     "title": "Soap",
@@ -23350,7 +23350,7 @@
   },
   "soap-receiveRequest": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "soap-receiveRequest",
     "group": "soap",
     "module": "citrus-ws",
@@ -23887,7 +23887,7 @@
   },
   "soap-receiveResponse": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "soap-receiveResponse",
     "group": "soap",
     "module": "citrus-ws",
@@ -24566,7 +24566,7 @@
   },
   "soap-sendFault": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "soap-sendFault",
     "group": "soap",
     "module": "citrus-ws",
@@ -25049,7 +25049,7 @@
   },
   "soap-sendRequest": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "soap-sendRequest",
     "group": "soap",
     "module": "citrus-ws",
@@ -25513,7 +25513,7 @@
   },
   "soap-sendResponse": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "soap-sendResponse",
     "group": "soap",
     "module": "citrus-ws",
@@ -25955,7 +25955,7 @@
   },
   "sql": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "sql",
     "module": "citrus-sql",
     "title": "Sql",
@@ -26093,7 +26093,7 @@
   },
   "start": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "start",
     "title": "Start",
     "description": "Start server test action.",
@@ -26126,7 +26126,7 @@
   },
   "stop": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "stop",
     "title": "Stop",
     "description": "Stop server test action.",
@@ -26160,7 +26160,7 @@
   },
   "stopTime": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "stopTime",
     "title": "StopTime",
     "description": "Stop time test action.",
@@ -26189,7 +26189,7 @@
   },
   "stopTimer": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "stopTimer",
     "title": "StopTimer",
     "description": "Stop timer test action.",
@@ -26216,7 +26216,7 @@
   },
   "testcontainers": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers",
     "module": "citrus-testcontainers",
     "title": "Testcontainers",
@@ -26241,7 +26241,7 @@
   },
   "testcontainers-compose": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-compose",
     "group": "testcontainers",
     "module": "citrus-testcontainers",
@@ -26253,7 +26253,7 @@
   },
   "testcontainers-compose-down": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-compose-down",
     "group": "testcontainers-compose",
     "title": "Down",
@@ -26273,7 +26273,7 @@
   },
   "testcontainers-compose-up": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-compose-up",
     "group": "testcontainers-compose",
     "title": "Up",
@@ -26340,7 +26340,7 @@
   },
   "testcontainers-start": {
     "kind": "testActionGroup",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-start",
     "group": "testcontainers",
     "module": "citrus-testcontainers",
@@ -26352,7 +26352,7 @@
   },
   "testcontainers-start-container": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-start-container",
     "group": "testcontainers-start",
     "title": "Container",
@@ -26481,7 +26481,7 @@
   },
   "testcontainers-start-floci": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-start-floci",
     "group": "testcontainers-start",
     "title": "Floci",
@@ -26652,7 +26652,7 @@
   },
   "testcontainers-start-kafka": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-start-kafka",
     "group": "testcontainers-start",
     "title": "Kafka",
@@ -26801,7 +26801,7 @@
   },
   "testcontainers-start-localstack": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-start-localstack",
     "group": "testcontainers-start",
     "title": "Localstack",
@@ -26978,7 +26978,7 @@
   },
   "testcontainers-start-mongodb": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-start-mongodb",
     "group": "testcontainers-start",
     "title": "Mongodb",
@@ -27111,7 +27111,7 @@
   },
   "testcontainers-start-postgresql": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-start-postgresql",
     "group": "testcontainers-start",
     "title": "Postgresql",
@@ -27275,7 +27275,7 @@
   },
   "testcontainers-start-redpanda": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-start-redpanda",
     "group": "testcontainers-start",
     "title": "Redpanda",
@@ -27428,7 +27428,7 @@
   },
   "testcontainers-stop": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "testcontainers-stop",
     "group": "testcontainers",
     "module": "citrus-testcontainers",
@@ -27446,7 +27446,7 @@
   },
   "trace": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "trace",
     "title": "Trace",
     "description": "Trace variables test action.",
@@ -27484,7 +27484,7 @@
   },
   "transform": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "transform",
     "title": "Transform",
     "description": "Transform test action.",
@@ -27564,7 +27564,7 @@
   },
   "waitFor": {
     "kind": "testAction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "waitFor",
     "title": "WaitFor",
     "description": "Wait for test action.",

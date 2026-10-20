@@ -128,6 +128,42 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
     }
 
     @CitrusTest
+    public void shouldRestartSimulatorAfterStop() throws Exception {
+        GrpcServer restartable = startSimulator(5000L, "helloworld.Greeter");
+        ManagedChannel restartChannel = ManagedChannelBuilder
+                .forAddress("localhost", restartable.getEndpointConfiguration().getPort())
+                .usePlaintext().build();
+
+        try {
+            GreeterGrpc.GreeterBlockingStub restartGreeter = GreeterGrpc.newBlockingStub(restartChannel);
+
+            restartable.stop();
+            assertThat(restartable.isRunning()).isFalse();
+
+            restartable.start();
+            assertThat(restartable.isRunning()).isTrue();
+
+            CompletableFuture<HelloReply> call = async(() -> restartGreeter.sayHello(
+                    HelloRequest.newBuilder().setName("Ada").build()));
+
+            when(grpc().server(restartable).receive()
+                    .call("helloworld.Greeter/SayHello")
+                    .message()
+                    .body("{ \"name\": \"Ada\", \"userId\": 0 }"));
+
+            then(grpc().server(restartable).send()
+                    .response()
+                    .message()
+                    .body("{ \"message\": \"Hello Ada\" }"));
+
+            assertThat(call.get(5, TimeUnit.SECONDS).getMessage()).isEqualTo("Hello Ada");
+        } finally {
+            restartChannel.shutdownNow();
+            restartable.stop();
+        }
+    }
+
+    @CitrusTest
     public void shouldAnswerWithErrorStatusAndTrailers() throws Exception {
         CompletableFuture<UserInfo> call = async(() -> greeter.getUser(
                 GetUserRequest.newBuilder().setId("unknown").build()));

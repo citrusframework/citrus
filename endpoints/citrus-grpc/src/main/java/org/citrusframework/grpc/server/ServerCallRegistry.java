@@ -64,6 +64,10 @@ public class ServerCallRegistry {
         calls.remove(callId);
     }
 
+    public void clear() {
+        calls.clear();
+    }
+
     public List<ActiveCall> getCalls() {
         return new ArrayList<>(calls.values());
     }

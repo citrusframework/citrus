@@ -3814,7 +3814,6 @@
               <xs:element name="stream-completed" type="tns:GrpcStatus"/>
               <xs:element name="status-description" type="xs:string"/>
               <xs:element name="trailer" type="tns:GrpcMetadata"/>
-              <xs:element name="selector" type="xs:string"/>
               <xs:element name="message" type="tns:MessageType"/>
               <xs:element name="validate" type="tns:Validate"/>
               <xs:element name="extract" type="tns:Extract"/>

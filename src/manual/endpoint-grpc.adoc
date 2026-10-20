@@ -182,7 +182,7 @@ when(grpc().client(greeterClient).send()
         .body("{ \\"id\\": \\"unknown\\" }"));
 
 then(grpc().client(greeterClient).receive()
-        .response(Status.Code.NOT_FOUND)
+        .response("NOT_FOUND")
         .statusDescription("@contains('unknown')@")
         .trailer("x-request-id", "@notEmpty()@"));
 ----
@@ -204,7 +204,8 @@ then(grpc().client(greeterClient).receive()
 
 For server-streaming methods every `streamMessage()` receive returns the next message in arrival
 order, including its 0-based sequence number. Messages that arrive before the test receives them are
-buffered (at most `maxBufferedMessages`, default 10000; beyond that the call is cancelled).
+buffered (at most `maxBufferedMessages`, default 10000; beyond that the call is cancelled and the
+receive fails naming the bound).
 `streamCompleted()` waits for the end of the stream and checks its status.
 
 .Java
@@ -355,7 +356,7 @@ Error status with description and trailers:
 [source,java,indent=0,role="secondary"]
 ----
 then(grpc().server(greeterServer).send()
-        .response(Status.Code.NOT_FOUND)
+        .response("NOT_FOUND")
         .statusDescription("unknown user")
         .trailer("x-request-id", "42"));
 ----
@@ -435,7 +436,8 @@ Citrus receive timeout is independent of the gRPC deadline and raises the usual 
 no message arrives.
 
 For TLS the client trusts a configured certificate; the simulator serves a certificate chain and
-private key:
+private key. Without a configured trust certificate the client falls back to the JVM default
+trust store:
 
 .Java
 [source,java,indent=0,role="secondary"]

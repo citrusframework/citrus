@@ -110,7 +110,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
         registerCleanup(context);
 
         call.start(new ClientCallListener(queue, method, codec()), GrpcMetadataMapper.toMetadata(grpcMessage.getHeaders()));
-        call.request(Integer.MAX_VALUE);
+        call.request(requestWindowSize());
         call.sendMessage(request);
 
         if (!method.isClientStreaming()) {
@@ -120,6 +120,24 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
         context.getVariables().put(GrpcMessageHeaders.CALL_ID, callId);
         context.getVariables().put(correlationKeyName(), callId);
         context.getVariables().put(GrpcMessageHeaders.callIdVariableName(getName()), callId);
+    }
+
+    /**
+     * Calculates the number of messages to request from the server. The window is limited to the
+     * configured buffer bound so that a server streaming a large response cannot flood the client
+     * with messages that are not buffered by the client at all. One additional message is requested
+     * in order to detect that the bound was exceeded.
+     *
+     * @return the number of messages to request
+     */
+    private int requestWindowSize() {
+        int maxBufferedMessages = getEndpointConfiguration().getMaxBufferedMessages();
+        if (maxBufferedMessages <= 0) {
+            // no bound configured - request messages without a limit
+            return Integer.MAX_VALUE;
+        }
+
+        return maxBufferedMessages + 1;
     }
 
     @Override
@@ -155,6 +173,13 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
         GrpcMessage message = queue.poll(timeout);
 
         if (message == null) {
+            if (queue.isOverflowed()) {
+                // the bound was exceeded while the test was waiting for the message
+                calls.cancel(callId);
+                throw new CitrusRuntimeException("gRPC call '%s' exceeded the maximum of %d buffered messages"
+                        .formatted(callId, queue.getMaxBufferedMessages()));
+            }
+
             throw new MessageTimeoutException(timeout, getName());
         }
 

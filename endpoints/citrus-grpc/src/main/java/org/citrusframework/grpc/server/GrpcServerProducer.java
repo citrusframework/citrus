@@ -69,7 +69,8 @@ public class GrpcServerProducer implements Producer {
 
         ServerCallRegistry.ActiveCall call = calls.get(callId);
         if (call == null) {
-            throw new CitrusRuntimeException(String.format("Unknown gRPC call '%s'", callId));
+            throw new CitrusRuntimeException(String.format(
+                    "Unknown gRPC call '%s' - the call may have been cancelled by the client or already completed", callId));
         }
 
         if (call.isCancelled()) {

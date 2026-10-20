@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.citrusframework.validation.context.DefaultValidationContext;
+import org.citrusframework.validation.context.ValidationContext;
 
 /**
  * Validation context holding the expected gRPC status of a call: the status code (default {@code OK}),
@@ -65,7 +66,7 @@ public class GrpcStatusValidationContext extends DefaultValidationContext {
     /**
      * Fluent builder for a status validation context.
      */
-    public static class Builder {
+    public static final class Builder implements ValidationContext.Builder<GrpcStatusValidationContext, Builder> {
 
         private final GrpcStatusValidationContext context = new GrpcStatusValidationContext();
 

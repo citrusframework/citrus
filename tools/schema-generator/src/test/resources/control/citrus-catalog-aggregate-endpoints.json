@@ -1,7 +1,7 @@
 {
   "kubernetes-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kubernetes-client",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
@@ -79,7 +79,7 @@
   },
   "context-messageStore": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "context-messageStore",
     "group": "context",
     "module": "citrus-base",
@@ -108,7 +108,7 @@
   },
   "kafka-synchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kafka-synchronous",
     "group": "kafka",
     "module": "citrus-kafka",
@@ -237,7 +237,7 @@
   },
   "jmx-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "jmx-server",
     "group": "jmx",
     "module": "citrus-jmx",
@@ -365,7 +365,7 @@
   },
   "scp-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "scp-server",
     "group": "scp",
     "module": "citrus-ftp",
@@ -496,7 +496,7 @@
   },
   "direct-synchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "direct-synchronous",
     "group": "direct",
     "module": "citrus-base",
@@ -541,7 +541,7 @@
   },
   "docker-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "docker-client",
     "group": "docker",
     "module": "citrus-docker",
@@ -611,7 +611,7 @@
   },
   "grpc-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "grpc-server",
     "group": "grpc",
     "module": "citrus-grpc",
@@ -711,7 +711,7 @@
   },
   "kafka-asynchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "kafka-asynchronous",
     "group": "kafka",
     "module": "citrus-kafka",
@@ -840,7 +840,7 @@
   },
   "jmx-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "jmx-client",
     "group": "jmx",
     "module": "citrus-jmx",
@@ -909,7 +909,7 @@
   },
   "rmi-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "rmi-client",
     "group": "rmi",
     "module": "citrus-rmi",
@@ -973,7 +973,7 @@
   },
   "k8s-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "k8s-client",
     "group": "k8s",
     "module": "citrus-kubernetes",
@@ -1051,7 +1051,7 @@
   },
   "mail-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "mail-client",
     "group": "mail",
     "module": "citrus-mail",
@@ -1120,7 +1120,7 @@
   },
   "http-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "http-client",
     "group": "http",
     "module": "citrus-http",
@@ -1291,7 +1291,7 @@
   },
   "ssh-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "ssh-client",
     "group": "ssh",
     "module": "citrus-ssh",
@@ -1380,7 +1380,7 @@
   },
   "websocket-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "websocket-client",
     "group": "websocket",
     "module": "citrus-websocket",
@@ -1434,7 +1434,7 @@
   },
   "channel-asynchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "channel-asynchronous",
     "group": "channel",
     "module": "citrus-spring-integration",
@@ -1494,7 +1494,7 @@
   },
   "graphql-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "graphql-client",
     "group": "graphql",
     "module": "citrus-graphql",
@@ -1685,7 +1685,7 @@
   },
   "soap-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "soap-server",
     "group": "soap",
     "module": "citrus-ws",
@@ -1858,7 +1858,7 @@
   },
   "channel-synchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "channel-synchronous",
     "group": "channel",
     "module": "citrus-spring-integration",
@@ -1930,7 +1930,7 @@
   },
   "sftp-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "sftp-server",
     "group": "sftp",
     "module": "citrus-ftp",
@@ -2061,7 +2061,7 @@
   },
   "ftp-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "ftp-server",
     "group": "ftp",
     "module": "citrus-ftp",
@@ -2191,7 +2191,7 @@
   },
   "camel-inOut": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-inOut",
     "group": "camel",
     "module": "citrus-camel",
@@ -2242,7 +2242,7 @@
   },
   "vertx-asynchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "vertx-asynchronous",
     "group": "vertx",
     "module": "citrus-vertx",
@@ -2304,7 +2304,7 @@
   },
   "ftp-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "ftp-client",
     "group": "ftp",
     "module": "citrus-ftp",
@@ -2377,7 +2377,7 @@
   },
   "camel-asynchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-asynchronous",
     "group": "camel",
     "module": "citrus-camel",
@@ -2417,7 +2417,7 @@
   },
   "scp-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "scp-client",
     "group": "scp",
     "module": "citrus-ftp",
@@ -2515,7 +2515,7 @@
   },
   "rmi-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "rmi-server",
     "group": "rmi",
     "module": "citrus-rmi",
@@ -2614,7 +2614,7 @@
   },
   "vertx-synchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "vertx-synchronous",
     "group": "vertx",
     "module": "citrus-vertx",
@@ -2682,7 +2682,7 @@
   },
   "jms-synchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "jms-synchronous",
     "group": "jms",
     "module": "citrus-jms",
@@ -2775,7 +2775,7 @@
   },
   "camel-inOnly": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-inOnly",
     "group": "camel",
     "module": "citrus-camel",
@@ -2815,7 +2815,7 @@
   },
   "direct-asynchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "direct-asynchronous",
     "group": "direct",
     "module": "citrus-base",
@@ -2849,7 +2849,7 @@
   },
   "graphql-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "graphql-server",
     "group": "graphql",
     "module": "citrus-graphql",
@@ -3163,7 +3163,7 @@
   },
   "grpc-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "grpc-client",
     "group": "grpc",
     "module": "citrus-grpc",
@@ -3248,7 +3248,7 @@
   },
   "camel-synchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "camel-synchronous",
     "group": "camel",
     "module": "citrus-camel",
@@ -3299,7 +3299,7 @@
   },
   "soap-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "soap-client",
     "group": "soap",
     "module": "citrus-ws",
@@ -3400,7 +3400,7 @@
   },
   "jms-asynchronous": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "jms-asynchronous",
     "group": "jms",
     "module": "citrus-jms",
@@ -3495,7 +3495,7 @@
   },
   "sftp-client": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "sftp-client",
     "group": "sftp",
     "module": "citrus-ftp",
@@ -3608,7 +3608,7 @@
   },
   "selenium-browser": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "selenium-browser",
     "group": "selenium",
     "module": "citrus-selenium",
@@ -3713,7 +3713,7 @@
   },
   "http-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "http-server",
     "group": "http",
     "module": "citrus-http",
@@ -4006,7 +4006,7 @@
   },
   "websocket-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "websocket-server",
     "group": "websocket",
     "module": "citrus-websocket",
@@ -4309,7 +4309,7 @@
   },
   "mail-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "mail-server",
     "group": "mail",
     "module": "citrus-mail",
@@ -4410,7 +4410,7 @@
   },
   "ssh-server": {
     "kind": "testEndpoint",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "ssh-server",
     "group": "ssh",
     "module": "citrus-ssh",
