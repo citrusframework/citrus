@@ -87,6 +87,9 @@ public class ServerCallRegistry {
         private final ScheduledExecutorService scheduler;
 
         private volatile boolean cancelled;
+
+        private final java.util.concurrent.atomic.AtomicInteger bufferedMessages =
+                new java.util.concurrent.atomic.AtomicInteger();
         private volatile ScheduledFuture<?> timeoutTask;
 
         private ActiveCall(ServerCallRegistry registry,
@@ -123,6 +126,10 @@ public class ServerCallRegistry {
 
         public Metadata getRequestMetadata() {
             return requestMetadata;
+        }
+
+        public int countBufferedRequestMessage() {
+            return bufferedMessages.incrementAndGet();
         }
 
         public boolean isCancelled() {

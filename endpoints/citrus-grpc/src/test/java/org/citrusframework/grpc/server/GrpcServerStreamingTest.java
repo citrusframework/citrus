@@ -188,6 +188,62 @@ public class GrpcServerStreamingTest {
         assertThat(client.status().getCode()).isEqualTo(Status.Code.OK);
     }
 
+    @Test
+    public void shouldRejectClientStreamingCallWhenBufferBoundIsExceeded() throws Exception {
+        GrpcServerEndpointConfiguration configuration = new GrpcServerEndpointConfiguration();
+        configuration.setPort(findAvailableTcpPort());
+        configuration.setDescriptors(List.of(DESCRIPTORS));
+        configuration.setTimeout(5000L);
+        configuration.setMaxBufferedMessages(2);
+
+        GrpcServer bounded = new GrpcServer(configuration);
+        bounded.initialize();
+        bounded.start();
+
+        ManagedChannel boundedChannel = ManagedChannelBuilder
+                .forAddress("localhost", configuration.getPort())
+                .usePlaintext()
+                .build();
+
+        try {
+            Descriptors.Descriptor userType = registry.findMessage("grpc2grpc.User");
+            DynamicStreamClient client = new DynamicStreamClient(boundedChannel, registry.findMethod(STORE_USERS));
+
+            client.send(DynamicMessage.newBuilder(userType)
+                    .setField(userType.findFieldByName("id"), 1)
+                    .setField(userType.findFieldByName("username"), "ada")
+                    .setField(userType.findFieldByName("email"), "ada@example.com")
+                    .setField(userType.findFieldByName("phone"), "555-1")
+                    .build());
+            client.send(DynamicMessage.newBuilder(userType)
+                    .setField(userType.findFieldByName("id"), 2)
+                    .setField(userType.findFieldByName("username"), "bob")
+                    .setField(userType.findFieldByName("email"), "bob@example.com")
+                    .setField(userType.findFieldByName("phone"), "555-2")
+                    .build());
+            client.send(DynamicMessage.newBuilder(userType)
+                    .setField(userType.findFieldByName("id"), 3)
+                    .setField(userType.findFieldByName("username"), "cid")
+                    .setField(userType.findFieldByName("email"), "cid@example.com")
+                    .setField(userType.findFieldByName("phone"), "555-3")
+                    .build());
+            client.halfClose();
+
+            assertThat(client.await(5000L)).isTrue();
+            assertThat(client.status().getCode()).isEqualTo(Status.Code.RESOURCE_EXHAUSTED);
+            assertThat(client.status().getDescription()).contains("maximum of 2");
+
+            GrpcMessage call = (GrpcMessage) bounded.createConsumer().receive(context, 3000L);
+            assertThat(call.getKind()).isEqualTo(GrpcMessageHeaders.KIND_CALL);
+
+            GrpcMessage second = (GrpcMessage) bounded.createConsumer().receive(context, 3000L);
+            assertThat(second.getKind()).isEqualTo(GrpcMessageHeaders.KIND_STREAM_MESSAGE);
+        } finally {
+            boundedChannel.shutdownNow();
+            bounded.stop();
+        }
+    }
+
     private GrpcMessage receive() {
         return (GrpcMessage) server.createConsumer().receive(context, 5000L);
     }
@@ -213,7 +269,11 @@ public class GrpcServerStreamingTest {
         private final ClientCall<DynamicMessage, DynamicMessage> call;
 
         private DynamicStreamClient(Descriptors.MethodDescriptor method) {
-            call = channel.newCall(method(method), CallOptions.DEFAULT);
+            this(channel, method);
+        }
+
+        private DynamicStreamClient(ManagedChannel target, Descriptors.MethodDescriptor method) {
+            call = target.newCall(method(method), CallOptions.DEFAULT);
             call.start(new ClientCall.Listener<>() {
                 @Override
                 public void onMessage(DynamicMessage message) {

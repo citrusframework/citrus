@@ -54,6 +54,7 @@ public class GrpcServerConfigParser implements AnnotationConfigParser<GrpcServer
             builder.privateKey(context.replaceDynamicContentInString(annotation.privateKey()));
         }
         builder.omitDefaultValues(annotation.omitDefaultValues());
+        builder.maxBufferedMessages(annotation.maxBufferedMessages());
         builder.timeout(annotation.timeout());
         builder.autoStart(annotation.autoStart());
 

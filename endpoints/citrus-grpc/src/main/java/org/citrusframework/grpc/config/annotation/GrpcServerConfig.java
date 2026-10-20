@@ -46,6 +46,8 @@ public @interface GrpcServerConfig {
 
     boolean omitDefaultValues() default false;
 
+    int maxBufferedMessages() default 10_000;
+
     long timeout() default 5000L;
 
     boolean autoStart() default true;
