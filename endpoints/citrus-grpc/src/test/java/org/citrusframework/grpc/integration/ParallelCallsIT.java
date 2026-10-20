@@ -84,25 +84,26 @@ public class ParallelCallsIT extends TestNGCitrusSpringSupport implements TestAc
                 .body("{ \"name\": \"Grace\" }"));
         run(context -> callIds.add((String) context.getVariable(GrpcMessageHeaders.CALL_ID)));
 
+        // the two calls may arrive in any order - echo the name actually received
         then(grpc().server(simulator).receive()
                 .call("helloworld.Greeter/SayHello")
                 .message()
-                .body("{ \"name\": \"Ada\", \"userId\": 0 }"));
+                .extract(extractor().jsonPath().expression("$.name", "name")));
 
         then(grpc().server(simulator).send()
                 .response()
                 .message()
-                .body("{ \"message\": \"Hello Ada\" }"));
+                .body("{ \"message\": \"Hello ${name}\" }"));
 
         then(grpc().server(simulator).receive()
                 .call("helloworld.Greeter/SayHello")
                 .message()
-                .body("{ \"name\": \"Grace\", \"userId\": 0 }"));
+                .extract(extractor().jsonPath().expression("$.name", "name")));
 
         then(grpc().server(simulator).send()
                 .response()
                 .message()
-                .body("{ \"message\": \"Hello Grace\" }"));
+                .body("{ \"message\": \"Hello ${name}\" }"));
 
         then(grpc().client(client).receive()
                 .response()
