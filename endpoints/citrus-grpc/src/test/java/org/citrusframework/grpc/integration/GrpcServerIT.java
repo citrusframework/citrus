@@ -35,7 +35,7 @@ import io.grpc.stub.ClientResponseObserver;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.grpc.endpoint.GrpcEndpoints;
+import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.grpc.server.GrpcServer;
 import org.citrusframework.grpc.test.proto.helloworld.GetUserRequest;
 import org.citrusframework.grpc.test.proto.helloworld.GreeterGrpc;
@@ -285,14 +285,34 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
         assertThat(received.await(5, TimeUnit.SECONDS)).isTrue();
 
         callRef.get().cancel("client cancels", null);
-        Thread.sleep(200L);
 
-        assertThatThrownBy(() -> when(grpc().server(simulator).send()
-                .streamMessage()
-                .message()
-                .body(PRICE_ONE)))
-                .isInstanceOf(CitrusRuntimeException.class)
-                .hasMessageContaining("cancelled by the client");
+        CitrusRuntimeException failure = awaitCancelledCallFailure();
+        assertThat(failure).isNotNull();
+        assertThat(failure.getMessage()).contains("cancelled by the client");
+    }
+
+    /**
+     * Sends a stream message until the simulator reports the cancelled call.
+     *
+     * @return the failure raised for the cancelled call or {@code null} if it was not raised
+     */
+    private CitrusRuntimeException awaitCancelledCallFailure() {
+        long deadline = System.currentTimeMillis() + 5000;
+        while (System.currentTimeMillis() < deadline) {
+            try {
+                when(grpc().server(simulator).send()
+                        .streamMessage()
+                        .message()
+                        .body(PRICE_ONE));
+            } catch (CitrusRuntimeException e) {
+                return e;
+            } catch (IllegalStateException e) {
+                // the call has been closed by the client in the meantime - retry until the simulator
+                // has processed the cancellation
+            }
+        }
+
+        return null;
     }
 
     private static GrpcServer startSimulator(long timeout, String... services) {

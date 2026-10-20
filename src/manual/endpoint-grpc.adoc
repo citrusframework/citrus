@@ -204,8 +204,8 @@ then(grpc().client(greeterClient).receive()
 
 For server-streaming methods every `streamMessage()` receive returns the next message in arrival
 order, including its 0-based sequence number. Messages that arrive before the test receives them are
-buffered (at most `maxBufferedMessages`, default 10000; beyond that the call is cancelled and the
-receive fails naming the bound).
+buffered (at most `maxBufferedMessages`, default 10000; beyond that the call is cancelled, the
+buffered messages are discarded and the receive fails naming the bound).
 `streamCompleted()` waits for the end of the stream and checks its status.
 
 .Java
@@ -399,9 +399,10 @@ then(grpc().server(storeServer).send()
 Calls to services the simulator does not serve are answered `UNIMPLEMENTED` without a test step. A
 call that gets no reply within the server response timeout (`responseTimeout`, default 5000 ms) ends
 with `INTERNAL`; the timeout restarts with every simulator send. The `timeout` setting of the
-simulator is the receive timeout used when waiting for incoming calls. A send on a call the client
-has cancelled fails the test. The simulator buffers at most `maxBufferedMessages` request messages
-per call (default 10 000); beyond that the call ends with `RESOURCE_EXHAUSTED`.
+simulator is the receive timeout used when waiting for incoming calls and the `pollingInterval`
+setting (default 50 ms) defines how often the simulator looks for incoming calls. A send on a call
+the client has cancelled fails the test. The simulator buffers at most `maxBufferedMessages` request
+messages per call (default 10 000); beyond that the call ends with `RESOURCE_EXHAUSTED`.
 
 A custom endpoint adapter (e.g. a static response) answers calls without test steps: its reply
 becomes the unary response, or one stream message followed by `OK` for a server-streaming call. A
@@ -428,7 +429,9 @@ then(grpc().client(greeterClient).receive()
         .trailer("x-request-id", "42"));
 ----
 
-`-bin` metadata values are base64 strings in Citrus and raw bytes on the wire.
+`-bin` metadata values are base64 strings in Citrus and raw bytes on the wire. A metadata header
+with several values is joined with a comma; binary values are split apart again when they are sent,
+so that they survive the round trip.
 
 The client endpoint's `deadline` setting applies to every call and can be overridden per send. An
 expired call reports status `DEADLINE_EXCEEDED`, which the test can expect like any other status. A
@@ -510,6 +513,9 @@ then(grpc().client(greeterClient).receive()
         .selector("header:citrus_grpc_call_id=" + callId)
         .response());
 ----
+
+The call id in the selector may also be quoted, so that the usual Citrus header selector syntax
+applies: `header:citrus_grpc_call_id = '42'`.
 
 The simulator answers the call that was received last. The id of that call is stored in the correlation
 key of the server endpoint. A send can target a specific call with `callId(...)`:

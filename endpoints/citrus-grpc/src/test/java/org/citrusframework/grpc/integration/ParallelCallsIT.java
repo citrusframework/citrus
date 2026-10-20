@@ -22,7 +22,7 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.grpc.client.GrpcClient;
 import org.citrusframework.grpc.client.GrpcClientBuilder;
-import org.citrusframework.grpc.endpoint.GrpcEndpoints;
+import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.grpc.message.GrpcMessageHeaders;
 import org.citrusframework.grpc.server.GrpcServer;
 import org.citrusframework.grpc.server.GrpcServerBuilder;

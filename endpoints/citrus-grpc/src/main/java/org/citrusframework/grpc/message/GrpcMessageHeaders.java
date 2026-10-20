@@ -35,7 +35,7 @@ public class GrpcMessageHeaders {
     /** Full name of the gRPC method, e.g. {@code helloworld.Greeter/SayHello} */
     public static final String METHOD = GRPC_PREFIX + "method";
 
-    /** Kind of the gRPC method, {@code UNARY} or {@code SERVER_STREAMING} */
+    /** Kind of the gRPC method, one of {@code UNARY}, {@code SERVER_STREAMING}, {@code CLIENT_STREAMING} or {@code BIDI_STREAMING} */
     public static final String METHOD_TYPE = GRPC_PREFIX + "method_type";
 
     /** Unique identifier of a gRPC call */

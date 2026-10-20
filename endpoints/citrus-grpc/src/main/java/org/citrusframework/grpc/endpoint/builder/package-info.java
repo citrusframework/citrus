@@ -13,22 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.citrusframework.grpc.endpoint;
 
-import org.citrusframework.endpoint.builder.ClientServerEndpointBuilder;
-import org.citrusframework.grpc.client.GrpcClientBuilder;
-import org.citrusframework.grpc.server.GrpcServerBuilder;
-
-/**
- * Entry point for gRPC client and server endpoint builders.
- */
-public final class GrpcEndpoints extends ClientServerEndpointBuilder<GrpcClientBuilder, GrpcServerBuilder> {
-
-    private GrpcEndpoints() {
-        super(new GrpcClientBuilder(), new GrpcServerBuilder());
-    }
-
-    public static GrpcEndpoints grpc() {
-        return new GrpcEndpoints();
-    }
-}
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://citrusframework.org/schema/xml/testcase", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
+package org.citrusframework.grpc.endpoint.builder;

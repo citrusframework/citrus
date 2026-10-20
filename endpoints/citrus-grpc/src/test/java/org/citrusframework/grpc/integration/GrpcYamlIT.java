@@ -18,20 +18,24 @@ package org.citrusframework.grpc.integration;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.grpc.client.GrpcClient;
-import org.citrusframework.grpc.endpoint.GrpcEndpoints;
+import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.grpc.server.GrpcServer;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
+
+import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * Runs gRPC client and simulator from a YAML test.
  */
 public class GrpcYamlIT extends TestNGCitrusSpringSupport {
 
+    private static final int PORT = findAvailableTcpPort(18880);
+
     @BindToRegistry
     private final GrpcServer simulator = GrpcEndpoints.grpc().server()
-            .port(18880)
+            .port(PORT)
             .descriptors("classpath:descriptors/test-protos.binpb", "classpath:org/citrusframework/grpc/streaming/petstore.proto")
             .timeout(5000L)
             .autoStart(true)
@@ -40,7 +44,7 @@ public class GrpcYamlIT extends TestNGCitrusSpringSupport {
 
     @BindToRegistry
     private final GrpcClient client = GrpcEndpoints.grpc().client()
-            .target("localhost:18880")
+            .target("localhost:" + PORT)
             .descriptors("classpath:descriptors/test-protos.binpb", "classpath:org/citrusframework/grpc/streaming/petstore.proto")
             .timeout(5000L)
             .build();

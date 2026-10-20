@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.grpc.Metadata;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessageHeaders;
 
 /**
@@ -30,7 +31,8 @@ import org.citrusframework.message.MessageHeaders;
  *
  * <p>Plain metadata keys map 1:1 to message headers, response trailers are exposed with the
  * {@link GrpcMessageHeaders#TRAILER_PREFIX} prefix and binary ({@code -bin}) metadata values are
- * represented as base64 encoded strings in Citrus and as raw bytes on the wire.</p>
+ * represented as base64 encoded strings in Citrus and as raw bytes on the wire. Multiple values of
+ * a binary header are separated by a comma, because the base64 alphabet does not contain commas.</p>
  *
  * @since 5.1
  */
@@ -130,19 +132,44 @@ public final class GrpcMetadataMapper {
     }
 
     private static void put(Metadata metadata, String name, Object value) {
-        if (name.endsWith(BINARY_HEADER_SUFFIX)) {
-            metadata.put(Metadata.Key.of(name, Metadata.BINARY_BYTE_MARSHALLER), binaryValue(value));
-        } else {
-            metadata.put(Metadata.Key.of(name, Metadata.ASCII_STRING_MARSHALLER), String.valueOf(value));
+        if (name == null || name.isBlank()) {
+            throw new CitrusRuntimeException("Invalid gRPC metadata header - the header name must not be empty");
+        }
+
+        try {
+            if (name.endsWith(BINARY_HEADER_SUFFIX)) {
+                for (byte[] bytes : binaryValues(value)) {
+                    metadata.put(Metadata.Key.of(name, Metadata.BINARY_BYTE_MARSHALLER), bytes);
+                }
+            } else {
+                metadata.put(Metadata.Key.of(name, Metadata.ASCII_STRING_MARSHALLER), String.valueOf(value));
+            }
+        } catch (IllegalArgumentException e) {
+            throw new CitrusRuntimeException("Invalid gRPC metadata header '%s' - %s".formatted(name, e.getMessage()), e);
         }
     }
 
-    private static byte[] binaryValue(Object value) {
+    /**
+     * Decodes the binary values of a {@code -bin} header. Multiple values are separated by a comma.
+     * The base64 alphabet does not contain commas, so the separator is unambiguous.
+     *
+     * @param value the header value
+     * @return the decoded byte arrays
+     */
+    private static List<byte[]> binaryValues(Object value) {
         if (value instanceof byte[] bytes) {
-            return bytes;
+            return List.of(bytes);
         }
 
-        return Base64.getDecoder().decode(String.valueOf(value));
+        List<byte[]> values = new ArrayList<>();
+        for (String part : String.valueOf(value).split(",")) {
+            String encoded = part.trim();
+            if (!encoded.isEmpty()) {
+                values.add(Base64.getDecoder().decode(encoded));
+            }
+        }
+
+        return values;
     }
 
     private static boolean isMetadataHeader(String name) {

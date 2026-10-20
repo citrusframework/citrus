@@ -16,6 +16,7 @@
 
 package org.citrusframework.grpc.server;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +55,7 @@ public class GrpcServer extends AbstractServer {
     private GrpcMessageCodec codec;
     private ServerCallRegistry calls;
     private ScheduledExecutorService scheduler;
+    private ExecutorService adapterExecutor;
     private Server server;
     private MessageQueue inboundQueue;
     private boolean testDriven;
@@ -102,6 +104,7 @@ public class GrpcServer extends AbstractServer {
         }
         this.correlationKeyName = correlator.getCorrelationKeyName(getName());
         this.scheduler = createScheduler();
+        this.adapterExecutor = createAdapterExecutor();
 
         setAutoStart(autoStart);
         if (autoStart && !isRunning()) {
@@ -120,13 +123,18 @@ public class GrpcServer extends AbstractServer {
             scheduler = createScheduler();
         }
 
+        if (adapterExecutor == null) {
+            // the server was stopped before - recreate the adapter executor so that a restart works
+            adapterExecutor = createAdapterExecutor();
+        }
+
         ServerBuilder<?> builder = configuration.isTls()
                 ? Grpc.newServerBuilderForPort(configuration.getPort(),
                         GrpcTlsSupport.serverCredentials(configuration.getCertificateChain(), configuration.getPrivateKey()))
                 : ServerBuilder.forPort(configuration.getPort());
 
         builder.fallbackHandlerRegistry(new DynamicCallHandler(configuration, descriptorRegistry, codec,
-                calls, inboundQueue, getEndpointAdapter(), testDriven, scheduler));
+                calls, inboundQueue, getEndpointAdapter(), testDriven, scheduler, adapterExecutor));
 
         try {
             this.server = builder.build().start();
@@ -158,6 +166,11 @@ public class GrpcServer extends AbstractServer {
             scheduler = null;
         }
 
+        if (adapterExecutor != null) {
+            adapterExecutor.shutdownNow();
+            adapterExecutor = null;
+        }
+
         if (calls != null) {
             calls.clear();
         }
@@ -168,6 +181,20 @@ public class GrpcServer extends AbstractServer {
     private ScheduledExecutorService createScheduler() {
         return Executors.newSingleThreadScheduledExecutor(runnable -> {
             Thread thread = new Thread(runnable, getName() + "-grpc-timeout");
+            thread.setDaemon(true);
+            return thread;
+        });
+    }
+
+    /**
+     * Creates the executor that handles calls answered by a custom endpoint adapter. The adapter may
+     * block while waiting for the system under test, so it must not run on the timeout scheduler.
+     *
+     * @return the executor service for endpoint adapter calls
+     */
+    private ExecutorService createAdapterExecutor() {
+        return Executors.newCachedThreadPool(runnable -> {
+            Thread thread = new Thread(runnable, getName() + "-grpc-adapter");
             thread.setDaemon(true);
             return thread;
         });

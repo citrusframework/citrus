@@ -21,7 +21,7 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.grpc.client.GrpcClient;
-import org.citrusframework.grpc.endpoint.GrpcEndpoints;
+import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.grpc.integration.service.GreeterService;
 import org.citrusframework.grpc.integration.service.PricesService;
 import org.citrusframework.spi.BindToRegistry;
@@ -70,6 +70,8 @@ public class GrpcClientIT extends TestNGCitrusSpringSupport implements TestActio
 
     @CitrusTest
     public void shouldCallUnaryMethodWithMetadataAndTrailers() {
+        GreeterService.reset();
+
         when(grpc().client(greeter).send()
                 .call("helloworld.Greeter/SayHello")
                 .metadata("x-request-id", "42")

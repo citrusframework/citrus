@@ -28,6 +28,7 @@ import io.grpc.ClientCall;
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
 import io.grpc.Status;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -50,7 +51,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 5.1
  */
-public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveConsumer {
+public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveConsumer, ShutdownPhase {
 
     private static final Logger logger = LoggerFactory.getLogger(GrpcClient.class);
 
@@ -89,6 +90,11 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
                 throw new CitrusRuntimeException("Unknown gRPC call '%s' - open a call first".formatted(callId));
             }
 
+            if (!liveCall.method().isClientStreaming()) {
+                throw new CitrusRuntimeException("gRPC method '%s' is not client streaming - send a single request message"
+                        .formatted(liveCall.method().getService().getFullName() + "/" + liveCall.method().getName()));
+            }
+
             calls.sendMessage(callId, codec().encode(liveCall.method().getInputType(), message.getPayload()));
             return;
         }
@@ -117,7 +123,6 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
             call.halfClose();
         }
 
-        context.getVariables().put(GrpcMessageHeaders.CALL_ID, callId);
         context.getVariables().put(correlationKeyName(), callId);
         context.getVariables().put(GrpcMessageHeaders.callIdVariableName(getName()), callId);
     }
@@ -134,6 +139,11 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
         int maxBufferedMessages = getEndpointConfiguration().getMaxBufferedMessages();
         if (maxBufferedMessages <= 0) {
             // no bound configured - request messages without a limit
+            return Integer.MAX_VALUE;
+        }
+
+        if (maxBufferedMessages == Integer.MAX_VALUE) {
+            // saturate - the additional message must not overflow the window size
             return Integer.MAX_VALUE;
         }
 
@@ -202,7 +212,13 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
     }
 
     private String currentCallId(TestContext context) {
-        Object callId = context.getVariables().get(correlationKeyName());
+        Object callId = context.getVariables().get(GrpcMessageHeaders.callIdVariableName(getName()));
+        if (callId == null) {
+            // fall back to the correlation key for endpoints that have been created before the
+            // endpoint scoped call id variable was introduced
+            callId = context.getVariables().get(correlationKeyName());
+        }
+
         if (callId == null) {
             throw new CitrusRuntimeException("No open gRPC call available - send a request first");
         }
@@ -223,6 +239,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
     /**
      * Shuts down the underlying channel.
      */
+    @Override
     public void destroy() {
         calls.cancelAll();
 
@@ -239,14 +256,38 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
 
     private String resolveCallId(String selector, TestContext context) {
         if (selector != null && !selector.isBlank()) {
-            String key = "header:" + GrpcMessageHeaders.CALL_ID + "=";
-            if (!selector.startsWith(key)) {
-                throw new CitrusRuntimeException("Unsupported gRPC message selector '%s' - use '%s<callId>'".formatted(selector, key));
+            String prefix = "header:" + GrpcMessageHeaders.CALL_ID;
+            String expression = selector.trim();
+
+            if (!expression.startsWith(prefix)) {
+                throw new CitrusRuntimeException("Unsupported gRPC message selector '%s' - use '%s=<callId>'"
+                        .formatted(selector, prefix));
             }
-            return selector.substring(key.length());
+
+            String value = expression.substring(prefix.length()).trim();
+            if (value.startsWith("=")) {
+                value = value.substring(1).trim();
+            }
+
+            if (value.length() > 1
+                    && ((value.startsWith("'") && value.endsWith("'"))
+                        || (value.startsWith("\"") && value.endsWith("\"")))) {
+                value = value.substring(1, value.length() - 1);
+            }
+
+            if (value.isEmpty()) {
+                throw new CitrusRuntimeException("Missing gRPC call id in message selector '%s' - use '%s=<callId>'"
+                        .formatted(selector, prefix));
+            }
+
+            return value;
         }
 
-        Object callId = context.getVariables().get(correlationKeyName());
+        Object callId = context.getVariables().get(GrpcMessageHeaders.callIdVariableName(getName()));
+        if (callId == null) {
+            callId = context.getVariables().get(correlationKeyName());
+        }
+
         if (callId == null) {
             throw new CitrusRuntimeException("No gRPC call available - send a request first");
         }

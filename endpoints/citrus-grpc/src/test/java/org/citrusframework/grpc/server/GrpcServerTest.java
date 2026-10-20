@@ -218,7 +218,7 @@ public class GrpcServerTest {
 
     @Test
     public void shouldRestartIdleTimeoutOnEverySend() throws Exception {
-        GrpcServer server = startServer(500);
+        GrpcServer server = startServer(2000);
         ManagedChannel channel = channel(server);
 
         CountDownLatch completed = new CountDownLatch(1);
@@ -246,9 +246,11 @@ public class GrpcServerTest {
                         });
 
         GrpcMessage call = (GrpcMessage) server.createConsumer().receive(context, 2000);
-        Thread.sleep(300);
+        // wait until the idle timeout is close - the send below must restart the timer
+        Thread.sleep(1000);
         server.createProducer().send(streamMessage(call, "{\"symbol\": \"ACME\"}"), context);
-        Thread.sleep(300);
+        // wait longer than the original timeout - the call must still be alive due to the restarted timer
+        Thread.sleep(1200);
         server.createProducer().send(streamCompleted(call), context);
 
         assertThat(completed.await(2, TimeUnit.SECONDS)).isTrue();
@@ -294,11 +296,34 @@ public class GrpcServerTest {
 
         assertThat(firstMessage.await(2, TimeUnit.SECONDS)).isTrue();
         callStream.get().cancel("cancelled by test", null);
-        Thread.sleep(300);
 
-        assertThatThrownBy(() -> server.createProducer().send(streamMessage(call, "{\"symbol\": \"ACME\"}"), context))
-                .isInstanceOf(CitrusRuntimeException.class)
-                .hasMessageContaining("cancelled");
+        CitrusRuntimeException failure = awaitCancelledCallFailure(server, call, context);
+        assertThat(failure).isNotNull();
+        assertThat(failure.getMessage()).contains("cancelled");
+    }
+
+    /**
+     * Sends a stream message until the server reports the cancelled call.
+     *
+     * @param server the simulator endpoint
+     * @param call the call received from the client
+     * @param context the test context
+     * @return the failure raised for the cancelled call or {@code null} if it was not raised
+     */
+    private CitrusRuntimeException awaitCancelledCallFailure(GrpcServer server, GrpcMessage call, TestContext context) {
+        long deadline = System.currentTimeMillis() + 5000;
+        while (System.currentTimeMillis() < deadline) {
+            try {
+                server.createProducer().send(streamMessage(call, "{\"symbol\": \"ACME\"}"), context);
+            } catch (CitrusRuntimeException e) {
+                return e;
+            } catch (IllegalStateException e) {
+                // the call has been closed by the client in the meantime - retry until the simulator
+                // has processed the cancellation
+            }
+        }
+
+        return null;
     }
 
     @Test

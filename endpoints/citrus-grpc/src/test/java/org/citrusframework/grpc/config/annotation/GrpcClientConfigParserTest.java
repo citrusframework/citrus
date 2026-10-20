@@ -42,7 +42,6 @@ public class GrpcClientConfigParserTest {
         when(config.omitDefaultValues()).thenReturn(true);
         when(config.maxBufferedMessages()).thenReturn(25);
         when(config.timeout()).thenReturn(1000L);
-        when(config.pollingInterval()).thenReturn(100L);
         when(config.correlator()).thenReturn("correlator");
         when(config.actor()).thenReturn("");
 
@@ -63,7 +62,6 @@ public class GrpcClientConfigParserTest {
         assertThat(client.getEndpointConfiguration().isOmitDefaultValues()).isTrue();
         assertThat(client.getEndpointConfiguration().getMaxBufferedMessages()).isEqualTo(25);
         assertThat(client.getEndpointConfiguration().getTimeout()).isEqualTo(1000L);
-        assertThat(client.getEndpointConfiguration().getPollingInterval()).isEqualTo(100L);
         assertThat(client.getEndpointConfiguration().getCorrelator()).isSameAs(correlator);
     }
 }

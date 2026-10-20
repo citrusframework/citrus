@@ -35,8 +35,6 @@ public class GrpcServerBuilder extends AbstractEndpointBuilder<GrpcServer> {
 
     private final GrpcServer endpoint = new GrpcServer(new GrpcServerEndpointConfiguration());
 
-    private String certificateChain;
-    private String privateKey;
     private String endpointAdapter;
 
     @Override
@@ -104,7 +102,7 @@ public class GrpcServerBuilder extends AbstractEndpointBuilder<GrpcServer> {
     }
 
     public GrpcServerBuilder certificateChain(String certificateChain) {
-        this.certificateChain = certificateChain;
+        configuration().setCertificateChain(certificateChain);
         return this;
     }
 
@@ -115,7 +113,7 @@ public class GrpcServerBuilder extends AbstractEndpointBuilder<GrpcServer> {
     }
 
     public GrpcServerBuilder privateKey(String privateKey) {
-        this.privateKey = privateKey;
+        configuration().setPrivateKey(privateKey);
         return this;
     }
 
@@ -164,6 +162,17 @@ public class GrpcServerBuilder extends AbstractEndpointBuilder<GrpcServer> {
         return this;
     }
 
+    public GrpcServerBuilder pollingInterval(long pollingInterval) {
+        configuration().setPollingInterval(pollingInterval);
+        return this;
+    }
+
+    @SchemaProperty(description = "Polling interval in milliseconds used when waiting for incoming calls.")
+    @XmlAttribute(name = "polling-interval")
+    public void setPollingInterval(long pollingInterval) {
+        pollingInterval(pollingInterval);
+    }
+
     @SchemaProperty(description = "Server side response deadline in milliseconds before the simulator answers INTERNAL.")
     @XmlAttribute(name = "response-timeout")
     public void setResponseTimeout(long responseTimeout) {
@@ -194,9 +203,6 @@ public class GrpcServerBuilder extends AbstractEndpointBuilder<GrpcServer> {
 
     @Override
     public GrpcServer build() {
-        configuration().setCertificateChain(certificateChain);
-        configuration().setPrivateKey(privateKey);
-
         if (endpointAdapter != null) {
             if (referenceResolver == null) {
                 throw new CitrusRuntimeException("Missing reference resolver - unable to resolve the endpoint adapter '%s'"

@@ -32,7 +32,7 @@ import io.grpc.protobuf.ProtoUtils;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.grpc.actions.GrpcClientActionBuilder;
 import org.citrusframework.grpc.descriptor.GrpcDescriptorRegistry;
-import org.citrusframework.grpc.endpoint.GrpcEndpoints;
+import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -57,8 +57,16 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
     private Server server;
     private GrpcClient client;
 
+    private final List<DynamicMessage> storedUsers = new ArrayList<>();
+    private final List<DynamicMessage> bulkUsers = new ArrayList<>();
+    private DynamicMessage storeUsersResponse;
+
     @BeforeMethod
     public void setUp() throws Exception {
+        storedUsers.clear();
+        bulkUsers.clear();
+        storeUsersResponse = null;
+
         registry = new GrpcDescriptorRegistry(List.of(DESCRIPTORS));
 
         server = ServerBuilder.forPort(findAvailableTcpPort())
@@ -115,6 +123,12 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
                 .message()
                 .validate(jsonPath().expression("$.msg", "@notEmpty()@"));
         clientActions.build().execute(context);
+
+        assertThat(storedUsers).hasSize(3);
+        assertThat(username(storedUsers.get(0))).isEqualTo("ada");
+        assertThat(username(storedUsers.get(1))).isEqualTo("bob");
+        assertThat(username(storedUsers.get(2))).isEqualTo("cid");
+        assertThat(storeUsersResponse.getField(messageField("msg"))).isEqualTo("received 3");
     }
 
     @Test
@@ -144,6 +158,10 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
 
         clientActions.receive().streamCompleted();
         clientActions.build().execute(context);
+
+        assertThat(bulkUsers).hasSize(2);
+        assertThat(username(bulkUsers.get(0))).isEqualTo("ada");
+        assertThat(username(bulkUsers.get(1))).isEqualTo("bob");
     }
 
     @Test
@@ -169,6 +187,7 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
                 @Override
                 public void onMessage(DynamicMessage message) {
                     received.add(message);
+                    storedUsers.add(message);
                     call.request(1);
                 }
 
@@ -178,6 +197,7 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
                             .setField(outputType.findFieldByName("msg"), "received " + received.size())
                             .build();
 
+                    storeUsersResponse = response;
                     call.sendMessage(response);
                     call.close(Status.OK, new Metadata());
                 }
@@ -193,6 +213,7 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
             return new ServerCall.Listener<>() {
                 @Override
                 public void onMessage(DynamicMessage message) {
+                    bulkUsers.add(message);
                     call.sendMessage(message);
                     call.request(1);
                 }
@@ -203,6 +224,18 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
                 }
             };
         };
+    }
+
+    private String username(DynamicMessage message) {
+        return (String) message.getField(userField());
+    }
+
+    private Descriptors.FieldDescriptor userField() {
+        return registry.findMessage("grpc2grpc.User").findFieldByName("username");
+    }
+
+    private Descriptors.FieldDescriptor messageField(String name) {
+        return registry.findMessage("grpc2grpc.EmptyRes").findFieldByName(name);
     }
 
     private static ServerMethodDefinition<DynamicMessage, DynamicMessage> definition(
