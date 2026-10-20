@@ -112,6 +112,13 @@ public class ProtoFileSource implements DescriptorSource {
             if (WellKnownTypes.isRuntimeProto(imported)) {
                 continue;
             }
+
+            if (!isSafeRelativePath(imported)) {
+                throw new DescriptorRegistryException(
+                        "Invalid import '%s' of Protobuf source file '%s' - the import must be a relative path within the source tree"
+                                .formatted(imported, logicalPath));
+            }
+
             collect(imported, readImport(logicalPath, imported), sources);
         }
     }
@@ -325,10 +332,41 @@ public class ProtoFileSource implements DescriptorSource {
 
     private static void write(Path root, Map<String, byte[]> sources) throws IOException {
         for (Map.Entry<String, byte[]> source : sources.entrySet()) {
-            Path target = root.resolve(source.getKey());
+            Path target = root.resolve(source.getKey()).normalize();
+            if (!target.startsWith(root)) {
+                throw new DescriptorRegistryException(
+                        "Invalid Protobuf source path '%s' - the path must not point outside of the source tree"
+                                .formatted(source.getKey()));
+            }
+
             Files.createDirectories(target.getParent());
             Files.write(target, source.getValue());
         }
+    }
+
+    /**
+     * Checks that the given import is a relative path that stays inside the source tree. Imports
+     * pointing outside of the source tree would allow reading and writing arbitrary files.
+     *
+     * @param path the import path
+     * @return true if the path is a safe relative path
+     */
+    private static boolean isSafeRelativePath(String path) {
+        if (path == null || path.isBlank()) {
+            return false;
+        }
+
+        if (path.startsWith("/") || path.contains("\\") || path.matches("^[A-Za-z]:.*")) {
+            return false;
+        }
+
+        for (String segment : path.split("/")) {
+            if (segment.equals("..")) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static void delete(Path root) {

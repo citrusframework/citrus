@@ -35,6 +35,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -69,6 +70,8 @@ public class GrpcServerActionBuilderTest extends AbstractTestNGUnitTest {
                 .metadata("authorization", "@startsWith('Bearer ')@")
                 .message().body("{ \"name\": \"@ignore@\" }")
                 .build().execute(context);
+
+        verify(consumer, times(1)).receive(any(TestContext.class), anyLong());
     }
 
     @Test

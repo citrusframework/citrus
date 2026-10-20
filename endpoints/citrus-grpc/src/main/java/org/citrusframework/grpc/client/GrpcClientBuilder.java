@@ -147,17 +147,6 @@ public class GrpcClientBuilder extends AbstractEndpointBuilder<GrpcClient> {
         timeout(timeout);
     }
 
-    public GrpcClientBuilder pollingInterval(long pollingInterval) {
-        configuration().setPollingInterval(pollingInterval);
-        return this;
-    }
-
-    @SchemaProperty(description = "Polling interval in milliseconds.")
-    @XmlAttribute(name = "polling-interval")
-    public void setPollingInterval(long pollingInterval) {
-        pollingInterval(pollingInterval);
-    }
-
     public GrpcClientBuilder correlator(String correlator) {
         this.correlator = correlator;
         return this;

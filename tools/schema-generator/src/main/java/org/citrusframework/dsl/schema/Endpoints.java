@@ -28,7 +28,7 @@ import org.citrusframework.http.endpoint.builder.HttpEndpointBuilder;
 import org.citrusframework.jms.endpoint.JmsEndpointsBuilder;
 import org.citrusframework.kafka.endpoint.builder.KafkaEndpointsBuilder;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpointBuilder;
-import org.citrusframework.grpc.builder.GrpcEndpointBuilder;
+import org.citrusframework.grpc.endpoint.builder.GrpcEndpointBuilder;
 import org.citrusframework.kubernetes.endpoint.builder.KubernetesEndpointBuilder;
 import org.citrusframework.mail.endpoint.builder.MailEndpointBuilder;
 import org.citrusframework.selenium.endpoint.SeleniumEndpointBuilder;

@@ -16,7 +16,7 @@
 package org.citrusframework.dsl.endpoint.grpc;
 
 import org.citrusframework.grpc.client.GrpcClientBuilder;
-import org.citrusframework.grpc.endpoint.GrpcEndpoints;
+import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.grpc.server.GrpcServerBuilder;
 
 public class GrpcEndpointCatalog {

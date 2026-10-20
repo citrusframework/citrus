@@ -41,6 +41,13 @@ public class GreeterService extends GreeterGrpc.GreeterImplBase {
 
     public static final AtomicReference<Metadata> LAST_REQUEST_METADATA = new AtomicReference<>();
 
+    /**
+     * Resets the captured request metadata, so that tests do not observe the state of a previous call.
+     */
+    public static void reset() {
+        LAST_REQUEST_METADATA.set(null);
+    }
+
     @Override
     public void sayHello(HelloRequest request, io.grpc.stub.StreamObserver<HelloReply> responseObserver) {
         responseObserver.onNext(HelloReply.newBuilder()

@@ -38,6 +38,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -95,6 +96,23 @@ public class GrpcClientActionBuilderTest extends AbstractTestNGUnitTest {
         grpc.receive().response().message().body("{ \"message\": \"Hello Ada\" }");
 
         grpc.build().execute(context);
+
+        verify(consumer, times(1)).receive(any(TestContext.class), anyLong());
+        assertThat(sent).isEmpty();
+    }
+
+    @Test
+    public void shouldFailOnUnexpectedResponseBody() {
+        when(consumer.receive(any(TestContext.class), anyLong()))
+                .thenReturn(response("OK").setPayload("{ \"message\": \"Hello Bob\" }"));
+        when(consumer.receive(any(TestContext.class)))
+                .thenReturn(response("OK").setPayload("{ \"message\": \"Hello Bob\" }"));
+
+        GrpcClientActionBuilder grpc = new GrpcClientActionBuilder(client);
+        grpc.receive().response().message().body("{ \"message\": \"Hello Ada\" }");
+
+        assertThatThrownBy(() -> grpc.build().execute(context))
+                .hasMessageContaining("Hello Ada");
     }
 
     @Test
@@ -124,6 +142,8 @@ public class GrpcClientActionBuilderTest extends AbstractTestNGUnitTest {
                 .statusDescription("@contains('unknown')@");
 
         grpc.build().execute(context);
+
+        verify(consumer, times(1)).receive(any(TestContext.class), anyLong());
     }
 
     @Test
@@ -138,6 +158,8 @@ public class GrpcClientActionBuilderTest extends AbstractTestNGUnitTest {
         grpc.receive().streamMessage().message().body("{ \"symbol\": \"ACME\" }");
 
         grpc.build().execute(context);
+
+        verify(consumer, times(1)).receive(any(TestContext.class), anyLong());
     }
 
     @Test
@@ -182,6 +204,8 @@ public class GrpcClientActionBuilderTest extends AbstractTestNGUnitTest {
         grpc.receive().streamCompleted();
 
         grpc.build().execute(context);
+
+        verify(consumer, times(1)).receive(any(TestContext.class), anyLong());
     }
 
     @Test

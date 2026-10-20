@@ -38,10 +38,15 @@ import com.google.protobuf.Type;
  */
 final class WellKnownTypes {
 
+    /** Prefix of the Protobuf runtime protos provided by the Wire schema loader */
+    private static final String WIRE_PREFIX = "wire/";
+
+    private static final Map<String, FileDescriptor> TYPES = createTypes();
+
     private WellKnownTypes() {
     }
 
-    static Map<String, FileDescriptor> all() {
+    private static Map<String, FileDescriptor> createTypes() {
         Map<String, FileDescriptor> types = new LinkedHashMap<>();
         types.put("google/protobuf/any.proto", Any.getDescriptor().getFile());
         types.put("google/protobuf/api.proto", Api.getDescriptor().getFile());
@@ -57,10 +62,17 @@ final class WellKnownTypes {
         return types;
     }
 
+    static Map<String, FileDescriptor> all() {
+        return TYPES;
+    }
+
     /**
-     * Protobuf files that are provided by the runtime and must not be loaded from source.
+     * Protobuf files that are provided by the runtime and must not be loaded from source. These are
+     * the well-known types registered in {@link #all()} and the runtime protos of the Wire schema
+     * loader. Any other import must be resolvable as a source file, otherwise the import is
+     * reported as unresolvable instead of failing later with a confusing error.
      */
     static boolean isRuntimeProto(String name) {
-        return name.startsWith("google/protobuf/") || name.startsWith("wire/");
+        return TYPES.containsKey(name) || name.startsWith(WIRE_PREFIX);
     }
 }

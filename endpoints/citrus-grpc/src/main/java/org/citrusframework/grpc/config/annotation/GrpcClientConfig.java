@@ -48,8 +48,6 @@ public @interface GrpcClientConfig {
 
     long timeout() default 5000L;
 
-    long pollingInterval() default 500L;
-
     String correlator() default "";
 
     String actor() default "";

@@ -56,7 +56,6 @@ public class GrpcClientConfigParser implements AnnotationConfigParser<GrpcClient
         builder.omitDefaultValues(annotation.omitDefaultValues());
         builder.maxBufferedMessages(annotation.maxBufferedMessages());
         builder.timeout(annotation.timeout());
-        builder.pollingInterval(annotation.pollingInterval());
         if (StringUtils.hasText(annotation.correlator())) {
             builder.correlator(context.replaceDynamicContentInString(annotation.correlator()));
         }

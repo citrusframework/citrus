@@ -49,18 +49,23 @@ public class GrpcStatusValidator extends AbstractMessageValidator<GrpcStatusVali
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context,
                                 GrpcStatusValidationContext validationContext) {
+        if (!supportsMessageType(null, receivedMessage)) {
+            // the message does not carry a final gRPC status - nothing to validate here
+            return;
+        }
+
         String method = header(receivedMessage, GrpcMessageHeaders.METHOD);
         String actualCode = header(receivedMessage, GrpcMessageHeaders.STATUS_CODE);
         String actualDescription = header(receivedMessage, GrpcMessageHeaders.STATUS_DESCRIPTION);
         String expectedCode = validationContext.getStatusCode();
 
-        if (expectedCode == null || expectedCode.isBlank()) {
-            // no status code expected - nothing to validate here
-            return;
-        }
-
-        if (!matches(actualCode, expectedCode, context)) {
-            throw new ValidationException(failureMessage(method, actualCode, actualDescription, expectedCode));
+        if (expectedCode != null && !expectedCode.isBlank()) {
+            try {
+                validateStatusCode(actualCode, expectedCode, context);
+            } catch (ValidationException e) {
+                throw new ValidationException("%s - %s"
+                        .formatted(failureMessage(method, actualCode, actualDescription, expectedCode), e.getMessage()));
+            }
         }
 
         if (validationContext.getStatusDescription() != null) {
@@ -75,29 +80,27 @@ public class GrpcStatusValidator extends AbstractMessageValidator<GrpcStatusVali
     }
 
     /**
-     * Matches the actual status code against the expected one. The expected value may use a Citrus
+     * Validates the actual status code against the expected one. The expected value may use a Citrus
      * validation matcher expression, e.g. {@code @startsWith('OK')@}.
      *
      * @param actualCode the status code received from the endpoint
      * @param expectedCode the expected status code
      * @param context the test context
-     * @return true if the actual status code matches the expected one
      */
-    private static boolean matches(String actualCode, String expectedCode, TestContext context) {
+    private static void validateStatusCode(String actualCode, String expectedCode, TestContext context) {
         if (actualCode == null) {
-            return false;
+            throw new ValidationException("Missing gRPC status code in the received message");
         }
 
         if (ValidationMatcherUtils.isValidationMatcherExpression(expectedCode)) {
-            try {
-                ValidationMatcherUtils.resolveValidationMatcher("status code", actualCode, expectedCode, context);
-                return true;
-            } catch (ValidationException e) {
-                return false;
-            }
+            // the matcher reports a detailed failure message that must not get lost
+            ValidationMatcherUtils.resolveValidationMatcher("status code", actualCode, expectedCode, context);
+            return;
         }
 
-        return expectedCode.equals(actualCode);
+        if (!expectedCode.equals(actualCode)) {
+            throw new ValidationException("Expected status code '%s' but got '%s'".formatted(expectedCode, actualCode));
+        }
     }
 
     private static String header(Message message, String name) {

@@ -57,6 +57,7 @@ public class GrpcServerConfigParser implements AnnotationConfigParser<GrpcServer
         builder.maxBufferedMessages(annotation.maxBufferedMessages());
         builder.timeout(annotation.timeout());
         builder.responseTimeout(annotation.responseTimeout());
+        builder.pollingInterval(annotation.pollingInterval());
         builder.autoStart(annotation.autoStart());
 
         if (StringUtils.hasText(annotation.endpointAdapter())) {

@@ -17,6 +17,7 @@
 package org.citrusframework.grpc.server;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -34,6 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DynamicCallHandlerTest {
 
     private ScheduledExecutorService scheduler;
+    private ExecutorService adapterExecutor;
 
     private GrpcServerEndpointConfiguration configuration;
     private GrpcDescriptorRegistry descriptorRegistry;
@@ -42,6 +44,7 @@ public class DynamicCallHandlerTest {
     @BeforeMethod
     public void setUp() {
         scheduler = Executors.newSingleThreadScheduledExecutor();
+        adapterExecutor = Executors.newSingleThreadExecutor();
         configuration = new GrpcServerEndpointConfiguration();
         configuration.setDescriptors(List.of("classpath:descriptors/test-protos.binpb"));
 
@@ -52,6 +55,7 @@ public class DynamicCallHandlerTest {
     @AfterMethod(alwaysRun = true)
     public void tearDown() {
         scheduler.shutdownNow();
+        adapterExecutor.shutdownNow();
     }
 
     @Test
@@ -97,6 +101,6 @@ public class DynamicCallHandlerTest {
 
     private DynamicCallHandler handler() {
         return new DynamicCallHandler(configuration, descriptorRegistry, codec, new ServerCallRegistry(),
-                new DefaultMessageQueue("test.inbound"), null, false, scheduler);
+                new DefaultMessageQueue("test.inbound"), null, false, scheduler, adapterExecutor);
     }
 }

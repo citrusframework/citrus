@@ -72,6 +72,7 @@ public class GrpcClientTest {
 
     private CountDownLatch watchStarted;
     private CountDownLatch watchCancelled;
+    private CountDownLatch subscribeCompleted;
     private AtomicReference<Metadata> receivedHeaders;
 
     private GrpcClient client;
@@ -120,6 +121,7 @@ public class GrpcClientTest {
     public void setUp() {
         watchStarted = new CountDownLatch(1);
         watchCancelled = new CountDownLatch(1);
+        subscribeCompleted = new CountDownLatch(1);
         receivedHeaders = new AtomicReference<>();
 
         GrpcClientEndpointConfiguration configuration = new GrpcClientEndpointConfiguration();
@@ -205,11 +207,13 @@ public class GrpcClientTest {
         TestContext context = new TestContext();
 
         client.send(new GrpcMessage("{\"symbol\":\"ACME\"}").method(SUBSCRIBE), context);
-        Thread.sleep(500);
+        assertThat(subscribeCompleted.await(5, TimeUnit.SECONDS)).isTrue();
 
-        GrpcMessage first = (GrpcMessage) client.receive(context, 5000);
-        assertThat(first.getKind()).isEqualTo(GrpcMessageHeaders.KIND_STREAM_MESSAGE);
-        assertThat(first.getStreamSequence()).isZero();
+        for (int i = 0; i < 3; i++) {
+            GrpcMessage message = (GrpcMessage) client.receive(context, 5000);
+            assertThat(message.getKind()).isEqualTo(GrpcMessageHeaders.KIND_STREAM_MESSAGE);
+            assertThat(message.getStreamSequence()).isEqualTo(i);
+        }
     }
 
     @Test
@@ -223,11 +227,15 @@ public class GrpcClientTest {
 
         TestContext context = new TestContext();
         client.send(new GrpcMessage("{\"symbol\":\"ACME\"}").method(SUBSCRIBE), context);
+        assertThat(subscribeCompleted.await(5, TimeUnit.SECONDS)).isTrue();
+
+        // the client must buffer the messages before the bound can be exceeded - reading them
+        // right away would keep the buffer below the bound and hide the overflow
         Thread.sleep(500);
 
-        assertThatThrownBy(() -> client.receive(context, 1000))
+        assertThatThrownBy(() -> client.receive(context, 5000))
                 .isInstanceOf(CitrusRuntimeException.class)
-                .hasMessageContaining("2");
+                .hasMessageContaining("exceeded the maximum of 2 buffered messages");
     }
 
     @Test
@@ -287,12 +295,15 @@ public class GrpcClientTest {
         TestContext context = new TestContext();
 
         client.send(new GrpcMessage("{\"name\":\"Ada\"}").method(SAY_HELLO), context);
-        String firstCallId = (String) context.getVariables().get(GrpcMessageHeaders.CALL_ID);
+        String firstCallId = (String) context.getVariables()
+                .get(GrpcMessageHeaders.callIdVariableName(client.getName()));
 
         client.send(new GrpcMessage("{\"name\":\"Grace\"}").method(SAY_HELLO), context);
-        String secondCallId = (String) context.getVariables().get(GrpcMessageHeaders.CALL_ID);
+        String secondCallId = (String) context.getVariables()
+                .get(GrpcMessageHeaders.callIdVariableName(client.getName()));
 
         assertThat(firstCallId).isNotEqualTo(secondCallId);
+        assertThat(context.getVariables().get(GrpcMessageHeaders.CALL_ID)).isNull();
 
         GrpcMessage first = (GrpcMessage) client.receive(
                 "header:" + GrpcMessageHeaders.CALL_ID + "=" + firstCallId, context, 5000);
@@ -378,6 +389,7 @@ public class GrpcClientTest {
                         call.sendMessage(price);
                     }
 
+                    subscribeCompleted.countDown();
                     call.close(Status.OK, new Metadata());
                 }
             };

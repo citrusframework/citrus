@@ -18,6 +18,7 @@ package org.citrusframework.grpc.server;
 
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ScheduledExecutorService;
@@ -63,6 +64,7 @@ public class DynamicCallHandler extends HandlerRegistry {
     private final EndpointAdapter endpointAdapter;
     private final boolean testDriven;
     private final ScheduledExecutorService scheduler;
+    private final ExecutorService adapterExecutor;
 
     public DynamicCallHandler(GrpcServerEndpointConfiguration configuration,
                               GrpcDescriptorRegistry descriptorRegistry,
@@ -71,7 +73,8 @@ public class DynamicCallHandler extends HandlerRegistry {
                               MessageQueue inboundQueue,
                               EndpointAdapter endpointAdapter,
                               boolean testDriven,
-                              ScheduledExecutorService scheduler) {
+                              ScheduledExecutorService scheduler,
+                              ExecutorService adapterExecutor) {
         this.configuration = configuration;
         this.descriptorRegistry = descriptorRegistry;
         this.codec = codec;
@@ -80,6 +83,7 @@ public class DynamicCallHandler extends HandlerRegistry {
         this.endpointAdapter = endpointAdapter;
         this.testDriven = testDriven;
         this.scheduler = scheduler;
+        this.adapterExecutor = adapterExecutor;
     }
 
     @Override
@@ -172,7 +176,10 @@ public class DynamicCallHandler extends HandlerRegistry {
         if (testDriven) {
             inboundQueue.send(callMessage);
         } else if (endpointAdapter != null) {
-            scheduler.execute(() -> handleWithAdapter(active, callMessage));
+            // the endpoint adapter may block while waiting for the system under test. It must not
+            // run on the timeout scheduler, otherwise the response timeout of all other calls
+            // would be blocked as well
+            adapterExecutor.execute(() -> handleWithAdapter(active, callMessage));
         } else {
             closeInternal(active, "Citrus simulator: no endpoint adapter available");
         }
@@ -326,7 +333,16 @@ public class DynamicCallHandler extends HandlerRegistry {
                 @Override
                 public void onHalfClose() {
                     ServerCallRegistry.ActiveCall active = activeCall.get();
-                    if (active != null && method.isClientStreaming()
+                    if (active == null) {
+                        // the client closed the request stream without sending a single request
+                        // message - the call would never be answered otherwise
+                        call.close(Status.INTERNAL.withDescription(
+                                "Citrus simulator: the request stream was closed without a request message"),
+                                new Metadata());
+                        return;
+                    }
+
+                    if (method.isClientStreaming()
                             && requestCompleted.compareAndSet(false, true)) {
                         handleRequestCompleted(active, method);
                     }

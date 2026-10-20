@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.endpoint.AbstractEndpointConfiguration;
-import org.citrusframework.endpoint.PollableEndpointConfiguration;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 
@@ -30,7 +29,7 @@ import org.citrusframework.message.MessageCorrelator;
  *
  * @since 5.1
  */
-public class GrpcClientEndpointConfiguration extends AbstractEndpointConfiguration implements PollableEndpointConfiguration {
+public class GrpcClientEndpointConfiguration extends AbstractEndpointConfiguration {
 
     private String target;
     private List<String> descriptors = new ArrayList<>();
@@ -40,7 +39,6 @@ public class GrpcClientEndpointConfiguration extends AbstractEndpointConfigurati
     private String trustCertificate;
     private boolean omitDefaultValues;
     private int maxBufferedMessages = 10_000;
-    private long pollingInterval = 500L;
 
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
 
@@ -114,15 +112,5 @@ public class GrpcClientEndpointConfiguration extends AbstractEndpointConfigurati
 
     public void setCorrelator(MessageCorrelator correlator) {
         this.correlator = correlator;
-    }
-
-    @Override
-    public long getPollingInterval() {
-        return pollingInterval;
-    }
-
-    @Override
-    public void setPollingInterval(long pollingInterval) {
-        this.pollingInterval = pollingInterval;
     }
 }

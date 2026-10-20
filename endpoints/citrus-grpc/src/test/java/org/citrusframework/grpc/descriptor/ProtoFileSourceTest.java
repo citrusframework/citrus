@@ -76,6 +76,27 @@ public class ProtoFileSourceTest {
     }
 
     @Test
+    public void shouldResolveImportFromProtoPath() {
+        List<FileDescriptor> files = new ProtoFileSource("classpath:protos/extras/demo.proto",
+                List.of("classpath:protos/external")).getDescriptors();
+
+        assertThat(files).extracting(FileDescriptor::getName)
+                .contains("protos/extras/demo.proto", "shared.proto");
+
+        FileDescriptor demo = file(files, "protos/extras/demo.proto");
+        FieldDescriptor shared = demo.findMessageTypeByName("Demo").findFieldByName("shared");
+        assertThat(shared.getMessageType().getFullName()).isEqualTo("shared.Shared");
+    }
+
+    @Test
+    public void shouldFailForImportOutsideOfTheSourceTree() {
+        assertThatThrownBy(() -> new ProtoFileSource("classpath:bad/traversal.proto").getDescriptors())
+                .isInstanceOf(DescriptorRegistryException.class)
+                .hasMessageContaining("bad/traversal.proto")
+                .hasMessageContaining("must be a relative path within the source tree");
+    }
+
+    @Test
     public void shouldFailForMissingResource() {
         assertThatThrownBy(() -> new ProtoFileSource("classpath:missing.proto").getDescriptors())
                 .isInstanceOf(DescriptorRegistryException.class)

@@ -102,15 +102,15 @@ public class GrpcClientResponseActionBuilder
 
     @Override
     protected GrpcClientReceiveAction doBuild() {
-        if (GrpcMessageHeaders.KIND_RESPONSE.equals(kind) || GrpcMessageHeaders.KIND_STREAM_END.equals(kind)) {
-            GrpcStatusValidationContext validationContext = new GrpcStatusValidationContext();
-            validationContext.setStatusCode(statusCode);
-            if (statusDescription != null) {
-                validationContext.setStatusDescription(statusDescription);
-            }
-            trailers.forEach(validationContext::trailer);
-            validate(validationContext);
+        // the status validation context is always added, so that the gRPC status of the call is
+        // validated even when the receive action does not declare an explicit expectation
+        GrpcStatusValidationContext validationContext = new GrpcStatusValidationContext();
+        validationContext.setStatusCode(statusCode);
+        if (statusDescription != null) {
+            validationContext.setStatusDescription(statusDescription);
         }
+        trailers.forEach(validationContext::trailer);
+        validate(validationContext);
 
         GrpcClientReceiveAction action = new GrpcClientReceiveAction(this, kind);
         GrpcReceiveActionSupport.ensurePayloadValidation(this, action);
