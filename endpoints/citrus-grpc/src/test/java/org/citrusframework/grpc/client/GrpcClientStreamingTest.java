@@ -98,13 +98,13 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
     public void shouldSendClientStreamingMessagesAndComplete() {
         GrpcClientActionBuilder clientActions = new GrpcClientActionBuilder(client);
 
-        clientActions.send().call(STORE_USERS).message().body(user(1, "ada"));
+        clientActions.send().call(STORE_USERS).message().body("{ \"id\": 1, \"username\": \"ada\", \"email\": \"ada@example.com\", \"phone\": \"555-1\" }");
         clientActions.build().execute(context);
 
-        clientActions.send().streamMessage().message().body(user(2, "bob"));
+        clientActions.send().streamMessage().message().body("{ \"id\": 2, \"username\": \"bob\", \"email\": \"bob@example.com\", \"phone\": \"555-2\" }");
         clientActions.build().execute(context);
 
-        clientActions.send().streamMessage().message().body(user(3, "cid"));
+        clientActions.send().streamMessage().message().body("{ \"id\": 3, \"username\": \"cid\", \"email\": \"cid@example.com\", \"phone\": \"555-3\" }");
         clientActions.build().execute(context);
 
         clientActions.send().streamCompleted();
@@ -121,7 +121,7 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
     public void shouldSendAndReceiveBidirectionalMessages() {
         GrpcClientActionBuilder clientActions = new GrpcClientActionBuilder(client);
 
-        clientActions.send().call(BULK_USERS).message().body(user(1, "ada"));
+        clientActions.send().call(BULK_USERS).message().body("{ \"id\": 1, \"username\": \"ada\", \"email\": \"ada@example.com\", \"phone\": \"555-1\" }");
         clientActions.build().execute(context);
 
         clientActions.receive()
@@ -130,7 +130,7 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
                 .validate(jsonPath().expression("$.username", "ada"));
         clientActions.build().execute(context);
 
-        clientActions.send().streamMessage().message().body(user(2, "bob"));
+        clientActions.send().streamMessage().message().body("{ \"id\": 2, \"username\": \"bob\", \"email\": \"bob@example.com\", \"phone\": \"555-2\" }");
         clientActions.build().execute(context);
 
         clientActions.receive()
@@ -150,7 +150,7 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
     public void shouldFailToSendOnUnknownCall() {
         GrpcClientActionBuilder clientActions = new GrpcClientActionBuilder(client);
 
-        clientActions.send().streamMessage().message().body(user(1, "ada"));
+        clientActions.send().streamMessage().message().body("{ \"id\": 1, \"username\": \"ada\", \"email\": \"ada@example.com\", \"phone\": \"555-1\" }");
 
         assertThatThrownBy(() -> clientActions.build().execute(context))
                 .isInstanceOf(CitrusRuntimeException.class)
@@ -229,10 +229,5 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
             return io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING;
         }
         return io.grpc.MethodDescriptor.MethodType.UNARY;
-    }
-
-    private static String user(int id, String username) {
-        return "{ \"id\": %d, \"username\": \"%s\", \"email\": \"%s@example.com\", \"phone\": \"555-%d\" }"
-                .formatted(id, username, username, id);
     }
 }
