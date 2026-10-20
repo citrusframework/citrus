@@ -227,8 +227,8 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         if (receive.timeout != null) {
             receiveAction.setTimeout(receive.timeout);
         }
-        if (receive.selector != null) {
-            receiveAction.setSelect(receive.selector);
+        if (receive.select != null) {
+            receiveAction.setSelect(receive.select);
         }
         if (receive.validator != null) {
             builder.validator(receive.validator);
@@ -397,7 +397,7 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         private Message message;
         private Message.Extract extract;
         private Integer timeout;
-        private String selector;
+        private String select;
         private String validator;
         private String validators;
         private String headerValidator;
@@ -454,8 +454,8 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
 
         @SchemaProperty(description = "Message selector expression.")
-        public void setSelector(String selector) {
-            this.selector = selector;
+        public void setSelect(String select) {
+            this.select = select;
         }
 
         public String getValidator() {

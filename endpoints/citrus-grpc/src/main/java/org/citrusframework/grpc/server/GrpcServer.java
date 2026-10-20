@@ -75,7 +75,7 @@ public class GrpcServer extends AbstractServer {
 
     @Override
     public void initialize() {
-        if (calls != null) {
+        if (calls != null && scheduler != null) {
             // already initialized - the server and its call registry are running
             return;
         }
@@ -97,13 +97,11 @@ public class GrpcServer extends AbstractServer {
 
         this.descriptorRegistry = new GrpcDescriptorRegistry(configuration.getDescriptors(), configuration.getProtoPaths());
         this.codec = new GrpcMessageCodec(descriptorRegistry, configuration.isOmitDefaultValues());
-        this.calls = new ServerCallRegistry();
+        if (calls == null) {
+            this.calls = new ServerCallRegistry();
+        }
         this.correlationKeyName = correlator.getCorrelationKeyName(getName());
-        this.scheduler = Executors.newSingleThreadScheduledExecutor(runnable -> {
-            Thread thread = new Thread(runnable, getName() + "-grpc-timeout");
-            thread.setDaemon(true);
-            return thread;
-        });
+        this.scheduler = createScheduler();
 
         setAutoStart(autoStart);
         if (autoStart && !isRunning()) {
@@ -115,6 +113,11 @@ public class GrpcServer extends AbstractServer {
     protected void startup() {
         if (server != null) {
             return;
+        }
+
+        if (scheduler == null) {
+            // the server was stopped before - recreate the timeout scheduler so that a restart works
+            scheduler = createScheduler();
         }
 
         ServerBuilder<?> builder = configuration.isTls()
@@ -155,7 +158,19 @@ public class GrpcServer extends AbstractServer {
             scheduler = null;
         }
 
+        if (calls != null) {
+            calls.clear();
+        }
+
         LOG.info("Stopped gRPC server on port {}", configuration.getPort());
+    }
+
+    private ScheduledExecutorService createScheduler() {
+        return Executors.newSingleThreadScheduledExecutor(runnable -> {
+            Thread thread = new Thread(runnable, getName() + "-grpc-timeout");
+            thread.setDaemon(true);
+            return thread;
+        });
     }
 
     @Override

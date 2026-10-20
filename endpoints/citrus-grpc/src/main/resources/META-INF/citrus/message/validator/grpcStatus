@@ -1,2 +1,2 @@
-name=grpcStatusValidator
+name=defaultGrpcStatusMessageValidator
 type=org.citrusframework.grpc.validation.GrpcStatusValidator

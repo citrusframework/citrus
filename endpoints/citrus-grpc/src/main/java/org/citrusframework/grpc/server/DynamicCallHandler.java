@@ -338,6 +338,7 @@ public class DynamicCallHandler extends HandlerRegistry {
                     if (active != null) {
                         LOG.debug("gRPC call '{}' was cancelled by the client", active.getCallId());
                         active.markCancelled();
+                        calls.remove(active.getCallId());
                     }
                 }
             };

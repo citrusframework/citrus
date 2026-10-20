@@ -50,6 +50,11 @@
       <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <!--
+      Required so that the default JSON message validator is available to users of this endpoint.
+      The gRPC actions set the message type to JSON - without this dependency the body of a gRPC
+      message would not be validated at all.
+    -->
     <dependency>
       <groupId>org.citrusframework</groupId>
       <artifactId>citrus-validation-json</artifactId>
@@ -83,6 +88,7 @@
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib</artifactId>
     </dependency>
+    <!-- kotlin-reflect is used by the schema encoder of the Square Wire schema parser -->
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-reflect</artifactId>

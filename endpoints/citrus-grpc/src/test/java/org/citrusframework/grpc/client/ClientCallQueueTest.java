@@ -52,6 +52,18 @@ public class ClientCallQueueTest {
     }
 
     @Test
+    public void shouldNotBoundMessagesWhenBoundIsDisabled() {
+        ClientCallQueue queue = new ClientCallQueue("call-1", 0);
+
+        for (int i = 0; i < 100; i++) {
+            assertThat(queue.offer(new GrpcMessage("message-" + i))).isTrue();
+        }
+
+        assertThat(queue.isOverflowed()).isFalse();
+        assertThat(queue.size()).isEqualTo(100);
+    }
+
+    @Test
     public void shouldClearBufferedMessages() {
         ClientCallQueue queue = new ClientCallQueue("call-1", 10);
         queue.offer(new GrpcMessage("first"));
