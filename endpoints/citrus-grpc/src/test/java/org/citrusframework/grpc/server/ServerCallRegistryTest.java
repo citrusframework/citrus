@@ -191,8 +191,8 @@ public class ServerCallRegistryTest {
         ServerCallRegistry.ActiveCall activeCall = registry.register(
                 "call-1", call, methodDescriptor(), new Metadata(), 0L, scheduler);
 
-        assertThat(activeCall.countBufferedRequestMessage()).isEqualTo(1);
-        assertThat(activeCall.countBufferedRequestMessage()).isEqualTo(2);
+        assertThat(activeCall.incrementBufferedRequestCount()).isEqualTo(1);
+        assertThat(activeCall.incrementBufferedRequestCount()).isEqualTo(2);
     }
 
     private static Descriptors.MethodDescriptor methodDescriptor() {
