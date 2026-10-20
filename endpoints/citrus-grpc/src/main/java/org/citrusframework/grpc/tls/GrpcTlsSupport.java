@@ -41,12 +41,27 @@ public final class GrpcTlsSupport {
     }
 
     /**
-     * Creates client channel credentials trusting the given certificate resource.
+     * Creates client channel credentials using the JVM's default trust store. Useful for public
+     * TLS endpoints whose certificate is signed by a trusted CA.
+     *
+     * @return the channel credentials
+     */
+    public static ChannelCredentials clientCredentials() {
+        return TlsChannelCredentials.create();
+    }
+
+    /**
+     * Creates client channel credentials trusting the given certificate resource. An empty
+     * resource falls back to the JVM's default trust store.
      *
      * @param trustCertificate the trust certificate resource
      * @return the channel credentials
      */
     public static ChannelCredentials clientCredentials(String trustCertificate) {
+        if (trustCertificate == null || trustCertificate.isBlank()) {
+            return clientCredentials();
+        }
+
         Resource resource = resource(trustCertificate);
 
         try (InputStream stream = resource.getInputStream()) {
