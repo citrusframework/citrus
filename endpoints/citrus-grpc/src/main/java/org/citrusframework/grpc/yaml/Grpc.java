@@ -148,6 +148,7 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 }
             };
             applyMessage(sendAction, send);
+            build(sendAction);
             return builder.build();
         }
 
@@ -165,6 +166,7 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 }
             };
             applyMessage(sendAction, send);
+            build(sendAction);
             return builder.build();
         }
 
@@ -186,6 +188,7 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             receive.trailers.forEach(trailer -> builder.trailer(trailer.name, trailer.value));
 
             receiveAction = receive(builder);
+            build(receiveAction);
             return builder.build();
         }
 
@@ -207,10 +210,37 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             }
 
             receiveAction = receive(builder);
+            build(receiveAction);
             return builder.build();
         }
 
         throw new CitrusRuntimeException("Missing gRPC client or server - set the 'client' or 'server' property");
+    }
+
+    /**
+     * Applies the settings that are handled by the send action itself. The action resolves the
+     * actor and adds the validation contexts (e.g. the message schema validation) to the
+     * underlying action builder.
+     *
+     * @param action the send action
+     */
+    private void build(Send action) {
+        action.setReferenceResolver(referenceResolver);
+        action.setActor(actor);
+        action.build();
+    }
+
+    /**
+     * Applies the settings that are handled by the receive action itself. The action resolves the
+     * actor and adds the validation contexts (e.g. the message schema validation) to the
+     * underlying action builder.
+     *
+     * @param action the receive action
+     */
+    private void build(Receive action) {
+        action.setReferenceResolver(referenceResolver);
+        action.setActor(actor);
+        action.build();
     }
 
     private Receive receive(ReceiveMessageAction.ReceiveMessageActionBuilder<?, ?, ?> builder) {
@@ -282,6 +312,7 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         if (element.statusDescription != null) {
             builder.statusDescription(element.statusDescription);
         }
+        element.metadata.forEach(metadata -> builder.metadata(metadata.name, metadata.value));
         element.trailers.forEach(trailer -> builder.trailer(trailer.name, trailer.value));
     }
 

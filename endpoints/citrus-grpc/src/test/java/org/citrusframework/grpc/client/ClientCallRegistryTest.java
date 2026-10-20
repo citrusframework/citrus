@@ -112,8 +112,28 @@ public class ClientCallRegistryTest {
         registry.remove("call-1");
 
         assertThat(registry.get("call-1")).isNull();
-        assertThat(registry.getLiveCall("call-1")).isNull();
         assertThat(registry.getCallIds()).isEmpty();
+
+        // the live call is kept as a completed call in order to report a proper error when the
+        // test tries to send another message on the completed call
+        assertThat(registry.getLiveCall("call-1")).isNotNull();
+        assertThat(registry.getLiveCall("call-1").isCompleted()).isTrue();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldFailToSendMessageOnCompletedCall() {
+        ClientCall<DynamicMessage, DynamicMessage> call = Mockito.mock(ClientCall.class);
+
+        registry.register("call-1", new ClientCallQueue("call-1", 10), call, methodDescriptor(), () -> {
+        });
+
+        registry.remove("call-1");
+
+        assertThatThrownBy(() -> registry.sendMessage("call-1",
+                DynamicMessage.newBuilder(HelloRequest.getDescriptor()).build()))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("already completed");
     }
 
     @Test

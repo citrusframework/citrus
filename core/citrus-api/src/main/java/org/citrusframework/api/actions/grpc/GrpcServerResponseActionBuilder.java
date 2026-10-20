@@ -73,6 +73,15 @@ public interface GrpcServerResponseActionBuilder<T extends TestAction, M extends
     B trailer(String name, Object value);
 
     /**
+     * Sets a response header. In contrast to a trailer the header is sent with the response
+     * headers of the call.
+     * @param name
+     * @param value
+     * @return
+     */
+    B metadata(String name, Object value);
+
+    /**
      * Targets a specific call by its call id. Use this to answer one of several calls that are
      * currently open on the simulator. By default the response is sent to the call that was
      * received last.

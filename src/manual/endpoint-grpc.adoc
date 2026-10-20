@@ -206,6 +206,8 @@ For server-streaming methods every `streamMessage()` receive returns the next me
 order, including its 0-based sequence number. Messages that arrive before the test receives them are
 buffered (at most `maxBufferedMessages`, default 10000; beyond that the call is cancelled, the
 buffered messages are discarded and the receive fails naming the bound).
+The bound limits the number of messages that are buffered at the same time - it does not limit the
+total number of messages of a stream.
 `streamCompleted()` waits for the end of the stream and checks its status.
 
 .Java
@@ -433,6 +435,17 @@ then(grpc().client(greeterClient).receive()
 with several values is joined with a comma; binary values are split apart again when they are sent,
 so that they survive the round trip.
 
+The simulator sends response headers and trailers with the response:
+
+.Java
+[source,java,indent=0,role="secondary"]
+----
+when(grpc().server(greeterServer).send()
+        .response()
+        .metadata("x-request-id", "42")
+        .trailer("x-request-id", "42"));
+----
+
 The client endpoint's `deadline` setting applies to every call and can be overridden per send. An
 expired call reports status `DEADLINE_EXCEEDED`, which the test can expect like any other status. A
 Citrus receive timeout is independent of the gRPC deadline and raises the usual action timeout when
@@ -515,7 +528,8 @@ then(grpc().client(greeterClient).receive()
 ----
 
 The call id in the selector may also be quoted, so that the usual Citrus header selector syntax
-applies: `header:citrus_grpc_call_id = '42'`.
+applies: `header:citrus_grpc_call_id = '42'`. The `header:` prefix is optional, so that
+`citrus_grpc_call_id = '42'` selects the very same call.
 
 The simulator answers the call that was received last. The id of that call is stored in the correlation
 key of the server endpoint. A send can target a specific call with `callId(...)`:

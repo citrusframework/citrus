@@ -27,7 +27,6 @@ import org.citrusframework.grpc.message.GrpcMessageCodec;
 import org.citrusframework.grpc.message.GrpcMessageHeaders;
 import org.citrusframework.grpc.message.GrpcMetadataMapper;
 import org.citrusframework.message.Message;
-import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.messaging.Producer;
 
 /**
@@ -38,18 +37,15 @@ public class GrpcServerProducer implements Producer {
 
     private final ServerCallRegistry calls;
     private final GrpcMessageCodec codec;
-    private final MessageCorrelator correlator;
     private final String correlationKeyName;
     private final String name;
 
     public GrpcServerProducer(ServerCallRegistry calls,
                               GrpcMessageCodec codec,
-                              MessageCorrelator correlator,
                               String correlationKeyName,
                               String name) {
         this.calls = calls;
         this.codec = codec;
-        this.correlator = correlator;
         this.correlationKeyName = correlationKeyName;
         this.name = name;
     }

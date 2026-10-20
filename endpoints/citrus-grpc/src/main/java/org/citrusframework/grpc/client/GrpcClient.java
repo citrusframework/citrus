@@ -53,6 +53,12 @@ import org.slf4j.LoggerFactory;
  */
 public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveConsumer, ShutdownPhase {
 
+    /** Optional prefix of a header message selector */
+    private static final String HEADER_SELECTOR_PREFIX = "header:";
+
+    /** Separator of multiple message selector expressions */
+    private static final String SELECTOR_AND = " AND ";
+
     private static final Logger logger = LoggerFactory.getLogger(GrpcClient.class);
 
     private final ClientCallRegistry calls = new ClientCallRegistry();
@@ -90,6 +96,11 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
                 throw new CitrusRuntimeException("Unknown gRPC call '%s' - open a call first".formatted(callId));
             }
 
+            if (liveCall.isCompleted()) {
+                throw new CitrusRuntimeException("gRPC call '%s' already completed - the call has been closed by the server"
+                        .formatted(callId));
+            }
+
             if (!liveCall.method().isClientStreaming()) {
                 throw new CitrusRuntimeException("gRPC method '%s' is not client streaming - send a single request message"
                         .formatted(liveCall.method().getService().getFullName() + "/" + liveCall.method().getName()));
@@ -115,7 +126,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
         calls.register(callId, queue, call, method, () -> call.cancel("cancelled by Citrus test", null));
         registerCleanup(context);
 
-        call.start(new ClientCallListener(queue, method, codec()), GrpcMetadataMapper.toMetadata(grpcMessage.getHeaders()));
+        call.start(new ClientCallListener(call, queue, method, codec()), GrpcMetadataMapper.toMetadata(grpcMessage.getHeaders()));
         call.request(requestWindowSize());
         call.sendMessage(request);
 
@@ -128,10 +139,11 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
     }
 
     /**
-     * Calculates the number of messages to request from the server. The window is limited to the
-     * configured buffer bound so that a server streaming a large response cannot flood the client
+     * Calculates the number of messages to request from the server. The initial window is limited to
+     * the configured buffer bound so that a server streaming a large response cannot flood the client
      * with messages that are not buffered by the client at all. One additional message is requested
-     * in order to detect that the bound was exceeded.
+     * in order to detect that the bound was exceeded. The window is replenished with every message
+     * received from the server, so the number of messages is not limited to this value.
      *
      * @return the number of messages to request
      */
@@ -256,28 +268,42 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
 
     private String resolveCallId(String selector, TestContext context) {
         if (selector != null && !selector.isBlank()) {
-            String prefix = "header:" + GrpcMessageHeaders.CALL_ID;
             String expression = selector.trim();
 
-            if (!expression.startsWith(prefix)) {
-                throw new CitrusRuntimeException("Unsupported gRPC message selector '%s' - use '%s=<callId>'"
-                        .formatted(selector, prefix));
+            // the header selector prefix is optional - both 'header:citrus_grpc_call_id = 42' and
+            // 'citrus_grpc_call_id = 42' select the very same call
+            if (expression.startsWith(HEADER_SELECTOR_PREFIX)) {
+                expression = expression.substring(HEADER_SELECTOR_PREFIX.length()).trim();
             }
 
-            String value = expression.substring(prefix.length()).trim();
-            if (value.startsWith("=")) {
-                value = value.substring(1).trim();
+            int separator = expression.indexOf('=');
+            if (separator < 0) {
+                throw new CitrusRuntimeException("Unsupported gRPC message selector '%s' - use '%s = <callId>'"
+                        .formatted(selector, GrpcMessageHeaders.CALL_ID));
+            }
+
+            String key = expression.substring(0, separator).trim();
+            String value = expression.substring(separator + 1).trim();
+
+            if (!GrpcMessageHeaders.CALL_ID.equals(key)) {
+                throw new CitrusRuntimeException("Unsupported gRPC message selector '%s' - use '%s = <callId>'"
+                        .formatted(selector, GrpcMessageHeaders.CALL_ID));
+            }
+
+            if (value.contains(SELECTOR_AND)) {
+                throw new CitrusRuntimeException("Unsupported gRPC message selector '%s' - a gRPC call is selected by "
+                        + "'%s = <callId>' only".formatted(selector, GrpcMessageHeaders.CALL_ID));
             }
 
             if (value.length() > 1
                     && ((value.startsWith("'") && value.endsWith("'"))
                         || (value.startsWith("\"") && value.endsWith("\"")))) {
-                value = value.substring(1, value.length() - 1);
+                value = value.substring(1, value.length() - 1).trim();
             }
 
             if (value.isEmpty()) {
-                throw new CitrusRuntimeException("Missing gRPC call id in message selector '%s' - use '%s=<callId>'"
-                        .formatted(selector, prefix));
+                throw new CitrusRuntimeException("Missing gRPC call id in message selector '%s' - use '%s = <callId>'"
+                        .formatted(selector, GrpcMessageHeaders.CALL_ID));
             }
 
             return value;
@@ -398,6 +424,7 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
      */
     private static final class ClientCallListener extends ClientCall.Listener<DynamicMessage> {
 
+        private final ClientCall<DynamicMessage, DynamicMessage> call;
         private final ClientCallQueue queue;
         private final Descriptors.MethodDescriptor method;
         private final GrpcMessageCodec codec;
@@ -405,7 +432,11 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
         private DynamicMessage response;
         private Map<String, Object> responseHeaders;
 
-        private ClientCallListener(ClientCallQueue queue, Descriptors.MethodDescriptor method, GrpcMessageCodec codec) {
+        private ClientCallListener(ClientCall<DynamicMessage, DynamicMessage> call,
+                                  ClientCallQueue queue,
+                                  Descriptors.MethodDescriptor method,
+                                  GrpcMessageCodec codec) {
+            this.call = call;
             this.queue = queue;
             this.method = method;
             this.codec = codec;
@@ -434,7 +465,12 @@ public class GrpcClient extends AbstractEndpoint implements Producer, SelectiveC
                     .streamSequence(sequence++);
 
             addResponseHeaders(grpcMessage);
-            queue.offer(grpcMessage);
+            if (queue.offer(grpcMessage)) {
+                // The gRPC flow control window is not replenished automatically - each delivered
+                // message requires a new request in order to keep the stream flowing. Otherwise the
+                // stream would be limited to the initially requested number of messages.
+                call.request(1);
+            }
         }
 
         @Override
