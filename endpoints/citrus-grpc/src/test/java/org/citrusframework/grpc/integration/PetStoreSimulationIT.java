@@ -29,12 +29,13 @@ import static org.citrusframework.json.dsl.JsonPathSupport.jsonPath;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
- * Beeceptor's {@code grpc2grpc.PetStoreService} simulated with the Citrus gRPC simulator, the same
- * way the GraphQL client/server integration tests simulate their API. Covers all five RPC kinds:
- * unary (twice), server streaming, client streaming and bidirectional streaming.
+ * The {@code grpc2grpc.PetStoreService} (the Beeceptor demo service) simulated with the Citrus gRPC
+ * simulator, the same way the GraphQL client/server integration tests simulate their API. Covers
+ * all five RPC kinds: unary (twice), server streaming, client streaming and bidirectional
+ * streaming.
  */
 @Test
-public class BeeceptorSimulationIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+public class PetStoreSimulationIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
     private static final String PET_STORE = "grpc2grpc.PetStoreService";
     private static final String DESCRIPTORS = "classpath:org/citrusframework/grpc/streaming/petstore.proto";
