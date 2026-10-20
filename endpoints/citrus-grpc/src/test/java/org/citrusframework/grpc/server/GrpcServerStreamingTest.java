@@ -88,10 +88,26 @@ public class GrpcServerStreamingTest {
     @Test
     public void shouldServeClientStreamingCall() throws Exception {
         DynamicStreamClient client = new DynamicStreamClient(registry.findMethod(STORE_USERS));
+        Descriptors.Descriptor userType = registry.findMessage("grpc2grpc.User");
 
-        client.send(user(1, "ada"));
-        client.send(user(2, "bob"));
-        client.send(user(3, "cid"));
+        client.send(DynamicMessage.newBuilder(userType)
+                .setField(userType.findFieldByName("id"), 1)
+                .setField(userType.findFieldByName("username"), "ada")
+                .setField(userType.findFieldByName("email"), "ada@example.com")
+                .setField(userType.findFieldByName("phone"), "555-1")
+                .build());
+        client.send(DynamicMessage.newBuilder(userType)
+                .setField(userType.findFieldByName("id"), 2)
+                .setField(userType.findFieldByName("username"), "bob")
+                .setField(userType.findFieldByName("email"), "bob@example.com")
+                .setField(userType.findFieldByName("phone"), "555-2")
+                .build());
+        client.send(DynamicMessage.newBuilder(userType)
+                .setField(userType.findFieldByName("id"), 3)
+                .setField(userType.findFieldByName("username"), "cid")
+                .setField(userType.findFieldByName("email"), "cid@example.com")
+                .setField(userType.findFieldByName("phone"), "555-3")
+                .build());
         client.halfClose();
 
         GrpcMessage call = receive();
@@ -129,21 +145,32 @@ public class GrpcServerStreamingTest {
     @Test
     public void shouldServeBidirectionalCall() throws Exception {
         DynamicStreamClient client = new DynamicStreamClient(registry.findMethod(BULK_USERS));
+        Descriptors.Descriptor userType = registry.findMessage("grpc2grpc.User");
 
-        client.send(user(1, "ada"));
+        client.send(DynamicMessage.newBuilder(userType)
+                .setField(userType.findFieldByName("id"), 1)
+                .setField(userType.findFieldByName("username"), "ada")
+                .setField(userType.findFieldByName("email"), "ada@example.com")
+                .setField(userType.findFieldByName("phone"), "555-1")
+                .build());
 
         GrpcMessage call = receive();
         assertThat(call.getKind()).isEqualTo(GrpcMessageHeaders.KIND_CALL);
         assertThat(call.getMethodType()).isEqualTo(GrpcMessageHeaders.METHOD_TYPE_BIDI_STREAMING);
 
-        server.createProducer().send(new GrpcMessage(userJson(10, "echo"))
+        server.createProducer().send(new GrpcMessage("{ \"id\": 10, \"username\": \"echo\", \"email\": \"echo@example.com\", \"phone\": \"555-10\" }")
                 .kind(GrpcMessageHeaders.KIND_STREAM_MESSAGE)
                 .callId(call.getCallId()), context);
 
         assertThat(client.awaitResponses(1, 5000L)).isTrue();
         assertThat(client.decode(0)).contains("\"username\": \"echo\"");
 
-        client.send(user(2, "bob"));
+        client.send(DynamicMessage.newBuilder(userType)
+                .setField(userType.findFieldByName("id"), 2)
+                .setField(userType.findFieldByName("username"), "bob")
+                .setField(userType.findFieldByName("email"), "bob@example.com")
+                .setField(userType.findFieldByName("phone"), "555-2")
+                .build());
         GrpcMessage second = receive();
         assertThat(second.getKind()).isEqualTo(GrpcMessageHeaders.KIND_STREAM_MESSAGE);
         assertThat(second.getPayload(String.class)).contains("\"username\": \"bob\"");
@@ -163,21 +190,6 @@ public class GrpcServerStreamingTest {
 
     private GrpcMessage receive() {
         return (GrpcMessage) server.createConsumer().receive(context, 5000L);
-    }
-
-    private DynamicMessage user(int id, String username) {
-        Descriptors.Descriptor userType = registry.findMessage("grpc2grpc.User");
-        return DynamicMessage.newBuilder(userType)
-                .setField(userType.findFieldByName("id"), id)
-                .setField(userType.findFieldByName("username"), username)
-                .setField(userType.findFieldByName("email"), username + "@example.com")
-                .setField(userType.findFieldByName("phone"), "555-" + id)
-                .build();
-    }
-
-    private static String userJson(int id, String username) {
-        return "{ \"id\": %d, \"username\": \"%s\", \"email\": \"%s@example.com\", \"phone\": \"555-%d\" }"
-                .formatted(id, username, username, id);
     }
 
     private static io.grpc.MethodDescriptor<DynamicMessage, DynamicMessage> method(Descriptors.MethodDescriptor method) {
