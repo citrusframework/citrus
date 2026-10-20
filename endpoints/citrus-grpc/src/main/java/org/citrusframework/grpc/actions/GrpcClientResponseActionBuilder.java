@@ -24,6 +24,7 @@ import org.citrusframework.base.message.builder.ReceiveMessageBuilderSupport;
 import org.citrusframework.grpc.message.GrpcMessageHeaders;
 import org.citrusframework.grpc.validation.GrpcStatusValidationContext;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.validation.json.JsonTextMessageValidator;
 
 /**
  * Receives a response, a stream message or the completion of a gRPC call.
@@ -111,7 +112,9 @@ public class GrpcClientResponseActionBuilder
             validate(validationContext);
         }
 
-        return new GrpcClientReceiveAction(this, kind);
+        GrpcClientReceiveAction action = new GrpcClientReceiveAction(this, kind);
+        GrpcReceiveActionSupport.ensurePayloadValidation(this, action);
+        return action;
     }
 
     public static class GrpcClientResponseActionBuilderSupport

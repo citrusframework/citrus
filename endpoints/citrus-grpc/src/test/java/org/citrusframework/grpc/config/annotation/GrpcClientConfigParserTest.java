@@ -19,6 +19,8 @@ import java.time.Duration;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.grpc.client.GrpcClient;
+import org.citrusframework.message.DefaultMessageCorrelator;
+import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.testng.annotations.Test;
 
@@ -41,10 +43,15 @@ public class GrpcClientConfigParserTest {
         when(config.maxBufferedMessages()).thenReturn(25);
         when(config.timeout()).thenReturn(1000L);
         when(config.pollingInterval()).thenReturn(100L);
+        when(config.correlator()).thenReturn("correlator");
         when(config.actor()).thenReturn("");
 
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
+        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
+        referenceResolver.bind("correlator", correlator);
+
         GrpcClient client = new GrpcClientConfigParser()
-                .parse(config, new SimpleReferenceResolver(), new TestContext());
+                .parse(config, referenceResolver, new TestContext());
 
         assertThat(client.getEndpointConfiguration().getTarget()).isEqualTo("localhost:50051");
         assertThat(client.getEndpointConfiguration().getDescriptors())
@@ -57,5 +64,6 @@ public class GrpcClientConfigParserTest {
         assertThat(client.getEndpointConfiguration().getMaxBufferedMessages()).isEqualTo(25);
         assertThat(client.getEndpointConfiguration().getTimeout()).isEqualTo(1000L);
         assertThat(client.getEndpointConfiguration().getPollingInterval()).isEqualTo(100L);
+        assertThat(client.getEndpointConfiguration().getCorrelator()).isSameAs(correlator);
     }
 }

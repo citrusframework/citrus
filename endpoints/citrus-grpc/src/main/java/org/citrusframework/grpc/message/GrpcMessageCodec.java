@@ -71,7 +71,9 @@ public class GrpcMessageCodec {
     }
 
     /**
-     * Converts the given message body into a {@link DynamicMessage} of the given type.
+     * Converts the given message body into a {@link DynamicMessage} of the given type. A {@code null}
+     * or blank body is converted into the default instance of the expected type, so requests with an
+     * empty message type can be sent without a body.
      *
      * @param type the expected Protobuf message type
      * @param body the message body — a JSON string or a Protobuf message of the given type
@@ -91,6 +93,11 @@ public class GrpcMessageCodec {
                 throw new GrpcMessageCodecException(String.format(
                         "Failed to read message body of type '%s': %s", type.getFullName(), e.getMessage()), e);
             }
+        }
+
+        if (body == null || (body instanceof String value && value.isBlank())) {
+            // no body given - send the default instance of the expected type
+            return DynamicMessage.getDefaultInstance(type);
         }
 
         DynamicMessage.Builder builder = DynamicMessage.newBuilder(type);

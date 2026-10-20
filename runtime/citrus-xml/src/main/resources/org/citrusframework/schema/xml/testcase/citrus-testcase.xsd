@@ -3792,6 +3792,7 @@
                 <xs:complexType/>
               </xs:element>
               <xs:element name="stream-completed" type="tns:GrpcStatus"/>
+              <xs:element name="call-id" type="xs:string"/>
               <xs:element name="status-description" type="xs:string"/>
               <xs:element name="trailer" type="tns:GrpcMetadata"/>
               <xs:element name="message" type="tns:MessageType"/>

@@ -3098,6 +3098,11 @@
                                   "description": "Bean reference to a custom endpoint adapter.",
                                   "$comment": "group:advanced"
                                 },
+                                "maxBufferedMessages": {
+                                  "type": "integer",
+                                  "title": "MaxBufferedMessages",
+                                  "description": "Maximum number of buffered request messages per call."
+                                },
                                 "name": {
                                   "type": "string",
                                   "title": "Name",
@@ -3128,6 +3133,11 @@
                                     "description": "Additional import paths for .proto descriptor sources."
                                   }
                                 },
+                                "responseTimeout": {
+                                  "type": "integer",
+                                  "title": "ResponseTimeout",
+                                  "description": "Server side response deadline in milliseconds before the simulator answers INTERNAL."
+                                },
                                 "services": {
                                   "title": "Services",
                                   "description": "Full service names served by the simulator. Defaults to all services in the descriptors.",
@@ -3141,7 +3151,7 @@
                                 "timeout": {
                                   "type": "integer",
                                   "title": "Timeout",
-                                  "description": "Idle timeout in milliseconds before the simulator answers INTERNAL."
+                                  "description": "Timeout in milliseconds when waiting for incoming calls."
                                 },
                                 "tls": {
                                   "type": "boolean",
@@ -9237,6 +9247,18 @@
           "title": "Extract",
           "description": "Extracts variables from the message."
         },
+        "headerValidator": {
+          "type": "string",
+          "title": "HeaderValidator",
+          "description": "Explicit message header validator.",
+          "$comment": "group:advanced"
+        },
+        "headerValidators": {
+          "type": "string",
+          "title": "HeaderValidators",
+          "description": "List of message header validators used to validate the message.",
+          "$comment": "group:advanced"
+        },
         "message": {
           "type": "object",
           "properties": {
@@ -9625,6 +9647,18 @@
             "title": "Trailer",
             "description": "Expected trailer entries."
           }
+        },
+        "validator": {
+          "type": "string",
+          "title": "Validator",
+          "description": "Explicit message validator.",
+          "$comment": "group:advanced"
+        },
+        "validators": {
+          "type": "string",
+          "title": "Validators",
+          "description": "List of message validators used to validate the message.",
+          "$comment": "group:advanced"
         }
       },
       "additionalProperties": false    }
@@ -9645,6 +9679,11 @@
           "type": "string",
           "title": "Call",
           "description": "The gRPC method to call, e.g. package.Service/Method."
+        },
+        "callId": {
+          "type": "string",
+          "title": "CallId",
+          "description": "The id of the call to respond to."
         },
         "deadline": {
           "type": "integer",

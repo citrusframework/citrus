@@ -159,6 +159,29 @@ public class GrpcClientTest {
     }
 
     @Test
+    public void shouldSurfaceResponseHeaders() {
+        TestContext context = new TestContext();
+
+        client.send(new GrpcMessage("{\"name\":\"Ada\"}").method(SAY_HELLO), context);
+
+        GrpcMessage response = (GrpcMessage) client.receive(context, 5000);
+
+        assertThat(response.getHeader("x-response-id")).isEqualTo("res-42");
+    }
+
+    @Test
+    public void shouldReleaseCallAfterUnaryResponse() {
+        TestContext context = new TestContext();
+
+        client.send(new GrpcMessage("{\"name\":\"Ada\"}").method(SAY_HELLO), context);
+        client.receive(context, 5000);
+
+        assertThatThrownBy(() -> client.receive(context, 500))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("Unknown gRPC call");
+    }
+
+    @Test
     public void shouldReceiveStreamMessagesInOrder() {
         TestContext context = new TestContext();
 
@@ -285,7 +308,9 @@ public class GrpcClientTest {
     private ServerCallHandler<DynamicMessage, DynamicMessage> sayHelloHandler() {
         return (call, headers) -> {
             receivedHeaders.set(headers);
-            call.sendHeaders(new Metadata());
+            Metadata responseHeaders = new Metadata();
+            responseHeaders.put(Metadata.Key.of("x-response-id", Metadata.ASCII_STRING_MARSHALLER), "res-42");
+            call.sendHeaders(responseHeaders);
             call.request(2);
 
             return new ServerCall.Listener<>() {

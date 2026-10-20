@@ -127,13 +127,24 @@ public class DynamicCallHandler extends HandlerRegistry {
 
     private static MethodDescriptor<DynamicMessage, DynamicMessage> methodDescriptor(Descriptors.MethodDescriptor method) {
         return MethodDescriptor.<DynamicMessage, DynamicMessage>newBuilder()
-                .setType(method.isServerStreaming()
-                        ? MethodDescriptor.MethodType.SERVER_STREAMING
-                        : MethodDescriptor.MethodType.UNARY)
+                .setType(grpcMethodType(method))
                 .setFullMethodName(fullMethodName(method))
                 .setRequestMarshaller(ProtoUtils.marshaller(DynamicMessage.getDefaultInstance(method.getInputType())))
                 .setResponseMarshaller(ProtoUtils.marshaller(DynamicMessage.getDefaultInstance(method.getOutputType())))
                 .build();
+    }
+
+    private static MethodDescriptor.MethodType grpcMethodType(Descriptors.MethodDescriptor method) {
+        if (method.isClientStreaming() && method.isServerStreaming()) {
+            return MethodDescriptor.MethodType.BIDI_STREAMING;
+        }
+        if (method.isClientStreaming()) {
+            return MethodDescriptor.MethodType.CLIENT_STREAMING;
+        }
+        if (method.isServerStreaming()) {
+            return MethodDescriptor.MethodType.SERVER_STREAMING;
+        }
+        return MethodDescriptor.MethodType.UNARY;
     }
 
     private void handleCall(ServerCall<DynamicMessage, DynamicMessage> call,
@@ -143,7 +154,7 @@ public class DynamicCallHandler extends HandlerRegistry {
                             AtomicReference<ServerCallRegistry.ActiveCall> activeCall) {
         String callId = UUID.randomUUID().toString();
         ServerCallRegistry.ActiveCall active = calls.register(callId, call, method, headers,
-                configuration.getTimeout(), scheduler);
+                configuration.getResponseTimeout(), scheduler);
         activeCall.set(active);
         active.startTimeout();
 
@@ -242,12 +253,7 @@ public class DynamicCallHandler extends HandlerRegistry {
             Metadata headers = GrpcMetadataMapper.toMetadata(grpcReply.getHeaders());
             Descriptors.Descriptor outputType = active.getMethod().getOutputType();
 
-            if (active.getMethod().isServerStreaming()) {
-                if (status.isOk()) {
-                    active.sendHeaders(headers);
-                    active.sendMessage(responseMessage(grpcReply, outputType));
-                }
-            } else if (status.isOk()) {
+            if (status.isOk()) {
                 active.sendHeaders(headers);
                 active.sendMessage(responseMessage(grpcReply, outputType));
             }
@@ -261,11 +267,7 @@ public class DynamicCallHandler extends HandlerRegistry {
     }
 
     private DynamicMessage responseMessage(GrpcMessage reply, Descriptors.Descriptor outputType) {
-        Object payload = reply.getPayload();
-        if (payload == null || (payload instanceof String value && value.isBlank())) {
-            return DynamicMessage.getDefaultInstance(outputType);
-        }
-        return codec.encode(outputType, payload);
+        return codec.encode(outputType, reply.getPayload());
     }
 
     static Status statusOf(GrpcMessage message) {

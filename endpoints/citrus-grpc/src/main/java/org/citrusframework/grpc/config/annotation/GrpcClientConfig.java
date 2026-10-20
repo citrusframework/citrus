@@ -50,5 +50,7 @@ public @interface GrpcClientConfig {
 
     long pollingInterval() default 500L;
 
+    String correlator() default "";
+
     String actor() default "";
 }

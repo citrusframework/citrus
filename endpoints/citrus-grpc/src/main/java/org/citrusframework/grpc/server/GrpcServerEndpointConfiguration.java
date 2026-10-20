@@ -35,6 +35,7 @@ public class GrpcServerEndpointConfiguration extends AbstractEndpointConfigurati
     private String privateKey;
     private boolean omitDefaultValues;
     private long pollingInterval = 50L;
+    private long responseTimeout = 5000L;
 
     private int maxBufferedMessages = 10_000;
 
@@ -112,6 +113,21 @@ public class GrpcServerEndpointConfiguration extends AbstractEndpointConfigurati
 
     public void setPollingInterval(long pollingInterval) {
         this.pollingInterval = pollingInterval;
+    }
+
+    /**
+     * Maximum time the simulator waits for a response to a received call before it closes the call
+     * with an {@code INTERNAL} status. This is the server side response deadline and independent of
+     * the endpoint receive timeout used when waiting for incoming calls.
+     *
+     * @return the response timeout in milliseconds
+     */
+    public long getResponseTimeout() {
+        return responseTimeout;
+    }
+
+    public void setResponseTimeout(long responseTimeout) {
+        this.responseTimeout = responseTimeout;
     }
 
     public int getMaxBufferedMessages() {

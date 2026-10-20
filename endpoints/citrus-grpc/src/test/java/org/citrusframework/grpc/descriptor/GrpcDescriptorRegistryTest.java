@@ -82,6 +82,13 @@ public class GrpcDescriptorRegistryTest {
     }
 
     @Test
+    public void shouldRegisterNestedTypesInTypeRegistry() {
+        var registry = new GrpcDescriptorRegistry(List.of(DESCRIPTOR_SET));
+
+        assertThat(registry.typeRegistry().find("feat.Feature.Nested")).isNotNull();
+    }
+
+    @Test
     public void shouldLoadLazilyAndCacheDescriptors() {
         var registry = new GrpcDescriptorRegistry(List.of(GreeterGrpc.class.getName()));
 

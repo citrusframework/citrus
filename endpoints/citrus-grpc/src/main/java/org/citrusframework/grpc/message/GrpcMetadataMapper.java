@@ -16,8 +16,10 @@
 
 package org.citrusframework.grpc.message;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.grpc.Metadata;
@@ -106,14 +108,22 @@ public final class GrpcMetadataMapper {
     private static void read(Metadata metadata, Map<String, Object> headers, String prefix) {
         for (String name : metadata.keys()) {
             if (name.endsWith(BINARY_HEADER_SUFFIX)) {
-                byte[] value = metadata.get(Metadata.Key.of(name, Metadata.BINARY_BYTE_MARSHALLER));
-                if (value != null) {
-                    headers.put(prefix + name, Base64.getEncoder().encodeToString(value));
+                List<String> values = new ArrayList<>();
+                for (byte[] value : metadata.getAll(Metadata.Key.of(name, Metadata.BINARY_BYTE_MARSHALLER))) {
+                    values.add(Base64.getEncoder().encodeToString(value));
+                }
+
+                if (!values.isEmpty()) {
+                    headers.put(prefix + name, String.join(",", values));
                 }
             } else {
-                String value = metadata.get(Metadata.Key.of(name, Metadata.ASCII_STRING_MARSHALLER));
-                if (value != null) {
-                    headers.put(prefix + name, value);
+                List<String> values = new ArrayList<>();
+                for (String value : metadata.getAll(Metadata.Key.of(name, Metadata.ASCII_STRING_MARSHALLER))) {
+                    values.add(value);
+                }
+
+                if (!values.isEmpty()) {
+                    headers.put(prefix + name, String.join(",", values));
                 }
             }
         }

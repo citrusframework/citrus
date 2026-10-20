@@ -91,6 +91,12 @@ Clients can also be created from an endpoint URI in the test:
 </grpc>
 ----
 
+NOTE: The endpoint URI always creates a *client* endpoint. A simulator is always created explicitly
+as an endpoint bean, because it needs a port and a list of descriptors.
+
+The client endpoint uses a default message correlator, which names the correlation key of the
+endpoint. A custom correlator can be set with the `correlator` setting (a bean reference).
+
 [[grpc-calls]]
 == Calling a gRPC service
 
@@ -164,7 +170,8 @@ enums by their name. The `omitDefaultValues` endpoint setting switches to omitti
 == Status expectations
 
 A call that ends with a non-OK status fails the receive unless the test expects that status. The
-expected code, an optional description and trailers accept validation matchers.
+expected code, an optional description and trailers accept validation matchers. The status is always
+validated, also when the receive uses custom message validators.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -389,10 +396,11 @@ then(grpc().server(storeServer).send()
 ----
 
 Calls to services the simulator does not serve are answered `UNIMPLEMENTED` without a test step. A
-call that gets no reply within the server timeout ends with `INTERNAL`; the timeout restarts with
-every simulator send. A send on a call the client has cancelled fails the test. The simulator
-buffers at most `maxBufferedMessages` request messages per call (default 10 000); beyond that the
-call ends with `RESOURCE_EXHAUSTED`.
+call that gets no reply within the server response timeout (`responseTimeout`, default 5000 ms) ends
+with `INTERNAL`; the timeout restarts with every simulator send. The `timeout` setting of the
+simulator is the receive timeout used when waiting for incoming calls. A send on a call the client
+has cancelled fails the test. The simulator buffers at most `maxBufferedMessages` request messages
+per call (default 10 000); beyond that the call ends with `RESOURCE_EXHAUSTED`.
 
 A custom endpoint adapter (e.g. a static response) answers calls without test steps: its reply
 becomes the unary response, or one stream message followed by `OK` for a server-streaming call. A
@@ -469,3 +477,46 @@ kind, status and stream position:
 
 These headers can be validated and extracted like any other message header, and a receive can select
 a specific call with `citrus_grpc_call_id`.
+
+The response headers (initial metadata) and the response trailers of a call are mapped to Citrus
+message headers one to one, so they can be validated and extracted like any other header. Binary
+metadata (`-bin` suffixed) is base64 encoded. A header with several values is joined with a comma.
+
+[[grpc-parallel-calls]]
+== Calls in parallel
+
+A client endpoint keeps the id of its most recent call in the test context. The variable is scoped to
+the endpoint, so several gRPC clients do not overwrite each other:
+
+[cols="3,5"]
+|===
+| Variable | Value
+
+| `citrus_grpc_call_id_<endpointName>` | Id of the most recent call of that client endpoint
+| `citrus_message_correlator_<endpointName>` | Same id, used as the correlation key of the endpoint
+|===
+
+A receive picks the call of the correlation key by default. To collect the responses of calls that
+run in parallel, select the call explicitly:
+
+.Java
+[source,java,indent=0,role="secondary"]
+----
+String callId = context.getVariable("citrus_grpc_call_id_greeterClient");
+
+then(grpc().client(greeterClient).receive()
+        .selector("header:citrus_grpc_call_id=" + callId)
+        .response());
+----
+
+The simulator answers the call that was received last. The id of that call is stored in the correlation
+key of the server endpoint. A send can target a specific call with `callId(...)`:
+
+.Java
+[source,java,indent=0,role="secondary"]
+----
+then(grpc().server(greeterServer).send()
+        .callId(context.getVariable("citrus_message_correlator_greeterServer"))
+        .response()
+        .message().body("{ \\"message\\": \\"Hello\\" }"));
+----

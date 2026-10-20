@@ -65,7 +65,9 @@ public class GrpcServerRequestActionBuilder
 
     @Override
     protected ReceiveMessageAction doBuild() {
-        return new ReceiveMessageAction(this);
+        ReceiveMessageAction action = new ReceiveMessageAction(this);
+        GrpcReceiveActionSupport.ensurePayloadValidation(this, action);
+        return action;
     }
 
     public static class GrpcServerRequestActionBuilderSupport

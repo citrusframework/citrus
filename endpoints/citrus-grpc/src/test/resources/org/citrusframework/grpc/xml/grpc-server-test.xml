@@ -45,6 +45,7 @@
 
     <grpc server="grpcServer">
       <send>
+        <call-id>call-1</call-id>
         <response status="OK"/>
         <trailer name="x-trailer">42</trailer>
         <message>
