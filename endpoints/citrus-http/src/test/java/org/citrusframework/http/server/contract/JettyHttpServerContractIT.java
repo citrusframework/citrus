@@ -16,11 +16,13 @@
 
 package org.citrusframework.http.server.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import org.citrusframework.http.interceptor.LoggingHandlerInterceptor;
+import org.citrusframework.http.interceptor.HttpServerInterceptor;
+import org.citrusframework.http.interceptor.LoggingServerInterceptor;
 import org.citrusframework.http.security.BasicAuthConstraint;
 import org.citrusframework.http.security.SecurityHandlerFactory;
 import org.citrusframework.http.security.User;
@@ -67,9 +69,11 @@ public class JettyHttpServerContractIT extends AbstractHttpServerContractIT {
 
     @Override
     protected void configureTracing(AbstractHttpServer server, MessageListeners messageListeners) {
-        LoggingHandlerInterceptor loggingInterceptor = new LoggingHandlerInterceptor();
+        LoggingServerInterceptor loggingInterceptor = new LoggingServerInterceptor();
         loggingInterceptor.setMessageListener(messageListeners);
 
-        server.getInterceptors().add(loggingInterceptor);
+        List<HttpServerInterceptor> interceptors = new ArrayList<>(server.getServerInterceptors());
+        interceptors.add(loggingInterceptor);
+        server.setServerInterceptors(interceptors);
     }
 }

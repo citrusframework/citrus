@@ -16,12 +16,16 @@
 
 package org.citrusframework.http.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.base.server.AbstractServer;
+import org.citrusframework.http.interceptor.HttpServerInterceptor;
+import org.citrusframework.http.interceptor.LoggingServerInterceptor;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
+import org.citrusframework.report.MessageListeners;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -103,6 +107,26 @@ public abstract class AbstractHttpServer extends AbstractServer {
      * Optional secure connection settings
      */
     private HttpSecureConnection secureConnection;
+
+    /**
+     * List of Citrus server interceptors running around the request handling
+     */
+    private List<HttpServerInterceptor> serverInterceptors = new ArrayList<>();
+
+    @Override
+    public void initialize() {
+        super.initialize();
+
+        if (getReferenceResolver() != null && getReferenceResolver().resolveAll(MessageListeners.class).size() == 1) {
+            MessageListeners messageListeners = getReferenceResolver().resolve(MessageListeners.class);
+
+            getServerInterceptors().stream()
+                    .filter(LoggingServerInterceptor.class::isInstance)
+                    .map(LoggingServerInterceptor.class::cast)
+                    .filter(interceptor -> !interceptor.hasMessageListeners())
+                    .forEach(interceptor -> interceptor.setMessageListener(messageListeners));
+        }
+    }
 
     /**
      * Gets the port.
@@ -304,5 +328,23 @@ public abstract class AbstractHttpServer extends AbstractServer {
      */
     public void setSecureConnection(HttpSecureConnection secureConnection) {
         this.secureConnection = secureConnection;
+    }
+
+    /**
+     * Gets the list of Citrus server interceptors.
+     *
+     * @return the server interceptors.
+     */
+    public List<HttpServerInterceptor> getServerInterceptors() {
+        return serverInterceptors;
+    }
+
+    /**
+     * Sets the list of Citrus server interceptors.
+     *
+     * @param serverInterceptors the server interceptors to set.
+     */
+    public void setServerInterceptors(List<HttpServerInterceptor> serverInterceptors) {
+        this.serverInterceptors = serverInterceptors;
     }
 }

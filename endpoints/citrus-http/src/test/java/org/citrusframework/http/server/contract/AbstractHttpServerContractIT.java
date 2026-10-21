@@ -1029,6 +1029,85 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
         assertThat(outboundMessage.getPayload().toString()).contains("HTTP/1.1 200");
     }
 
+    /**
+     * HSRV-022: Citrus server interceptors run around request handling.
+     */
+    @Test
+    public void shouldShortCircuitRequestWithInterceptor() {
+        AbstractHttpServer server = startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+            builder.interceptor((request, chain) -> new HttpMessage("short circuit"));
+        });
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/orders", new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getBodyAsString()).isEqualTo("short circuit");
+        assertThat(getEndpointAdapter().hasReceivedRequests()).isFalse();
+    }
+
+    /**
+     * HSRV-022: Citrus server interceptors run around request handling.
+     */
+    @Test
+    public void shouldDecorateRequestWithInterceptor() {
+        AbstractHttpServer server = startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+            builder.interceptor((request, chain) -> chain.proceed(request.header("X-Intercepted", "true")));
+        });
+
+        getEndpointAdapter().setReplyProvider(request -> new HttpMessage("ok"));
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/orders", new byte[0]);
+        assertThat(response.getStatusCode()).isEqualTo(200);
+
+        HttpMessage request = getEndpointAdapter().takeRequest(5, TimeUnit.SECONDS);
+        assertThat(request.getHeader("X-Intercepted")).isEqualTo("true");
+    }
+
+    /**
+     * HSRV-022: Citrus server interceptors run around request handling.
+     */
+    @Test
+    public void shouldReplaceReplyWithInterceptor() {
+        AbstractHttpServer server = startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+            builder.interceptor((request, chain) -> {
+                chain.proceed(request);
+                return new HttpMessage("replaced").status(HttpStatus.ACCEPTED);
+            });
+        });
+
+        getEndpointAdapter().setReplyProvider(request -> new HttpMessage("original"));
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/orders", new byte[0]);
+        assertThat(response.getStatusCode()).isEqualTo(202);
+        assertThat(response.getBodyAsString()).isEqualTo("replaced");
+    }
+
+    /**
+     * HSRV-022: Citrus server interceptors run around request handling.
+     */
+    @Test
+    public void shouldAnswerWithServerErrorWhenInterceptorFails() {
+        AbstractHttpServer server = startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+            builder.interceptor((request, chain) -> {
+                throw new IllegalStateException("Interceptor failed");
+            });
+        });
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/orders", new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(500);
+        assertThat(response.getBodyAsString()).isEmpty();
+        assertThat(getEndpointAdapter().hasReceivedRequests()).isFalse();
+    }
+
     private static String basicAuthorization(String username, String password) {
         return "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes(ISO_8859_1));
     }

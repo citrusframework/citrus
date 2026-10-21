@@ -16,6 +16,7 @@
 
 package org.citrusframework.http.server;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.base.server.AbstractServerBuilder;
+import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
@@ -263,6 +265,24 @@ public class AbstractCommonHttpServerBuilder<T extends AbstractHttpServer, B ext
     public B authentication(String resourcePath, HttpAuthentication auth) {
         endpoint.setAuthentication(auth);
         endpoint.setSecuredPath(resourcePath);
+        return self;
+    }
+
+    /**
+     * Adds a Citrus server interceptor that runs around the request handling.
+     */
+    public B interceptor(HttpServerInterceptor interceptor) {
+        List<HttpServerInterceptor> interceptors = new ArrayList<>(endpoint.getServerInterceptors());
+        interceptors.add(interceptor);
+        endpoint.setServerInterceptors(interceptors);
+        return self;
+    }
+
+    /**
+     * Sets the list of Citrus server interceptors that run around the request handling.
+     */
+    public B serverInterceptors(List<HttpServerInterceptor> interceptors) {
+        endpoint.setServerInterceptors(new ArrayList<>(interceptors));
         return self;
     }
 

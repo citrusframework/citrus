@@ -16,7 +16,9 @@
 
 package org.citrusframework.http.controller;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -29,9 +31,13 @@ import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
+import org.citrusframework.http.interceptor.HttpServerInterceptor;
+import org.citrusframework.http.interceptor.HttpServerInterceptorChain;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.server.HttpServerSettings;
 import org.citrusframework.message.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -70,6 +76,30 @@ public class HttpMessageController {
 
     /** Maximum number of responses cached on this server for message tracing reasons */
     private int responseCacheSize = HttpServerSettings.responseCacheSize();
+
+    /** List of Citrus server interceptors running around the request handling */
+    private List<HttpServerInterceptor> serverInterceptors = new ArrayList<>();
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(HttpMessageController.class);
+
+    /**
+     * Gets the list of Citrus server interceptors.
+     *
+     * @return the server interceptors.
+     */
+    public List<HttpServerInterceptor> getServerInterceptors() {
+        return serverInterceptors;
+    }
+
+    /**
+     * Sets the list of Citrus server interceptors.
+     *
+     * @param serverInterceptors the server interceptors to set.
+     */
+    public void setServerInterceptors(List<HttpServerInterceptor> serverInterceptors) {
+        this.serverInterceptors = serverInterceptors;
+    }
 
     @RequestMapping(value = "**", method = { RequestMethod.GET })
     @ResponseBody
@@ -167,10 +197,20 @@ public class HttpMessageController {
                 .version(servletRequest.getProtocol())
                 .method(method);
 
-        Message response = endpointAdapter.handleMessage(request);
+        Message response;
+        boolean serverError = false;
+        try {
+            response = new HttpServerInterceptorChain(serverInterceptors, this::handleEndpointMessage).proceed(request);
+        } catch (Exception e) {
+            logger.error("Error while handling Http request: {}", e.getMessage(), e);
+            response = null;
+            serverError = true;
+        }
 
         ResponseEntity<?> responseEntity;
-        if (response == null) {
+        if (serverError) {
+            responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } else if (response == null) {
             responseEntity = new ResponseEntity<>(HttpStatus.valueOf(endpointConfiguration.getDefaultStatusCode()));
         } else {
             HttpMessage httpResponse;
@@ -203,6 +243,24 @@ public class HttpMessageController {
         clearResponseCacheEntries(activeRequests, responseCache);
 
         return responseEntity;
+    }
+
+    /**
+     * Handles the request with the endpoint adapter and applies the default status to the reply.
+     * The default status is applied before the interceptors see the reply, so that a server
+     * interceptor is able to report the very same status that the client receives.
+     *
+     * @param request the request message to handle.
+     * @return the reply message of the endpoint adapter.
+     */
+    private Message handleEndpointMessage(HttpMessage request) {
+        Message reply = endpointAdapter.handleMessage(request);
+
+        if (reply instanceof HttpMessage httpReply && httpReply.getStatusCode() == null) {
+            httpReply.status(HttpStatusCode.valueOf(endpointConfiguration.getDefaultStatusCode()));
+        }
+
+        return reply;
     }
 
     /**

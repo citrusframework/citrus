@@ -27,6 +27,7 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
@@ -63,7 +64,15 @@ public class HttpServerConfigParser implements AnnotationConfigParser<HttpServer
             builder.endpointAdapter(referenceResolver.resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
-        builder.interceptors(referenceResolver.resolve(annotation.interceptors(), HandlerInterceptor.class));
+        List<Object> resolvedInterceptors = referenceResolver.resolve(annotation.interceptors(), Object.class);
+        builder.interceptors(resolvedInterceptors.stream()
+                .filter(HandlerInterceptor.class::isInstance)
+                .map(HandlerInterceptor.class::cast)
+                .toList());
+        builder.serverInterceptors(resolvedInterceptors.stream()
+                .filter(HttpServerInterceptor.class::isInstance)
+                .map(HttpServerInterceptor.class::cast)
+                .toList());
 
         if (hasText(annotation.actor())) {
             builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
