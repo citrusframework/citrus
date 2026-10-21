@@ -44,6 +44,11 @@ import org.citrusframework.variable.VariableExtractor;
  * constructed, because the variable is only resolved at runtime. This context resolves the
  * expressions at runtime and delegates the validation to the matching JSONPath or XPath
  * validation context.
+ * <p>
+ * The context may hold a mix of dynamic and static path expressions. As soon as a single
+ * expression references a variable all expressions are routed to this context. Static
+ * expressions are not affected by the variable resolution and are classified as JSONPath or
+ * XPath in exactly the same way as the dynamic ones.
  */
 public class DynamicPathExpressionValidationContext extends DefaultValidationContext {
 

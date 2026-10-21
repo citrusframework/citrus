@@ -107,6 +107,7 @@ public class PathExpressionValidationContext {
             if (expressions.keySet().stream()
                     .anyMatch(IsDynamicPathExpressionPredicate.getInstance()::test)) {
                 // the type of the path expression is unknown as the variable gets resolved at runtime only
+                // all expressions are routed to the dynamic context, static ones are left untouched
                 return new DynamicPathExpressionValidationContext.Builder()
                         .expressions(expressions)
                         .build();
