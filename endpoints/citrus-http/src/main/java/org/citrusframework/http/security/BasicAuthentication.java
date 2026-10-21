@@ -52,7 +52,7 @@ public class BasicAuthentication implements HttpAuthentication {
     }
 
     @Override
-    @Deprecated(since = "5.1.0")
+    @Deprecated(since = "5.2")
     public SecurityHandler getSecurityHandler(String resourcePath) {
         try {
             SecurityHandlerFactory securityHandlerFactory = new SecurityHandlerFactory();

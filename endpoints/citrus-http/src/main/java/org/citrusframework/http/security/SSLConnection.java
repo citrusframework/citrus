@@ -78,7 +78,7 @@ public class SSLConnection implements HttpSecureConnection {
     }
 
     @Override
-    @Deprecated(since = "5.1.0")
+    @Deprecated(since = "5.2")
     public ServerConnector getServerConnector(int securePort) {
         ServerConnector connector = new ServerConnector(new Server(),
                 new SslConnectionFactory(sslContextFactory(), HttpVersion.HTTP_1_1.asString()),

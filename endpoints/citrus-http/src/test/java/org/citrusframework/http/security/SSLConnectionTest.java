@@ -92,6 +92,6 @@ public class SSLConnectionTest {
         Method method = HttpSecureConnection.class.getMethod("getServerConnector", int.class);
 
         assertThat(method.isAnnotationPresent(Deprecated.class)).isTrue();
-        assertThat(method.getAnnotation(Deprecated.class).since()).isEqualTo("5.1.0");
+        assertThat(method.getAnnotation(Deprecated.class).since()).isEqualTo("5.2");
     }
 }

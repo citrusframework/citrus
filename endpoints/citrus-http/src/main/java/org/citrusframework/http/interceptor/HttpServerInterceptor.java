@@ -35,7 +35,7 @@ import org.citrusframework.message.Message;
  * When an interceptor raises an exception the server answers the client with an internal
  * server error.
  *
- * @since 5.1.0
+ * @since 5.2
  */
 @FunctionalInterface
 public interface HttpServerInterceptor {

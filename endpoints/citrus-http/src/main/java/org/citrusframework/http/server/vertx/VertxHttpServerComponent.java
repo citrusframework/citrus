@@ -30,7 +30,7 @@ import org.citrusframework.util.TypeConversionUtils;
  * The endpoint uri uses the type {@code http.vertx-server} and supports the parameters
  * {@code port}, {@code contextPath}, {@code autoStart}, {@code timeout} and {@code name}.
  *
- * @since 5.1.0
+ * @since 5.2
  */
 public class VertxHttpServerComponent extends AbstractEndpointComponent {
 

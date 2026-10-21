@@ -32,7 +32,7 @@ public interface HttpSecureConnection {
      * @return
      * @deprecated Jetty specific, use {@link #getServerTlsSettings()} instead.
      */
-    @Deprecated(since = "5.1.0")
+    @Deprecated(since = "5.2")
     ServerConnector getServerConnector(int securePort);
 
     /**

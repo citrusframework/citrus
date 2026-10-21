@@ -35,7 +35,7 @@ import static org.citrusframework.util.StringUtils.hasText;
 /**
  * Creates the Vert.x based Http server from the {@link VertxHttpServerConfig} annotation.
  *
- * @since 5.1.0
+ * @since 5.2
  */
 public class VertxHttpServerConfigParser implements AnnotationConfigParser<VertxHttpServerConfig, VertxHttpServer> {
 

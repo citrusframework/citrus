@@ -91,7 +91,7 @@ public class BasicAuthenticationTest {
         Method method = HttpAuthentication.class.getMethod("getSecurityHandler", String.class);
 
         assertThat(method.isAnnotationPresent(Deprecated.class)).isTrue();
-        assertThat(method.getAnnotation(Deprecated.class).since()).isEqualTo("5.1.0");
+        assertThat(method.getAnnotation(Deprecated.class).since()).isEqualTo("5.2");
     }
 
     @Test

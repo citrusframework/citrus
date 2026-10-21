@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
 /**
  * Parser for the Vert.x based Http server implementation in the Citrus http namespace.
  *
- * @since 5.1.0
+ * @since 5.2
  */
 public class VertxHttpServerParser extends AbstractServerParser {
 

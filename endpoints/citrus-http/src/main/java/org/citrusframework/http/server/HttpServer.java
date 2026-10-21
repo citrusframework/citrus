@@ -342,7 +342,7 @@ public class HttpServer extends AbstractHttpServer {
      * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
      * use a Spring servlet context.
      */
-    @Deprecated(since = "5.1.0")
+    @Deprecated(since = "5.2")
     public String getContextConfigLocation() {
         return contextConfigLocation;
     }
@@ -354,7 +354,7 @@ public class HttpServer extends AbstractHttpServer {
      * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
      * use a Spring servlet context.
      */
-    @Deprecated(since = "5.1.0")
+    @Deprecated(since = "5.2")
     public void setContextConfigLocation(String contextConfigLocation) {
         this.contextConfigLocation = contextConfigLocation;
     }
@@ -505,7 +505,7 @@ public class HttpServer extends AbstractHttpServer {
      * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
      * use a Spring servlet context.
      */
-    @Deprecated(since = "5.1.0")
+    @Deprecated(since = "5.2")
     public boolean isUseRootContextAsParent() {
         return useRootContextAsParent;
     }
@@ -517,7 +517,7 @@ public class HttpServer extends AbstractHttpServer {
      * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
      * use a Spring servlet context.
      */
-    @Deprecated(since = "5.1.0")
+    @Deprecated(since = "5.2")
     public void setUseRootContextAsParent(boolean useRootContextAsParent) {
         this.useRootContextAsParent = useRootContextAsParent;
     }

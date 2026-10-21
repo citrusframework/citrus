@@ -31,7 +31,7 @@ public interface HttpAuthentication {
      * @return
      * @deprecated Jetty specific, use {@link #getServerAuthentication(String)} instead.
      */
-    @Deprecated(since = "5.1.0")
+    @Deprecated(since = "5.2")
     SecurityHandler getSecurityHandler(String resourcePath);
 
     /**

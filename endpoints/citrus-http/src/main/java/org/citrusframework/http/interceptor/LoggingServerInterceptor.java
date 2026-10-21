@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * the sent reply in raw HTTP form. When the server runs in a Citrus context with message listeners
  * the messages are reported to those listeners instead of being written to the debug log.
  *
- * @since 5.1.0
+ * @since 5.2
  */
 public class LoggingServerInterceptor implements HttpServerInterceptor {
 

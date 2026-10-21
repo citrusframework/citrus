@@ -28,7 +28,7 @@ import org.springframework.http.HttpStatus;
  * neutral options of the Http server. Options that are specific to the Jetty based server
  * (servlet context, servlet handler, filters, connectors) are not supported.
  *
- * @since 5.1.0
+ * @since 5.2
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })

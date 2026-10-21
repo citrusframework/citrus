@@ -68,6 +68,6 @@ public class HttpServerDeprecationTest extends AbstractTestNGUnitTest {
         Deprecated deprecated = method.getAnnotation(Deprecated.class);
 
         assertThat(deprecated).as("%s should be deprecated", method).isNotNull();
-        assertThat(deprecated.since()).as("%s should be deprecated since 5.1.0", method).isEqualTo("5.1.0");
+        assertThat(deprecated.since()).as("%s should be deprecated since 5.2", method).isEqualTo("5.2");
     }
 }
