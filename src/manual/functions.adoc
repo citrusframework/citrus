@@ -1591,6 +1591,23 @@ As the Spring environment is also able to resolve System properties you can use 
 
 The default value is optional and provides an error fallback in case the environment setting is not available. In case no default value is provided the function will fail with errors.
 
+NOTE: The `env()` function is part of the `citrus-spring` module. When running tests without the Spring environment use the <<functions-env-var,envVar()>> function instead.
+
+[[functions-env-var]]
+== envVar()
+
+The *envVar* function resolves an operating system environment variable at test runtime. The resulting value is returned as function result. In case the environment variable is not set an optional default value is used.
+In case no default value is given the function will fail with errors.
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:envVar('MY_VAR', 'my-default')]]></message>
+</echo>
+----
+
+The function is part of the `citrus-base` module, so it is available in any Citrus test and does not require the Spring environment.
+
 [[functions-unix-timestamp]]
 == unixTimestamp()
 
