@@ -25,6 +25,7 @@ import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.http.client.HttpEndpointComponent;
 import org.citrusframework.http.client.HttpsEndpointComponent;
+import org.citrusframework.http.server.vertx.VertxHttpServerComponent;
 import org.citrusframework.jms.endpoint.JmsEndpointComponent;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.spi.ReferenceResolver;
@@ -83,7 +84,7 @@ public class WebServiceEndpointComponentTest {
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 6L);
+        Assert.assertEquals(validators.size(), 7L);
         Assert.assertNotNull(validators.get("direct"));
         Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
         Assert.assertNotNull(validators.get("message-store"));
@@ -94,6 +95,8 @@ public class WebServiceEndpointComponentTest {
         Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
         Assert.assertNotNull(validators.get("https"));
         Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
+        Assert.assertNotNull(validators.get("http.vertx-server"));
+        Assert.assertEquals(validators.get("http.vertx-server").getClass(), VertxHttpServerComponent.class);
         Assert.assertNotNull(validators.get("soap"));
         Assert.assertEquals(validators.get("soap").getClass(), WebServiceEndpointComponent.class);
     }

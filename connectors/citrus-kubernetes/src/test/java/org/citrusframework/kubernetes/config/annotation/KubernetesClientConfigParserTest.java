@@ -24,6 +24,7 @@ import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import org.citrusframework.http.config.annotation.HttpClientConfigParser;
 import org.citrusframework.http.config.annotation.HttpServerConfigParser;
+import org.citrusframework.http.config.annotation.VertxHttpServerConfigParser;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
@@ -117,7 +118,7 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = lookup();
-        assertEquals(validators.size(), 5L);
+        assertEquals(validators.size(), 6L);
         assertNotNull(validators.get("direct.async"));
         assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
         assertNotNull(validators.get("direct.sync"));
@@ -126,6 +127,8 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
         assertNotNull(validators.get("http.server"));
         assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+        assertNotNull(validators.get("http.vertx-server"));
+        assertEquals(validators.get("http.vertx-server").getClass(), VertxHttpServerConfigParser.class);
         assertNotNull(validators.get("k8s.client"));
         assertEquals(validators.get("k8s.client").getClass(), KubernetesClientConfigParser.class);
     }
