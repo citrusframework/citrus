@@ -28,6 +28,7 @@ import jakarta.servlet.Filter;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
 import org.citrusframework.base.server.AbstractServerBuilder;
+import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.util.StringUtils;
@@ -35,6 +36,8 @@ import org.citrusframework.api.yaml.SchemaProperty;
 import org.eclipse.jetty.ee11.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractHttpServerBuilder<T, B>> extends AbstractCommonHttpServerBuilder<T, B> {
@@ -365,6 +368,87 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     public B secured(int securePort, HttpSecureConnection conn) {
         super.secured(securePort, conn);
         endpoint.setConnector(conn.getServerConnector(securePort));
+        return self;
+    }
+
+    /*
+     * The transport neutral options are declared in the common base class
+     * AbstractCommonHttpServerBuilder. The overrides below keep the erased method
+     * descriptors of this class unchanged so that clients compiled against a previous
+     * version of citrus-http keep working when they upgrade the library.
+     */
+
+    @Override
+    public B port(int port) {
+        super.port(port);
+        return self;
+    }
+
+    @Override
+    public B securePort(int port) {
+        super.securePort(port);
+        return self;
+    }
+
+    @Override
+    public B contextPath(String contextPath) {
+        super.contextPath(contextPath);
+        return self;
+    }
+
+    @Override
+    public B useDefaultFilters(boolean useDefaultFilters) {
+        super.useDefaultFilters(useDefaultFilters);
+        return self;
+    }
+
+    @Override
+    public B binaryMediaTypes(List<MediaType> binaryMediaTypes) {
+        super.binaryMediaTypes(binaryMediaTypes);
+        return self;
+    }
+
+    @Override
+    public B messageConverter(HttpMessageConverter messageConverter) {
+        super.messageConverter(messageConverter);
+        return self;
+    }
+
+    @Override
+    public B handleCookies(boolean flag) {
+        super.handleCookies(flag);
+        return self;
+    }
+
+    @Override
+    public B removeSemicolonPathContent(boolean removeSemicolonPathContent) {
+        super.removeSemicolonPathContent(removeSemicolonPathContent);
+        return self;
+    }
+
+    @Override
+    public B defaultStatus(HttpStatus status) {
+        super.defaultStatus(status);
+        return self;
+    }
+
+    @Override
+    public B timeout(long timeout) {
+        super.timeout(timeout);
+        return self;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public B authentication(HttpAuthentication auth) {
+        super.authentication(auth);
+        return self;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public B secured(HttpSecureConnection conn) {
+        super.secured(conn);
         return self;
     }
 }
