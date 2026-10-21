@@ -24,6 +24,7 @@ import org.citrusframework.http.config.annotation.VertxHttpServerConfig;
 import org.citrusframework.http.server.vertx.VertxHttpServer;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -35,11 +36,9 @@ import org.testng.annotations.Test;
  */
 public class VertxHttpServerAnnotationIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
-    private static final int PORT = 19305;
-
     @CitrusEndpoint
-    @VertxHttpServerConfig(autoStart = true,
-            port = PORT,
+    @VertxHttpServerConfig(autoStart = false,
+            port = 0,
             timeout = 5000L)
     private VertxHttpServer vertxHttpServer;
 
@@ -53,10 +52,14 @@ public class VertxHttpServerAnnotationIT extends TestNGCitrusSpringSupport imple
     @Test
     @CitrusTest
     public void shouldCreateVertxServerWithAnnotation() {
+        int port = SocketUtils.findAvailableTcpPort();
+        vertxHttpServer.setPort(port);
+        vertxHttpServer.start();
+
         Assert.assertTrue(vertxHttpServer.isRunning());
 
         HttpClient httpClient = new HttpClientBuilder()
-                .requestUrl("http://localhost:" + PORT)
+                .requestUrl("http://localhost:" + port)
                 .build();
 
         when(http().client(httpClient)

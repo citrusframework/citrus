@@ -19,7 +19,9 @@
     <description>Test receives messages via the Vert.x based Http server instance and sends proper response back to client.</description>
 
     <actions>
-      <http:send-request client="vertxHttpClient" fork="true">
+      <http:send-request client="vertxHttpClient"
+                         uri="http://localhost:citrus:serverPort('vertxHttpServer')"
+                         fork="true">
         <http:GET path="/orders/42"/>
       </http:send-request>
 

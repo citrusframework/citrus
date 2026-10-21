@@ -25,7 +25,7 @@ actions {
         http() {
             vertxServer {
                 name = 'groovyVertxHttpServer'
-                port = 19303
+                port = 0
                 autoStart = true
                 timeout = 5000L
             }
@@ -33,7 +33,7 @@ actions {
         http() {
             client {
                 name = 'groovyVertxHttpClient'
-                requestUrl = 'http://localhost:19303'
+                requestUrl = 'http://localhost'
             }
         }
     """))
@@ -42,7 +42,7 @@ actions {
         .send()
         .get()
             .fork(true)
-            .uri('http://localhost:19303')
+            .uri("http://localhost:citrus:serverPort('groovyVertxHttpServer')")
             .path('/orders/42')
             .message()
                 .contentType("text/plain")

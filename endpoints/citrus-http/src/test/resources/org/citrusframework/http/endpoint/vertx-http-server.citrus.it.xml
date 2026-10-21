@@ -19,15 +19,15 @@
       xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <endpoints>
     <http>
-      <vertx-server name="xmlVertxHttpServer" port="19301" auto-start="true" timeout="5000"/>
+      <vertx-server name="xmlVertxHttpServer" port="0" auto-start="true" timeout="5000"/>
     </http>
     <http>
-      <client name="xmlVertxHttpClient" request-url="http://localhost:19301" timeout="5000"/>
+      <client name="xmlVertxHttpClient" request-url="http://localhost" timeout="5000"/>
     </http>
   </endpoints>
   <actions>
     <http client="xmlVertxHttpClient">
-      <send-request uri="http://localhost:19301" fork="true">
+      <send-request uri="http://localhost:citrus:serverPort('xmlVertxHttpServer')" fork="true">
         <GET path="/orders/42"/>
       </send-request>
     </http>

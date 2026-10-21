@@ -19,19 +19,19 @@ endpoints:
   - http:
       vertxServer:
         name: "yamlVertxHttpServer"
-        port: 19302
+        port: 0
         autoStart: true
         timeout: 5000
   - http:
       client:
         name: "yamlVertxHttpClient"
-        requestUrl: "http://localhost:19302"
+        requestUrl: "http://localhost"
         timeout: 5000
 actions:
   - http:
       client: "yamlVertxHttpClient"
       sendRequest:
-        uri: "http://localhost:19302"
+        uri: "http://localhost:citrus:serverPort('yamlVertxHttpServer')"
         fork: true
         GET:
           path: "/orders/42"

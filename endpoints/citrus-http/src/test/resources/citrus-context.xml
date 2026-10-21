@@ -21,6 +21,10 @@
     <citrus:variable name="project.name" value="Citrus Http Integration Testing"/>
   </citrus:global-variables>
 
+  <!-- Default function library with all functions registered on the classpath -->
+  <bean id="citrusFunctionRegistry" class="org.citrusframework.spring.functions.FunctionRegistryFactory"/>
+  <bean id="citrusFunctionLibrary" class="org.citrusframework.spring.functions.DefaultFunctionLibraryFactory"/>
+
   <!-- Xsd schema resources and definitions -->
   <citrus:schema-repository id="helloSchemaRepository">
     <citrus:schemas>
@@ -183,12 +187,12 @@
 
   <!-- Vert.x based Http server endpoints -->
   <citrus-http:vertx-server id="vertxHttpServer"
-                            port="19306"
+                            port="0"
                             auto-start="true"
                             timeout="5000"/>
 
   <citrus-http:client id="vertxHttpClient"
-                      request-url="http://localhost:19306"
+                      request-url="http://localhost"
                       timeout="5000"/>
 
   <citrus:before-test id="defaultBeforeTest">
