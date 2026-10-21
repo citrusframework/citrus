@@ -27,43 +27,27 @@ import java.util.stream.Collectors;
 import jakarta.servlet.Filter;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
-import org.citrusframework.http.message.HttpMessageConverter;
+import org.citrusframework.base.server.AbstractServerBuilder;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
-import org.citrusframework.base.server.AbstractServerBuilder;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.eclipse.jetty.ee11.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractHttpServerBuilder<T, B>> extends AbstractServerBuilder<T, B> {
+public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractHttpServerBuilder<T, B>> extends AbstractCommonHttpServerBuilder<T, B> {
 
-    /**
-     * Endpoint target
-     */
-    private final T endpoint;
-
-    private int securePort = 8443;
     private final List<String> connectors = new ArrayList<>();
     private final Map<String, String> filters = new LinkedHashMap<>();
     private String servletHandler;
     private String securityHandler;
-    private String messageConverter;
     private final List<String> interceptors = new ArrayList<>();
-
-    private String authentication;
-    private String securedConnection;
-
-    private final B self;
 
     @SuppressWarnings("unchecked")
     protected AbstractHttpServerBuilder(T server) {
-        this.endpoint = server;
-        this.self = (B) this;
+        super(server);
     }
 
     @Override
@@ -81,18 +65,6 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
                 securityHandler(referenceResolver.resolve(securityHandler, SecurityHandler.class));
             }
 
-            if (StringUtils.hasText(messageConverter)) {
-                messageConverter(referenceResolver.resolve(messageConverter, HttpMessageConverter.class));
-            }
-
-            if (StringUtils.hasText(authentication)) {
-                authentication(referenceResolver.resolve(authentication, HttpAuthentication.class));
-            }
-
-            if (StringUtils.hasText(securedConnection)) {
-                secured(referenceResolver.resolve(securedConnection, HttpSecureConnection.class));
-            }
-
             if (!filters.isEmpty()) {
                 filters(this.filters.entrySet()
                         .stream()
@@ -108,41 +80,6 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
         }
 
         return super.build();
-    }
-
-    @Override
-    protected T getEndpoint() {
-        return endpoint;
-    }
-
-    /**
-     * Sets the port property.
-     */
-    public B port(int port) {
-        endpoint.setPort(port);
-        return self;
-    }
-
-    @SchemaProperty(description = "The Http server port.")
-    @XmlAttribute
-    public void setPort(int port) {
-        port(port);
-    }
-
-    /**
-     * Sets the secure port property.
-     */
-    public B securePort(int port) {
-        this.securePort = port;
-        return self;
-    }
-
-    @SchemaProperty(
-            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
-            description = "The secured port.")
-    @XmlAttribute(name = "secure-port")
-    public void setSecurePort(int port) {
-        securePort(port);
     }
 
     /**
@@ -185,22 +122,6 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @XmlAttribute(name = "root-parent-context")
     public void setRootParentContext(boolean rootParentContext) {
         rootParentContext(rootParentContext);
-    }
-
-    /**
-     * When enabled server uses default servlet filters such as request caching filter.
-     */
-    public B useDefaultFilters(boolean useDefaultFilters) {
-        endpoint.setUseDefaultFilters(useDefaultFilters);
-        return self;
-    }
-
-    @SchemaProperty(
-            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:filter") },
-            description = "When enabled the server uses the default set of Http servlet filters.")
-    @XmlAttribute(name = "use-default-filters")
-    public void setUseDefaultFilters(boolean useDefaultFilters) {
-        useDefaultFilters(useDefaultFilters);
     }
 
     /**
@@ -291,25 +212,6 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     /**
-     * Sets the binaryMediaTypes.
-     */
-    public B binaryMediaTypes(List<MediaType> binaryMediaTypes) {
-        endpoint.setBinaryMediaTypes(binaryMediaTypes);
-        return self;
-    }
-
-    @SchemaProperty(advanced = true, description = "List of supported media types on this server.")
-    @XmlTransient
-    public void setBinaryMediaTypes(List<String> binaryMediaTypes) {
-        binaryMediaTypes(binaryMediaTypes.stream().map(MediaType::valueOf).toList());
-    }
-
-    @XmlAttribute(name = "binary-media-types")
-    public void setBinaryMediaTypes(String binaryMediaTypes) {
-        setBinaryMediaTypes(Arrays.asList(binaryMediaTypes.split(",")));
-    }
-
-    /**
      * Sets the servlet name.
      */
     public B servletName(String servletName) {
@@ -339,22 +241,6 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @XmlAttribute(name = "servlet-mapping-path")
     public void setServletMappingPath(String servletMappingPath) {
         servletMappingPath(servletMappingPath);
-    }
-
-    /**
-     * Sets the context path.
-     */
-    public B contextPath(String contextPath) {
-        endpoint.setContextPath(contextPath);
-        return self;
-    }
-
-    @SchemaProperty(
-            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:servlet") },
-            description = "Sets the context path on this server.")
-    @XmlAttribute(name = "context-path")
-    public void setContextPath(String contextPath) {
-        contextPath(contextPath);
     }
 
     /**
@@ -390,20 +276,6 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     /**
-     * Sets the message converter.
-     */
-    public B messageConverter(HttpMessageConverter messageConverter) {
-        endpoint.setMessageConverter(messageConverter);
-        return self;
-    }
-
-    @SchemaProperty(advanced = true, description = "Sets the Http message converter bean reference.")
-    @XmlAttribute(name = "message-converter")
-    public void setMessageConverter(String messageConverter) {
-        this.messageConverter = messageConverter;
-    }
-
-    /**
      * Sets the handleAttributeHeaders property.
      */
     public B handleAttributeHeaders(boolean flag) {
@@ -415,48 +287,6 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @XmlAttribute(name = "handle-attribute-headers")
     public void setHandleAttributeHeaders(boolean flag) {
         handleAttributeHeaders(flag);
-    }
-
-    /**
-     * Sets the handleCookies property.
-     */
-    public B handleCookies(boolean flag) {
-        endpoint.setHandleCookies(flag);
-        return self;
-    }
-
-    @SchemaProperty(advanced = true, description = "When enabled the server handles cookies.")
-    @XmlAttribute(name = "handle-cookies")
-    public void setHandleCookies(boolean flag) {
-        handleCookies(flag);
-    }
-
-    /**
-     * Sets the semicolon handling property.
-     */
-    public B removeSemicolonPathContent(boolean removeSemicolonPathContent) {
-        endpoint.setRemoveSemicolonPathContent(removeSemicolonPathContent);
-        return self;
-    }
-
-    @SchemaProperty(advanced = true, description = "When enabled the server removes semicolon path content from headers.")
-    @XmlAttribute(name = "remove-semicolon-path-content")
-    public void setRemoveSemicolonPathContent(boolean removeSemicolonPathContent) {
-        removeSemicolonPathContent(removeSemicolonPathContent);
-    }
-
-    /**
-     * Sets the default status code property.
-     */
-    public B defaultStatus(HttpStatus status) {
-        endpoint.setDefaultStatusCode(status.value());
-        return self;
-    }
-
-    @SchemaProperty(advanced = true, description = "Sets the default status returned by the server.")
-    @XmlAttribute(name = "default-status")
-    public void setDefaultStatus(HttpStatus status) {
-        defaultStatus(status);
     }
 
     /**
@@ -511,50 +341,16 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @Override
-    public B timeout(long timeout) {
-        endpoint.setDefaultTimeout(timeout);
-        return self;
-    }
-
-    @SchemaProperty(description = "Sets the server timeout while waiting for incoming requests.", defaultValue = "5000")
-    @XmlAttribute
-    public void setTimeout(long timeout) {
-        timeout(timeout);
-    }
-
-    public B authentication(HttpAuthentication auth) {
-        endpoint.setSecurityHandler(auth.getSecurityHandler("/*"));
-        return self;
-    }
-
     public B authentication(String resourcePath, HttpAuthentication auth) {
+        super.authentication(resourcePath, auth);
         endpoint.setSecurityHandler(auth.getSecurityHandler(resourcePath));
         return self;
     }
 
-    @SchemaProperty(
-            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
-            description = "Use given authentication mechanism for all request paths.")
-    @XmlAttribute
-    public void setAuthentication(String authentication) {
-        this.authentication = authentication;
-    }
-
-    public B secured(HttpSecureConnection conn) {
-        return secured(securePort, conn);
-    }
-
+    @Override
     public B secured(int securePort, HttpSecureConnection conn) {
-        this.securePort = securePort;
+        super.secured(securePort, conn);
         endpoint.setConnector(conn.getServerConnector(securePort));
         return self;
-    }
-
-    @SchemaProperty(
-            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
-            description = "Secure the connections on given secured port with given security mechanism.")
-    @XmlAttribute(name = "secured-connection")
-    public void setSecuredConnection(String connection) {
-        this.securedConnection = connection;
     }
 }
