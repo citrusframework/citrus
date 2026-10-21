@@ -66,14 +66,22 @@ public class HttpServerConfigParser implements AnnotationConfigParser<HttpServer
         }
 
         List<Object> resolvedInterceptors = referenceResolver.resolve(annotation.interceptors(), Object.class);
-        builder.interceptors(resolvedInterceptors.stream()
-                .filter(HandlerInterceptor.class::isInstance)
-                .map(HandlerInterceptor.class::cast)
-                .toList());
-        builder.serverInterceptors(resolvedInterceptors.stream()
-                .filter(HttpServerInterceptor.class::isInstance)
-                .map(HttpServerInterceptor.class::cast)
-                .toList());
+        List<HandlerInterceptor> handlerInterceptors = new ArrayList<>();
+        List<HttpServerInterceptor> serverInterceptors = new ArrayList<>();
+
+        for (Object interceptor : resolvedInterceptors) {
+            if (interceptor instanceof HandlerInterceptor handlerInterceptor) {
+                handlerInterceptors.add(handlerInterceptor);
+            } else if (interceptor instanceof HttpServerInterceptor serverInterceptor) {
+                serverInterceptors.add(serverInterceptor);
+            } else {
+                throw new CitrusRuntimeException("Invalid interceptor configuration for Http server: %s is not a %s or a %s."
+                        .formatted(interceptor.getClass().getName(), HandlerInterceptor.class.getName(), HttpServerInterceptor.class.getName()));
+            }
+        }
+
+        builder.interceptors(handlerInterceptors);
+        builder.serverInterceptors(serverInterceptors);
 
         if (hasText(annotation.actor())) {
             builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));

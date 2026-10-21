@@ -22,7 +22,6 @@ import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
@@ -81,10 +80,7 @@ public class VertxHttpServerConfigParser implements AnnotationConfigParser<Vertx
         }
 
         List<Object> resolvedInterceptors = referenceResolver.resolve(annotation.interceptors(), Object.class);
-        builder.serverInterceptors(resolvedInterceptors.stream()
-                .filter(HttpServerInterceptor.class::isInstance)
-                .map(HttpServerInterceptor.class::cast)
-                .toList());
+        builder.interceptors(resolvedInterceptors);
 
         if (hasText(annotation.authentication())) {
             builder.authentication(annotation.securedPath(), referenceResolver.resolve(annotation.authentication(), HttpAuthentication.class));

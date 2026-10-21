@@ -18,6 +18,7 @@ package org.citrusframework.http.config.annotation;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.Filter;
@@ -31,6 +32,7 @@ import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.StaticEndpoint;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.server.HttpServer;
@@ -51,7 +53,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.config.annotation.AnnotationConfigParser.lookup;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
 
@@ -290,6 +294,17 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         assertNotNull(httpServer7.getServerInterceptors());
         assertEquals(httpServer7.getServerInterceptors().size(), 1L);
         assertEquals(httpServer7.getServerInterceptors().get(0), citrusInterceptor1);
+    }
+
+    @Test
+    public void testRejectUnsupportedInterceptorType() {
+        HttpServerConfig config = mock(HttpServerConfig.class);
+        when(config.interceptors()).thenReturn(new String[]{"unsupportedInterceptor"});
+        when(referenceResolver.resolve(new String[]{"unsupportedInterceptor"}, Object.class)).thenReturn(List.of(new Object()));
+
+        assertThatThrownBy(() -> new HttpServerConfigParser().parse(config, referenceResolver, context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("Invalid interceptor configuration for Http server");
     }
 
     @Test

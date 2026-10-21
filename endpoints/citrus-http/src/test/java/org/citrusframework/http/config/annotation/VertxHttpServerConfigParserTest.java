@@ -18,6 +18,7 @@ package org.citrusframework.http.config.annotation;
 
 import io.vertx.core.Vertx;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.TestActor;
@@ -26,6 +27,7 @@ import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.StaticEndpoint;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
@@ -42,7 +44,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.config.annotation.AnnotationConfigParser.lookup;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -189,6 +193,20 @@ public class VertxHttpServerConfigParserTest extends AbstractTestNGUnitTest {
 
         // supplied Vert.x instance
         assertEquals(vertxHttpServer7.getVertx(), vertx);
+    }
+
+    @Test
+    public void testRejectUnsupportedInterceptorType() {
+        VertxHttpServerConfig config = mock(VertxHttpServerConfig.class);
+        when(config.interceptors()).thenReturn(new String[]{"unsupportedInterceptor"});
+        when(config.defaultStatus()).thenReturn(HttpStatus.OK);
+        when(config.binaryMediaTypes()).thenReturn(new String[0]);
+        when(config.workerPoolSize()).thenReturn(10);
+        when(referenceResolver.resolve(new String[]{"unsupportedInterceptor"}, Object.class)).thenReturn(List.of(new Object()));
+
+        assertThatThrownBy(() -> new VertxHttpServerConfigParser().parse(config, referenceResolver, context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasStackTraceContaining("Invalid interceptor configuration for Vert.x Http server");
     }
 
     @Test

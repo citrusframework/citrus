@@ -160,6 +160,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
         if (interceptors != null) {
             for (Object interceptor : interceptors) {
                 if (interceptor instanceof HttpServerInterceptor) {
+                    logger.warn("Citrus server interceptor is not supported by the Jetty based Http server. Use the server interceptors instead.");
                     continue;
                 } else if (interceptor instanceof MappedInterceptor mappedInterceptor) {
                     mappedInterceptor.setPathMatcher(new AntPathMatcher());

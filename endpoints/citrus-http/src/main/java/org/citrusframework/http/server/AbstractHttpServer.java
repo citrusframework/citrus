@@ -347,4 +347,31 @@ public abstract class AbstractHttpServer extends AbstractServer {
     public void setServerInterceptors(List<HttpServerInterceptor> serverInterceptors) {
         this.serverInterceptors = serverInterceptors;
     }
+
+    /**
+     * Sets the interceptors of the server. Interceptors implementing the transport neutral
+     * {@link HttpServerInterceptor} are added to the server interceptors. All other interceptors
+     * are bound to a specific server technology and are passed on to the server implementation.
+     * Server interceptors that are already registered are kept.
+     *
+     * @param interceptors the interceptors to set.
+     */
+    @Override
+    public void setInterceptors(List<Object> interceptors) {
+        List<HttpServerInterceptor> serverInterceptors = new ArrayList<>(getServerInterceptors());
+        List<Object> technologyInterceptors = new ArrayList<>();
+
+        if (interceptors != null) {
+            for (Object interceptor : interceptors) {
+                if (interceptor instanceof HttpServerInterceptor serverInterceptor) {
+                    serverInterceptors.add(serverInterceptor);
+                } else {
+                    technologyInterceptors.add(interceptor);
+                }
+            }
+        }
+
+        setServerInterceptors(serverInterceptors);
+        super.setInterceptors(technologyInterceptors);
+    }
 }

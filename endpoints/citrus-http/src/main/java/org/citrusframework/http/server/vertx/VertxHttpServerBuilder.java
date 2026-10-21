@@ -24,7 +24,6 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.api.yaml.SchemaType;
-import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.server.AbstractCommonHttpServerBuilder;
 
 import io.vertx.core.Vertx;
@@ -89,17 +88,11 @@ public class VertxHttpServerBuilder extends AbstractCommonHttpServerBuilder<Vert
 
     /**
      * Sets the interceptors running around the request handling. Only Citrus server interceptors
-     * are supported by the Vert.x based server.
+     * are supported by the Vert.x based server. Interceptors that are already registered as server
+     * interceptors are kept.
      */
     public VertxHttpServerBuilder interceptors(List<Object> interceptors) {
-        List<Object> configuredInterceptors = new ArrayList<>(interceptors);
-
-        endpoint.setConfiguredInterceptors(configuredInterceptors);
-        endpoint.setServerInterceptors(configuredInterceptors.stream()
-                .filter(HttpServerInterceptor.class::isInstance)
-                .map(HttpServerInterceptor.class::cast)
-                .toList());
-
+        endpoint.setInterceptors(interceptors);
         return self;
     }
 

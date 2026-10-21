@@ -18,11 +18,13 @@ package org.citrusframework.http.server;
 
 import java.util.List;
 
+import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -120,5 +122,29 @@ public class AbstractHttpServerTest {
 
         assertThat(server.getSecureConnection()).isSameAs(secureConnection);
         assertThat(server.getSecurePort()).isEqualTo(9443);
+    }
+
+    @Test
+    public void shouldAddCitrusInterceptorsToServerInterceptors() {
+        HttpServerInterceptor citrusInterceptor = mock(HttpServerInterceptor.class);
+        HandlerInterceptor handlerInterceptor = mock(HandlerInterceptor.class);
+
+        HttpServer server = new HttpServer();
+        server.setInterceptors(List.of(citrusInterceptor, handlerInterceptor));
+
+        assertThat(server.getServerInterceptors()).containsExactly(citrusInterceptor);
+        assertThat(server.getInterceptors()).containsExactly(handlerInterceptor);
+    }
+
+    @Test
+    public void shouldKeepRegisteredServerInterceptorsWhenSettingInterceptors() {
+        HttpServerInterceptor registeredInterceptor = mock(HttpServerInterceptor.class);
+        HttpServerInterceptor configuredInterceptor = mock(HttpServerInterceptor.class);
+
+        HttpServer server = new HttpServer();
+        server.setServerInterceptors(List.of(registeredInterceptor));
+        server.setInterceptors(List.of(configuredInterceptor));
+
+        assertThat(server.getServerInterceptors()).containsExactly(registeredInterceptor, configuredInterceptor);
     }
 }

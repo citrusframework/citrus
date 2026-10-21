@@ -6,8 +6,10 @@
        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
        xmlns:citrus-jms-test="http://www.citrusframework.org/schema/jms/testcase"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                          http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                          http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
                          http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
@@ -193,6 +195,29 @@
 
   <citrus-http:client id="vertxHttpClient"
                       request-url="http://localhost"
+                      timeout="5000"/>
+
+  <!-- Http server using a transport neutral server interceptor -->
+  <bean id="citrusServerInterceptor" class="org.citrusframework.http.interceptor.HeaderServerInterceptor"/>
+
+  <util:list id="citrusServerInterceptors">
+    <ref bean="citrusServerInterceptor"/>
+  </util:list>
+
+  <bean id="staticResponseEndpointAdapter" class="org.citrusframework.base.endpoint.adapter.StaticResponseEndpointAdapter">
+    <property name="messagePayload" value="&lt;testResponseMessage&gt;&lt;text&gt;Hello Citrus&lt;/text&gt;&lt;/testResponseMessage&gt;"/>
+  </bean>
+
+  <citrus-http:server id="httpServerWithServerInterceptor"
+                      port="11084"
+                      auto-start="true"
+                      context-config-location="classpath:org/citrusframework/http/citrus-http-interceptor-servlet.xml"
+                      endpoint-adapter="staticResponseEndpointAdapter"
+                      interceptors="citrusServerInterceptors"/>
+
+  <citrus-http:client id="serverInterceptorHttpClient"
+                      request-url="http://localhost:11084/test"
+                      request-method="POST"
                       timeout="5000"/>
 
   <citrus:before-test id="defaultBeforeTest">

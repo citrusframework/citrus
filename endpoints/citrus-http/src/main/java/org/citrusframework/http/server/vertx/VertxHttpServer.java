@@ -411,21 +411,8 @@ public class VertxHttpServer extends AbstractHttpServer {
      */
     @Override
     public void setInterceptors(List<Object> interceptors) {
-        List<HttpServerInterceptor> serverInterceptors = new ArrayList<>();
-        List<Object> configured = new ArrayList<>();
-
-        if (interceptors != null) {
-            for (Object interceptor : interceptors) {
-                if (interceptor instanceof HttpServerInterceptor serverInterceptor) {
-                    serverInterceptors.add(serverInterceptor);
-                } else {
-                    configured.add(interceptor);
-                }
-            }
-        }
-
-        setServerInterceptors(serverInterceptors);
-        setConfiguredInterceptors(configured);
+        super.setInterceptors(interceptors);
+        setConfiguredInterceptors(new ArrayList<>(getInterceptors()));
     }
 
     /**
