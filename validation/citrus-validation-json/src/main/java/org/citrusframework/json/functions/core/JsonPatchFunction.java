@@ -26,6 +26,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ArrayNode;
@@ -37,6 +38,7 @@ import tools.jackson.databind.node.ObjectNode;
  *
  * @since 4.x
  */
+@SchemaType(module = "citrus-validation-json")
 public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunction.Parameters> {
 
     private static final JsonMapper jsonMapper = JsonMapper.shared();

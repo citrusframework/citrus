@@ -25,6 +25,7 @@ import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 import static org.citrusframework.kubernetes.KubernetesSupport.getNamespace;
 
@@ -33,6 +34,7 @@ import static org.citrusframework.kubernetes.KubernetesSupport.getNamespace;
  * In local mode constructs a localhost service URL with a given local service port.
  * The in-cluster mode uses the service name and the current namespace to construct a Kubernetes service URL.
  */
+@SchemaType(module = "citrus-kubernetes")
 public class ResolveServiceUrlFunction implements ParameterizedFunction<ResolveServiceUrlFunction.Parameters> {
 
     @Override
