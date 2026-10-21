@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <citrus-http:vertx-server id="vertxHttpServerWithSpringInterceptor"
+                              auto-start="false"
+                              port="8084"
+                              interceptors="springInterceptors"/>
+
+    <util:list id="springInterceptors">
+      <bean id="springInterceptor" class="org.mockito.Mockito" factory-method="mock">
+          <constructor-arg><value type="java.lang.Class">org.springframework.web.servlet.HandlerInterceptor</value></constructor-arg>
+        <constructor-arg value="springInterceptor"/>
+      </bean>
+    </util:list>
+</beans>

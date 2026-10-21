@@ -403,6 +403,32 @@ public class VertxHttpServer extends AbstractHttpServer {
     }
 
     /**
+     * Sets the interceptors of the server. Citrus server interceptors are added to the server
+     * interceptors. Any other interceptor is bound to another server technology and is rejected
+     * when the server is initialized.
+     *
+     * @param interceptors the interceptors to set.
+     */
+    @Override
+    public void setInterceptors(List<Object> interceptors) {
+        List<HttpServerInterceptor> serverInterceptors = new ArrayList<>();
+        List<Object> configured = new ArrayList<>();
+
+        if (interceptors != null) {
+            for (Object interceptor : interceptors) {
+                if (interceptor instanceof HttpServerInterceptor serverInterceptor) {
+                    serverInterceptors.add(serverInterceptor);
+                } else {
+                    configured.add(interceptor);
+                }
+            }
+        }
+
+        setServerInterceptors(serverInterceptors);
+        setConfiguredInterceptors(configured);
+    }
+
+    /**
      * Gets the port the server is actually listening on.
      *
      * @return the actual port.

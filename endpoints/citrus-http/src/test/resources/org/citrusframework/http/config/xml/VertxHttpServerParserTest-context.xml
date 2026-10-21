@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <citrus-http:vertx-server id="vertxHttpServer1"
+                              auto-start="false"
+                              port="8081"/>
+
+    <citrus-http:vertx-server id="vertxHttpServer2"
+                              auto-start="false"
+                              port="8082"
+                              secure-port="8443"
+                              timeout="6000"
+                              context-path="/citrus"
+                              use-default-filters="false"
+                              message-converter="messageConverter"
+                              handle-cookies="true"
+                              default-status-code="404"
+                              binary-media-types="binaryMediaTypes"
+                              authentication="authentication"
+                              secured-path="/secured/*"
+                              secured-connection="securedConnection"
+                              vertx="vertx"
+                              worker-pool-size="50"
+                              debug-logging="true"/>
+
+    <citrus-http:vertx-server id="vertxHttpServer3"
+                              auto-start="false"
+                              port="8083"
+                              interceptors="interceptors"/>
+
+    <util:list id="interceptors">
+      <bean id="citrusInterceptor" class="org.mockito.Mockito" factory-method="mock">
+          <constructor-arg><value type="java.lang.Class">org.citrusframework.http.interceptor.HttpServerInterceptor</value></constructor-arg>
+        <constructor-arg value="citrusInterceptor"/>
+      </bean>
+    </util:list>
+
+    <util:list id="binaryMediaTypes" value-type="org.springframework.http.MediaType">
+        <util:constant static-field="org.springframework.http.MediaType.APPLICATION_OCTET_STREAM"/>
+        <value>application/custom</value>
+    </util:list>
+
+    <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.citrusframework.http.message.HttpMessageConverter</value></constructor-arg>
+        <constructor-arg value="messageConverter"/>
+    </bean>
+
+    <bean id="authentication" class="org.citrusframework.http.security.BasicAuthentication">
+        <constructor-arg value="citrus"/>
+        <constructor-arg value="secret"/>
+    </bean>
+
+    <bean id="securedConnection" class="org.citrusframework.http.security.SSLConnection"/>
+
+    <bean id="vertx" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">io.vertx.core.Vertx</value></constructor-arg>
+        <constructor-arg value="vertx"/>
+    </bean>
+</beans>

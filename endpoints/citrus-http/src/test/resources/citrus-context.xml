@@ -181,6 +181,16 @@
                       context-config-location="classpath:org/citrusframework/http/citrus-http-standalone-servlet.xml"
                       resource-base="src/test/resources"/>
 
+  <!-- Vert.x based Http server endpoints -->
+  <citrus-http:vertx-server id="vertxHttpServer"
+                            port="19306"
+                            auto-start="true"
+                            timeout="5000"/>
+
+  <citrus-http:client id="vertxHttpClient"
+                      request-url="http://localhost:19306"
+                      timeout="5000"/>
+
   <citrus:before-test id="defaultBeforeTest">
     <citrus:actions>
       <citrus-jms-test:purge-jms-queues connection-factory="connectionFactory" timeout="10">
