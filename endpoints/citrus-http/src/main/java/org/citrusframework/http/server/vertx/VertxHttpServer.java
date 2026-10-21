@@ -19,6 +19,7 @@ package org.citrusframework.http.server.vertx;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
@@ -68,6 +69,12 @@ public class VertxHttpServer extends AbstractHttpServer {
 
     /** Default size of the worker pool handling the endpoint adapter */
     public static final int DEFAULT_WORKER_POOL_SIZE = 200;
+
+    /** Counter used to create a unique worker pool name for each server instance */
+    private static final AtomicInteger SERVER_COUNTER = new AtomicInteger();
+
+    /** Unique id of this server instance, used to create a dedicated worker pool */
+    private final int serverId = SERVER_COUNTER.incrementAndGet();
 
     /** Vert.x instance used by this server. May be supplied by the user. */
     private Vertx vertx;
@@ -160,7 +167,10 @@ public class VertxHttpServer extends AbstractHttpServer {
             ownsVertx = true;
         }
 
-        workerExecutor = vertx.createSharedWorkerExecutor("citrus-http-" + getName(), workerPoolSize,
+        // The worker pool is named after the server instance, so that every server uses its own
+        // pool. A shared pool would ignore the worker pool size of all but the first server
+        // registering with the same name.
+        workerExecutor = vertx.createSharedWorkerExecutor("citrus-http-" + getName() + "-" + serverId, workerPoolSize,
                 getDefaultTimeout() + WORKER_EXECUTION_TIME_OFFSET_MILLIS);
 
         HttpEndpointConfiguration endpointConfiguration = createEndpointConfiguration();
