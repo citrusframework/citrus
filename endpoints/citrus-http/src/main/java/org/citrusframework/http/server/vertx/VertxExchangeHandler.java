@@ -15,6 +15,7 @@
  */
 package org.citrusframework.http.server.vertx;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +32,7 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 
 /**
  * Handles the Http exchange of a Vert.x request. The request body is received on the event loop, the
@@ -44,13 +46,16 @@ class VertxExchangeHandler {
     private final VertxRequestMapper requestMapper;
     private final VertxResponseWriter responseWriter;
     private final EndpointAdapter endpointAdapter;
+    private final boolean useDefaultFilters;
 
     VertxExchangeHandler(WorkerExecutor workerExecutor, VertxRequestMapper requestMapper,
-                         VertxResponseWriter responseWriter, EndpointAdapter endpointAdapter) {
+                         VertxResponseWriter responseWriter, EndpointAdapter endpointAdapter,
+                         boolean useDefaultFilters) {
         this.workerExecutor = workerExecutor;
         this.requestMapper = requestMapper;
         this.responseWriter = responseWriter;
         this.endpointAdapter = endpointAdapter;
+        this.useDefaultFilters = useDefaultFilters;
     }
 
     /**
@@ -63,13 +68,31 @@ class VertxExchangeHandler {
 
         request.body()
                 .onSuccess(buffer -> {
-                    VertxRequestSnapshot snapshot = createSnapshot(request, buffer);
+                    try {
+                        VertxRequestSnapshot snapshot = createSnapshot(request, decodeBody(request, buffer));
 
-                    workerExecutor.<VertxResponseSnapshot>executeBlocking(() -> handleOnWorker(snapshot), false)
-                            .onSuccess(response -> writeResponse(context, request, response))
-                            .onFailure(t -> handleFailure(context, t));
+                        workerExecutor.<VertxResponseSnapshot>executeBlocking(() -> handleOnWorker(snapshot), false)
+                                .onSuccess(response -> writeResponse(context, request, response))
+                                .onFailure(t -> handleFailure(context, t));
+                    } catch (Exception e) {
+                        handleFailure(context, e);
+                    }
                 })
                 .onFailure(t -> handleFailure(context, t));
+    }
+
+    /**
+     * Decodes the body of the request when it is marked as gzip encoded. The content encoding header
+     * is kept on the message, so Citrus is able to handle the request body as plain text.
+     */
+    private byte[] decodeBody(HttpServerRequest request, Buffer buffer) throws IOException {
+        byte[] body = buffer != null ? buffer.getBytes() : new byte[0];
+
+        if (useDefaultFilters && VertxGzip.isGzipEncoding(request.getHeader(HttpHeaders.CONTENT_ENCODING))) {
+            return VertxGzip.decode(body);
+        }
+
+        return body;
     }
 
     /**
@@ -125,7 +148,7 @@ class VertxExchangeHandler {
     /**
      * Creates the request snapshot of the given request.
      */
-    private VertxRequestSnapshot createSnapshot(HttpServerRequest request, Buffer buffer) {
+    private VertxRequestSnapshot createSnapshot(HttpServerRequest request, byte[] body) {
         return new VertxRequestSnapshot(
                 request.method().name(),
                 request.uri(),
@@ -134,7 +157,7 @@ class VertxExchangeHandler {
                 getVersionString(request.version()),
                 request.headers(),
                 createCookies(request.cookies()),
-                buffer != null ? buffer.getBytes() : new byte[0]);
+                body);
     }
 
     /**

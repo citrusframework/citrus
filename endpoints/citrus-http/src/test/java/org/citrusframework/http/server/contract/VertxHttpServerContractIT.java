@@ -47,7 +47,8 @@ public class VertxHttpServerContractIT extends AbstractHttpServerContractIT {
     @Override
     protected boolean isSupported(Feature feature) {
         return switch (feature) {
-            case GZIP, AUTHENTICATION, TLS, TRACING, INTERCEPTORS -> false;
+            case GZIP -> true;
+            case AUTHENTICATION, TLS, TRACING, INTERCEPTORS -> false;
         };
     }
 

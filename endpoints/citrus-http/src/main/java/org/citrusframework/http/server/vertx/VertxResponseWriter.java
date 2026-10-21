@@ -95,8 +95,15 @@ class VertxResponseWriter {
         headers.put(HttpHeaders.CONTENT_TYPE, List.of(contentType.toString()));
 
         byte[] body = new byte[0];
-        if (!HttpStatus.NO_CONTENT.equals(httpResponse.getStatusCode())) {
+        boolean noContent = HttpStatus.NO_CONTENT.equals(httpResponse.getStatusCode());
+
+        if (!noContent && entity.getBody() != null) {
             body = writeBody(entity.getBody(), contentType);
+
+            if (useDefaultFilters && isGzipAccepted(request)) {
+                body = compress(body);
+                headers.put(HttpHeaders.CONTENT_ENCODING, List.of("gzip"));
+            }
         }
 
         if (body.length > 0) {
@@ -104,6 +111,28 @@ class VertxResponseWriter {
         }
 
         return new VertxResponseSnapshot(status, headers, body);
+    }
+
+    /**
+     * Checks if the client accepts a gzip encoded response.
+     */
+    private boolean isGzipAccepted(VertxRequestSnapshot request) {
+        if (request == null || request.headers() == null) {
+            return false;
+        }
+
+        return VertxGzip.isGzipEncoding(request.headers().get(HttpHeaders.ACCEPT_ENCODING));
+    }
+
+    /**
+     * Compresses the response body with gzip.
+     */
+    private byte[] compress(byte[] body) {
+        try {
+            return VertxGzip.encode(body);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to compress Http response body", e);
+        }
     }
 
     /**

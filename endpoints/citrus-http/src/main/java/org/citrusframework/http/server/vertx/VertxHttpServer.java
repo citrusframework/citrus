@@ -144,7 +144,8 @@ public class VertxHttpServer extends AbstractHttpServer {
                 workerExecutor,
                 new VertxRequestMapper(endpointConfiguration, entityConverter, getContextPath()),
                 new VertxResponseWriter(endpointConfiguration, entityConverter, isUseDefaultFilters()),
-                getEndpointAdapter());
+                getEndpointAdapter(),
+                isUseDefaultFilters());
 
         HttpServerOptions options = new HttpServerOptions()
                 .setHost("0.0.0.0")
