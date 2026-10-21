@@ -64,6 +64,7 @@ import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
+import org.citrusframework.validation.context.path.DynamicPathExpressionValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.context.yaml.YamlMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
@@ -286,6 +287,8 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
         if (!validationContexts.isEmpty()) {
             logger.debug("Control message:\n{}", controlMessage.print(context));
 
+            List<ValidationContext> activeValidationContexts = resolveDynamicValidationContexts(validationContexts, context);
+
             if (hasText(controlMessage.getPayload(String.class))) {
                 assumeMessageType(controlMessage);
             } else {
@@ -294,7 +297,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
 
             if (nonNull(validators) && !validators.isEmpty()) {
                 for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
-                    messageValidator.validateMessage(message, controlMessage, context, validationContexts);
+                    messageValidator.validateMessage(message, controlMessage, context, activeValidationContexts);
                 }
 
                 if (validators.parallelStream()
@@ -302,30 +305,30 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
                         .noneMatch(DefaultMessageHeaderValidator.class::isAssignableFrom)) {
                     MessageValidator<? extends ValidationContext> defaultMessageHeaderValidator = context.getMessageValidatorRegistry().getDefaultMessageHeaderValidator();
                     if (defaultMessageHeaderValidator != null) {
-                        defaultMessageHeaderValidator.validateMessage(message, controlMessage, context, validationContexts);
+                        defaultMessageHeaderValidator.validateMessage(message, controlMessage, context, activeValidationContexts);
                     }
                 }
             } else {
-                boolean mustFindValidator = validationContexts.stream()
+                boolean mustFindValidator = activeValidationContexts.stream()
                         .anyMatch(ValidationContext::requiresValidator);
 
                 List<MessageValidator<? extends ValidationContext>> activeValidators =
                         context.getMessageValidatorRegistry().findMessageValidators(messageType, message, mustFindValidator);
 
                 for (MessageValidator<? extends ValidationContext> messageValidator : activeValidators) {
-                    messageValidator.validateMessage(message, controlMessage, context, validationContexts);
+                    messageValidator.validateMessage(message, controlMessage, context, activeValidationContexts);
                 }
 
                 if (CitrusSettings.isPerformDefaultValidation() &&
-                        validationContexts.stream().anyMatch(validationContext -> validationContext.getStatus() == ValidationStatus.UNKNOWN)) {
+                        activeValidationContexts.stream().anyMatch(validationContext -> validationContext.getStatus() == ValidationStatus.UNKNOWN)) {
                     var defaultValidator = context.getMessageValidatorRegistry().getDefaultMessageValidator();
                     if (activeValidators.stream().noneMatch(validator -> defaultValidator.getClass().isInstance(validator))) {
-                        defaultValidator.validateMessage(message, controlMessage, context, validationContexts);
+                        defaultValidator.validateMessage(message, controlMessage, context, activeValidationContexts);
                     }
                 }
             }
 
-            List<ValidationContext> validationContextsWithUnknownValidationStatus = validationContexts.stream()
+            List<ValidationContext> validationContextsWithUnknownValidationStatus = activeValidationContexts.stream()
                     .filter(validationContext -> validationContext.getStatus() == ValidationStatus.UNKNOWN)
                     .toList();
             if (!validationContextsWithUnknownValidationStatus.isEmpty()) {
@@ -338,6 +341,32 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
                         ));
             }
         }
+    }
+
+    /**
+     * Resolves path expressions that reference dynamic variables. The type of such a path
+     * expression (JSONPath or XPath) is unknown when the test is constructed, because the
+     * variable is only resolved at runtime. This method replaces the dynamic validation
+     * context with the matching JSONPath or XPath validation contexts.
+     * @param validationContexts the validation contexts of the action
+     * @param context the test context
+     * @return the validation contexts with resolved dynamic path expressions
+     */
+    private static List<ValidationContext> resolveDynamicValidationContexts(List<ValidationContext> validationContexts, TestContext context) {
+        if (validationContexts.stream().noneMatch(DynamicPathExpressionValidationContext.class::isInstance)) {
+            return validationContexts;
+        }
+
+        List<ValidationContext> resolvedValidationContexts = new ArrayList<>();
+        for (ValidationContext validationContext : validationContexts) {
+            if (validationContext instanceof DynamicPathExpressionValidationContext dynamicValidationContext) {
+                resolvedValidationContexts.addAll(dynamicValidationContext.resolve(context));
+            } else {
+                resolvedValidationContexts.add(validationContext);
+            }
+        }
+
+        return resolvedValidationContexts;
     }
 
     private static void logUnusedValidationContext(ValidationContext validationContext) {
@@ -820,7 +849,11 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
                 getHeaderValidationContext();
             }
 
-            if (validationContexts.stream().noneMatch(MessageValidationContext.class::isInstance)) {
+            if (validationContexts.stream().noneMatch(MessageValidationContext.class::isInstance)
+                    && validationContexts.stream().noneMatch(DynamicPathExpressionValidationContext.class::isInstance)) {
+                // A dynamic path expression context is resolved to a proper JSONPath or XPath validation
+                // context at runtime. So we must not add a generic message validation context here as this
+                // would result in an incomplete message validation.
                 injectMessageValidationContext();
             }
         }

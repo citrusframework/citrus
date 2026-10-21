@@ -308,6 +308,29 @@ as all other message elements are not included into this explicit validation.
 NOTE: If this type of element validation is chosen neither <payload> nor <data> nor <resource> template definitions are
 allowed in Citrus XML test cases.
 
+The path expression itself may also reference a test variable. As the type of the path expression (JSONPath or XPath) is
+not known before the variable gets resolved, Citrus resolves the variable at runtime and then applies the matching
+validation:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive("someEndpoint")
+    .message()
+    .validate(validation().path()
+        .expression("${versionPath}", "2"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <validate path="${versionPath}" value="2"/>
+  </message>
+</receive>
+----
+
 TIP: Citrus offers an alternative dot-notated syntax in order to walk through XML trees. In case you are not familiar with
 XPath or simply need a very easy way to find your element inside the XML tree you might use this way. Every element hierarchy
 in the XML tree is represented with a simple dot - for example:

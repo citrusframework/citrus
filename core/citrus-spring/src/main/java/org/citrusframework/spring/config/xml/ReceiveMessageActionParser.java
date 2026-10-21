@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.spring.config.util.ValidateMessageParserUtil;
 import org.citrusframework.spring.config.util.VariableExtractorParserUtil;
+import org.citrusframework.util.IsDynamicPathExpressionPredicate;
 import org.citrusframework.util.IsJsonPathPredicate;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
@@ -35,6 +36,7 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.context.path.DynamicPathExpressionValidationContext;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.script.ScriptValidationContextBuilder;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
@@ -102,6 +104,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             addHeaderValidationContext(messageElement, validationContexts);
             addXmlValidationContext(messageElement, validationContexts);
             addJsonMessageValidationContext(messageElement, validationContexts);
+            addDynamicValidationContext(messageElement, validationContexts);
             addMessageValidationContext(messageElement, validationContexts);
             addScriptValidationContext(messageElement, validationContexts);
 
@@ -386,7 +389,9 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             Element validateElement, Map<String, Object> validateXpathExpressions) {
         //check for xpath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
-        if (hasText(pathExpression) && !IsJsonPathPredicate.getInstance().test(pathExpression)) {
+        if (hasText(pathExpression) &&
+                !IsJsonPathPredicate.getInstance().test(pathExpression) &&
+                !IsDynamicPathExpressionPredicate.getInstance().test(pathExpression)) {
             //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
             if (validateElement.hasAttribute("result-type")) {
                 pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;
@@ -421,12 +426,61 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
     private void extractJsonPathValidateExpressions(Element validateElement, Map<String, Object> validateJsonPathExpressions) {
         //check for jsonPath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
-        if (IsJsonPathPredicate.getInstance().test(pathExpression)) {
+        if (IsJsonPathPredicate.getInstance().test(pathExpression) &&
+                !IsDynamicPathExpressionPredicate.getInstance().test(pathExpression)) {
             validateJsonPathExpressions.put(pathExpression, validateElement.getAttribute("value"));
         }
 
         //check for jsonPath validation elements - new style preferred
         ValidateMessageParserUtil.parseJsonPathElements(validateElement, validateJsonPathExpressions);
+    }
+
+    /**
+     * Parses validation elements with a path expression that references a dynamic variable and adds
+     * them to a dynamic path expression validation context. The type of the path expression (jsonPath
+     * or xpath) is unknown at this point and gets resolved at runtime when the variable is resolved.
+     */
+    private void addDynamicValidationContext(Element messageElement, List<ValidationContext.Builder<?, ?>> validationContexts) {
+        Map<String, Object> validateDynamicPathExpressions = new LinkedHashMap<>();
+
+        List<Element> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
+        for (Element validateElement : validateElements) {
+            extractDynamicPathValidateExpressions(validateElement, validateDynamicPathExpressions);
+        }
+
+        if (!validateDynamicPathExpressions.isEmpty()) {
+            DynamicPathExpressionValidationContext.Builder dynamicValidationContext = new DynamicPathExpressionValidationContext.Builder();
+            dynamicValidationContext.expressions(validateDynamicPathExpressions);
+
+            //Catch namespace declarations for namespace context
+            Map<String, String> namespaces = new HashMap<>();
+            List<Element> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
+            for (Element namespaceElement : namespaceElements) {
+                namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
+            }
+            if (!namespaces.isEmpty()) {
+                dynamicValidationContext.namespaceContext(namespaces);
+            }
+
+            validationContexts.add(dynamicValidationContext);
+        }
+    }
+
+    /**
+     * Extracts path expressions referencing a dynamic variable and fills map with them
+     * @param validateElement
+     * @param validateDynamicPathExpressions
+     */
+    private void extractDynamicPathValidateExpressions(Element validateElement, Map<String, Object> validateDynamicPathExpressions) {
+        String pathExpression = validateElement.getAttribute("path");
+        if (IsDynamicPathExpressionPredicate.getInstance().test(pathExpression)) {
+            //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
+            if (validateElement.hasAttribute("result-type")) {
+                pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;
+            }
+
+            validateDynamicPathExpressions.put(pathExpression, validateElement.getAttribute("value"));
+        }
     }
 
     @Override

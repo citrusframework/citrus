@@ -17,6 +17,7 @@ package org.citrusframework.xml.actions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -33,11 +34,13 @@ import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.IsDynamicPathExpressionPredicate;
 import org.citrusframework.util.IsJsonPathPredicate;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.MessageValidationContext;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.context.path.DynamicPathExpressionValidationContext;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.script.ScriptValidationContextBuilder;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
@@ -195,7 +198,8 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     private void extractJsonPathValidateExpressions(Validate validateElement, Map<String, Object> validateJsonPathExpressions) {
         //check for jsonPath validation - old style with direct attribute
         String pathExpression = validateElement.path;
-        if (IsJsonPathPredicate.getInstance().test(pathExpression)) {
+        if (IsJsonPathPredicate.getInstance().test(pathExpression) &&
+                !IsDynamicPathExpressionPredicate.getInstance().test(pathExpression)) {
             validateJsonPathExpressions.put(pathExpression, validateElement.value);
         }
 
@@ -205,6 +209,45 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             if (StringUtils.hasText(expression)) {
                 validateJsonPathExpressions.put(expression, jsonPathElement.value);
             }
+        }
+    }
+
+    private void addDynamicValidationContext() {
+        //check for validate elements with a path expression that references a dynamic variable
+        //the type of the path expression (jsonPath or xpath) is unknown at this point and
+        //gets resolved at runtime when the variable is resolved
+        Map<String, Object> validateDynamicPathExpressions = new LinkedHashMap<>();
+        for (Validate validateElement : getValidates()) {
+            extractDynamicPathValidateExpressions(validateElement, validateDynamicPathExpressions);
+        }
+
+        if (!validateDynamicPathExpressions.isEmpty()) {
+            DynamicPathExpressionValidationContext.Builder dynamicValidationContext = new DynamicPathExpressionValidationContext.Builder();
+            dynamicValidationContext.expressions(validateDynamicPathExpressions);
+
+            //Catch namespace declarations for namespace context
+            Map<String, String> namespaces = new HashMap<>();
+            for (Namespace namespace : getNamespaces()) {
+                namespaces.put(namespace.prefix, namespace.value);
+            }
+            if (!namespaces.isEmpty()) {
+                dynamicValidationContext.namespaceContext(namespaces);
+            }
+
+            builder.validate(dynamicValidationContext);
+        }
+    }
+
+    private void extractDynamicPathValidateExpressions(Validate validateElement, Map<String, Object> validateDynamicPathExpressions) {
+        //check for path validation with a dynamic variable - old style with direct attribute
+        String pathExpression = validateElement.path;
+        if (IsDynamicPathExpressionPredicate.getInstance().test(pathExpression)) {
+            //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
+            if (validateElement.resultType != null) {
+                pathExpression = validateElement.resultType + ":" + pathExpression;
+            }
+
+            validateDynamicPathExpressions.put(pathExpression, validateElement.value);
         }
     }
 
@@ -285,7 +328,9 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     private void extractXPathValidateExpressions(Validate validateElement, Map<String, Object> validateXpathExpressions) {
         //check for xpath validation - old style with direct attribute
         String pathExpression = validateElement.path;
-        if (StringUtils.hasText(pathExpression) && !IsJsonPathPredicate.getInstance().test(pathExpression)) {
+        if (StringUtils.hasText(pathExpression) &&
+                !IsJsonPathPredicate.getInstance().test(pathExpression) &&
+                !IsDynamicPathExpressionPredicate.getInstance().test(pathExpression)) {
             //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
             if (validateElement.resultType != null) {
                 pathExpression = validateElement.resultType + ":" + pathExpression;
@@ -361,6 +406,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
 
         addXmlValidationContext();
         addJsonValidationContext();
+        addDynamicValidationContext();
         addMessageValidationContext();
         addScriptValidationContext();
 

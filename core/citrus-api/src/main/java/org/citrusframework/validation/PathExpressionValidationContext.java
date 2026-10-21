@@ -22,12 +22,14 @@ import java.util.Map;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.util.IsDynamicPathExpressionPredicate;
 import org.citrusframework.util.IsJsonPathPredicate;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.expression.PathExpressionValidationContextBuilder;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
+import org.citrusframework.validation.context.path.DynamicPathExpressionValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
+import org.citrusframework.validation.expression.PathExpressionValidationContextBuilder;
 import org.citrusframework.variable.VariableExtractor;
 
 public class PathExpressionValidationContext {
@@ -100,6 +102,14 @@ public class PathExpressionValidationContext {
         public ValidationContext build() {
             if (expressions.isEmpty()) {
                 return new DefaultValidationContext();
+            }
+
+            if (expressions.keySet().stream()
+                    .anyMatch(IsDynamicPathExpressionPredicate.getInstance()::test)) {
+                // the type of the path expression is unknown as the variable gets resolved at runtime only
+                return new DynamicPathExpressionValidationContext.Builder()
+                        .expressions(expressions)
+                        .build();
             }
 
             String expression = expressions.keySet().iterator().next();
