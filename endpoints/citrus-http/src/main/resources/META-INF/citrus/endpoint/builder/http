@@ -1,3 +1,5 @@
 type=org.citrusframework.http.endpoint.builder.HttpEndpointBuilder
 client=org.citrusframework.http.client.HttpClientBuilder
 server=org.citrusframework.http.server.HttpServerBuilder
+vertx-server=org.citrusframework.http.server.vertx.VertxHttpServerBuilder
+vertxServer=org.citrusframework.http.server.vertx.VertxHttpServerBuilder

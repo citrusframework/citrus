@@ -19,8 +19,12 @@ package org.citrusframework.http.endpoint.builder;
 import org.citrusframework.endpoint.builder.ClientServerEndpointBuilder;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.http.server.vertx.VertxHttpServerBuilder;
 
 public final class HttpEndpoints extends ClientServerEndpointBuilder<HttpClientBuilder, HttpServerBuilder> {
+
+    private final VertxHttpServerBuilder vertxServerBuilder = new VertxHttpServerBuilder();
+
     /**
      * Private constructor setting the client and server builder implementation.
      */
@@ -34,5 +38,13 @@ public final class HttpEndpoints extends ClientServerEndpointBuilder<HttpClientB
      */
     public static HttpEndpoints http() {
         return new HttpEndpoints();
+    }
+
+    /**
+     * Gets the Vert.x based server builder.
+     * @return
+     */
+    public VertxHttpServerBuilder vertxServer() {
+        return vertxServerBuilder;
     }
 }

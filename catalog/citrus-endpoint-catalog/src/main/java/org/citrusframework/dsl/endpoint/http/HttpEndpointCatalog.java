@@ -19,6 +19,7 @@ package org.citrusframework.dsl.endpoint.http;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.endpoint.builder.HttpEndpoints;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.http.server.vertx.VertxHttpServerBuilder;
 
 public class HttpEndpointCatalog {
 
@@ -47,5 +48,13 @@ public class HttpEndpointCatalog {
      */
     public HttpServerBuilder server() {
         return HttpEndpoints.http().server();
+    }
+
+    /**
+     * Gets the Vert.x based server builder.
+     * @return
+     */
+    public VertxHttpServerBuilder vertxServer() {
+        return HttpEndpoints.http().vertxServer();
     }
 }
