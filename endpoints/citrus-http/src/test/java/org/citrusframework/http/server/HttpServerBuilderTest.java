@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
 public class HttpServerBuilderTest {
 
     @Test
+    @SuppressWarnings("deprecation")
     public void shouldResolveSecuredConnectionByName() {
         ServerConnector serverConnector = mock(ServerConnector.class);
         HttpSecureConnection secureConnection = mock(HttpSecureConnection.class);

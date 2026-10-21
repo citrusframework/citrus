@@ -26,6 +26,9 @@ import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.springframework.http.client.ClientHttpRequestFactory;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
@@ -49,6 +52,7 @@ public class BasicAuthentication implements HttpAuthentication {
     }
 
     @Override
+    @Deprecated(since = "5.1.0")
     public SecurityHandler getSecurityHandler(String resourcePath) {
         try {
             SecurityHandlerFactory securityHandlerFactory = new SecurityHandlerFactory();
@@ -64,6 +68,14 @@ public class BasicAuthentication implements HttpAuthentication {
         } catch (Exception e) {
             throw new CitrusRuntimeException(e);
         }
+    }
+
+    @Override
+    public Optional<HttpServerAuthentication> getServerAuthentication(String resourcePath) {
+        return Optional.of(new HttpServerAuthentication(
+                realm,
+                List.of(new User(username, password, userRoles)),
+                Map.of(resourcePath, List.of(userRoles))));
     }
 
     @Override

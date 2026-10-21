@@ -16,6 +16,8 @@
 
 package org.citrusframework.http.security;
 
+import java.util.Optional;
+
 import org.citrusframework.http.client.HttpClient;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -27,7 +29,9 @@ public interface HttpAuthentication {
      *
      * @param resourcePath
      * @return
+     * @deprecated Jetty specific, use {@link #getServerAuthentication(String)} instead.
      */
+    @Deprecated(since = "5.1.0")
     SecurityHandler getSecurityHandler(String resourcePath);
 
     /**
@@ -38,6 +42,18 @@ public interface HttpAuthentication {
      * @return
      */
     ClientHttpRequestFactory getRequestFactory(String requestUrl, HttpClient httpClient);
+
+    /**
+     * Transport neutral description of the server side authentication for the given resource
+     * path. Returns an empty optional when the authentication is not able to describe itself
+     * in a transport neutral way.
+     *
+     * @param resourcePath the path spec the authentication applies to.
+     * @return the server side authentication description.
+     */
+    default Optional<HttpServerAuthentication> getServerAuthentication(String resourcePath) {
+        return Optional.empty();
+    }
 
     static HttpAuthentication basic(String username, String password) {
         return new BasicAuthentication(username, password);

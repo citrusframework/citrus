@@ -341,6 +341,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public B authentication(String resourcePath, HttpAuthentication auth) {
         super.authentication(resourcePath, auth);
         endpoint.setSecurityHandler(auth.getSecurityHandler(resourcePath));
@@ -348,6 +349,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public B secured(int securePort, HttpSecureConnection conn) {
         super.secured(securePort, conn);
         endpoint.setConnector(conn.getServerConnector(securePort));
