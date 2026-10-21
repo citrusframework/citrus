@@ -33,6 +33,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.interceptor.HttpServerInterceptorChain;
+import org.citrusframework.http.interceptor.HttpServerInterceptorException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.server.HttpServerSettings;
 import org.citrusframework.message.Message;
@@ -201,7 +202,10 @@ public class HttpMessageController {
         boolean serverError = false;
         try {
             response = new HttpServerInterceptorChain(serverInterceptors, this::handleEndpointMessage).proceed(request);
-        } catch (Exception e) {
+        } catch (HttpServerInterceptorException e) {
+            // Only a failure of a server interceptor is translated into a server error response.
+            // A failure of the endpoint adapter is propagated to the servlet container, so that it
+            // is handled the same way it was before the interceptor chain was introduced.
             logger.error("Error while handling Http request: {}", e.getMessage(), e);
             response = null;
             serverError = true;

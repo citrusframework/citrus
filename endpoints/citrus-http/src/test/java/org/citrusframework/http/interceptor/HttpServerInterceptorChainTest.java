@@ -116,7 +116,7 @@ public class HttpServerInterceptorChainTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void shouldPropagateException() {
+    public void shouldWrapInterceptorException() {
         HttpServerInterceptorChain chain = new HttpServerInterceptorChain(
                 List.of((request, next) -> {
                     throw new IllegalStateException("failed");
@@ -124,14 +124,44 @@ public class HttpServerInterceptorChainTest extends AbstractTestNGUnitTest {
                 message -> new HttpMessage("reply"));
 
         assertThatThrownBy(() -> chain.proceed(new HttpMessage("payload")))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("failed");
+                .isInstanceOf(HttpServerInterceptorException.class)
+                .hasRootCauseInstanceOf(IllegalStateException.class)
+                .hasRootCauseMessage("failed");
+    }
+
+    @Test
+    public void shouldNotWrapInterceptorExceptionTwice() {
+        HttpServerInterceptorChain chain = new HttpServerInterceptorChain(
+                List.of(
+                        (request, next) -> next.proceed(request),
+                        (request, next) -> {
+                            throw new IllegalStateException("failed");
+                        }),
+                message -> new HttpMessage("reply"));
+
+        assertThatThrownBy(() -> chain.proceed(new HttpMessage("payload")))
+                .isInstanceOf(HttpServerInterceptorException.class)
+                .hasRootCauseInstanceOf(IllegalStateException.class)
+                .hasRootCauseMessage("failed");
     }
 
     @Test
     public void shouldPropagateEndpointException() {
         HttpServerInterceptorChain chain = new HttpServerInterceptorChain(
                 List.of(),
+                message -> {
+                    throw new CitrusRuntimeException("endpoint failed");
+                });
+
+        assertThatThrownBy(() -> chain.proceed(new HttpMessage("payload")))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessage("endpoint failed");
+    }
+
+    @Test
+    public void shouldPropagateEndpointExceptionThroughInterceptors() {
+        HttpServerInterceptorChain chain = new HttpServerInterceptorChain(
+                List.of((request, next) -> next.proceed(request)),
                 message -> {
                     throw new CitrusRuntimeException("endpoint failed");
                 });
