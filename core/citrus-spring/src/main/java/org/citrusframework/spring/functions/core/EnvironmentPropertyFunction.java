@@ -24,12 +24,14 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 
 /**
  * Function to get environment variable settings.
  */
+@SchemaType(module = "citrus-spring")
 public class EnvironmentPropertyFunction implements EnvironmentAware,
         ParameterizedFunction<EnvironmentPropertyFunction.Parameters> {
 

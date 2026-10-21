@@ -102,7 +102,7 @@
     "version": "${citrus.version}",
     "name": "resolveExternalServiceUrl",
     "group": "citrus",
-    "module": "citrus-base",
+    "module": "citrus-kubernetes",
     "title": "ResolveExternalServiceUrl",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -433,7 +433,7 @@
     "version": "${citrus.version}",
     "name": "resolveServiceUrl",
     "group": "citrus",
-    "module": "citrus-base",
+    "module": "citrus-kubernetes",
     "title": "ResolveServiceUrl",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -636,7 +636,7 @@
     "version": "${citrus.version}",
     "name": "jsonPatch",
     "group": "citrus",
-    "module": "citrus-base",
+    "module": "citrus-validation-json",
     "title": "JsonPatch",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -824,7 +824,7 @@
     "version": "${citrus.version}",
     "name": "jsonPath",
     "group": "citrus",
-    "module": "citrus-base",
+    "module": "citrus-validation-json",
     "title": "JsonPath",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -895,6 +895,33 @@
       ],
       "additionalProperties": false    }
   },
+  "env": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "env",
+    "group": "citrus",
+    "module": "citrus-spring",
+    "title": "Env",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "defaultValue": {
+          "type": "string",
+          "title": "DefaultValue",
+          "description": "The default value when environment property is not set."
+        },
+        "propertyName": {
+          "type": "string",
+          "title": "PropertyName",
+          "description": "The environment property name."
+        }
+      },
+      "required": [
+        "propertyName"
+      ],
+      "additionalProperties": false    }
+  },
   "round": {
     "kind": "testFunction",
     "version": "${citrus.version}",
@@ -950,7 +977,7 @@
     "version": "${citrus.version}",
     "name": "serviceClusterIp",
     "group": "citrus",
-    "module": "citrus-base",
+    "module": "citrus-kubernetes",
     "title": "ServiceClusterIp",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",

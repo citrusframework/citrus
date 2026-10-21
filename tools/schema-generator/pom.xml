@@ -162,6 +162,16 @@
       <artifactId>citrus-validation-assertj</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-validation-json</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-spring</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Logging -->
     <dependency>

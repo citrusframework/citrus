@@ -23,10 +23,12 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.json.JsonPathUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * @since 2.6.2
  */
+@SchemaType(module = "citrus-validation-json")
 public class JsonPathFunction implements ParameterizedFunction<JsonPathFunction.Parameters> {
 
     @Override

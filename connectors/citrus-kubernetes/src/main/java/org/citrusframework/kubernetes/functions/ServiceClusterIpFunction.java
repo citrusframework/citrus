@@ -28,7 +28,9 @@ import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
+@SchemaType(module = "citrus-kubernetes")
 public class ServiceClusterIpFunction implements ParameterizedFunction<ServiceClusterIpFunction.Parameters> {
 
     @Override
