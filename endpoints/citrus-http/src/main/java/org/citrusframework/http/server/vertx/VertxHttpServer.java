@@ -79,6 +79,9 @@ public class VertxHttpServer extends AbstractHttpServer {
     private WorkerExecutor workerExecutor;
     private VertxExchangeHandler exchangeHandler;
 
+    /** Handler performing the basic authentication of the incoming requests */
+    private VertxBasicAuthHandler basicAuthHandler;
+
     /** Size of the worker pool running the endpoint adapter */
     private int workerPoolSize = DEFAULT_WORKER_POOL_SIZE;
 
@@ -146,6 +149,11 @@ public class VertxHttpServer extends AbstractHttpServer {
                 new VertxResponseWriter(endpointConfiguration, entityConverter, isUseDefaultFilters()),
                 getEndpointAdapter(),
                 isUseDefaultFilters());
+
+        if (getAuthentication() != null) {
+            getAuthentication().getServerAuthentication(getSecuredPath())
+                    .ifPresent(authentication -> basicAuthHandler = new VertxBasicAuthHandler(getContextPath(), authentication));
+        }
 
         HttpServerOptions options = new HttpServerOptions()
                 .setHost("0.0.0.0")
@@ -223,6 +231,10 @@ public class VertxHttpServer extends AbstractHttpServer {
                 context.response().setStatusCode(404).end();
                 return;
             }
+        }
+
+        if (basicAuthHandler != null && basicAuthHandler.handle(context) != VertxBasicAuthHandler.Outcome.ALLOWED) {
+            return;
         }
 
         exchangeHandler.handle(context);
