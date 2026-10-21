@@ -39,10 +39,6 @@ public class IsDynamicPathExpressionPredicate implements Predicate<String> {
 
     @Override
     public boolean test(String toTest) {
-        if (toTest == null) {
-            return false;
-        }
-
         return StringUtils.hasText(toTest) && toTest.contains(CitrusSettings.VARIABLE_PREFIX);
     }
 }
