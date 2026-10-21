@@ -20,9 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -237,10 +237,11 @@ class VertxResponseWriter {
     }
 
     /**
-     * Copies all headers of the given entity excluding the transport managed headers.
+     * Copies all headers of the given entity excluding the transport managed headers. Header names
+     * are handled case insensitively, so a header never shows up twice with a different spelling.
      */
     private Map<String, List<String>> copyHeaders(HttpEntity<?> entity) {
-        Map<String, List<String>> headers = new LinkedHashMap<>();
+        Map<String, List<String>> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         for (Map.Entry<String, List<String>> header : entity.getHeaders().headerSet()) {
             if (TRANSPORT_MANAGED_HEADERS.stream().anyMatch(name -> name.equalsIgnoreCase(header.getKey()))) {

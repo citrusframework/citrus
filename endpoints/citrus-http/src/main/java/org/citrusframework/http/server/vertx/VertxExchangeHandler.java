@@ -142,9 +142,7 @@ class VertxExchangeHandler {
         httpResponse.setStatusCode(response.status());
 
         for (Map.Entry<String, List<String>> header : response.headers().entrySet()) {
-            for (String value : header.getValue()) {
-                httpResponse.putHeader(header.getKey(), value);
-            }
+            httpResponse.putHeader(header.getKey(), header.getValue());
         }
 
         if (HttpMethod.HEAD.equals(request.method())) {

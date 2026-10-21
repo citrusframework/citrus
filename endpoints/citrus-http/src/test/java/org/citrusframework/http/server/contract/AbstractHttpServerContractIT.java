@@ -670,6 +670,33 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
     }
 
     /**
+     * HSRV-023: All cookies of the reply are sent to the client. Headers that occur multiple
+     * times in the reply must not be reduced to their last value.
+     */
+    @Test
+    public void shouldSendAllReplyCookies() {
+        AbstractHttpServer server = startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+            builder.handleCookies(true);
+        });
+
+        getEndpointAdapter().setReplyProvider(request -> {
+            HttpMessage reply = new HttpMessage("ok");
+            reply.cookie(new Cookie("session", "abc"));
+            reply.cookie(new Cookie("csrf", "xyz"));
+            return reply;
+        });
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/cookies", new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getHeaders("Set-Cookie")).hasSize(2);
+        assertThat(response.getHeaders("Set-Cookie")).anySatisfy(setCookie -> assertThat(setCookie).contains("session=abc"));
+        assertThat(response.getHeaders("Set-Cookie")).anySatisfy(setCookie -> assertThat(setCookie).contains("csrf=xyz"));
+    }
+
+    /**
      * HSRV-010: Matrix parameters are removed from the request path by default.
      */
     @Test
