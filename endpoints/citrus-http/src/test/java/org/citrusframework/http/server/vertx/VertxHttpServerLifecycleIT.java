@@ -62,7 +62,8 @@ public class VertxHttpServerLifecycleIT extends TestNGCitrusSpringSupport {
 
         ContractClient.Response response = ContractClient.send(port, "GET", "/orders");
 
-        assertThat(response.getStatusCode()).isEqualTo(501);
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getBody()).isEmpty();
     }
 
     @Test
@@ -109,12 +110,12 @@ public class VertxHttpServerLifecycleIT extends TestNGCitrusSpringSupport {
         server.initialize();
         server.start();
 
-        assertThat(ContractClient.send(port, "GET", "/orders").getStatusCode()).isEqualTo(501);
+        assertThat(ContractClient.send(port, "GET", "/orders").getStatusCode()).isEqualTo(200);
 
         server.stop();
         server.start();
 
-        assertThat(ContractClient.send(port, "GET", "/orders").getStatusCode()).isEqualTo(501);
+        assertThat(ContractClient.send(port, "GET", "/orders").getStatusCode()).isEqualTo(200);
     }
 
     @Test

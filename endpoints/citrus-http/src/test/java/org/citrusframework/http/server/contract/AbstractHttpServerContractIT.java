@@ -51,6 +51,7 @@ import org.citrusframework.util.SocketUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.testng.SkipException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
@@ -146,6 +147,38 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      * @param messageListeners the message listeners to report to.
      */
     protected abstract void configureTracing(AbstractHttpServer server, MessageListeners messageListeners);
+
+    /**
+     * Optional server features that are not supported by every server implementation.
+     */
+    public enum Feature {
+        GZIP,
+        AUTHENTICATION,
+        TLS,
+        TRACING,
+        INTERCEPTORS
+    }
+
+    /**
+     * Checks if the given feature is supported by this server implementation.
+     *
+     * @param feature the feature to check.
+     * @return true if the feature is supported.
+     */
+    protected boolean isSupported(Feature feature) {
+        return true;
+    }
+
+    /**
+     * Skips the test when the given feature is not supported by this server implementation.
+     *
+     * @param feature the feature required by the test.
+     */
+    protected void assumeSupported(Feature feature) {
+        if (!isSupported(feature)) {
+            throw new SkipException("Feature not supported by this server implementation: " + feature);
+        }
+    }
 
     @AfterMethod(alwaysRun = true)
     public void stopServers() {
@@ -761,6 +794,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldDecodeGzipRequestBody() {
+        assumeSupported(Feature.GZIP);
         AbstractHttpServer server = startServer(builder -> {
             builder.port(SocketUtils.findAvailableTcpPort());
             builder.contextPath("/");
@@ -783,6 +817,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldCompressResponseWhenClientAcceptsGzip() {
+        assumeSupported(Feature.GZIP);
         AbstractHttpServer server = startServer(builder -> {
             builder.port(SocketUtils.findAvailableTcpPort());
             builder.contextPath("/");
@@ -805,6 +840,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldNotCompressResponseForOtherContentCodings() {
+        assumeSupported(Feature.GZIP);
         AbstractHttpServer server = startServer(builder -> {
             builder.port(SocketUtils.findAvailableTcpPort());
             builder.contextPath("/");
@@ -827,6 +863,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldNotCompressNoContentResponse() {
+        assumeSupported(Feature.GZIP);
         AbstractHttpServer server = startServer(builder -> {
             builder.port(SocketUtils.findAvailableTcpPort());
             builder.contextPath("/");
@@ -854,6 +891,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldFailOnCorruptGzipRequestBody() {
+        assumeSupported(Feature.GZIP);
         AbstractHttpServer server = startServer(builder -> {
             builder.port(SocketUtils.findAvailableTcpPort());
             builder.contextPath("/");
@@ -871,6 +909,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldRejectRequestWithoutCredentials() {
+        assumeSupported(Feature.AUTHENTICATION);
         AbstractHttpServer server = startSecuredServer();
 
         ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/secured/data", new byte[0]);
@@ -885,6 +924,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldRejectRequestWithWrongCredentials() {
+        assumeSupported(Feature.AUTHENTICATION);
         AbstractHttpServer server = startSecuredServer();
 
         ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/secured/data",
@@ -900,6 +940,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldDeliverRequestWithValidCredentials() {
+        assumeSupported(Feature.AUTHENTICATION);
         AbstractHttpServer server = startSecuredServer();
 
         getEndpointAdapter().setReplyProvider(request -> new HttpMessage("secured"));
@@ -921,6 +962,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldLeaveUnmatchedPathsUnauthenticated() {
+        assumeSupported(Feature.AUTHENTICATION);
         AbstractHttpServer server = startSecuredServer();
 
         getEndpointAdapter().setReplyProvider(request -> new HttpMessage("open"));
@@ -941,6 +983,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldAnswerForbiddenForUserWithoutRole() {
+        assumeSupported(Feature.AUTHENTICATION);
         AbstractHttpServer server = startSecuredServer();
 
         ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/secured/data",
@@ -955,6 +998,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldAcceptHttpsOnSecurePortWithJks() {
+        assumeSupported(Feature.TLS);
         int securePort = findAvailablePort(-1);
 
         AbstractHttpServer server = startSecuredServer(securePort, JKS_KEY_STORE);
@@ -975,6 +1019,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldAcceptHttpsOnSecurePortWithPkcs12() {
+        assumeSupported(Feature.TLS);
         int securePort = findAvailablePort(-1);
 
         AbstractHttpServer server = startSecuredServer(securePort, PKCS12_KEY_STORE);
@@ -997,6 +1042,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldNotListenOnPlainPortWhenSecured() {
+        assumeSupported(Feature.TLS);
         int securePort = findAvailablePort(-1);
 
         AbstractHttpServer server = startSecuredServer(securePort, JKS_KEY_STORE);
@@ -1010,6 +1056,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldReportExchangeToMessageListener() {
+        assumeSupported(Feature.TRACING);
         ContractMessageListener messageListener = startServerWithTracing(builder -> {
             builder.port(SocketUtils.findAvailableTcpPort());
             builder.contextPath("/");
@@ -1034,6 +1081,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldShortCircuitRequestWithInterceptor() {
+        assumeSupported(Feature.INTERCEPTORS);
         AbstractHttpServer server = startServer(builder -> {
             builder.port(SocketUtils.findAvailableTcpPort());
             builder.contextPath("/");
@@ -1052,6 +1100,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldDecorateRequestWithInterceptor() {
+        assumeSupported(Feature.INTERCEPTORS);
         AbstractHttpServer server = startServer(builder -> {
             builder.port(SocketUtils.findAvailableTcpPort());
             builder.contextPath("/");
@@ -1072,6 +1121,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldReplaceReplyWithInterceptor() {
+        assumeSupported(Feature.INTERCEPTORS);
         AbstractHttpServer server = startServer(builder -> {
             builder.port(SocketUtils.findAvailableTcpPort());
             builder.contextPath("/");
@@ -1093,6 +1143,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     @Test
     public void shouldAnswerWithServerErrorWhenInterceptorFails() {
+        assumeSupported(Feature.INTERCEPTORS);
         AbstractHttpServer server = startServer(builder -> {
             builder.port(SocketUtils.findAvailableTcpPort());
             builder.contextPath("/");

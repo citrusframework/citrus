@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.http.interceptor.HttpServerInterceptor;
+import org.citrusframework.http.message.DelegatingHttpEntityMessageConverter;
 import org.citrusframework.http.security.BasicAuthentication;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
@@ -29,6 +31,7 @@ import org.citrusframework.http.security.SSLConnection;
 import org.citrusframework.http.server.AbstractHttpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -74,6 +77,7 @@ public class VertxHttpServer extends AbstractHttpServer {
 
     /** Worker executor running the endpoint adapter off the event loop */
     private WorkerExecutor workerExecutor;
+    private VertxExchangeHandler exchangeHandler;
 
     /** Size of the worker pool running the endpoint adapter */
     private int workerPoolSize = DEFAULT_WORKER_POOL_SIZE;
@@ -131,6 +135,16 @@ public class VertxHttpServer extends AbstractHttpServer {
 
         workerExecutor = vertx.createSharedWorkerExecutor("citrus-http-" + getName(), workerPoolSize,
                 getDefaultTimeout() + WORKER_EXECUTION_TIME_OFFSET_MILLIS);
+
+        HttpEndpointConfiguration endpointConfiguration = createEndpointConfiguration();
+        DelegatingHttpEntityMessageConverter entityConverter = new DelegatingHttpEntityMessageConverter();
+        entityConverter.setBinaryMediaTypes(getBinaryMediaTypes());
+
+        exchangeHandler = new VertxExchangeHandler(
+                workerExecutor,
+                new VertxRequestMapper(endpointConfiguration, entityConverter, getContextPath()),
+                new VertxResponseWriter(endpointConfiguration, entityConverter, isUseDefaultFilters()),
+                getEndpointAdapter());
 
         HttpServerOptions options = new HttpServerOptions()
                 .setHost("0.0.0.0")
@@ -210,7 +224,25 @@ public class VertxHttpServer extends AbstractHttpServer {
             }
         }
 
-        context.response().setStatusCode(501).end();
+        exchangeHandler.handle(context);
+    }
+
+    /**
+     * Creates the endpoint configuration used to map the requests and to convert the replies. The
+     * configuration is the same as the one used by the Jetty based Http server.
+     *
+     * @return the endpoint configuration.
+     */
+    private HttpEndpointConfiguration createEndpointConfiguration() {
+        HttpEndpointConfiguration configuration = new HttpEndpointConfiguration();
+        configuration.setMessageConverter(getMessageConverter());
+        configuration.setHeaderMapper(DefaultHttpHeaderMapper.inboundMapper());
+        configuration.setHandleCookies(isHandleCookies());
+        configuration.setRemoveSemicolonPathContent(isRemoveSemicolonPathContent());
+        configuration.setDefaultStatusCode(getDefaultStatusCode());
+        configuration.setBinaryMediaTypes(getBinaryMediaTypes());
+
+        return configuration;
     }
 
     /**

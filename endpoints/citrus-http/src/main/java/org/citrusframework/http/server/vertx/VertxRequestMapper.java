@@ -157,10 +157,6 @@ class VertxRequestMapper {
     private String getRequestUri(String path, Charset charset) {
         String uri = path != null ? path : "";
 
-        if (!"/".equals(contextPath) && uri.startsWith(contextPath)) {
-            uri = uri.substring(contextPath.length());
-        }
-
         if (uri.isEmpty()) {
             uri = "/";
         }

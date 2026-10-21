@@ -93,12 +93,12 @@ public class VertxRequestMapperTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void shouldStripContextPathFromRequestPath() {
+    public void shouldKeepContextPathInRequestPath() {
         mapper = new VertxRequestMapper(configuration, new DelegatingHttpEntityMessageConverter(), "/api");
 
         HttpMessage request = mapper.map(snapshot("GET", "/api/orders/42", MultiMap.caseInsensitiveMultiMap(), null));
 
-        assertThat(request.getPath()).isEqualTo("/orders/42");
+        assertThat(request.getPath()).isEqualTo("/api/orders/42");
         assertThat(request.getContextPath()).isEqualTo("/api");
     }
 
