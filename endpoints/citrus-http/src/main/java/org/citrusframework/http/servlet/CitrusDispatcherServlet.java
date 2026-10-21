@@ -23,7 +23,6 @@ import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.http.controller.HttpMessageController;
 import org.citrusframework.http.interceptor.DelegatingHandlerInterceptor;
-import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.interceptor.LoggingHandlerInterceptor;
 import org.citrusframework.http.interceptor.MappedInterceptorAdapter;
 import org.citrusframework.http.message.DelegatingHttpEntityMessageConverter;
@@ -159,10 +158,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
 
         if (interceptors != null) {
             for (Object interceptor : interceptors) {
-                if (interceptor instanceof HttpServerInterceptor) {
-                    logger.warn("Citrus server interceptor is not supported by the Jetty based Http server. Use the server interceptors instead.");
-                    continue;
-                } else if (interceptor instanceof MappedInterceptor mappedInterceptor) {
+                if (interceptor instanceof MappedInterceptor mappedInterceptor) {
                     mappedInterceptor.setPathMatcher(new AntPathMatcher());
                     handlerInterceptors.add(new MappedInterceptorAdapter(mappedInterceptor));
                 } else if (interceptor instanceof HandlerInterceptor handlerInterceptor) {

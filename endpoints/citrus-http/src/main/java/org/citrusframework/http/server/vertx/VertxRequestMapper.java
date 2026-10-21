@@ -152,7 +152,8 @@ class VertxRequestMapper {
     }
 
     /**
-     * Gets the request path relative to the context path, decoded and cleaned up like Spring does.
+     * Gets the request path of the request. The path contains the context path of the server and
+     * is decoded and cleaned up like Spring does.
      */
     private String getRequestUri(String path, Charset charset) {
         String uri = path != null ? path : "";
