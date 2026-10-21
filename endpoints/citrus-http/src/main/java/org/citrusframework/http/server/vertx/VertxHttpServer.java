@@ -27,6 +27,7 @@ import org.citrusframework.http.message.DelegatingHttpEntityMessageConverter;
 import org.citrusframework.http.security.BasicAuthentication;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
+import org.citrusframework.http.security.HttpServerTlsSettings;
 import org.citrusframework.http.security.SSLConnection;
 import org.citrusframework.http.server.AbstractHttpServer;
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.WorkerExecutor;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.net.TrustOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -158,6 +160,20 @@ public class VertxHttpServer extends AbstractHttpServer {
         HttpServerOptions options = new HttpServerOptions()
                 .setHost("0.0.0.0")
                 .setPort(resolvePort());
+
+        if (getSecureConnection() != null) {
+            HttpServerTlsSettings tlsSettings = getSecureConnection().getServerTlsSettings()
+                    .orElseThrow(() -> new CitrusRuntimeException("Invalid secure connection configuration for Vert.x Http server: %s does not provide transport neutral server TLS settings. Use a %s implementation instead."
+                            .formatted(getSecureConnection().getClass().getName(), SSLConnection.class.getName())));
+
+            options.setSsl(true);
+            options.setKeyCertOptions(VertxTlsOptions.createKeyCertOptions(tlsSettings));
+
+            TrustOptions trustOptions = VertxTlsOptions.createTrustOptions(tlsSettings);
+            if (trustOptions != null) {
+                options.setTrustOptions(trustOptions);
+            }
+        }
 
         try {
             vertxHttpServer = vertx.createHttpServer(options)
