@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.http.interceptor.HttpServerInterceptor;
+import org.citrusframework.http.interceptor.LoggingServerInterceptor;
 import org.citrusframework.http.message.DelegatingHttpEntityMessageConverter;
 import org.citrusframework.http.security.BasicAuthentication;
 import org.citrusframework.http.security.HttpAuthentication;
@@ -90,10 +91,31 @@ public class VertxHttpServer extends AbstractHttpServer {
     /** Interceptors as configured by the user. Used to detect configuration that is bound to another server technology. */
     private List<Object> configuredInterceptors = new ArrayList<>();
 
+    /** Flag indicating that the default logging interceptor has already been added */
+    private boolean defaultLoggingInterceptorAdded;
+
     @Override
     public void initialize() {
         validateConfiguration();
+        addDefaultLoggingInterceptor();
         super.initialize();
+    }
+
+    /**
+     * Adds the default logging interceptor to the server interceptors. The interceptor reports the
+     * exchanged messages to the message listeners of the test context, if present. This mirrors the
+     * default logging interceptor of the Jetty based server.
+     */
+    private void addDefaultLoggingInterceptor() {
+        if (defaultLoggingInterceptorAdded) {
+            return;
+        }
+
+        List<HttpServerInterceptor> interceptors = new ArrayList<>(getServerInterceptors());
+        interceptors.add(0, new LoggingServerInterceptor());
+        setServerInterceptors(interceptors);
+
+        defaultLoggingInterceptorAdded = true;
     }
 
     /**
@@ -150,7 +172,9 @@ public class VertxHttpServer extends AbstractHttpServer {
                 new VertxRequestMapper(endpointConfiguration, entityConverter, getContextPath()),
                 new VertxResponseWriter(endpointConfiguration, entityConverter, isUseDefaultFilters()),
                 getEndpointAdapter(),
-                isUseDefaultFilters());
+                isUseDefaultFilters(),
+                getServerInterceptors(),
+                getDefaultStatusCode());
 
         if (getAuthentication() != null) {
             getAuthentication().getServerAuthentication(getSecuredPath())

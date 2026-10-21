@@ -16,6 +16,7 @@
 package org.citrusframework.http.server.contract;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.citrusframework.http.client.HttpClient;
+import org.citrusframework.http.interceptor.HttpServerInterceptor;
+import org.citrusframework.http.interceptor.LoggingServerInterceptor;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpServerAuthentication;
 import org.citrusframework.http.security.User;
@@ -61,8 +64,7 @@ public class VertxHttpServerContractIT extends AbstractHttpServerContractIT {
     @Override
     protected boolean isSupported(Feature feature) {
         return switch (feature) {
-            case GZIP, AUTHENTICATION, TLS -> true;
-            case TRACING, INTERCEPTORS -> false;
+            case GZIP, AUTHENTICATION, TLS, TRACING, INTERCEPTORS -> true;
         };
     }
 
@@ -95,7 +97,12 @@ public class VertxHttpServerContractIT extends AbstractHttpServerContractIT {
 
     @Override
     protected void configureTracing(AbstractHttpServer server, MessageListeners messageListeners) {
-        // tracing is not supported yet
+        LoggingServerInterceptor loggingInterceptor = new LoggingServerInterceptor();
+        loggingInterceptor.setMessageListener(messageListeners);
+
+        List<HttpServerInterceptor> interceptors = new ArrayList<>(server.getServerInterceptors());
+        interceptors.add(loggingInterceptor);
+        server.setServerInterceptors(interceptors);
     }
 
     /**

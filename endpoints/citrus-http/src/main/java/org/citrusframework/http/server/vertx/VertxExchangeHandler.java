@@ -28,11 +28,14 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.http.HttpVersion;
 import io.vertx.ext.web.RoutingContext;
 import org.citrusframework.endpoint.EndpointAdapter;
+import org.citrusframework.http.interceptor.HttpServerInterceptor;
+import org.citrusframework.http.interceptor.HttpServerInterceptorChain;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 
 /**
  * Handles the Http exchange of a Vert.x request. The request body is received on the event loop, the
@@ -47,15 +50,20 @@ class VertxExchangeHandler {
     private final VertxResponseWriter responseWriter;
     private final EndpointAdapter endpointAdapter;
     private final boolean useDefaultFilters;
+    private final List<HttpServerInterceptor> serverInterceptors;
+    private final int defaultStatusCode;
 
     VertxExchangeHandler(WorkerExecutor workerExecutor, VertxRequestMapper requestMapper,
                          VertxResponseWriter responseWriter, EndpointAdapter endpointAdapter,
-                         boolean useDefaultFilters) {
+                         boolean useDefaultFilters, List<HttpServerInterceptor> serverInterceptors,
+                         int defaultStatusCode) {
         this.workerExecutor = workerExecutor;
         this.requestMapper = requestMapper;
         this.responseWriter = responseWriter;
         this.endpointAdapter = endpointAdapter;
         this.useDefaultFilters = useDefaultFilters;
+        this.serverInterceptors = serverInterceptors != null ? serverInterceptors : List.of();
+        this.defaultStatusCode = defaultStatusCode;
     }
 
     /**
@@ -100,9 +108,25 @@ class VertxExchangeHandler {
      */
     private VertxResponseSnapshot handleOnWorker(VertxRequestSnapshot snapshot) {
         HttpMessage request = requestMapper.map(snapshot);
-        Message reply = endpointAdapter.handleMessage(request);
+
+        Message reply = new HttpServerInterceptorChain(serverInterceptors, this::handleEndpointMessage)
+                .proceed(request);
 
         return responseWriter.write(reply, snapshot);
+    }
+
+    /**
+     * Invokes the endpoint adapter and applies the default status to the reply, so that the server
+     * interceptors are able to see the final status of the response.
+     */
+    private Message handleEndpointMessage(HttpMessage request) {
+        Message reply = endpointAdapter.handleMessage(request);
+
+        if (reply instanceof HttpMessage httpReply && httpReply.getStatusCode() == null) {
+            httpReply.status(HttpStatusCode.valueOf(defaultStatusCode));
+        }
+
+        return reply;
     }
 
     /**
