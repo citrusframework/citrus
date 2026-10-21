@@ -29,6 +29,7 @@ import org.citrusframework.base.functions.core.CurrentDateFunction;
 import org.citrusframework.base.functions.core.DecodeBase64Function;
 import org.citrusframework.base.functions.core.DigestAuthHeaderFunction;
 import org.citrusframework.base.functions.core.EncodeBase64Function;
+import org.citrusframework.base.functions.core.EnvironmentVariableFunction;
 import org.citrusframework.base.functions.core.EscapeJsonFunction;
 import org.citrusframework.base.functions.core.FloorFunction;
 import org.citrusframework.base.functions.core.LoadMessageFunction;
@@ -101,6 +102,7 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
         addMember("readFile", new ReadFileResourceFunction());
         addMember("message", new LoadMessageFunction());
         addMember("systemProperty", new SystemPropertyFunction());
+        addMember("envVar", new EnvironmentVariableFunction());
         addMember("unixTimestamp", new UnixTimestampFunction());
         addMember("escapeJson", new EscapeJsonFunction());
 
