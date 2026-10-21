@@ -25,6 +25,7 @@ import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.http.client.HttpEndpointComponent;
 import org.citrusframework.http.client.HttpsEndpointComponent;
+import org.citrusframework.http.server.vertx.VertxHttpServerComponent;
 import org.citrusframework.spi.ReferenceResolver;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
@@ -88,7 +89,7 @@ public class SeleniumEndpointComponentTest {
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 5L);
+        Assert.assertEquals(validators.size(), 6L);
         Assert.assertNotNull(validators.get("direct"));
         Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
         Assert.assertNotNull(validators.get("message-store"));
@@ -99,6 +100,8 @@ public class SeleniumEndpointComponentTest {
         Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
         Assert.assertNotNull(validators.get("selenium"));
         Assert.assertEquals(validators.get("selenium").getClass(), SeleniumEndpointComponent.class);
+        Assert.assertNotNull(validators.get("http.vertx-server"));
+        Assert.assertEquals(validators.get("http.vertx-server").getClass(), VertxHttpServerComponent.class);
     }
 
     @Test
