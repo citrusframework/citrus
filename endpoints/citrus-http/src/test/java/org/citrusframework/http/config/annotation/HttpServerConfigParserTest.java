@@ -295,7 +295,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = lookup();
-        assertEquals(validators.size(), 8L);
+        assertEquals(validators.size(), 9L);
         assertNotNull(validators.get("direct.async"));
         assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
         assertNotNull(validators.get("direct.sync"));
@@ -312,6 +312,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
         assertNotNull(validators.get("http.server"));
         assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+        assertNotNull(validators.get("http.vertx-server"));
+        assertEquals(validators.get("http.vertx-server").getClass(), VertxHttpServerConfigParser.class);
     }
 
     @Test

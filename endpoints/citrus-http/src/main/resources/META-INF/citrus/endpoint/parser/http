@@ -1,2 +1,3 @@
 client=org.citrusframework.http.config.annotation.HttpClientConfigParser
 server=org.citrusframework.http.config.annotation.HttpServerConfigParser
+vertx-server=org.citrusframework.http.config.annotation.VertxHttpServerConfigParser
