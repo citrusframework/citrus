@@ -16,11 +16,19 @@
 
 package org.citrusframework.http.server.contract;
 
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
+import org.citrusframework.http.interceptor.LoggingHandlerInterceptor;
+import org.citrusframework.http.security.BasicAuthConstraint;
+import org.citrusframework.http.security.SecurityHandlerFactory;
+import org.citrusframework.http.security.User;
 import org.citrusframework.http.server.AbstractCommonHttpServerBuilder;
 import org.citrusframework.http.server.AbstractHttpServer;
+import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.report.MessageListeners;
 
 /**
  * Runs the shared HTTP server contract suite against the default Jetty based HTTP server.
@@ -42,5 +50,26 @@ public class JettyHttpServerContractIT extends AbstractHttpServerContractIT {
     @Override
     protected boolean isDuplicateSlashRejected() {
         return true;
+    }
+
+    @Override
+    protected void configureAuthentication(AbstractHttpServer server) {
+        SecurityHandlerFactory securityHandlerFactory = new SecurityHandlerFactory();
+        securityHandlerFactory.setRealm(AUTH_REALM);
+        securityHandlerFactory.setUsers(List.of(
+                new User(AUTH_USER, AUTH_PASSWORD, new String[]{AUTH_ROLE}),
+                new User(AUTH_USER_WITHOUT_ROLE, AUTH_PASSWORD_WITHOUT_ROLE, new String[0])));
+        securityHandlerFactory.setConstraints(Map.of(SECURED_PATH, new BasicAuthConstraint(new String[]{AUTH_ROLE})));
+        securityHandlerFactory.initialize();
+
+        ((HttpServer) server).setSecurityHandler(securityHandlerFactory.getObject());
+    }
+
+    @Override
+    protected void configureTracing(AbstractHttpServer server, MessageListeners messageListeners) {
+        LoggingHandlerInterceptor loggingInterceptor = new LoggingHandlerInterceptor();
+        loggingInterceptor.setMessageListener(messageListeners);
+
+        server.getInterceptors().add(loggingInterceptor);
     }
 }

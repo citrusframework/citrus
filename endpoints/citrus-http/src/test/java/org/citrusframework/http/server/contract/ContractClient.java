@@ -23,11 +23,18 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Minimal wire level HTTP/1.1 client used by the HTTP server contract test suite. The client writes
@@ -90,6 +97,56 @@ public final class ContractClient {
             return readResponse(socket.getInputStream(), method);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to send %s request to port %d".formatted(method, port), e);
+        }
+    }
+
+    /**
+     * Sends a request over a TLS connection. The test certificates are self signed and expired, so the
+     * client does not verify the server certificate.
+     *
+     * @param port the target port.
+     * @param method the HTTP method.
+     * @param target the request target.
+     * @param headers the additional request headers.
+     * @param body the request body.
+     * @return the parsed response.
+     */
+    public static Response sendSecure(int port, String method, String target, Map<String, String> headers, byte[] body) {
+        try (SSLSocket socket = (SSLSocket) createTrustAllContext().getSocketFactory().createSocket()) {
+            socket.connect(new InetSocketAddress("localhost", port), CONNECT_TIMEOUT);
+            socket.setSoTimeout(READ_TIMEOUT);
+            socket.startHandshake();
+
+            OutputStream outputStream = socket.getOutputStream();
+            outputStream.write(buildRequest(port, method, target, headers, body));
+            outputStream.flush();
+
+            return readResponse(socket.getInputStream(), method);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to send secure %s request to port %d".formatted(method, port), e);
+        }
+    }
+
+    private static SSLContext createTrustAllContext() {
+        try {
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, new TrustManager[]{new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            }}, new SecureRandom());
+            return context;
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to create trust all SSL context", e);
         }
     }
 

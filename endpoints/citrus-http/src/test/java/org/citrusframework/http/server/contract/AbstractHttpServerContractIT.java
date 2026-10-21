@@ -16,8 +16,12 @@
 
 package org.citrusframework.http.server.contract;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,14 +33,19 @@ import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageHeaders;
+import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.http.server.AbstractCommonHttpServerBuilder;
 import org.citrusframework.http.server.AbstractHttpServer;
 import org.citrusframework.message.Message;
+import org.citrusframework.report.MessageListeners;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.SocketUtils;
 import org.slf4j.Logger;
@@ -48,6 +57,7 @@ import org.testng.annotations.Test;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.citrusframework.spi.Resources.create;
 
 /**
  * Shared contract test suite for all HTTP server implementations. The suite verifies the documented
@@ -58,8 +68,41 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHttpServerContractIT.class);
 
+    /** Path spec protected by basic authentication */
+    protected static final String SECURED_PATH = "/secured/*";
+
+    /** Realm used by the basic authentication contract cases */
+    protected static final String AUTH_REALM = "citrus-realm";
+
+    /** User holding the required role */
+    protected static final String AUTH_USER = "citrus";
+
+    /** Password of the user holding the required role */
+    protected static final String AUTH_PASSWORD = "secr3t";
+
+    /** Role required to access the secured path */
+    protected static final String AUTH_ROLE = "citrus";
+
+    /** User without any role */
+    protected static final String AUTH_USER_WITHOUT_ROLE = "guest";
+
+    /** Password of the user without any role */
+    protected static final String AUTH_PASSWORD_WITHOUT_ROLE = "guest";
+
+    /** Password of the test key stores */
+    protected static final String KEY_STORE_PASSWORD = "secret";
+
+    /** Key store in JKS format */
+    protected static final Resource JKS_KEY_STORE = create("classpath:org/citrusframework/http/integration/http-server.jks");
+
+    /** Key store in PKCS12 format */
+    protected static final Resource PKCS12_KEY_STORE = create("classpath:org/citrusframework/http/server/contract/http-server.p12");
+
     /** Servers started by the current test */
     private final List<AbstractHttpServer> runningServers = new ArrayList<>();
+
+    /** The server started last */
+    private AbstractHttpServer lastServer;
 
     /** Endpoint adapter recording the requests that reached the server */
     private ContractEndpointAdapter endpointAdapter;
@@ -88,6 +131,22 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      */
     protected abstract boolean isDuplicateSlashRejected();
 
+    /**
+     * Enables basic authentication for {@link #SECURED_PATH} on the server under test. The server must
+     * know the contract users {@link #AUTH_USER} and {@link #AUTH_USER_WITHOUT_ROLE}.
+     *
+     * @param server the server under test.
+     */
+    protected abstract void configureAuthentication(AbstractHttpServer server);
+
+    /**
+     * Adds the tracing interceptor reporting the exchanged messages to the given message listeners.
+     *
+     * @param server the server under test.
+     * @param messageListeners the message listeners to report to.
+     */
+    protected abstract void configureTracing(AbstractHttpServer server, MessageListeners messageListeners);
+
     @AfterMethod(alwaysRun = true)
     public void stopServers() {
         for (AbstractHttpServer server : runningServers) {
@@ -109,6 +168,18 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
      * @return the started server.
      */
     protected AbstractHttpServer startServer(Consumer<AbstractCommonHttpServerBuilder<?, ?>> options) {
+        return startServer(options, server -> {
+        });
+    }
+
+    /**
+     * Starts the server under test with a recording endpoint adapter attached.
+     *
+     * @param options the options to apply to the server builder.
+     * @param serverConfigurer configures the created server before it is started.
+     * @return the started server.
+     */
+    protected AbstractHttpServer startServer(Consumer<AbstractCommonHttpServerBuilder<?, ?>> options, Consumer<AbstractHttpServer> serverConfigurer) {
         endpointAdapter = new ContractEndpointAdapter();
 
         AbstractHttpServer server = createServer(builder -> {
@@ -116,6 +187,7 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
             builder.endpointAdapter(endpointAdapter);
         });
 
+        serverConfigurer.accept(server);
         startServer(server);
         return server;
     }
@@ -133,10 +205,64 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
         return server;
     }
 
+    /**
+     * Starts the server under test with basic authentication enabled for {@link #SECURED_PATH}.
+     *
+     * @return the started server.
+     */
+    protected AbstractHttpServer startSecuredServer() {
+        return startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+        }, this::configureAuthentication);
+    }
+
+    /**
+     * Starts the server under test with a TLS connection using the given key store.
+     *
+     * @param securePort the port to listen on with TLS.
+     * @param keyStore the key store holding the server certificate.
+     * @return the started server.
+     */
+    protected AbstractHttpServer startSecuredServer(int securePort, Resource keyStore) {
+        return startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+            builder.secured(securePort, HttpSecureConnection.ssl().keyStore(keyStore, KEY_STORE_PASSWORD));
+        });
+    }
+
+    /**
+     * Starts the server under test with a tracing interceptor reporting the exchanged messages to the
+     * returned message listener.
+     *
+     * @param options the options to apply to the server builder.
+     * @return the message listener receiving the traced messages.
+     */
+    protected ContractMessageListener startServerWithTracing(Consumer<AbstractCommonHttpServerBuilder<?, ?>> options) {
+        ContractMessageListener messageListener = new ContractMessageListener();
+
+        MessageListeners messageListeners = new MessageListeners();
+        messageListeners.addMessageListener(messageListener);
+
+        startServer(options, server -> configureTracing(server, messageListeners));
+        return messageListener;
+    }
+
     private void startServer(AbstractHttpServer server) {
         runningServers.add(server);
+        lastServer = server;
         server.initialize();
         server.start();
+    }
+
+    /**
+     * Gets the server that has been started last.
+     *
+     * @return the server under test.
+     */
+    protected AbstractHttpServer getServer() {
+        return lastServer;
     }
 
     /**
@@ -627,6 +753,310 @@ public abstract class AbstractHttpServerContractIT extends TestNGCitrusSpringSup
             assertThat(responseA.get(10, TimeUnit.SECONDS).getBodyAsString()).isEqualTo("reply for A");
         } finally {
             executor.shutdownNow();
+        }
+    }
+
+    /**
+     * HSRV-011: Gzip bodies are decoded and responses compressed.
+     */
+    @Test
+    public void shouldDecodeGzipRequestBody() {
+        AbstractHttpServer server = startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+        });
+
+        getEndpointAdapter().setReplyProvider(request -> new HttpMessage("ok"));
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "POST", "/gzip",
+                Map.of("Content-Type", "text/plain", "Content-Encoding", "gzip"), gzip("Hello gzip".getBytes(StandardCharsets.UTF_8)));
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+
+        HttpMessage request = getEndpointAdapter().takeRequest(5, TimeUnit.SECONDS);
+        assertThat(request.getPayload()).isEqualTo("Hello gzip");
+        assertThat(request.getHeader("Content-Encoding")).isEqualTo("gzip");
+    }
+
+    /**
+     * HSRV-011: Gzip bodies are decoded and responses compressed.
+     */
+    @Test
+    public void shouldCompressResponseWhenClientAcceptsGzip() {
+        AbstractHttpServer server = startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+        });
+
+        getEndpointAdapter().setReplyProvider(request -> new HttpMessage("Hello gzip response"));
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/gzip",
+                Map.of("Accept-Encoding", "gzip"), new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getHeader("Content-Encoding")).isEqualTo("gzip");
+        assertThat(gunzip(response.getBody())).isEqualTo("Hello gzip response".getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * HSRV-011: Gzip bodies are decoded and responses compressed.
+     * <p>
+     * The server applies no other response content coding than gzip.
+     */
+    @Test
+    public void shouldNotCompressResponseForOtherContentCodings() {
+        AbstractHttpServer server = startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+        });
+
+        getEndpointAdapter().setReplyProvider(request -> new HttpMessage("Hello plain response"));
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/gzip",
+                Map.of("Accept-Encoding", "deflate"), new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getHeader("Content-Encoding")).isNull();
+        assertThat(response.getBodyAsString()).isEqualTo("Hello plain response");
+    }
+
+    /**
+     * HSRV-011: Gzip bodies are decoded and responses compressed.
+     * <p>
+     * A 204 response is not compressed.
+     */
+    @Test
+    public void shouldNotCompressNoContentResponse() {
+        AbstractHttpServer server = startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+        });
+
+        getEndpointAdapter().setReplyProvider(request -> {
+            HttpMessage reply = new HttpMessage("");
+            reply.status(HttpStatus.NO_CONTENT);
+            return reply;
+        });
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/gzip",
+                Map.of("Accept-Encoding", "gzip"), new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(204);
+        assertThat(response.getHeader("Content-Encoding")).isNull();
+        assertThat(response.getBody()).isEmpty();
+    }
+
+    /**
+     * HSRV-011: Gzip bodies are decoded and responses compressed.
+     * <p>
+     * A request body that is marked as gzip encoded but does not hold a valid gzip stream fails the
+     * request before it reaches Citrus.
+     */
+    @Test
+    public void shouldFailOnCorruptGzipRequestBody() {
+        AbstractHttpServer server = startServer(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+        });
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "POST", "/gzip",
+                Map.of("Content-Type", "text/plain", "Content-Encoding", "gzip"), "no gzip at all".getBytes(StandardCharsets.UTF_8));
+
+        assertThat(response.getStatusCode()).isEqualTo(500);
+        assertThat(getEndpointAdapter().hasReceivedRequests()).isFalse();
+    }
+
+    /**
+     * HSRV-012: Basic authentication protects a path spec.
+     */
+    @Test
+    public void shouldRejectRequestWithoutCredentials() {
+        AbstractHttpServer server = startSecuredServer();
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/secured/data", new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(401);
+        assertThat(response.getHeader("WWW-Authenticate")).contains("Basic realm=\"" + AUTH_REALM + "\"");
+        assertThat(getEndpointAdapter().hasReceivedRequests()).isFalse();
+    }
+
+    /**
+     * HSRV-012: Basic authentication protects a path spec.
+     */
+    @Test
+    public void shouldRejectRequestWithWrongCredentials() {
+        AbstractHttpServer server = startSecuredServer();
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/secured/data",
+                Map.of("Authorization", basicAuthorization(AUTH_USER, "wrong")), new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(401);
+        assertThat(response.getHeader("WWW-Authenticate")).contains("Basic realm=\"" + AUTH_REALM + "\"");
+        assertThat(getEndpointAdapter().hasReceivedRequests()).isFalse();
+    }
+
+    /**
+     * HSRV-012: Basic authentication protects a path spec.
+     */
+    @Test
+    public void shouldDeliverRequestWithValidCredentials() {
+        AbstractHttpServer server = startSecuredServer();
+
+        getEndpointAdapter().setReplyProvider(request -> new HttpMessage("secured"));
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/secured/data",
+                Map.of("Authorization", basicAuthorization(AUTH_USER, AUTH_PASSWORD)), new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getBodyAsString()).isEqualTo("secured");
+
+        HttpMessage request = getEndpointAdapter().takeRequest(5, TimeUnit.SECONDS);
+        assertThat(request.getPath()).isEqualTo("/secured/data");
+    }
+
+    /**
+     * HSRV-012: Basic authentication protects a path spec.
+     * <p>
+     * Requests to paths that do not match the secured path spec are not authenticated.
+     */
+    @Test
+    public void shouldLeaveUnmatchedPathsUnauthenticated() {
+        AbstractHttpServer server = startSecuredServer();
+
+        getEndpointAdapter().setReplyProvider(request -> new HttpMessage("open"));
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/other", new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getBodyAsString()).isEqualTo("open");
+
+        HttpMessage request = getEndpointAdapter().takeRequest(5, TimeUnit.SECONDS);
+        assertThat(request.getPath()).isEqualTo("/other");
+    }
+
+    /**
+     * HSRV-012: Basic authentication protects a path spec.
+     * <p>
+     * An authenticated user that does not hold the required role is forbidden.
+     */
+    @Test
+    public void shouldAnswerForbiddenForUserWithoutRole() {
+        AbstractHttpServer server = startSecuredServer();
+
+        ContractClient.Response response = ContractClient.send(server.getPort(), "GET", "/secured/data",
+                Map.of("Authorization", basicAuthorization(AUTH_USER_WITHOUT_ROLE, AUTH_PASSWORD_WITHOUT_ROLE)), new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(403);
+        assertThat(getEndpointAdapter().hasReceivedRequests()).isFalse();
+    }
+
+    /**
+     * HSRV-013: A secured server accepts HTTPS on the secure port.
+     */
+    @Test
+    public void shouldAcceptHttpsOnSecurePortWithJks() {
+        int securePort = findAvailablePort(-1);
+
+        AbstractHttpServer server = startSecuredServer(securePort, JKS_KEY_STORE);
+
+        getEndpointAdapter().setReplyProvider(request -> new HttpMessage("secure"));
+
+        ContractClient.Response response = ContractClient.sendSecure(securePort, "GET", "/orders", Map.of(), new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getBodyAsString()).isEqualTo("secure");
+
+        HttpMessage request = getEndpointAdapter().takeRequest(5, TimeUnit.SECONDS);
+        assertThat(request.getPath()).isEqualTo("/orders");
+    }
+
+    /**
+     * HSRV-013: A secured server accepts HTTPS on the secure port.
+     */
+    @Test
+    public void shouldAcceptHttpsOnSecurePortWithPkcs12() {
+        int securePort = findAvailablePort(-1);
+
+        AbstractHttpServer server = startSecuredServer(securePort, PKCS12_KEY_STORE);
+
+        getEndpointAdapter().setReplyProvider(request -> new HttpMessage("secure"));
+
+        ContractClient.Response response = ContractClient.sendSecure(securePort, "GET", "/orders", Map.of(), new byte[0]);
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getBodyAsString()).isEqualTo("secure");
+
+        HttpMessage request = getEndpointAdapter().takeRequest(5, TimeUnit.SECONDS);
+        assertThat(request.getPath()).isEqualTo("/orders");
+    }
+
+    /**
+     * HSRV-013: A secured server accepts HTTPS on the secure port.
+     * <p>
+     * A secured server does not accept plain HTTP on the plain port.
+     */
+    @Test
+    public void shouldNotListenOnPlainPortWhenSecured() {
+        int securePort = findAvailablePort(-1);
+
+        AbstractHttpServer server = startSecuredServer(securePort, JKS_KEY_STORE);
+
+        assertThatThrownBy(() -> ContractClient.send(server.getPort(), "GET", "/orders", new byte[0]))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    /**
+     * HSRV-015: Exchanged messages are logged and can be reported to message listeners.
+     */
+    @Test
+    public void shouldReportExchangeToMessageListener() {
+        ContractMessageListener messageListener = startServerWithTracing(builder -> {
+            builder.port(SocketUtils.findAvailableTcpPort());
+            builder.contextPath("/");
+        });
+
+        getEndpointAdapter().setReplyProvider(request -> new HttpMessage("ok"));
+
+        ContractClient.Response response = ContractClient.send(getServer().getPort(), "POST", "/orders",
+                Map.of("Content-Type", "text/plain"), "Hello".getBytes(StandardCharsets.UTF_8));
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+
+        Message inboundMessage = messageListener.takeInboundMessage(5, TimeUnit.SECONDS);
+        assertThat(inboundMessage.getPayload().toString()).contains("POST /orders");
+
+        Message outboundMessage = messageListener.takeOutboundMessage(5, TimeUnit.SECONDS);
+        assertThat(outboundMessage.getPayload().toString()).contains("HTTP/1.1 200");
+    }
+
+    private static String basicAuthorization(String username, String password) {
+        return "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes(ISO_8859_1));
+    }
+
+    private static int findAvailablePort(int excludedPort) {
+        int port = SocketUtils.findAvailableTcpPort();
+        while (port == excludedPort) {
+            port = SocketUtils.findAvailableTcpPort();
+        }
+        return port;
+    }
+
+    private static byte[] gzip(byte[] content) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+             GZIPOutputStream gzipOutputStream = new GZIPOutputStream(outputStream)) {
+            gzipOutputStream.write(content);
+            gzipOutputStream.finish();
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to gzip content", e);
+        }
+    }
+
+    private static byte[] gunzip(byte[] content) {
+        try (GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(content))) {
+            return gzipInputStream.readAllBytes();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to gunzip content", e);
         }
     }
 }
