@@ -40,8 +40,12 @@ public @interface HttpServerConfig {
 
     /**
      * Context config location.
+     *
      * @return
+     * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
+     * use a Spring servlet context.
      */
+    @Deprecated(since = "5.1.0")
     String contextConfigLocation() default "";
 
     /**
@@ -52,8 +56,12 @@ public @interface HttpServerConfig {
 
     /**
      * Root parent context.
+     *
      * @return
+     * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
+     * use a Spring servlet context.
      */
+    @Deprecated(since = "5.1.0")
     boolean rootParentContext() default false;
 
     /**

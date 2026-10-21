@@ -84,12 +84,18 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the context config location.
+     *
+     * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
+     * use a Spring servlet context.
      */
+    @Deprecated(since = "5.1.0")
+    @SuppressWarnings("deprecation")
     public B contextConfigLocation(String configLocation) {
         endpoint.setContextConfigLocation(configLocation);
         return self;
     }
 
+    @Deprecated(since = "5.1.0")
     @SchemaProperty(advanced = true, description = "Sets the Spring context configuration loaded for this Http server.")
     @XmlAttribute(name = "context-config-location")
     public void setContextConfigLocation(String configLocation) {
@@ -112,12 +118,18 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Enables/disables the root parent context.
+     *
+     * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
+     * use a Spring servlet context.
      */
+    @Deprecated(since = "5.1.0")
+    @SuppressWarnings("deprecation")
     public B rootParentContext(boolean rootParentContext) {
         endpoint.setUseRootContextAsParent(rootParentContext);
         return self;
     }
 
+    @Deprecated(since = "5.1.0")
     @SchemaProperty(advanced = true, description = "When enabled the server uses the root Spring application context.")
     @XmlAttribute(name = "root-parent-context")
     public void setRootParentContext(boolean rootParentContext) {

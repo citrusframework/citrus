@@ -29,9 +29,17 @@
         <xs:attribute name="port" type="xs:string"/>
         <xs:attribute name="auto-start" type="xs:boolean"/>
         <xs:attribute name="timeout" type="xs:string"/>
-        <xs:attribute name="context-config-location" type="xs:string"/>
+        <xs:attribute name="context-config-location" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Deprecated. Only supported by the Jetty based server. The Vert.x based server does not use a Spring servlet context.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="resource-base" type="xs:string"/>
-        <xs:attribute name="root-parent-context" type="xs:boolean"/>
+        <xs:attribute name="root-parent-context" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>Deprecated. Only supported by the Jetty based server. The Vert.x based server does not use a Spring servlet context.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="connector" type="xs:string"/>
         <xs:attribute name="connectors" type="xs:string"/>
         <xs:attribute name="filters" type="xs:string"/>

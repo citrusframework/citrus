@@ -50,6 +50,7 @@ import static org.citrusframework.util.StringUtils.hasText;
 public class HttpServerConfigParser implements AnnotationConfigParser<HttpServerConfig, HttpServer> {
 
     @Override
+    @SuppressWarnings("deprecation")
     public HttpServer parse(HttpServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         HttpServerBuilder builder = new HttpServerBuilder();
 
