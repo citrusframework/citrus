@@ -708,13 +708,40 @@ The following options are only supported by the Jetty based server. They are not
 |response-cache-size |Number of response messages the server keeps in its in-memory cache for message tracing.
 |===
 
+The Vert.x server is registered with two different names, so that it can be used with all configuration
+routes. The XML configuration uses the element name *vertx-server*, the YAML and Groovy configuration use the
+name *vertxServer*.
+
 The Vert.x server behaves slightly different in a few edge cases:
 
-* A *TRACE* request is delivered to the Citrus test case, so you may verify and respond to it as with any other request.
-  The Jetty based server answers TRACE requests on its own without involving the test case.
+[cols="1,1,1"]
+|===
+|Topic |Jetty based server |Vert.x based server
 
-* Malformed basic authentication credentials are answered with *401 Unauthorized* and an authentication challenge. The Jetty
-  based server answers with an internal server error in that case.
+|TRACE request |Answered by the server without involving the test case.
+|Delivered to the Citrus test case, so you may verify and respond to it as with any other request.
+
+|Malformed basic authentication credentials |Answered with an internal server error.
+|Answered with *401 Unauthorized* and an authentication challenge.
+
+|Duplicate slashes in the request path |Answered with *400 Bad Request*.
+|Duplicate slashes are removed from the path and the request is handled.
+
+|*use-default-filters* |Adds the request caching filter and compresses the response with gzip.
+|Compresses the response with gzip. There is no equivalent of the request caching filter.
+
+|Empty response body with *Accept-Encoding: gzip* |Sends a gzip encoded empty body including the content encoding header.
+|Sends an empty body without content encoding header.
+
+|*204 No Content* response |Sets the content length header to *0*.
+|Does not set a content length header.
+
+|Cookies of the response |Written by the servlet container, e.g. *name=value; Path=/*.
+|Written by Citrus, e.g. *name=value;Path=/*.
+
+|Failed request handling |A failure of the endpoint adapter is propagated to the servlet container. A failure of a server interceptor is answered with an empty *500 Internal Server Error*.
+|Answered with an empty *500 Internal Server Error*.
+|===
 
 [[http-headers]]
 == Http headers
