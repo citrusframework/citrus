@@ -780,6 +780,33 @@
       ],
       "additionalProperties": false    }
   },
+  "envVar": {
+    "kind": "testFunction",
+    "version": "${citrus.version}",
+    "name": "envVar",
+    "group": "citrus",
+    "module": "citrus-base",
+    "title": "EnvVar",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "defaultValue": {
+          "type": "string",
+          "title": "DefaultValue",
+          "description": "The default value when environment variable is not set."
+        },
+        "propertyName": {
+          "type": "string",
+          "title": "PropertyName",
+          "description": "The environment variable name."
+        }
+      },
+      "required": [
+        "propertyName"
+      ],
+      "additionalProperties": false    }
+  },
   "randomNumberGenerator": {
     "kind": "testFunction",
     "version": "${citrus.version}",
