@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,10 +79,15 @@ public abstract class SqlUtils {
 
         try {
             if (logger.isDebugEnabled()) {
-                logger.debug("Create statements from SQL file: {}", sqlResource.file().getAbsolutePath());
+                logger.debug("Create statements from SQL file: {}", sqlResource.location());
             }
 
-            reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));
+            InputStream inputStream = sqlResource.getInputStream();
+            if (inputStream == null) {
+                throw new CitrusRuntimeException("Failed to load SQL script resource '%s' - does not exist".formatted(sqlResource.location()));
+            }
+
+            reader = new BufferedReader(new InputStreamReader(inputStream));
             buffer = new StringBuilder();
 
             String line;

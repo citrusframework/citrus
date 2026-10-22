@@ -121,7 +121,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * @return list of SQL statements.
      */
     protected List<String> createStatementsFromFileResource(TestContext context) {
-        return SqlUtils.createStatementsFromFileResource(Resources.fromClasspath(context.replaceDynamicContentInString(sqlResourcePath)));
+        return SqlUtils.createStatementsFromFileResource(resolveSqlResource(context));
     }
 
     /**
@@ -132,7 +132,18 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * @return list of SQL statements.
      */
     protected List<String> createStatementsFromFileResource(TestContext context, SqlUtils.LastScriptLineDecorator lineDecorator) {
-        return SqlUtils.createStatementsFromFileResource(Resources.fromClasspath(context.replaceDynamicContentInString(sqlResourcePath)), lineDecorator);
+        return SqlUtils.createStatementsFromFileResource(resolveSqlResource(context), lineDecorator);
+    }
+
+    /**
+     * Resolves the configured SQL resource path to a file resource, honoring resource prefixes
+     * such as "classpath:" and "file:" as well as plain file system paths.
+     *
+     * @param context the current test context.
+     * @return the resolved file resource.
+     */
+    private Resource resolveSqlResource(TestContext context) {
+        return Resources.create(context.replaceDynamicContentInString(sqlResourcePath));
     }
 
     @Override

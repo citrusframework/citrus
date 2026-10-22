@@ -16,6 +16,8 @@
 
 package org.citrusframework.sql.actions;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,6 +95,62 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 
         verify(jdbcTemplate).execute(DB_STMT_1);
         verify(jdbcTemplate).execute(DB_STMT_2);
+    }
+
+    @Test
+    public void testSQLExecutionWithFileSystemResource() throws Exception {
+        String absolutePath = absolutePathOf("org/citrusframework/sql/actions/test-sql-statements.sql");
+
+        executeSQLActionBuilder.sqlResource("file:" + absolutePath);
+
+        reset(jdbcTemplate);
+
+        executeSQLActionBuilder.build().execute(context);
+
+        verify(jdbcTemplate).execute(DB_STMT_1);
+        verify(jdbcTemplate).execute(DB_STMT_2);
+    }
+
+    @Test
+    public void testSQLExecutionWithAbsoluteFilePath() throws Exception {
+        String absolutePath = absolutePathOf("org/citrusframework/sql/actions/test-sql-statements.sql");
+
+        executeSQLActionBuilder.sqlResource(absolutePath);
+
+        reset(jdbcTemplate);
+
+        executeSQLActionBuilder.build().execute(context);
+
+        verify(jdbcTemplate).execute(DB_STMT_1);
+        verify(jdbcTemplate).execute(DB_STMT_2);
+    }
+
+    @Test
+    public void testSQLExecutionWithMissingFileSystemResource() {
+        executeSQLActionBuilder.sqlResource("file:/nonexistent/path/to/sql-script.sql");
+
+        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class,
+                () -> executeSQLActionBuilder.build().execute(context));
+
+        Assert.assertTrue(exception.getMessage().contains("sql-script.sql"),
+                "Exception message should name the missing resource but was: " + exception.getMessage());
+    }
+
+    @Test
+    public void testSQLExecutionWithMissingClasspathResource() {
+        executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/nonexistent-sql-script.sql");
+
+        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class,
+                () -> executeSQLActionBuilder.build().execute(context));
+
+        Assert.assertTrue(exception.getMessage().contains("nonexistent-sql-script.sql"),
+                "Exception message should name the missing resource but was: " + exception.getMessage());
+    }
+
+    private static String absolutePathOf(String classpathLocation) throws Exception {
+        URL resource = ExecuteSQLActionTest.class.getClassLoader().getResource(classpathLocation);
+        Assert.assertNotNull(resource, "Test resource not found on classpath: " + classpathLocation);
+        return new File(resource.toURI()).getAbsolutePath();
     }
 
     @Test
