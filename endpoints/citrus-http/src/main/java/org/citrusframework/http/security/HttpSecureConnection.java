@@ -16,6 +16,8 @@
 
 package org.citrusframework.http.security;
 
+import java.util.Optional;
+
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.eclipse.jetty.server.ServerConnector;
 
@@ -28,7 +30,9 @@ public interface HttpSecureConnection {
      * Create server connector representing the secure connection.
      * @param securePort
      * @return
+     * @deprecated Jetty specific, use {@link #getServerTlsSettings()} instead.
      */
+    @Deprecated(since = "5.2")
     ServerConnector getServerConnector(int securePort);
 
     /**
@@ -36,6 +40,17 @@ public interface HttpSecureConnection {
      * @return
      */
     HttpClientConnectionManager getClientConnectionManager();
+
+    /**
+     * Transport neutral description of the server side TLS settings. Returns an empty
+     * optional when the secure connection is not able to describe itself in a transport
+     * neutral way.
+     *
+     * @return the server side TLS settings.
+     */
+    default Optional<HttpServerTlsSettings> getServerTlsSettings() {
+        return Optional.empty();
+    }
 
     static SSLConnection ssl() {
         return new SSLConnection();

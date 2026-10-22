@@ -631,6 +631,118 @@ Then we send back a response with an Http status code.
 
 This completes the server actions on Http message transport. Now we continue with some more Http specific settings and features.
 
+[[http-rest-server-vertx]]
+== Http REST server with Vert.x
+
+Beside the default Jetty based Http server Citrus also provides a Vert.x based Http server. The Vert.x server is opt-in,
+the Jetty based server stays the default. Both servers handle requests and responses in the very same way, so you can
+change the implementation without touching your test cases.
+
+The Vert.x server is selected when the server endpoint is created. All configuration routes support the Vert.x server.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public VertxHttpServer vertxHttpServer() {
+    return new VertxHttpServerBuilder()
+        .port(8080)
+        .autoStart(true)
+        .build();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-http:vertx-server id="vertxHttpServer"
+                port="8080"
+                auto-start="true"/>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+endpoints:
+  - http:
+      vertxServer:
+        name: "vertxHttpServer"
+        port: 8080
+        autoStart: true
+----
+
+.Annotation
+[source,java,indent=0,role="secondary"]
+----
+@CitrusEndpoint
+@VertxHttpServerConfig(autoStart = true, port = 8080)
+private VertxHttpServer vertxHttpServer;
+----
+
+The Vert.x server supports all transport neutral server options like *port*, *context-path*, *timeout*, *message-converter*,
+*handle-cookies*, *default-status-code*, *binary-media-types*, *use-default-filters*, *interceptors*, *authentication* and
+*secured-connection*. In addition to that the Vert.x server provides the following options:
+
+[cols="1,1,3"]
+|===
+|Option |Default |Description
+
+|vertx |none |Reference to a Vert.x instance. A supplied instance is never closed by the server. By default the server creates its own instance on start.
+|worker-pool-size |`200` |Size of the worker pool that handles the incoming requests. This matches the default thread pool maximum of the Jetty based server.
+|===
+
+The following options are only supported by the Jetty based server. They are not available on the Vert.x server:
+
+[cols="1,3"]
+|===
+|Option |Description
+
+|connector, connectors |Jetty connectors used by the server.
+|servlet-handler, security-handler |Jetty servlet and security handlers.
+|servlet-name, servlet-mapping-path |Name and mapping path of the servlet that handles the requests.
+|filters, filter-mappings |Servlet filters and their mappings.
+|context-config-location |Deprecated. Custom Spring servlet context file. Use a custom Http server interceptor or message converter instead.
+|root-parent-context |Deprecated. Use the root Spring application context as parent of the server context.
+|resource-base |Directory with static resources.
+|handle-header-attributes |Add the servlet request attributes as message headers.
+|response-cache-size |Number of response messages the server keeps in its in-memory cache for message tracing.
+|===
+
+The Vert.x server is registered with two different names, so that it can be used with all configuration
+routes. The XML configuration uses the element name *vertx-server*, the YAML and Groovy configuration use the
+name *vertxServer*.
+
+The Vert.x server behaves slightly different in a few edge cases:
+
+[cols="1,1,1"]
+|===
+|Topic |Jetty based server |Vert.x based server
+
+|TRACE request |Answered by the server without involving the test case.
+|Delivered to the Citrus test case, so you may verify and respond to it as with any other request.
+
+|Malformed basic authentication credentials |Answered with an internal server error.
+|Answered with *401 Unauthorized* and an authentication challenge.
+
+|Duplicate slashes in the request path |Answered with *400 Bad Request*.
+|Duplicate slashes are removed from the path and the request is handled.
+
+|*use-default-filters* |Adds the request caching filter and compresses the response with gzip.
+|Compresses the response with gzip. There is no equivalent of the request caching filter.
+
+|Empty response body with *Accept-Encoding: gzip* |Sends a gzip encoded empty body including the content encoding header.
+|Sends an empty body without content encoding header.
+
+|*204 No Content* response |Sets the content length header to *0*.
+|Does not set a content length header.
+
+|Cookies of the response |Written by the servlet container, e.g. *name=value; Path=/*.
+|Written by Citrus, e.g. *name=value;Path=/*.
+
+|Failed request handling |A failure of the endpoint adapter is propagated to the servlet container. A failure of a server interceptor is answered with an empty *500 Internal Server Error*.
+|Answered with an empty *500 Internal Server Error*.
+|===
+
 [[http-headers]]
 == Http headers
 
@@ -922,7 +1034,8 @@ The parameters are automatically added to the request URL that is configured on 
 == Http server interceptors
 
 The server component is able to add custom interceptors that participate in the request/response processing. The interceptors
-need to implement the common interface *org.springframework.web.servlet.HandlerInterceptor*.
+need to implement the common interface *org.springframework.web.servlet.HandlerInterceptor* or the transport neutral
+*org.citrusframework.http.interceptor.HttpServerInterceptor*.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -952,6 +1065,27 @@ public HttpServer httpServer() {
 
 The sample above adds the Citrus logging handler interceptor that logs requests and responses exchanged with that server
 component. You can add custom interceptor implementations here in order to participate in the request/response message processing.
+
+The *org.springframework.web.servlet.HandlerInterceptor* is a Spring specific type and therefore only supported by the
+Jetty based server. Citrus provides the transport neutral *org.citrusframework.http.interceptor.HttpServerInterceptor*
+that works with the Jetty based server and the Vert.x based server as well. An interceptor receives the request message
+and may change it, may replace the response or may answer the client on its own without the test case seeing the request.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public HttpServer httpServer() {
+    return new HttpServerBuilder()
+        .port(8080)
+        .autoStart(true)
+        .interceptor(new LoggingServerInterceptor())
+        .build();
+}
+----
+
+The *LoggingServerInterceptor* reports the requests and responses exchanged with the server to the message listeners of the
+test context. When no message listener is registered the interceptor logs the exchange on debug level.
 
 [[http-form-urlencoded-data]]
 == Http form urlencoded data
@@ -2074,3 +2208,7 @@ public HttpServer httpServer() {
       auto-start="true"
       context-config-location="classpath:org/citrusframework/http/custom-servlet-context.xml"/>
 ----
+
+NOTE: The *context-config-location* and the *root-parent-context* options are deprecated. They configure the Spring servlet
+context of the Jetty based server and are not available on the Vert.x based server. Use a custom Http server interceptor
+(see <<http-server-interceptors>>) or a custom message converter instead.

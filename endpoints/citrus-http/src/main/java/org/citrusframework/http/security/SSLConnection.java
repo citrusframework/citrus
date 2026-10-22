@@ -24,6 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Collections;
+import java.util.Optional;
 import javax.net.ssl.HostnameVerifier;
 
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
@@ -77,6 +78,7 @@ public class SSLConnection implements HttpSecureConnection {
     }
 
     @Override
+    @Deprecated(since = "5.2")
     public ServerConnector getServerConnector(int securePort) {
         ServerConnector connector = new ServerConnector(new Server(),
                 new SslConnectionFactory(sslContextFactory(), HttpVersion.HTTP_1_1.asString()),
@@ -84,6 +86,11 @@ public class SSLConnection implements HttpSecureConnection {
         connector.setPort(securePort);
 
         return connector;
+    }
+
+    @Override
+    public Optional<HttpServerTlsSettings> getServerTlsSettings() {
+        return Optional.of(new HttpServerTlsSettings(keyStore, keyStorePassword, trustStore, trustStorePassword));
     }
 
     @Override

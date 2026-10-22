@@ -32,6 +32,7 @@ public class HttpServerConnectorFactory implements FactoryBean<ServerConnector> 
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ServerConnector getObject() {
         return secureConnection.getServerConnector(securePort);
     }

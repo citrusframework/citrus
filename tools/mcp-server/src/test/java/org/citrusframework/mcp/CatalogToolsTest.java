@@ -176,7 +176,10 @@ class CatalogToolsTest {
         CatalogTools.ComponentListResult result = tools.citrus_catalog_endpoints(null, "http", null);
 
         assertThat(result).isNotNull();
-        assertThat(result.count()).isEqualTo(2);
+        assertThat(result.count()).isEqualTo(4);
+        assertThat(result.components())
+                .extracting(CatalogTools.ComponentDetailResult::name)
+                .contains("client", "server", "vertx-server", "vertxServer");
     }
 
 }

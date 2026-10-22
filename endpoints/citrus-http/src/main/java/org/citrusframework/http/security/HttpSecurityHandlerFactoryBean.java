@@ -29,6 +29,7 @@ public class HttpSecurityHandlerFactoryBean implements FactoryBean<SecurityHandl
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public SecurityHandler getObject() {
         return auth.getSecurityHandler(resourcePath);
     }

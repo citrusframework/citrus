@@ -39,6 +39,7 @@ public class WebSocketServer extends HttpServer {
     /**
      * Default constructor overwrites context config location.
      */
+    @SuppressWarnings("deprecation")
     public WebSocketServer() {
         setContextConfigLocation("classpath:org/citrusframework/websocket/citrus-servlet-context.xml");
     }

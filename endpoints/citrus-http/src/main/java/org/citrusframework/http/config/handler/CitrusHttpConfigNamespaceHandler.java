@@ -18,6 +18,7 @@ package org.citrusframework.http.config.handler;
 
 import org.citrusframework.http.config.xml.HttpClientParser;
 import org.citrusframework.http.config.xml.HttpServerParser;
+import org.citrusframework.http.config.xml.VertxHttpServerParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -28,6 +29,7 @@ public class CitrusHttpConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
         registerBeanDefinitionParser("server", new HttpServerParser());
+        registerBeanDefinitionParser("vertx-server", new VertxHttpServerParser());
         registerBeanDefinitionParser("client", new HttpClientParser());
     }
 }

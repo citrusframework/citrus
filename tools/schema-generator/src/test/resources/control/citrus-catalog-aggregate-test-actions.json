@@ -759,7 +759,8 @@
           "type": "boolean",
           "title": "AutoRemove",
           "description": "When enabled the Camel integration is automatically removed from Kubernetes after the test.",
-          "default": true        },
+          "default": true
+        },
         "buildProperties": {
           "title": "BuildProperties",
           "description": "List of build properties passed to the Camel CLI project build.",
@@ -1824,36 +1825,24 @@
           "description": "When enabled the dynamic endpoint is removed automatically after the test.",
           "$comment": "group:generic"
         },
-        "camel": {
-        },
-        "channel": {
-        },
-        "context": {
-        },
+        "camel": {},
+        "channel": {},
+        "context": {},
         "description": {
           "type": "string",
           "title": "Description",
           "description": "Test action description printed when the action is executed.",
           "$comment": "group:advanced"
         },
-        "direct": {
-        },
-        "docker": {
-        },
-        "ftp": {
-        },
-        "http": {
-        },
-"graphql": {
-        },
-        "jms": {
-        },
-        "kafka": {
-        },
-        "kubernetes": {
-        },
-        "mail": {
-        },
+        "direct": {},
+        "docker": {},
+        "ftp": {},
+        "http": {},
+        "graphql": {},
+        "jms": {},
+        "kafka": {},
+        "kubernetes": {},
+        "mail": {},
         "name": {
           "type": "string",
           "title": "Name",
@@ -1872,14 +1861,10 @@
           },
           "$comment": "group:generic"
         },
-        "scp": {
-        },
-        "selenium": {
-        },
-        "sftp": {
-        },
-        "soap": {
-        },
+        "scp": {},
+        "selenium": {},
+        "sftp": {},
+        "soap": {},
         "type": {
           "type": "string",
           "title": "Type",
@@ -1892,10 +1877,8 @@
           "description": "The URI with properties defining the endpoint.",
           "$comment": "group:generic"
         },
-        "vertx": {
-        },
-        "webSocket": {
-        }
+        "vertx": {},
+        "webSocket": {}
       },
       "additionalProperties": false,
       "anyOf": [
@@ -1907,10 +1890,9 @@
                 "http": {
                   "type": "object",
                   "properties": {
-                    "client": {
-                    },
-                    "server": {
-                    }
+                    "client": {},
+                    "server": {},
+                    "vertxServer": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -2371,7 +2353,7 @@
                                 "useDefaultFilters": {
                                   "type": "boolean",
                                   "title": "UseDefaultFilters",
-                                  "description": "When enabled the server uses the default set of Http servlet filters.",
+                                  "description": "When enabled the server uses the default set of Http server features.",
                                   "$comment": "group:filter"
                                 }
                               },
@@ -2385,6 +2367,197 @@
                           ]
                         },
                         {
+                          "type": "object",
+                          "properties": {
+                            "vertxServer": {
+                              "type": "object",
+                              "properties": {
+                                "authentication": {
+                                  "type": "string",
+                                  "title": "Authentication",
+                                  "description": "Use given authentication mechanism for all request paths.",
+                                  "$comment": "group:security"
+                                },
+                                "autoStart": {
+                                  "type": "boolean",
+                                  "title": "AutoStart",
+                                  "description": "When enabled the server is automatically started after creation."
+                                },
+                                "binaryMediaTypes": {
+                                  "title": "BinaryMediaTypes",
+                                  "description": "List of supported media types on this server.",
+                                  "$comment": "group:advanced",
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "title": "BinaryMediaTypes",
+                                    "description": "List of supported media types on this server.",
+                                    "$comment": "group:advanced"
+                                  }
+                                },
+                                "contextPath": {
+                                  "type": "string",
+                                  "title": "ContextPath",
+                                  "description": "Sets the context path on this server.",
+                                  "$comment": "group:servlet"
+                                },
+                                "debugLogging": {
+                                  "type": "boolean",
+                                  "title": "DebugLogging",
+                                  "description": "When enabled the server prints debug logging output.",
+                                  "$comment": "group:advanced"
+                                },
+                                "defaultStatus": {
+                                  "type": "string",
+                                  "enum": [
+                                    "CONTINUE",
+                                    "SWITCHING_PROTOCOLS",
+                                    "PROCESSING",
+                                    "EARLY_HINTS",
+                                    "OK",
+                                    "CREATED",
+                                    "ACCEPTED",
+                                    "NON_AUTHORITATIVE_INFORMATION",
+                                    "NO_CONTENT",
+                                    "RESET_CONTENT",
+                                    "PARTIAL_CONTENT",
+                                    "MULTI_STATUS",
+                                    "ALREADY_REPORTED",
+                                    "IM_USED",
+                                    "MULTIPLE_CHOICES",
+                                    "MOVED_PERMANENTLY",
+                                    "FOUND",
+                                    "SEE_OTHER",
+                                    "NOT_MODIFIED",
+                                    "TEMPORARY_REDIRECT",
+                                    "PERMANENT_REDIRECT",
+                                    "BAD_REQUEST",
+                                    "UNAUTHORIZED",
+                                    "PAYMENT_REQUIRED",
+                                    "FORBIDDEN",
+                                    "NOT_FOUND",
+                                    "METHOD_NOT_ALLOWED",
+                                    "NOT_ACCEPTABLE",
+                                    "PROXY_AUTHENTICATION_REQUIRED",
+                                    "REQUEST_TIMEOUT",
+                                    "CONFLICT",
+                                    "GONE",
+                                    "LENGTH_REQUIRED",
+                                    "PRECONDITION_FAILED",
+                                    "CONTENT_TOO_LARGE",
+                                    "PAYLOAD_TOO_LARGE",
+                                    "URI_TOO_LONG",
+                                    "UNSUPPORTED_MEDIA_TYPE",
+                                    "REQUESTED_RANGE_NOT_SATISFIABLE",
+                                    "EXPECTATION_FAILED",
+                                    "I_AM_A_TEAPOT",
+                                    "MISDIRECTED_REQUEST",
+                                    "UNPROCESSABLE_CONTENT",
+                                    "UNPROCESSABLE_ENTITY",
+                                    "LOCKED",
+                                    "FAILED_DEPENDENCY",
+                                    "TOO_EARLY",
+                                    "UPGRADE_REQUIRED",
+                                    "PRECONDITION_REQUIRED",
+                                    "TOO_MANY_REQUESTS",
+                                    "REQUEST_HEADER_FIELDS_TOO_LARGE",
+                                    "UNAVAILABLE_FOR_LEGAL_REASONS",
+                                    "INTERNAL_SERVER_ERROR",
+                                    "NOT_IMPLEMENTED",
+                                    "BAD_GATEWAY",
+                                    "SERVICE_UNAVAILABLE",
+                                    "GATEWAY_TIMEOUT",
+                                    "HTTP_VERSION_NOT_SUPPORTED",
+                                    "VARIANT_ALSO_NEGOTIATES",
+                                    "INSUFFICIENT_STORAGE",
+                                    "LOOP_DETECTED",
+                                    "BANDWIDTH_LIMIT_EXCEEDED",
+                                    "NOT_EXTENDED",
+                                    "NETWORK_AUTHENTICATION_REQUIRED"
+                                  ],
+                                  "title": "DefaultStatus",
+                                  "description": "Sets the default status returned by the server.",
+                                  "$comment": "group:advanced"
+                                },
+                                "endpointAdapter": {
+                                  "type": "string",
+                                  "title": "EndpointAdapter",
+                                  "description": "Sets a custom endpoint adapter to handle requests.",
+                                  "$comment": "group:advanced"
+                                },
+                                "handleCookies": {
+                                  "type": "boolean",
+                                  "title": "HandleCookies",
+                                  "description": "When enabled the server handles cookies.",
+                                  "$comment": "group:advanced"
+                                },
+                                "messageConverter": {
+                                  "type": "string",
+                                  "title": "MessageConverter",
+                                  "description": "Sets the Http message converter bean reference.",
+                                  "$comment": "group:advanced"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "Name",
+                                  "description": "The name of the endpoint"
+                                },
+                                "port": {
+                                  "type": "integer",
+                                  "title": "Port",
+                                  "description": "The Http server port."
+                                },
+                                "removeSemicolonPathContent": {
+                                  "type": "boolean",
+                                  "title": "RemoveSemicolonPathContent",
+                                  "description": "When enabled the server removes semicolon path content from headers.",
+                                  "$comment": "group:advanced"
+                                },
+                                "securePort": {
+                                  "type": "integer",
+                                  "title": "SecurePort",
+                                  "description": "The secured port.",
+                                  "$comment": "group:security"
+                                },
+                                "securedConnection": {
+                                  "type": "string",
+                                  "title": "SecuredConnection",
+                                  "description": "Secure the connections on given secured port with given security mechanism.",
+                                  "$comment": "group:security"
+                                },
+                                "timeout": {
+                                  "type": "integer",
+                                  "title": "Timeout",
+                                  "description": "Sets the server timeout while waiting for incoming requests.",
+                                  "default": 5000
+                                },
+                                "useDefaultFilters": {
+                                  "type": "boolean",
+                                  "title": "UseDefaultFilters",
+                                  "description": "When enabled the server uses the default set of Http server features.",
+                                  "$comment": "group:filter"
+                                },
+                                "vertx": {
+                                  "type": "string",
+                                  "title": "Vertx",
+                                  "description": "The Vert.x instance used by the Http server. A supplied instance is never closed by the server."
+                                },
+                                "workerPoolSize": {
+                                  "type": "integer",
+                                  "title": "WorkerPoolSize",
+                                  "description": "The size of the worker pool running the endpoint adapter."
+                                }
+                              },
+                              "additionalProperties": false,
+                              "title": "VertxServer",
+                              "description": "Sets the Vert.x based Http server endpoint."
+                            }
+                          },
+                          "required": [
+                            "vertxServer"
+                          ]
+                        },
+                        {
                           "not": {
                             "anyOf": [
                               {
@@ -2395,6 +2568,11 @@
                               {
                                 "required": [
                                   "server"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "vertxServer"
                                 ]
                               }
                             ]
@@ -2410,16 +2588,15 @@
               "required": [
                 "http"
               ]
-            },{
+            },
+            {
               "type": "object",
               "properties": {
                 "graphql": {
                   "type": "object",
                   "properties": {
-                    "client": {
-                    },
-                    "server": {
-                    }
+                    "client": {},
+                    "server": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -2601,7 +2778,8 @@
                                   "type": "boolean",
                                   "title": "Strict",
                                   "description": "Enables or disables GraphQL document and response checks.",
-                                  "default": true                                },
+                                  "default": true
+                                },
                                 "timeout": {
                                   "type": "integer",
                                   "title": "Timeout",
@@ -2911,7 +3089,8 @@
                                   "type": "boolean",
                                   "title": "Strict",
                                   "description": "Enables or disables GraphQL document and reply checks.",
-                                  "default": true                                },
+                                  "default": true
+                                },
                                 "timeout": {
                                   "type": "integer",
                                   "title": "Timeout",
@@ -2921,7 +3100,7 @@
                                 "useDefaultFilters": {
                                   "type": "boolean",
                                   "title": "UseDefaultFilters",
-                                  "description": "When enabled the server uses the default set of Http servlet filters.",
+                                  "description": "When enabled the server uses the default set of Http server features.",
                                   "$comment": "group:filter"
                                 }
                               },
@@ -2967,10 +3146,8 @@
                 "soap": {
                   "type": "object",
                   "properties": {
-                    "client": {
-                    },
-                    "server": {
-                    }
+                    "client": {},
+                    "server": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -3287,10 +3464,8 @@
                 "webSocket": {
                   "type": "object",
                   "properties": {
-                    "client": {
-                    },
-                    "server": {
-                    }
+                    "client": {},
+                    "server": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -3634,7 +3809,7 @@
                                 "useDefaultFilters": {
                                   "type": "boolean",
                                   "title": "UseDefaultFilters",
-                                  "description": "When enabled the server uses the default set of Http servlet filters.",
+                                  "description": "When enabled the server uses the default set of Http server features.",
                                   "$comment": "group:filter"
                                 },
                                 "webSockets": {
@@ -3729,10 +3904,8 @@
                 "mail": {
                   "type": "object",
                   "properties": {
-                    "client": {
-                    },
-                    "server": {
-                    }
+                    "client": {},
+                    "server": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -3945,10 +4118,8 @@
                 "ftp": {
                   "type": "object",
                   "properties": {
-                    "client": {
-                    },
-                    "server": {
-                    }
+                    "client": {},
+                    "server": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -4194,10 +4365,8 @@
                 "sftp": {
                   "type": "object",
                   "properties": {
-                    "client": {
-                    },
-                    "server": {
-                    }
+                    "client": {},
+                    "server": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -4484,10 +4653,8 @@
                 "scp": {
                   "type": "object",
                   "properties": {
-                    "client": {
-                    },
-                    "server": {
-                    }
+                    "client": {},
+                    "server": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -4927,10 +5094,8 @@
                 "jms": {
                   "type": "object",
                   "properties": {
-                    "asynchronous": {
-                    },
-                    "synchronous": {
-                    }
+                    "asynchronous": {},
+                    "synchronous": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -5161,10 +5326,8 @@
                 "vertx": {
                   "type": "object",
                   "properties": {
-                    "asynchronous": {
-                    },
-                    "synchronous": {
-                    }
+                    "asynchronous": {},
+                    "synchronous": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -5337,10 +5500,8 @@
                 "direct": {
                   "type": "object",
                   "properties": {
-                    "asynchronous": {
-                    },
-                    "synchronous": {
-                    }
+                    "asynchronous": {},
+                    "synchronous": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -5462,10 +5623,8 @@
                 "kafka": {
                   "type": "object",
                   "properties": {
-                    "asynchronous": {
-                    },
-                    "synchronous": {
-                    }
+                    "asynchronous": {},
+                    "synchronous": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -5766,10 +5925,8 @@
                 "camel": {
                   "type": "object",
                   "properties": {
-                    "asynchronous": {
-                    },
-                    "synchronous": {
-                    }
+                    "asynchronous": {},
+                    "synchronous": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -5903,10 +6060,8 @@
                 "channel": {
                   "type": "object",
                   "properties": {
-                    "asynchronous": {
-                    },
-                    "synchronous": {
-                    }
+                    "asynchronous": {},
+                    "synchronous": {}
                   },
                   "additionalProperties": false,
                   "anyOf": [
@@ -6198,7 +6353,8 @@
                     "required": [
                       "http"
                     ]
-                  },{
+                  },
+                  {
                     "required": [
                       "graphql"
                     ]
@@ -6677,22 +6833,14 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "properties": {
-        "DELETE": {
-        },
-        "GET": {
-        },
-        "HEAD": {
-        },
-        "OPTIONS": {
-        },
-        "PATCH": {
-        },
-        "POST": {
-        },
-        "PUT": {
-        },
-        "TRACE": {
-        },
+        "DELETE": {},
+        "GET": {},
+        "HEAD": {},
+        "OPTIONS": {},
+        "PATCH": {},
+        "POST": {},
+        "PUT": {},
+        "TRACE": {},
         "extract": {
           "type": "object",
           "properties": {
@@ -7017,10 +7165,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -7184,8 +7330,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -7369,10 +7514,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -7536,8 +7679,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -7721,10 +7863,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -7888,8 +8028,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -8073,10 +8212,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -8240,8 +8377,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -8425,10 +8561,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -8592,8 +8726,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -8777,10 +8910,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -8944,8 +9075,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -9129,10 +9259,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -9296,8 +9424,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -9481,10 +9608,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -9648,8 +9773,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -9967,10 +10091,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -10134,8 +10256,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -10505,22 +10626,14 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "properties": {
-        "DELETE": {
-        },
-        "GET": {
-        },
-        "HEAD": {
-        },
-        "OPTIONS": {
-        },
-        "PATCH": {
-        },
-        "POST": {
-        },
-        "PUT": {
-        },
-        "TRACE": {
-        },
+        "DELETE": {},
+        "GET": {},
+        "HEAD": {},
+        "OPTIONS": {},
+        "PATCH": {},
+        "POST": {},
+        "PUT": {},
+        "TRACE": {},
         "extract": {
           "type": "object",
           "properties": {
@@ -10625,10 +10738,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -10792,8 +10903,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -10977,10 +11087,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -11144,8 +11252,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -11329,10 +11436,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -11496,8 +11601,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -11681,10 +11785,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -11848,8 +11950,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -12033,10 +12134,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -12200,8 +12299,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -12385,10 +12483,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -12552,8 +12648,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -12737,10 +12832,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -12904,8 +12997,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -13089,10 +13181,8 @@
                           "title": "Data",
                           "description": "The message body content as inline data."
                         },
-                        "resource": {
-                        },
-                        "script": {
-                        }
+                        "resource": {},
+                        "script": {}
                       },
                       "additionalProperties": false,
                       "anyOf": [
@@ -13256,8 +13346,7 @@
                             "title": "Name",
                             "description": "The message header name."
                           },
-                          "resource": {
-                          },
+                          "resource": {},
                           "type": {
                             "type": "string",
                             "title": "Type",
@@ -13563,10 +13652,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -13730,8 +13817,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -15464,7 +15550,8 @@
           "type": "boolean",
           "title": "SchemaValidation",
           "description": "Enables the schema validation.",
-          "default": false        },
+          "default": false
+        },
         "select": {
           "type": "string",
           "title": "Select",
@@ -15748,7 +15835,8 @@
           "type": "boolean",
           "title": "SchemaValidation",
           "description": "Enables the schema validation.",
-          "default": false        },
+          "default": false
+        },
         "select": {
           "type": "string",
           "title": "Select",
@@ -16457,10 +16545,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -16619,8 +16705,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -17682,7 +17767,7 @@
       },
       "additionalProperties": false    }
   },
-"selenium-cookies": {
+  "selenium-cookies": {
     "kind": "testAction",
     "version": "${citrus.version}",
     "name": "selenium-cookies",
@@ -18218,7 +18303,7 @@
       },
       "additionalProperties": false    }
   },
-"selenium-frame": {
+  "selenium-frame": {
     "kind": "testAction",
     "version": "${citrus.version}",
     "name": "selenium-frame",
@@ -19108,10 +19193,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -19270,8 +19353,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -19990,10 +20072,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -20157,8 +20237,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -20521,10 +20600,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -20688,8 +20765,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -21182,10 +21258,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -21390,8 +21464,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -21676,10 +21749,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -21843,8 +21914,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -22129,10 +22199,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -22296,8 +22364,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -24058,25 +24125,21 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
       "properties": {
-        "action": {
-        },
+        "action": {},
         "description": {
           "type": "string",
           "title": "Description",
           "description": "Test action description printed when the action is executed.",
           "$comment": "group:advanced"
         },
-        "file": {
-        },
-        "http": {
-        },
+        "file": {},
+        "http": {},
         "interval": {
           "type": "string",
           "title": "Interval",
           "description": "Interval in milliseconds to check for the given wait condition."
         },
-        "message": {
-        },
+        "message": {},
         "timeout": {
           "type": "string",
           "title": "Timeout",
@@ -24347,10 +24410,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -24509,8 +24570,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -24698,7 +24758,8 @@
           "type": "boolean",
           "title": "Strict",
           "description": "Enables or disables the GraphQL checks.",
-          "default": true        },
+          "default": true
+        },
         "timeout": {
           "type": "integer",
           "title": "Timeout",
@@ -25071,10 +25132,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -25233,8 +25292,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -25412,7 +25470,8 @@
           "type": "boolean",
           "title": "Strict",
           "description": "Enables or disables the GraphQL checks.",
-          "default": true        },
+          "default": true
+        },
         "timeout": {
           "type": "integer",
           "title": "Timeout",
@@ -25686,10 +25745,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -25848,8 +25905,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -25993,7 +26049,8 @@
           "type": "boolean",
           "title": "Strict",
           "description": "Enables or disables the GraphQL document checks.",
-          "default": true        },
+          "default": true
+        },
         "uri": {
           "type": "string",
           "title": "Uri",
@@ -26159,10 +26216,8 @@
                   "title": "Data",
                   "description": "The message body content as inline data."
                 },
-                "resource": {
-                },
-                "script": {
-                }
+                "resource": {},
+                "script": {}
               },
               "additionalProperties": false,
               "anyOf": [
@@ -26321,8 +26376,7 @@
                     "title": "Name",
                     "description": "The message header name."
                   },
-                  "resource": {
-                  },
+                  "resource": {},
                   "type": {
                     "type": "string",
                     "title": "Type",
@@ -26451,7 +26505,8 @@
           "type": "boolean",
           "title": "Strict",
           "description": "Enables or disables the GraphQL reply check.",
-          "default": true        }
+          "default": true
+        }
       },
       "additionalProperties": false    }
   }

@@ -26,6 +26,7 @@ import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.http.server.vertx.VertxHttpServerBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.api.yaml.SchemaProperty;
@@ -34,10 +35,11 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * Endpoint builder delegates to either client od server endpoint builder.
  */
-@SchemaType(oneOf = { "client", "server" }, module = "citrus-http")
+@SchemaType(oneOf = { "client", "server", "vertxServer" }, module = "citrus-http")
 @XmlType(name = "", propOrder = {
         "client",
-        "server"
+        "server",
+        "vertxServer"
 })
 @XmlRootElement(name = "http")
 public class HttpEndpointBuilder implements EndpointBuilder<Endpoint>, ReferenceResolverAware {
@@ -54,6 +56,12 @@ public class HttpEndpointBuilder implements EndpointBuilder<Endpoint>, Reference
     @SchemaProperty(description = "Sets the Http server endpoint.")
     @XmlElement
     public void setServer(HttpServerBuilder server) {
+        this.delegate = server;
+    }
+
+    @SchemaProperty(description = "Sets the Vert.x based Http server endpoint.")
+    @XmlElement(name = "vertx-server")
+    public void setVertxServer(VertxHttpServerBuilder server) {
         this.delegate = server;
     }
 

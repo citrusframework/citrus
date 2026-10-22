@@ -17,7 +17,6 @@
 package org.citrusframework.http.server;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.Filter;
@@ -25,12 +24,10 @@ import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.context.ParentDelegatingWebApplicationContext;
 import org.citrusframework.http.interceptor.LoggingHandlerInterceptor;
-import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.servlet.CitrusDispatcherServlet;
 import org.citrusframework.http.servlet.GzipServletFilter;
 import org.citrusframework.http.servlet.RequestCachingServletFilter;
 import org.citrusframework.report.MessageListeners;
-import org.citrusframework.base.server.AbstractServer;
 import org.eclipse.jetty.ee11.servlet.FilterHolder;
 import org.eclipse.jetty.ee11.servlet.FilterMapping;
 import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
@@ -43,16 +40,12 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import static java.nio.file.Paths.get;
-import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOf;
 import static java.util.Objects.nonNull;
 import static org.citrusframework.util.StringUtils.hasText;
-import static org.springframework.http.MediaType.valueOf;
 import static org.springframework.web.context.WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE;
 
 /**
@@ -61,12 +54,7 @@ import static org.springframework.web.context.WebApplicationContext.ROOT_WEB_APP
  *
  * @since 2007
  */
-public class HttpServer extends AbstractServer {
-
-    /**
-     * Server port
-     */
-    private int port = 8080;
+public class HttpServer extends AbstractHttpServer {
 
     /**
      * Server resource base
@@ -124,11 +112,6 @@ public class HttpServer extends AbstractServer {
     private String servletName;
 
     /**
-     * Context path
-     */
-    private String contextPath = "/";
-
-    /**
      * Optional security handler for basic auth
      */
     private SecurityHandler securityHandler;
@@ -144,46 +127,9 @@ public class HttpServer extends AbstractServer {
     private boolean handleAttributeHeaders = false;
 
     /**
-     * Should handle http cookies
-     */
-    private boolean handleCookies = false;
-
-    /**
-     * Should handle matrix encoded path parameters
-     */
-    private boolean removeSemicolonPathContent = true;
-
-    /**
-     * Default status code returned by http server
-     */
-    private int defaultStatusCode = HttpStatus.OK.value();
-
-    /**
      * Default size of in memory response cahce for message tracing reasons
      */
     private int responseCacheSize = HttpServerSettings.responseCacheSize();
-
-    /**
-     * When enabled default servlet filters (e.g. request caching filter) will be added to the servlet context.
-     */
-    private boolean useDefaultFilters = HttpServerSettings.isUseDefaultFilters();
-
-    /**
-     * List of media types that should be handled with binary content processing
-     */
-    private List<MediaType> binaryMediaTypes = asList(
-            MediaType.APPLICATION_OCTET_STREAM,
-            MediaType.APPLICATION_PDF,
-            MediaType.IMAGE_GIF,
-            MediaType.IMAGE_JPEG,
-            MediaType.IMAGE_PNG,
-            valueOf("application/zip")
-    );
-
-    /**
-     * Message converter
-     */
-    private HttpMessageConverter messageConverter = new HttpMessageConverter();
 
     @Override
     protected void shutdown() {
@@ -208,7 +154,7 @@ public class HttpServer extends AbstractServer {
                 jettyServer = connector.getServer();
                 jettyServer.addConnector(connector);
             } else {
-                jettyServer = new Server(port);
+                jettyServer = new Server(getPort());
             }
 
             final Handler.Sequence handlers = new Handler.Sequence();
@@ -216,7 +162,7 @@ public class HttpServer extends AbstractServer {
             ContextHandlerCollection contextCollection = new ContextHandlerCollection();
 
             ServletContextHandler contextHandler = new ServletContextHandler();
-            contextHandler.setContextPath(contextPath);
+            contextHandler.setContextPath(getContextPath());
 
             if (nonNull(resourceBase)) {
                 contextHandler.setBaseResourceAsPath(get(resourceBase));
@@ -250,7 +196,7 @@ public class HttpServer extends AbstractServer {
                 servletHandler.addFilter(filterHolder, filterMapping);
             }
 
-            if (useDefaultFilters) {
+            if (isUseDefaultFilters()) {
                 addRequestCachingFilter();
                 addGzipFilter();
             }
@@ -372,24 +318,6 @@ public class HttpServer extends AbstractServer {
     }
 
     /**
-     * Gets the port.
-     *
-     * @return the port to get.
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
-     * Sets the port.
-     *
-     * @param port the port to set
-     */
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    /**
      * Gets the resourceBase.
      *
      * @return the resourceBase to get.
@@ -411,7 +339,10 @@ public class HttpServer extends AbstractServer {
      * Gets the contextConfigLocation.
      *
      * @return the contextConfigLocation to get.
+     * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
+     * use a Spring servlet context.
      */
+    @Deprecated(since = "5.2")
     public String getContextConfigLocation() {
         return contextConfigLocation;
     }
@@ -420,17 +351,12 @@ public class HttpServer extends AbstractServer {
      * Sets the contextConfigLocation.
      *
      * @param contextConfigLocation the contextConfigLocation to set
+     * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
+     * use a Spring servlet context.
      */
+    @Deprecated(since = "5.2")
     public void setContextConfigLocation(String contextConfigLocation) {
         this.contextConfigLocation = contextConfigLocation;
-    }
-
-    public boolean isUseDefaultFilters() {
-        return useDefaultFilters;
-    }
-
-    public void setUseDefaultFilters(boolean useDefaultFilters) {
-        this.useDefaultFilters = useDefaultFilters;
     }
 
     /**
@@ -528,24 +454,6 @@ public class HttpServer extends AbstractServer {
     }
 
     /**
-     * Gets the contextPath.
-     *
-     * @return the contextPath to get.
-     */
-    public String getContextPath() {
-        return contextPath;
-    }
-
-    /**
-     * Sets the contextPath.
-     *
-     * @param contextPath the contextPath to set
-     */
-    public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;
-    }
-
-    /**
      * Gets the securityHandler.
      *
      * @return the securityHandler to get.
@@ -594,7 +502,10 @@ public class HttpServer extends AbstractServer {
      * Gets the useRootContextAsParent.
      *
      * @return the useRootContextAsParent to get.
+     * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
+     * use a Spring servlet context.
      */
+    @Deprecated(since = "5.2")
     public boolean isUseRootContextAsParent() {
         return useRootContextAsParent;
     }
@@ -603,27 +514,12 @@ public class HttpServer extends AbstractServer {
      * Sets the useRootContextAsParent.
      *
      * @param useRootContextAsParent the useRootContextAsParent to set
+     * @deprecated Only supported by the Jetty based server. The Vert.x based server does not
+     * use a Spring servlet context.
      */
+    @Deprecated(since = "5.2")
     public void setUseRootContextAsParent(boolean useRootContextAsParent) {
         this.useRootContextAsParent = useRootContextAsParent;
-    }
-
-    /**
-     * Gets the message converter.
-     *
-     * @return
-     */
-    public HttpMessageConverter getMessageConverter() {
-        return messageConverter;
-    }
-
-    /**
-     * Sets the message converter.
-     *
-     * @param messageConverter
-     */
-    public void setMessageConverter(HttpMessageConverter messageConverter) {
-        this.messageConverter = messageConverter;
     }
 
     /**
@@ -645,38 +541,6 @@ public class HttpServer extends AbstractServer {
     }
 
     /**
-     * Gets the handleCookies.
-     *
-     * @return
-     */
-    public boolean isHandleCookies() {
-        return handleCookies;
-    }
-
-    /**
-     * Sets the handleCookies.
-     *
-     * @param handleCookies
-     */
-    public void setHandleCookies(boolean handleCookies) {
-        this.handleCookies = handleCookies;
-    }
-
-    /**
-     * Gets the removeSemicolonPathContent.
-     */
-    public boolean isRemoveSemicolonPathContent() {
-        return removeSemicolonPathContent;
-    }
-
-    /**
-     * Sets the removeSemicolonPathContent.
-     */
-    public void setRemoveSemicolonPathContent(boolean removeSemicolonPathContent) {
-        this.removeSemicolonPathContent = removeSemicolonPathContent;
-    }
-
-    /**
      * Gets the response cache size.
      *
      * @return
@@ -692,41 +556,5 @@ public class HttpServer extends AbstractServer {
      */
     public void setResponseCacheSize(int responseCacheSize) {
         this.responseCacheSize = responseCacheSize;
-    }
-
-    /**
-     * Gets the defaultStatusCode.
-     *
-     * @return
-     */
-    public int getDefaultStatusCode() {
-        return defaultStatusCode;
-    }
-
-    /**
-     * Sets the defaultStatusCode.
-     *
-     * @param defaultStatusCode
-     */
-    public void setDefaultStatusCode(int defaultStatusCode) {
-        this.defaultStatusCode = defaultStatusCode;
-    }
-
-    /**
-     * Gets the binaryMediaTypes.
-     *
-     * @return
-     */
-    public List<MediaType> getBinaryMediaTypes() {
-        return binaryMediaTypes;
-    }
-
-    /**
-     * Sets the binaryMediaTypes.
-     *
-     * @param binaryMediaTypes
-     */
-    public void setBinaryMediaTypes(List<MediaType> binaryMediaTypes) {
-        this.binaryMediaTypes = binaryMediaTypes;
     }
 }

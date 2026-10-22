@@ -28,6 +28,7 @@ import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigPa
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.http.config.annotation.HttpClientConfigParser;
 import org.citrusframework.http.config.annotation.HttpServerConfigParser;
+import org.citrusframework.http.config.annotation.VertxHttpServerConfigParser;
 import org.citrusframework.jms.config.annotation.JmsEndpointConfigParser;
 import org.citrusframework.jms.config.annotation.JmsSyncEndpointConfigParser;
 import org.citrusframework.message.DefaultMessageCorrelator;
@@ -201,7 +202,7 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 8L);
+        Assert.assertEquals(validators.size(), 9L);
         Assert.assertNotNull(validators.get("direct.async"));
         Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
         Assert.assertNotNull(validators.get("direct.sync"));
@@ -214,6 +215,8 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
         Assert.assertNotNull(validators.get("http.server"));
         Assert.assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+        Assert.assertNotNull(validators.get("http.vertx-server"));
+        Assert.assertEquals(validators.get("http.vertx-server").getClass(), VertxHttpServerConfigParser.class);
         Assert.assertNotNull(validators.get("soap.client"));
         Assert.assertEquals(validators.get("soap.client").getClass(), WebServiceClientConfigParser.class);
         Assert.assertNotNull(validators.get("soap.server"));

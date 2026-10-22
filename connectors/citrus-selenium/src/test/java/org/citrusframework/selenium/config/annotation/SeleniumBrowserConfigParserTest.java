@@ -27,6 +27,7 @@ import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import org.citrusframework.http.config.annotation.HttpClientConfigParser;
 import org.citrusframework.http.config.annotation.HttpServerConfigParser;
+import org.citrusframework.http.config.annotation.VertxHttpServerConfigParser;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
@@ -174,7 +175,7 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 5L);
+        Assert.assertEquals(validators.size(), 6L);
         Assert.assertNotNull(validators.get("direct.async"));
         Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
         Assert.assertNotNull(validators.get("direct.sync"));
@@ -185,6 +186,8 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
         Assert.assertNotNull(validators.get("selenium.browser"));
         Assert.assertEquals(validators.get("selenium.browser").getClass(), SeleniumBrowserConfigParser.class);
+        Assert.assertNotNull(validators.get("http.vertx-server"));
+        Assert.assertEquals(validators.get("http.vertx-server").getClass(), VertxHttpServerConfigParser.class);
     }
 
     @Test

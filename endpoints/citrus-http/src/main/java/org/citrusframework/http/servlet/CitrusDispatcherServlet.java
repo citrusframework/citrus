@@ -117,6 +117,8 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
 
             messageController.setResponseCacheSize(httpServer.getResponseCacheSize());
 
+            messageController.setServerInterceptors(httpServer.getServerInterceptors());
+
             if (endpointAdapter != null) {
                 messageController.setEndpointAdapter(endpointAdapter);
             }

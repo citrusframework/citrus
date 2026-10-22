@@ -29,9 +29,17 @@
         <xs:attribute name="port" type="xs:string"/>
         <xs:attribute name="auto-start" type="xs:boolean"/>
         <xs:attribute name="timeout" type="xs:string"/>
-        <xs:attribute name="context-config-location" type="xs:string"/>
+        <xs:attribute name="context-config-location" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Deprecated. Only supported by the Jetty based server. The Vert.x based server does not use a Spring servlet context.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="resource-base" type="xs:string"/>
-        <xs:attribute name="root-parent-context" type="xs:boolean"/>
+        <xs:attribute name="root-parent-context" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>Deprecated. Only supported by the Jetty based server. The Vert.x based server does not use a Spring servlet context.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="connector" type="xs:string"/>
         <xs:attribute name="connectors" type="xs:string"/>
         <xs:attribute name="filters" type="xs:string"/>
@@ -49,6 +57,34 @@
         <xs:attribute name="default-status-code" type="xs:string"/>
         <xs:attribute name="response-cache-size" type="xs:integer"/>
         <xs:attribute name="interceptors" type="xs:string"/>
+        <xs:attribute name="debug-logging" type="xs:boolean"/>
+        <xs:attribute name="actor" type="xs:string"/>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="vertx-server">
+      <xs:annotation>
+        <xs:documentation>Vert.x based Http server implementation accepts client connections and receives messages via Http transport protocol. This server implementation is opt-in, the Jetty based server remains the default.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="port" type="xs:string"/>
+        <xs:attribute name="secure-port" type="xs:string"/>
+        <xs:attribute name="auto-start" type="xs:boolean"/>
+        <xs:attribute name="timeout" type="xs:string"/>
+        <xs:attribute name="context-path" type="xs:string"/>
+        <xs:attribute name="use-default-filters" type="xs:boolean"/>
+        <xs:attribute name="binary-media-types" type="xs:string"/>
+        <xs:attribute name="message-converter" type="xs:string"/>
+        <xs:attribute name="handle-cookies" type="xs:boolean"/>
+        <xs:attribute name="default-status-code" type="xs:string"/>
+        <xs:attribute name="authentication" type="xs:string"/>
+        <xs:attribute name="secured-path" type="xs:string"/>
+        <xs:attribute name="secured-connection" type="xs:string"/>
+        <xs:attribute name="vertx" type="xs:string"/>
+        <xs:attribute name="worker-pool-size" type="xs:string"/>
+        <xs:attribute name="interceptors" type="xs:string"/>
+        <xs:attribute name="endpoint-adapter" type="xs:string"/>
         <xs:attribute name="debug-logging" type="xs:boolean"/>
         <xs:attribute name="actor" type="xs:string"/>
       </xs:complexType>

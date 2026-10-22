@@ -27,6 +27,7 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
@@ -49,6 +50,7 @@ import static org.citrusframework.util.StringUtils.hasText;
 public class HttpServerConfigParser implements AnnotationConfigParser<HttpServerConfig, HttpServer> {
 
     @Override
+    @SuppressWarnings("deprecation")
     public HttpServer parse(HttpServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         HttpServerBuilder builder = new HttpServerBuilder();
 
@@ -63,7 +65,23 @@ public class HttpServerConfigParser implements AnnotationConfigParser<HttpServer
             builder.endpointAdapter(referenceResolver.resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
-        builder.interceptors(referenceResolver.resolve(annotation.interceptors(), HandlerInterceptor.class));
+        List<Object> resolvedInterceptors = referenceResolver.resolve(annotation.interceptors(), Object.class);
+        List<HandlerInterceptor> handlerInterceptors = new ArrayList<>();
+        List<HttpServerInterceptor> serverInterceptors = new ArrayList<>();
+
+        for (Object interceptor : resolvedInterceptors) {
+            if (interceptor instanceof HandlerInterceptor handlerInterceptor) {
+                handlerInterceptors.add(handlerInterceptor);
+            } else if (interceptor instanceof HttpServerInterceptor serverInterceptor) {
+                serverInterceptors.add(serverInterceptor);
+            } else {
+                throw new CitrusRuntimeException("Invalid interceptor configuration for Http server: %s is not a %s or a %s."
+                        .formatted(interceptor.getClass().getName(), HandlerInterceptor.class.getName(), HttpServerInterceptor.class.getName()));
+            }
+        }
+
+        builder.interceptors(handlerInterceptors);
+        builder.serverInterceptors(serverInterceptors);
 
         if (hasText(annotation.actor())) {
             builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));

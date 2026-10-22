@@ -38,7 +38,7 @@ import static java.lang.String.format;
  * The implementation of the Serializable interface is cause by the {@link HttpMessage} implementation of Serializable
  * and the implications from that.
  */
-class CookieConverter implements Serializable {
+public class CookieConverter implements Serializable {
 
     private static final String NAME = "Name";
     private static final String VALUE = "Value";
@@ -74,7 +74,7 @@ class CookieConverter implements Serializable {
      * @param cookie the cookie to convert
      * @return The cookie string representation of the given cookie
      */
-    String getCookieString(Cookie cookie) {
+    public String getCookieString(Cookie cookie) {
         StringBuilder builder = new StringBuilder();
 
         builder.append(cookie.getName());

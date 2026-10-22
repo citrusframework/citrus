@@ -18,6 +18,7 @@ package org.citrusframework.http.config.annotation;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.Filter;
@@ -31,6 +32,8 @@ import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.StaticEndpoint;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.http.interceptor.HttpServerInterceptor;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.jms.config.annotation.JmsEndpointConfigParser;
@@ -50,7 +53,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.config.annotation.AnnotationConfigParser.lookup;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
 
@@ -107,6 +112,12 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
             endpointAdapter = "endpointAdapter")
     private HttpServer httpServer6;
 
+    @CitrusEndpoint
+    @HttpServerConfig(autoStart = false,
+            port = 8087,
+            interceptors = {"clientInterceptor1", "citrusInterceptor1"})
+    private HttpServer httpServer7;
+
     @Mock
     private ReferenceResolver referenceResolver;
     @Mock
@@ -129,6 +140,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
     private HandlerInterceptor clientInterceptor1;
     @Mock
     private HandlerInterceptor clientInterceptor2;
+    @Mock
+    private HttpServerInterceptor citrusInterceptor1;
     @Mock
     private TestActor testActor;
 
@@ -154,7 +167,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
         when(referenceResolver.resolve("clientInterceptor1", HandlerInterceptor.class)).thenReturn(clientInterceptor1);
         when(referenceResolver.resolve("clientInterceptor2", HandlerInterceptor.class)).thenReturn(clientInterceptor2);
-        when(referenceResolver.resolve(new String[]{"clientInterceptor1", "clientInterceptor2"}, HandlerInterceptor.class)).thenReturn(Arrays.asList(clientInterceptor1, clientInterceptor2));
+        when(referenceResolver.resolve(new String[]{"clientInterceptor1", "clientInterceptor2"}, Object.class)).thenReturn(Arrays.asList(clientInterceptor1, clientInterceptor2));
+        when(referenceResolver.resolve(new String[]{"clientInterceptor1", "citrusInterceptor1"}, Object.class)).thenReturn(Arrays.asList(clientInterceptor1, citrusInterceptor1));
         when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
 
         when(endpointAdapter.getEndpoint()).thenReturn(new StaticEndpoint());
@@ -258,6 +272,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(httpServer5.getServletName(), "httpServer5-servlet");
         assertNotNull(httpServer5.getInterceptors());
         assertEquals(httpServer5.getInterceptors().size(), 2L);
+        assertNotNull(httpServer5.getServerInterceptors());
+        assertEquals(httpServer5.getServerInterceptors().size(), 0L);
 
         // 6th message sender
         assertNull(httpServer6.getConnector());
@@ -270,12 +286,31 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         assertFalse(httpServer6.isAutoStart());
         assertFalse(httpServer6.isUseRootContextAsParent());
         assertEquals(httpServer6.getServletName(), "httpServer6-servlet");
+
+        // 7th message sender - Spring and Citrus interceptors are separated
+        assertNotNull(httpServer7.getInterceptors());
+        assertEquals(httpServer7.getInterceptors().size(), 1L);
+        assertEquals(httpServer7.getInterceptors().get(0), clientInterceptor1);
+        assertNotNull(httpServer7.getServerInterceptors());
+        assertEquals(httpServer7.getServerInterceptors().size(), 1L);
+        assertEquals(httpServer7.getServerInterceptors().get(0), citrusInterceptor1);
+    }
+
+    @Test
+    public void testRejectUnsupportedInterceptorType() {
+        HttpServerConfig config = mock(HttpServerConfig.class);
+        when(config.interceptors()).thenReturn(new String[]{"unsupportedInterceptor"});
+        when(referenceResolver.resolve(new String[]{"unsupportedInterceptor"}, Object.class)).thenReturn(List.of(new Object()));
+
+        assertThatThrownBy(() -> new HttpServerConfigParser().parse(config, referenceResolver, context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("Invalid interceptor configuration for Http server");
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = lookup();
-        assertEquals(validators.size(), 8L);
+        assertEquals(validators.size(), 9L);
         assertNotNull(validators.get("direct.async"));
         assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
         assertNotNull(validators.get("direct.sync"));
@@ -292,6 +327,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
         assertNotNull(validators.get("http.server"));
         assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+        assertNotNull(validators.get("http.vertx-server"));
+        assertEquals(validators.get("http.vertx-server").getClass(), VertxHttpServerConfigParser.class);
     }
 
     @Test

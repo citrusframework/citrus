@@ -43,6 +43,7 @@ import static org.citrusframework.util.StringUtils.hasText;
 public class WebSocketServerConfigParser implements AnnotationConfigParser<WebSocketServerConfig, WebSocketServer> {
 
     @Override
+    @SuppressWarnings("deprecation")
     public WebSocketServer parse(WebSocketServerConfig annotation, ReferenceResolver referenceResolver, TestContext context) {
         WebSocketServerBuilder builder = new WebSocketServerBuilder();
 

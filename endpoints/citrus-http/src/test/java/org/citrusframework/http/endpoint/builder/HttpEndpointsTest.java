@@ -21,6 +21,8 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.http.server.vertx.VertxHttpServer;
+import org.citrusframework.http.server.vertx.VertxHttpServerBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -32,6 +34,7 @@ public class HttpEndpointsTest {
         Assert.assertTrue(endpointBuilders.containsKey("http"));
         Assert.assertTrue(endpointBuilders.containsKey("http.client"));
         Assert.assertTrue(endpointBuilders.containsKey("http.server"));
+        Assert.assertTrue(endpointBuilders.containsKey("http.vertx-server"));
     }
 
     @Test
@@ -42,5 +45,18 @@ public class HttpEndpointsTest {
         Assert.assertEquals(EndpointBuilder.lookup("http.client").get().getClass(), HttpClientBuilder.class);
         Assert.assertTrue(EndpointBuilder.lookup("http.server").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("http.server").get().getClass(), HttpServerBuilder.class);
+        Assert.assertTrue(EndpointBuilder.lookup("http.vertx-server").isPresent());
+        Assert.assertEquals(EndpointBuilder.lookup("http.vertx-server").get().getClass(), VertxHttpServerBuilder.class);
+    }
+
+    @Test
+    public void shouldCreateVertxServerEndpoint() {
+        VertxHttpServerBuilder builder = HttpEndpoints.http().vertxServer();
+        Assert.assertNotNull(builder);
+
+        HttpEndpointBuilder endpointBuilder = new HttpEndpointBuilder();
+        endpointBuilder.setVertxServer(builder);
+
+        Assert.assertTrue(endpointBuilder.build() instanceof VertxHttpServer);
     }
 }
