@@ -108,6 +108,15 @@ public class LoggingInterceptorUtilsTest {
     }
 
     @Test
+    public void shouldRenderUnmappedMediaTypeWithFormFeedAsText() {
+        byte[] body = "page1\fpage2".getBytes(StandardCharsets.UTF_8);
+
+        String result = LoggingInterceptorUtils.getBodyContent(body, "application/x-custom", null);
+
+        assertThat(result).isEqualTo("page1\fpage2");
+    }
+
+    @Test
     public void shouldRenderTextualMediaTypeAsText() {
         String jsonResult = LoggingInterceptorUtils.getBodyContent("{\"id\":\"42\"}".getBytes(StandardCharsets.UTF_8),
                 "application/json", null);
@@ -130,15 +139,29 @@ public class LoggingInterceptorUtilsTest {
     }
 
     @Test
-    public void shouldRenderEmptyBodyAsEmptyString() {
+    public void shouldRenderEmptyBinaryBodyAsZeroBytesSummary() {
         String result = LoggingInterceptorUtils.getBodyContent(new byte[0], "application/octet-stream", null);
+
+        assertThat(result).isEqualTo("<binary 0 bytes>");
+    }
+
+    @Test
+    public void shouldRenderNullBinaryBodyAsZeroBytesSummary() {
+        String result = LoggingInterceptorUtils.getBodyContent(null, "application/octet-stream", null);
+
+        assertThat(result).isEqualTo("<binary 0 bytes>");
+    }
+
+    @Test
+    public void shouldRenderEmptyTextBodyAsEmptyString() {
+        String result = LoggingInterceptorUtils.getBodyContent(new byte[0], "text/plain", null);
 
         assertThat(result).isEmpty();
     }
 
     @Test
-    public void shouldRenderNullBodyAsEmptyString() {
-        String result = LoggingInterceptorUtils.getBodyContent(null, "application/octet-stream", null);
+    public void shouldRenderNullTextBodyAsEmptyString() {
+        String result = LoggingInterceptorUtils.getBodyContent(null, "text/plain", null);
 
         assertThat(result).isEmpty();
     }
