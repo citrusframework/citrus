@@ -26,7 +26,9 @@ import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
 
 /**
- * Function returns given string argument in lower case.
+ * Function resolves the value of a system property at test runtime.
+ * In case the system property is not set an optional default value is used as fallback.
+ * When neither the system property nor a default value is given the function fails with an error.
  */
 public class SystemPropertyFunction implements ParameterizedFunction<SystemPropertyFunction.Parameters> {
 
