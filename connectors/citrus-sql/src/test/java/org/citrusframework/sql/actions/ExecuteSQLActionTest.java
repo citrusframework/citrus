@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.InOrder;
@@ -34,6 +35,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -99,6 +102,40 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 
         verify(jdbcTemplate).execute(DB_STMT_1);
         verify(jdbcTemplate).execute(DB_STMT_2);
+    }
+
+    @Test
+    public void testCustomResourceParsingHookIsUsed() {
+        executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-statements.sql");
+
+        ExecuteSQLAction action = Mockito.spy(executeSQLActionBuilder.build());
+
+        doReturn(List.of("DELETE * FROM CUSTOM_PARSED")).when(action)
+                .createStatementsFromFileResource(any(Resource.class), any());
+
+        reset(jdbcTemplate);
+
+        action.execute(context);
+
+        verify(jdbcTemplate).execute("DELETE * FROM CUSTOM_PARSED");
+    }
+
+    @Test
+    public void testSQLExecutionWithBlankResourcePathIsIgnored() {
+        executeSQLActionBuilder.sqlResource((String) null);
+        executeSQLActionBuilder.sqlResource("   ");
+        executeSQLActionBuilder.statement(DB_STMT_1);
+
+        ExecuteSQLAction action = executeSQLActionBuilder.build();
+
+        Assert.assertTrue(action.getSqlResourcePaths().isEmpty());
+        Assert.assertTrue(action.getSqlStatementSources().size() == 1);
+
+        reset(jdbcTemplate);
+
+        action.execute(context);
+
+        verify(jdbcTemplate).execute(DB_STMT_1);
     }
 
     @Test

@@ -151,7 +151,11 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     }
 
     /**
-     * Gets the script.
+     * Gets the last configured inline script.
+     *
+     * <p>Retained for backward compatibility: only the last script is returned, while
+     * execution runs every script added via {@code sqlScript(...)} in declaration order.
+     *
      * @return the script
      */
     public String getScript() {

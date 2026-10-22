@@ -133,6 +133,8 @@ The first action uses inline SQL statements defined directly inside the test cas
 
 You can add multiple resource files to a single action and you can mix inline statements with resource files. All statements and script files are executed in the order of their declaration.
 
+NOTE: Previously an action executed either the inline statements or the single configured script resource, never both, and each additional `sqlResource(...)` call replaced the previous one. All declared sources are now executed in order, so review actions that declare several sources to make sure every one of them should run.
+
 IMPORTANT: You have to pay attention to some rules when dealing with external SQL resources.
 
 * Each statement should begin in a new line
