@@ -98,12 +98,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
     @Override
     public void doExecute(TestContext context) {
-        final List<String> statementsToUse;
-        if (statements.isEmpty()) {
-            statementsToUse = createStatementsFromFileResource(context);
-        } else {
-            statementsToUse = statements;
-        }
+        final List<String> statementsToUse = resolveStatements(context);
 
         try {
             //for control result set validation

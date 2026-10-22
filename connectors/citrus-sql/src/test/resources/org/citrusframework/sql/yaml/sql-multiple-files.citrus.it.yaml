@@ -1,0 +1,10 @@
+name: "SqlMultipleFilesTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in YAML
+actions:
+  - sql:
+      dataSource: "dataSource"
+      statements:
+        - file: "classpath:org/citrusframework/sql/test-statements-a.sql"
+        - file: "classpath:org/citrusframework/sql/test-statements-b.sql"

@@ -16,6 +16,8 @@
 
 package org.citrusframework.sql.yaml;
 
+import java.util.List;
+
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.sql.actions.ExecuteSQLAction;
@@ -90,6 +92,23 @@ public class SqlTest extends AbstractYamlActionTest {
         Assert.assertEquals(action.getTransactionManager(), mockTransactionManager);
         Assert.assertEquals(action.getTransactionTimeout(), "5000");
         Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
+    }
+
+    @Test
+    public void shouldLoadSqlWithMultipleFiles() {
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/yaml/sql-multiple-files.citrus.it.yaml");
+
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
+        Assert.assertEquals(result.getActionCount(), 1L);
+
+        ExecuteSQLAction action = (ExecuteSQLAction) result.getTestAction(0);
+        Assert.assertEquals(action.getSqlResourcePaths(), List.of(
+                "classpath:org/citrusframework/sql/test-statements-a.sql",
+                "classpath:org/citrusframework/sql/test-statements-b.sql"));
+
+        Integer count = new JdbcTemplate(dataSource).queryForObject("select count(*) from message where id in (300, 301)", Integer.class);
+        Assert.assertEquals(count, Integer.valueOf(2));
     }
 
     @Test

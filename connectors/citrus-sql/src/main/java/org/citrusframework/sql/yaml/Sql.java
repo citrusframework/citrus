@@ -182,8 +182,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             sqlQueryBuilder.jdbcTemplate(base.getJdbcTemplate());
         }
 
-        sqlQueryBuilder.sqlResource(base.getSqlResourcePath());
-        sqlQueryBuilder.statements(base.getStatements());
+        base.getSqlStatementSources().forEach(sqlQueryBuilder::sqlStatementSource);
 
         if (base.getTransactionManager() != null) {
             sqlQueryBuilder.transactionManager(base.getTransactionManager());

@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,19 @@ public abstract class SqlUtils {
      * @return list of SQL statements.
      */
     public static List<String> createStatementsFromFileResource(Resource sqlResource) {
-        return createStatementsFromFileResource(sqlResource, null);
+        return createStatementsFromFileResource(sqlResource, Charset.defaultCharset(), null);
+    }
+
+    /**
+     * Reads SQL statements from external file resource. File resource can hold several
+     * multi-line statements and comments.
+     *
+     * @param sqlResource the sql file resource.
+     * @param charset the charset used to read the sql file resource.
+     * @return list of SQL statements.
+     */
+    public static List<String> createStatementsFromFileResource(Resource sqlResource, Charset charset) {
+        return createStatementsFromFileResource(sqlResource, charset, null);
     }
 
     /**
@@ -72,6 +85,19 @@ public abstract class SqlUtils {
      * @return list of SQL statements.
      */
     public static List<String> createStatementsFromFileResource(Resource sqlResource, LastScriptLineDecorator lineDecorator) {
+        return createStatementsFromFileResource(sqlResource, Charset.defaultCharset(), lineDecorator);
+    }
+
+    /**
+     * Reads SQL statements from external file resource. File resource can hold several
+     * multi-line statements and comments.
+     *
+     * @param sqlResource   the sql file resource.
+     * @param charset       the charset used to read the sql file resource.
+     * @param lineDecorator optional line decorator for last script lines.
+     * @return list of SQL statements.
+     */
+    public static List<String> createStatementsFromFileResource(Resource sqlResource, Charset charset, LastScriptLineDecorator lineDecorator) {
         BufferedReader reader = null;
         StringBuilder buffer;
 
@@ -87,7 +113,7 @@ public abstract class SqlUtils {
                 throw new CitrusRuntimeException("Failed to load SQL script resource '%s' - does not exist".formatted(sqlResource.location()));
             }
 
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+            reader = new BufferedReader(new InputStreamReader(inputStream, charset));
             buffer = new StringBuilder();
 
             String line;

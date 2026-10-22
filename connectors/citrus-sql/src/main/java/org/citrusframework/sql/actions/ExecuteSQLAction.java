@@ -50,12 +50,7 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        final List<String> statementsToUse;
-        if (statements.isEmpty()) {
-            statementsToUse = createStatementsFromFileResource(context);
-        } else {
-            statementsToUse = statements;
-        }
+        final List<String> statementsToUse = resolveStatements(context);
 
         if (getTransactionManager() != null) {
             if (logger.isDebugEnabled()) {

@@ -22,6 +22,7 @@ import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -280,6 +281,63 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
         reset(jdbcTemplate);
         executePLSQLActionBuilder.build().execute(context);
         verify(jdbcTemplate, times(2)).execute(controlStatement);
+    }
+
+    @Test
+    public void testPLSQLExecutionWithChainedFileResources() {
+        executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-plsql.sql");
+        executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-plsql-multiple-stmts.sql");
+
+        String controlStatement = """
+                DECLARE
+                    Zahl1 number(2);
+                    Text varchar(20) := 'Hello World!';
+                BEGIN
+                    EXECUTE IMMEDIATE "
+                        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';"
+                END;""";
+
+        reset(jdbcTemplate);
+        executePLSQLActionBuilder.build().execute(context);
+        verify(jdbcTemplate, times(3)).execute(controlStatement);
+    }
+
+    @Test
+    public void testPLSQLExecutionWithInlineScriptAndFileResource() {
+        String stmt = "DECLARE " +
+                "Zahl1 number(2);" +
+                "Text varchar(20) := 'Hello World!';" +
+                "BEGIN" +
+                "EXECUTE IMMEDIATE \"" +
+                "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
+                "END;/";
+
+        executePLSQLActionBuilder.sqlScript(stmt);
+        executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-plsql.sql");
+
+        String inlineControlStatement = "DECLARE " +
+                "Zahl1 number(2);" +
+                "Text varchar(20) := 'Hello World!';" +
+                "BEGIN" +
+                "EXECUTE IMMEDIATE \"" +
+                "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
+                "END;";
+
+        String fileControlStatement = """
+                DECLARE
+                    Zahl1 number(2);
+                    Text varchar(20) := 'Hello World!';
+                BEGIN
+                    EXECUTE IMMEDIATE "
+                        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';"
+                END;""";
+
+        reset(jdbcTemplate);
+        executePLSQLActionBuilder.build().execute(context);
+
+        InOrder inOrder = Mockito.inOrder(jdbcTemplate);
+        inOrder.verify(jdbcTemplate).execute(inlineControlStatement);
+        inOrder.verify(jdbcTemplate).execute(fileControlStatement);
     }
 
     @Test

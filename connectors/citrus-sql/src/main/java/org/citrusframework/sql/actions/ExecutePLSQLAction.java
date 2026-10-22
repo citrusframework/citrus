@@ -16,7 +16,6 @@
 
 package org.citrusframework.sql.actions;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +26,9 @@ import org.citrusframework.api.actions.sql.ExecutePlsqlActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
-import org.citrusframework.util.FileUtils;
+import org.citrusframework.sql.util.SqlStatementSource;
 import org.citrusframework.sql.util.SqlUtils;
+import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -49,6 +49,19 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     /** Special statement endoing character sequence */
     public static final String PLSQL_STMT_ENDING = "/";
 
+    /** Line decorator used to split PLSQL script resources into single statements */
+    private static final SqlUtils.LastScriptLineDecorator PLSQL_LINE_DECORATOR = new SqlUtils.LastScriptLineDecorator() {
+        @Override
+        public String getStatementEndingCharacter() {
+            return PLSQL_STMT_ENDING;
+        }
+
+        @Override
+        public String decorate(String line) {
+            return line.trim().substring(0, (line.trim().length() - 1));
+        }
+    };
+
     /**
      * Default constructor.
      */
@@ -61,24 +74,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        List<String> statementsToUse;
-        if (StringUtils.hasText(script)) {
-            statementsToUse = createStatementsFromScript(context);
-        } else if (StringUtils.hasText(sqlResourcePath)) {
-            statementsToUse = createStatementsFromFileResource(context, new SqlUtils.LastScriptLineDecorator() {
-                @Override
-                public String getStatementEndingCharacter() {
-                    return PLSQL_STMT_ENDING;
-                }
-
-                @Override
-                public String decorate(String line) {
-                    return line.trim().substring(0, (line.trim().length() - 1));
-                }
-            });
-        } else {
-            statementsToUse = statements;
-        }
+        List<String> statementsToUse = resolveStatements(context, PLSQL_LINE_DECORATOR);
 
         if (getTransactionManager() != null) {
             if (logger.isDebugEnabled()) {
@@ -131,9 +127,11 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     /**
      * Create SQL statements from inline script.
      * @param context the current test context.
+     * @param script the inline PLSQL script.
      * @return list of SQL statements.
      */
-    private List<String> createStatementsFromScript(TestContext context) {
+    @Override
+    protected List<String> createStatementsFromScript(TestContext context, String script) {
         List<String> stmts = new ArrayList<>();
 
         String resolvedScript = context.replaceDynamicContentInString(script);
@@ -190,6 +188,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
         @Override
         public Builder sqlScript(String script) {
             this.script = script;
+            sqlStatementSource(new SqlStatementSource.Script(script));
             return this;
         }
 
@@ -200,11 +199,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
 
         @Override
         public Builder sqlResource(Resource sqlResource, Charset charset) {
-            try {
-                sqlScript(FileUtils.readToString(sqlResource, charset));
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to read sql resource", e);
-            }
+            statements(SqlUtils.createStatementsFromFileResource(sqlResource, charset, PLSQL_LINE_DECORATOR));
             return this;
         }
 

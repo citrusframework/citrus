@@ -23,7 +23,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,6 +42,8 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 
     private static final String DB_STMT_1 = "DELETE * FROM ERRORS WHERE STATUS='resolved'";
     private static final String DB_STMT_2 = "DELETE * FROM CONFIGURATION WHERE VERSION=1";
+    private static final String DB_STMT_3 = "DELETE * FROM ORDERS WHERE STATE='cancelled'";
+    private static final String DB_STMT_4 = "DELETE * FROM CUSTOMERS WHERE ACTIVE=false";
 
     private ExecuteSQLAction.Builder executeSQLActionBuilder;
 
@@ -151,6 +155,59 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         URL resource = ExecuteSQLActionTest.class.getClassLoader().getResource(classpathLocation);
         Assert.assertNotNull(resource, "Test resource not found on classpath: " + classpathLocation);
         return new File(resource.toURI()).getAbsolutePath();
+    }
+
+    @Test
+    public void testSQLExecutionWithChainedFileResources() {
+        executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-statements.sql");
+        executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-statements-2.sql");
+
+        ExecuteSQLAction action = executeSQLActionBuilder.build();
+        Assert.assertEquals(action.getSqlResourcePaths(),
+                List.of("classpath:org/citrusframework/sql/actions/test-sql-statements.sql",
+                        "classpath:org/citrusframework/sql/actions/test-sql-statements-2.sql"));
+        Assert.assertEquals(action.getSqlResourcePath(), "classpath:org/citrusframework/sql/actions/test-sql-statements.sql");
+
+        reset(jdbcTemplate);
+
+        action.execute(context);
+
+        InOrder inOrder = Mockito.inOrder(jdbcTemplate);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_1);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_2);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_3);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_4);
+    }
+
+    @Test
+    public void testSQLExecutionWithMixedResourceAndFilePath() {
+        executeSQLActionBuilder.sqlResource(Resources.fromClasspath("org/citrusframework/sql/actions/test-sql-statements-2.sql"));
+        executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-statements.sql");
+
+        reset(jdbcTemplate);
+
+        executeSQLActionBuilder.build().execute(context);
+
+        InOrder inOrder = Mockito.inOrder(jdbcTemplate);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_3);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_4);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_1);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_2);
+    }
+
+    @Test
+    public void testSQLExecutionWithInlineStatementsAndFileResource() {
+        executeSQLActionBuilder.statement(DB_STMT_3);
+        executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-statements.sql");
+
+        reset(jdbcTemplate);
+
+        executeSQLActionBuilder.build().execute(context);
+
+        InOrder inOrder = Mockito.inOrder(jdbcTemplate);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_3);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_1);
+        inOrder.verify(jdbcTemplate).execute(DB_STMT_2);
     }
 
     @Test

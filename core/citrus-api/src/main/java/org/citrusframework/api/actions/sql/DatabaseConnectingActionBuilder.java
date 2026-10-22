@@ -74,12 +74,16 @@ public interface DatabaseConnectingActionBuilder<T extends TestAction, B extends
     B statement(String sql);
 
     /**
-     * Setter for external file resource containing the SQL statements to execute.
+     * Adds an external file resource containing the SQL statements to execute. The resource is read
+     * when the action is built and its statements are added to the list of SQL executions. May be
+     * called multiple times, all resources are executed in the order of declaration.
      */
     B sqlResource(Resource sqlResource);
 
     /**
-     * Setter for external file resource containing the SQL statements to execute.
+     * Adds an external file resource containing the SQL statements to execute. The resource path
+     * supports the "classpath:" and "file:" prefix as well as plain file system paths and URLs.
+     * May be called multiple times, all resources are executed in the order of declaration.
      */
     B sqlResource(String filePath);
 }

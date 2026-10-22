@@ -16,6 +16,8 @@
 
 package org.citrusframework.sql.xml;
 
+import java.util.List;
+
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.sql.actions.ExecuteSQLAction;
@@ -90,6 +92,23 @@ public class SqlTest extends AbstractXmlActionTest {
         Assert.assertEquals(action.getTransactionManager(), mockTransactionManager);
         Assert.assertEquals(action.getTransactionTimeout(), "5000");
         Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
+    }
+
+    @Test
+    public void shouldLoadSqlWithFileAndInlineStatement() {
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/sql/xml/sql-file-and-inline.citrus.it.xml");
+
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
+        Assert.assertEquals(result.getActionCount(), 1L);
+
+        ExecuteSQLAction action = (ExecuteSQLAction) result.getTestAction(0);
+        Assert.assertEquals(action.getStatements().size(), 1);
+        Assert.assertEquals(action.getStatements().get(0), "insert into message values (302, 'Inline')");
+        Assert.assertEquals(action.getSqlResourcePaths(), List.of("classpath:org/citrusframework/sql/test-statements-a.sql"));
+
+        Integer count = new JdbcTemplate(dataSource).queryForObject("select count(*) from message where id in (300, 302)", Integer.class);
+        Assert.assertEquals(count, Integer.valueOf(2));
     }
 
     @Test

@@ -27,13 +27,16 @@ public interface ExecutePlsqlActionBuilder<T extends TestAction, B extends Execu
         extends DatabaseConnectingActionBuilder<T, B> {
 
     /**
-     * Setter for inline script.
+     * Setter for inline script. The script may hold several statements, separated by "/".
      * @param script
      */
     B sqlScript(String script);
 
     /**
-     * Setter for external file resource containing the SQL statements to execute.
+     * Adds an external file resource containing the SQL statements to execute. The resource is read
+     * with the given charset when the action is built and its statements are added to the list of
+     * SQL executions. May be called multiple times, all resources are executed in the order of
+     * declaration.
      */
     B sqlResource(Resource sqlResource, Charset charset);
 
