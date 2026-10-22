@@ -191,6 +191,9 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
 
         @Override
         public Builder sqlScript(String script) {
+            if (!StringUtils.hasText(script)) {
+                return this;
+            }
             this.script = script;
             sqlStatementSource(new SqlStatementSource.Script(script));
             return this;
