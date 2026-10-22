@@ -137,15 +137,38 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * Reads SQL statements from all configured external file resources, in declaration order.
      * File resources can hold several multi-line statements and comments.
      *
+     * <p>Note: the execution path of the database actions resolves statement sources via
+     * {@link #resolveStatements(TestContext, SqlUtils.LastScriptLineDecorator)}. Both methods
+     * parse each resolved resource through
+     * {@link #createStatementsFromFileResource(Resource, SqlUtils.LastScriptLineDecorator)},
+     * so subclasses should overwrite that method to customize resource parsing.
+     *
      * @param context the current test context.
+     * @param lineDecorator optional line decorator for last script lines.
      * @return list of SQL statements.
      */
     protected List<String> createStatementsFromFileResource(TestContext context, SqlUtils.LastScriptLineDecorator lineDecorator) {
         List<String> stmts = new ArrayList<>();
         for (String resourcePath : sqlResourcePaths) {
-            stmts.addAll(SqlUtils.createStatementsFromFileResource(resolveSqlResource(context, resourcePath), lineDecorator));
+            stmts.addAll(createStatementsFromFileResource(resolveSqlResource(context, resourcePath), lineDecorator));
         }
         return stmts;
+    }
+
+    /**
+     * Reads SQL statements from the given external file resource. The file resource can hold several
+     * multi-line statements and comments.
+     *
+     * <p>May be overwritten by subclasses to customize how a single resolved resource is parsed.
+     * This method backs both {@link #createStatementsFromFileResource(TestContext, SqlUtils.LastScriptLineDecorator)}
+     * and {@link #resolveStatements(TestContext, SqlUtils.LastScriptLineDecorator)}.
+     *
+     * @param sqlResource the resolved SQL file resource.
+     * @param lineDecorator optional line decorator for last script lines.
+     * @return list of SQL statements.
+     */
+    protected List<String> createStatementsFromFileResource(Resource sqlResource, SqlUtils.LastScriptLineDecorator lineDecorator) {
+        return SqlUtils.createStatementsFromFileResource(sqlResource, lineDecorator);
     }
 
     /**
@@ -177,7 +200,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
             switch (source) {
                 case SqlStatementSource.Statement statement -> resolved.add(statement.sql());
                 case SqlStatementSource.ResourcePath resourcePath -> resolved.addAll(
-                        SqlUtils.createStatementsFromFileResource(resolveSqlResource(context, resourcePath.path()), lineDecorator));
+                        createStatementsFromFileResource(resolveSqlResource(context, resourcePath.path()), lineDecorator));
                 case SqlStatementSource.Script script -> resolved.addAll(createStatementsFromScript(context, script.script()));
             }
         }
@@ -204,7 +227,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * @param resourcePath the configured SQL resource path.
      * @return the resolved file resource.
      */
-    private Resource resolveSqlResource(TestContext context, String resourcePath) {
+    protected Resource resolveSqlResource(TestContext context, String resourcePath) {
         return Resources.create(context.replaceDynamicContentInString(resourcePath));
     }
 
@@ -230,8 +253,13 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     }
 
     /**
-     * Gets the sqlResource.
-     * @return the sqlResource
+     * Gets the first configured SQL file resource path.
+     *
+     * <p>Retained for backward compatibility: only the first path is returned.
+     * Use {@link #getSqlResourcePaths()} or {@link #getSqlStatementSources()} for
+     * all configured paths in declaration order.
+     *
+     * @return the first SQL file resource path, or null if none was configured
      */
     public String getSqlResourcePath() {
         return sqlResourcePath;
@@ -246,7 +274,13 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     }
 
     /**
-     * Gets the statements.
+     * Gets the inline SQL statements, including statements parsed eagerly from
+     * {@link Resource}-based {@code sqlResource(...)} calls.
+     *
+     * <p>Statements from path-based resources are resolved at execution time and are
+     * not included here. Use {@link #getSqlStatementSources()} for all configured
+     * sources in declaration order.
+     *
      * @return the statements
      */
     public List<String> getStatements() {
@@ -400,6 +434,9 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
 
         @Override
         public S sqlResource(String filePath) {
+            if (!StringUtils.hasText(filePath)) {
+                return self;
+            }
             return sqlStatementSource(new SqlStatementSource.ResourcePath(filePath));
         }
 
