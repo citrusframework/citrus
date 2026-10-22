@@ -16,6 +16,8 @@
 
 package org.citrusframework.sql.actions;
 
+import java.io.File;
+import java.net.URL;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -138,6 +140,45 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
         executePLSQLActionBuilder.build().execute(context);
 
         verify(jdbcTemplate).execute(controlStatement);
+    }
+
+    @Test
+    public void testPLSQLExecutionWithFileSystemResource() throws Exception {
+        String absolutePath = absolutePathOf("org/citrusframework/sql/actions/test-plsql.sql");
+
+        executePLSQLActionBuilder.sqlResource("file:" + absolutePath);
+
+        String controlStatement = """
+                DECLARE
+                    Zahl1 number(2);
+                    Text varchar(20) := 'Hello World!';
+                BEGIN
+                    EXECUTE IMMEDIATE "
+                        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';"
+                END;""";
+
+        reset(jdbcTemplate);
+
+        executePLSQLActionBuilder.build().execute(context);
+
+        verify(jdbcTemplate).execute(controlStatement);
+    }
+
+    @Test
+    public void testPLSQLExecutionWithMissingFileSystemResource() {
+        executePLSQLActionBuilder.sqlResource("file:/nonexistent/path/to/plsql-script.sql");
+
+        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class,
+                () -> executePLSQLActionBuilder.build().execute(context));
+
+        Assert.assertTrue(exception.getMessage().contains("plsql-script.sql"),
+                "Exception message should name the missing resource but was: " + exception.getMessage());
+    }
+
+    private static String absolutePathOf(String classpathLocation) throws Exception {
+        URL resource = ExecutePLSQLActionTest.class.getClassLoader().getResource(classpathLocation);
+        Assert.assertNotNull(resource, "Test resource not found on classpath: " + classpathLocation);
+        return new File(resource.toURI()).getAbsolutePath();
     }
 
     @Test
