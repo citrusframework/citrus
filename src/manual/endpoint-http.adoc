@@ -439,7 +439,7 @@ message:
 * Messages with a *Content-Encoding* of *gzip*, *deflate* or *zstd* are logged as a summary of the payload size, too.
 * Messages with an unknown content type are logged with the decoded body content when the payload is valid text. Otherwise the payload size summary is used.
 
-A message without any body content is logged with an empty body. This way binary messages do not pollute the log with unreadable byte values.
+A non-binary message without any body content is logged with an empty body. This way binary messages do not pollute the log with unreadable byte values.
 
 [[http-rest-server]]
 == Http REST server
