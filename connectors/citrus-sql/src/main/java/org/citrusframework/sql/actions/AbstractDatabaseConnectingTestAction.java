@@ -34,6 +34,7 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.sql.util.SqlStatementSource;
 import org.citrusframework.sql.util.SqlUtils;
 import org.citrusframework.util.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -61,8 +62,14 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     /** SQL file resource path */
     protected final String sqlResourcePath;
 
+    /** SQL file resource paths in declaration order */
+    protected final List<String> sqlResourcePaths;
+
     /** List of SQL statements */
     protected final List<String> statements;
+
+    /** SQL statement sources in declaration order */
+    protected final List<SqlStatementSource> sqlStatementSources;
 
     /** Optional transaction manager */
     private final PlatformTransactionManager transactionManager;
@@ -78,10 +85,12 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         Optional.ofNullable(builder.dataSource).ifPresent(super::setDataSource);
 
         this.sqlResourcePath = builder.sqlResourcePath;
+        this.sqlResourcePaths = List.copyOf(builder.sqlResourcePaths);
         this.transactionIsolationLevel = builder.transactionIsolationLevel;
         this.transactionManager = builder.transactionManager;
         this.transactionTimeout = builder.transactionTimeout;
         this.statements = builder.statements;
+        this.sqlStatementSources = List.copyOf(builder.sqlStatementSources);
     }
 
     /**
@@ -114,36 +123,89 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     }
 
     /**
-     * Reads SQL statements from external file resource. File resource can hold several
-     * multi-line statements and comments.
+     * Reads SQL statements from all configured external file resources, in declaration order.
+     * File resources can hold several multi-line statements and comments.
      *
      * @param context the current test context.
      * @return list of SQL statements.
      */
     protected List<String> createStatementsFromFileResource(TestContext context) {
-        return SqlUtils.createStatementsFromFileResource(resolveSqlResource(context));
+        return createStatementsFromFileResource(context, null);
     }
 
     /**
-     * Reads SQL statements from external file resource. File resource can hold several
-     * multi-line statements and comments.
+     * Reads SQL statements from all configured external file resources, in declaration order.
+     * File resources can hold several multi-line statements and comments.
      *
      * @param context the current test context.
      * @return list of SQL statements.
      */
     protected List<String> createStatementsFromFileResource(TestContext context, SqlUtils.LastScriptLineDecorator lineDecorator) {
-        return SqlUtils.createStatementsFromFileResource(resolveSqlResource(context), lineDecorator);
+        List<String> stmts = new ArrayList<>();
+        for (String resourcePath : sqlResourcePaths) {
+            stmts.addAll(SqlUtils.createStatementsFromFileResource(resolveSqlResource(context, resourcePath), lineDecorator));
+        }
+        return stmts;
     }
 
     /**
-     * Resolves the configured SQL resource path to a file resource, honoring resource prefixes
+     * Resolves all configured SQL statement sources to SQL statements, in declaration order.
+     * Inline statements are used as is, external file resources are read and split into
+     * statements and inline scripts are delegated to
+     * {@link #createStatementsFromScript(TestContext, String)}.
+     *
+     * @param context the current test context.
+     * @return list of SQL statements.
+     */
+    protected List<String> resolveStatements(TestContext context) {
+        return resolveStatements(context, null);
+    }
+
+    /**
+     * Resolves all configured SQL statement sources to SQL statements, in declaration order.
+     * Inline statements are used as is, external file resources are read and split into
+     * statements and inline scripts are delegated to
+     * {@link #createStatementsFromScript(TestContext, String)}.
+     *
+     * @param context the current test context.
+     * @param lineDecorator optional line decorator for last script lines of external file resources.
+     * @return list of SQL statements.
+     */
+    protected List<String> resolveStatements(TestContext context, SqlUtils.LastScriptLineDecorator lineDecorator) {
+        List<String> resolved = new ArrayList<>();
+        for (SqlStatementSource source : sqlStatementSources) {
+            switch (source) {
+                case SqlStatementSource.Statement statement -> resolved.add(statement.sql());
+                case SqlStatementSource.ResourcePath resourcePath -> resolved.addAll(
+                        SqlUtils.createStatementsFromFileResource(resolveSqlResource(context, resourcePath.path()), lineDecorator));
+                case SqlStatementSource.Script script -> resolved.addAll(createStatementsFromScript(context, script.script()));
+            }
+        }
+        return resolved;
+    }
+
+    /**
+     * Resolves an inline SQL script to SQL statements. Subclasses supporting inline scripts
+     * (such as the PL/SQL action) overwrite this method.
+     *
+     * @param context the current test context.
+     * @param script the inline SQL script.
+     * @return list of SQL statements.
+     */
+    protected List<String> createStatementsFromScript(TestContext context, String script) {
+        throw new CitrusRuntimeException("Inline SQL scripts are not supported by this test action");
+    }
+
+    /**
+     * Resolves the given SQL resource path to a file resource, honoring resource prefixes
      * such as "classpath:" and "file:" as well as plain file system paths.
      *
      * @param context the current test context.
+     * @param resourcePath the configured SQL resource path.
      * @return the resolved file resource.
      */
-    private Resource resolveSqlResource(TestContext context) {
-        return Resources.create(context.replaceDynamicContentInString(sqlResourcePath));
+    private Resource resolveSqlResource(TestContext context, String resourcePath) {
+        return Resources.create(context.replaceDynamicContentInString(resourcePath));
     }
 
     @Override
@@ -176,11 +238,27 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     }
 
     /**
+     * Gets all configured SQL file resource paths, in declaration order.
+     * @return the SQL file resource paths
+     */
+    public List<String> getSqlResourcePaths() {
+        return sqlResourcePaths;
+    }
+
+    /**
      * Gets the statements.
      * @return the statements
      */
     public List<String> getStatements() {
         return statements;
+    }
+
+    /**
+     * Gets all configured SQL statement sources, in declaration order.
+     * @return the SQL statement sources
+     */
+    public List<SqlStatementSource> getSqlStatementSources() {
+        return sqlStatementSources;
     }
 
     /**
@@ -236,7 +314,9 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         protected String dataSourceName;
 
         protected String sqlResourcePath;
+        protected final List<String> sqlResourcePaths = new ArrayList<>();
         protected final List<String> statements = new ArrayList<>();
+        protected final List<SqlStatementSource> sqlStatementSources = new ArrayList<>();
         protected PlatformTransactionManager transactionManager;
         protected String transactionTimeout = String.valueOf(TransactionDefinition.TIMEOUT_DEFAULT);
         protected String transactionIsolationLevel = "ISOLATION_DEFAULT";
@@ -303,14 +383,13 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
 
         @Override
         public S statements(List<String> statements) {
-            this.statements.addAll(statements);
+            statements.forEach(this::statement);
             return self;
         }
 
         @Override
         public S statement(String sql) {
-            this.statements.add(sql);
-            return self;
+            return sqlStatementSource(new SqlStatementSource.Statement(sql));
         }
 
         @Override
@@ -321,7 +400,32 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
 
         @Override
         public S sqlResource(String filePath) {
-            this.sqlResourcePath = filePath;
+            return sqlStatementSource(new SqlStatementSource.ResourcePath(filePath));
+        }
+
+        /**
+         * Adds a SQL statement source, keeping the order of declaration. Sources are either
+         * inline statements, inline scripts or paths to external script resources.
+         *
+         * @param source the SQL statement source to add.
+         * @return the builder.
+         */
+        public S sqlStatementSource(SqlStatementSource source) {
+            this.sqlStatementSources.add(source);
+
+            switch (source) {
+                case SqlStatementSource.Statement statement -> this.statements.add(statement.sql());
+                case SqlStatementSource.ResourcePath resourcePath -> {
+                    if (this.sqlResourcePath == null) {
+                        this.sqlResourcePath = resourcePath.path();
+                    }
+                    this.sqlResourcePaths.add(resourcePath.path());
+                }
+                case SqlStatementSource.Script ignored -> {
+                    // inline scripts do not have a representation on this level
+                }
+            }
+
             return self;
         }
 

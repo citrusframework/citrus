@@ -1,0 +1,3 @@
+--Test SQL statements 2
+DELETE * FROM ORDERS WHERE STATE='cancelled';
+DELETE * FROM CUSTOMERS WHERE ACTIVE=false;

@@ -25,6 +25,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
+import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -539,6 +541,28 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("${name}"), "Mickey Mouse");
         Assert.assertNotNull(context.getVariable("${height}"));
         Assert.assertEquals(context.getVariable("${height}"), "0,3");
+    }
+
+    @Test
+    public void testSQLStatementsWithChainedFileResources() {
+        String sql1 = "select ORDERTYPE, STATUS from orders where ID = 5";
+        String sql2 = "select NAME, HEIGHT\nfrom customers\nwhere ID=1";
+        String sql3 = "select NAME, HEIGHT from customers where ID=2";
+        String sql4 = "select ORDERTYPE, STATUS from orders where ID = 6";
+
+        reset(jdbcTemplate);
+
+        when(jdbcTemplate.queryForList(anyString())).thenReturn(Collections.emptyList());
+
+        executeSQLQueryAction.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-query-statements.sql");
+        executeSQLQueryAction.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-query-statements-2.sql");
+        executeSQLQueryAction.build().execute(context);
+
+        InOrder inOrder = Mockito.inOrder(jdbcTemplate);
+        inOrder.verify(jdbcTemplate).queryForList(sql1);
+        inOrder.verify(jdbcTemplate).queryForList(sql2);
+        inOrder.verify(jdbcTemplate).queryForList(sql3);
+        inOrder.verify(jdbcTemplate).queryForList(sql4);
     }
 
     @SuppressWarnings("unchecked")
