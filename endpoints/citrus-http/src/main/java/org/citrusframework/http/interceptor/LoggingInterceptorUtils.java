@@ -16,8 +16,11 @@
 
 package org.citrusframework.http.interceptor;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.stream.Stream;
 
 import org.citrusframework.message.MessagePayloadUtils;
@@ -32,16 +35,74 @@ class LoggingInterceptorUtils {
     }
 
     public static String getBodyContent(byte[] body, String contentType, String contentEncoding) {
+        if (body == null || body.length == 0) {
+            return "";
+        }
+
         if (isBinaryEncoding(contentEncoding)) {
-            return Arrays.toString(body);
+            return binaryContentSummary(body);
         }
 
+        Charset charset = getCharset(contentType);
         MessageType messageType = MessageType.mapToMessageType(contentType, contentEncoding);
-        if (messageType != null && MessageType.isBinary(messageType.name())) {
-            return Arrays.toString(body);
+
+        if (messageType != null) {
+            if (MessageType.isBinary(messageType.name())) {
+                return binaryContentSummary(body);
+            }
+
+            return MessagePayloadUtils.prettyPrint(new String(body, charset).trim());
         }
 
-        return MessagePayloadUtils.prettyPrint(new String(body, getCharset(contentType)).trim());
+        // the media type is unknown to Citrus, so the payload itself decides how it is rendered
+        if (!isTextContent(body, charset)) {
+            return binaryContentSummary(body);
+        }
+
+        return MessagePayloadUtils.prettyPrint(new String(body, charset).trim());
+    }
+
+    /**
+     * Creates a summary of a binary body holding the number of bytes only.
+     * @param body the binary payload
+     * @return the summary to write to the log
+     */
+    private static String binaryContentSummary(byte[] body) {
+        return "<binary " + body.length + " bytes>";
+    }
+
+    /**
+     * Checks if the given payload is readable text. The payload must decode without error in the given charset and
+     * must not contain control characters other than tab, line feed and carriage return.
+     * @param body the payload to check
+     * @param charset the charset used to decode the payload
+     * @return true if the payload can be written to the log as text
+     */
+    private static boolean isTextContent(byte[] body, Charset charset) {
+        String content;
+
+        try {
+            CharsetDecoder decoder = charset.newDecoder()
+                    .onMalformedInput(CodingErrorAction.REPORT)
+                    .onUnmappableCharacter(CodingErrorAction.REPORT);
+            content = decoder.decode(ByteBuffer.wrap(body)).toString();
+        } catch (CharacterCodingException e) {
+            return false;
+        }
+
+        for (int i = 0; i < content.length(); i++) {
+            char currentChar = content.charAt(i);
+
+            if (currentChar == '\t' || currentChar == '\n' || currentChar == '\r') {
+                continue;
+            }
+
+            if (Character.isISOControl(currentChar)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static Charset getCharset(String contentType) {
