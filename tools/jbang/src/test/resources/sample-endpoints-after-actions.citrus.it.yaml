@@ -1,0 +1,58 @@
+# modules: citrus-camel,citrus-testcontainers
+# deps: org.apache.camel:camel-aws2-s3:${camel.version}
+name: my-test
+variables:
+  - name: foo
+    value: bar
+  - name: id
+    value: citrus:randomNumber(4)
+actions:
+  - print:
+      message: Citrus rocks!
+  - send:
+      endpoint: http://localhost:8080/test
+      message:
+        body:
+          data: Howdy
+  - send:
+      endpoint: >-
+        camel:paho-mqtt5:${mqtt.topic}?brokerUrl=tcp://localhost:12883&amp;clientId=${mqtt.client.id}
+      message:
+        body:
+          data: Hi
+  - send:
+      endpoint: kafka:my-topic
+      message:
+        body:
+          data: Hello ${id}
+  - receive:
+      endpoint: "kafka:my-topic"
+      message:
+        body:
+          data: @ignore@ @isNumber()@
+  - camel:
+      jbang:
+        run:
+          integration:
+            file: "path/to/some/integration.yaml"
+  - camel:
+      infra:
+        run:
+          service: kafka
+          autoRemove: true
+  - camel:
+      infra:
+        run:
+          service: aws
+          implementation: sqs
+          fixedPort: true
+  - iterate:
+      condition: i < 10
+      actions:
+        - print:
+            message: ${i}
+endpoints:
+  - jms:
+      asynchronous:
+        name: foo
+        destination: my-queue
