@@ -92,7 +92,7 @@ public class MongoDbNoSqlProviderRegressionTest {
 
     @Test
     public void shouldMapServerSideTimeoutToTimeout() {
-        when(collection.insertMany(anyList())).thenThrow(new MongoExecutionTimeoutException("operation exceeded time limit"));
+        when(collection.insertMany(anyList())).thenThrow(new MongoExecutionTimeoutException(50, "operation exceeded time limit"));
 
         NoSqlException exception = expectThrows(NoSqlException.class,
                 () -> provider.execute(insertOperation("{}"), context()));
