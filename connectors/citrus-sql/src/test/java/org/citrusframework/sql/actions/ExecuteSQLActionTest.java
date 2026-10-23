@@ -129,7 +129,7 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         ExecuteSQLAction action = executeSQLActionBuilder.build();
 
         Assert.assertTrue(action.getSqlResourcePaths().isEmpty());
-        Assert.assertTrue(action.getSqlStatementSources().size() == 1);
+        Assert.assertEquals(action.getSqlStatementSources().size(), 1);
 
         reset(jdbcTemplate);
 
