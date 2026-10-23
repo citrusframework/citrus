@@ -23,6 +23,7 @@ import org.citrusframework.http.yaml.Http;
 import org.citrusframework.jbang.yaml.JBang;
 import org.citrusframework.jms.yaml.PurgeQueues;
 import org.citrusframework.knative.yaml.Knative;
+import org.citrusframework.nosql.yaml.NoSql;
 import org.citrusframework.kubernetes.yaml.Kubernetes;
 import org.citrusframework.graphql.yaml.GraphQl;
 import org.citrusframework.grpc.yaml.Grpc;
@@ -231,6 +232,10 @@ public class TestActions {
 
     @SchemaProperty(kind = GROUP, description = "Testcontainers test actions.", module = "citrus-testcontainers")
     public void setTestcontainers(Testcontainers builder) {
+    }
+
+    @SchemaProperty(kind = ACTION, description = "NoSQL database test actions.", module = "citrus-nosql")
+    public void setNosql(NoSql builder) {
     }
 
     @SchemaProperty(kind = ACTION, description = "SQL test actions.", module = "citrus-sql")

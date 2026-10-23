@@ -384,6 +384,16 @@
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
+        <artifactId>citrus-nosql</artifactId>
+        <version>5.2.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.citrusframework</groupId>
+        <artifactId>citrus-nosql-mongodb</artifactId>
+        <version>5.2.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-jbang-connector</artifactId>
         <version>5.2.0-SNAPSHOT</version>
       </dependency>
