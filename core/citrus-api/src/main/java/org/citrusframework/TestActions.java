@@ -27,6 +27,7 @@ import org.citrusframework.api.actions.jbang.JBangTestActions;
 import org.citrusframework.api.actions.jms.JmsTestActions;
 import org.citrusframework.api.actions.knative.KnativeTestActions;
 import org.citrusframework.api.actions.kubernetes.KubernetesTestActions;
+import org.citrusframework.api.actions.nosql.NoSqlTestActions;
 import org.citrusframework.api.actions.openapi.OpenApiTestActions;
 import org.citrusframework.api.actions.script.ScriptTestActions;
 import org.citrusframework.api.actions.selenium.SeleniumTestActions;
@@ -49,6 +50,7 @@ public interface TestActions extends
         JmsTestActions,
         KnativeTestActions,
         KubernetesTestActions,
+        NoSqlTestActions,
         OpenApiTestActions,
         ScriptTestActions,
         SeleniumTestActions,

@@ -7,6 +7,7 @@ and receiving messages the tester may access these actions in order to build a m
 include::actions-send.adoc[]
 include::actions-receive.adoc[]
 include::actions-database.adoc[]
+include::actions-nosql.adoc[]
 include::actions-sleep.adoc[]
 include::actions-delay.adoc[]
 include::actions-java.adoc[]

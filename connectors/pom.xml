@@ -22,6 +22,8 @@
     <module>citrus-selenium</module>
     <module>citrus-playwright</module>
     <module>citrus-sql</module>
+    <module>citrus-nosql</module>
+    <module>citrus-nosql-mongodb</module>
     <module>citrus-jbang-connector</module>
     <module>citrus-agent-connector</module>
     <module>citrus-testcontainers</module>

@@ -53,6 +53,8 @@
         <include>org.citrusframework:citrus-knative</include>
         <include>org.citrusframework:citrus-testcontainers</include>
         <include>org.citrusframework:citrus-sql</include>
+        <include>org.citrusframework:citrus-nosql</include>
+        <include>org.citrusframework:citrus-nosql-mongodb</include>
         <include>org.citrusframework:citrus-jbang-connector</include>
 
         <include>org.citrusframework:citrus-restdocs</include>
@@ -334,6 +336,20 @@
     </fileSet>
     <fileSet>
       <directory>connectors/citrus-testcontainers/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>connectors/citrus-nosql/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>connectors/citrus-nosql-mongodb/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

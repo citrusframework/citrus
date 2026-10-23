@@ -15558,6 +15558,130 @@
       ],
       "additionalProperties": false    }
   },
+  "nosql": {
+    "kind": "testAction",
+    "version": "5.2.0-SNAPSHOT",
+    "name": "nosql",
+    "module": "citrus-nosql",
+    "title": "Nosql",
+    "description": "NoSQL database test actions.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "client": {
+          "type": "string",
+          "title": "Client",
+          "description": "Name of the NoSQL database configuration."
+        },
+        "command": {
+          "type": "string",
+          "title": "Command",
+          "description": "Native provider command, required for the native operation."
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "extract": {
+          "title": "Extract",
+          "description": "Result extraction entries.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "title": "Path",
+                "description": "JSON path evaluated against the canonical result model."
+              },
+              "variable": {
+                "type": "string",
+                "title": "Variable",
+                "description": "Test variable that receives the extracted value."
+              }
+            },
+            "required": [
+              "path",
+              "variable"
+            ],
+            "additionalProperties": false,
+            "title": "Extract",
+            "description": "Result extraction entries."
+          }
+        },
+        "filter": {
+          "type": "string",
+          "title": "Filter",
+          "description": "Query filter or delete selection in provider JSON syntax."
+        },
+        "maxResults": {
+          "type": "integer",
+          "title": "MaxResults",
+          "description": "Maximum number of documents to read."
+        },
+        "operation": {
+          "type": "string",
+          "title": "Operation",
+          "description": "Operation to execute: query, insert, update, delete or native."
+        },
+        "payload": {
+          "type": "string",
+          "title": "Payload",
+          "description": "Write payload or native command payload in provider JSON syntax."
+        },
+        "retryAttempts": {
+          "type": "integer",
+          "title": "RetryAttempts",
+          "description": "Maximum read attempts. Writes are never retried."
+        },
+        "retryInterval": {
+          "type": "string",
+          "title": "RetryInterval",
+          "description": "Retry interval as ISO-8601 duration or milliseconds."
+        },
+        "target": {
+          "type": "string",
+          "title": "Target",
+          "description": "Target collection, table or equivalent database object."
+        },
+        "validate": {
+          "title": "Validate",
+          "description": "Result validation entries.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "title": "Path",
+                "description": "JSON path evaluated against the canonical result model."
+              },
+              "value": {
+                "type": "string",
+                "title": "Value",
+                "description": "Expected value or validation matcher expression."
+              }
+            },
+            "required": [
+              "path",
+              "value"
+            ],
+            "additionalProperties": false,
+            "title": "Validate",
+            "description": "Result validation entries."
+          }
+        }
+      },
+      "required": [
+        "client",
+        "operation",
+        "target"
+      ],
+      "additionalProperties": false    }
+  },
   "openapi": {
     "kind": "testActionGroup",
     "version": "${citrus.version}",

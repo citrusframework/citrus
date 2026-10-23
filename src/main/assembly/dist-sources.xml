@@ -278,6 +278,20 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>connectors/citrus-nosql/target</directory>
+      <outputDirectory/>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>connectors/citrus-nosql-mongodb/target</directory>
+      <outputDirectory/>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>connectors/citrus-sql/target</directory>
       <outputDirectory/>
       <includes>

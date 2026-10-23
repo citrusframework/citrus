@@ -57,6 +57,8 @@
         <include>org.citrusframework:citrus-knative</include>
         <include>org.citrusframework:citrus-testcontainers</include>
         <include>org.citrusframework:citrus-sql</include>
+        <include>org.citrusframework:citrus-nosql</include>
+        <include>org.citrusframework:citrus-nosql-mongodb</include>
         <include>org.citrusframework:citrus-jbang-connector</include>
 
         <include>org.citrusframework:citrus-restdocs</include>
