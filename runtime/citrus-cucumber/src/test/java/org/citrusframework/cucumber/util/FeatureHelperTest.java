@@ -44,6 +44,6 @@ public class FeatureHelperTest {
         Assertions.assertEquals("", FeatureHelper.extractFeaturePackage((URI) null));
         Assertions.assertEquals("", FeatureHelper.extractFeaturePackage(URI.create("foo.feature")));
         Assertions.assertEquals("", FeatureHelper.extractFeaturePackage(URI.create("/foo.feature")));
-        Assertions.assertEquals("org.citrusframework.cucumber/steps.foo", FeatureHelper.extractFeaturePackage(URI.create("classpath:org/citrusframework/cucumber/steps/foo/foo.feature")));
+        Assertions.assertEquals("org.citrusframework.cucumber.steps.foo", FeatureHelper.extractFeaturePackage(URI.create("classpath:org/citrusframework/cucumber/steps/foo/foo.feature")));
     }
 }

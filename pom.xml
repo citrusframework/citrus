@@ -303,6 +303,7 @@
     <system-stubs.version>2.1.8</system-stubs.version>
     <testcontainers.version>2.0.5</testcontainers.version>
     <testng.version>7.12.0</testng.version>
+    <testng.engine.version>1.1.0</testng.engine.version>
     <!-- bound to https://mvnrepository.com/artifact/io.fabric8/kubernetes-httpclient-vertx/${k8s.client.version} -->
     <vertx.version>4.5.35</vertx.version>
     <wire.version>7.1.0</wire.version>
@@ -620,6 +621,12 @@
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
         <version>${testng.version}</version>
+      </dependency>
+      <dependency>
+        <!-- Required to run TestNG tests with the JUnit Platform provider -->
+        <groupId>org.junit.support</groupId>
+        <artifactId>testng-engine</artifactId>
+        <version>${testng.engine.version}</version>
       </dependency>
       <dependency>
         <!-- Required for the core module as the vintage engine does not provide a Junit4 compile scope -->
