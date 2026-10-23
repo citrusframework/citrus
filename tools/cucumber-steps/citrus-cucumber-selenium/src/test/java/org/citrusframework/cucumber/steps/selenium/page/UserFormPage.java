@@ -20,7 +20,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.model.PageValidator;
 import org.citrusframework.selenium.model.WebPage;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.springframework.util.StringUtils;
@@ -52,8 +52,8 @@ public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
 
     @Override
     public void validate(UserFormPage webPage, SeleniumBrowser browser, TestContext context) {
-        Assert.assertNotNull(userName);
-        Assert.assertTrue(StringUtils.hasText(userName.getAttribute("value")));
-        Assert.assertNotNull(form);
+        Assertions.assertNotNull(userName);
+        Assertions.assertTrue(StringUtils.hasText(userName.getAttribute("value")));
+        Assertions.assertNotNull(form);
     }
 }
