@@ -47,7 +47,7 @@
     </dependency>
     <dependency>
       <groupId>com.atlassian.oai</groupId>
-      <artifactId>swagger-request-validator-core</artifactId>
+      <artifactId>openapi-request-validator-core</artifactId>
     </dependency>
 
     <!--

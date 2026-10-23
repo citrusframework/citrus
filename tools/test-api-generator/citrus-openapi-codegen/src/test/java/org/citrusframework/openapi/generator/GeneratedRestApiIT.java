@@ -596,7 +596,7 @@ class GeneratedRestApiIT {
                             .isInstanceOf(TestCaseFailedException.class)
                             .hasCauseInstanceOf(ValidationException.class)
                             .hasMessageContaining(
-                                "ERROR - Instance type (string) does not match any allowed primitive type (allowed: [\"integer\"]): []");
+                                "ERROR - string found, integer expected: []");
                     }
 
                     @Test
@@ -2361,7 +2361,7 @@ class GeneratedRestApiIT {
                     OK);
                 assertThatThrownBy(() -> runner.when(getPetByIdResponseActionBuilder)).isInstanceOf(
                         TestCaseFailedException.class)
-                    .hasMessageContaining("Object has missing required properties ([\"name\"]): []")
+                    .hasMessageContaining("ERROR - required property 'name' not found: []")
                     .hasCauseInstanceOf(ValidationException.class);
             }
         }
