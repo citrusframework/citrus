@@ -22,8 +22,11 @@ import org.citrusframework.TestResult;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.container.Iterate;
 import org.citrusframework.container.Sequence;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -512,6 +515,95 @@ public class TestFlowReporterTest {
     }
 
     @Test
+    public void shouldGetJsonReportWithFinallyActions() {
+        TestFlowReporter reporter = new TestFlowReporter();
+        TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
+        metaInfo.setAuthor("theAuthor");
+        metaInfo.setStatus(TestCaseMetaInfo.Status.FINAL);
+
+        TestResults results = new TestResults();
+        TestResult result = TestResult.success("fooTest", "FooTest");
+        result.withDuration(Duration.ofSeconds(2));
+        results.addResult(result);
+        reset(test);
+
+        when(test.getName()).thenReturn("fooTest");
+        when(test.getMetaInfo()).thenReturn(metaInfo);
+        when(test.getTestResult()).thenReturn(result);
+        when(test.getActionIndex(echo)).thenReturn(0);
+
+        reporter.onTestStart(test);
+
+        reporter.onTestActionStart(test, echo);
+        reporter.onTestActionFinish(test, echo);
+
+        reporter.onFinalActionsStart(test);
+
+        reporter.onTestActionStart(test, send);
+        reporter.onTestActionFinish(test, send);
+
+        reporter.onTestActionStart(test, receive);
+        reporter.onTestActionFailed(test, receive, new CitrusRuntimeException("Failed to stop container"));
+
+        reporter.onFinalActionsEnd(test);
+
+        reporter.onTestSuccess(test);
+
+        reporter.generate(results);
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
+        [
+          {
+            "name": "fooTest",
+            "result": {
+              "name": "fooTest",
+              "className": "FooTest",
+              "result": "SUCCESS",
+              "duration": 2000
+            },
+            "actions": [
+              {
+                "name": "echo",
+                "path": "actions.0.echo"
+              }
+            ],
+            "finally": [
+              {
+                "name": "send",
+                "path": "finally.0.send"
+              },
+              {
+                "name": "receive",
+                "path": "finally.1.receive",
+                "error": "Failed to stop container"
+              }
+            ]
+          }
+        ]""");
+    }
+
+    @Test
+    public void shouldGetJsonReportWithFinalActionsInDefaultTestCase() {
+        TestFlowReporter reporter = new TestFlowReporter();
+        TestContext context = TestContextFactory.newInstance().getObject();
+        context.getTestListeners().addTestListener(reporter);
+        context.getTestActionListeners().addTestActionListener(reporter);
+
+        DefaultTestCase testCase = new DefaultTestCase();
+        testCase.setName("fooTest");
+        testCase.addTestAction(new EchoAction.Builder().build());
+        testCase.addFinalAction(new EchoAction.Builder().build());
+
+        testCase.execute(context);
+        testCase.finish(context);
+
+        assertThat(reporter.getJsonReport())
+                .contains("\"path\": \"actions.0.echo\"")
+                .contains("\"finally\": [")
+                .contains("\"path\": \"finally.0.echo\"")
+                .doesNotContain("-1");
+    }
+
+    @Test
     public void shouldGetJsonReportWithMessages() {
         SendMessageAction sendMock = Mockito.mock(SendMessageAction.class);
         ReceiveMessageAction receiveMock = Mockito.mock(ReceiveMessageAction.class);
@@ -964,6 +1056,62 @@ public class TestFlowReporterTest {
             path: "actions.2.receive"
             error: |
               Something went completely wrong
+        """);
+    }
+
+    @Test
+    public void shouldGetYamlReportWithFinallyActions() {
+        TestFlowReporter reporter = new TestFlowReporter();
+        TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
+        metaInfo.setAuthor("theAuthor");
+        metaInfo.setStatus(TestCaseMetaInfo.Status.FINAL);
+
+        TestResults results = new TestResults();
+        TestResult result = TestResult.success("fooTest", "FooTest");
+        result.withDuration(Duration.ofSeconds(2));
+        results.addResult(result);
+        reset(test);
+
+        when(test.getName()).thenReturn("fooTest");
+        when(test.getMetaInfo()).thenReturn(metaInfo);
+        when(test.getTestResult()).thenReturn(result);
+        when(test.getActionIndex(echo)).thenReturn(0);
+
+        reporter.onTestStart(test);
+
+        reporter.onTestActionStart(test, echo);
+        reporter.onTestActionFinish(test, echo);
+
+        reporter.onFinalActionsStart(test);
+
+        reporter.onTestActionStart(test, send);
+        reporter.onTestActionFinish(test, send);
+
+        reporter.onTestActionStart(test, receive);
+        reporter.onTestActionFailed(test, receive, new CitrusRuntimeException("Failed to stop container"));
+
+        reporter.onFinalActionsEnd(test);
+
+        reporter.onTestSuccess(test);
+
+        reporter.generate(results);
+        Assert.assertEquals(reporter.getYamlReport(), """
+        - name: "fooTest"
+          result:
+            name: "fooTest"
+            className: "FooTest"
+            result: "SUCCESS"
+            duration: 2000
+          actions:
+          - name: "echo"
+            path: "actions.0.echo"
+          finally:
+          - name: "send"
+            path: "finally.0.send"
+          - name: "receive"
+            path: "finally.1.receive"
+            error: |
+              Failed to stop container
         """);
     }
 
