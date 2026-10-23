@@ -1,0 +1,302 @@
+[[actions-nosql]]
+== NoSQL
+
+Citrus can query and modify NoSQL databases during a test. The NoSQL support has a generic core and
+a provider per database. The MongoDB provider is included in this repository.
+
+IMPORTANT: The NoSQL test actions live in separate modules.
+Add the core module for the action and one provider module for the database you use.
+
+.NoSQL dependency modules
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-nosql</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-nosql-mongodb</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+The core module has no database driver dependency. The MongoDB driver stays inside
+`citrus-nosql-mongodb`.
+
+[[nosql-configuration]]
+=== Named database configuration
+
+Every action refers to a named configuration. The configuration owns the provider id, the database
+name and the managed client. Credentials stay in the configuration, never in the action payload.
+
+Actions choose the configuration with `client("ordersDatabase")`.
+
+[[nosql-configuration-spring]]
+==== Spring bean
+
+When Citrus runs with Spring, declare the client and the configuration as beans. Citrus resolves the
+bean by name, so no manual binding is needed. The client is created once and closed with the
+application context.
+
+[source,java,indent=0]
+----
+@Configuration
+class NoSqlConfiguration {
+
+    @Bean(destroyMethod = "close")
+    MongoClient mongoClient() {
+        return MongoClients.create(connectionString);
+    }
+
+    @Bean
+    NoSqlDatabaseConfiguration ordersDatabase(MongoClient mongoClient) {
+        return MongoDbConfigurations.create("ordersDatabase", mongoClient, "orders");
+    }
+}
+----
+
+[[nosql-configuration-bind]]
+==== Registry configuration class
+
+Without Spring, put the configuration in a class with `@BindToRegistry` methods. Citrus parses the
+class once and binds every returned component under its method name.
+
+[source,java,indent=0]
+----
+public class NoSqlConfiguration {
+
+    @BindToRegistry
+    public NoSqlDatabaseConfiguration ordersDatabase() {
+        return MongoDbConfigurations.create("ordersDatabase", mongoClient(), "orders");
+    }
+}
+----
+
+Activate the class with the `citrus.java.config` system property or the `CITRUS_JAVA_CONFIG`
+environment variable:
+
+[source,properties]
+----
+citrus.java.config=com.example.NoSqlConfiguration
+----
+
+The configuration closes an `AutoCloseable` client when the Citrus context shuts down. Forgetting
+`@AfterAll` therefore does not leak the client.
+
+[[nosql-configuration-manual]]
+==== Manual binding
+
+A test can also bind the configuration directly:
+
+[source,java,indent=0]
+----
+@CitrusResource
+TestContext context;
+
+@BeforeEach
+void setUp() {
+    NoSqlDatabaseConfigurations.register(context,
+        MongoDbConfigurations.create("ordersDatabase", mongoClient, "orders"));
+}
+----
+
+`register` binds the configuration under its own name, so the string appears only once.
+Create the `MongoClient` once for the suite. Do not create a new client for every test method.
+The bound configuration closes the client when the Citrus context is destroyed, so a forgotten
+manual close is safe.
+Several configurations can share one collection binding:
+
+[source,java,indent=0]
+----
+context.getReferenceResolver().bind("nosqlDatabases",
+    NoSqlDatabaseConfigurations.of(ordersDatabase, customersDatabase));
+----
+
+[[nosql-query]]
+=== Query
+
+A query returns the matching documents in provider order. The result is bounded by `maxResults`.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+runner.when(nosql()
+    .client("ordersDatabase")
+    .query()
+    .target("orders")
+    .filter("{ \"orderId\": \"${orderId}\" }")
+    .maxResults(10)
+    .validate("$.documents[0].status", "COMPLETED")
+    .extract("$.documents[0].customerId", "customerId"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<nosql client="ordersDatabase" operation="query" target="orders" max-results="10">
+    <filter>{ "orderId": "${orderId}" }</filter>
+    <validate path="$.documents[0].status" value="COMPLETED"/>
+    <extract path="$.documents[0].customerId" variable="customerId"/>
+</nosql>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+- nosql:
+    client: ordersDatabase
+    operation: query
+    target: orders
+    maxResults: 10
+    filter: '{ "orderId": "${orderId}" }'
+    validate:
+      - path: "$.documents[0].status"
+        value: COMPLETED
+    extract:
+      - path: "$.documents[0].customerId"
+        variable: customerId
+----
+
+[[nosql-write]]
+=== Insert, update and delete
+
+Writes report only the counters the provider knows. A counter that the provider does not report is
+absent, never zero.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+runner.when(nosql()
+    .client("ordersDatabase")
+    .insert()
+    .target("orders")
+    .payload("{ \"orderId\": \"1001\", \"status\": \"NEW\" }"));
+
+runner.when(nosql()
+    .client("ordersDatabase")
+    .update()
+    .target("orders")
+    .payload("{ \"filter\": { \"orderId\": \"1001\" }, " +
+             "\"update\": { \"$set\": { \"status\": \"COMPLETED\" } } }"));
+
+runner.when(nosql()
+    .client("ordersDatabase")
+    .delete()
+    .target("orders")
+    .payload("{ \"status\": \"CANCELLED\" }"));
+----
+
+The MongoDB update payload has this form:
+
+[source,json]
+----
+{
+  "filter": { "orderId": "1001" },
+  "update": { "$set": { "status": "COMPLETED" } },
+  "multi": false,
+  "upsert": false
+}
+----
+
+[[nosql-native]]
+=== Native commands
+
+The generic operations do not cover every database feature. A provider can expose native commands
+with a `provider.command` name. The provider declares the commands it accepts, and Citrus rejects
+every other command before the client is called.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+runner.when(nosql()
+    .client("ordersDatabase")
+    .nativeOperation("mongodb.aggregate")
+    .target("orders")
+    .payload("""
+        [{ "$group": { "_id": "$status", "total": { "$sum": 1 } } }]
+        """));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<nosql client="ordersDatabase" operation="native" command="mongodb.aggregate" target="orders">
+    <payload>[{ "$group": { "_id": "$status", "total": { "$sum": 1 } } }]</payload>
+</nosql>
+----
+
+[[nosql-result-paths]]
+=== Result validation and extraction
+
+Validation and extraction use JSONPath over the canonical result, not over a provider payload.
+
+|===
+|Result type |Paths
+
+|Query
+|`$.documents`, `$.documents[0].field`, `$.totalCount` (only when the provider reports it)
+
+|Write
+|`$.matched`, `$.modified`, `$.inserted`, `$.deleted`, `$.generatedIds`
+
+|Scalar
+|`$.value`
+
+|Native
+|`$.providerId`, `$.value`, `$.metadata.<key>`
+|===
+
+A path that does not exist fails the action. A field that exists with a `null` value matches the
+expected text `null`. Validation matchers such as `@startsWith('COMP')@` are supported.
+
+MongoDB `ObjectId` and `Decimal128` are explicit provider values. Their rendered form is the hex
+string and the decimal text. A native result wraps provider documents in `$.value`.
+
+[[nosql-errors]]
+=== Errors and retries
+
+|===
+|Error class |Meaning
+
+|`CONFIGURATION`
+|Unknown configuration or provider, missing provider client, invalid database name
+
+|`UNSUPPORTED_OPERATION`
+|Provider does not support the operation kind or the native command
+
+|`INVALID_PAYLOAD`
+|Malformed or missing payload
+
+|`CONNECTION`
+|Database connection failed
+
+|`TIMEOUT`
+|Operation timed out; a write timeout reports an unknown write outcome
+
+|`EXECUTION`
+|Provider rejected the operation
+
+|`VALIDATION`
+|Validation path missing or value mismatch
+
+|`EXTRACTION`
+|Extraction path missing
+|===
+
+Writes are never retried implicitly. Read operations can opt in to a retry policy:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+runner.when(nosql()
+    .client("ordersDatabase")
+    .query()
+    .target("orders")
+    .filter("{}")
+    .retry(3, Duration.ofMillis(500)));
+----
+
+Credentials never appear in action payloads or logs. A configuration prints only its name, provider
+and database.
