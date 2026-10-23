@@ -18,6 +18,7 @@ package org.citrusframework.jbang.cli.util;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.citrusframework.spi.Resources;
@@ -53,23 +54,25 @@ public class YamlCodeAnalyzerTest {
         Assert.assertEquals(foundDeps[2], "org.apache.camel:camel-test-infra-aws-v2:" + CAMEL_VERSION_DEFAULT);
         Assert.assertEquals(foundDeps[3], "org.apache.camel:camel-test-infra-kafka:" + CAMEL_VERSION_DEFAULT);
 
-        Assert.assertEquals(scanResult.actions().length, 5L);
+        Assert.assertEquals(scanResult.actions().length, 6L);
         String[] foundActions = Arrays.stream(scanResult.actions()).sorted().toArray(String[]::new);
         Assert.assertEquals(foundActions[0], "camel-cli-run");
         Assert.assertEquals(foundActions[1], "camel-infra-run");
-        Assert.assertEquals(foundActions[2], "print");
-        Assert.assertEquals(foundActions[3], "receive");
-        Assert.assertEquals(foundActions[4], "send");
+        Assert.assertEquals(foundActions[2], "createEndpoint");
+        Assert.assertEquals(foundActions[3], "print");
+        Assert.assertEquals(foundActions[4], "receive");
+        Assert.assertEquals(foundActions[5], "send");
 
         Assert.assertEquals(scanResult.containers().length, 1L);
         Assert.assertEquals(scanResult.containers()[0], "iterate");
 
-        Assert.assertEquals(scanResult.endpoints().length, 4L);
+        Assert.assertEquals(scanResult.endpoints().length, 5L);
         String[] foundEndpoints = Arrays.stream(scanResult.endpoints()).sorted().toArray(String[]::new);
         Assert.assertEquals(foundEndpoints[0], "camel");
-        Assert.assertEquals(foundEndpoints[1], "http");
-        Assert.assertEquals(foundEndpoints[2], "jms");
-        Assert.assertEquals(foundEndpoints[3], "kafka");
+        Assert.assertEquals(foundEndpoints[1], "direct");
+        Assert.assertEquals(foundEndpoints[2], "http");
+        Assert.assertEquals(foundEndpoints[3], "jms");
+        Assert.assertEquals(foundEndpoints[4], "kafka");
 
         Assert.assertEquals(scanResult.functions().length, 1L);
         Assert.assertEquals(scanResult.functions()[0], "citrus:randomNumber");
@@ -125,6 +128,60 @@ public class YamlCodeAnalyzerTest {
 
         Set<String> components = analyzer.extractCamelEndpointComponents(code);
         Assert.assertTrue(components.contains("direct"));
+    }
+
+    @Test
+    public void shouldDetectEndpointFromCreateEndpointWithTypedKey() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                actions:
+                  - createEndpoint:
+                      kafka:
+                        asynchronous:
+                          name: myKafkaEndpoint
+                          topic: my-topic
+                """;
+
+        Set<String> modules = new HashSet<>();
+        Set<String> endpoints = analyzer.scanEndpoints(code, modules);
+        Assert.assertTrue(endpoints.contains("kafka"));
+        Assert.assertTrue(modules.contains("citrus-kafka"));
+    }
+
+    @Test
+    public void shouldDetectEndpointFromCreateEndpointWithTypeAttribute() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                actions:
+                  - createEndpoint:
+                      type: "http"
+                      properties:
+                        requestUrl: "http://localhost:8080"
+                """;
+
+        Set<String> modules = new HashSet<>();
+        Set<String> endpoints = analyzer.scanEndpoints(code, modules);
+        Assert.assertTrue(endpoints.contains("http"));
+        Assert.assertTrue(modules.contains("citrus-http"));
+    }
+
+    @Test
+    public void shouldDetectEndpointFromCreateEndpointWithUri() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                actions:
+                  - createEndpoint:
+                      name: myJmsEndpoint
+                      uri: "jms:my-queue"
+                """;
+
+        Set<String> modules = new HashSet<>();
+        Set<String> endpoints = analyzer.scanEndpoints(code, modules);
+        Assert.assertTrue(endpoints.contains("jms"));
+        Assert.assertTrue(modules.contains("citrus-jms"));
     }
 
     @Test

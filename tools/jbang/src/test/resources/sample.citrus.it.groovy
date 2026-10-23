@@ -70,6 +70,10 @@ actions {
       .implementation("sqs")
       .fixedPort(true))
 
+    $(createEndpoint().type("direct")
+            .endpointName("myDirectEndpoint")
+            .property("queueName", "test-queue"))
+
     $(iterate()
       .condition("i < 10")
       .actions(

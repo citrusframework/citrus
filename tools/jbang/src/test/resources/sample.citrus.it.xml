@@ -85,6 +85,11 @@
         <run service="aws" implementation="sqs" fixed-port="true"/>
       </infra>
     </camel>
+    <create-endpoint name="myDirectEndpoint">
+      <direct>
+        <asynchronous queue="test-queue"/>
+      </direct>
+    </create-endpoint>
     <iterate condition="i &lt; 10">
       <actions>
         <print>
