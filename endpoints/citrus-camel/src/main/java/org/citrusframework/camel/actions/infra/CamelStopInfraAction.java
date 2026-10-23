@@ -41,7 +41,7 @@ public class CamelStopInfraAction extends AbstractCamelAction {
     private final String implementation;
 
     protected CamelStopInfraAction(Builder builder) {
-        super("stop-infra", builder);
+        super("infra:stop", builder);
 
         this.instance = builder.instance;
         this.serviceName = builder.serviceName;
