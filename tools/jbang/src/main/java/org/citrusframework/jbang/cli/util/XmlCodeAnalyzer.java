@@ -35,6 +35,10 @@ public class XmlCodeAnalyzer implements CodeAnalyzer {
 
     private static final Pattern CAMEL_INFRA_SERVICE_PATTERN = Pattern.compile("<run\\s*service=\"([a-zA-Z][a-zA-Z0-9._-]*)\"", Pattern.MULTILINE);
 
+    private static final Pattern CREATE_ENDPOINT_TYPE_PATTERN = Pattern.compile("<create-endpoint[^>]*\\stype=\"([a-zA-Z][a-zA-Z0-9]*)\"");
+    private static final Pattern CREATE_ENDPOINT_URI_PATTERN = Pattern.compile("<create-endpoint[^>]*\\suri=\"([a-zA-Z][a-zA-Z0-9]*):");
+    private static final Pattern CREATE_ENDPOINT_CHILD_PATTERN = Pattern.compile("<create-endpoint[^>]*>\\s*<([a-zA-Z][a-zA-Z0-9]*)[ >]", Pattern.DOTALL);
+
     @Override
     public Set<String> scanModules(String code) {
         Set<String> items = new HashSet<>();
@@ -203,6 +207,41 @@ public class XmlCodeAnalyzer implements CodeAnalyzer {
             }
         }
 
+        scanCreateEndpointActions(code, components, items, modules);
+
         return items;
+    }
+
+    private void scanCreateEndpointActions(String code, Map<String, ComponentDefinition> components,
+                                           Set<String> items, Set<String> modules) {
+        if (!code.contains("<create-endpoint")) {
+            return;
+        }
+
+        Set<String> endpointGroups = resolveEndpointGroups(components);
+
+        Matcher typeMatcher = CREATE_ENDPOINT_TYPE_PATTERN.matcher(code);
+        while (typeMatcher.find()) {
+            String type = typeMatcher.group(1);
+            if (endpointGroups.contains(type)) {
+                addEndpointModule(type, components, items, modules);
+            }
+        }
+
+        Matcher uriMatcher = CREATE_ENDPOINT_URI_PATTERN.matcher(code);
+        while (uriMatcher.find()) {
+            String uriPrefix = uriMatcher.group(1);
+            if (endpointGroups.contains(uriPrefix)) {
+                addEndpointModule(uriPrefix, components, items, modules);
+            }
+        }
+
+        Matcher childMatcher = CREATE_ENDPOINT_CHILD_PATTERN.matcher(code);
+        while (childMatcher.find()) {
+            String childElement = childMatcher.group(1);
+            if (endpointGroups.contains(childElement)) {
+                addEndpointModule(childElement, components, items, modules);
+            }
+        }
     }
 }

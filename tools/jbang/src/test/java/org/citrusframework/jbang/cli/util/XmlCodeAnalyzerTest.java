@@ -18,6 +18,8 @@ package org.citrusframework.jbang.cli.util;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.citrusframework.spi.Resources;
 import org.testng.Assert;
@@ -62,12 +64,13 @@ public class XmlCodeAnalyzerTest {
         Assert.assertEquals(scanResult.containers().length, 1L);
         Assert.assertEquals(scanResult.containers()[0], "iterate");
 
-        Assert.assertEquals(scanResult.endpoints().length, 4L);
+        Assert.assertEquals(scanResult.endpoints().length, 5L);
         String[] foundEndpoints = Arrays.stream(scanResult.endpoints()).sorted().toArray(String[]::new);
         Assert.assertEquals(foundEndpoints[0], "camel");
-        Assert.assertEquals(foundEndpoints[1], "http");
-        Assert.assertEquals(foundEndpoints[2], "jms");
-        Assert.assertEquals(foundEndpoints[3], "kafka");
+        Assert.assertEquals(foundEndpoints[1], "direct");
+        Assert.assertEquals(foundEndpoints[2], "http");
+        Assert.assertEquals(foundEndpoints[3], "jms");
+        Assert.assertEquals(foundEndpoints[4], "kafka");
 
         Assert.assertEquals(scanResult.functions().length, 1L);
         Assert.assertEquals(scanResult.functions()[0], "citrus:randomNumber");
@@ -76,6 +79,62 @@ public class XmlCodeAnalyzerTest {
         String[] foundValidationMatcher = Arrays.stream(scanResult.validationMatcher()).sorted().toArray(String[]::new);
         Assert.assertEquals(foundValidationMatcher[0], "ignore");
         Assert.assertEquals(foundValidationMatcher[1], "isNumber");
+    }
+
+    @Test
+    public void shouldDetectEndpointFromCreateEndpointWithTypeAttribute() {
+        XmlCodeAnalyzer analyzer = new XmlCodeAnalyzer();
+
+        String code = """
+                <actions>
+                  <create-endpoint type="kafka" auto-close="true">
+                    <properties>
+                      <property name="topic" value="my-topic"/>
+                    </properties>
+                  </create-endpoint>
+                </actions>
+                """;
+
+        Set<String> modules = new HashSet<>();
+        Set<String> endpoints = analyzer.scanEndpoints(code, modules);
+        Assert.assertTrue(endpoints.contains("kafka"));
+        Assert.assertTrue(modules.contains("citrus-kafka"));
+    }
+
+    @Test
+    public void shouldDetectEndpointFromCreateEndpointWithChildElement() {
+        XmlCodeAnalyzer analyzer = new XmlCodeAnalyzer();
+
+        String code = """
+                <actions>
+                  <create-endpoint name="myHttpEndpoint">
+                    <http>
+                      <client requestUrl="http://localhost:8080"/>
+                    </http>
+                  </create-endpoint>
+                </actions>
+                """;
+
+        Set<String> modules = new HashSet<>();
+        Set<String> endpoints = analyzer.scanEndpoints(code, modules);
+        Assert.assertTrue(endpoints.contains("http"));
+        Assert.assertTrue(modules.contains("citrus-http"));
+    }
+
+    @Test
+    public void shouldDetectEndpointFromCreateEndpointWithUri() {
+        XmlCodeAnalyzer analyzer = new XmlCodeAnalyzer();
+
+        String code = """
+                <actions>
+                  <create-endpoint name="myJmsEndpoint" uri="jms:my-queue"/>
+                </actions>
+                """;
+
+        Set<String> modules = new HashSet<>();
+        Set<String> endpoints = analyzer.scanEndpoints(code, modules);
+        Assert.assertTrue(endpoints.contains("jms"));
+        Assert.assertTrue(modules.contains("citrus-jms"));
     }
 
 }

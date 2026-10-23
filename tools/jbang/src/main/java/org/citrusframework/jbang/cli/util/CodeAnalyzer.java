@@ -225,6 +225,29 @@ public interface CodeAnalyzer {
         return dependencies;
     }
 
+    default Set<String> resolveEndpointGroups(Map<String, ComponentDefinition> components) {
+        Set<String> groups = new HashSet<>();
+        for (ComponentDefinition component : components.values()) {
+            String group = Optional.ofNullable(component.group()).orElse(component.name());
+            if (group != null) {
+                groups.add(group);
+            }
+        }
+        return groups;
+    }
+
+    default void addEndpointModule(String group, Map<String, ComponentDefinition> components,
+                                   Set<String> items, Set<String> modules) {
+        items.add(group);
+        for (ComponentDefinition component : components.values()) {
+            String componentGroup = Optional.ofNullable(component.group()).orElse(component.name());
+            if (group.equals(componentGroup) && StringUtils.hasText(component.module())) {
+                modules.add(component.module());
+                break;
+            }
+        }
+    }
+
     default String resolveName(String name, String group, Map<String, ComponentDefinition> components) {
         if (group == null) {
             return name;
