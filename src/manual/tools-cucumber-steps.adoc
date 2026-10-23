@@ -15,18 +15,19 @@ IMPORTANT: If you want to use the predefined Citrus step implementations, please
 .MyFeatureIT.java
 [source,java]
 ----
-@RunWith(Cucumber.class)
-@CucumberOptions(
-    extraGlue = { "org.citrusframework.cucumber" },
-    plugin = { "pretty", "org.citrusframework.cucumber.CitrusReporter" } )
+@Suite
+@IncludeEngines("cucumber")
+@SelectPackages("com.example")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example,org.citrusframework.cucumber")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
 public class MyFeatureIT {
 
 }
 ----
 
-As an alternative you may declare the glue package in `cucumber.properties` in your project.
+As an alternative you may declare the glue package in `junit-platform.properties` in your project.
 
-.cucumber.properties
+.junit-platform.properties
 [source,properties]
 ----
 cucumber.object-factory=org.citrusframework.cucumber.backend.CitrusObjectFactory

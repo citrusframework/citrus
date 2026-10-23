@@ -26,7 +26,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.cucumber.CucumberSettings;
 import org.citrusframework.cucumber.VariableNames;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class InjectEnvVarsHookTest {
 

@@ -16,18 +16,21 @@
 
 package org.citrusframework.cucumber.integration.report;
 
-import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.Suite;
 
-@SuppressWarnings("deprecation")
-@RunWith(Cucumber.class)
-@CucumberOptions(
-        plugin = {
-            "pretty",
-            "org.citrusframework.cucumber.report.json.TerminationLogReporter",
-            "org.citrusframework.cucumber.report.ReportVerifyPlugin"
-        }
-)
+import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
+import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
+
+@Suite
+@IncludeEngines("cucumber")
+@SelectPackages("org.citrusframework.cucumber.integration.report")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "org.citrusframework.cucumber.integration.report")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME,
+        value = "pretty," +
+                "org.citrusframework.cucumber.report.json.TerminationLogReporter," +
+                "org.citrusframework.cucumber.report.ReportVerifyPlugin")
 public class TerminationLogReporterTest {
 }

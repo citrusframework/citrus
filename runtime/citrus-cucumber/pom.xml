@@ -68,7 +68,7 @@
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit4</artifactId>
+            <artifactId>surefire-junit-platform</artifactId>
             <version>${maven.surefire.plugin.version}</version>
           </dependency>
         </dependencies>
@@ -114,13 +114,19 @@
     <!-- Test scoped dependencies -->
     <dependency>
       <groupId>io.cucumber</groupId>
-      <artifactId>cucumber-junit</artifactId>
+      <artifactId>cucumber-junit-platform-engine</artifactId>
       <scope>test</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-suite</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
 

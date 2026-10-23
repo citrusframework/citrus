@@ -37,19 +37,27 @@ So following from that we need a Maven dependency for the unit testing framework
 ----
 <dependency>
   <groupId>io.cucumber</groupId>
-  <artifactId>cucumber-junit</artifactId>
+  <artifactId>cucumber-junit-platform-engine</artifactId>
   <version>${cucumber.version}</version>
+</dependency>
+<dependency>
+  <groupId>org.junit.platform</groupId>
+  <artifactId>junit-platform-suite</artifactId>
+  <version>${junit.version}</version>
 </dependency>
 ----
 
 In order to enable Citrus Cucumber support we need to specify a special object factory in the environment. The most
-comfortable way to specify a custom object factory is to add this property to the `cucumber.properties` in classpath.
+comfortable way to specify a custom object factory is to add this property to the `junit-platform.properties` in classpath.
 
-.cucumber.properties
+.junit-platform.properties
 [source,properties]
 ----
 cucumber.object-factory=org.citrusframework.cucumber.backend.CitrusObjectFactory
 ----
+
+NOTE: The JUnit Platform Cucumber engine reads `junit-platform.properties`. The `cucumber.properties` file is still
+supported when running Cucumber through the Citrus test engine or the Cucumber command line.
 
 This special object factory takes care of creating all step definition instances. The object factory is able to inject
 `@CitrusResource` annotated fields in step classes. We will see this later on in the examples. The usage of this special
@@ -64,7 +72,7 @@ After these preparation steps you are able to combine Citrus and Cucumber in you
 TIP: In case you want to use Spring support in Citrus with a Spring application context you should use the following factory
 implementation.
 
-.cucumber.properties
+.junit-platform.properties
 [source,properties]
 ----
 cucumber.object-factory=org.citrusframework.cucumber.backend.spring.CitrusSpringObjectFactory
@@ -73,20 +81,22 @@ cucumber.object-factory=org.citrusframework.cucumber.backend.spring.CitrusSpring
 [[cucumber-options]]
 === Cucumber options
 
-Cucumber is able to run tests with JUnit. The basic test case is an empty test which uses the respective JUnit runner
-implementation from cucumber.
+Cucumber is able to run tests with JUnit. The basic test case is an empty test which uses the JUnit Platform suite
+support from cucumber.
 
 .MyFeature.java
 [source,java]
 ----
-@RunWith(Cucumber.class)
-@CucumberOptions(
-  plugin = { "pretty", "org.citrusframework.cucumber.CitrusReporter" } )
+@Suite
+@IncludeEngines("cucumber")
+@SelectPackages("com.example")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
 public class MyFeatureIT {
 }
 ----
 
-The test case above uses the *Cucumber* JUnit test runner. In addition to that we give some options to the Cucumber execution.
+The test case above uses the *Cucumber* JUnit Platform suite support. In addition to that we give some options to the Cucumber execution.
 In case you want to have the usual Citrus test results reported you can add the special Citrus reporter implementation
 `org.citrusframework.cucumber.CitrusReporter`. This class is responsible for printing the Citrus test summary. This reporter
 extends the default Cucumber reporter so the default Cucumber report summary is also printed to the console.
@@ -192,15 +202,17 @@ this namespace into your Spring configuration in order to use the Citrus Cucumbe
 </spring:beans>
 ----
 
-The JUnit Cucumber feature class itself does not change. We still use the Cucumber JUnit runner implementation with some
+The JUnit Cucumber feature class itself does not change. We still use the Cucumber JUnit Platform suite support with some
 options specific to Citrus:
 
 .MyFeatureIT.java
 [source,java]
 ----
-@RunWith(Cucumber.class)
-@CucumberOptions(
-    plugin = { "pretty", "org.citrusframework.cucumber.CitrusReporter" } )
+@Suite
+@IncludeEngines("cucumber")
+@SelectPackages("com.example")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
 public class MyFeatureIT {
 }
 ----
@@ -318,9 +330,9 @@ are included in a separate module. So first of all we have to add this dependenc
 
 The Citrus Cucumber extension has to handle things different when Cucumber Spring support is enabled. Therefore we use
 another object factory implementation that also support Cucumber Spring features. Change the object factory property in
-*cucumber.properties* to the following:
+*junit-platform.properties* to the following:
 
-.cucumber.properties
+.junit-platform.properties
 [source,properties]
 ----
 cucumber.object-factory=org.citrusframework.cucumber.backend.spring.CitrusSpringObjectFactory
@@ -408,10 +420,11 @@ After that you need to include the glue code package in your test class like thi
 .Include Citrus steps
 [source,java]
 ----
-@RunWith(Cucumber.class)
-@CucumberOptions(
-    extraGlue = { "org.citrusframework.cucumber" },
-    plugin = { "pretty", "org.citrusframework.cucumber.CitrusReporter" } )
+@Suite
+@IncludeEngines("cucumber")
+@SelectPackages("com.example")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example,org.citrusframework.cucumber")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
 public class MyFeatureIT {
 
 }
