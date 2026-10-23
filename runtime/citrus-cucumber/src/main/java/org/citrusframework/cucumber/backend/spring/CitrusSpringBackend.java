@@ -23,6 +23,8 @@ import java.util.Map;
 import io.cucumber.core.backend.Container;
 import io.cucumber.core.backend.Glue;
 import io.cucumber.core.backend.Lookup;
+import io.cucumber.core.backend.discovery.GlueDiscoveryRequest;
+import io.cucumber.core.backend.discovery.UriGlueDiscoverySelector;
 import io.cucumber.core.resource.ClasspathSupport;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusInstanceManager;
@@ -48,14 +50,18 @@ public class CitrusSpringBackend extends CitrusBackend {
     }
 
     @Override
-    public void loadGlue(Glue glue, List<URI> gluePaths) {
+    public void loadGlue(Glue glue, GlueDiscoveryRequest request) {
+        List<URI> gluePaths = request.getSelectorsByType(UriGlueDiscoverySelector.class).stream()
+                .map(UriGlueDiscoverySelector::uri)
+                .toList();
+
         if (CitrusInstanceManager.hasInstance()) {
             new XmlStepInstanceProcessor(glue, gluePaths, lookup).process(CitrusInstanceManager.getOrDefault());
         } else {
             CitrusInstanceManager.addInstanceProcessor(new XmlStepInstanceProcessor(glue, gluePaths, lookup));
         }
 
-        super.loadGlue(glue, gluePaths);
+        super.loadGlue(glue, request);
     }
 
     /**

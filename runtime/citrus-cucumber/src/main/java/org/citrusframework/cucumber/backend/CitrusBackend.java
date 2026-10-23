@@ -17,14 +17,13 @@
 package org.citrusframework.cucumber.backend;
 
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.util.List;
 
 import io.cucumber.core.backend.Backend;
 import io.cucumber.core.backend.Container;
 import io.cucumber.core.backend.Glue;
 import io.cucumber.core.backend.Lookup;
 import io.cucumber.core.backend.Snippet;
+import io.cucumber.core.backend.discovery.GlueDiscoveryRequest;
 import io.cucumber.core.exception.CucumberException;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.cucumber.CitrusLifecycleHooks;
@@ -52,7 +51,7 @@ public class CitrusBackend implements Backend {
     }
 
     @Override
-    public void loadGlue(Glue glue, List<URI> gluePaths) {
+    public void loadGlue(Glue glue, GlueDiscoveryRequest request) {
         try {
             if (container.addClass(CitrusLifecycleHooks.class)) {
                 Method beforeMethod = CitrusLifecycleHooks.class.getMethod("before", Scenario.class);

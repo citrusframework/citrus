@@ -24,7 +24,7 @@ import io.cucumber.plugin.EventListener;
 import io.cucumber.plugin.event.EventPublisher;
 import io.cucumber.plugin.event.TestRunFinished;
 import org.citrusframework.cucumber.CucumberSettings;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,10 +37,10 @@ public class ReportVerifyPlugin implements EventListener {
     public void setEventPublisher(EventPublisher eventPublisher) {
         eventPublisher.registerHandlerFor(TestRunFinished.class, event -> {
             try {
-                Assert.assertTrue("Verify termination log exists", Files.exists(CucumberSettings.getTerminationLog()));
+                Assertions.assertTrue(Files.exists(CucumberSettings.getTerminationLog()), "Verify termination log exists");
                 List<String> lines = Files.readAllLines(CucumberSettings.getTerminationLog());
-                Assert.assertEquals(1L, lines.size());
-                Assert.assertEquals("{" +
+                Assertions.assertEquals(1L, lines.size());
+                Assertions.assertEquals("{" +
                             "\"suiteName\":\"Test reporter\"," +
                             "\"summary\":" +
                                 "{\"passed\":1,\"failed\":0,\"errors\":0,\"skipped\":0,\"pending\":0,\"undefined\":0,\"total\":1}," +
@@ -50,7 +50,7 @@ public class ReportVerifyPlugin implements EventListener {
                         "}", lines.get(0));
             } catch (IOException e) {
                 LOG.warn("Failed to verify termination logs", e);
-                Assert.fail(e.getMessage());
+                Assertions.fail(e.getMessage());
             }
         });
     }
