@@ -34,6 +34,7 @@ import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.eventbus.RandomUuidGenerator;
 import io.cucumber.core.eventbus.UuidGenerator;
 import io.cucumber.core.options.CommandlineOptionsParser;
+import io.cucumber.core.options.Constants;
 import io.cucumber.core.options.CucumberOptionsAnnotationParser;
 import io.cucumber.core.options.CucumberProperties;
 import io.cucumber.core.options.CucumberPropertiesParser;
@@ -111,12 +112,19 @@ public class CucumberTestEngine extends AbstractTestEngine {
 
         addToFeatures(features, getConfiguration().getTestSources());
 
+        String previousFeatures = System.getProperty(Constants.FEATURES_PROPERTY_NAME);
         if (!features.isEmpty()) {
-            System.setProperty("cucumber.features", String.join(",", features));
+            System.setProperty(Constants.FEATURES_PROPERTY_NAME, String.join(",", features));
         }
 
-        RuntimeOptions environmentOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromEnvironment()).build(annotationOptions);
-        RuntimeOptions systemOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromSystemProperties()).build(environmentOptions);
+        RuntimeOptions environmentOptions;
+        RuntimeOptions systemOptions;
+        try {
+            environmentOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromEnvironment()).build(annotationOptions);
+            systemOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromSystemProperties()).build(environmentOptions);
+        } finally {
+            restoreFeaturesProperty(previousFeatures);
+        }
 
         List<String> args = new ArrayList<>();
 
@@ -167,7 +175,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
      * This keeps Citrus Cucumber compatible with classes that use the JUnit Platform suite support
      * instead of the deprecated Cucumber JUnit 4 runner annotations.
      */
-    private RuntimeOptions parseSuiteOptions(Class<?> testClass, RuntimeOptions propertiesFileOptions, List<String> features) {
+    RuntimeOptions parseSuiteOptions(Class<?> testClass, RuntimeOptions propertiesFileOptions, List<String> features) {
         Map<String, String> parameters = new LinkedHashMap<>();
 
         Arrays.stream(testClass.getAnnotations())
@@ -193,12 +201,25 @@ public class CucumberTestEngine extends AbstractTestEngine {
                     }
                 });
 
-        parameters.putIfAbsent("cucumber.glue", testClass.getPackageName());
+        parameters.putIfAbsent(Constants.GLUE_PROPERTY_NAME, testClass.getPackageName());
 
         return new CucumberPropertiesParser().parse(parameters)
                 .setUuidGeneratorClass(RandomUuidGenerator.class)
                 .addDefaultGlueIfAbsent()
                 .build(propertiesFileOptions);
+    }
+
+    /**
+     * Restores the given value of the global cucumber features system property. The property is only required
+     * while the runtime options are resolved. Leaving it behind would leak the feature selection of this run into
+     * any subsequent Cucumber run within the same JVM.
+     */
+    private static void restoreFeaturesProperty(String previousValue) {
+        if (previousValue != null) {
+            System.setProperty(Constants.FEATURES_PROPERTY_NAME, previousValue);
+        } else {
+            System.clearProperty(Constants.FEATURES_PROPERTY_NAME);
+        }
     }
 
     private static String annotationValue(Annotation annotation, String attribute) {
