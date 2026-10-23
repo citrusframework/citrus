@@ -16,15 +16,18 @@
 
 package org.citrusframework.cucumber.steps.http;
 
-import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.Suite;
 
-@SuppressWarnings("deprecation")
-@RunWith(Cucumber.class)
-@CucumberOptions(
-        extraGlue = { "org.citrusframework.cucumber.steps.core" },
-        plugin = { "pretty", "org.citrusframework.cucumber.CitrusReporter" }
-)
+import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
+import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
+
+@Suite
+@IncludeEngines("cucumber")
+@SelectPackages("org.citrusframework.cucumber.steps.http")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "org.citrusframework.cucumber.steps.http,org.citrusframework.cucumber.steps.core")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
 public class HttpFeature_IT {
 }
