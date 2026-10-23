@@ -40,6 +40,9 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
     private static final Pattern CREATE_ENDPOINT_TYPE_PATTERN = Pattern.compile("createEndpoint:[^-]*?type:\\s*\"?'?([a-zA-Z][a-zA-Z0-9]*)\"?'?", Pattern.DOTALL);
     private static final Pattern CREATE_ENDPOINT_URI_PATTERN = Pattern.compile("createEndpoint:[^-]*?uri:\\s*\"?'?([a-zA-Z][a-zA-Z0-9]*):", Pattern.DOTALL);
 
+    private static final Pattern ENDPOINTS_SECTION_PATTERN = Pattern.compile("^endpoints:", Pattern.MULTILINE);
+    private static final Pattern TOP_LEVEL_KEY_PATTERN = Pattern.compile("^[a-zA-Z]", Pattern.MULTILINE);
+
     @Override
     public Set<String> scanModules(String code) {
         Set<String> items = new HashSet<>();
@@ -182,8 +185,14 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
 
         Set<String> items = new HashSet<>();
 
-        if (code.contains("endpoints:") && code.indexOf("endpoints:") < code.indexOf("actions:")) {
-            String endpointDefs = code.substring(code.indexOf("endpoints:"), code.indexOf("actions:"));
+        Matcher endpointsSectionMatcher = ENDPOINTS_SECTION_PATTERN.matcher(code);
+        if (endpointsSectionMatcher.find()) {
+            String afterEndpointsKey = code.substring(endpointsSectionMatcher.end());
+            Matcher nextKeyMatcher = TOP_LEVEL_KEY_PATTERN.matcher(afterEndpointsKey);
+            String endpointDefs = nextKeyMatcher.find()
+                    ? afterEndpointsKey.substring(0, nextKeyMatcher.start())
+                    : afterEndpointsKey;
+
             for (Map.Entry<String, ComponentDefinition> entry : components.entrySet()) {
                 ComponentDefinition component = components.get(entry.getKey());
                 String name = Optional.ofNullable(component.group()).orElse(entry.getKey());

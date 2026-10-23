@@ -83,6 +83,31 @@ public class YamlCodeAnalyzerTest {
         Assert.assertEquals(foundValidationMatcher[1], "isNumber");
     }
 
+    @Test
+    public void shouldAnalyzeCodeWithEndpointsAfterActions() throws IOException {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+        CodeAnalyzer.ScanResult scanResult = analyzer.scan(Resources.create("sample-endpoints-after-actions.citrus.it.yaml"));
+
+        Assert.assertEquals(scanResult.name(), "sample-endpoints-after-actions.citrus.it.yaml");
+
+        Assert.assertEquals(scanResult.modules().length, 7L);
+        String[] foundModules = Arrays.stream(scanResult.modules()).sorted().toArray(String[]::new);
+        Assert.assertEquals(foundModules[0], "citrus-base");
+        Assert.assertEquals(foundModules[1], "citrus-camel");
+        Assert.assertEquals(foundModules[2], "citrus-http");
+        Assert.assertEquals(foundModules[3], "citrus-jbang-connector");
+        Assert.assertEquals(foundModules[4], "citrus-jms");
+        Assert.assertEquals(foundModules[5], "citrus-kafka");
+        Assert.assertEquals(foundModules[6], "citrus-testcontainers");
+
+        Assert.assertEquals(scanResult.endpoints().length, 4L);
+        String[] foundEndpoints = Arrays.stream(scanResult.endpoints()).sorted().toArray(String[]::new);
+        Assert.assertEquals(foundEndpoints[0], "camel");
+        Assert.assertEquals(foundEndpoints[1], "http");
+        Assert.assertEquals(foundEndpoints[2], "jms");
+        Assert.assertEquals(foundEndpoints[3], "kafka");
+    }
+
     @DataProvider(name = "multilineEndpointVariants")
     public Object[][] multilineEndpointVariants() {
         return new Object[][] {
@@ -176,6 +201,75 @@ public class YamlCodeAnalyzerTest {
                   - createEndpoint:
                       name: myJmsEndpoint
                       uri: "jms:my-queue"
+                """;
+
+        Set<String> modules = new HashSet<>();
+        Set<String> endpoints = analyzer.scanEndpoints(code, modules);
+        Assert.assertTrue(endpoints.contains("jms"));
+        Assert.assertTrue(modules.contains("citrus-jms"));
+    }
+
+    @Test
+    public void shouldDetectEndpointsAfterActions() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                name: my-test
+                actions:
+                  - send:
+                      endpoint: http://localhost:8080/test
+                      message:
+                        body:
+                          data: Howdy
+                endpoints:
+                  - jms:
+                      asynchronous:
+                        name: foo
+                        destination: my-queue
+                """;
+
+        Set<String> modules = new HashSet<>();
+        Set<String> endpoints = analyzer.scanEndpoints(code, modules);
+        Assert.assertTrue(endpoints.contains("jms"));
+        Assert.assertTrue(modules.contains("citrus-jms"));
+    }
+
+    @Test
+    public void shouldDetectEndpointsAtEndOfFile() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                name: my-test
+                endpoints:
+                  - kafka:
+                      asynchronous:
+                        name: myKafka
+                        topic: my-topic
+                """;
+
+        Set<String> modules = new HashSet<>();
+        Set<String> endpoints = analyzer.scanEndpoints(code, modules);
+        Assert.assertTrue(endpoints.contains("kafka"));
+        Assert.assertTrue(modules.contains("citrus-kafka"));
+    }
+
+    @Test
+    public void shouldDetectEndpointsBeforeActions() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                name: my-test
+                endpoints:
+                  - jms:
+                      asynchronous:
+                        name: foo
+                        destination: my-queue
+                actions:
+                  - send:
+                      endpoint: http://localhost:8080/test
+                      message:
+                        body:
+                          data: Howdy
                 """;
 
         Set<String> modules = new HashSet<>();
