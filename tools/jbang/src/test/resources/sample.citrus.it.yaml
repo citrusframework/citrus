@@ -51,6 +51,11 @@ actions:
           service: aws
           implementation: sqs
           fixedPort: true
+  - createEndpoint:
+      direct:
+        asynchronous:
+          name: myDirectEndpoint
+          queue: "test-queue"
   - iterate:
       condition: i < 10
       actions:

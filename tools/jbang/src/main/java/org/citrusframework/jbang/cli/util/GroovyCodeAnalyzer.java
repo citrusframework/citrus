@@ -35,6 +35,9 @@ public class GroovyCodeAnalyzer implements CodeAnalyzer {
 
     private static final Pattern CAMEL_INFRA_SERVICE_PATTERN = Pattern.compile("\\.service\\(\\s*[\"']([a-zA-Z][a-zA-Z0-9._-]*)[\"']\\s*\\)", Pattern.MULTILINE);
 
+    private static final Pattern CREATE_ENDPOINT_TYPE_PATTERN = Pattern.compile("createEndpoint\\(\\).*?\\.type\\(\\s*[\"']([a-zA-Z][a-zA-Z0-9]*)[\"']\\s*\\)", Pattern.DOTALL);
+    private static final Pattern CREATE_ENDPOINT_URI_PATTERN = Pattern.compile("createEndpoint\\(\\s*[\"']([a-zA-Z][a-zA-Z0-9]*):");
+
     @Override
     public Set<String> scanModules(String code) {
         Set<String> items = new HashSet<>();
@@ -200,6 +203,33 @@ public class GroovyCodeAnalyzer implements CodeAnalyzer {
             }
         }
 
+        scanCreateEndpointActions(code, components, items, modules);
+
         return items;
+    }
+
+    private void scanCreateEndpointActions(String code, Map<String, ComponentDefinition> components,
+                                           Set<String> items, Set<String> modules) {
+        if (!code.contains("createEndpoint(")) {
+            return;
+        }
+
+        Set<String> endpointGroups = resolveEndpointGroups(components);
+
+        Matcher typeMatcher = CREATE_ENDPOINT_TYPE_PATTERN.matcher(code);
+        while (typeMatcher.find()) {
+            String type = typeMatcher.group(1);
+            if (endpointGroups.contains(type)) {
+                addEndpointModule(type, components, items, modules);
+            }
+        }
+
+        Matcher uriMatcher = CREATE_ENDPOINT_URI_PATTERN.matcher(code);
+        while (uriMatcher.find()) {
+            String uriPrefix = uriMatcher.group(1);
+            if (endpointGroups.contains(uriPrefix)) {
+                addEndpointModule(uriPrefix, components, items, modules);
+            }
+        }
     }
 }
