@@ -43,7 +43,7 @@ So following from that we need a Maven dependency for the unit testing framework
 <dependency>
   <groupId>org.junit.platform</groupId>
   <artifactId>junit-platform-suite</artifactId>
-  <version>${junit.version}</version>
+  <version>${junit.platform.version}</version>
 </dependency>
 ----
 
@@ -87,6 +87,14 @@ support from cucumber.
 .MyFeature.java
 [source,java]
 ----
+import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.Suite;
+
+import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
+import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
+
 @Suite
 @IncludeEngines("cucumber")
 @SelectPackages("com.example")
