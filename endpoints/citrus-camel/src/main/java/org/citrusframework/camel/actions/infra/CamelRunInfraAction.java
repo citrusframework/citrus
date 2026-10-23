@@ -66,7 +66,7 @@ public class CamelRunInfraAction extends AbstractCamelAction {
     private final boolean dumpServiceOutput;
 
     protected CamelRunInfraAction(Builder builder) {
-        super("run-infra", builder);
+        super("infra:run", builder);
 
         this.catalog = builder.catalog;
         this.serviceName = builder.serviceName;
