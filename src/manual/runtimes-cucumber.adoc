@@ -29,10 +29,11 @@ dependency to your project.
 </dependency>
 ----
 
-Cucumber works with both JUnit and TestNG as unit testing framework. You can choose which framework to use with Cucumber.
-So following from that we need a Maven dependency for the unit testing framework support:
+Citrus runs Cucumber through the JUnit Platform. The Cucumber JUnit Platform engine executes the feature files and
+integrates with the Citrus object factory and glue code. So following from that we need Maven dependencies for the
+JUnit Platform engine and the JUnit Platform suite support:
 
-.Cucumber JUnit support
+.Cucumber JUnit Platform support
 [source,xml]
 ----
 <dependency>
@@ -46,6 +47,9 @@ So following from that we need a Maven dependency for the unit testing framework
   <version>${junit.platform.version}</version>
 </dependency>
 ----
+
+The `junit-platform-suite` artifact provides the `@Suite` annotation and the suite engine that delegates test discovery
+to the Cucumber engine.
 
 In order to enable Citrus Cucumber support we need to specify a special object factory in the environment. The most
 comfortable way to specify a custom object factory is to add this property to the `junit-platform.properties` in classpath.
@@ -81,10 +85,10 @@ cucumber.object-factory=org.citrusframework.cucumber.backend.spring.CitrusSpring
 [[cucumber-options]]
 === Cucumber options
 
-Cucumber is able to run tests with JUnit. The basic test case is an empty test which uses the JUnit Platform suite
-support from cucumber.
+Cucumber runs on the JUnit Platform. The basic test case is an empty suite class that selects the feature files and
+configures the Cucumber engine.
 
-.MyFeature.java
+.MyFeatureIT.java
 [source,java]
 ----
 import org.junit.platform.suite.api.ConfigurationParameter;
@@ -109,8 +113,8 @@ In case you want to have the usual Citrus test results reported you can add the 
 `org.citrusframework.cucumber.CitrusReporter`. This class is responsible for printing the Citrus test summary. This reporter
 extends the default Cucumber reporter so the default Cucumber report summary is also printed to the console.
 
-That completes the JUnit class configuration. Now we are able to add feature stories and step definitions to the package
-of our test *MyFeatureIT* . Cucumber and Citrus will automatically pick up step definitions and glue code in that test
+That completes the suite class configuration. Now we are able to add feature stories and step definitions to the package
+of our test *MyFeatureIT*. Cucumber and Citrus will automatically pick up step definitions and glue code in that test
 package. So let's write a feature story *echo.feature* right next to the *MyFeatureIT* test class.
 
 .echo.feature
@@ -184,6 +188,153 @@ as we used to do in normal Java DSL tests.
 That is a first combination of Citrus and Cucumber BDD. The feature file gets translated into step implementations that
 use Citrus test action runner Java API to run integration tests with behavior driven development.
 
+[[cucumber-junit4-migration]]
+=== Migrating from the Cucumber JUnit 4 runner
+
+Citrus no longer uses the deprecated Cucumber JUnit 4 runner integration. It uses the JUnit Platform engine instead.
+The JUnit Platform engine ignores `@CucumberOptions`. When the project runs on the JUnit Platform,
+`@RunWith(Cucumber.class)` is only executed by the JUnit Vintage engine. Once the JUnit Vintage engine is removed, the
+feature files silently stop running.
+
+The migration has three parts: replace the Maven dependencies, replace the runner annotations with JUnit Platform suite
+annotations, and move the `cucumber.properties` settings to `junit-platform.properties`.
+
+.Migrate the Maven dependencies
+[source,xml]
+----
+<!-- Remove the JUnit 4 runner integration -->
+<dependency>
+  <groupId>io.cucumber</groupId>
+  <artifactId>cucumber-junit</artifactId>
+</dependency>
+<dependency>
+  <groupId>org.junit.vintage</groupId>
+  <artifactId>junit-vintage-engine</artifactId>
+</dependency>
+
+<!-- Add the JUnit Platform engine and suite support -->
+<dependency>
+  <groupId>io.cucumber</groupId>
+  <artifactId>cucumber-junit-platform-engine</artifactId>
+  <version>${cucumber.version}</version>
+</dependency>
+<dependency>
+  <groupId>org.junit.platform</groupId>
+  <artifactId>junit-platform-suite</artifactId>
+  <version>${junit.platform.version}</version>
+</dependency>
+----
+
+Keep JUnit 4 and the JUnit Vintage engine only if other tests in the project still need them. The Cucumber JUnit Platform
+engine does not require the JUnit Vintage engine.
+
+The following example shows the same suite class before and after the migration. The class name and the `*IT` naming
+convention do not change.
+
+.Before: Cucumber JUnit 4 runner
+[source,java]
+----
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.junit.runner.RunWith;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+    features = "classpath:com/example",
+    glue = { "com.example", "org.citrusframework.cucumber" },
+    tags = "@smoke",
+    plugin = { "pretty", "org.citrusframework.cucumber.CitrusReporter" })
+public class MyFeatureIT {
+}
+----
+
+.After: JUnit Platform suite
+[source,java]
+----
+import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.SelectClasspathResource;
+import org.junit.platform.suite.api.Suite;
+
+import static io.cucumber.junit.platform.engine.Constants.FILTER_TAGS_PROPERTY_NAME;
+import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
+import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
+
+@Suite
+@IncludeEngines("cucumber")
+@SelectClasspathResource("com/example")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example,org.citrusframework.cucumber")
+@ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "@smoke")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
+public class MyFeatureIT {
+}
+----
+
+Use `@IncludeEngines("cucumber")` to run only the Cucumber engine. Without that annotation other JUnit Platform engines
+on the test classpath also participate in test discovery. `@SelectClasspathResource` uses slash-separated resource
+paths. Use `@SelectPackages` when the feature files are located in the package of the suite class.
+
+The following table maps the `@CucumberOptions` attributes to their JUnit Platform counterparts. Put the configuration
+parameter either in `@ConfigurationParameter` or in `junit-platform.properties`.
+
+[cols="1,1,2"]
+|===
+|`@CucumberOptions` |Configuration parameter |Notes
+
+|`features`
+|`cucumber.features`
+|Prefer `@SelectClasspathResource`, `@SelectClasspathResources`, or `@SelectPackages`.
+
+|`glue`
+|`cucumber.glue`
+|Comma-separated package or class names.
+
+|`extraGlue`
+|`cucumber.glue`
+|Append the extra packages to the same comma-separated value.
+
+|`plugin`
+|`cucumber.plugin`
+|Plugin names and order stay the same, including `org.citrusframework.cucumber.CitrusReporter`.
+
+|`tags`
+|`cucumber.filter.tags`
+|Standard Cucumber tag expression.
+
+|`name`
+|`cucumber.filter.name`
+|Regular expression matched against scenario names.
+
+|`monochrome`
+|`cucumber.ansi-colors.disabled`
+|Use `true` to disable colors.
+
+|`dryRun`
+|`cucumber.execution.dry-run`
+|Use `true` to verify step matching without executing steps.
+
+|`snippets`
+|`cucumber.snippet-type`
+|Snippet naming style, for example `camelcase` or `underscore`.
+
+|`publish`
+|`cucumber.publish.enabled`
+|Use `false` to disable publishing the Cucumber report.
+|===
+
+The JUnit Platform engine does not read `cucumber.properties`. Keep the `cucumber.properties` file only when the tests
+are also executed by the Citrus test engine or the Cucumber command line. For the JUnit Platform engine, move the same
+`cucumber.*` keys to `junit-platform.properties` or pass them as JUnit Platform configuration parameters.
+
+Maven Surefire and Failsafe must use the JUnit Platform provider. Surefire and Failsafe 3.x select that provider
+automatically when the Cucumber JUnit Platform engine is on the test classpath. Remove an explicit `surefire-junit4`
+provider dependency if the project declares one. The `*IT` class name convention still works with Failsafe.
+
+Custom `CitrusBackend` or `CitrusSpringBackend` subclasses should override
+`loadGlue(Glue, GlueDiscoveryRequest)` instead of the deprecated `loadGlue(Glue, List<URI>)` method. The deprecated
+method is still called by the default implementation for backwards compatibility, but it will be removed when Cucumber
+drops the deprecated interface method.
+
 [[cucumber-xml-steps]]
 === Cucumber XML steps
 
@@ -210,7 +361,7 @@ this namespace into your Spring configuration in order to use the Citrus Cucumbe
 </spring:beans>
 ----
 
-The JUnit Cucumber feature class itself does not change. We still use the Cucumber JUnit Platform suite support with some
+The JUnit Platform suite class itself does not change. We still use the Cucumber JUnit Platform suite support with some
 options specific to Citrus:
 
 .MyFeatureIT.java
