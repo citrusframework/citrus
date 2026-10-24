@@ -37,6 +37,9 @@ IMPORTANT: The step implementations are executed with the JUnit Platform suite s
 `cucumber-junit-platform-engine` and `junit-platform-suite` dependencies to your project as described in
 xref:runtimes-cucumber[Cucumber integration with Citrus].
 
+TIP: Still using `@RunWith(Cucumber.class)` and `@CucumberOptions`? Follow
+xref:runtimes-cucumber#cucumber-junit4-migration[the JUnit 4 migration section] before including the Citrus step glue.
+
 As an alternative you may declare the glue package in `junit-platform.properties` in your project.
 
 .junit-platform.properties
