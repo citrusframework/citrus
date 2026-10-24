@@ -28,6 +28,9 @@ import static org.citrusframework.openapi.OpenApiConstants.FORMAT_DATE_TIME;
 import static org.citrusframework.openapi.OpenApiConstants.FORMAT_UUID;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_BOOLEAN;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_STRING;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
@@ -61,6 +64,21 @@ public class OasRandomConfigurationTest {
         RandomGenerator generator = randomConfiguration.getGenerator(schema);
         assertNotNull(generator);
         assertTrue(generator.handles(schema));
+    }
+
+    @Test
+    public void testGenerateDateTimeUsesRfc3339Format() {
+        OasSchema schema = new Oas30Schema();
+        schema.type = TYPE_STRING;
+        schema.format = FORMAT_DATE_TIME;
+
+        RandomContext mockContext = mock(RandomContext.class);
+        RandomModelBuilder mockBuilder = mock(RandomModelBuilder.class);
+        when(mockContext.getRandomModelBuilder()).thenReturn(mockBuilder);
+
+        randomConfiguration.getGenerator(schema).generateIntoContext(mockContext, schema);
+
+        verify(mockBuilder).appendSimpleQuoted("citrus:currentDate('yyyy-MM-dd'T'HH:mm:ssXXX')");
     }
 
     @Test
