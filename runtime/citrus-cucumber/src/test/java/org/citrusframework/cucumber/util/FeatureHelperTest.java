@@ -18,32 +18,32 @@ package org.citrusframework.cucumber.util;
 
 import java.net.URI;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FeatureHelperTest {
 
     @Test
     public void extractFeatureFileName() {
-        Assert.assertEquals("", FeatureHelper.extractFeatureFileName((URI) null));
-        Assert.assertEquals("foo.feature", FeatureHelper.extractFeatureFileName(URI.create("foo.feature")));
-        Assert.assertEquals("foo.feature", FeatureHelper.extractFeatureFileName(URI.create("/foo.feature")));
-        Assert.assertEquals("foo.feature", FeatureHelper.extractFeatureFileName(URI.create("classpath:org/citrusframework/cucumber/steps/foo/foo.feature")));
+        Assertions.assertEquals("", FeatureHelper.extractFeatureFileName((URI) null));
+        Assertions.assertEquals("foo.feature", FeatureHelper.extractFeatureFileName(URI.create("foo.feature")));
+        Assertions.assertEquals("foo.feature", FeatureHelper.extractFeatureFileName(URI.create("/foo.feature")));
+        Assertions.assertEquals("foo.feature", FeatureHelper.extractFeatureFileName(URI.create("classpath:org/citrusframework/cucumber/steps/foo/foo.feature")));
     }
 
     @Test
     public void extractFeatureFile() {
-        Assert.assertEquals("", FeatureHelper.extractFeatureFile((URI) null));
-        Assert.assertEquals("foo.feature", FeatureHelper.extractFeatureFile(URI.create("foo.feature")));
-        Assert.assertEquals("/foo.feature", FeatureHelper.extractFeatureFile(URI.create("/foo.feature")));
-        Assert.assertEquals("classpath:org/citrusframework/cucumber/steps/foo/foo.feature", FeatureHelper.extractFeatureFile(URI.create("classpath:org/citrusframework/cucumber/steps/foo/foo.feature")));
+        Assertions.assertEquals("", FeatureHelper.extractFeatureFile((URI) null));
+        Assertions.assertEquals("foo.feature", FeatureHelper.extractFeatureFile(URI.create("foo.feature")));
+        Assertions.assertEquals("/foo.feature", FeatureHelper.extractFeatureFile(URI.create("/foo.feature")));
+        Assertions.assertEquals("classpath:org/citrusframework/cucumber/steps/foo/foo.feature", FeatureHelper.extractFeatureFile(URI.create("classpath:org/citrusframework/cucumber/steps/foo/foo.feature")));
     }
 
     @Test
     public void extractFeaturePackage() {
-        Assert.assertEquals("", FeatureHelper.extractFeaturePackage((URI) null));
-        Assert.assertEquals("", FeatureHelper.extractFeaturePackage(URI.create("foo.feature")));
-        Assert.assertEquals("", FeatureHelper.extractFeaturePackage(URI.create("/foo.feature")));
-        Assert.assertEquals("org.citrusframework.cucumber/steps.foo", FeatureHelper.extractFeaturePackage(URI.create("classpath:org/citrusframework/cucumber/steps/foo/foo.feature")));
+        Assertions.assertEquals("", FeatureHelper.extractFeaturePackage((URI) null));
+        Assertions.assertEquals("", FeatureHelper.extractFeaturePackage(URI.create("foo.feature")));
+        Assertions.assertEquals("", FeatureHelper.extractFeaturePackage(URI.create("/foo.feature")));
+        Assertions.assertEquals("org.citrusframework.cucumber.steps.foo", FeatureHelper.extractFeaturePackage(URI.create("classpath:org/citrusframework/cucumber/steps/foo/foo.feature")));
     }
 }

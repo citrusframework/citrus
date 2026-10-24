@@ -25,6 +25,8 @@ import io.cucumber.core.backend.Container;
 import io.cucumber.core.backend.Glue;
 import io.cucumber.core.backend.Lookup;
 import io.cucumber.core.backend.Snippet;
+import io.cucumber.core.backend.discovery.GlueDiscoveryRequest;
+import io.cucumber.core.backend.discovery.UriGlueDiscoverySelector;
 import io.cucumber.core.exception.CucumberException;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.cucumber.CitrusLifecycleHooks;
@@ -51,6 +53,23 @@ public class CitrusBackend implements Backend {
         CitrusInstanceManager.addInstanceProcessor(instance -> instance.beforeSuite(CitrusReporter.SUITE_NAME));
     }
 
+    @Override
+    public void loadGlue(Glue glue, GlueDiscoveryRequest request) {
+        List<URI> gluePaths = request.getSelectorsByType(UriGlueDiscoverySelector.class).stream()
+                .map(UriGlueDiscoverySelector::uri)
+                .toList();
+
+        loadGlue(glue, gluePaths);
+    }
+
+    /**
+     * Registers the Citrus lifecycle hooks on the given glue.
+     * @param glue
+     * @param gluePaths
+     * @deprecated Cucumber 8 discovers the glue paths via {@link #loadGlue(Glue, GlueDiscoveryRequest)}. This method
+     * is only kept for backwards compatibility with subclasses overriding the former signature.
+     */
+    @Deprecated
     @Override
     public void loadGlue(Glue glue, List<URI> gluePaths) {
         try {

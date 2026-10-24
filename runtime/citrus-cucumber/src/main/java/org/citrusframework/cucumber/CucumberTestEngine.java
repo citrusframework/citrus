@@ -24,7 +24,9 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,7 @@ import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.eventbus.RandomUuidGenerator;
 import io.cucumber.core.eventbus.UuidGenerator;
 import io.cucumber.core.options.CommandlineOptionsParser;
+import io.cucumber.core.options.Constants;
 import io.cucumber.core.options.CucumberOptionsAnnotationParser;
 import io.cucumber.core.options.CucumberProperties;
 import io.cucumber.core.options.CucumberPropertiesParser;
@@ -66,6 +69,8 @@ public class CucumberTestEngine extends AbstractTestEngine {
     public void run() {
         RuntimeOptions propertiesFileOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromPropertiesFile()).build();
 
+        List<String> features = new ArrayList<>();
+
         RuntimeOptions annotationOptions;
         Optional<TestSource> javaClass = getConfiguration().getTestSources()
                 .stream()
@@ -73,11 +78,11 @@ public class CucumberTestEngine extends AbstractTestEngine {
                 .filter(source -> {
                     try {
                         Class<?> type = Class.forName(source.getName(), false, ClassLoaderHelper.getClassLoader());
-                        return Arrays.stream(type.getAnnotations())
-                                .anyMatch(annotation -> annotation.annotationType().getSimpleName().equals("CucumberOptions"));
+                        return isCucumberOptionsClass(type) || isSuiteClass(type);
                     } catch (Exception e) {
                         try {
-                            return FileUtils.readToString(source.getSourceFile()).contains("@CucumberOptions");
+                            String sourceContent = FileUtils.readToString(source.getSourceFile());
+                            return sourceContent.contains("@CucumberOptions") || sourceContent.contains("@Suite");
                         } catch (Exception ex) {
                             return false;
                         }
@@ -87,12 +92,17 @@ public class CucumberTestEngine extends AbstractTestEngine {
 
         if (javaClass.isPresent()) {
             try {
-                annotationOptions = new CucumberOptionsAnnotationParser()
-                        .withOptionsProvider(GenericCucumberOptions::new)
-                        .parse(Class.forName(javaClass.get().getName(), true, ClassLoaderHelper.getClassLoader()))
-                        .setUuidGeneratorClass(RandomUuidGenerator.class)
-                        .addDefaultGlueIfAbsent()
-                        .build(propertiesFileOptions);
+                Class<?> testClass = Class.forName(javaClass.get().getName(), true, ClassLoaderHelper.getClassLoader());
+                if (isSuiteClass(testClass)) {
+                    annotationOptions = parseSuiteOptions(testClass, propertiesFileOptions, features);
+                } else {
+                    annotationOptions = new CucumberOptionsAnnotationParser()
+                            .withOptionsProvider(GenericCucumberOptions::new)
+                            .parse(testClass)
+                            .setUuidGeneratorClass(RandomUuidGenerator.class)
+                            .addDefaultGlueIfAbsent()
+                            .build(propertiesFileOptions);
+                }
             } catch (ClassNotFoundException e) {
                 throw new CitrusRuntimeException("Unable to find test class in classpath: " + javaClass.get().getName());
             }
@@ -100,15 +110,21 @@ public class CucumberTestEngine extends AbstractTestEngine {
             annotationOptions = propertiesFileOptions;
         }
 
-        List<String> features = new ArrayList<>();
         addToFeatures(features, getConfiguration().getTestSources());
 
+        String previousFeatures = System.getProperty(Constants.FEATURES_PROPERTY_NAME);
         if (!features.isEmpty()) {
-            System.setProperty("cucumber.features", String.join(",", features));
+            System.setProperty(Constants.FEATURES_PROPERTY_NAME, String.join(",", features));
         }
 
-        RuntimeOptions environmentOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromEnvironment()).build(annotationOptions);
-        RuntimeOptions systemOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromSystemProperties()).build(environmentOptions);
+        RuntimeOptions environmentOptions;
+        RuntimeOptions systemOptions;
+        try {
+            environmentOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromEnvironment()).build(annotationOptions);
+            systemOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromSystemProperties()).build(environmentOptions);
+        } finally {
+            restoreFeaturesProperty(previousFeatures);
+        }
 
         List<String> args = new ArrayList<>();
 
@@ -140,6 +156,97 @@ public class CucumberTestEngine extends AbstractTestEngine {
                 .build();
 
         runtime.run();
+    }
+
+    private static boolean isCucumberOptionsClass(Class<?> type) {
+        return Arrays.stream(type.getAnnotations())
+                .anyMatch(annotation -> annotation.annotationType().getSimpleName().equals("CucumberOptions"));
+    }
+
+    private static boolean isSuiteClass(Class<?> type) {
+        return Arrays.stream(type.getAnnotations())
+                .anyMatch(annotation -> "org.junit.platform.suite.api.Suite".equals(annotation.annotationType().getName()));
+    }
+
+    /**
+     * Reads JUnit Platform suite annotations such as {@code @ConfigurationParameter},
+     * {@code @SelectClasspathResource} and {@code @SelectPackages} in a generic way using
+     * method invocation via reflection.
+     * This keeps Citrus Cucumber compatible with classes that use the JUnit Platform suite support
+     * instead of the deprecated Cucumber JUnit 4 runner annotations.
+     */
+    RuntimeOptions parseSuiteOptions(Class<?> testClass, RuntimeOptions propertiesFileOptions, List<String> features) {
+        Map<String, String> parameters = new LinkedHashMap<>();
+
+        Arrays.stream(testClass.getAnnotations())
+                .filter(annotation -> annotation.annotationType().getName().startsWith("org.junit.platform.suite.api."))
+                .forEach(annotation -> {
+                    switch (annotation.annotationType().getSimpleName()) {
+                        case "ConfigurationParameter" -> parameters.put(
+                                annotationValue(annotation, "key"), annotationValue(annotation, "value"));
+                        case "ConfigurationParameters" -> Arrays.stream(annotationValues(annotation, "value"))
+                                .forEach(parameter -> parameters.put(
+                                        annotationValue(parameter, "key"), annotationValue(parameter, "value")));
+                        case "SelectClasspathResource" -> features.add(
+                                ClasspathSupport.CLASSPATH_SCHEME_PREFIX + annotationValue(annotation, "value"));
+                        case "SelectClasspathResources" -> Arrays.stream(annotationValues(annotation, "value"))
+                                .forEach(selector -> features.add(
+                                        ClasspathSupport.CLASSPATH_SCHEME_PREFIX + annotationValue(selector, "value")));
+                        case "SelectPackages" -> Arrays.stream(annotationStringValues(annotation, "value"))
+                                .forEach(value -> features.add(
+                                        ClasspathSupport.CLASSPATH_SCHEME_PREFIX + value.replace('.', '/')));
+                        default -> {
+                            // ignore other suite annotations
+                        }
+                    }
+                });
+
+        parameters.putIfAbsent(Constants.GLUE_PROPERTY_NAME, testClass.getPackageName());
+
+        return new CucumberPropertiesParser().parse(parameters)
+                .setUuidGeneratorClass(RandomUuidGenerator.class)
+                .addDefaultGlueIfAbsent()
+                .build(propertiesFileOptions);
+    }
+
+    /**
+     * Restores the given value of the global cucumber features system property. The property is only required
+     * while the runtime options are resolved. Leaving it behind would leak the feature selection of this run into
+     * any subsequent Cucumber run within the same JVM.
+     */
+    private static void restoreFeaturesProperty(String previousValue) {
+        if (previousValue != null) {
+            System.setProperty(Constants.FEATURES_PROPERTY_NAME, previousValue);
+        } else {
+            System.clearProperty(Constants.FEATURES_PROPERTY_NAME);
+        }
+    }
+
+    private static String annotationValue(Annotation annotation, String attribute) {
+        try {
+            return (String) annotation.annotationType().getMethod(attribute).invoke(annotation);
+        } catch (ReflectiveOperationException e) {
+            throw new CitrusRuntimeException(String.format("Failed to retrieve %s value on annotation type %s",
+                    attribute, annotation.annotationType()), e);
+        }
+    }
+
+    private static Annotation[] annotationValues(Annotation annotation, String attribute) {
+        try {
+            return (Annotation[]) annotation.annotationType().getMethod(attribute).invoke(annotation);
+        } catch (ReflectiveOperationException e) {
+            throw new CitrusRuntimeException(String.format("Failed to retrieve %s value on annotation type %s",
+                    attribute, annotation.annotationType()), e);
+        }
+    }
+
+    private static String[] annotationStringValues(Annotation annotation, String attribute) {
+        try {
+            return (String[]) annotation.annotationType().getMethod(attribute).invoke(annotation);
+        } catch (ReflectiveOperationException e) {
+            throw new CitrusRuntimeException(String.format("Failed to retrieve %s value on annotation type %s",
+                    attribute, annotation.annotationType()), e);
+        }
     }
 
     private void addToFeatures(List<String> features, List<TestSource> testSources) {
