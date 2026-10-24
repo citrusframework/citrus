@@ -61,7 +61,6 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
 
     private final TestFlowReport flowReport = new TestFlowReport();
 
-    /** Names of tests that currently execute their final actions */
     private final Set<String> finalActionsTests = ConcurrentHashMap.newKeySet();
 
     private final boolean enabled = TestFlowReporterSettings.isReportEnabled();
