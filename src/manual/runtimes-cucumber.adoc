@@ -272,7 +272,8 @@ public class MyFeatureIT {
 
 Use `@IncludeEngines("cucumber")` to run only the Cucumber engine. Without that annotation other JUnit Platform engines
 on the test classpath also participate in test discovery. `@SelectClasspathResource` uses slash-separated resource
-paths. Use `@SelectPackages` when the feature files are located in the package of the suite class.
+paths. Use `@SelectPackages` when the feature files are located in the package of the suite class. For feature files
+outside the test classpath, use the `cucumber.features` configuration parameter with a file path or URI.
 
 The following table maps the `@CucumberOptions` attributes to their JUnit Platform counterparts. Put the configuration
 parameter either in `@ConfigurationParameter` or in `junit-platform.properties`.
@@ -329,6 +330,8 @@ are also executed by the Citrus test engine or the Cucumber command line. For th
 Maven Surefire and Failsafe must use the JUnit Platform provider. Surefire and Failsafe 3.x select that provider
 automatically when the Cucumber JUnit Platform engine is on the test classpath. Remove an explicit `surefire-junit4`
 provider dependency if the project declares one. The `*IT` class name convention still works with Failsafe.
+
+Run the suite class as a JUnit Platform test in the IDE or with Maven. It is no longer executed as a JUnit 4 test.
 
 Custom `CitrusBackend` or `CitrusSpringBackend` subclasses should override
 `loadGlue(Glue, GlueDiscoveryRequest)` instead of the deprecated `loadGlue(Glue, List<URI>)` method. The deprecated
