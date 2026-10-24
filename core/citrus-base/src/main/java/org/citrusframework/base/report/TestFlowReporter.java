@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,8 @@ import org.citrusframework.util.yaml.YamlStringBuilder;
 public class TestFlowReporter extends AbstractTestReporter implements TestListener, TestActionListener, ShutdownPhase {
 
     private final TestFlowReport flowReport = new TestFlowReport();
+
+    private final Set<String> finalActionsTests = ConcurrentHashMap.newKeySet();
 
     private final boolean enabled = TestFlowReporterSettings.isReportEnabled();
 
@@ -139,33 +142,35 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
 
     @Override
     public void onTestActionFinish(TestCase test, TestAction testAction) {
-        String actionPath = getActionPath(test, testAction);
-        TestActionResult tar = new TestActionResult(testAction.getName(), actionPath);
-
-        if (testAction instanceof MessageAwareTestAction messageAware) {
-            messageAware.getMessage().ifPresent(tar::setMessage);
-        }
-
-        ReportEntry reportEntry = flowReport.getOrCreateNew(test.getName());
-        reportEntry.addAction(tar);
-
-        if (testAction instanceof TestActionContainer actionContainer) {
-            addNestedTestActions(actionPath, actionContainer, tar);
-        }
+        recordTestAction(test, testAction, null);
     }
 
     @Override
     public void onTestActionFailed(TestCase test, TestAction testAction, Throwable cause) {
-        String actionPath = getActionPath(test, testAction);
+        recordTestAction(test, testAction, Optional.ofNullable(cause.getMessage()).orElse(""));
+    }
+
+    private void recordTestAction(TestCase test, TestAction testAction, String error) {
+        boolean finalAction = finalActionsTests.contains(test.getName());
+        ReportEntry reportEntry = flowReport.getOrCreateNew(test.getName());
+        String actionPath = finalAction
+                ? "finally.%d.%s".formatted(reportEntry.getFinalActions().size(), testAction.getName())
+                : getActionPath(test, testAction);
         TestActionResult tar = new TestActionResult(testAction.getName(), actionPath);
 
         if (testAction instanceof MessageAwareTestAction messageAware) {
             messageAware.getMessage().ifPresent(tar::setMessage);
         }
 
-        ReportEntry reportEntry = flowReport.getOrCreateNew(test.getName());
-        reportEntry.addAction(tar);
-        tar.setError(Optional.ofNullable(cause.getMessage()).orElse(""));
+        if (error != null) {
+            tar.setError(error);
+        }
+
+        if (finalAction) {
+            reportEntry.addFinalAction(tar);
+        } else {
+            reportEntry.addAction(tar);
+        }
 
         if (testAction instanceof TestActionContainer actionContainer) {
             addNestedTestActions(actionPath, actionContainer, tar);
@@ -219,6 +224,16 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
 
     @Override
     public void onTestActionSkipped(TestCase test, TestAction testAction) {
+    }
+
+    @Override
+    public void onFinalActionsStart(TestCase test) {
+        finalActionsTests.add(test.getName());
+    }
+
+    @Override
+    public void onFinalActionsEnd(TestCase test) {
+        finalActionsTests.remove(test.getName());
     }
 
     private static String getActionPath(TestActionContainer container, TestAction testAction) {
@@ -330,6 +345,7 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
         private final String name;
         private TestResult result;
         private final List<TestActionResult> actions = new ArrayList<>();
+        private final List<TestActionResult> finalActions = new ArrayList<>();
 
         public ReportEntry(String name) {
             this.name = name;
@@ -355,29 +371,53 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
             this.actions.add(action);
         }
 
+        public List<TestActionResult> getFinalActions() {
+            return finalActions;
+        }
+
+        public void addFinalAction(TestActionResult action) {
+            this.finalActions.add(action);
+        }
+
         public String toJson() {
-            return new JsonStringBuilder()
+            var builder = new JsonStringBuilder()
                 .withObject()
                     .withProperty("name", name)
                     .withProperty("result").append(Optional.ofNullable(result).map(TestResult::toJson).orElse("{}"))
                     .withProperty("actions")
                         .withArray()
                             .append(actions.stream().map(TestActionResult::toJson).collect(Collectors.joining(",")))
-                        .closeArray()
-                    .closeObject()
-                .toString();
+                        .closeArray();
+
+            if (!finalActions.isEmpty()) {
+                builder.withProperty("finally")
+                        .withArray()
+                            .append(finalActions.stream().map(TestActionResult::toJson).collect(Collectors.joining(",")))
+                        .closeArray();
+            }
+
+            return builder.closeObject().toString();
         }
 
         public String toYaml() {
-            return new YamlStringBuilder()
+            var builder = new YamlStringBuilder()
                 .withProperty("name", name)
                 .withObject("result").append(Optional.ofNullable(result).map(TestResult::toYaml).orElse("{}")).closeObject()
                 .withObject("actions")
                     .withArray()
                         .append(actions.stream().map(TestActionResult::toYaml).toList())
                     .closeArray()
-                .closeObject()
-                .toString();
+                .closeObject();
+
+            if (!finalActions.isEmpty()) {
+                builder.withObject("finally")
+                    .withArray()
+                        .append(finalActions.stream().map(TestActionResult::toYaml).toList())
+                    .closeArray()
+                    .closeObject();
+            }
+
+            return builder.toString();
         }
     }
 }
