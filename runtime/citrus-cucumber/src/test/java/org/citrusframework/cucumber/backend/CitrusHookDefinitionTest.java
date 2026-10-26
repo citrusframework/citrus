@@ -36,10 +36,9 @@ public class CitrusHookDefinitionTest {
 
     @Test
     public void shouldExposeBeforeHookMetadata() throws NoSuchMethodException {
-        CitrusHookDefinition hook = new CitrusHookDefinition(method("before"), "", 10000, lookup,
-                "Citrus lifecycle before", HookType.BEFORE);
+        CitrusHookDefinition hook = new CitrusHookDefinition(method("before"), "", 10000, lookup, HookType.BEFORE);
 
-        assertEquals(hook.getName(), Optional.of("Citrus lifecycle before"));
+        assertEquals(hook.getName(), Optional.of("HookMethods.before"));
         assertEquals(hook.getHookType(), Optional.of(HookType.BEFORE));
         assertEquals(hook.getOrder(), 10000);
         assertEquals(hook.getTagExpression(), "");
@@ -47,13 +46,21 @@ public class CitrusHookDefinitionTest {
 
     @Test
     public void shouldExposeAfterHookMetadata() throws NoSuchMethodException {
-        CitrusHookDefinition hook = new CitrusHookDefinition(method("after"), "", 10000, lookup,
-                "Citrus lifecycle after", HookType.AFTER);
+        CitrusHookDefinition hook = new CitrusHookDefinition(method("after"), "", 10000, lookup, HookType.AFTER);
 
-        assertEquals(hook.getName(), Optional.of("Citrus lifecycle after"));
+        assertEquals(hook.getName(), Optional.of("HookMethods.after"));
         assertEquals(hook.getHookType(), Optional.of(HookType.AFTER));
         assertEquals(hook.getOrder(), 10000);
         assertEquals(hook.getTagExpression(), "");
+    }
+
+    @Test
+    public void shouldUseExplicitHookName() throws NoSuchMethodException {
+        CitrusHookDefinition hook = new CitrusHookDefinition(method("before"), "", 10000, lookup,
+                "Citrus lifecycle before", HookType.BEFORE);
+
+        assertEquals(hook.getName(), Optional.of("Citrus lifecycle before"));
+        assertEquals(hook.getHookType(), Optional.of(HookType.BEFORE));
     }
 
     @Test
