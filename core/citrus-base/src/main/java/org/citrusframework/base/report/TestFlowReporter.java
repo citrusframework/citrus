@@ -284,6 +284,7 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
 
     public void clear() {
         flowReport.clear();
+        finalActionsTests.clear();
     }
 
     public static class TestFlowReport {
