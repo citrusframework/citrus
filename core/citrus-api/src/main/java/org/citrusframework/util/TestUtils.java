@@ -18,6 +18,7 @@ package org.citrusframework.util;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -153,14 +154,14 @@ public abstract class TestUtils {
 
     public static boolean isNetworkReachable() {
         try {
-            URL url = new URL(HTTPS_CITRUSFRAMEWORK_ORG);
+            URL url = URI.create(HTTPS_CITRUSFRAMEWORK_ORG).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
             int responseCode = connection.getResponseCode();
             return responseCode == HttpURLConnection.HTTP_OK;
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             return false;
         }
     }

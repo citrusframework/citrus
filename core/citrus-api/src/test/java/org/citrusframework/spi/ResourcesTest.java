@@ -170,7 +170,7 @@ public class ResourcesTest {
 
     @Test
     public void urlResourceExistsOnConnectionTest() throws IOException {
-        URL withContentUrlMock = spy(new URL(Resources.HTTP_RESOURCE_PREFIX + "//host/context"));
+        URL withContentUrlMock = spy(URI.create(Resources.HTTP_RESOURCE_PREFIX + "//host/context").toURL());
         HttpURLConnection urlConnectionMock = mock(HttpURLConnection.class);
         doReturn(urlConnectionMock).when(withContentUrlMock).openConnection();
         doReturn(HttpURLConnection.HTTP_OK).when(urlConnectionMock).getResponseCode();
@@ -179,7 +179,7 @@ public class ResourcesTest {
 
     @Test
     public void urlResourceNotExistsOnConnectionFailureTest() throws IOException {
-        URL withContentUrlMock = spy(new URL(Resources.HTTP_RESOURCE_PREFIX + "//host/context"));
+        URL withContentUrlMock = spy(URI.create(Resources.HTTP_RESOURCE_PREFIX + "//host/context").toURL());
         HttpURLConnection urlConnectionMock = mock(HttpURLConnection.class);
         doReturn(urlConnectionMock).when(withContentUrlMock).openConnection();
         doReturn(HttpURLConnection.HTTP_INTERNAL_ERROR).when(urlConnectionMock).getResponseCode();
@@ -198,7 +198,7 @@ public class ResourcesTest {
 
     @Test
     public void urlResourceNotExistsOnIOExceptionTest() throws IOException {
-        URL withContentUrlMock = spy(new URL(Resources.HTTP_RESOURCE_PREFIX + "//host/context"));
+        URL withContentUrlMock = spy(URI.create(Resources.HTTP_RESOURCE_PREFIX + "//host/context").toURL());
         doThrow(new IOException("Test Exception[urlResourceNotExistsOnIoExceptionTest]"))
             .when(withContentUrlMock).openConnection();
         assertThrows(CitrusRuntimeException.class, () -> new UrlResource(withContentUrlMock).exists());
@@ -206,7 +206,7 @@ public class ResourcesTest {
 
     @Test
     public void urlResourceInputStreamTest() throws IOException {
-        URL withContentUrlMock = spy(new URL(Resources.HTTP_RESOURCE_PREFIX + "//host/context"));
+        URL withContentUrlMock = spy(URI.create(Resources.HTTP_RESOURCE_PREFIX + "//host/context").toURL());
         HttpURLConnection urlConnectionMock = mock(HttpURLConnection.class);
         InputStream inputStreamMock = mock(InputStream.class);
 
@@ -219,7 +219,7 @@ public class ResourcesTest {
 
     @Test
     public void urlResourceInputStreamIOExceptionTest() throws IOException {
-        URL withContentUrlMock = spy(new URL(Resources.HTTP_RESOURCE_PREFIX + "//host/context"));
+        URL withContentUrlMock = spy(URI.create(Resources.HTTP_RESOURCE_PREFIX + "//host/context").toURL());
         HttpURLConnection urlConnectionMock = mock(HttpURLConnection.class);
 
         doReturn(urlConnectionMock).when(withContentUrlMock).openConnection();
