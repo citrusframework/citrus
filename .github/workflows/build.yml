@@ -38,7 +38,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      checks: write
       checks: write
       pull-requests: write
       actions: read
