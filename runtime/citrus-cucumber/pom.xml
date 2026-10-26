@@ -82,6 +82,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <systemPropertyVariables>
+            <!-- Keep the termination log path absolute so it resolves regardless of the provider working directory -->
+            <citrus.termination.log>${project.build.directory}/termination.log</citrus.termination.log>
+          </systemPropertyVariables>
+        </configuration>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>
