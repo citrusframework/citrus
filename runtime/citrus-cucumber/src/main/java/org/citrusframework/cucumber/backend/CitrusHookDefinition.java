@@ -38,6 +38,10 @@ public class CitrusHookDefinition implements HookDefinition {
         this(method, tagExpression, order, lookup, null, null);
     }
 
+    public CitrusHookDefinition(Method method, String tagExpression, int order, Lookup lookup, HookType hookType) {
+        this(method, tagExpression, order, lookup, deriveName(method), hookType);
+    }
+
     public CitrusHookDefinition(Method method, String tagExpression, int order, Lookup lookup,
                                 String name, HookType hookType) {
         this.method = method;
@@ -46,6 +50,15 @@ public class CitrusHookDefinition implements HookDefinition {
         this.lookup = lookup;
         this.name = name;
         this.hookType = hookType;
+    }
+
+    /**
+     * Derives a readable hook name from the hook method.
+     * @param method the hook method.
+     * @return the name of the hook.
+     */
+    private static String deriveName(Method method) {
+        return method.getDeclaringClass().getSimpleName() + "." + method.getName();
     }
 
     @Override

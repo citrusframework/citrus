@@ -76,12 +76,10 @@ public class CitrusBackend implements Backend {
         try {
             if (container.addClass(CitrusLifecycleHooks.class)) {
                 Method beforeMethod = CitrusLifecycleHooks.class.getMethod("before", Scenario.class);
-                glue.addBeforeHook(new CitrusHookDefinition(beforeMethod, "", 10000, lookup,
-                        "Citrus lifecycle before", HookType.BEFORE));
+                glue.addBeforeHook(new CitrusHookDefinition(beforeMethod, "", 10000, lookup, HookType.BEFORE));
 
                 Method afterMethod = CitrusLifecycleHooks.class.getMethod("after", Scenario.class);
-                glue.addAfterHook(new CitrusHookDefinition(afterMethod, "", 10000, lookup,
-                        "Citrus lifecycle after", HookType.AFTER));
+                glue.addAfterHook(new CitrusHookDefinition(afterMethod, "", 10000, lookup, HookType.AFTER));
             }
         } catch (NoSuchMethodException e) {
             throw new CucumberException("Unable to add Citrus lifecycle hooks");
