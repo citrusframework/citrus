@@ -32,5 +32,5 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
         value = "pretty," +
                 "org.citrusframework.cucumber.report.json.TerminationLogReporter," +
                 "org.citrusframework.cucumber.integration.report.ReportVerifyPlugin")
-public class TerminationLogReporterTest {
+public class TerminationLogReporterIT {
 }
