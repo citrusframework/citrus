@@ -374,6 +374,10 @@ classes explicitly or let Cucumber scan glue packages.
 |Threshold that controls when Cucumber prints the glue hint.
 |===
 
+NOTE: The `cucumber.glue.classes`, `cucumber.glue.included-class-name-pattern`, `cucumber.glue.excluded-class-name-pattern`
+and `cucumber.glue.hint.*` parameters are experimental in Cucumber 8 and may still change in later 8.x releases. Scanning a
+glue package with `cucumber.glue` is the stable alternative.
+
 Explicit glue classes are the fastest option and also work well with GraalVM native images, because the step classes do
 not have to be discovered with classpath scanning. The list must contain every glue class the features use, including
 your own step classes and any predefined Citrus step classes.
