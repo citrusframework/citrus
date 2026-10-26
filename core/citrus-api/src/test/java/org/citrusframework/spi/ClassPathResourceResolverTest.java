@@ -26,6 +26,7 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Enumeration;
@@ -113,7 +114,7 @@ public class ClassPathResourceResolverTest {
                 URL url = delegate.getResource(baseJar);
                 requireNonNull(url);
 
-                URL jarResourceUrl = new URL("jar:" + normalizeUrl(url) + nestedJar + "!/META-INF/citrus/test/parser/core");
+                URL jarResourceUrl = URI.create("jar:" + normalizeUrl(url) + nestedJar + "!/META-INF/citrus/test/parser/core").toURL();
 
                 // "nested" is not recognized protocol and can thus not be used for creating URLS.
                 // Therefore, use a spy to fake in the "nested" protocol if needed.
@@ -134,8 +135,8 @@ public class ClassPathResourceResolverTest {
                 URL nestedJarUrl = getNestedJarUrl();
 
                 try {
-                    return new URL(nestedJarUrl + "/" + name);
-                } catch (MalformedURLException e) {
+                    return URI.create(nestedJarUrl + "/" + name).toURL();
+                } catch (MalformedURLException | IllegalArgumentException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -148,8 +149,8 @@ public class ClassPathResourceResolverTest {
             requireNonNull(url);
 
             try {
-                return new URL("jar:" + normalizeUrl(url) + "!/BOOT-INF/lib/test-nested-jar.jar");
-            } catch (MalformedURLException e) {
+                return URI.create("jar:" + normalizeUrl(url) + "!/BOOT-INF/lib/test-nested-jar.jar").toURL();
+            } catch (MalformedURLException | IllegalArgumentException e) {
                 throw new RuntimeException(e);
             }
         }

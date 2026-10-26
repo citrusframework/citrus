@@ -57,8 +57,8 @@ public class Resources {
             return fromFileSystem(filePath);
         } else if (filePath.startsWith(HTTP_RESOURCE_PREFIX) || filePath.startsWith(JAR_RESOURCE_PREFIX)) {
             try {
-                return create(new URL(filePath));
-            } catch (MalformedURLException e) {
+                return create(URI.create(filePath).toURL());
+            } catch (MalformedURLException | IllegalArgumentException e) {
                 throw new CitrusRuntimeException(e);
             }
         }
