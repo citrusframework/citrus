@@ -10,7 +10,7 @@ The step implementation represents the actual runtime logic executed with the fe
 Citrus provides a set of default ready-to-use step implementations that you can just add to your feature file.
 The predefined steps leverage Citrus endpoints and test actions to perform integration testing with proper message exchange and validation.
 
-IMPORTANT: If you want to use the predefined Citrus step implementations, please make sure to include the extra glue package as follows:
+IMPORTANT: If you want to use the predefined Citrus step implementations, please make sure to register the step classes as glue as follows:
 
 .MyFeatureIT.java
 [source,java]
@@ -20,18 +20,27 @@ import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
 
-import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
+import static io.cucumber.junit.platform.engine.Constants.GLUE_CLASSES_PROPERTY_NAME;
 import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 
 @Suite
 @IncludeEngines("cucumber")
 @SelectPackages("com.example")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example,org.citrusframework.cucumber")
+@ConfigurationParameter(key = GLUE_CLASSES_PROPERTY_NAME, value = "org.citrusframework.cucumber.steps.core.StandardSteps,"
+        + "org.citrusframework.cucumber.steps.core.MessagingSteps,"
+        + "org.citrusframework.cucumber.steps.core.EndpointSteps,"
+        + "org.citrusframework.cucumber.steps.core.ComponentSteps")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
 public class MyFeatureIT {
 
 }
 ----
+
+The example registers the step classes of the `citrus-cucumber-core` module. Add the step classes of the other step
+modules you use, as well as your own step classes, to the same list. Each step module keeps its step classes in the
+package `org.citrusframework.cucumber.steps.<module>`. When you prefer package scanning, use such a package as
+`cucumber.glue` and narrow the scan with `cucumber.glue.included-class-name-pattern` or
+`cucumber.glue.excluded-class-name-pattern` as described in xref:runtimes-cucumber#cucumber-glue-discovery[glue discovery].
 
 IMPORTANT: The step implementations are executed with the JUnit Platform suite support. Make sure to add the
 `cucumber-junit-platform-engine` and `junit-platform-suite` dependencies to your project as described in
@@ -40,15 +49,18 @@ xref:runtimes-cucumber[Cucumber integration with Citrus].
 TIP: Still using `@RunWith(Cucumber.class)` and `@CucumberOptions`? Follow
 xref:runtimes-cucumber#cucumber-junit4-migration[the JUnit 4 migration section] before including the Citrus step glue.
 
-As an alternative you may declare the glue package in `junit-platform.properties` in your project.
+As an alternative you may declare the glue in `junit-platform.properties` in your project.
 
 .junit-platform.properties
 [source,properties]
 ----
 cucumber.object-factory=org.citrusframework.cucumber.backend.CitrusObjectFactory
-cucumber.glue=org.citrusframework.cucumber
+cucumber.glue.classes=org.citrusframework.cucumber.steps.core.StandardSteps,org.citrusframework.cucumber.steps.core.MessagingSteps
 cucumber.plugin=pretty,org.citrusframework.cucumber.CitrusReporter
 ----
+
+TIP: To load the predefined steps of every step module on the classpath, use the broad glue package instead:
+`cucumber.glue=org.citrusframework.cucumber`. This scans all Citrus step packages and therefore takes longer to start.
 
 NOTE: The Citrus step implementations require a special Cucumber object factory `org.citrusframework.cucumber.backend.CitrusObjectFactory`.
 

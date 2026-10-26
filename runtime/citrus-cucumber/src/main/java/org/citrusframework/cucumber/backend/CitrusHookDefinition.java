@@ -17,6 +17,7 @@
 package org.citrusframework.cucumber.backend;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import io.cucumber.core.backend.CucumberBackendException;
 import io.cucumber.core.backend.HookDefinition;
@@ -30,12 +31,21 @@ public class CitrusHookDefinition implements HookDefinition {
     private final Lookup lookup;
     private final String tagExpression;
     private final int order;
+    private final String name;
+    private final HookType hookType;
 
     public CitrusHookDefinition(Method method, String tagExpression, int order, Lookup lookup) {
+        this(method, tagExpression, order, lookup, null, null);
+    }
+
+    public CitrusHookDefinition(Method method, String tagExpression, int order, Lookup lookup,
+                                String name, HookType hookType) {
         this.method = method;
         this.tagExpression = tagExpression;
         this.order = order;
         this.lookup = lookup;
+        this.name = name;
+        this.hookType = hookType;
     }
 
     @Override
@@ -62,6 +72,16 @@ public class CitrusHookDefinition implements HookDefinition {
     @Override
     public int getOrder() {
         return order;
+    }
+
+    @Override
+    public Optional<String> getName() {
+        return Optional.ofNullable(name);
+    }
+
+    @Override
+    public Optional<HookType> getHookType() {
+        return Optional.ofNullable(hookType);
     }
 
     @Override
