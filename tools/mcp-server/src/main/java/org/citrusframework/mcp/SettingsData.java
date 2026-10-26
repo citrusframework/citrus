@@ -47,8 +47,8 @@ public class SettingsData {
         GROUPS.put("spring", createSpringSettings());
         GROUPS.put("agent", createAgentSettings());
         GROUPS.put("camel", createCamelSettings());
-        GROUPS.put("camel-cli", createCamelCliSettings());
-        GROUPS.put("camel-infra", createCamelInfraSettings());
+        GROUPS.put("camel:cli", createCamelCliSettings());
+        GROUPS.put("camel:infra", createCamelInfraSettings());
         GROUPS.put("http", createHttpSettings());
         GROUPS.put("ftp", createFtpSettings());
         GROUPS.put("mail", createMailSettings());
@@ -60,11 +60,11 @@ public class SettingsData {
         GROUPS.put("knative", createKnativeSettings());
         GROUPS.put("kafka", createKafkaEndpointSettings());
         GROUPS.put("testcontainers", createTestContainersSettings());
-        GROUPS.put("testcontainers-kafka", createKafkaSettings());
-        GROUPS.put("testcontainers-localstack", createLocalStackSettings());
-        GROUPS.put("testcontainers-postgresql", createPostgreSQLSettings());
-        GROUPS.put("testcontainers-mongodb", createMongoDBSettings());
-        GROUPS.put("testcontainers-redpanda", createRedpandaSettings());
+        GROUPS.put("testcontainers:kafka", createKafkaSettings());
+        GROUPS.put("testcontainers:localstack", createLocalStackSettings());
+        GROUPS.put("testcontainers:postgresql", createPostgreSQLSettings());
+        GROUPS.put("testcontainers:mongodb", createMongoDBSettings());
+        GROUPS.put("testcontainers:redpanda", createRedpandaSettings());
     }
 
     public Map<String, SettingsGroup> getGroups() {
@@ -462,7 +462,7 @@ public class SettingsData {
                 "jbang", STRING,
                 "Camel CLI launcher type (jbang or launcher)"));
 
-        return new SettingsGroup("camel-cli", "Camel CLI Settings",
+        return new SettingsGroup("camel:cli", "Camel CLI Settings",
                 "Camel CLI (formerly JBang) settings from CamelCliSettings", "citrus-camel", settings);
     }
 
@@ -482,7 +482,7 @@ public class SettingsData {
                 "false", BOOLEAN,
                 "Use fixed port for infrastructure services"));
 
-        return new SettingsGroup("camel-infra", "Camel Infrastructure Settings",
+        return new SettingsGroup("camel:infra", "Camel Infrastructure Settings",
                 "Camel infrastructure service settings from CamelInfraSettings", "citrus-camel", settings);
     }
 
@@ -779,7 +779,7 @@ public class SettingsData {
                 "7.9.5", STRING,
                 "Default Kafka container image version"));
 
-        return new SettingsGroup("testcontainers-kafka", "Kafka Testcontainers Settings",
+        return new SettingsGroup("testcontainers:kafka", "Kafka Testcontainers Settings",
                 "Kafka container settings from KafkaSettings", "citrus-testcontainers", settings);
     }
 
@@ -811,7 +811,7 @@ public class SettingsData {
                 "secretkey", STRING,
                 "AWS secret key for LocalStack"));
 
-        return new SettingsGroup("testcontainers-localstack", "LocalStack Testcontainers Settings",
+        return new SettingsGroup("testcontainers:localstack", "LocalStack Testcontainers Settings",
                 "LocalStack/AWS container settings from LocalStackSettings", "citrus-testcontainers", settings);
     }
 
@@ -843,7 +843,7 @@ public class SettingsData {
                 "180", INT,
                 "PostgreSQL container startup timeout in seconds"));
 
-        return new SettingsGroup("testcontainers-postgresql", "PostgreSQL Testcontainers Settings",
+        return new SettingsGroup("testcontainers:postgresql", "PostgreSQL Testcontainers Settings",
                 "PostgreSQL container settings from PostgreSQLSettings", "citrus-testcontainers", settings);
     }
 
@@ -866,7 +866,7 @@ public class SettingsData {
                 "180", INT,
                 "MongoDB container startup timeout in seconds"));
 
-        return new SettingsGroup("testcontainers-mongodb", "MongoDB Testcontainers Settings",
+        return new SettingsGroup("testcontainers:mongodb", "MongoDB Testcontainers Settings",
                 "MongoDB container settings from MongoDBSettings", "citrus-testcontainers", settings);
     }
 
@@ -889,7 +889,7 @@ public class SettingsData {
                 "180", INT,
                 "Redpanda container startup timeout in seconds"));
 
-        return new SettingsGroup("testcontainers-redpanda", "Redpanda Testcontainers Settings",
+        return new SettingsGroup("testcontainers:redpanda", "Redpanda Testcontainers Settings",
                 "Redpanda container settings from RedpandaSettings", "citrus-testcontainers", settings);
     }
 

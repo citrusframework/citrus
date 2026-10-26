@@ -90,8 +90,8 @@ class SettingsResourcesTest {
         assertThat(result).isNotNull();
         assertThat(result.uri()).isEqualTo("citrus://settings/module/citrus-camel");
         assertThat(result.text()).contains("\"name\":\"camel\"");
-        assertThat(result.text()).contains("\"name\":\"camel-cli\"");
-        assertThat(result.text()).contains("\"name\":\"camel-infra\"");
+        assertThat(result.text()).contains("\"name\":\"camel:cli\"");
+        assertThat(result.text()).contains("\"name\":\"camel:infra\"");
     }
 
     @Test

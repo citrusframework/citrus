@@ -42,7 +42,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
 
     private AbstractTestcontainersAction.Builder<? extends AbstractTestcontainersAction, ?> delegate;
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers-compose")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:compose")
     public void setUp(Up composeUp) {
         ComposeUpAction.Builder builder = new ComposeUpAction.Builder();
 
@@ -80,7 +80,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers-compose")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:compose")
     public void setDown(Down composeDown) {
         ComposeDownAction.Builder builder = new ComposeDownAction.Builder();
         builder.containerName(composeDown.getName());

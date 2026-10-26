@@ -155,7 +155,7 @@ public class CatalogService {
             return name;
         }
 
-        if (name.startsWith(group + "-")) {
+        if (name.startsWith(group + ":") || name.startsWith(group + "-")) {
             return name.substring(group.length() + 1);
         }
 

@@ -47,6 +47,6 @@ public class InspectTest extends CommandTest {
         Assertions.assertTrue(printer.getOutput().contains("\"receive\""));
         Assertions.assertTrue(printer.getOutput().contains("\"print\""));
         Assertions.assertTrue(printer.getOutput().contains("\"send\""));
-        Assertions.assertTrue(printer.getOutput().contains("\"camel-infra-run\""));
+        Assertions.assertTrue(printer.getOutput().contains("\"camel:infra:run\""));
     }
 }

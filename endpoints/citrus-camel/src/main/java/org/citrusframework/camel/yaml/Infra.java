@@ -30,7 +30,7 @@ import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 
 public class Infra implements CamelActionBuilderWrapper<AbstractCamelAction.Builder<?, ?>> {
 
-    private static final String CAMEL_INFRA_GROUP = "camel-infra";
+    private static final String CAMEL_INFRA_GROUP = "camel:infra";
 
     private AbstractCamelAction.Builder<?, ?> builder;
 

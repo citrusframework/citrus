@@ -266,7 +266,7 @@ public interface CodeAnalyzer {
      * @return optional alias for given token or empty.
      */
     default Optional<String> getTestActionAliasFor(String key, String token) {
-        if (key.startsWith("camel-") && token.equals("cli")) {
+        if (key.startsWith("camel:") && token.equals("cli")) {
             // jbang is an alias for cli in Camel test actions
             return Optional.of("jbang");
         }
