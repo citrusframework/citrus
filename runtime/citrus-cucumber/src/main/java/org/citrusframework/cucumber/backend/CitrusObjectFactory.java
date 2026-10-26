@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import io.cucumber.core.backend.DefaultObjectFactory;
 import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.exception.CucumberException;
 import org.citrusframework.CitrusInstanceManager;
@@ -80,13 +81,15 @@ public class CitrusObjectFactory implements ObjectFactory {
     }
 
     private <T> T createNewInstance(Class<T> type) {
+        Constructor<T> constructor = DefaultObjectFactory.getNonPrivateZeroArgumentConstructor(type);
+        if (constructor == null) {
+            throw new CucumberException(String.format("%s doesn't have a non-private zero-argument constructor", type.getName()));
+        }
+
         try {
-            Constructor<T> constructor = type.getConstructor();
-            T instance = constructor.newInstance();
+            T instance = DefaultObjectFactory.makeAccessible(constructor).newInstance();
             instances.put(type, instance);
             return instance;
-        } catch (NoSuchMethodException e) {
-            throw new CucumberException(String.format("%s doesn't have an empty constructor", type), e);
         } catch (Exception e) {
             throw new CucumberException(String.format("Failed to instantiate %s", type), e);
         }
