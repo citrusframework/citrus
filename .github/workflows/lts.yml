@@ -29,6 +29,10 @@ jobs:
         version: [ 21, 25 ]
         os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      checks: write
+      actions: read
     steps:
       - name: Set up JDK
         uses: actions/setup-java@v5
@@ -57,4 +61,11 @@ jobs:
           
           jbang --version
           
-          ./mvnw --no-transfer-progress -Djava.version=${{ matrix.version }} install
+          ./mvnw --no-transfer-progress --fail-at-end -Djava.version=${{ matrix.version }} install
+
+      - name: Publish test report
+        if: ${{ !cancelled() }}
+        uses: ./.github/actions/test-report
+        with:
+          report-name: Maven Tests (Java ${{ matrix.version }})
+          artifact-name: surefire-reports-java-${{ matrix.version }}

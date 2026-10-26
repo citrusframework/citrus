@@ -37,6 +37,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+      actions: read
     env:
       # Browsers come from the playwright-runtimes profile only, so a missing
       # runtime surfaces as skipped tests instead of an implicit full download.
@@ -86,10 +91,17 @@ jobs:
           
           # On a pull request, build only the modules this branch touched plus
           # everything downstream of them. Pushes to main always build in full.
-          ./mvnw --no-transfer-progress install -P${MAVEN_PROFILES}
+          # --fail-at-end keeps building unaffected modules after a test
+          # failure so the test report below collects all failures, not just
+          # the first failing module.
+          ./mvnw --no-transfer-progress --fail-at-end install -P${MAVEN_PROFILES}
         env:
           MAVEN_PROFILES: ${{ github.event_name == 'pull_request' && 'playwright-runtimes,gib' || 'playwright-runtimes' }}
 
       - name: Show modules selected by the incremental build
         if: always() && github.event_name == 'pull_request'
         run: cat target/gib-impacted-modules.log || echo "no impacted-modules log (full build or nothing selected)"
+
+      - name: Publish test report
+        if: ${{ !cancelled() }}
+        uses: ./.github/actions/test-report
