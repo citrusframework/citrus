@@ -55,7 +55,7 @@ public class Catalog {
     public void add(CatalogItem item) {
         String name = Optional.ofNullable(item.schema.group())
                 .filter(group -> !group.isBlank())
-                .map(group -> "%s-%s".formatted(group, item.name))
+                .map(group -> "%s:%s".formatted(group, item.name))
                 .orElse(item.name);
         collectedItems.put(name, item);
     }

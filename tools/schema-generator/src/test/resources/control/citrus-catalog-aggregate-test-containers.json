@@ -445,10 +445,10 @@
       ],
       "additionalProperties": false    }
   },
-  "soap-assertFault": {
+  "soap:assertFault": {
     "kind": "testContainer",
     "version": "${citrus.version}",
-    "name": "soap-assertFault",
+    "name": "soap:assertFault",
     "group": "soap",
     "module": "citrus-ws",
     "title": "AssertFault",

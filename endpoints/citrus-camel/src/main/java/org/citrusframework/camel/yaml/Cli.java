@@ -44,7 +44,7 @@ import static org.citrusframework.api.yaml.SchemaProperty.Kind.GROUP;
 
 public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Builder<?, ?>> {
 
-    private static final String CAMEL_CLI_GROUP = "camel-cli";
+    private static final String CAMEL_CLI_GROUP = "camel:cli";
 
     private AbstractCamelCliAction.Builder<?, ?> builder;
 
@@ -646,7 +646,7 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
 
     public static class Plugin implements CamelActionBuilderWrapper<AbstractCamelCliAction.Builder<?, ?>> {
 
-        private static final String CAMEL_CLI_PLUGIN_GROUP = "camel-cli-plugin";
+        private static final String CAMEL_CLI_PLUGIN_GROUP = "camel:cli:plugin";
 
         private AbstractCamelCliAction.Builder<?, ?> builder;
 
@@ -727,7 +727,7 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
 
     public static class Cmd implements CamelActionBuilderWrapper<AbstractCamelCliAction.Builder<?, ?>> {
 
-        private static final String CAMEL_CLI_CMD_GROUP = "camel-cli-cmd";
+        private static final String CAMEL_CLI_CMD_GROUP = "camel:cli:cmd";
 
         private AbstractCamelCliAction.Builder<?, ?> builder;
 
@@ -1088,7 +1088,7 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
 
     public static class Kubernetes implements CamelActionBuilderWrapper<AbstractCamelCliAction.Builder<?, ?>> {
 
-        private static final String CAMEL_CLI_KUBERNETES_GROUP = "camel-cli-kubernetes";
+        private static final String CAMEL_CLI_KUBERNETES_GROUP = "camel:cli:kubernetes";
 
         private AbstractCamelCliAction.Builder<?, ?> builder;
 

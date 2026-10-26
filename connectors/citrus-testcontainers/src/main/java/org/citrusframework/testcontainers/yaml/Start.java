@@ -49,14 +49,14 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
     private StartTestcontainersAction.AbstractBuilder<?, ?, ?> delegate;
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
     public void setContainer(Container container) {
         StartTestcontainersAction.Builder<?> builder = new StartTestcontainersAction.Builder<>();
         configureStartActionBuilder(builder, container);
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
     public void setLocalstack(LocalStack container) {
         StartLocalStackAction.Builder builder = new StartLocalStackAction.Builder();
         if (container.getVersion() != null) {
@@ -94,7 +94,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
     public void setFloci(Floci container) {
         StartFlociAction.Builder builder = new StartFlociAction.Builder();
         if (container.getVersion() != null) {
@@ -128,7 +128,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
     public void setMongodb(MongoDB container) {
         StartMongoDBAction.Builder builder = new StartMongoDBAction.Builder();
         if (container.getVersion() != null) {
@@ -140,7 +140,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
     public void setKafka(Kafka container) {
         StartKafkaAction.Builder builder = new StartKafkaAction.Builder();
         if (container.getVersion() != null) {
@@ -164,7 +164,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
     public void setRedpanda(Redpanda container) {
         StartRedpandaAction.Builder builder = new StartRedpandaAction.Builder();
         if (container.getVersion() != null) {
@@ -184,7 +184,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers-start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
     public void setPostgresql(PostgreSQL container) {
         StartPostgreSQLAction.Builder builder = new StartPostgreSQLAction.Builder();
         if (container.getVersion() != null) {

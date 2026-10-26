@@ -55,8 +55,8 @@ public class GroovyCodeAnalyzerTest {
 
         Assert.assertEquals(scanResult.actions().length, 6L);
         String[] foundActions = Arrays.stream(scanResult.actions()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundActions[0], "camel-cli-run");
-        Assert.assertEquals(foundActions[1], "camel-infra-run");
+        Assert.assertEquals(foundActions[0], "camel:cli:run");
+        Assert.assertEquals(foundActions[1], "camel:infra:run");
         Assert.assertEquals(foundActions[2], "createEndpoint");
         Assert.assertEquals(foundActions[3], "print");
         Assert.assertEquals(foundActions[4], "receive");

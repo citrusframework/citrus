@@ -97,7 +97,7 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
                 .filter(entry -> "testAction".equals(entry.getValue().kind()))
                 .collect(Collectors.toSet());
         for (Map.Entry<String, ComponentDefinition> entry : testGroups) {
-            String[] tokens = entry.getKey().split("-");
+            String[] tokens = entry.getKey().split(":");
 
             boolean allMatch = true;
             for (int i = 0; i < tokens.length && allMatch; i++) {
@@ -128,7 +128,7 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
                     }
                 }
 
-                if (entry.getKey().contains("-jbang-") || entry.getKey().contains("-cli-")) {
+                if (entry.getKey().contains(":jbang:") || entry.getKey().contains(":cli:")) {
                     // add jbang connector as it often is a provided scope dependency
                     modules.add("citrus-jbang-connector");
                 }

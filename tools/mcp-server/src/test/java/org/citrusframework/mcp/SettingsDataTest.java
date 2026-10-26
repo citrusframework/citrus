@@ -33,14 +33,14 @@ class SettingsDataTest {
 
         assertThat(groupNames).contains(
                 "core", "logging", "reporting", "spring", "agent",
-                "camel", "camel-cli", "camel-infra",
+                "camel", "camel:cli", "camel:infra",
                 "http", "ftp", "mail", "openapi",
                 "json", "yaml-validation",
                 "jbang", "kubernetes", "knative",
                 "kafka",
-                "testcontainers", "testcontainers-kafka",
-                "testcontainers-localstack", "testcontainers-postgresql",
-                "testcontainers-mongodb", "testcontainers-redpanda");
+                "testcontainers", "testcontainers:kafka",
+                "testcontainers:localstack", "testcontainers:postgresql",
+                "testcontainers:mongodb", "testcontainers:redpanda");
     }
 
     @Test
@@ -146,7 +146,7 @@ class SettingsDataTest {
 
         assertThat(groups).hasSize(3);
         assertThat(groups).extracting(SettingsData.SettingsGroup::name)
-                .containsExactlyInAnyOrder("camel", "camel-cli", "camel-infra");
+                .containsExactlyInAnyOrder("camel", "camel:cli", "camel:infra");
     }
 
     @Test
