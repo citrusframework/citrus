@@ -20,6 +20,7 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
+import org.apache.camel.builder.EndpointProducerBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointUriBuilder;
 import org.citrusframework.base.message.builder.MessageBuilderSupport;
@@ -64,6 +65,14 @@ public class CamelExchangeActionBuilder<T extends MessageBuilderSupport.MessageA
     @Override
     public T endpoint(String endpointUri) {
         return endpoint(endpointUri, false);
+    }
+
+    public T endpoint(EndpointProducerBuilder builder) {
+        return endpoint(builder.getRawUri(), false);
+    }
+
+    public T endpoint(EndpointProducerBuilder builder, boolean inOut) {
+        return endpoint(builder.getRawUri(), inOut);
     }
 
     @Override
