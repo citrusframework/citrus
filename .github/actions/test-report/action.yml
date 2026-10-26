@@ -47,7 +47,11 @@ runs:
       uses: dorny/test-reporter@v2
       with:
         name: ${{ inputs.report-name }}
-        path: '**/target/surefire-reports/*.xml,**/target/failsafe-reports/*.xml'
+        # Only surefire's own TEST-*.xml schema (emitted for JUnit and
+        # TestNG providers alike). TestNG-native testng-results.xml and
+        # failsafe-summary.xml use different schemas and must stay out:
+        # dorny requires every matched file to share one format.
+        path: '**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml'
         reporter: java-junit
         # Build status already comes from the Maven step, so the report
         # itself stays informational. This also keeps fork PRs (read-only
