@@ -53,6 +53,18 @@ public class CitrusObjectFactoryTest {
     }
 
     @Test
+    public void testProtectedStepsInstantiation() {
+        CitrusObjectFactory factory = new CitrusObjectFactory();
+        factory.addClass(ProtectedSteps.class);
+
+        factory.start();
+        final ProtectedSteps steps = factory.getInstance(ProtectedSteps.class);
+        Assert.assertNotNull(steps);
+        Assert.assertNotNull(steps.runner);
+        factory.stop();
+    }
+
+    @Test
     public void testPrivateConstructorFails() {
         CitrusObjectFactory factory = new CitrusObjectFactory();
         factory.addClass(PrivateConstructorSteps.class);
@@ -79,6 +91,15 @@ public class CitrusObjectFactoryTest {
     static class PrivateConstructorSteps {
 
         private PrivateConstructorSteps() {
+        }
+    }
+
+    public static class ProtectedSteps {
+
+        @CitrusResource
+        TestCaseRunner runner;
+
+        protected ProtectedSteps() {
         }
     }
 }
