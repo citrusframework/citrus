@@ -154,13 +154,6 @@
     </dependency>
 
     <dependency>
-      <!-- Required to run the TestNG based unit tests with the JUnit Platform provider -->
-      <groupId>org.junit.support</groupId>
-      <artifactId>testng-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.citrusframework</groupId>
       <artifactId>citrus-test-support</artifactId>
       <version>${project.version}</version>
