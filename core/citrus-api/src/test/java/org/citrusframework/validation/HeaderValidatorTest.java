@@ -17,7 +17,9 @@
 package org.citrusframework.validation;
 
 import java.util.Map;
+import java.util.Set;
 
+import org.citrusframework.util.ConcurrencyTestUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -34,5 +36,11 @@ public class HeaderValidatorTest {
     @Test
     public void testTestLookup() {
         Assert.assertTrue(HeaderValidator.lookup("default").isPresent());
+    }
+
+    @Test
+    public void shouldLookupValidatorsOnceWhenCalledConcurrently() throws Exception {
+        ConcurrencyTestUtils.raceRepeatedly(10_000, 16, HeaderValidator.validators::clear, HeaderValidator::lookup,
+                () -> Assert.assertEquals(HeaderValidator.validators.keySet(), Set.of("defaultHeaderValidator")));
     }
 }

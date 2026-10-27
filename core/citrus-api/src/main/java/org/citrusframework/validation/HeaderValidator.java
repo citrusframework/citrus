@@ -50,13 +50,16 @@ public interface HeaderValidator {
      * @return
      */
     static Map<String, HeaderValidator> lookup() {
-        if (validators.isEmpty()) {
-            validators.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
+        synchronized (validators) {
+            if (validators.isEmpty()) {
+                validators.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
 
-            if (logger.isTraceEnabled()) {
-                validators.forEach((k, v) -> logger.trace("Found header validator '{}' as {}", k, v.getClass()));
+                if (logger.isTraceEnabled()) {
+                    validators.forEach((k, v) -> logger.trace("Found header validator '{}' as {}", k, v.getClass()));
+                }
             }
         }
+
         return validators;
     }
 
