@@ -24,8 +24,10 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Verifies that dynamic path expressions are resolved at runtime and afterwards
@@ -42,17 +44,17 @@ public class DynamicPathExpressionValidationContextTest {
                 .expression("${VERSION_PATH}", "1.0")
                 .build();
 
-        Assert.assertTrue(validationContext.requiresValidator());
-        Assert.assertTrue(validationContext.getCorrespondingValidationModule().isEmpty());
+        Assertions.assertTrue(validationContext.requiresValidator());
+        Assertions.assertTrue(validationContext.getCorrespondingValidationModule().isEmpty());
 
         List<ValidationContext> resolvedContexts = validationContext.resolve(context);
 
-        Assert.assertEquals(resolvedContexts.size(), 1);
-        Assert.assertTrue(resolvedContexts.get(0) instanceof XpathMessageValidationContext);
+        Assertions.assertEquals(1, resolvedContexts.size());
+        Assertions.assertTrue(resolvedContexts.get(0) instanceof XpathMessageValidationContext);
 
         XpathMessageValidationContext xpathValidationContext = (XpathMessageValidationContext) resolvedContexts.get(0);
-        Assert.assertEquals(xpathValidationContext.getXpathExpressions().size(), 1);
-        Assert.assertEquals(xpathValidationContext.getXpathExpressions().get("/root/version/@number"), "1.0");
+        Assertions.assertEquals(1, xpathValidationContext.getXpathExpressions().size());
+        Assertions.assertEquals("1.0", xpathValidationContext.getXpathExpressions().get("/root/version/@number"));
     }
 
     @Test
@@ -66,13 +68,13 @@ public class DynamicPathExpressionValidationContextTest {
 
         List<ValidationContext> resolvedContexts = validationContext.resolve(context);
 
-        Assert.assertEquals(resolvedContexts.size(), 2);
-        Assert.assertTrue(resolvedContexts.get(0) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(resolvedContexts.get(1) instanceof JsonPathMessageValidationContext);
+        Assertions.assertEquals(2, resolvedContexts.size());
+        Assertions.assertTrue(resolvedContexts.get(0) instanceof JsonMessageValidationContext);
+        Assertions.assertTrue(resolvedContexts.get(1) instanceof JsonPathMessageValidationContext);
 
         JsonPathMessageValidationContext jsonPathValidationContext = (JsonPathMessageValidationContext) resolvedContexts.get(1);
-        Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().size(), 1);
-        Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$.version.number"), "1.0");
+        Assertions.assertEquals(1, jsonPathValidationContext.getJsonPathExpressions().size());
+        Assertions.assertEquals("1.0", jsonPathValidationContext.getJsonPathExpressions().get("$.version.number"));
     }
 
     @Test
@@ -88,10 +90,10 @@ public class DynamicPathExpressionValidationContextTest {
 
         List<ValidationContext> resolvedContexts = validationContext.resolve(context);
 
-        Assert.assertEquals(resolvedContexts.size(), 3);
-        Assert.assertTrue(resolvedContexts.stream().anyMatch(XpathMessageValidationContext.class::isInstance));
-        Assert.assertTrue(resolvedContexts.stream().anyMatch(JsonMessageValidationContext.class::isInstance));
-        Assert.assertTrue(resolvedContexts.stream().anyMatch(JsonPathMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(3, resolvedContexts.size());
+        Assertions.assertTrue(resolvedContexts.stream().anyMatch(XpathMessageValidationContext.class::isInstance));
+        Assertions.assertTrue(resolvedContexts.stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assertions.assertTrue(resolvedContexts.stream().anyMatch(JsonPathMessageValidationContext.class::isInstance));
     }
 
     @Test
@@ -105,14 +107,14 @@ public class DynamicPathExpressionValidationContextTest {
 
         List<ValidationContext> resolvedContexts = validationContext.resolve(context);
 
-        Assert.assertEquals(resolvedContexts.size(), 1);
-        Assert.assertTrue(resolvedContexts.get(0) instanceof XpathMessageValidationContext);
+        Assertions.assertEquals(1, resolvedContexts.size());
+        Assertions.assertTrue(resolvedContexts.get(0) instanceof XpathMessageValidationContext);
 
         XpathMessageValidationContext xpathValidationContext = (XpathMessageValidationContext) resolvedContexts.get(0);
-        Assert.assertEquals(xpathValidationContext.getXpathExpressions().get("boolean:/root/version/@number"), "true");
+        Assertions.assertEquals("true", xpathValidationContext.getXpathExpressions().get("boolean:/root/version/@number"));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void shouldFailOnUnknownVariable() {
         TestContext context = new TestContext();
 
@@ -120,6 +122,6 @@ public class DynamicPathExpressionValidationContextTest {
                 .expression("${UNKNOWN}", "1.0")
                 .build();
 
-        validationContext.resolve(context);
+        assertThrows(CitrusRuntimeException.class, () -> validationContext.resolve(context));
     }
 }

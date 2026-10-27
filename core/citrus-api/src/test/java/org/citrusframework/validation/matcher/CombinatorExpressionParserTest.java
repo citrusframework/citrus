@@ -18,20 +18,21 @@ package org.citrusframework.validation.matcher;
 
 import java.util.Collections;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CombinatorExpressionParserTest {
 
-    @Test(dataProvider = "expressions")
+    @ParameterizedTest
+    @MethodSource("expressions")
     public void shouldSplitSubExpressions(String body, List<String> expected) {
         List<String> result = CombinatorExpressionParser.splitSubExpressions(body);
-        Assert.assertEquals(result, expected);
+        Assertions.assertEquals(expected, result);
     }
 
-    @DataProvider
     public Object[][] expressions() {
         return new Object[][]{
                 // null / blank → empty list

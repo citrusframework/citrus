@@ -1,33 +1,32 @@
 package org.citrusframework.util;
 
 import java.util.Optional;
-
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.util.EnvUtils.booleanPropertyOrDefault;
 import static org.citrusframework.util.EnvUtils.enumPropertyOrDefault;
 import static org.citrusframework.util.EnvUtils.transformPropertyToEnv;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
 
 public class EnvUtilsTest {
 
     private SystemProvider systemProvider;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethod() {
         systemProvider = mock(SystemProvider.class);
     }
 
     @Test
     public void testTransformPropertyToEnv() {
-        assertEquals(transformPropertyToEnv("foo.bar"), "FOO_BAR");
-        assertEquals(transformPropertyToEnv("test.value"), "TEST_VALUE");
-        assertEquals(transformPropertyToEnv("hello.world"), "HELLO_WORLD");
+        assertEquals("FOO_BAR", transformPropertyToEnv("foo.bar"));
+        assertEquals("TEST_VALUE", transformPropertyToEnv("test.value"));
+        assertEquals("HELLO_WORLD", transformPropertyToEnv("hello.world"));
     }
 
     @Test
@@ -85,7 +84,7 @@ public class EnvUtilsTest {
 
         TestEnum result = enumPropertyOrDefault(systemProvider, TestEnum.class, "enum.test",
             "ENUM_TEST", TestEnum.VALUE_TWO);
-        assertEquals(result, TestEnum.VALUE_ONE);
+        assertEquals(TestEnum.VALUE_ONE, result);
     }
 
     @Test
@@ -95,7 +94,7 @@ public class EnvUtilsTest {
 
         TestEnum result = enumPropertyOrDefault(systemProvider, TestEnum.class, "enum.test",
             "ENUM_TEST", TestEnum.VALUE_ONE);
-        assertEquals(result, TestEnum.VALUE_TWO);
+        assertEquals(TestEnum.VALUE_TWO, result);
     }
 
     @Test
@@ -105,7 +104,7 @@ public class EnvUtilsTest {
 
         TestEnum result = enumPropertyOrDefault(systemProvider, TestEnum.class, "enum.test",
             "ENUM_TEST", TestEnum.VALUE_ONE);
-        assertEquals(result, TestEnum.VALUE_ONE);
+        assertEquals(TestEnum.VALUE_ONE, result);
     }
 
     enum TestEnum {

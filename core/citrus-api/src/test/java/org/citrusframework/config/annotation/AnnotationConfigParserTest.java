@@ -17,15 +17,14 @@
 package org.citrusframework.config.annotation;
 
 import java.util.Map;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AnnotationConfigParserTest {
 
     @Test
     public void testLookup() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 0L);
+        Assertions.assertEquals(0L, validators.size());
     }
 }

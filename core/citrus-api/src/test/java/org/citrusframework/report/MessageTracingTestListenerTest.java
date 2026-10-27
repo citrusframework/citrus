@@ -23,23 +23,25 @@ import java.util.Scanner;
 import org.citrusframework.TestCase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.RawMessage;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @since 2.5
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MessageTracingTestListenerTest {
 
     private final MessageTracingTestListener testling = new MessageTracingTestListener();
     private final TestContext context = new TestContext();
 
-    @BeforeClass
+    @BeforeAll
     public void setupTestling() {
         testling.setOutputDirectory("target/citrus-logs/trace/messages");
     }

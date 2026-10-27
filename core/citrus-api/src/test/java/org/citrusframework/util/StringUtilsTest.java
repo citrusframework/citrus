@@ -19,75 +19,80 @@ package org.citrusframework.util;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.citrusframework.util.StringUtils.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class StringUtilsTest {
 
-    @DataProvider
     public static Object[][] text() {
         return new Object[][]{{"foo"}};
     }
 
-    @DataProvider
     public static Object[][] blankText() {
         return new Object[][]{{" "}};
     }
 
-    @DataProvider
     public static Object[][] emptyText() {
         return new Object[][]{{null}, {""}};
     }
 
-    @Test(dataProvider = "text")
+    @ParameterizedTest
+    @MethodSource("text")
     public void hasText_returnsTrue(String str) {
         assertTrue(hasText(str));
     }
 
-    @Test(dataProvider = "blankText")
+    @ParameterizedTest
+    @MethodSource("blankText")
     public void hasText_returnsFalse_forBlankText(String str) {
         assertFalse(hasText(str));
     }
 
-    @Test(dataProvider = "emptyText")
+    @ParameterizedTest
+    @MethodSource("emptyText")
     public void hasText_returnsFalse_forEmptyText(String str) {
         assertFalse(hasText(str));
     }
 
-    @Test(dataProvider = "emptyText")
+    @ParameterizedTest
+    @MethodSource("emptyText")
     public void isEmpty_returnsTrue(String str) {
         assertTrue(isEmpty(str));
     }
 
-    @Test(dataProvider = "text")
+    @ParameterizedTest
+    @MethodSource("text")
     public void isEmpty_returnsFalse_forText(String str) {
         assertFalse(isEmpty(str));
     }
 
-    @Test(dataProvider = "blankText")
+    @ParameterizedTest
+    @MethodSource("blankText")
     public void isEmpty_returnsFalse_forBlankText(String str) {
         assertFalse(isEmpty(str));
     }
 
     @Test
     public void appendSegmentToPath() {
-        assertEquals(appendSegmentToUrlPath("s1", "s2"), "s1/s2");
-        assertEquals(appendSegmentToUrlPath("s1", ""), "s1");
-        assertEquals(appendSegmentToUrlPath("s1/", "s2"), "s1/s2");
-        assertEquals(appendSegmentToUrlPath("s1/", ""), "s1/");
-        assertEquals(appendSegmentToUrlPath("s1/", "/s2"), "s1/s2");
-        assertEquals(appendSegmentToUrlPath("/s1", "/s2"), "/s1/s2");
-        assertEquals(appendSegmentToUrlPath("/s1/", "/s2"), "/s1/s2");
-        assertEquals(appendSegmentToUrlPath("/s1/", "/s2/"), "/s1/s2/");
-        assertEquals(appendSegmentToUrlPath("/s1/", null), "/s1/");
-        assertEquals(appendSegmentToUrlPath(null, "/s2/"), "/s2/");
+        assertEquals("s1/s2", appendSegmentToUrlPath("s1", "s2"));
+        assertEquals("s1", appendSegmentToUrlPath("s1", ""));
+        assertEquals("s1/s2", appendSegmentToUrlPath("s1/", "s2"));
+        assertEquals("s1/", appendSegmentToUrlPath("s1/", ""));
+        assertEquals("s1/s2", appendSegmentToUrlPath("s1/", "/s2"));
+        assertEquals("/s1/s2", appendSegmentToUrlPath("/s1", "/s2"));
+        assertEquals("/s1/s2", appendSegmentToUrlPath("/s1/", "/s2"));
+        assertEquals("/s1/s2/", appendSegmentToUrlPath("/s1/", "/s2/"));
+        assertEquals("/s1/", appendSegmentToUrlPath("/s1/", null));
+        assertEquals("/s2/", appendSegmentToUrlPath(null, "/s2/"));
         assertNull(appendSegmentToUrlPath(null, null));
     }
 
@@ -97,7 +102,7 @@ public class StringUtilsTest {
         String expected = "\"Hello, World!\"";
         String result = quote(input, true);
 
-        assertEquals(result, expected, "The text should be quoted.");
+        assertEquals(expected, result, "The text should be quoted.");
     }
 
     @Test
@@ -106,7 +111,7 @@ public class StringUtilsTest {
         String expected = "Hello, World!";
         String result = quote(input, false);
 
-        assertEquals(result, expected, "The text should not be quoted.");
+        assertEquals(expected, result, "The text should not be quoted.");
     }
 
     @Test
@@ -115,7 +120,7 @@ public class StringUtilsTest {
         String expected = "\"\"";
         String result = quote(input, true);
 
-        assertEquals(result, expected, "The empty text should be quoted.");
+        assertEquals(expected, result, "The empty text should be quoted.");
     }
 
     @Test
@@ -124,7 +129,7 @@ public class StringUtilsTest {
         String expected = "";
         String result = quote(input, false);
 
-        assertEquals(result, expected, "The empty text should not be quoted.");
+        assertEquals(expected, result, "The empty text should not be quoted.");
     }
 
     @Test
@@ -133,7 +138,7 @@ public class StringUtilsTest {
         String expected = "\"null\"";
         String result = quote(input, true);
 
-        assertEquals(result, expected, "The null text should be treated as a string 'null'.");
+        assertEquals(expected, result, "The null text should be treated as a string 'null'.");
     }
 
     @Test
@@ -141,7 +146,6 @@ public class StringUtilsTest {
         assertNull(quote(null, false));
     }
 
-    @DataProvider(name = "trimTrailingCommaDataProvider")
     public Object[][] trimTrailingCommaDataProvider() {
         return new Object[][]{
                 {new StringBuilder("Example text,    "), "Example text"},
@@ -154,35 +158,35 @@ public class StringUtilsTest {
         };
     }
 
-    @Test(dataProvider = "trimTrailingCommaDataProvider")
+    @ParameterizedTest
+    @MethodSource("trimTrailingCommaDataProvider")
     public void testTrimTrailingComma(StringBuilder input, String expected) {
         trimTrailingComma(input);
-        assertEquals(input.toString(), expected);
+        assertEquals(expected, input.toString());
     }
 
     @Test
     public void testTrimTrailingCommaOnlySpaces() {
         StringBuilder builder = new StringBuilder("     ");
         trimTrailingComma(builder);
-        assertEquals(builder.toString(), "");
+        assertEquals("", builder.toString());
 
         builder = new StringBuilder(",");
         trimTrailingComma(builder);
-        assertEquals(builder.toString(), "");
+        assertEquals("", builder.toString());
 
         builder = new StringBuilder(",   ,   ");
         trimTrailingComma(builder);
-        assertEquals(builder.toString(), ",   ");
+        assertEquals(",   ", builder.toString());
     }
 
     @Test
     public void testTrimTrailingCommaWithNull() {
         StringBuilder builder = new StringBuilder();
         trimTrailingComma(builder);
-        assertEquals(builder.toString(), "");
+        assertEquals("", builder.toString());
     }
 
-    @DataProvider
     public Object[][] convertFirstCharToUpperCaseData() {
         return new Object[][]{
                 {"hello", "Hello"},
@@ -197,14 +201,14 @@ public class StringUtilsTest {
         };
     }
 
-    @Test(dataProvider = "convertFirstCharToUpperCaseData")
+    @ParameterizedTest
+    @MethodSource("convertFirstCharToUpperCaseData")
     public void testConvertFirstCharToUpperCase(String input, String expected) {
         String actual = StringUtils.convertFirstCharToUpperCase(input);
-        assertEquals(actual, expected,
+        assertEquals(expected, actual,
                 "The convertFirstCharToUpperCaseData method did not return the expected result.");
     }
 
-    @DataProvider
     public Object[][] convertFirstCharToLowerCaseData() {
         return new Object[][]{
                 {"hello", "hello"},
@@ -219,14 +223,14 @@ public class StringUtilsTest {
         };
     }
 
-    @Test(dataProvider = "convertFirstCharToLowerCaseData")
+    @ParameterizedTest
+    @MethodSource("convertFirstCharToLowerCaseData")
     public void testConvertFirstCharToLowerCase(String input, String expected) {
         String actual = StringUtils.convertFirstCharToLowerCase(input);
-        assertEquals(actual, expected,
+        assertEquals(expected, actual,
                 "The convertFirstCharToLowerCaseData method did not return the expected result.");
     }
 
-    @DataProvider
     public Object[][] normalizeWhitespaceProvider() {
         return new Object[][] {
             // Test data: payload, ignoreWhitespace, ignoreNewLineType, expected result
@@ -241,14 +245,15 @@ public class StringUtilsTest {
         };
     }
 
-    @Test(dataProvider = "normalizeWhitespaceProvider")
+    @ParameterizedTest
+    @MethodSource("normalizeWhitespaceProvider")
     public void normalizeWhitespace(String text, boolean normalizeWhitespace, boolean normalizeLineEndingsToUnix, String expected) {
-        assertEquals(StringUtils.normalizeWhitespace(text, normalizeWhitespace, normalizeLineEndingsToUnix), expected);
+        assertEquals(expected, StringUtils.normalizeWhitespace(text, normalizeWhitespace, normalizeLineEndingsToUnix));
     }
 
     @Test
     public void testConvertToStringEmpty() {
-        assertEquals(convertToString(Collections.emptyMap()), "{}");
+        assertEquals("{}", convertToString(Collections.emptyMap()));
     }
 
     @Test
@@ -256,14 +261,14 @@ public class StringUtilsTest {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("name", "citrus");
         map.put("type", "framework");
-        assertEquals(convertToString(map), "{\"name\": \"citrus\", \"type\": \"framework\"}");
+        assertEquals("{\"name\": \"citrus\", \"type\": \"framework\"}", convertToString(map));
     }
 
     @Test
     public void testConvertToStringWithNullValue() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("body", null);
-        assertEquals(convertToString(map), "{\"body\": null}");
+        assertEquals("{\"body\": null}", convertToString(map));
     }
 
     @Test
@@ -271,7 +276,7 @@ public class StringUtilsTest {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("count", 42);
         map.put("rate", 3.14);
-        assertEquals(convertToString(map), "{\"count\": 42, \"rate\": 3.14}");
+        assertEquals("{\"count\": 42, \"rate\": 3.14}", convertToString(map));
     }
 
     @Test
@@ -280,7 +285,7 @@ public class StringUtilsTest {
         map.put("name", "test");
         map.put("count", 5);
         map.put("data", null);
-        assertEquals(convertToString(map), "{\"name\": \"test\", \"count\": 5, \"data\": null}");
+        assertEquals("{\"name\": \"test\", \"count\": 5, \"data\": null}", convertToString(map));
     }
 
     @Test
@@ -296,57 +301,57 @@ public class StringUtilsTest {
     @Test
     public void testExtractMapFromJson() {
         Map<String, Object> result = extractMap("{\"name\": \"citrus\", \"type\": \"framework\"}");
-        assertEquals(result.size(), 2);
-        assertEquals(result.get("name"), "citrus");
-        assertEquals(result.get("type"), "framework");
+        assertEquals(2, result.size());
+        assertEquals("citrus", result.get("name"));
+        assertEquals("framework", result.get("type"));
     }
 
     @Test
     public void testExtractMapFromJsonWithNullValue() {
         Map<String, Object> result = extractMap("{\"body\": null}");
-        assertEquals(result.size(), 1);
-        assertEquals(result.get("body"), "null");
+        assertEquals(1, result.size());
+        assertEquals("null", result.get("body"));
     }
 
     @Test
     public void testExtractMapFromJsonWithNumericValue() {
         Map<String, Object> result = extractMap("{\"count\": 42}");
-        assertEquals(result.size(), 1);
-        assertEquals(result.get("count"), "42");
+        assertEquals(1, result.size());
+        assertEquals("42", result.get("count"));
     }
 
     @Test
     public void testExtractMapFromKeyValuePairs() {
         Map<String, Object> result = extractMap("name=citrus,type=framework");
-        assertEquals(result.size(), 2);
-        assertEquals(result.get("name"), "citrus");
-        assertEquals(result.get("type"), "framework");
+        assertEquals(2, result.size());
+        assertEquals("citrus", result.get("name"));
+        assertEquals("framework", result.get("type"));
     }
 
     @Test
     public void testExtractMapFromKeyValuePairsWithSpaces() {
         Map<String, Object> result = extractMap(" name = citrus , type = framework ");
-        assertEquals(result.size(), 2);
-        assertEquals(result.get("name"), "citrus");
-        assertEquals(result.get("type"), "framework");
+        assertEquals(2, result.size());
+        assertEquals("citrus", result.get("name"));
+        assertEquals("framework", result.get("type"));
     }
 
     @Test
     public void testExtractMapFromKeyValuePairsWithQuotes() {
         Map<String, Object> result = extractMap("\"name\"=\"citrus\",\"type\"=\"framework\"");
-        assertEquals(result.size(), 2);
-        assertEquals(result.get("name"), "citrus");
-        assertEquals(result.get("type"), "framework");
+        assertEquals(2, result.size());
+        assertEquals("citrus", result.get("name"));
+        assertEquals("framework", result.get("type"));
     }
 
     @Test
     public void testStripQuotesWithQuotes() {
-        assertEquals(stripQuotes("\"hello\""), "hello");
+        assertEquals("hello", stripQuotes("\"hello\""));
     }
 
     @Test
     public void testStripQuotesWithoutQuotes() {
-        assertEquals(stripQuotes("hello"), "hello");
+        assertEquals("hello", stripQuotes("hello"));
     }
 
     @Test
@@ -356,16 +361,16 @@ public class StringUtilsTest {
 
     @Test
     public void testStripQuotesEmptyQuoted() {
-        assertEquals(stripQuotes("\"\""), "");
+        assertEquals("", stripQuotes("\"\""));
     }
 
     @Test
     public void testStripQuotesWithSurroundingSpaces() {
-        assertEquals(stripQuotes("  \"hello\"  "), "hello");
+        assertEquals("hello", stripQuotes("  \"hello\"  "));
     }
 
     @Test
     public void testStripQuotesSingleQuoteOnly() {
-        assertEquals(stripQuotes("\"hello"), "\"hello");
+        assertEquals("\"hello", stripQuotes("\"hello"));
     }
 }

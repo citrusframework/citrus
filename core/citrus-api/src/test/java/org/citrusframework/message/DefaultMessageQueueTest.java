@@ -20,15 +20,15 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.selector.HeaderMatchingMessageSelector;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DefaultMessageQueueTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupMocks() {
         context = new TestContext();
     }
@@ -44,8 +44,8 @@ public class DefaultMessageQueueTest {
 
         Message receivedMessage = queue.receive(selector, 1000L);
 
-        Assert.assertEquals(receivedMessage.getPayload(), "FooMessage");
-        Assert.assertEquals(receivedMessage.getHeaders().get("foo"), "bar");
+        Assertions.assertEquals("FooMessage", receivedMessage.getPayload());
+        Assertions.assertEquals("bar", receivedMessage.getHeaders().get("foo"));
     }
 
     @Test
@@ -65,9 +65,9 @@ public class DefaultMessageQueueTest {
 
         Message receivedMessage = queue.receive(selector, 1000L);
 
-        Assert.assertEquals(receivedMessage.getPayload(), "FooMessage");
-        Assert.assertEquals(receivedMessage.getHeaders().get("foo"), "bar");
-        Assert.assertEquals(retries.get(), 8L);
+        Assertions.assertEquals("FooMessage", receivedMessage.getPayload());
+        Assertions.assertEquals("bar", receivedMessage.getHeaders().get("foo"));
+        Assertions.assertEquals(8L, retries.get());
     }
 
     @Test
@@ -88,8 +88,8 @@ public class DefaultMessageQueueTest {
 
         Message receivedMessage = queue.receive(selector, 1000L);
 
-        Assert.assertNull(receivedMessage);
-        Assert.assertEquals(retries.get(), 3L);
+        Assertions.assertNull(receivedMessage);
+        Assertions.assertEquals(3L, retries.get());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class DefaultMessageQueueTest {
 
         Message receivedMessage = queue.receive(selector, 1000L);
 
-        Assert.assertNull(receivedMessage);
-        Assert.assertEquals(retries.get(), 4L);
+        Assertions.assertNull(receivedMessage);
+        Assertions.assertEquals(4L, retries.get());
     }
 }

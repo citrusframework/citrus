@@ -16,25 +16,29 @@
 
 package org.citrusframework;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestActorTest {
 
     @Test
     public void shouldBeEnabledByDefault() {
-        Assert.assertFalse(new TestActor().isDisabled());
-        Assert.assertFalse(new TestActor("foo").isDisabled());
-        Assert.assertTrue(new TestActor("foo", true).isDisabled());
+        Assertions.assertFalse(new TestActor().isDisabled());
+        Assertions.assertFalse(new TestActor("foo").isDisabled());
+        Assertions.assertTrue(new TestActor("foo", true).isDisabled());
 
-        Assert.assertTrue(new TestActor("foo", true).isDisabled());
+        Assertions.assertTrue(new TestActor("foo", true).isDisabled());
     }
 
     @Test
     public void shouldDisableViaSystemProperty() {
         System.setProperty("citrus.test.actor.foo.enabled", "false");
-        Assert.assertTrue(new TestActor("foo").isDisabled());
-        Assert.assertFalse(new TestActor("bar").isDisabled());
+        try {
+            Assertions.assertTrue(new TestActor("foo").isDisabled());
+            Assertions.assertFalse(new TestActor("bar").isDisabled());
+        } finally {
+            System.clearProperty("citrus.test.actor.foo.enabled");
+        }
     }
 
 }

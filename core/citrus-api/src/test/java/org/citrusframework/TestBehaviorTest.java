@@ -18,12 +18,11 @@ package org.citrusframework;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Test;
 
-import org.testng.annotations.Test;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertThrows;
 
 public class TestBehaviorTest {
 
@@ -38,14 +37,14 @@ public class TestBehaviorTest {
 
     @Test
     public void shouldNameNamedClass() {
-        assertEquals(new PlaceAnOrder(new ArrayList<>()).getName(), "place an order");
+        assertEquals("place an order", new PlaceAnOrder(new ArrayList<>()).getName());
     }
 
     @Test
     public void shouldNameLambdaGenerically() {
         TestBehavior behavior = runner -> {};
 
-        assertEquals(behavior.getName(), "behavior");
+        assertEquals("behavior", behavior.getName());
     }
 
     @Test
@@ -53,10 +52,10 @@ public class TestBehaviorTest {
         List<String> applied = new ArrayList<>();
         TestBehavior behavior = TestBehavior.named("sign in", runner -> applied.add("signed in"));
 
-        assertEquals(behavior.getName(), "sign in");
+        assertEquals("sign in", behavior.getName());
 
         behavior.apply(runner);
-        assertEquals(applied, List.of("signed in"));
+        assertEquals(List.of("signed in"), applied);
     }
 
     @Test
@@ -73,7 +72,7 @@ public class TestBehaviorTest {
 
         composite.apply(runner);
 
-        assertEquals(applied, List.of("signed in", "order placed"));
+        assertEquals(List.of("signed in", "order placed"), applied);
     }
 
     @Test
@@ -81,9 +80,9 @@ public class TestBehaviorTest {
         TestBehavior signIn = TestBehavior.named("sign in", runner -> {});
         TestBehavior checkOut = TestBehavior.named("check out", runner -> {});
 
-        assertEquals(signIn.andThen(new PlaceAnOrder(new ArrayList<>())).getName(), "sign in then place an order");
-        assertEquals(signIn.andThen(new PlaceAnOrder(new ArrayList<>())).andThen(checkOut).getName(),
-                "sign in then place an order then check out");
+        assertEquals("sign in then place an order", signIn.andThen(new PlaceAnOrder(new ArrayList<>())).getName());
+        assertEquals("sign in then place an order then check out",
+                signIn.andThen(new PlaceAnOrder(new ArrayList<>())).andThen(checkOut).getName());
     }
 
     @Test

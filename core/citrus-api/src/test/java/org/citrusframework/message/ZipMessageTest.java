@@ -26,8 +26,8 @@ import java.util.zip.ZipFile;
 
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.7.5
@@ -41,13 +41,13 @@ public class ZipMessageTest {
         File archive = new File (createTempDir().toFile(), "archive.zip");
         FileUtils.writeToFile(new ByteArrayInputStream(message.getPayload()), archive);
 
-        Assert.assertTrue(archive.exists());
+        Assertions.assertTrue(archive.exists());
 
         try (var zipFile = new ZipFile(archive.getAbsolutePath())) {
-            Assert.assertEquals(zipFile.size(), 1);
+            Assertions.assertEquals(1, zipFile.size());
 
-            Assert.assertNotNull(zipFile.getEntry("/foo.txt"));
-            Assert.assertEquals(FileUtils.readToString(zipFile.getInputStream(new ZipEntry("/foo.txt"))), "Foo!");
+            Assertions.assertNotNull(zipFile.getEntry("/foo.txt"));
+            Assertions.assertEquals("Foo!", FileUtils.readToString(zipFile.getInputStream(new ZipEntry("/foo.txt"))));
         }
     }
 
@@ -58,21 +58,21 @@ public class ZipMessageTest {
         File archive = new File (createTempDir().toFile(), "archive.zip");
         FileUtils.writeToFile(new ByteArrayInputStream(message.getPayload()), archive);
 
-        Assert.assertTrue(archive.exists());
+        Assertions.assertTrue(archive.exists());
 
         try (var zipFile = new ZipFile(archive.getAbsolutePath())) {
-            Assert.assertEquals(zipFile.size(), 5);
+            Assertions.assertEquals(5, zipFile.size());
 
-            Assert.assertNotNull(zipFile.getEntry("/archive/"));
-            Assert.assertTrue(zipFile.getEntry("/archive/").isDirectory());
-            Assert.assertNotNull(zipFile.getEntry("archive/foo.txt"));
-            Assert.assertEquals(FileUtils.readToString(zipFile.getInputStream(new ZipEntry("archive/foo.txt"))), "Foo!");
-            Assert.assertNotNull(zipFile.getEntry("archive/bar.txt"));
-            Assert.assertEquals(FileUtils.readToString(zipFile.getInputStream(new ZipEntry("archive/bar.txt"))), "Bar!");
-            Assert.assertNotNull(zipFile.getEntry("archive/dir/"));
-            Assert.assertTrue(zipFile.getEntry("archive/dir/").isDirectory());
-            Assert.assertNotNull(zipFile.getEntry("archive/dir/sub_foo.txt"));
-            Assert.assertEquals(FileUtils.readToString(zipFile.getInputStream(new ZipEntry("archive/dir/sub_foo.txt"))), "SubFoo!");
+            Assertions.assertNotNull(zipFile.getEntry("/archive/"));
+            Assertions.assertTrue(zipFile.getEntry("/archive/").isDirectory());
+            Assertions.assertNotNull(zipFile.getEntry("archive/foo.txt"));
+            Assertions.assertEquals("Foo!", FileUtils.readToString(zipFile.getInputStream(new ZipEntry("archive/foo.txt"))));
+            Assertions.assertNotNull(zipFile.getEntry("archive/bar.txt"));
+            Assertions.assertEquals("Bar!", FileUtils.readToString(zipFile.getInputStream(new ZipEntry("archive/bar.txt"))));
+            Assertions.assertNotNull(zipFile.getEntry("archive/dir/"));
+            Assertions.assertTrue(zipFile.getEntry("archive/dir/").isDirectory());
+            Assertions.assertNotNull(zipFile.getEntry("archive/dir/sub_foo.txt"));
+            Assertions.assertEquals("SubFoo!", FileUtils.readToString(zipFile.getInputStream(new ZipEntry("archive/dir/sub_foo.txt"))));
         }
     }
 
@@ -86,15 +86,15 @@ public class ZipMessageTest {
         File archive = new File (createTempDir().toFile(), "archive.zip");
         FileUtils.writeToFile(new ByteArrayInputStream(message.getPayload()), archive);
 
-        Assert.assertTrue(archive.exists());
+        Assertions.assertTrue(archive.exists());
 
         try (var zipFile = new ZipFile(archive.getAbsolutePath())) {
-            Assert.assertEquals(zipFile.size(), 2);
+            Assertions.assertEquals(2, zipFile.size());
 
-            Assert.assertNotNull(zipFile.getEntry("/foos/"));
-            Assert.assertTrue(zipFile.getEntry("/foos/").isDirectory());
-            Assert.assertNotNull(zipFile.getEntry("foos/foo.txt"));
-            Assert.assertEquals(FileUtils.readToString(zipFile.getInputStream(new ZipEntry("foos/foo.txt"))), "Foo!");
+            Assertions.assertNotNull(zipFile.getEntry("/foos/"));
+            Assertions.assertTrue(zipFile.getEntry("/foos/").isDirectory());
+            Assertions.assertNotNull(zipFile.getEntry("foos/foo.txt"));
+            Assertions.assertEquals("Foo!", FileUtils.readToString(zipFile.getInputStream(new ZipEntry("foos/foo.txt"))));
         }
     }
 
@@ -109,17 +109,17 @@ public class ZipMessageTest {
         File archive = new File (createTempDir().toFile(), "archive.zip");
         FileUtils.writeToFile(new ByteArrayInputStream(message.getPayload()), archive);
 
-        Assert.assertTrue(archive.exists());
+        Assertions.assertTrue(archive.exists());
 
         try (var zipFile = new ZipFile(archive.getAbsolutePath())) {
-            Assert.assertEquals(zipFile.size(), 3);
+            Assertions.assertEquals(3, zipFile.size());
 
-            Assert.assertNotNull(zipFile.getEntry("/foos/"));
-            Assert.assertTrue(zipFile.getEntry("/foos/").isDirectory());
-            Assert.assertNotNull(zipFile.getEntry("/bars/"));
-            Assert.assertTrue(zipFile.getEntry("/bars/").isDirectory());
-            Assert.assertNotNull(zipFile.getEntry("bars/bar.txt"));
-            Assert.assertEquals(FileUtils.readToString(zipFile.getInputStream(new ZipEntry("bars/bar.txt"))), "Bar!");
+            Assertions.assertNotNull(zipFile.getEntry("/foos/"));
+            Assertions.assertTrue(zipFile.getEntry("/foos/").isDirectory());
+            Assertions.assertNotNull(zipFile.getEntry("/bars/"));
+            Assertions.assertTrue(zipFile.getEntry("/bars/").isDirectory());
+            Assertions.assertNotNull(zipFile.getEntry("bars/bar.txt"));
+            Assertions.assertEquals("Bar!", FileUtils.readToString(zipFile.getInputStream(new ZipEntry("bars/bar.txt"))));
         }
     }
 

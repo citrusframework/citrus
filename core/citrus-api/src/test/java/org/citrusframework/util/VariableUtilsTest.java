@@ -17,50 +17,50 @@
 package org.citrusframework.util;
 
 import org.citrusframework.variable.VariableUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class VariableUtilsTest {
 
     @Test
     public void testCutOffVariablesPrefixSuffix() {
-        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix(""), "");
-        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix("something_else"), "something_else");
-        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix("${}"), "");
-        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix("${variable}"), "variable");
-        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix("${incomplete"), "${incomplete");
-        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix("{incomplete}"), "{incomplete}");
+        Assertions.assertEquals("", VariableUtils.cutOffVariablesPrefix(""));
+        Assertions.assertEquals("something_else", VariableUtils.cutOffVariablesPrefix("something_else"));
+        Assertions.assertEquals("", VariableUtils.cutOffVariablesPrefix("${}"));
+        Assertions.assertEquals("variable", VariableUtils.cutOffVariablesPrefix("${variable}"));
+        Assertions.assertEquals("${incomplete", VariableUtils.cutOffVariablesPrefix("${incomplete"));
+        Assertions.assertEquals("{incomplete}", VariableUtils.cutOffVariablesPrefix("{incomplete}"));
     }
 
     @Test
     public void testCutOffSingleQuotes() {
-        Assert.assertEquals(VariableUtils.cutOffSingleQuotes(""), "");
-        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("something_else"), "something_else");
-        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("'"), "'");
-        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("''"), "");
-        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("'variable'"), "variable");
-        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("'incomplete"), "'incomplete");
-        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("incomplete'"), "incomplete'");
+        Assertions.assertEquals("", VariableUtils.cutOffSingleQuotes(""));
+        Assertions.assertEquals("something_else", VariableUtils.cutOffSingleQuotes("something_else"));
+        Assertions.assertEquals("'", VariableUtils.cutOffSingleQuotes("'"));
+        Assertions.assertEquals("", VariableUtils.cutOffSingleQuotes("''"));
+        Assertions.assertEquals("variable", VariableUtils.cutOffSingleQuotes("'variable'"));
+        Assertions.assertEquals("'incomplete", VariableUtils.cutOffSingleQuotes("'incomplete"));
+        Assertions.assertEquals("incomplete'", VariableUtils.cutOffSingleQuotes("incomplete'"));
     }
 
     @Test
     public void testCutOffDoubleQuotes() {
-        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes(""), "");
-        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("something_else"), "something_else");
-        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("\""), "\"");
-        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("\"\""), "");
-        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("\"variable\""), "variable");
-        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("\"incomplete"), "\"incomplete");
-        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("incomplete\""), "incomplete\"");
+        Assertions.assertEquals("", VariableUtils.cutOffDoubleQuotes(""));
+        Assertions.assertEquals("something_else", VariableUtils.cutOffDoubleQuotes("something_else"));
+        Assertions.assertEquals("\"", VariableUtils.cutOffDoubleQuotes("\""));
+        Assertions.assertEquals("", VariableUtils.cutOffDoubleQuotes("\"\""));
+        Assertions.assertEquals("variable", VariableUtils.cutOffDoubleQuotes("\"variable\""));
+        Assertions.assertEquals("\"incomplete", VariableUtils.cutOffDoubleQuotes("\"incomplete"));
+        Assertions.assertEquals("incomplete\"", VariableUtils.cutOffDoubleQuotes("incomplete\""));
     }
 
     @Test
     public void testCutOffVariablesEscaping() {
-        Assert.assertEquals(VariableUtils.cutOffVariablesEscaping(""), "");
-        Assert.assertEquals(VariableUtils.cutOffVariablesEscaping("something_else"), "something_else");
-        Assert.assertEquals(VariableUtils.cutOffVariablesEscaping("////"), "");
-        Assert.assertEquals(VariableUtils.cutOffVariablesEscaping("//variable//"), "variable");
-        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("//incomplete"), "//incomplete");
-        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("incomplete//"), "incomplete//");
+        Assertions.assertEquals("", VariableUtils.cutOffVariablesEscaping(""));
+        Assertions.assertEquals("something_else", VariableUtils.cutOffVariablesEscaping("something_else"));
+        Assertions.assertEquals("", VariableUtils.cutOffVariablesEscaping("////"));
+        Assertions.assertEquals("variable", VariableUtils.cutOffVariablesEscaping("//variable//"));
+        Assertions.assertEquals("//incomplete", VariableUtils.cutOffDoubleQuotes("//incomplete"));
+        Assertions.assertEquals("incomplete//", VariableUtils.cutOffDoubleQuotes("incomplete//"));
     }
 }

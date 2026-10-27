@@ -19,12 +19,14 @@ package org.citrusframework.validation.matcher;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.NoSuchValidationMatcherException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class ValidationMatcherLibraryTest {
 
     private ValidationMatcherLibrary validationMatcherLibrary = new ValidationMatcherLibrary();
@@ -32,10 +34,8 @@ public class ValidationMatcherLibraryTest {
     @Mock
     private ValidationMatcher matcher;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-
         validationMatcherLibrary.setName("fooValidationMatcherLibrary");
         validationMatcherLibrary.setPrefix("foo:");
         validationMatcherLibrary.setMembers(Collections.singletonMap("customMatcher", matcher));
@@ -43,7 +43,7 @@ public class ValidationMatcherLibraryTest {
 
     @Test
     public void testGetValidationMatcher() {
-        Assert.assertNotNull(validationMatcherLibrary.getValidationMatcher("customMatcher"));
+        Assertions.assertNotNull(validationMatcherLibrary.getValidationMatcher("customMatcher"));
     }
 
     @Test
@@ -51,15 +51,15 @@ public class ValidationMatcherLibraryTest {
         try {
             validationMatcherLibrary.getValidationMatcher("unknownMatcher");
         } catch (NoSuchValidationMatcherException e) {
-            Assert.assertTrue(e.getMessage().contains("unknownMatcher"));
-            Assert.assertTrue(e.getMessage().contains(validationMatcherLibrary.getName()));
-            Assert.assertTrue(e.getMessage().contains(validationMatcherLibrary.getPrefix()));
+            Assertions.assertTrue(e.getMessage().contains("unknownMatcher"));
+            Assertions.assertTrue(e.getMessage().contains(validationMatcherLibrary.getName()));
+            Assertions.assertTrue(e.getMessage().contains(validationMatcherLibrary.getPrefix()));
         }
     }
 
     @Test
     public void testKnowsValidationMatcher() {
-        Assert.assertTrue(validationMatcherLibrary.knowsValidationMatcher("foo:customMatcher()"));
-        Assert.assertFalse(validationMatcherLibrary.knowsValidationMatcher("foo:unknownMatcher()"));
+        Assertions.assertTrue(validationMatcherLibrary.knowsValidationMatcher("foo:customMatcher()"));
+        Assertions.assertFalse(validationMatcherLibrary.knowsValidationMatcher("foo:unknownMatcher()"));
     }
 }

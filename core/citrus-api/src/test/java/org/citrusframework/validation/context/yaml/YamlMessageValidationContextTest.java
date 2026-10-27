@@ -16,8 +16,8 @@
 
 package org.citrusframework.validation.context.yaml;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +25,7 @@ public class YamlMessageValidationContextTest {
 
     private YamlMessageValidationContext fixture;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethod() {
         fixture = new YamlMessageValidationContext();
     }

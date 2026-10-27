@@ -5,10 +5,11 @@ import java.lang.reflect.Field;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.util.ReflectionHelper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.MockitoAnnotations.openMocks;
 
+@ExtendWith(MockitoExtension.class)
 public class AbstractReferenceResolverAwareTestActionBuilderTest {
 
     @Mock
@@ -34,11 +36,9 @@ public class AbstractReferenceResolverAwareTestActionBuilderTest {
     private static final Field referenceResolverField = ReflectionHelper.findField(
             AbstractReferenceResolverAwareTestActionBuilder.class, "referenceResolver");
 
-    private AutoCloseable openedMocks;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethod() {
-        openedMocks = openMocks(this);
 
         fixture = new AbstractReferenceResolverAwareTestActionBuilder() {
 
@@ -82,11 +82,6 @@ public class AbstractReferenceResolverAwareTestActionBuilderTest {
 
         assertNull(ReflectionHelper.getField(referenceResolverField, fixture), "ReferenceResolver should NOT be set");
         verifyNoInteractions(referenceResolverAware);
-    }
-
-    @AfterMethod
-    public void afterMethod() throws Exception {
-        openedMocks.close();
     }
 
     private abstract static class TestReferenceResolver implements TestActionBuilder, ReferenceResolverAware {

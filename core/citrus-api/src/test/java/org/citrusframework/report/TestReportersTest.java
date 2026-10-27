@@ -2,19 +2,22 @@ package org.citrusframework.report;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestResult;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.MockitoAnnotations.openMocks;
-import static org.testng.Assert.assertNotEquals;
-import static org.testng.AssertJUnit.assertEquals;
 
+@ExtendWith(MockitoExtension.class)
 public class TestReportersTest {
 
     @Mock
@@ -22,9 +25,8 @@ public class TestReportersTest {
 
     private TestReporters fixture;
 
-    @BeforeMethod
+    @BeforeEach
     void beforeMethodSetup() {
-        openMocks(this);
 
         fixture = new TestReporters();
     }
@@ -46,7 +48,7 @@ public class TestReportersTest {
         fixture.setAutoClear(true);
         fixture.onStart();
 
-        assertNotEquals(fixture.getTestResults(), testResults);
+        assertNotEquals(testResults, fixture.getTestResults());
     }
 
     @Test

@@ -17,21 +17,20 @@
 package org.citrusframework.util;
 
 import java.util.Map;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TypeConverterTest {
 
     @Test
     public void testLookup() {
         Map<String, TypeConverter> converters = TypeConverter.lookup();
-        Assert.assertEquals(converters.size(), 1L);
-        Assert.assertEquals(converters.get(TypeConverter.DEFAULT).getClass(), DefaultTypeConverter.class);
-        Assert.assertEquals(converters.get(TypeConverter.DEFAULT), TypeConverter.lookupDefault());
+        Assertions.assertEquals(1L, converters.size());
+        Assertions.assertEquals(DefaultTypeConverter.class, converters.get(TypeConverter.DEFAULT).getClass());
+        Assertions.assertEquals(TypeConverter.lookupDefault(), converters.get(TypeConverter.DEFAULT));
 
-        Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.SPRING));
-        Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.APACHE_CAMEL));
-        Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.GROOVY));
+        Assertions.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.SPRING));
+        Assertions.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.APACHE_CAMEL));
+        Assertions.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.GROOVY));
     }
 }

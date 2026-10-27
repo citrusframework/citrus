@@ -21,8 +21,6 @@ import org.citrusframework.spi.Resources.ByteArrayResource;
 import org.citrusframework.spi.Resources.ClasspathResource;
 import org.citrusframework.spi.Resources.FileSystemResource;
 import org.citrusframework.spi.Resources.UrlResource;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -33,17 +31,19 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertThrows;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertNotNull;
-import static org.testng.AssertJUnit.assertTrue;
 
 public class ResourcesTest {
 
@@ -53,7 +53,7 @@ public class ResourcesTest {
     private static URI fileWithoutContentUri;
     private static URI nonExistingFileUri;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() throws URISyntaxException {
         Resource resource = Resources.create("/ResourcesTest");
         baseUri = resource.file().getParentFile().toURI();

@@ -16,175 +16,175 @@
 
 package org.citrusframework.log;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DefaultLogModifierTest {
 
     @Test
     public void testMaskKeyValue() {
-        Assert.assertTrue(CitrusLogSettings.isLogModifierEnabled());
+        Assertions.assertTrue(CitrusLogSettings.isLogModifierEnabled());
 
         DefaultLogModifier logModifier = new DefaultLogModifier();
 
-        Assert.assertEquals(logModifier.mask("password=foo"), "password=****");
-        Assert.assertEquals(logModifier.mask("PASSWORD=foo"), "PASSWORD=****");
-        Assert.assertEquals(logModifier.mask("SERVICE_PASSWORD=foo"), "SERVICE_PASSWORD=****");
-        Assert.assertEquals(logModifier.mask("password=foo bar"), "password=****");
-        Assert.assertEquals(logModifier.mask("password=!@#$%^*() -+[]{}:;"), "password=****");
-        Assert.assertEquals(logModifier.mask("password = foo"), "password = ****");
-        Assert.assertEquals(logModifier.mask("password = foo  bar"), "password = ****");
-        Assert.assertEquals(logModifier.mask("password=\"foo\""), "password=\"****\"");
-        Assert.assertEquals(logModifier.mask("PASSWORD=\"foo\""), "PASSWORD=\"****\"");
-        Assert.assertEquals(logModifier.mask("SERVICE_PASSWORD=\"foo\""), "SERVICE_PASSWORD=\"****\"");
-        Assert.assertEquals(logModifier.mask("password=\"\""), "password=\"\"");
-        Assert.assertEquals(logModifier.mask("password=\"!@#$%^*() -+[]{};:\""), "password=\"****\"");
-        Assert.assertEquals(logModifier.mask("password='foo'"), "password='****'");
-        Assert.assertEquals(logModifier.mask("password='foo bar'"), "password='****'");
-        Assert.assertEquals(logModifier.mask("password=''"), "password=''");
-        Assert.assertEquals(logModifier.mask("password='!@#$%^*() -+[]{};:'"), "password='****'");
+        Assertions.assertEquals("password=****", logModifier.mask("password=foo"));
+        Assertions.assertEquals("PASSWORD=****", logModifier.mask("PASSWORD=foo"));
+        Assertions.assertEquals("SERVICE_PASSWORD=****", logModifier.mask("SERVICE_PASSWORD=foo"));
+        Assertions.assertEquals("password=****", logModifier.mask("password=foo bar"));
+        Assertions.assertEquals("password=****", logModifier.mask("password=!@#$%^*() -+[]{}:;"));
+        Assertions.assertEquals("password = ****", logModifier.mask("password = foo"));
+        Assertions.assertEquals("password = ****", logModifier.mask("password = foo  bar"));
+        Assertions.assertEquals("password=\"****\"", logModifier.mask("password=\"foo\""));
+        Assertions.assertEquals("PASSWORD=\"****\"", logModifier.mask("PASSWORD=\"foo\""));
+        Assertions.assertEquals("SERVICE_PASSWORD=\"****\"", logModifier.mask("SERVICE_PASSWORD=\"foo\""));
+        Assertions.assertEquals("password=\"\"", logModifier.mask("password=\"\""));
+        Assertions.assertEquals("password=\"****\"", logModifier.mask("password=\"!@#$%^*() -+[]{};:\""));
+        Assertions.assertEquals("password='****'", logModifier.mask("password='foo'"));
+        Assertions.assertEquals("password='****'", logModifier.mask("password='foo bar'"));
+        Assertions.assertEquals("password=''", logModifier.mask("password=''"));
+        Assertions.assertEquals("password='****'", logModifier.mask("password='!@#$%^*() -+[]{};:'"));
 
-        Assert.assertEquals(logModifier.mask("secret=foo"), "secret=****");
-        Assert.assertEquals(logModifier.mask("secretKey=foo"), "secretKey=****");
+        Assertions.assertEquals("secret=****", logModifier.mask("secret=foo"));
+        Assertions.assertEquals("secretKey=****", logModifier.mask("secretKey=foo"));
 
-        Assert.assertEquals(logModifier.mask("password=foo,secret=foo,secretKey=foo"), "password=****,secret=****,secretKey=****");
-        Assert.assertEquals(logModifier.mask("password=\"foo\",secret='foo',secretKey=\"foo\""), "password=\"****\",secret='****',secretKey=\"****\"");
-        Assert.assertEquals(logModifier.mask("password=foo, secret=foo, secretKey=foo"), "password=****, secret=****, secretKey=****");
-        Assert.assertEquals(logModifier.mask("password=\"foo\", secret='foo', secretKey=\"foo\""), "password=\"****\", secret='****', secretKey=\"****\"");
-        Assert.assertEquals(logModifier.mask("a=foo, secret=foo, b=foo"), "a=foo, secret=****, b=foo");
+        Assertions.assertEquals("password=****,secret=****,secretKey=****", logModifier.mask("password=foo,secret=foo,secretKey=foo"));
+        Assertions.assertEquals("password=\"****\",secret='****',secretKey=\"****\"", logModifier.mask("password=\"foo\",secret='foo',secretKey=\"foo\""));
+        Assertions.assertEquals("password=****, secret=****, secretKey=****", logModifier.mask("password=foo, secret=foo, secretKey=foo"));
+        Assertions.assertEquals("password=\"****\", secret='****', secretKey=\"****\"", logModifier.mask("password=\"foo\", secret='foo', secretKey=\"foo\""));
+        Assertions.assertEquals("a=foo, secret=****, b=foo", logModifier.mask("a=foo, secret=foo, b=foo"));
     }
 
     @Test
     public void testMaskFormUrlEncoded() {
-        Assert.assertTrue(CitrusLogSettings.isLogModifierEnabled());
+        Assertions.assertTrue(CitrusLogSettings.isLogModifierEnabled());
 
         DefaultLogModifier logModifier = new DefaultLogModifier();
 
-        Assert.assertEquals(logModifier.mask("password=foo&secret=bar&foo=bar"), "password=****&secret=****&foo=bar");
-        Assert.assertEquals(logModifier.mask("password=foo bar&secret=bar foo&foo=bar"), "password=****&secret=****&foo=bar");
-        Assert.assertEquals(logModifier.mask("password=&secret=&foo="), "password=****&secret=****&foo=");
-        Assert.assertEquals(logModifier.mask("password=!@#$%^*() -+[]{};:&secret=!@#$%^*() -+[]{};:&foo=bar"), "password=****&secret=****&foo=bar");
+        Assertions.assertEquals("password=****&secret=****&foo=bar", logModifier.mask("password=foo&secret=bar&foo=bar"));
+        Assertions.assertEquals("password=****&secret=****&foo=bar", logModifier.mask("password=foo bar&secret=bar foo&foo=bar"));
+        Assertions.assertEquals("password=****&secret=****&foo=", logModifier.mask("password=&secret=&foo="));
+        Assertions.assertEquals("password=****&secret=****&foo=bar", logModifier.mask("password=!@#$%^*() -+[]{};:&secret=!@#$%^*() -+[]{};:&foo=bar"));
     }
 
     @Test
     public void testMaskXml() {
-        Assert.assertTrue(CitrusLogSettings.isLogModifierEnabled());
+        Assertions.assertTrue(CitrusLogSettings.isLogModifierEnabled());
 
         DefaultLogModifier logModifier = new DefaultLogModifier();
 
-        Assert.assertEquals(logModifier.mask("<password></password>"), "<password>****</password>");
-        Assert.assertEquals(logModifier.mask("<password>foo</password>"), "<password>****</password>");
-        Assert.assertEquals(logModifier.mask("<password>foo bar</password>"), "<password>****</password>");
-        Assert.assertEquals(logModifier.mask("<password>!@#$%^&*() -+[]{};:</password>"), "<password>****</password>");
-        Assert.assertEquals(logModifier.mask("<element password=\"foo\"></element>"), "<element password=\"****\"></element>");
-        Assert.assertEquals(logModifier.mask("<secret password=\"foo\"/>"), "<secret password=\"****\"/>");
-        Assert.assertEquals(logModifier.mask("<secret password=\"!@#$%^&*() -+[]{};:\"/>"), "<secret password=\"****\"/>");
+        Assertions.assertEquals("<password>****</password>", logModifier.mask("<password></password>"));
+        Assertions.assertEquals("<password>****</password>", logModifier.mask("<password>foo</password>"));
+        Assertions.assertEquals("<password>****</password>", logModifier.mask("<password>foo bar</password>"));
+        Assertions.assertEquals("<password>****</password>", logModifier.mask("<password>!@#$%^&*() -+[]{};:</password>"));
+        Assertions.assertEquals("<element password=\"****\"></element>", logModifier.mask("<element password=\"foo\"></element>"));
+        Assertions.assertEquals("<secret password=\"****\"/>", logModifier.mask("<secret password=\"foo\"/>"));
+        Assertions.assertEquals("<secret password=\"****\"/>", logModifier.mask("<secret password=\"!@#$%^&*() -+[]{};:\"/>"));
 
-        Assert.assertEquals(logModifier.mask("<secret>foo</secret>"), "<secret>****</secret>");
-        Assert.assertEquals(logModifier.mask("<secretKey>foo</secretKey>"), "<secretKey>****</secretKey>");
+        Assertions.assertEquals("<secret>****</secret>", logModifier.mask("<secret>foo</secret>"));
+        Assertions.assertEquals("<secretKey>****</secretKey>", logModifier.mask("<secretKey>foo</secretKey>"));
 
-        Assert.assertEquals(logModifier.mask("<password>foo</password><secret>foo</secret><secretKey>foo</secretKey>"),
-                "<password>****</password><secret>****</secret><secretKey>****</secretKey>");
-        Assert.assertEquals(logModifier.mask("<a>foo</a><secret>foo</secret><b>foo</b>"),
-                "<a>foo</a><secret>****</secret><b>foo</b>");
+        Assertions.assertEquals("<password>****</password><secret>****</secret><secretKey>****</secretKey>",
+                logModifier.mask("<password>foo</password><secret>foo</secret><secretKey>foo</secretKey>"));
+        Assertions.assertEquals("<a>foo</a><secret>****</secret><b>foo</b>",
+                logModifier.mask("<a>foo</a><secret>foo</secret><b>foo</b>"));
     }
 
     @Test
     public void testMaskJson() {
-        Assert.assertTrue(CitrusLogSettings.isLogModifierEnabled());
+        Assertions.assertTrue(CitrusLogSettings.isLogModifierEnabled());
 
         DefaultLogModifier logModifier = new DefaultLogModifier();
 
-        Assert.assertEquals(logModifier.mask("{\"password\":\"foo\"}"), "{\"password\":\"****\"}");
-        Assert.assertEquals(logModifier.mask("{\"password\":\"foo bar\"}"), "{\"password\":\"****\"}");
-        Assert.assertEquals(logModifier.mask("{\"password\":\"\"}"), "{\"password\":\"****\"}");
-        Assert.assertEquals(logModifier.mask("{\"password\":\"!@#$%^&*() -+[]{};:\"}"), "{\"password\":\"****\"}");
+        Assertions.assertEquals("{\"password\":\"****\"}", logModifier.mask("{\"password\":\"foo\"}"));
+        Assertions.assertEquals("{\"password\":\"****\"}", logModifier.mask("{\"password\":\"foo bar\"}"));
+        Assertions.assertEquals("{\"password\":\"****\"}", logModifier.mask("{\"password\":\"\"}"));
+        Assertions.assertEquals("{\"password\":\"****\"}", logModifier.mask("{\"password\":\"!@#$%^&*() -+[]{};:\"}"));
 
-        Assert.assertEquals(logModifier.mask("{\"secret\":\"foo\"}"), "{\"secret\":\"****\"}");
-        Assert.assertEquals(logModifier.mask("{\"secretKey\":\"foo\"}"), "{\"secretKey\":\"****\"}");
+        Assertions.assertEquals("{\"secret\":\"****\"}", logModifier.mask("{\"secret\":\"foo\"}"));
+        Assertions.assertEquals("{\"secretKey\":\"****\"}", logModifier.mask("{\"secretKey\":\"foo\"}"));
 
-        Assert.assertEquals(logModifier.mask("{\"password\": \"foo\", \"secret\": \"foo\", \"secretKey\": \"foo\"}"),
-                "{\"password\": \"****\", \"secret\": \"****\", \"secretKey\": \"****\"}");
-        Assert.assertEquals(logModifier.mask("{\"a\": \"foo\", \"b\": \"foo\", \"secretKey\": \"foo\"}"),
-                "{\"a\": \"foo\", \"b\": \"foo\", \"secretKey\": \"****\"}");
+        Assertions.assertEquals("{\"password\": \"****\", \"secret\": \"****\", \"secretKey\": \"****\"}",
+                logModifier.mask("{\"password\": \"foo\", \"secret\": \"foo\", \"secretKey\": \"foo\"}"));
+        Assertions.assertEquals("{\"a\": \"foo\", \"b\": \"foo\", \"secretKey\": \"****\"}",
+                logModifier.mask("{\"a\": \"foo\", \"b\": \"foo\", \"secretKey\": \"foo\"}"));
     }
 
     @Test
     public void testMaskYaml() {
-        Assert.assertTrue(CitrusLogSettings.isLogModifierEnabled());
+        Assertions.assertTrue(CitrusLogSettings.isLogModifierEnabled());
 
         DefaultLogModifier logModifier = new DefaultLogModifier();
 
-        Assert.assertEquals(logModifier.mask("- password: 'foo'"), "- password: '****'");
-        Assert.assertEquals(logModifier.mask("- password: 'foo bar'"), "- password: '****'");
-        Assert.assertEquals(logModifier.mask("- password: {}"), "- password: ****");
-        Assert.assertEquals(logModifier.mask("- password: '!@#$%^&*() -+[]{};:'"), "- password: '****'");
+        Assertions.assertEquals("- password: '****'", logModifier.mask("- password: 'foo'"));
+        Assertions.assertEquals("- password: '****'", logModifier.mask("- password: 'foo bar'"));
+        Assertions.assertEquals("- password: ****", logModifier.mask("- password: {}"));
+        Assertions.assertEquals("- password: '****'", logModifier.mask("- password: '!@#$%^&*() -+[]{};:'"));
 
-        Assert.assertEquals(logModifier.mask("- password: \"foo\""), "- password: \"****\"");
-        Assert.assertEquals(logModifier.mask("- password: \"foo bar\""), "- password: \"****\"");
-        Assert.assertEquals(logModifier.mask("- password: \"!@#$%^&*() -+[]{};:\""), "- password: \"****\"");
+        Assertions.assertEquals("- password: \"****\"", logModifier.mask("- password: \"foo\""));
+        Assertions.assertEquals("- password: \"****\"", logModifier.mask("- password: \"foo bar\""));
+        Assertions.assertEquals("- password: \"****\"", logModifier.mask("- password: \"!@#$%^&*() -+[]{};:\""));
 
-        Assert.assertEquals(logModifier.mask("- secret: 'foo'"), "- secret: '****'");
-        Assert.assertEquals(logModifier.mask("- secretKey: 'foo'"), "- secretKey: '****'");
+        Assertions.assertEquals("- secret: '****'", logModifier.mask("- secret: 'foo'"));
+        Assertions.assertEquals("- secretKey: '****'", logModifier.mask("- secretKey: 'foo'"));
 
-        Assert.assertEquals(logModifier.mask("- secret: \"foo\""), "- secret: \"****\"");
-        Assert.assertEquals(logModifier.mask("- secretKey: \"foo\""), "- secretKey: \"****\"");
+        Assertions.assertEquals("- secret: \"****\"", logModifier.mask("- secret: \"foo\""));
+        Assertions.assertEquals("- secretKey: \"****\"", logModifier.mask("- secretKey: \"foo\""));
 
-        Assert.assertEquals(logModifier.mask("""
-            - password: 'foo'
-              secret: 'foo'
-              secretKey: 'foo'
-            """),
-            """
+        Assertions.assertEquals("""
             - password: '****'
               secret: '****'
               secretKey: '****'
-            """);
-        Assert.assertEquals(logModifier.mask("""
-            - password: "foo"
-              secret: "foo"
-              secretKey: "foo"
-            """),
-            """
+            """,
+            logModifier.mask("""
+            - password: 'foo'
+              secret: 'foo'
+              secretKey: 'foo'
+            """));
+        Assertions.assertEquals("""
             - password: "****"
               secret: "****"
               secretKey: "****"
-            """);
+            """,
+            logModifier.mask("""
+            - password: "foo"
+              secret: "foo"
+              secretKey: "foo"
+            """));
 
-        Assert.assertEquals(logModifier.mask("""
-            - nested:
-                password: 'foo'
-                secret: 'foo'
-                secretKey: 'foo'
-            """),
-            """
+        Assertions.assertEquals("""
             - nested:
                 password: '****'
                 secret: '****'
                 secretKey: '****'
-            """);
-        Assert.assertEquals(logModifier.mask("""
+            """,
+            logModifier.mask("""
             - nested:
-                password: "foo"
-                secret: "foo"
-                secretKey: "foo"
-            """),
-            """
+                password: 'foo'
+                secret: 'foo'
+                secretKey: 'foo'
+            """));
+        Assertions.assertEquals("""
             - nested:
                 password: "****"
                 secret: "****"
                 secretKey: "****"
-            """);
+            """,
+            logModifier.mask("""
+            - nested:
+                password: "foo"
+                secret: "foo"
+                secretKey: "foo"
+            """));
 
-        Assert.assertEquals(logModifier.mask("""
-            - a: 'foo'
-              b: 'foo'
-              secretKey: 'foo'
-            """),
-            """
+        Assertions.assertEquals("""
             - a: 'foo'
               b: 'foo'
               secretKey: '****'
-            """);
+            """,
+            logModifier.mask("""
+            - a: 'foo'
+              b: 'foo'
+              secretKey: 'foo'
+            """));
     }
 }

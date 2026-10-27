@@ -19,28 +19,24 @@ package org.citrusframework.log;
 import java.util.Collections;
 
 import org.citrusframework.message.Message;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class LogMessageModifierTest {
 
     @Mock
     private Message message;
 
-    @BeforeTest
-    public void setupMocks() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     public void testMaskBody() {
         when(message.getPayload(String.class)).thenReturn("foo");
-        Assert.assertEquals(new MockLogModifier("bar").maskBody(message), "bar");
+        Assertions.assertEquals("bar", new MockLogModifier("bar").maskBody(message));
     }
 
     @Test
@@ -48,10 +44,10 @@ public class LogMessageModifierTest {
         when(message.getHeaders()).thenReturn(Collections.singletonMap("key", "value"));
 
         MockLogModifier modifier = new MockLogModifier("key=value");
-        Assert.assertEquals(modifier.maskHeaders(message), Collections.singletonMap("key", "value"));
+        Assertions.assertEquals(Collections.singletonMap("key", "value"), modifier.maskHeaders(message));
 
         modifier = new MockLogModifier("key=masked");
-        Assert.assertEquals(modifier.maskHeaders(message), Collections.singletonMap("key", CitrusLogSettings.getLogMaskValue()));
+        Assertions.assertEquals(Collections.singletonMap("key", CitrusLogSettings.getLogMaskValue()), modifier.maskHeaders(message));
     }
 
     private record MockLogModifier(String result) implements LogMessageModifier {

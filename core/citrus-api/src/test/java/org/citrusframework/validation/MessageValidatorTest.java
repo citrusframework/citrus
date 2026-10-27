@@ -19,21 +19,21 @@ package org.citrusframework.validation;
 import java.util.Map;
 
 import org.citrusframework.validation.context.ValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MessageValidatorTest {
 
     @Test
     public void testLookup() {
         Map<String, MessageValidator<? extends ValidationContext>> validators = MessageValidator.lookup();
-        Assert.assertEquals(validators.size(), 1L);
-        Assert.assertNotNull(validators.get("defaultMessageHeaderValidator"));
-        Assert.assertEquals(validators.get("defaultMessageHeaderValidator").getClass(), DefaultMessageHeaderValidator.class);
+        Assertions.assertEquals(1L, validators.size());
+        Assertions.assertNotNull(validators.get("defaultMessageHeaderValidator"));
+        Assertions.assertEquals(DefaultMessageHeaderValidator.class, validators.get("defaultMessageHeaderValidator").getClass());
     }
 
     @Test
     public void testTestLookup() {
-        Assert.assertTrue(MessageValidator.lookup("header").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("header").isPresent());
     }
 }

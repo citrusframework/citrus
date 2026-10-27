@@ -21,9 +21,9 @@ import java.util.Map;
 
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @since 1.4
@@ -42,14 +42,14 @@ public class SimpleMappingStrategyTest {
         mappings.put("bar", barEndpointAdapter);
         mappingStrategy.setAdapterMappings(mappings);
 
-        Assert.assertEquals(mappingStrategy.getEndpointAdapter("foo"), fooEndpointAdapter);
-        Assert.assertEquals(mappingStrategy.getEndpointAdapter("bar"), barEndpointAdapter);
+        Assertions.assertEquals(fooEndpointAdapter, mappingStrategy.getEndpointAdapter("foo"));
+        Assertions.assertEquals(barEndpointAdapter, mappingStrategy.getEndpointAdapter("bar"));
 
         try {
             mappingStrategy.getEndpointAdapter("unknown");
-            Assert.fail("Missing exception due to unknown mapping key");
+            Assertions.fail("Missing exception due to unknown mapping key");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Unable to find matching endpoint adapter with mapping key 'unknown'"));
+            Assertions.assertTrue(e.getMessage().startsWith("Unable to find matching endpoint adapter with mapping key 'unknown'"));
         }
     }
 }

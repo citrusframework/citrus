@@ -20,13 +20,16 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.context.DefaultValidationContext;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class DefaultEmptyMessageValidatorTest {
 
     @Mock
@@ -35,11 +38,6 @@ public class DefaultEmptyMessageValidatorTest {
     private Message control;
 
     private final DefaultEmptyMessageValidator validator = new DefaultEmptyMessageValidator();
-
-    @BeforeMethod
-    public void setupMocks() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void shouldValidateEmptyMessage() {
@@ -55,23 +53,26 @@ public class DefaultEmptyMessageValidatorTest {
         validator.validateMessage(received, control, new TestContext(), new DefaultValidationContext());
     }
 
-    @Test(expectedExceptions = ValidationException.class,
-          expectedExceptionsMessageRegExp = "Validation failed - received message content is not empty!")
+    @Test
     public void shouldValidateNonEmptyMessage() {
         when(received.getPayload(String.class)).thenReturn("Hello");
         when(control.getPayload()).thenReturn("");
         when(control.getPayload(String.class)).thenReturn("");
 
-        validator.validateMessage(received, control, new TestContext(), new DefaultValidationContext());
+        ValidationException thrown = assertThrows(ValidationException.class, () -> {
+            validator.validateMessage(received, control, new TestContext(), new DefaultValidationContext());
+        });
+        assertThat(thrown).hasMessage("Validation failed - received message content is not empty!");
     }
 
-    @Test(expectedExceptions = ValidationException.class,
-            expectedExceptionsMessageRegExp = "Empty message validation failed - control message is not empty!")
+    @Test
     public void shouldValidateInvalidControlMessage() {
-        when(received.getPayload(String.class)).thenReturn("");
         when(control.getPayload()).thenReturn("Hello");
         when(control.getPayload(String.class)).thenReturn("Hello");
 
-        validator.validateMessage(received, control, new TestContext(), new DefaultValidationContext());
+        ValidationException thrown = assertThrows(ValidationException.class, () -> {
+            validator.validateMessage(received, control, new TestContext(), new DefaultValidationContext());
+        });
+        assertThat(thrown).hasMessage("Empty message validation failed - control message is not empty!");
     }
 }

@@ -30,9 +30,9 @@ import java.util.zip.GZIPOutputStream;
 import javax.xml.transform.Source;
 
 import org.citrusframework.api.xml.StringSource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.util.MultiValueMap;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @since 2.7
@@ -45,47 +45,47 @@ public class DefaultTypeConverterTest {
     public void testConvertIfNecessary() throws IOException {
         String payload = "Hello Citrus!";
 
-        Assert.assertEquals(converter.convertIfNecessary("1", Byte.class), Byte.valueOf((byte) 1));
-        Assert.assertEquals(converter.convertIfNecessary((byte) 1, Byte.class), Byte.valueOf((byte) 1));
-        Assert.assertEquals(converter.convertIfNecessary("1", Short.class), Short.valueOf((short) 1));
-        Assert.assertEquals(converter.convertIfNecessary((short) 1, Short.class), Short.valueOf((short) 1));
-        Assert.assertEquals(converter.convertIfNecessary("1", Integer.class), Integer.valueOf(1));
-        Assert.assertEquals(converter.convertIfNecessary(1, Integer.class), Integer.valueOf(1));
-        Assert.assertEquals(converter.convertIfNecessary("1", Long.class), Long.valueOf(1));
-        Assert.assertEquals(converter.convertIfNecessary(1L, Long.class), Long.valueOf(1));
-        Assert.assertEquals(converter.convertIfNecessary("1", Float.class), Float.valueOf(1.0F));
-        Assert.assertEquals(converter.convertIfNecessary(1.0F, Float.class), Float.valueOf(1.0F));
-        Assert.assertEquals(converter.convertIfNecessary("1", Double.class), Double.valueOf(1.0D));
-        Assert.assertEquals(converter.convertIfNecessary(1.0D, Double.class), Double.valueOf(1.0D));
-        Assert.assertEquals(converter.convertIfNecessary("true", Boolean.class), Boolean.TRUE);
-        Assert.assertEquals(converter.convertIfNecessary(Boolean.FALSE, Boolean.class), Boolean.FALSE);
-        Assert.assertEquals(converter.convertIfNecessary("no", Boolean.class), Boolean.FALSE);
-        Assert.assertEquals(converter.convertIfNecessary("[a,b,c]", String[].class).length, 3);
-        Assert.assertEquals(converter.convertIfNecessary("[a, b, c]", String[].class).length, 3);
-        Assert.assertEquals(converter.convertIfNecessary("[a,b,c]", List.class).size(), 3);
-        Assert.assertEquals(converter.convertIfNecessary("[a, b, c]", List.class).size(), 3);
-        Assert.assertEquals(converter.convertIfNecessary("{key=value}", Map.class).get("key"), "value");
-        Assert.assertEquals(converter.convertIfNecessary("{key1=value1, key2=value2}", Map.class).get("key2"), "value2");
-        Assert.assertEquals(converter.convertIfNecessary("{key1=value1,key2=value2}", Map.class).get("key2"), "value2");
-        Assert.assertEquals(converter.convertIfNecessary(Arrays.asList("foo", "bar"), String.class), "[foo, bar]");
-        Assert.assertEquals(converter.convertIfNecessary(new String[] {"foo", "bar"}, String.class), "[foo, bar]");
-        Assert.assertEquals(converter.convertIfNecessary(new Object[] {"foo", "bar"}, String.class), "[foo, bar]");
-        Assert.assertEquals(converter.convertIfNecessary(Collections.singletonMap("foo", "bar"), String.class), "{foo=bar}");
-        Assert.assertEquals(converter.convertIfNecessary(MultiValueMap.fromSingleValue(Collections.singletonMap("foo", "bar")), String.class), "{foo=bar}");
-        Assert.assertEquals(converter.convertIfNecessary(MultiValueMap.fromMultiValue(Collections.singletonMap("foo", List.of("bar", "foobar"))), String.class), "{foo=[bar, foobar]}");
-        Assert.assertEquals(converter.convertIfNecessary(MultiValueMap.fromSingleValue(Collections.singletonMap("foo", "bar")), byte[].class), "{foo=bar}".getBytes());
-        Assert.assertEquals(converter.convertIfNecessary(MultiValueMap.fromMultiValue(Collections.singletonMap("foo", List.of("bar", "foobar"))), byte[].class), "{foo=[bar, foobar]}".getBytes());
-        Assert.assertEquals(converter.convertIfNecessary(Arrays.asList(1, 2), String.class), "[1, 2]");
-        Assert.assertEquals(converter.convertIfNecessary(new int[] {1, 2}, String.class), "[1, 2]");
-        Assert.assertEquals(converter.convertIfNecessary(null, String.class), "null");
-        Assert.assertEquals(converter.convertIfNecessary(payload, String.class), payload);
-        Assert.assertEquals(converter.convertIfNecessary(payload, InputStream.class).getClass(), ByteArrayInputStream.class);
-        Assert.assertEquals(converter.convertIfNecessary(payload, Source.class).getClass(), StringSource.class);
-        Assert.assertEquals(converter.convertIfNecessary(payload, byte[].class), payload.getBytes());
-        Assert.assertEquals(converter.convertIfNecessary(payload.getBytes(), String.class), Arrays.toString(payload.getBytes()));
-        Assert.assertEquals(converter.convertIfNecessary(ByteBuffer.wrap(payload.getBytes()), String.class), payload);
-        Assert.assertEquals(converter.convertIfNecessary(new ByteArrayInputStream(payload.getBytes()), String.class), Arrays.toString(payload.getBytes()));
-        Assert.assertEquals(converter.convertIfNecessary(new GZIPInputStream(new ByteArrayInputStream(getZipped(payload.getBytes()))), String.class), Arrays.toString(payload.getBytes()));
+        Assertions.assertEquals(Byte.valueOf((byte) 1), converter.convertIfNecessary("1", Byte.class));
+        Assertions.assertEquals(Byte.valueOf((byte) 1), converter.convertIfNecessary((byte) 1, Byte.class));
+        Assertions.assertEquals(Short.valueOf((short) 1), converter.convertIfNecessary("1", Short.class));
+        Assertions.assertEquals(Short.valueOf((short) 1), converter.convertIfNecessary((short) 1, Short.class));
+        Assertions.assertEquals(Integer.valueOf(1), converter.convertIfNecessary("1", Integer.class));
+        Assertions.assertEquals(Integer.valueOf(1), converter.convertIfNecessary(1, Integer.class));
+        Assertions.assertEquals(Long.valueOf(1), converter.convertIfNecessary("1", Long.class));
+        Assertions.assertEquals(Long.valueOf(1), converter.convertIfNecessary(1L, Long.class));
+        Assertions.assertEquals(Float.valueOf(1.0F), converter.convertIfNecessary("1", Float.class));
+        Assertions.assertEquals(Float.valueOf(1.0F), converter.convertIfNecessary(1.0F, Float.class));
+        Assertions.assertEquals(Double.valueOf(1.0D), converter.convertIfNecessary("1", Double.class));
+        Assertions.assertEquals(Double.valueOf(1.0D), converter.convertIfNecessary(1.0D, Double.class));
+        Assertions.assertEquals(Boolean.TRUE, converter.convertIfNecessary("true", Boolean.class));
+        Assertions.assertEquals(Boolean.FALSE, converter.convertIfNecessary(Boolean.FALSE, Boolean.class));
+        Assertions.assertEquals(Boolean.FALSE, converter.convertIfNecessary("no", Boolean.class));
+        Assertions.assertEquals(3, converter.convertIfNecessary("[a,b,c]", String[].class).length);
+        Assertions.assertEquals(3, converter.convertIfNecessary("[a, b, c]", String[].class).length);
+        Assertions.assertEquals(3, converter.convertIfNecessary("[a,b,c]", List.class).size());
+        Assertions.assertEquals(3, converter.convertIfNecessary("[a, b, c]", List.class).size());
+        Assertions.assertEquals("value", converter.convertIfNecessary("{key=value}", Map.class).get("key"));
+        Assertions.assertEquals("value2", converter.convertIfNecessary("{key1=value1, key2=value2}", Map.class).get("key2"));
+        Assertions.assertEquals("value2", converter.convertIfNecessary("{key1=value1,key2=value2}", Map.class).get("key2"));
+        Assertions.assertEquals("[foo, bar]", converter.convertIfNecessary(Arrays.asList("foo", "bar"), String.class));
+        Assertions.assertEquals("[foo, bar]", converter.convertIfNecessary(new String[] {"foo", "bar"}, String.class));
+        Assertions.assertEquals("[foo, bar]", converter.convertIfNecessary(new Object[] {"foo", "bar"}, String.class));
+        Assertions.assertEquals("{foo=bar}", converter.convertIfNecessary(Collections.singletonMap("foo", "bar"), String.class));
+        Assertions.assertEquals("{foo=bar}", converter.convertIfNecessary(MultiValueMap.fromSingleValue(Collections.singletonMap("foo", "bar")), String.class));
+        Assertions.assertEquals("{foo=[bar, foobar]}", converter.convertIfNecessary(MultiValueMap.fromMultiValue(Collections.singletonMap("foo", List.of("bar", "foobar"))), String.class));
+        Assertions.assertArrayEquals("{foo=bar}".getBytes(), converter.convertIfNecessary(MultiValueMap.fromSingleValue(Collections.singletonMap("foo", "bar")), byte[].class));
+        Assertions.assertArrayEquals("{foo=[bar, foobar]}".getBytes(), converter.convertIfNecessary(MultiValueMap.fromMultiValue(Collections.singletonMap("foo", List.of("bar", "foobar"))), byte[].class));
+        Assertions.assertEquals("[1, 2]", converter.convertIfNecessary(Arrays.asList(1, 2), String.class));
+        Assertions.assertEquals("[1, 2]", converter.convertIfNecessary(new int[] {1, 2}, String.class));
+        Assertions.assertEquals("null", converter.convertIfNecessary(null, String.class));
+        Assertions.assertEquals(payload, converter.convertIfNecessary(payload, String.class));
+        Assertions.assertEquals(ByteArrayInputStream.class, converter.convertIfNecessary(payload, InputStream.class).getClass());
+        Assertions.assertEquals(StringSource.class, converter.convertIfNecessary(payload, Source.class).getClass());
+        Assertions.assertArrayEquals(payload.getBytes(), converter.convertIfNecessary(payload, byte[].class));
+        Assertions.assertEquals(Arrays.toString(payload.getBytes()), converter.convertIfNecessary(payload.getBytes(), String.class));
+        Assertions.assertEquals(payload, converter.convertIfNecessary(ByteBuffer.wrap(payload.getBytes()), String.class));
+        Assertions.assertEquals(Arrays.toString(payload.getBytes()), converter.convertIfNecessary(new ByteArrayInputStream(payload.getBytes()), String.class));
+        Assertions.assertEquals(Arrays.toString(payload.getBytes()), converter.convertIfNecessary(new GZIPInputStream(new ByteArrayInputStream(getZipped(payload.getBytes()))), String.class));
     }
 
     private byte[] getZipped(byte[] in) throws IOException {

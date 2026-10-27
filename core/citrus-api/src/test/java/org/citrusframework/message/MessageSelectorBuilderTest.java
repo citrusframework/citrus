@@ -16,9 +16,8 @@
 package org.citrusframework.message;
 
 import java.util.Map;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MessageSelectorBuilderTest {
 
@@ -26,66 +25,66 @@ public class MessageSelectorBuilderTest {
     public void testToKeyValueMap() {
         Map<String, String> headerMap = MessageSelectorBuilder.withString("foo = 'bar'").toKeyValueMap();
 
-        Assert.assertEquals(headerMap.size(), 1L);
-        Assert.assertTrue(headerMap.containsKey("foo"));
-        Assert.assertEquals(headerMap.get("foo"), "bar");
+        Assertions.assertEquals(1L, headerMap.size());
+        Assertions.assertTrue(headerMap.containsKey("foo"));
+        Assertions.assertEquals("bar", headerMap.get("foo"));
 
         headerMap = MessageSelectorBuilder.withString("foo = 'bar' AND operation = 'foo'").toKeyValueMap();
 
-        Assert.assertEquals(headerMap.size(), 2L);
-        Assert.assertTrue(headerMap.containsKey("foo"));
-        Assert.assertEquals(headerMap.get("foo"), "bar");
-        Assert.assertTrue(headerMap.containsKey("operation"));
-        Assert.assertEquals(headerMap.get("operation"), "foo");
+        Assertions.assertEquals(2L, headerMap.size());
+        Assertions.assertTrue(headerMap.containsKey("foo"));
+        Assertions.assertEquals("bar", headerMap.get("foo"));
+        Assertions.assertTrue(headerMap.containsKey("operation"));
+        Assertions.assertEquals("foo", headerMap.get("operation"));
 
         headerMap = MessageSelectorBuilder.withString("foo='bar' AND operation='foo'").toKeyValueMap();
 
-        Assert.assertEquals(headerMap.size(), 2L);
-        Assert.assertTrue(headerMap.containsKey("foo"));
-        Assert.assertEquals(headerMap.get("foo"), "bar");
-        Assert.assertTrue(headerMap.containsKey("operation"));
-        Assert.assertEquals(headerMap.get("operation"), "foo");
+        Assertions.assertEquals(2L, headerMap.size());
+        Assertions.assertTrue(headerMap.containsKey("foo"));
+        Assertions.assertEquals("bar", headerMap.get("foo"));
+        Assertions.assertTrue(headerMap.containsKey("operation"));
+        Assertions.assertEquals("foo", headerMap.get("operation"));
 
         headerMap = MessageSelectorBuilder.withString("foo='bar' AND operation='foo' AND foobar='true'").toKeyValueMap();
 
-        Assert.assertEquals(headerMap.size(), 3L);
-        Assert.assertTrue(headerMap.containsKey("foo"));
-        Assert.assertEquals(headerMap.get("foo"), "bar");
-        Assert.assertTrue(headerMap.containsKey("operation"));
-        Assert.assertEquals(headerMap.get("operation"), "foo");
-        Assert.assertTrue(headerMap.containsKey("foobar"));
-        Assert.assertEquals(headerMap.get("foobar"), "true");
+        Assertions.assertEquals(3L, headerMap.size());
+        Assertions.assertTrue(headerMap.containsKey("foo"));
+        Assertions.assertEquals("bar", headerMap.get("foo"));
+        Assertions.assertTrue(headerMap.containsKey("operation"));
+        Assertions.assertEquals("foo", headerMap.get("operation"));
+        Assertions.assertTrue(headerMap.containsKey("foobar"));
+        Assertions.assertEquals("true", headerMap.get("foobar"));
 
         headerMap = MessageSelectorBuilder.withString("A='Avalue' AND B='Bvalue' AND N='Nvalue'").toKeyValueMap();
 
-        Assert.assertEquals(headerMap.size(), 3L);
-        Assert.assertTrue(headerMap.containsKey("A"));
-        Assert.assertEquals(headerMap.get("A"), "Avalue");
-        Assert.assertTrue(headerMap.containsKey("B"));
-        Assert.assertEquals(headerMap.get("B"), "Bvalue");
-        Assert.assertTrue(headerMap.containsKey("N"));
-        Assert.assertEquals(headerMap.get("N"), "Nvalue");
+        Assertions.assertEquals(3L, headerMap.size());
+        Assertions.assertTrue(headerMap.containsKey("A"));
+        Assertions.assertEquals("Avalue", headerMap.get("A"));
+        Assertions.assertTrue(headerMap.containsKey("B"));
+        Assertions.assertEquals("Bvalue", headerMap.get("B"));
+        Assertions.assertTrue(headerMap.containsKey("N"));
+        Assertions.assertEquals("Nvalue", headerMap.get("N"));
 
         headerMap = MessageSelectorBuilder.withString("foo='OPERAND' AND bar='ANDROID'").toKeyValueMap();
 
-        Assert.assertEquals(headerMap.size(), 2L);
-        Assert.assertTrue(headerMap.containsKey("foo"));
-        Assert.assertEquals(headerMap.get("foo"), "OPERAND");
-        Assert.assertTrue(headerMap.containsKey("bar"));
-        Assert.assertEquals(headerMap.get("bar"), "ANDROID");
+        Assertions.assertEquals(2L, headerMap.size());
+        Assertions.assertTrue(headerMap.containsKey("foo"));
+        Assertions.assertEquals("OPERAND", headerMap.get("foo"));
+        Assertions.assertTrue(headerMap.containsKey("bar"));
+        Assertions.assertEquals("ANDROID", headerMap.get("bar"));
 
         headerMap = MessageSelectorBuilder.withString("foo='ANDROID'").toKeyValueMap();
 
-        Assert.assertEquals(headerMap.size(), 1L);
-        Assert.assertTrue(headerMap.containsKey("foo"));
-        Assert.assertEquals(headerMap.get("foo"), "ANDROID");
+        Assertions.assertEquals(1L, headerMap.size());
+        Assertions.assertTrue(headerMap.containsKey("foo"));
+        Assertions.assertEquals("ANDROID", headerMap.get("foo"));
 
         headerMap = MessageSelectorBuilder.withString("xpath://foo[@key='primary']/value='bar' AND operation='foo'").toKeyValueMap();
 
-        Assert.assertEquals(headerMap.size(), 2L);
-        Assert.assertTrue(headerMap.containsKey("xpath://foo[@key='primary']/value"));
-        Assert.assertEquals(headerMap.get("xpath://foo[@key='primary']/value"), "bar");
-        Assert.assertTrue(headerMap.containsKey("operation"));
-        Assert.assertEquals(headerMap.get("operation"), "foo");
+        Assertions.assertEquals(2L, headerMap.size());
+        Assertions.assertTrue(headerMap.containsKey("xpath://foo[@key='primary']/value"));
+        Assertions.assertEquals("bar", headerMap.get("xpath://foo[@key='primary']/value"));
+        Assertions.assertTrue(headerMap.containsKey("operation"));
+        Assertions.assertEquals("foo", headerMap.get("operation"));
     }
 }

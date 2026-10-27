@@ -17,22 +17,21 @@
 package org.citrusframework.validation;
 
 import java.util.Map;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class HeaderValidatorTest {
 
     @Test
     public void testLookup() {
         Map<String, HeaderValidator> validators = HeaderValidator.lookup();
-        Assert.assertEquals(validators.size(), 1L);
-        Assert.assertNotNull(validators.get("defaultHeaderValidator"));
-        Assert.assertEquals(validators.get("defaultHeaderValidator").getClass(), DefaultHeaderValidator.class);
+        Assertions.assertEquals(1L, validators.size());
+        Assertions.assertNotNull(validators.get("defaultHeaderValidator"));
+        Assertions.assertEquals(DefaultHeaderValidator.class, validators.get("defaultHeaderValidator").getClass());
     }
 
     @Test
     public void testTestLookup() {
-        Assert.assertTrue(HeaderValidator.lookup("default").isPresent());
+        Assertions.assertTrue(HeaderValidator.lookup("default").isPresent());
     }
 }

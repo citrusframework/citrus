@@ -20,14 +20,14 @@ import java.util.function.Supplier;
 
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestBehavior;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BehaviorNamesTest {
 
-    @DataProvider
     public static Object[][] namedTypes() {
         return new Object[][] {
                 { PlaceAnOrder.class, "place an order" },
@@ -40,34 +40,35 @@ public class BehaviorNamesTest {
         };
     }
 
-    @Test(dataProvider = "namedTypes")
+    @ParameterizedTest
+    @MethodSource("namedTypes")
     public void shouldDeCamelCaseNamedClass(Class<?> type, String expected) {
-        assertEquals(BehaviorNames.of(type), expected);
+        assertEquals(expected, BehaviorNames.of(type));
     }
 
     @Test
     public void shouldUseSimpleNameOfRecord() {
-        assertEquals(BehaviorNames.of(SayHelloRecord.class), "say hello record");
+        assertEquals("say hello record", BehaviorNames.of(SayHelloRecord.class));
     }
 
     @Test
     public void shouldDropEnclosingClassOfNestedClass() {
-        assertEquals(BehaviorNames.of(Outer.SayHello.class), "say hello");
+        assertEquals("say hello", BehaviorNames.of(Outer.SayHello.class));
     }
 
     @Test
     public void shouldUseSimpleNameOfLocalClass() {
         class CheckTheStock {}
 
-        assertEquals(BehaviorNames.of(CheckTheStock.class), "check the stock");
+        assertEquals("check the stock", BehaviorNames.of(CheckTheStock.class));
     }
 
     @Test
     public void shouldUseGenericNameForLambda() {
         Supplier<String> lambda = () -> "foo";
 
-        assertEquals(BehaviorNames.of(lambda.getClass()), BehaviorNames.GENERIC_NAME);
-        assertEquals(BehaviorNames.of(lambda.getClass()), "behavior");
+        assertEquals(BehaviorNames.GENERIC_NAME, BehaviorNames.of(lambda.getClass()));
+        assertEquals("behavior", BehaviorNames.of(lambda.getClass()));
     }
 
     @Test
@@ -79,12 +80,12 @@ public class BehaviorNamesTest {
             }
         };
 
-        assertEquals(BehaviorNames.of(anonymous.getClass()), "behavior");
+        assertEquals("behavior", BehaviorNames.of(anonymous.getClass()));
     }
 
     @Test
     public void shouldPreferExplicitName() {
-        assertEquals(TestBehavior.named("sign in", runner -> {}).getName(), "sign in");
+        assertEquals("sign in", TestBehavior.named("sign in", runner -> {}).getName());
     }
 
     @Test
@@ -92,19 +93,19 @@ public class BehaviorNamesTest {
         TestBehavior signIn = TestBehavior.named("sign in", runner -> {});
         TestBehavior placeAnOrder = new PlaceAnOrderBehavior();
 
-        assertEquals(signIn.andThen(placeAnOrder).getName(), "sign in then place an order behavior");
-        assertEquals(signIn.andThen(placeAnOrder.andThen(signIn)).getName(),
-                "sign in then place an order behavior then sign in");
+        assertEquals("sign in then place an order behavior", signIn.andThen(placeAnOrder).getName());
+        assertEquals("sign in then place an order behavior then sign in",
+                signIn.andThen(placeAnOrder.andThen(signIn)).getName());
     }
 
     @Test
     public void shouldIgnoreGeneratedSuffix() {
-        assertEquals(BehaviorNames.of(PlaceAnOrder$$SpringCGLIB$$0.class), "place an order");
+        assertEquals("place an order", BehaviorNames.of(PlaceAnOrder$$SpringCGLIB$$0.class));
     }
 
     @Test
     public void shouldUseGenericNameForMissingType() {
-        assertEquals(BehaviorNames.of(null), "behavior");
+        assertEquals("behavior", BehaviorNames.of(null));
     }
 
     private static class PlaceAnOrder {}

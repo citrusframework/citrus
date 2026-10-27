@@ -23,8 +23,8 @@ import java.util.concurrent.ExecutorService;
 
 import org.citrusframework.TestResult;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.Thread.currentThread;
 import static java.util.concurrent.Executors.newFixedThreadPool;
@@ -32,17 +32,17 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.citrusframework.TestResult.failed;
 import static org.citrusframework.TestResult.skipped;
 import static org.citrusframework.TestResult.success;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 public class TestResultsTest {
 
     private TestResults fixture;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethodSetup() {
         fixture = new TestResults();
     }
@@ -64,7 +64,7 @@ public class TestResultsTest {
         }
 
         var expectedDuration = durationToAdd.multipliedBy(numberOfThreads);
-        assertEquals(expectedDuration, fixture.getTotalDuration(), "Total duration is incorrect");
+        assertEquals(fixture.getTotalDuration(), expectedDuration, "Total duration is incorrect");
     }
 
     private void sumDurations(int numberOfThreads, ExecutorService executorService, CyclicBarrier barrier, Duration durationToAdd) {
@@ -92,12 +92,12 @@ public class TestResultsTest {
         fixture.addResult(success("OkTest", TestResultsTest.class.getName()));
         fixture.addResult(success("OkTest2", TestResultsTest.class.getName()));
 
-        assertEquals(fixture.getSuccess(), 2);
-        assertEquals(fixture.getSuccessPercentageFormatted(), "100.0");
-        assertEquals(fixture.getFailed(), 0);
-        assertEquals(fixture.getFailedPercentageFormatted(), "0.0");
-        assertEquals(fixture.getSkipped(), 0);
-        assertEquals(fixture.getSkippedPercentageFormatted(), "0.0");
+        assertEquals(2, fixture.getSuccess());
+        assertEquals("100.0", fixture.getSuccessPercentageFormatted());
+        assertEquals(0, fixture.getFailed());
+        assertEquals("0.0", fixture.getFailedPercentageFormatted());
+        assertEquals(0, fixture.getSkipped());
+        assertEquals("0.0", fixture.getSkippedPercentageFormatted());
     }
 
     @Test
@@ -106,12 +106,12 @@ public class TestResultsTest {
         fixture.addResult(failed("FailedTest", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
         fixture.addResult(success("OkTest2", TestResultsTest.class.getName()));
 
-        assertEquals(fixture.getSuccess(), 2);
-        assertEquals(fixture.getSuccessPercentageFormatted(), "66.7");
-        assertEquals(fixture.getFailed(), 1);
-        assertEquals(fixture.getFailedPercentageFormatted(), "33.3");
-        assertEquals(fixture.getSkipped(), 0);
-        assertEquals(fixture.getSkippedPercentageFormatted(), "0.0");
+        assertEquals(2, fixture.getSuccess());
+        assertEquals("66.7", fixture.getSuccessPercentageFormatted());
+        assertEquals(1, fixture.getFailed());
+        assertEquals("33.3", fixture.getFailedPercentageFormatted());
+        assertEquals(0, fixture.getSkipped());
+        assertEquals("0.0", fixture.getSkippedPercentageFormatted());
     }
 
     @Test
@@ -122,22 +122,22 @@ public class TestResultsTest {
         fixture.addResult(failed("FailedTest2", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
         fixture.addResult(skipped("SkippedTest1", TestResultsTest.class.getName()));
 
-        assertEquals(fixture.getSuccess(), 2);
-        assertEquals(fixture.getSuccessPercentageFormatted(), "40.0");
-        assertEquals(fixture.getFailed(), 2);
-        assertEquals(fixture.getFailedPercentageFormatted(), "40.0");
-        assertEquals(fixture.getSkipped(), 1);
-        assertEquals(fixture.getSkippedPercentageFormatted(), "20.0");
+        assertEquals(2, fixture.getSuccess());
+        assertEquals("40.0", fixture.getSuccessPercentageFormatted());
+        assertEquals(2, fixture.getFailed());
+        assertEquals("40.0", fixture.getFailedPercentageFormatted());
+        assertEquals(1, fixture.getSkipped());
+        assertEquals("20.0", fixture.getSkippedPercentageFormatted());
     }
 
     @Test
     public void testResultsForNoResult() {
-        assertEquals(fixture.getSuccess(), 0);
-        assertEquals(fixture.getSuccessPercentageFormatted(), "0.0");
-        assertEquals(fixture.getFailed(), 0);
-        assertEquals(fixture.getFailedPercentageFormatted(), "0.0");
-        assertEquals(fixture.getSkipped(), 0);
-        assertEquals(fixture.getSkippedPercentageFormatted(), "0.0");
+        assertEquals(0, fixture.getSuccess());
+        assertEquals("0.0", fixture.getSuccessPercentageFormatted());
+        assertEquals(0, fixture.getFailed());
+        assertEquals("0.0", fixture.getFailedPercentageFormatted());
+        assertEquals(0, fixture.getSkipped());
+        assertEquals("0.0", fixture.getSkippedPercentageFormatted());
     }
 
     @Test
@@ -147,11 +147,11 @@ public class TestResultsTest {
         fixture.addResult(failed("FailedTest", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")).withDuration(Duration.ofMillis(300)));
         fixture.addResult(skipped("SkippedTest", TestResultsTest.class.getName()));
 
-        assertEquals(fixture.getTotalDuration(), Duration.ofMillis(600));
+        assertEquals(Duration.ofMillis(600), fixture.getTotalDuration());
     }
 
     @Test
     void getTotalDurationReturnsZeroByDefault() {
-        assertEquals(fixture.getTotalDuration(), Duration.ZERO);
+        assertEquals(Duration.ZERO, fixture.getTotalDuration());
     }
 }

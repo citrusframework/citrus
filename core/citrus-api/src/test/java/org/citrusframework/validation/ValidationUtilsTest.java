@@ -19,11 +19,12 @@ package org.citrusframework.validation;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 /**
  * Verifies that {@link ValidationUtils#validateValues(Object, Object, String, TestContext)}
@@ -80,7 +81,7 @@ public class ValidationUtilsTest {
             ValidationUtils.validateValues(3, new ThrowingControl("ignored"), path, context);
             fail("Expected ValidationException");
         } catch (ValidationException e) {
-            assertEquals(e.getCause(), original, "Original matcher exception should be the cause");
+            assertEquals(original, e.getCause(), "Original matcher exception should be the cause");
         }
     }
 
@@ -156,7 +157,7 @@ public class ValidationUtilsTest {
         } catch (ValidationException e) {
             String expectedMessage = ValidationUtils.buildValueMismatchErrorMessage(
                     "Values not matching for element '" + path + "'", expected, "actual-value");
-            assertEquals(e.getMessage(), expectedMessage,
+            assertEquals(expectedMessage, e.getMessage(),
                     "False-returning matcher must keep today's message unchanged");
         }
     }
@@ -173,7 +174,7 @@ public class ValidationUtilsTest {
         } catch (ValidationException e) {
             String expectedMessage = ValidationUtils.buildValueMismatchErrorMessage(
                     "Values not matching for element '" + path + "'", expected, null);
-            assertEquals(e.getMessage(), expectedMessage,
+            assertEquals(expectedMessage, e.getMessage(),
                     "False-returning matcher must keep today's message unchanged for null actual");
         }
     }

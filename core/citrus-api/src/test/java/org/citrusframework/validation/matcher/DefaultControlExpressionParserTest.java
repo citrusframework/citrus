@@ -17,33 +17,36 @@
 package org.citrusframework.validation.matcher;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.5
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DefaultControlExpressionParserTest {
 
-    @Test(dataProvider = "validControlExpressions")
+    @ParameterizedTest
+    @MethodSource("validControlExpressions")
     public void shouldExtractControlParametersSuccessfully(String controlExpression, List<String> expectedParameters) {
         ControlExpressionParser expressionParser = new DefaultControlExpressionParser();
         List<String> extractedParameters = expressionParser.extractControlValues(controlExpression, null);
 
-        Assert.assertEquals(extractedParameters.size(), expectedParameters.size());
+        Assertions.assertEquals(expectedParameters.size(), extractedParameters.size());
 
         for (int i = 0; i < expectedParameters.size(); i++) {
-            Assert.assertTrue(extractedParameters.size() > i);
-            Assert.assertEquals(extractedParameters.get(i), expectedParameters.get(i));
+            Assertions.assertTrue(extractedParameters.size() > i);
+            Assertions.assertEquals(expectedParameters.get(i), extractedParameters.get(i));
         }
     }
 
-    @DataProvider
     public Object[][] validControlExpressions() {
         return new Object[][]{
                 // {control-expression, expected-parameter-1, expected-parameter-2, ..}
@@ -61,13 +64,15 @@ public class DefaultControlExpressionParserTest {
         };
     }
 
-    @Test(dataProvider = "invalidControlExpressions", expectedExceptions = CitrusRuntimeException.class)
+    @ParameterizedTest
+    @MethodSource("invalidControlExpressions")
     public void shouldNotExtractControlParametersSuccessfully(String controlExpression) {
         ControlExpressionParser expressionParser = new DefaultControlExpressionParser();
-        expressionParser.extractControlValues(controlExpression, null);
+        assertThrows(CitrusRuntimeException.class, () -> {
+            expressionParser.extractControlValues(controlExpression, null);
+        });
     }
 
-    @DataProvider
     public Object[][] invalidControlExpressions() {
         return new Object[][]{
                 {"'"},
