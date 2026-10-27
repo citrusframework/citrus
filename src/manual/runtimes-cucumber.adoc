@@ -96,26 +96,34 @@ import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
 
-import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
+import static io.cucumber.junit.platform.engine.Constants.GLUE_CLASSES_PROPERTY_NAME;
 import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 
 @Suite
 @IncludeEngines("cucumber")
 @SelectPackages("com.example")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example")
+@ConfigurationParameter(key = GLUE_CLASSES_PROPERTY_NAME, value = "com.example.EchoSteps")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
 public class MyFeatureIT {
 }
 ----
 
 The test case above uses the *Cucumber* JUnit Platform suite support. In addition to that we give some options to the Cucumber execution.
+The `cucumber.glue.classes` parameter registers the step definition class *EchoSteps* directly, so Cucumber does not have
+to scan a glue package for step definitions. You can also use a glue package with `cucumber.glue` as described in
+<<cucumber-glue-discovery,glue discovery>>.
+
+NOTE: `cucumber.glue.classes` is experimental in Cucumber 8 (`@API(status = EXPERIMENTAL, since = "8.0.0")`) and may
+change in later 8.x releases. The stable alternative is a narrow `cucumber.glue` package as described in
+<<cucumber-glue-discovery,glue discovery>>.
 In case you want to have the usual Citrus test results reported you can add the special Citrus reporter implementation
 `org.citrusframework.cucumber.CitrusReporter`. This class is responsible for printing the Citrus test summary. This reporter
 extends the default Cucumber reporter so the default Cucumber report summary is also printed to the console.
+Some Cucumber report plugins need Jackson on the classpath, see <<cucumber-report-plugins,report plugins and Jackson>>.
 
 That completes the suite class configuration. Now we are able to add feature stories and step definitions to the package
-of our test *MyFeatureIT*. Cucumber and Citrus will automatically pick up step definitions and glue code in that test
-package. So let's write a feature story *echo.feature* right next to the *MyFeatureIT* test class.
+of our test *MyFeatureIT*. Cucumber picks up the feature files in that test package and runs them with the registered
+step definition class. So let's write a feature story *echo.feature* right next to the *MyFeatureIT* test class.
 
 .echo.feature
 [source,gherkin]
@@ -275,6 +283,9 @@ on the test classpath also participate in test discovery. `@SelectClasspathResou
 paths. Use `@SelectPackages` when the feature files are located in the package of the suite class. For feature files
 outside the test classpath, use the `cucumber.features` configuration parameter with a file path or URI.
 
+The migrated suite keeps the broad `org.citrusframework.cucumber` glue package of the original runner. After the
+migration you can replace it with explicit glue classes as described in <<cucumber-glue-discovery,glue discovery>>.
+
 The following table maps the `@CucumberOptions` attributes to their JUnit Platform counterparts. Put the configuration
 parameter either in `@ConfigurationParameter` or in `junit-platform.properties`.
 
@@ -337,6 +348,125 @@ Custom `CitrusBackend` or `CitrusSpringBackend` subclasses should override
 `loadGlue(Glue, GlueDiscoveryRequest)` instead of the deprecated `loadGlue(Glue, List<URI>)` method. The deprecated
 method is still called by the default implementation for backwards compatibility, but it will be removed when Cucumber
 drops the deprecated interface method.
+
+[[cucumber-glue-discovery]]
+=== Glue discovery
+
+Cucumber needs to know which classes provide step definitions, hooks and parameter types. You can register the glue
+classes explicitly or let Cucumber scan glue packages.
+
+[cols="1,2"]
+|===
+|Configuration parameter |Effect
+
+|`cucumber.glue.classes`
+|Comma-separated fully qualified class names. Cucumber registers exactly these glue classes and does not scan a package for them.
+
+|`cucumber.glue`
+|Comma-separated package names. Cucumber scans the packages and their sub-packages for glue classes.
+
+|`cucumber.glue.included-class-name-pattern`
+|Regular expression. While scanning a glue package, Cucumber keeps only the classes whose fully qualified name matches.
+
+|`cucumber.glue.excluded-class-name-pattern`
+|Regular expression. While scanning a glue package, Cucumber drops the classes whose fully qualified name matches.
+
+|`cucumber.glue.hint.enabled`
+|Use `false` to disable the glue hint.
+
+|`cucumber.glue.hint.threshold`
+|Threshold that controls when Cucumber prints the glue hint.
+|===
+
+NOTE: The `cucumber.glue.classes`, `cucumber.glue.included-class-name-pattern`, `cucumber.glue.excluded-class-name-pattern`
+and `cucumber.glue.hint.*` parameters are experimental in Cucumber 8 and may still change in later 8.x releases. Scanning a
+glue package with `cucumber.glue` is the stable alternative.
+
+Explicit glue classes are the fastest option and also work well with GraalVM native images, because the step classes do
+not have to be discovered with classpath scanning. The list must contain every glue class the features use, including
+your own step classes and any predefined Citrus step classes.
+
+.Explicit glue classes
+[source,java]
+----
+@Suite
+@IncludeEngines("cucumber")
+@SelectPackages("com.example")
+@ConfigurationParameter(key = GLUE_CLASSES_PROPERTY_NAME, value = "com.example.EchoSteps,com.example.GreetingSteps")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
+public class MyFeatureIT {
+}
+----
+
+When you prefer package scanning, keep the glue package as narrow as possible. The class name patterns narrow the scan
+further. They only apply to classes found by scanning a `cucumber.glue` package, not to classes listed in
+`cucumber.glue.classes`.
+
+.Glue package with class name filter
+[source,java]
+----
+@Suite
+@IncludeEngines("cucumber")
+@SelectPackages("com.example")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example")
+@ConfigurationParameter(key = GLUE_INCLUDED_CLASS_NAME_PATTERN_PROPERTY_NAME, value = "^com\\.example\\..*Steps$")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
+public class MyFeatureIT {
+}
+----
+
+When a glue package scan loads many classes, Cucumber prints a hint that recommends explicit glue classes or class name
+filters. Resolve the hint by listing the glue classes in `cucumber.glue.classes`, by using a narrower `cucumber.glue`
+package, or by adding an included or excluded class name pattern. Set `cucumber.glue.hint.enabled=false` to silence it.
+
+All of these parameters work in `@ConfigurationParameter` and in `junit-platform.properties`.
+
+.junit-platform.properties
+[source,properties]
+----
+cucumber.object-factory=org.citrusframework.cucumber.backend.CitrusObjectFactory
+cucumber.glue.classes=com.example.EchoSteps,com.example.GreetingSteps
+----
+
+[cols="1,2"]
+|===
+|File |Read by
+
+|`junit-platform.properties`
+|The Cucumber JUnit Platform engine (`@Suite` classes).
+
+|`cucumber.properties`
+|The Citrus test engine and the Cucumber command line. The JUnit Platform engine ignores this file.
+|===
+
+The `CitrusObjectFactory` creates glue classes through a non-private zero-argument constructor. Public, protected and
+package-private glue classes and constructors are supported. A glue class without such a constructor fails with a
+`CucumberException` naming the class. When your tests run as a named Java module, open the glue package to Cucumber so
+that it can create package-private classes reflectively.
+
+[[cucumber-report-plugins]]
+=== Report plugins and Jackson
+
+The Cucumber `json`, `html`, `message`, `timeline` and `usage-json` plugins write JSON and need a Jackson implementation
+on the test runtime classpath. Cucumber supports Jackson 3 or Jackson 2. Citrus projects should use Jackson 3.
+
+.Jackson 3 for Cucumber report plugins
+[source,xml]
+----
+<dependency>
+  <groupId>tools.jackson.core</groupId>
+  <artifactId>jackson-databind</artifactId>
+  <scope>test</scope>
+</dependency>
+----
+
+With Jackson 2, add both `com.fasterxml.jackson.core:jackson-databind` and
+`com.fasterxml.jackson.datatype:jackson-datatype-jdk8` instead. Without a Jackson implementation these plugins fail with
+a `CucumberException` that lists the missing dependencies.
+
+The Citrus termination log reporter (`org.citrusframework.cucumber.report.json.TerminationLogReporter`) always requires Jackson 3
+(`tools.jackson.core:jackson-databind`). The `citrus-cucumber` module does not bring Jackson with it, so add the
+dependency to your project when you use this reporter.
 
 [[cucumber-xml-steps]]
 === Cucumber XML steps
@@ -577,7 +707,7 @@ If you want to enable predefined steps support in your test you need to include 
 </dependency>
 ----
 
-After that you need to include the glue code package in your test class like this:
+After that you need to register the predefined step classes as glue in your test class like this:
 
 .Include Citrus steps
 [source,java]
@@ -585,16 +715,27 @@ After that you need to include the glue code package in your test class like thi
 @Suite
 @IncludeEngines("cucumber")
 @SelectPackages("com.example")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example,org.citrusframework.cucumber")
+@ConfigurationParameter(key = GLUE_CLASSES_PROPERTY_NAME, value = "org.citrusframework.cucumber.steps.core.StandardSteps,"
+        + "org.citrusframework.cucumber.steps.core.MessagingSteps,"
+        + "org.citrusframework.cucumber.steps.core.EndpointSteps,"
+        + "org.citrusframework.cucumber.steps.core.ComponentSteps")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty,org.citrusframework.cucumber.CitrusReporter")
 public class MyFeatureIT {
 
 }
 ----
 
-Instead of writing the glue code on our own in step definition classes we include the glue package `org.citrusframework.cucumber`
-as extra glue. This automatically loads all predefined Citrus step definitions. Once you have done this you can use predefined
-steps without having to write any glue code in Java.
+Instead of writing the glue code on our own in step definition classes we register the predefined Citrus step classes of the
+`citrus-cucumber-core` module as glue. Add your own step classes to the same list when the features also use them. Once you
+have done this you can use predefined steps without having to write any glue code in Java.
+
+Each step module keeps its step classes in the package `org.citrusframework.cucumber.steps.<module>`, for example
+`org.citrusframework.cucumber.steps.http`. You can use such a package as `cucumber.glue` and narrow it with the class name
+patterns described in <<cucumber-glue-discovery,glue discovery>>.
+
+TIP: To load the predefined steps of every step module on the classpath, use the broad glue package
+`org.citrusframework.cucumber` instead, for example `@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example,org.citrusframework.cucumber")`.
+This scans all Citrus step packages and therefore takes longer to start.
 
 [source,gherkin]
 ----

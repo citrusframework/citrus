@@ -52,7 +52,7 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 @Test
 public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
 
-    private final int port = findAvailableTcpPort(19600);
+    private final int port = findAvailableTcpPort(20000, 32767);
 
     private static final JsonMapper JSON = JsonMapper.shared();
 

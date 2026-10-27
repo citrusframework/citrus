@@ -16,6 +16,9 @@
 
 package org.citrusframework.cucumber.backend;
 
+import io.cucumber.core.exception.CucumberException;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -35,5 +38,68 @@ public class CitrusObjectFactoryTest {
         Assert.assertNotNull(steps.getTestRunner());
         Assert.assertNotNull(steps.getTestContext());
         factory.stop();
+    }
+
+    @Test
+    public void testPackagePrivateStepsInstantiation() {
+        CitrusObjectFactory factory = new CitrusObjectFactory();
+        factory.addClass(PackagePrivateSteps.class);
+
+        factory.start();
+        final PackagePrivateSteps steps = factory.getInstance(PackagePrivateSteps.class);
+        Assert.assertNotNull(steps);
+        Assert.assertNotNull(steps.runner);
+        factory.stop();
+    }
+
+    @Test
+    public void testProtectedStepsInstantiation() {
+        CitrusObjectFactory factory = new CitrusObjectFactory();
+        factory.addClass(ProtectedSteps.class);
+
+        factory.start();
+        final ProtectedSteps steps = factory.getInstance(ProtectedSteps.class);
+        Assert.assertNotNull(steps);
+        Assert.assertNotNull(steps.runner);
+        factory.stop();
+    }
+
+    @Test
+    public void testPrivateConstructorFails() {
+        CitrusObjectFactory factory = new CitrusObjectFactory();
+        factory.addClass(PrivateConstructorSteps.class);
+
+        factory.start();
+        try {
+            CucumberException e = Assert.expectThrows(CucumberException.class,
+                    () -> factory.getInstance(PrivateConstructorSteps.class));
+            Assert.assertTrue(e.getMessage().contains(PrivateConstructorSteps.class.getName()), e.getMessage());
+        } finally {
+            factory.stop();
+        }
+    }
+
+    static class PackagePrivateSteps {
+
+        @CitrusResource
+        TestCaseRunner runner;
+
+        PackagePrivateSteps() {
+        }
+    }
+
+    static class PrivateConstructorSteps {
+
+        private PrivateConstructorSteps() {
+        }
+    }
+
+    public static class ProtectedSteps {
+
+        @CitrusResource
+        TestCaseRunner runner;
+
+        protected ProtectedSteps() {
+        }
     }
 }

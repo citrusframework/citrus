@@ -35,7 +35,7 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 @Test
 public class GraphQlStrictIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
-    private final int port = findAvailableTcpPort(18880);
+    private final int port = findAvailableTcpPort(20000, 32767);
 
     @BindToRegistry
     private final GraphQlServer strictServer = GraphQlEndpoints.graphql().server()

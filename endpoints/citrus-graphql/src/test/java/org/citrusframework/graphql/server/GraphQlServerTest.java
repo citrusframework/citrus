@@ -62,7 +62,7 @@ public class GraphQlServerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void shouldServeGetRequestsAsJsonThroughStartedServer() throws Exception {
-        int port = findAvailableTcpPort(18280);
+        int port = findAvailableTcpPort(20000, 32767);
         GraphQlServer server = new GraphQlServer();
         server.setName("graphQlServer");
         server.setPort(port);

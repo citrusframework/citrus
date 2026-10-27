@@ -115,8 +115,9 @@ public class ServerCallRegistry {
                     return;
                 }
                 LOG.warn("No response for gRPC call '{}' within {} ms", callId, idleTimeout);
-                close(Status.INTERNAL.withDescription("Citrus simulator: no response within " + idleTimeout + " ms"), new Metadata());
+                // unregister before closing so that the call is never found once the client sees it closed
                 registry.remove(callId);
+                close(Status.INTERNAL.withDescription("Citrus simulator: no response within " + idleTimeout + " ms"), new Metadata());
             };
         }
 

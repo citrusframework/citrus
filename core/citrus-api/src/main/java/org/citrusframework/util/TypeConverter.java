@@ -49,15 +49,17 @@ public interface TypeConverter {
      * @return
      */
     static Map<String, TypeConverter> lookup() {
-        if (converters.isEmpty()) {
-            converters.putAll(TYPE_RESOLVER.resolveAll());
-
+        synchronized (converters) {
             if (converters.isEmpty()) {
-                converters.put(DEFAULT, DefaultTypeConverter.INSTANCE);
-            }
+                converters.putAll(TYPE_RESOLVER.resolveAll());
 
-            if (logger.isTraceEnabled()) {
-                converters.forEach((k, v) -> logger.trace("Found type converter '{}' as {}", k, v.getClass()));
+                if (converters.isEmpty()) {
+                    converters.put(DEFAULT, DefaultTypeConverter.INSTANCE);
+                }
+
+                if (logger.isTraceEnabled()) {
+                    converters.forEach((k, v) -> logger.trace("Found type converter '{}' as {}", k, v.getClass()));
+                }
             }
         }
 

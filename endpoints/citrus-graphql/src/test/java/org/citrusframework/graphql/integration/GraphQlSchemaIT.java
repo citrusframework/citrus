@@ -39,7 +39,7 @@ public class GraphQlSchemaIT extends TestNGCitrusSpringSupport implements TestAc
             "classpath:org/citrusframework/graphql/schema/scalars.graphqls"
     };
 
-    private final int port = findAvailableTcpPort(18780);
+    private final int port = findAvailableTcpPort(20000, 32767);
 
     @BindToRegistry
     private final GraphQlServer schemaServer = GraphQlEndpoints.graphql().server()

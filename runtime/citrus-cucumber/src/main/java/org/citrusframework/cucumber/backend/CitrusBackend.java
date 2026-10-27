@@ -23,6 +23,7 @@ import java.util.List;
 import io.cucumber.core.backend.Backend;
 import io.cucumber.core.backend.Container;
 import io.cucumber.core.backend.Glue;
+import io.cucumber.core.backend.HookDefinition.HookType;
 import io.cucumber.core.backend.Lookup;
 import io.cucumber.core.backend.Snippet;
 import io.cucumber.core.backend.discovery.GlueDiscoveryRequest;
@@ -75,10 +76,10 @@ public class CitrusBackend implements Backend {
         try {
             if (container.addClass(CitrusLifecycleHooks.class)) {
                 Method beforeMethod = CitrusLifecycleHooks.class.getMethod("before", Scenario.class);
-                glue.addBeforeHook(new CitrusHookDefinition(beforeMethod, "", 10000, lookup));
+                glue.addBeforeHook(new CitrusHookDefinition(beforeMethod, "", 10000, lookup, HookType.BEFORE));
 
                 Method afterMethod = CitrusLifecycleHooks.class.getMethod("after", Scenario.class);
-                glue.addAfterHook(new CitrusHookDefinition(afterMethod, "", 10000, lookup));
+                glue.addAfterHook(new CitrusHookDefinition(afterMethod, "", 10000, lookup, HookType.AFTER));
             }
         } catch (NoSuchMethodException e) {
             throw new CucumberException("Unable to add Citrus lifecycle hooks");
