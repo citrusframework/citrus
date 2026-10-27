@@ -112,6 +112,10 @@ The test case above uses the *Cucumber* JUnit Platform suite support. In additio
 The `cucumber.glue.classes` parameter registers the step definition class *EchoSteps* directly, so Cucumber does not have
 to scan a glue package for step definitions. You can also use a glue package with `cucumber.glue` as described in
 <<cucumber-glue-discovery,glue discovery>>.
+
+NOTE: `cucumber.glue.classes` is experimental in Cucumber 8 (`@API(status = EXPERIMENTAL, since = "8.0.0")`) and may
+change in later 8.x releases. The stable alternative is a narrow `cucumber.glue` package as described in
+<<cucumber-glue-discovery,glue discovery>>.
 In case you want to have the usual Citrus test results reported you can add the special Citrus reporter implementation
 `org.citrusframework.cucumber.CitrusReporter`. This class is responsible for printing the Citrus test summary. This reporter
 extends the default Cucumber reporter so the default Cucumber report summary is also printed to the console.
