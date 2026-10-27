@@ -53,7 +53,7 @@ public class GraphQlGetTransportIT extends TestNGCitrusSpringSupport implements 
             } ÄÖü €""";
     private static final String VARIABLES = "{\"id\":\"42\",\"ids\":[\"a,b\",\"c\"],\"q\":\"x+y%20z ${notACitrusVariable}\"}";
 
-    private final int port = findAvailableTcpPort(18180);
+    private final int port = findAvailableTcpPort(20000, 32767);
 
     @BindToRegistry
     private final HttpServer getServer = new HttpServerBuilder()
