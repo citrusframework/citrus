@@ -18,7 +18,7 @@ public class TestContextUnitTest {
     private TestContext fixture;
 
     @BeforeEach
-    void beforeTestClass() {
+    void beforeEach() {
         fixture = new TestContext();
     }
 

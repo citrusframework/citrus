@@ -26,7 +26,7 @@ public class TestReportersTest {
     private TestReporters fixture;
 
     @BeforeEach
-    void beforeMethodSetup() {
+    void beforeEach() {
 
         fixture = new TestReporters();
     }

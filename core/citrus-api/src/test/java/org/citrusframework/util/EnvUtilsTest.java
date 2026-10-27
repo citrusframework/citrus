@@ -18,7 +18,7 @@ public class EnvUtilsTest {
     private SystemProvider systemProvider;
 
     @BeforeEach
-    public void beforeMethod() {
+    public void beforeEach() {
         systemProvider = mock(SystemProvider.class);
     }
 

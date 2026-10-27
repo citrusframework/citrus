@@ -43,7 +43,7 @@ public class TestResultsTest {
     private TestResults fixture;
 
     @BeforeEach
-    public void beforeMethodSetup() {
+    public void beforeEach() {
         fixture = new TestResults();
     }
 

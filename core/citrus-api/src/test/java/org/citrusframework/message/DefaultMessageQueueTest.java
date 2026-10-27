@@ -29,7 +29,7 @@ public class DefaultMessageQueueTest {
     private TestContext context;
 
     @BeforeEach
-    public void setupMocks() {
+    public void setup() {
         context = new TestContext();
     }
 

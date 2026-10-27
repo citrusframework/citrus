@@ -26,7 +26,7 @@ public class JsonPathMessageValidationContextTest {
     private JsonPathMessageValidationContext fixture;
 
     @BeforeEach
-    public void beforeMethod() {
+    public void beforeEach() {
         fixture = new JsonPathMessageValidationContext();
     }
 

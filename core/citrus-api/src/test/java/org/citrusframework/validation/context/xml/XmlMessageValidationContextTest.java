@@ -26,7 +26,7 @@ public class XmlMessageValidationContextTest {
     private XmlMessageValidationContext fixture;
 
     @BeforeEach
-    public void beforeMethod() {
+    public void beforeEach() {
         fixture = new XmlMessageValidationContext();
     }
 

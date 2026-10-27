@@ -54,7 +54,7 @@ public class ResourcesTest {
     private static URI nonExistingFileUri;
 
     @BeforeAll
-    public static void beforeClass() throws URISyntaxException {
+    public static void beforeAll() throws URISyntaxException {
         Resource resource = Resources.create("/ResourcesTest");
         baseUri = resource.file().getParentFile().toURI();
         baseFolderUri = resource.file().toURI();

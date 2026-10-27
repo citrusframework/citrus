@@ -26,7 +26,7 @@ public class JsonMessageValidationContextTest {
     private JsonMessageValidationContext fixture;
 
     @BeforeEach
-    public void beforeMethod() {
+    public void beforeEach() {
         fixture = new JsonMessageValidationContext();
     }
 

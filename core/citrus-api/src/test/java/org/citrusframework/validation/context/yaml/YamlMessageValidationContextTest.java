@@ -26,7 +26,7 @@ public class YamlMessageValidationContextTest {
     private YamlMessageValidationContext fixture;
 
     @BeforeEach
-    public void beforeMethod() {
+    public void beforeEach() {
         fixture = new YamlMessageValidationContext();
     }
 
