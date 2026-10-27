@@ -47,17 +47,34 @@ public class SocketUtils {
     }
 
     public static int findAvailableTcpPort(int min) {
+        return findAvailableTcpPort(min, PORT_RANGE_MAX);
+    }
+
+    /**
+     * Find an available TCP port randomly selected from the range [min, max]. Use a maximum below the
+     * ephemeral port range of the operating system (e.g. 32767) when the port is bound some time after
+     * this check, so that outgoing connections cannot take it in the meantime.
+     */
+    public static int findAvailableTcpPort(int min, int max) {
         if (min < PORT_RANGE_MIN) {
             throw new CitrusRuntimeException(String.format("Invalid minimum value for port range - ports range must be greater than %d", PORT_RANGE_MIN));
+        }
+
+        if (max > PORT_RANGE_MAX) {
+            throw new CitrusRuntimeException(String.format("Invalid maximum value for port range - ports range must not exceed %d", PORT_RANGE_MAX));
+        }
+
+        if (min > max) {
+            throw new CitrusRuntimeException(String.format("Invalid port range - minimum %d is greater than maximum %d", min, max));
         }
 
         int candidatePort;
         int count = 0;
         do {
             if (++count > MAX_ATTEMPTS) {
-                throw new CitrusRuntimeException(String.format("Could not find an available TCP port in the range [%d, %d] after %d attempts", min, PORT_RANGE_MAX, MAX_ATTEMPTS));
+                throw new CitrusRuntimeException(String.format("Could not find an available TCP port in the range [%d, %d] after %d attempts", min, max, MAX_ATTEMPTS));
             }
-            candidatePort = min + random.nextInt(PORT_RANGE_MAX - min + 1);
+            candidatePort = min + random.nextInt(max - min + 1);
         }
         while (!isPortAvailable(candidatePort));
 

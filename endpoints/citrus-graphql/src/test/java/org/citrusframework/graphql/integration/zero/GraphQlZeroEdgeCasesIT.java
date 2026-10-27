@@ -40,7 +40,7 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 @Test
 public class GraphQlZeroEdgeCasesIT extends TestNGCitrusSpringSupport implements TestActionSupport {
 
-    private final int port = findAvailableTcpPort(19570);
+    private final int port = findAvailableTcpPort(20000, 32767);
 
     @BindToRegistry
     private final GraphQlServer zeroServer = GraphQlEndpoints.graphql().server()
