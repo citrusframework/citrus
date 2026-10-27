@@ -48,11 +48,13 @@ public interface Function {
      * @return
      */
     static Map<String, Function> lookup() {
-        if (functions.isEmpty()) {
-            functions.putAll(TYPE_RESOLVER.resolveAll());
+        synchronized (functions) {
+            if (functions.isEmpty()) {
+                functions.putAll(TYPE_RESOLVER.resolveAll());
 
-            if (logger.isTraceEnabled()) {
-                functions.forEach((k, v) -> logger.trace("Found function '{}' as {}", k, v.getClass()));
+                if (logger.isTraceEnabled()) {
+                    functions.forEach((k, v) -> logger.trace("Found function '{}' as {}", k, v.getClass()));
+                }
             }
         }
 

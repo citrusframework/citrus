@@ -34,4 +34,10 @@ public class TypeConverterTest {
         Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.APACHE_CAMEL));
         Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.GROOVY));
     }
+
+    @Test
+    public void shouldLookupConvertersOnceWhenCalledConcurrently() throws Exception {
+        ConcurrencyTestUtils.raceRepeatedly(10_000, 16, TypeConverter.converters::clear, TypeConverter::lookup,
+                () -> Assert.assertEquals(TypeConverter.converters.size(), 1));
+    }
 }

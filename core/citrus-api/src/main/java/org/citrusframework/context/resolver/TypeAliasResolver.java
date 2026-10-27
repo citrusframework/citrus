@@ -50,13 +50,16 @@ public interface TypeAliasResolver<S, A> {
      * @return
      */
     static Map<String, TypeAliasResolver<?, ?>> lookup() {
-        if (resolvers.isEmpty()) {
-            resolvers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
+        synchronized (resolvers) {
+            if (resolvers.isEmpty()) {
+                resolvers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
 
-            if (logger.isDebugEnabled()) {
-                resolvers.forEach((k, v) -> logger.debug("Found type alias resolver '{}' as {}", k, v.getClass()));
+                if (logger.isDebugEnabled()) {
+                    resolvers.forEach((k, v) -> logger.debug("Found type alias resolver '{}' as {}", k, v.getClass()));
+                }
             }
         }
+
         return resolvers;
     }
 

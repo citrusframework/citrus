@@ -51,13 +51,16 @@ public interface ValidationMatcher {
      * @return
      */
     static Map<String, ValidationMatcher> lookup() {
-        if (matcher.isEmpty()) {
-            matcher.putAll(TYPE_RESOLVER.resolveAll());
+        synchronized (matcher) {
+            if (matcher.isEmpty()) {
+                matcher.putAll(TYPE_RESOLVER.resolveAll());
 
-            if (logger.isTraceEnabled()) {
-                matcher.forEach((k, v) -> logger.trace("Found validation matcher '{}' as {}", k, v.getClass()));
+                if (logger.isTraceEnabled()) {
+                    matcher.forEach((k, v) -> logger.trace("Found validation matcher '{}' as {}", k, v.getClass()));
+                }
             }
         }
+
         return matcher;
     }
 

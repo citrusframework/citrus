@@ -57,13 +57,16 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
      * @return
      */
     static Map<String, AnnotationConfigParser<?, ?>> lookup() {
-        if (parsers.isEmpty()) {
-            parsers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
+        synchronized (parsers) {
+            if (parsers.isEmpty()) {
+                parsers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
 
-            if (logger.isTraceEnabled()) {
-                parsers.forEach((k, v) -> logger.trace("Found annotation config parser '{}' as {}", k, v.getClass()));
+                if (logger.isTraceEnabled()) {
+                    parsers.forEach((k, v) -> logger.trace("Found annotation config parser '{}' as {}", k, v.getClass()));
+                }
             }
         }
+
         return parsers;
     }
 
