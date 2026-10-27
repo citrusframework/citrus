@@ -38,7 +38,7 @@ public class TestReportersTest {
         fixture.setAutoClear(false);
         fixture.onStart();
 
-        assertEquals(fixture.getTestResults(), testResults);
+        assertEquals(testResults, fixture.getTestResults());
     }
 
     @Test

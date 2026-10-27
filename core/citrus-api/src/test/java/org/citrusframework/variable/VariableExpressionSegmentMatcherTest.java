@@ -36,8 +36,8 @@ public class VariableExpressionSegmentMatcherTest {
 
         for (SegmentAttributes attributes : testData.segmentAttributes) {
             assertTrue(matcher.nextMatch());
-            assertEquals(matcher.getSegmentExpression(), attributes.name);
-            assertEquals(matcher.getSegmentIndex(), attributes.index);
+            assertEquals(attributes.name, matcher.getSegmentExpression());
+            assertEquals(attributes.index, matcher.getSegmentIndex());
         }
         assertFalse(matcher.nextMatch());
     }

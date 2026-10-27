@@ -64,7 +64,7 @@ public class TestResultsTest {
         }
 
         var expectedDuration = durationToAdd.multipliedBy(numberOfThreads);
-        assertEquals(fixture.getTotalDuration(), expectedDuration, "Total duration is incorrect");
+        assertEquals(expectedDuration, fixture.getTotalDuration(), "Total duration is incorrect");
     }
 
     private void sumDurations(int numberOfThreads, ExecutorService executorService, CyclicBarrier barrier, Duration durationToAdd) {
