@@ -19,6 +19,7 @@ package org.citrusframework.cucumber.backend.spring;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import io.cucumber.core.backend.Container;
 import io.cucumber.core.backend.Glue;
@@ -42,6 +43,9 @@ public class CitrusSpringBackend extends CitrusBackend {
 
     private static final Logger logger = LoggerFactory.getLogger(CitrusSpringBackend.class);
 
+    /** XML step definitions waiting for the Citrus instance, loaded on the runner thread */
+    private XmlStepInstanceProcessor pendingXmlSteps;
+
     /**
      * Constructor using resource loader.
      */
@@ -55,18 +59,36 @@ public class CitrusSpringBackend extends CitrusBackend {
                 .map(UriGlueDiscoverySelector::uri)
                 .toList();
 
-        if (CitrusInstanceManager.hasInstance()) {
-            new XmlStepInstanceProcessor(glue, gluePaths, lookup).process(CitrusInstanceManager.getOrDefault());
+        XmlStepInstanceProcessor xmlSteps = new XmlStepInstanceProcessor(glue, gluePaths, lookup);
+        Optional<Citrus> citrus = CitrusInstanceManager.get();
+        if (citrus.isPresent()) {
+            xmlSteps.process(citrus.get());
         } else {
-            CitrusInstanceManager.addInstanceProcessor(new XmlStepInstanceProcessor(glue, gluePaths, lookup));
+            pendingXmlSteps = xmlSteps;
         }
 
         super.loadGlue(glue, request);
     }
 
     /**
-     * Initialization hook performs before suite actions and XML step initialization. Called as soon as citrus instance is requested
-     * from outside for the first time. Performs only once.
+     * Loads pending XML step definitions as soon as the object factory has created the Citrus instance.
+     * Cucumber calls this on the runner thread after starting the object factory and before preparing the glue,
+     * so each runner adds its XML steps to its own glue, also when scenarios run in parallel.
+     */
+    @Override
+    public void buildWorld() {
+        if (pendingXmlSteps != null) {
+            CitrusInstanceManager.get().ifPresent(citrus -> {
+                pendingXmlSteps.process(citrus);
+                pendingXmlSteps = null;
+            });
+        }
+
+        super.buildWorld();
+    }
+
+    /**
+     * Loads the XML step definitions found in the glue paths into the glue.
      */
     private record XmlStepInstanceProcessor(Glue glue, List<URI> gluePaths,
                                             Lookup lookup) implements CitrusInstanceProcessor {
