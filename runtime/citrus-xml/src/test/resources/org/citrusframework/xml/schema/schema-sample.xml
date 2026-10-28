@@ -19,6 +19,9 @@
     <direct>
       <asynchronous name="orders" queue="order.placed" auto-create-queue="true"/>
     </direct>
+    <direct>
+      <synchronous name="syncOrders" queue="order.reply" auto-create-queue="true" polling-interval="1000"/>
+    </direct>
   </endpoints>
   <actions>
     <async>

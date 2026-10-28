@@ -21,6 +21,7 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.CreateEndpointAction;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.DirectEndpointsBuilder;
+import org.citrusframework.message.MessageQueue;
 import org.citrusframework.xml.XmlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -43,8 +44,13 @@ public class CreateEndpointTest extends AbstractXmlActionTest {
         Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder());
         Assert.assertEquals(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder().getClass(), DirectEndpointsBuilder.class);
 
-        DirectEndpoint directEndpoint = (DirectEndpoint) ((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder().build();
+        DirectEndpointsBuilder endpointBuilder = (DirectEndpointsBuilder) ((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder();
+        endpointBuilder.setReferenceResolver(context.getReferenceResolver());
+
+        DirectEndpoint directEndpoint = (DirectEndpoint) endpointBuilder.build();
         Assert.assertEquals(directEndpoint.getName(), "foo");
         Assert.assertEquals(directEndpoint.getEndpointConfiguration().getQueueName(), "fooQueue");
+        Assert.assertTrue(context.getReferenceResolver().isResolvable("fooQueue", MessageQueue.class),
+                "Expected auto-create-queue to create the message queue in the reference resolver");
     }
 }

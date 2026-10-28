@@ -28,7 +28,7 @@
     </create-endpoint>
     <create-endpoint name="foo">
       <direct>
-        <asynchronous queue="fooQueue"/>
+        <asynchronous queue="fooQueue" auto-create-queue="true"/>
       </direct>
     </create-endpoint>
   </actions>
