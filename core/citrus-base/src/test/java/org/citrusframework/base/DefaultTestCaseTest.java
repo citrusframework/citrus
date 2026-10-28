@@ -398,7 +398,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
 
     @Test
     public void testThreadLeak() {
-        fixture.setName("ThreadLeakDefaultTestCaseTest");
+        fixture.setName("ThreadLeakDefaultTestCase");
         fixture.addTestAction(new EchoAction.Builder().build());
 
         fixture.execute(context);
@@ -406,7 +406,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
 
         final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
         Optional<Thread> waitingThread = threads.keySet().stream()
-                .filter(t -> t.getName().startsWith(WAIT_THREAD_PREFIX.concat("ThreadLeakDefaultTestCaseTest")))
+                .filter(t -> t.getName().startsWith(WAIT_THREAD_PREFIX.concat("ThreadLeakDefaultTestCase")))
                 .filter(Thread::isAlive)
                 .findAny();
 
