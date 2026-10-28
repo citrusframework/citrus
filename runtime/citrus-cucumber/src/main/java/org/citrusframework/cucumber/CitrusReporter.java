@@ -16,14 +16,14 @@
 
 package org.citrusframework.cucumber;
 
-import org.citrusframework.CitrusInstanceManager;
 import io.cucumber.core.plugin.DefaultSummaryPrinter;
 import io.cucumber.plugin.ColorAware;
 import io.cucumber.plugin.ConcurrentEventListener;
 import io.cucumber.plugin.event.EventPublisher;
-import io.cucumber.plugin.event.TestRunFinished;
 
 /**
+ * Prints the default Cucumber summary. The Citrus suite itself is started and finished by the
+ * static hooks in {@link CitrusLifecycleHooks}.
  * @since 2.6
  */
 public class CitrusReporter implements ColorAware, ConcurrentEventListener {
@@ -34,7 +34,6 @@ public class CitrusReporter implements ColorAware, ConcurrentEventListener {
 
     @Override
     public void setEventPublisher(EventPublisher publisher) {
-        publisher.registerHandlerFor(TestRunFinished.class, event -> CitrusInstanceManager.getOrDefault().afterSuite(SUITE_NAME));
         delegate.setEventPublisher(publisher);
     }
 

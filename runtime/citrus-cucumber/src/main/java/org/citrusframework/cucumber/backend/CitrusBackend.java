@@ -26,12 +26,11 @@ import io.cucumber.core.backend.Glue;
 import io.cucumber.core.backend.HookDefinition.HookType;
 import io.cucumber.core.backend.Lookup;
 import io.cucumber.core.backend.Snippet;
+import io.cucumber.core.backend.StaticHookDefinition;
 import io.cucumber.core.backend.discovery.GlueDiscoveryRequest;
 import io.cucumber.core.backend.discovery.UriGlueDiscoverySelector;
 import io.cucumber.core.exception.CucumberException;
-import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.cucumber.CitrusLifecycleHooks;
-import org.citrusframework.cucumber.CitrusReporter;
 
 /**
  * @since 2.6
@@ -50,8 +49,6 @@ public class CitrusBackend implements Backend {
     public CitrusBackend(Lookup lookup, Container container) {
         this.lookup = lookup;
         this.container = container;
-
-        CitrusInstanceManager.addInstanceProcessor(instance -> instance.beforeSuite(CitrusReporter.SUITE_NAME));
     }
 
     @Override
@@ -80,6 +77,12 @@ public class CitrusBackend implements Backend {
 
                 Method afterMethod = CitrusLifecycleHooks.class.getMethod("after", Scenario.class);
                 glue.addAfterHook(new CitrusHookDefinition(afterMethod, "", 10000, lookup, HookType.AFTER));
+
+                Method beforeSuiteMethod = CitrusLifecycleHooks.class.getMethod("beforeSuite");
+                glue.addBeforeAllHook(new CitrusStaticHookDefinition(beforeSuiteMethod, 10000, StaticHookDefinition.HookType.BEFORE_ALL));
+
+                Method afterSuiteMethod = CitrusLifecycleHooks.class.getMethod("afterSuite");
+                glue.addAfterAllHook(new CitrusStaticHookDefinition(afterSuiteMethod, 10000, StaticHookDefinition.HookType.AFTER_ALL));
             }
         } catch (NoSuchMethodException e) {
             throw new CucumberException("Unable to add Citrus lifecycle hooks");
