@@ -1,0 +1,46 @@
+{
+  "protocolRevision": "2025-11-25",
+  "catalog": {
+    "tool": {
+      "name": "echo",
+      "description": "Echoes the typed input back for deterministic simulation",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "nested": { "type": "object", "properties": { "value": { "type": "string" } } },
+          "items": { "type": "array", "items": { "type": "string" } },
+          "count": { "type": "number" },
+          "flag": { "type": "boolean" },
+          "maybeNull": { "type": ["string", "null"] },
+          "optional": { "type": "string" }
+        },
+        "required": ["nested", "items", "count", "flag"]
+      }
+    },
+    "resources": [
+      { "uri": "poc://alpha", "name": "alpha", "mimeType": "text/plain" },
+      { "uri": "poc://beta", "name": "beta", "mimeType": "text/plain" }
+    ]
+  },
+  "budgets": {
+    "startupTimeoutSeconds": 60,
+    "simulationTimeoutSeconds": 5,
+    "stopTimeoutSeconds": 10,
+    "scenarioTimeoutSeconds": 120
+  },
+  "scenarios": [
+    { "id": "bootstrap", "description": "Ordinary-Java same-PID start/stop, no listener on construct" },
+    { "id": "http-roundtrip", "description": "Init, list tools/resources, echo tool, resource read, tool-error, mismatch" },
+    { "id": "resource-list-empty", "description": "Controlled resources/list pending until empty reply" },
+    { "id": "resource-list-ordered", "description": "Ordered subset reply with exact correlation" },
+    { "id": "resource-list-delayed", "description": "Delayed reply within 5s budget with pending barrier" },
+    { "id": "resource-list-error", "description": "Explicit JSON-RPC error reply" },
+    { "id": "resource-list-timeout", "description": "Simulation timeout expiry and cleanup" },
+    { "id": "resource-list-concurrent", "description": "Two simultaneous requests, reverse replies" },
+    { "id": "lifecycle", "description": "Repeated start/stop, generations, bind failure, port reuse" },
+    { "id": "isolation-ab", "description": "A/B endpoints, equal request IDs, stop A while B serves" },
+    { "id": "spring-bean", "description": "Outer @Bean lifecycle, autoStart=false" },
+    { "id": "stdio", "description": "Child process stdio, protocol-only stdout, bounded exit" },
+    { "id": "failure-matrix", "description": "Late reply, disconnect/cancel, malformed, schema-invalid" }
+  ]
+}
