@@ -486,7 +486,51 @@ The `BeforeAll` hook does not create a Citrus instance. When no instance exists 
 object factory creates one. This keeps the Spring object factory in charge of creating the Citrus instance from the
 Spring application context.
 
-[[cucumber-docstring-datatable]]
+[[cucumber-parallel-execution]]
+=== Parallel execution
+
+The Cucumber JUnit Platform engine can run scenarios in parallel. Enable it with the Cucumber configuration parameters on
+the suite class or in `junit-platform.properties`.
+
+.Parallel scenarios
+[source,java]
+----
+@Suite
+@IncludeEngines("cucumber")
+@SelectPackages("com.example")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example")
+@ConfigurationParameter(key = PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, value = "true")
+@ConfigurationParameter(key = PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, value = "fixed")
+@ConfigurationParameter(key = PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, value = "4")
+@ConfigurationParameter(key = PARALLEL_CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME, value = "4")
+public class MyFeatureIT {
+}
+----
+
+.junit-platform.properties
+[source,properties]
+----
+cucumber.execution.parallel.enabled=true
+cucumber.execution.parallel.config.strategy=fixed
+cucumber.execution.parallel.config.fixed.parallelism=4
+cucumber.execution.parallel.config.fixed.max-pool-size=4
+----
+
+Each scenario still gets its own Citrus test case, test context and test variables, and both Java and XML step
+definitions can run in parallel. All scenarios share one Citrus
+instance, so the endpoints, components and before/after suite actions configured in the Citrus context are shared as well.
+The <<cucumber-suite-hooks,suite hooks>> still run once per Cucumber run.
+
+Keep the following in mind when you run scenarios in parallel:
+
+* Scenarios that send and receive on the same endpoint at the same time can consume each other's messages. Use separate
+endpoints or message selectors and correlation so that each scenario receives its own messages.
+* Step definition classes are created per scenario, but static fields in your glue classes are shared between threads.
+* The static `CitrusObjectFactory.instance()` and `CitrusSpringObjectFactory.instance()` accessors are deprecated. Cucumber
+creates one object factory per thread, so the static reference may belong to another thread. Inject Citrus resources
+with `@CitrusResource` and `@CitrusFramework` instead.
+* Log output of parallel scenarios is interleaved.
+
 === DocString and DataTable on one step
 
 A Gherkin step can carry a DocString and a DataTable at the same time. The DocString comes first, then the DataTable.
