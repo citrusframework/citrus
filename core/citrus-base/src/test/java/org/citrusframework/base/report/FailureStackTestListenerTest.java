@@ -192,6 +192,7 @@ public class FailureStackTestListenerTest {
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 25L);
     }
 
+    @Test
     public void testActionFailingInContainerHierarchy() {
         DefaultTestCase test = new DefaultTestCase();
         test.setPackageName("org.citrusframework.base.report");
@@ -216,8 +217,7 @@ public class FailureStackTestListenerTest {
                 new MockedTestAction("echo"),
                 new MockedTestAction("sleep"),
                 failedContainer);
-        nestedContainer.setActiveAction(failedContainer);
-        nestedContainer.setExecutedAction(failedContainer);
+        setActiveActions(nestedContainer, failedContainer);
         actions.add(nestedContainer);
 
         actions.add(new MockedTestAction("fail"));
