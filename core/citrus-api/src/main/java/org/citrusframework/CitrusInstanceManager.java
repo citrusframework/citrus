@@ -19,15 +19,20 @@ package org.citrusframework;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Supplier;
 
 /**
  * Instance creation manager creates new Citrus instances or always a singleton based on instance creation strategy.
  * Instance creation is thread-safe, so concurrent callers of {@link #getOrDefault()} share one instance.
+ * A new instance is published to other threads only after all instance processors have run on it.
  */
 public class CitrusInstanceManager {
 
     /** Singleton */
     private static volatile Citrus citrus;
+
+    /** Instance being created, visible only to the creating thread while the instance processors run */
+    private static Citrus initializing;
 
     /** List of instance resolvers capable of taking part in Citrus instance creation process */
     private static final List<CitrusInstanceProcessor> instanceProcessors = new CopyOnWriteArrayList<>();
@@ -41,6 +46,14 @@ public class CitrusInstanceManager {
      */
     public static void addInstanceProcessor(CitrusInstanceProcessor processor) {
         instanceProcessors.add(processor);
+    }
+
+    /**
+     * Remove instance processor.
+     * @param processor
+     */
+    public static void removeInstanceProcessor(CitrusInstanceProcessor processor) {
+        instanceProcessors.remove(processor);
     }
 
     /**
@@ -59,8 +72,14 @@ public class CitrusInstanceManager {
      */
     public static synchronized Citrus newInstance(CitrusContextProvider contextProvider) {
         if (strategy.equals(CitrusInstanceStrategy.NEW) || citrus == null) {
-            citrus = new Citrus(contextProvider.create());
-            instanceProcessors.forEach(processor -> processor.process(citrus));
+            Citrus created = new Citrus(contextProvider.create());
+            initializing = created;
+            try {
+                instanceProcessors.forEach(processor -> processor.process(created));
+            } finally {
+                initializing = null;
+                citrus = created;
+            }
         }
 
         return citrus;
@@ -79,7 +98,7 @@ public class CitrusInstanceManager {
      * @return
      */
     public static Optional<Citrus> get() {
-        return Optional.ofNullable(citrus);
+        return Optional.ofNullable(current());
     }
 
     /**
@@ -87,14 +106,21 @@ public class CitrusInstanceManager {
      * Create new instance if it has not been initialized yet.
      */
     public static Citrus getOrDefault() {
-        Citrus instance = citrus;
+        return getOrCreate(CitrusContextProvider::lookup);
+    }
+
+    /**
+     * Provide access to the current Citrus instance or create one with the given context provider.
+     */
+    static Citrus getOrCreate(Supplier<CitrusContextProvider> contextProvider) {
+        Citrus instance = current();
         if (instance != null) {
             return instance;
         }
 
         synchronized (CitrusInstanceManager.class) {
             if (citrus == null) {
-                citrus = newInstance();
+                newInstance(contextProvider.get());
             }
 
             return citrus;
@@ -105,7 +131,19 @@ public class CitrusInstanceManager {
      * Check if there has already been an instance instantiated using this manager.
      */
     public static boolean hasInstance() {
-        return citrus != null;
+        return current() != null;
+    }
+
+    /**
+     * Current instance. The thread creating a new instance sees it while the instance processors run,
+     * all other threads see it once the processors have finished.
+     */
+    private static Citrus current() {
+        if (Thread.holdsLock(CitrusInstanceManager.class) && initializing != null) {
+            return initializing;
+        }
+
+        return citrus;
     }
 
     /**
