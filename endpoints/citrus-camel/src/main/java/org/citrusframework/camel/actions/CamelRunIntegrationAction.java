@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.citrusframework.api.actions.camel.CamelIntegrationRunActionBuilder;
+import org.citrusframework.camel.actions.infra.CamelComponentPropertyResolver;
 import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -73,6 +74,7 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
 
     private final boolean waitForRunningState;
     private final boolean dumpIntegrationOutput;
+    private final boolean autoSetProperties;
 
     /**
      * Default constructor.
@@ -90,6 +92,7 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
         this.autoRemoveResources = builder.autoRemoveResources;
         this.waitForRunningState = builder.waitForRunningState;
         this.dumpIntegrationOutput = builder.dumpIntegrationOutput;
+        this.autoSetProperties = builder.autoSetProperties;
     }
 
     @Override
@@ -124,7 +127,12 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
 
             camelCli().dumpIntegrationOutput(dumpIntegrationOutput);
             camelCli().withEnvs(context.resolveDynamicValuesInMap(envVars));
-            camelCli().withSystemProperties(context.resolveDynamicValuesInMap(systemProperties));
+
+            Map<String, String> resolvedSystemProperties = new HashMap<>(context.resolveDynamicValuesInMap(systemProperties));
+            if (autoSetProperties) {
+                autoSetComponentProperties(context, resolvedSystemProperties);
+            }
+            camelCli().withSystemProperties(resolvedSystemProperties);
             camelCli().workingDir(integrationToRun.toAbsolutePath().getParent());
 
             ProcessAndOutput pao = camelCli().run(name, integrationToRun.getFileName().toString(), resourceFiles,
@@ -158,6 +166,20 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create temporary file from Camel integration source", e);
+        }
+    }
+
+    private void autoSetComponentProperties(TestContext context, Map<String, String> systemProperties) {
+        try {
+            String routeSource = sourceCode;
+            if (!StringUtils.hasText(routeSource) && integrationResource != null) {
+                routeSource = FileUtils.readToString(integrationResource);
+            }
+
+            CamelComponentPropertyResolver.resolveProperties(routeSource, context)
+                    .forEach(systemProperties::putIfAbsent);
+        } catch (IOException e) {
+            logger.debug("Failed to read Camel integration source for auto setting component properties", e);
         }
     }
 
@@ -196,6 +218,7 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
         private boolean autoRemoveResources = CamelCliSettings.isAutoRemoveResources();
         private boolean waitForRunningState = CamelCliSettings.isWaitForRunningState();
         private boolean dumpIntegrationOutput = CamelCliSettings.isDumpIntegrationOutput();
+        private boolean autoSetProperties = CamelCliSettings.isAutoSetProperties();
 
         @Override
         public Builder integration(String sourceCode) {
@@ -307,6 +330,12 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
         @Override
         public Builder waitForRunningState(boolean enabled) {
             this.waitForRunningState = enabled;
+            return this;
+        }
+
+        @Override
+        public Builder autoSetProperties(boolean enabled) {
+            this.autoSetProperties = enabled;
             return this;
         }
 

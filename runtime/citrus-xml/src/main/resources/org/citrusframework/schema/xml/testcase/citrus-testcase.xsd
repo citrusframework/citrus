@@ -2726,6 +2726,7 @@
                   <xs:attribute name="auto-remove" type="xs:boolean"/>
                   <xs:attribute name="wait-for-running-state" type="xs:boolean"/>
                   <xs:attribute name="dump-integration-output" type="xs:boolean"/>
+                  <xs:attribute name="auto-set-properties" type="xs:boolean"/>
                 </xs:complexType>
               </xs:element>
               <xs:element name="stop">
@@ -3172,6 +3173,7 @@
                   <xs:attribute name="auto-remove" type="xs:boolean"/>
                   <xs:attribute name="wait-for-running-state" type="xs:boolean"/>
                   <xs:attribute name="dump-integration-output" type="xs:boolean"/>
+                  <xs:attribute name="auto-set-properties" type="xs:boolean"/>
                 </xs:complexType>
               </xs:element>
               <xs:element name="stop">

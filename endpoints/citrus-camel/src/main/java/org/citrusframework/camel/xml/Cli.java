@@ -165,6 +165,17 @@ public class Cli {
         @XmlAttribute(name = "dump-integration-output")
         protected boolean dumpIntegrationOutput = CamelCliSettings.isDumpIntegrationOutput();
 
+        @XmlAttribute(name = "auto-set-properties")
+        protected boolean autoSetProperties = CamelCliSettings.isAutoSetProperties();
+
+        public boolean isAutoSetProperties() {
+            return autoSetProperties;
+        }
+
+        public void setAutoSetProperties(boolean autoSetProperties) {
+            this.autoSetProperties = autoSetProperties;
+        }
+
         @XmlElement
         protected Args args;
 

@@ -105,5 +105,12 @@ public interface CamelIntegrationRunActionBuilder<T extends TestAction, B extend
 
     B waitForRunningState(boolean enabled);
 
+    /**
+     * When enabled the action automatically inspects the integration source for used Camel components,
+     * matches component properties against test variables exposed by Camel infra services and sets
+     * matching properties as system properties on the Camel CLI run command.
+     */
+    B autoSetProperties(boolean enabled);
+
     B stub(String... components);
 }

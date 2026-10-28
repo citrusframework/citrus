@@ -5,6 +5,7 @@ actions:
   - camel:
       cli:
         run:
+          autoSetProperties: false
           args:
             - "--verbose"
           integration:
