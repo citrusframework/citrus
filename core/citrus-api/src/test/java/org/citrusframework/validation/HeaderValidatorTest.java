@@ -22,7 +22,9 @@ import java.util.Set;
 import org.citrusframework.util.ConcurrencyTestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Clears the shared HeaderValidator.validators map while racing lookups")
 public class HeaderValidatorTest {
 
     @Test
