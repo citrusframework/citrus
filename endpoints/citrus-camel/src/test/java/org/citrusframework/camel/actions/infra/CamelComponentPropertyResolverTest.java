@@ -109,4 +109,24 @@ public class CamelComponentPropertyResolverTest extends UnitTestSupport {
         assertTrue(CamelComponentPropertyResolver.resolveProperties("", new DefaultCamelCatalog(), context).isEmpty());
         assertTrue(CamelComponentPropertyResolver.resolveProperties("   ", new DefaultCamelCatalog(), context).isEmpty());
     }
+
+    @Test
+    public void shouldIgnoreObjectComponentOptions() {
+        context.setVariable("CITRUS_CAMEL_INFRA_KAFKA_CONFIGURATION", "some-string");
+
+        Map<String, String> properties = CamelComponentPropertyResolver.resolveProperties(
+                KAFKA_ROUTE, new DefaultCamelCatalog(), context);
+
+        assertTrue(properties.isEmpty());
+    }
+
+    @Test
+    public void shouldIgnoreObjectComponentOptionsOnElasticsearchClient() {
+        context.setVariable("CITRUS_CAMEL_INFRA_ELASTICSEARCH_CLIENT", "some-string");
+
+        Map<String, String> properties = CamelComponentPropertyResolver.resolveProperties(
+                "from(\"elasticsearch:demo?operation=search\")", new DefaultCamelCatalog(), context);
+
+        assertTrue(properties.isEmpty());
+    }
 }

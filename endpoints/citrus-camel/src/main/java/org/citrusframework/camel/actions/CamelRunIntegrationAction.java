@@ -17,6 +17,7 @@
 package org.citrusframework.camel.actions;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -48,6 +49,9 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CamelRunIntegrationAction.class);
+
+    /** Name of the Camel integration properties file */
+    private static final String APPLICATION_PROPERTIES_FILE = "application.properties";
 
     /** Name of Camel integration */
     private final String integrationName;
@@ -128,12 +132,14 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
             camelCli().dumpIntegrationOutput(dumpIntegrationOutput);
             camelCli().withEnvs(context.resolveDynamicValuesInMap(envVars));
 
+            Path workingDir = integrationToRun.toAbsolutePath().getParent();
+
             Map<String, String> resolvedSystemProperties = new HashMap<>(context.resolveDynamicValuesInMap(systemProperties));
             if (autoSetProperties) {
-                autoSetComponentProperties(context, resolvedSystemProperties);
+                autoSetComponentProperties(context, resolvedSystemProperties, workingDir);
             }
             camelCli().withSystemProperties(resolvedSystemProperties);
-            camelCli().workingDir(integrationToRun.toAbsolutePath().getParent());
+            camelCli().workingDir(workingDir);
 
             ProcessAndOutput pao = camelCli().run(name, integrationToRun.getFileName().toString(), resourceFiles,
                     context.resolveDynamicValuesInList(args).toArray(String[]::new));
@@ -169,18 +175,61 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
         }
     }
 
-    private void autoSetComponentProperties(TestContext context, Map<String, String> systemProperties) {
+    private void autoSetComponentProperties(TestContext context, Map<String, String> systemProperties, Path workingDir) {
         try {
             String routeSource = sourceCode;
             if (!StringUtils.hasText(routeSource) && integrationResource != null) {
                 routeSource = FileUtils.readToString(integrationResource);
             }
 
-            CamelComponentPropertyResolver.resolveProperties(routeSource, context)
-                    .forEach(systemProperties::putIfAbsent);
+            Map<String, String> userDefinedProperties = loadApplicationProperties(workingDir);
+            Map<String, String> autoSetProperties = CamelComponentPropertyResolver.resolveProperties(routeSource, context);
+
+            applyAutoSetComponentProperties(systemProperties, userDefinedProperties, autoSetProperties);
         } catch (IOException e) {
-            logger.debug("Failed to read Camel integration source for auto setting component properties", e);
+            logger.warn("Failed to auto set Camel component properties - skipping automatic property resolution", e);
         }
+    }
+
+    /**
+     * Reads the application properties of the Camel integration. Camel resolves component properties with
+     * system properties taking precedence over properties files. So user defined application properties
+     * must never be overwritten by automatically resolved component properties.
+     * @param workingDir the working directory of the Camel integration run
+     * @return the user defined application properties, never {@code null}
+     */
+    static Map<String, String> loadApplicationProperties(Path workingDir) throws IOException {
+        Map<String, String> userDefinedProperties = new HashMap<>();
+
+        Path propertiesFile = workingDir.resolve(APPLICATION_PROPERTIES_FILE);
+        if (Files.isRegularFile(propertiesFile)) {
+            Properties properties = new Properties();
+            try (InputStream inputStream = Files.newInputStream(propertiesFile)) {
+                properties.load(inputStream);
+            }
+
+            properties.forEach((key, value) -> userDefinedProperties.put(key.toString(), value.toString()));
+        }
+
+        return userDefinedProperties;
+    }
+
+    /**
+     * Adds automatically resolved component properties. User defined system properties and user defined
+     * application properties are never overwritten.
+     * @param systemProperties the system properties of the Camel integration run
+     * @param userDefinedProperties the user defined application properties
+     * @param autoSetProperties the automatically resolved component properties
+     */
+    static void applyAutoSetComponentProperties(Map<String, String> systemProperties, Map<String, String> userDefinedProperties,
+            Map<String, String> autoSetProperties) {
+        autoSetProperties.forEach((key, value) -> {
+            if (!systemProperties.containsKey(key) && !userDefinedProperties.containsKey(key)) {
+                systemProperties.put(key, value);
+            } else {
+                logger.debug("Skipping auto set Camel component property '{}' - already defined by the user", key);
+            }
+        });
     }
 
     private static void verifyProcessIsAlive(ProcessAndOutput pao, String name) {
