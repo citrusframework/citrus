@@ -17,15 +17,14 @@
 package org.citrusframework.endpoint;
 
 import java.util.Map;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class EndpointComponentTest {
 
     @Test
     public void testLookup() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 0L);
+        Assertions.assertEquals(0L, validators.size());
     }
 }

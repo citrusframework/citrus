@@ -23,15 +23,19 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.log.LogModifier;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@Isolated("Sets JVM-wide citrus.component.* system properties")
 public class PropertyUtilsTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         context = new TestContext();
         context.setReferenceResolver(new SimpleReferenceResolver());
@@ -47,7 +51,7 @@ public class PropertyUtilsTest {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals(result, "This test has the name MyTest!");
+        Assertions.assertEquals("This test has the name MyTest!", result);
     }
 
     @Test
@@ -59,7 +63,7 @@ public class PropertyUtilsTest {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals(result, "MyTest is the test's name!");
+        Assertions.assertEquals("MyTest is the test's name!", result);
     }
 
     @Test
@@ -72,17 +76,17 @@ public class PropertyUtilsTest {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals(result, "This test has the name MyTest and its author is Mickey Mouse");
+        Assertions.assertEquals("This test has the name MyTest and its author is Mickey Mouse", result);
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testPropertyReplacementUnknownProperty() {
         Properties props = new Properties();
         props.put("test.name", "MyTest");
 
         String content = "This test has the name @test.name@ and its author is @test.author@";
 
-        PropertyUtils.replacePropertiesInString(content, props);
+        assertThrows(CitrusRuntimeException.class, () -> PropertyUtils.replacePropertiesInString(content, props));
     }
 
     @Test
@@ -96,7 +100,7 @@ public class PropertyUtilsTest {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals(result, "This test has the name MyTest and its author is Mickey Mouse (mail:mickey@mouse.de) and Donald Duck (mail:donald@duck.de)");
+        Assertions.assertEquals("This test has the name MyTest and its author is Mickey Mouse (mail:mickey@mouse.de) and Donald Duck (mail:donald@duck.de)", result);
     }
 
     @Test
@@ -109,7 +113,7 @@ public class PropertyUtilsTest {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals(result, "This @test@ has the name MyTest and its author is Mickey Mouse");
+        Assertions.assertEquals("This @test@ has the name MyTest and its author is Mickey Mouse", result);
     }
 
     @Test
@@ -122,7 +126,7 @@ public class PropertyUtilsTest {
 
         String result = PropertyUtils.replacePropertiesInString(content, props);
 
-        Assert.assertEquals(result, "This @test@ has the name @MyTest@ and its author is Mickey Mouse");
+        Assertions.assertEquals("This @test@ has the name @MyTest@ and its author is Mickey Mouse", result);
     }
 
     @Test
@@ -135,10 +139,10 @@ public class PropertyUtilsTest {
 
         PropertyUtils.configure("foo", component, context.getReferenceResolver());
 
-        Assert.assertEquals(component.getText(), "Citrus rocks!");
-        Assert.assertEquals(component.getNumber(), 1000);
-        Assert.assertEquals(component.getLongNumber(), 5000L);
-        Assert.assertEquals(component.getConstant(), "unchanged");
+        Assertions.assertEquals("Citrus rocks!", component.getText());
+        Assertions.assertEquals(1000, component.getNumber());
+        Assertions.assertEquals(5000L, component.getLongNumber());
+        Assertions.assertEquals("unchanged", component.getConstant());
     }
 
     @Test
@@ -151,7 +155,7 @@ public class PropertyUtilsTest {
 
         PropertyUtils.configure("myBean", component, context.getReferenceResolver());
 
-        Assert.assertEquals(component.getLogModifier(), context.getLogModifier());
+        Assertions.assertEquals(context.getLogModifier(), component.getLogModifier());
     }
 
     @Test
@@ -165,8 +169,8 @@ public class PropertyUtilsTest {
 
         PropertyUtils.configure("anotherBean", component, context.getReferenceResolver());
 
-        Assert.assertEquals(component.getLogModifier(), context.getLogModifier());
-        Assert.assertEquals(component.getLongNumber(), 1000L);
+        Assertions.assertEquals(context.getLogModifier(), component.getLogModifier());
+        Assertions.assertEquals(1000L, component.getLongNumber());
     }
 
     private static class FooComponent {

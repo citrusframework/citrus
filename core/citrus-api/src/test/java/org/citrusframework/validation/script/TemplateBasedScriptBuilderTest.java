@@ -17,22 +17,22 @@
 package org.citrusframework.validation.script;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TemplateBasedScriptBuilderTest {
 
     @Test
     public void testTemplateScriptData() {
-        Assert.assertEquals(TemplateBasedScriptBuilder.fromTemplateScript("+++HEAD+++@SCRIPTBODY@+++TAIL+++")
+        Assertions.assertEquals("+++HEAD+++BODY+++TAIL+++", TemplateBasedScriptBuilder.fromTemplateScript("+++HEAD+++@SCRIPTBODY@+++TAIL+++")
                 .withCode("BODY")
-                .build(), "+++HEAD+++BODY+++TAIL+++");
+                .build());
     }
 
     @Test
     public void testMissingScriptBody() {
-        Assert.assertEquals(TemplateBasedScriptBuilder.fromTemplateScript("+++HEAD+++@SCRIPTBODY@+++TAIL+++")
-                .build(), "+++HEAD++++++TAIL+++");
+        Assertions.assertEquals("+++HEAD++++++TAIL+++", TemplateBasedScriptBuilder.fromTemplateScript("+++HEAD+++@SCRIPTBODY@+++TAIL+++")
+                .build());
     }
 
     @Test
@@ -42,16 +42,23 @@ public class TemplateBasedScriptBuilderTest {
                     .withCode("BODY")
                     .build();
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("@SCRIPTBODY@"));
+            Assertions.assertTrue(e.getMessage().contains("@SCRIPTBODY@"));
             return;
         }
 
-        Assert.fail("Missing error due to invalid script template");
+        Assertions.fail("Missing error due to invalid script template");
     }
 
     @Test
     public void testCustomImports() {
-        Assert.assertEquals(
+        Assertions.assertEquals(
+                """
+                        import org.citrusframework.MyClass;
+                        import org.citrusframework.SomeOtherClass;
+                        +++HEAD+++importedBODYimported
+                        this is also script body
+
+                        END+++TAIL+++""",
                 TemplateBasedScriptBuilder.fromTemplateScript("+++HEAD+++@SCRIPTBODY@+++TAIL+++")
                         .withCode("""
                                 import org.citrusframework.MyClass;
@@ -60,13 +67,6 @@ public class TemplateBasedScriptBuilderTest {
                                 this is also script body
 
                                 END""")
-                        .build(),
-                """
-                        import org.citrusframework.MyClass;
-                        import org.citrusframework.SomeOtherClass;
-                        +++HEAD+++importedBODYimported
-                        this is also script body
-
-                        END+++TAIL+++""");
+                        .build());
     }
 }

@@ -22,102 +22,102 @@ import org.citrusframework.spi.mocks.Bar;
 import org.citrusframework.spi.mocks.Foo;
 import org.citrusframework.spi.mocks.FooWithParams;
 import org.citrusframework.spi.mocks.SingletonFoo;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ResourcePathTypeResolverTest {
 
     @Test
     public void testResolveProperty() {
-        Assert.assertEquals(new ResourcePathTypeResolver().resolveProperty("mocks/foo", TypeResolver.DEFAULT_TYPE_PROPERTY), Foo.class.getName());
-        Assert.assertEquals(new ResourcePathTypeResolver().resolveProperty("mocks/foo", "name"), "fooMock");
-        Assert.assertEquals(new ResourcePathTypeResolver().resolveProperty("META-INF/mocks/foo", "name"), "fooMock");
-        Assert.assertEquals(new ResourcePathTypeResolver("META-INF/mocks").resolveProperty("foo", TypeResolver.DEFAULT_TYPE_PROPERTY), Foo.class.getName());
-        Assert.assertEquals(new ResourcePathTypeResolver("META-INF/mocks").resolveProperty("foo", "name"), "fooMock");
-        Assert.assertEquals(new ResourcePathTypeResolver("META-INF/mocks").resolveProperty("META-INF/mocks/foo", "name"), "fooMock");
-        Assert.assertEquals(new ResourcePathTypeResolver("META-INF/mocks").resolveProperty("bar", "name"), "barMock");
-        Assert.assertEquals(new ResourcePathTypeResolver().resolveProperty("mocks/foo", TypeResolver.DEFAULT_TYPE_PROPERTY), Foo.class.getName());
-        Assert.assertEquals(new ResourcePathTypeResolver().resolve("mocksWithParams/fooWithParams", 1,(short)2,3.d,4.f, 'c', true, new int[]{1,2,3},"StringParam").getClass(), FooWithParams.class);
+        Assertions.assertEquals(Foo.class.getName(), new ResourcePathTypeResolver().resolveProperty("mocks/foo", TypeResolver.DEFAULT_TYPE_PROPERTY));
+        Assertions.assertEquals("fooMock", new ResourcePathTypeResolver().resolveProperty("mocks/foo", "name"));
+        Assertions.assertEquals("fooMock", new ResourcePathTypeResolver().resolveProperty("META-INF/mocks/foo", "name"));
+        Assertions.assertEquals(Foo.class.getName(), new ResourcePathTypeResolver("META-INF/mocks").resolveProperty("foo", TypeResolver.DEFAULT_TYPE_PROPERTY));
+        Assertions.assertEquals("fooMock", new ResourcePathTypeResolver("META-INF/mocks").resolveProperty("foo", "name"));
+        Assertions.assertEquals("fooMock", new ResourcePathTypeResolver("META-INF/mocks").resolveProperty("META-INF/mocks/foo", "name"));
+        Assertions.assertEquals("barMock", new ResourcePathTypeResolver("META-INF/mocks").resolveProperty("bar", "name"));
+        Assertions.assertEquals(Foo.class.getName(), new ResourcePathTypeResolver().resolveProperty("mocks/foo", TypeResolver.DEFAULT_TYPE_PROPERTY));
+        Assertions.assertEquals(FooWithParams.class, new ResourcePathTypeResolver().resolve("mocksWithParams/fooWithParams", 1,(short)2,3.d,4.f, 'c', true, new int[]{1,2,3},"StringParam").getClass());
     }
 
     @Test
     public void testResolve() {
-        Assert.assertEquals(new ResourcePathTypeResolver("META-INF/mocks").resolve("foo").getClass(), Foo.class);
-        Assert.assertEquals(new ResourcePathTypeResolver("META-INF/mocks").resolve("bar").getClass(), Bar.class);
-        Assert.assertEquals(new ResourcePathTypeResolver("META-INF/mocks").resolve("foo", TypeResolver.DEFAULT_TYPE_PROPERTY).getClass(), Foo.class);
+        Assertions.assertEquals(Foo.class, new ResourcePathTypeResolver("META-INF/mocks").resolve("foo").getClass());
+        Assertions.assertEquals(Bar.class, new ResourcePathTypeResolver("META-INF/mocks").resolve("bar").getClass());
+        Assertions.assertEquals(Foo.class, new ResourcePathTypeResolver("META-INF/mocks").resolve("foo", TypeResolver.DEFAULT_TYPE_PROPERTY).getClass());
     }
 
     @Test
     public void testIsNonCitrusApiJarUrl() {
-        Assert.assertTrue(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/some-library-1.0.0.jar"));
-        Assert.assertTrue(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/some-library-1.0.0.jar!/"));
+        Assertions.assertTrue(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/some-library-1.0.0.jar"));
+        Assertions.assertTrue(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/some-library-1.0.0.jar!/"));
     }
 
     @Test
     public void testIsNonCitrusApiJarUrlExcludesCitrusApiJar() {
-        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1.jar"));
-        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1.jar!/"));
-        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1-SNAPSHOT.jar"));
-        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1-SNAPSHOT.jar!/"));
+        Assertions.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1.jar"));
+        Assertions.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1.jar!/"));
+        Assertions.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1-SNAPSHOT.jar"));
+        Assertions.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/citrus-api-5.0.1-SNAPSHOT.jar!/"));
     }
 
     @Test
     public void testIsNonCitrusApiJarUrlExcludesNestedJarUrls() {
-        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl(
+        Assertions.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl(
                 "jar:nested:/path/to/fat.jar/!BOOT-INF/lib/citrus-api-5.0.1.jar!/"));
-        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl(
+        Assertions.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl(
                 "jar:nested:/path/to/fat.jar/!BOOT-INF/lib/some-library-1.0.0.jar!/"));
     }
 
     @Test
     public void testIsNonCitrusApiJarUrlExcludesNonFileUrls() {
-        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl(
+        Assertions.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl(
                 "jar:file:/path/to/fat.jar!/BOOT-INF/lib/some-library-1.0.0.jar!/"));
-        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("http://example.com/some.jar"));
+        Assertions.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("http://example.com/some.jar"));
     }
 
     @Test
     public void testIsNonCitrusApiJarUrlExcludesNonJarFiles() {
-        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/classes/"));
-        Assert.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/some-file.txt"));
+        Assertions.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/classes/"));
+        Assertions.assertFalse(ResourcePathTypeResolver.isNonCitrusApiJarUrl("file:/path/to/some-file.txt"));
     }
 
     @Test
     public void testResolveAll() {
         Map<String, Object> resolved = new ResourcePathTypeResolver().resolveAll("mocks");
-        Assert.assertEquals(resolved.size(), 3L);
-        Assert.assertNotNull(resolved.get("foo"));
-        Assert.assertEquals(resolved.get("foo").getClass(), Foo.class);
-        Assert.assertNotNull(resolved.get("bar"));
-        Assert.assertEquals(resolved.get("bar").getClass(), Bar.class);
-        Assert.assertNotNull(resolved.get("singletonFoo"));
-        Assert.assertEquals(resolved.get("singletonFoo").getClass(), SingletonFoo.class);
+        Assertions.assertEquals(3L, resolved.size());
+        Assertions.assertNotNull(resolved.get("foo"));
+        Assertions.assertEquals(Foo.class, resolved.get("foo").getClass());
+        Assertions.assertNotNull(resolved.get("bar"));
+        Assertions.assertEquals(Bar.class, resolved.get("bar").getClass());
+        Assertions.assertNotNull(resolved.get("singletonFoo"));
+        Assertions.assertEquals(SingletonFoo.class, resolved.get("singletonFoo").getClass());
 
         resolved = new ResourcePathTypeResolver("META-INF/mocks").resolveAll();
-        Assert.assertEquals(resolved.size(), 3L);
-        Assert.assertNotNull(resolved.get("foo"));
-        Assert.assertEquals(resolved.get("foo").getClass(), Foo.class);
-        Assert.assertNotNull(resolved.get("bar"));
-        Assert.assertEquals(resolved.get("bar").getClass(), Bar.class);
-        Assert.assertNotNull(resolved.get("singletonFoo"));
-        Assert.assertEquals(resolved.get("singletonFoo").getClass(), SingletonFoo.class);
+        Assertions.assertEquals(3L, resolved.size());
+        Assertions.assertNotNull(resolved.get("foo"));
+        Assertions.assertEquals(Foo.class, resolved.get("foo").getClass());
+        Assertions.assertNotNull(resolved.get("bar"));
+        Assertions.assertEquals(Bar.class, resolved.get("bar").getClass());
+        Assertions.assertNotNull(resolved.get("singletonFoo"));
+        Assertions.assertEquals(SingletonFoo.class, resolved.get("singletonFoo").getClass());
 
         resolved = new ResourcePathTypeResolver().resolveAll("mocks", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
-        Assert.assertEquals(resolved.size(), 3L);
-        Assert.assertNotNull(resolved.get("fooMock"));
-        Assert.assertEquals(resolved.get("fooMock").getClass(), Foo.class);
-        Assert.assertNotNull(resolved.get("barMock"));
-        Assert.assertEquals(resolved.get("barMock").getClass(), Bar.class);
-        Assert.assertNotNull(resolved.get("singletonFooMock"));
-        Assert.assertEquals(resolved.get("singletonFooMock").getClass(), SingletonFoo.class);
+        Assertions.assertEquals(3L, resolved.size());
+        Assertions.assertNotNull(resolved.get("fooMock"));
+        Assertions.assertEquals(Foo.class, resolved.get("fooMock").getClass());
+        Assertions.assertNotNull(resolved.get("barMock"));
+        Assertions.assertEquals(Bar.class, resolved.get("barMock").getClass());
+        Assertions.assertNotNull(resolved.get("singletonFooMock"));
+        Assertions.assertEquals(SingletonFoo.class, resolved.get("singletonFooMock").getClass());
 
         resolved = new ResourcePathTypeResolver().resolveAll("all", TypeResolver.TYPE_PROPERTY_WILDCARD);
-        Assert.assertEquals(resolved.size(), 3L);
-        Assert.assertNotNull(resolved.get("mocks.foo"));
-        Assert.assertEquals(resolved.get("mocks.foo").getClass(), Foo.class);
-        Assert.assertNotNull(resolved.get("mocks.bar"));
-        Assert.assertEquals(resolved.get("mocks.bar").getClass(), Bar.class);
-        Assert.assertNotNull(resolved.get("mocks.singletonFoo"));
-        Assert.assertEquals(resolved.get("mocks.singletonFoo").getClass(), SingletonFoo.class);
+        Assertions.assertEquals(3L, resolved.size());
+        Assertions.assertNotNull(resolved.get("mocks.foo"));
+        Assertions.assertEquals(Foo.class, resolved.get("mocks.foo").getClass());
+        Assertions.assertNotNull(resolved.get("mocks.bar"));
+        Assertions.assertEquals(Bar.class, resolved.get("mocks.bar").getClass());
+        Assertions.assertNotNull(resolved.get("mocks.singletonFoo"));
+        Assertions.assertEquals(SingletonFoo.class, resolved.get("mocks.singletonFoo").getClass());
     }
 }

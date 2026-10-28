@@ -16,55 +16,54 @@
 
 package org.citrusframework.util;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class BooleanExpressionParserTest {
 
     @Test
     public void testExpressionParser() {
-        Assert.assertTrue(BooleanExpressionParser.evaluate("1 = 1"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("1 = 2"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("1 lt 2"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("2 lt 1"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("2 gt 1"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("1 gt 2"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("2 lt= 2"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("2 gt= 2"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("2 lt= 1"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("2 gt= 3"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("(1 = 1)"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("(1 = 1) and (2 = 2)"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("(1 lt= 1) and (2 gt= 2)"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("(1 gt 2) or (2 = 2)"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("((1 = 5) and (2 = 6)) or (2 gt 1)"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("(1 = 2)"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("(1 = 1) and (2 = 3)"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("(1 lt 1) and (2 gt 2)"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("(1 gt 2) or (2 = 3)"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("((1 = 5) and (2 = 6)) or (2 lt 1)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("1 = 1"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("1 = 2"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("1 lt 2"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("2 lt 1"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("2 gt 1"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("1 gt 2"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("2 lt= 2"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("2 gt= 2"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("2 lt= 1"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("2 gt= 3"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(1 = 1)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(1 = 1) and (2 = 2)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(1 lt= 1) and (2 gt= 2)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(1 gt 2) or (2 = 2)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("((1 = 5) and (2 = 6)) or (2 gt 1)"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("(1 = 2)"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("(1 = 1) and (2 = 3)"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("(1 lt 1) and (2 gt 2)"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("(1 gt 2) or (2 = 3)"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("((1 = 5) and (2 = 6)) or (2 lt 1)"));
     }
 
     @Test
     public void testExpressionParserWithStringValues() {
-        Assert.assertTrue(BooleanExpressionParser.evaluate("true"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("true = true"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("false = false"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("false"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("true = false"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("false = true"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("( false = false ) and ( true = true )"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("( false = false ) and ( true = false )"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false) and (true = true)"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("(false = false) and (true = false)"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("(   false = false) and (true = true    )"));
-        Assert.assertFalse(BooleanExpressionParser.evaluate("(false = false    ) and     (    true = false)"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("( true = false ) or ( false = false )"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false) or (true = true)"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false) or (true = false)"));
-        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false    ) or (    true = false)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("true"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("true = true"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("false = false"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("false"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("true = false"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("false = true"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("( false = false ) and ( true = true )"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("( false = false ) and ( true = false )"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(false = false) and (true = true)"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("(false = false) and (true = false)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(   false = false) and (true = true    )"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("(false = false    ) and     (    true = false)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("( true = false ) or ( false = false )"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(false = false) or (true = true)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(false = false) or (true = false)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(false = false    ) or (    true = false)"));
     }
 
     @Test
@@ -72,11 +71,11 @@ public class BooleanExpressionParserTest {
         try {
             BooleanExpressionParser.evaluate("wahr");
         } catch(final CitrusRuntimeException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Unknown operator 'wahr'");
+            Assertions.assertEquals("Unknown operator 'wahr'", e.getLocalizedMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of unknown operator");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " because of unknown operator");
     }
 
     @Test
@@ -84,10 +83,10 @@ public class BooleanExpressionParserTest {
         try {
             BooleanExpressionParser.evaluate("1 = ");
         } catch(final CitrusRuntimeException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Unable to parse boolean expression '1 = '. Maybe expression is incomplete!");
+            Assertions.assertEquals("Unable to parse boolean expression '1 = '. Maybe expression is incomplete!", e.getLocalizedMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of broken expression");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " because of broken expression");
     }
 }

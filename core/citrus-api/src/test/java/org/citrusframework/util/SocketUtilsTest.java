@@ -20,11 +20,11 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SocketUtilsTest {
 
@@ -39,7 +39,7 @@ public class SocketUtilsTest {
     @Test
     public void shouldFindPortInSinglePortRange() throws Exception {
         int port = SocketUtils.findAvailableTcpPort(20000, 32767);
-        assertEquals(SocketUtils.findAvailableTcpPort(port, port), port);
+        assertEquals(port, SocketUtils.findAvailableTcpPort(port, port));
     }
 
     @Test

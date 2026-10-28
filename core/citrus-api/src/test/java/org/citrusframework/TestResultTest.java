@@ -1,15 +1,14 @@
 package org.citrusframework;
 
 import java.time.Duration;
-
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.TestResult.RESULT.FAILURE;
 import static org.citrusframework.TestResult.RESULT.SKIP;
 import static org.citrusframework.TestResult.RESULT.SUCCESS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.testng.Assert.assertEquals;
 
 public class TestResultTest {
 
@@ -53,7 +52,7 @@ public class TestResultTest {
     void minimalToString() {
         var fixture = new TestResult(SUCCESS, "minimalToString", getClass().getSimpleName());
 
-        assertEquals(fixture.toString(), "TestResult[testName=minimalToString, className=TestResultTest, result=SUCCESS]");
+        assertEquals("TestResult[testName=minimalToString, className=TestResultTest, result=SUCCESS]", fixture.toString());
     }
 
     @Test
@@ -62,7 +61,7 @@ public class TestResultTest {
         fixture.getParameters().put("parameter 1", "value 1");
         fixture.getParameters().put("parameter 2", "value 2");
 
-        assertEquals(fixture.toString(), "TestResult[testName=toStringWithParameters, className=TestResultTest, parameters=[parameter 1=value 1, parameter 2=value 2], result=FAILURE]");
+        assertEquals("TestResult[testName=toStringWithParameters, className=TestResultTest, parameters=[parameter 1=value 1, parameter 2=value 2], result=FAILURE]", fixture.toString());
     }
 
     @Test
@@ -70,6 +69,6 @@ public class TestResultTest {
         var fixture = new TestResult(SKIP, "toStringWithDuration", getClass().getSimpleName());
         fixture.withDuration(Duration.ofMillis(1234L));
 
-        assertEquals(fixture.toString(), "TestResult[testName=toStringWithDuration, className=TestResultTest, result=SKIP, duration=1234ms]");
+        assertEquals("TestResult[testName=toStringWithDuration, className=TestResultTest, result=SKIP, duration=1234ms]", fixture.toString());
     }
 }

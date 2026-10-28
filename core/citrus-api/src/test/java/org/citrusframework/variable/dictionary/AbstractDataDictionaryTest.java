@@ -24,17 +24,18 @@ import java.util.InvalidPropertiesFormatException;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
-import static org.testng.Assert.expectThrows;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
 
+@ExtendWith(MockitoExtension.class)
 public class AbstractDataDictionaryTest {
 
     private static final String KEY = "a";
@@ -43,13 +44,11 @@ public class AbstractDataDictionaryTest {
     @Mock
     private Resource mappingFile;
 
-    private AutoCloseable mockitoContext;
 
     private TestableDataDictionary fixture;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
-        mockitoContext = MockitoAnnotations.openMocks(this);
 
         fixture = new TestableDataDictionary();
         fixture.setMappingFile(mappingFile);
@@ -99,7 +98,7 @@ public class AbstractDataDictionaryTest {
         doReturn(inputStream).when(mappingFile).getInputStream();
         doReturn("test.properties.xml").when(mappingFile).location(); // Note the .xml-suffix
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, () -> fixture.initialize());
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class, () -> fixture.initialize());
         assertTrue(exception.getCause() instanceof InvalidPropertiesFormatException);
 
         assertTrue(fixture.mappings.isEmpty());
@@ -109,11 +108,6 @@ public class AbstractDataDictionaryTest {
         assertEquals(1, fixture.mappings.size());
         assertTrue(fixture.mappings.containsKey(KEY));
         assertEquals(VALUE, fixture.mappings.get(KEY));
-    }
-
-    @AfterMethod
-    public void teardown() throws Exception {
-        mockitoContext.close();
     }
 
     private static class TestableDataDictionary extends AbstractDataDictionary<Object> {

@@ -16,12 +16,11 @@
 package org.citrusframework.api.graphql;
 
 import java.util.List;
+import org.junit.jupiter.api.Test;
 
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GraphQlErrorTest {
 
@@ -32,10 +31,10 @@ public class GraphQlErrorTest {
                 .path("books", 1, "title")
                 .code("NOT_FOUND");
 
-        assertEquals(error.getMessage(), "Book not found");
-        assertEquals(error.getPath(), List.of("books", 1, "title"));
-        assertEquals(error.getCode(), "NOT_FOUND");
-        assertEquals(error.toString(), "[NOT_FOUND] Book not found at books[1].title");
+        assertEquals("Book not found", error.getMessage());
+        assertEquals(List.of("books", 1, "title"), error.getPath());
+        assertEquals("NOT_FOUND", error.getCode());
+        assertEquals("[NOT_FOUND] Book not found at books[1].title", error.toString());
     }
 
     @Test
@@ -45,28 +44,28 @@ public class GraphQlErrorTest {
         assertNull(error.getMessage());
         assertNull(error.getCode());
         assertTrue(error.getPath().isEmpty());
-        assertEquals(error.toString(), "<any error>");
+        assertEquals("<any error>", error.toString());
     }
 
     @Test
     public void shouldDescribePartialError() {
-        assertEquals(GraphQlError.error().code("INTERNAL").toString(), "[INTERNAL]");
-        assertEquals(GraphQlError.error().message("boom").toString(), "boom");
-        assertEquals(GraphQlError.error().path("book").toString(), "at book");
+        assertEquals("[INTERNAL]", GraphQlError.error().code("INTERNAL").toString());
+        assertEquals("boom", GraphQlError.error().message("boom").toString());
+        assertEquals("at book", GraphQlError.error().path("book").toString());
     }
 
     @Test
     public void shouldParseDottedPath() {
-        assertEquals(GraphQlError.parsePath("books[1].title"), List.of("books", 1, "title"));
-        assertEquals(GraphQlError.parsePath("book.author"), List.of("book", "author"));
-        assertEquals(GraphQlError.parsePath("matrix[0][2]"), List.of("matrix", 0, 2));
+        assertEquals(List.of("books", 1, "title"), GraphQlError.parsePath("books[1].title"));
+        assertEquals(List.of("book", "author"), GraphQlError.parsePath("book.author"));
+        assertEquals(List.of("matrix", 0, 2), GraphQlError.parsePath("matrix[0][2]"));
         assertTrue(GraphQlError.parsePath("").isEmpty());
         assertTrue(GraphQlError.parsePath(null).isEmpty());
     }
 
     @Test
     public void shouldFormatPathLikeParsedPath() {
-        assertEquals(GraphQlError.formatPath(List.of("books", 1, "title")), "books[1].title");
-        assertEquals(GraphQlError.formatPath(List.of()), "");
+        assertEquals("books[1].title", GraphQlError.formatPath(List.of("books", 1, "title")));
+        assertEquals("", GraphQlError.formatPath(List.of()));
     }
 }

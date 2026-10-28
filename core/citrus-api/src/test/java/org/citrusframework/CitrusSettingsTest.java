@@ -1,12 +1,14 @@
 package org.citrusframework;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 import uk.org.webcompere.systemstubs.properties.SystemProperties;
-import uk.org.webcompere.systemstubs.testng.SystemStub;
-import uk.org.webcompere.systemstubs.testng.SystemStubsListener;
+import uk.org.webcompere.systemstubs.jupiter.SystemStub;
+import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -32,10 +34,11 @@ import static org.citrusframework.CitrusSettings.TEST_PACKAGE_VARIABLE_ENV;
 import static org.citrusframework.CitrusSettings.TEST_PACKAGE_VARIABLE_PROPERTY;
 import static org.citrusframework.validation.CustomValidatorStrategy.COMBINED;
 import static org.citrusframework.validation.CustomValidatorStrategy.EXCLUSIVE;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Listeners(SystemStubsListener.class)
+@Isolated("Replaces the JVM-wide environment variables and system properties")
+@ExtendWith(SystemStubsExtension.class)
 public class CitrusSettingsTest {
 
     @SystemStub
@@ -82,7 +85,6 @@ public class CitrusSettingsTest {
                 .isEqualTo(EXCLUSIVE);
     }
 
-    @DataProvider
     public static String[] combinedPropertyValues() {
         return new String[]{
                 "combined",
@@ -90,7 +92,8 @@ public class CitrusSettingsTest {
         };
     }
 
-    @Test(dataProvider = "combinedPropertyValues")
+    @ParameterizedTest
+    @MethodSource("combinedPropertyValues")
     public void getCustomValidatorStrategy_shouldReturnEnvVarValue(String combinedPropertyValue) {
         systemProperties.remove(CUSTOM_VALIDATOR_STRATEGY_PROPERTY);
         environmentVariables.set(CUSTOM_VALIDATOR_STRATEGY_ENV, combinedPropertyValue);
@@ -99,7 +102,8 @@ public class CitrusSettingsTest {
                 .isEqualTo(COMBINED);
     }
 
-    @Test(dataProvider = "combinedPropertyValues")
+    @ParameterizedTest
+    @MethodSource("combinedPropertyValues")
     public void getCustomValidatorStrategy_shouldReturnPropertyValue_overEnvVarValue(String combinedPropertyValue) {
         systemProperties.set(CUSTOM_VALIDATOR_STRATEGY_PROPERTY, combinedPropertyValue);
 

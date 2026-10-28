@@ -22,8 +22,10 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.mocks.BarService;
 import org.citrusframework.spi.mocks.FooService;
 import org.citrusframework.spi.mocks.MockService;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ServiceLoaderFallbackTest {
 
@@ -33,9 +35,9 @@ public class ServiceLoaderFallbackTest {
                 "META-INF/citrus/nonexistent/path", MockService.class);
 
         MockService service = resolver.resolve("fooService");
-        Assert.assertNotNull(service);
-        Assert.assertEquals(service.getClass(), FooService.class);
-        Assert.assertEquals(service.getName(), "fooService");
+        Assertions.assertNotNull(service);
+        Assertions.assertEquals(FooService.class, service.getClass());
+        Assertions.assertEquals("fooService", service.getName());
     }
 
     @Test
@@ -44,17 +46,17 @@ public class ServiceLoaderFallbackTest {
                 "META-INF/citrus/nonexistent/path", MockService.class);
 
         MockService service = resolver.resolve("barService");
-        Assert.assertNotNull(service);
-        Assert.assertEquals(service.getClass(), BarService.class);
-        Assert.assertEquals(service.getName(), "barService");
+        Assertions.assertNotNull(service);
+        Assertions.assertEquals(BarService.class, service.getClass());
+        Assertions.assertEquals("barService", service.getName());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testResolveByNameNotFoundInServiceLoader() {
         ResourcePathTypeResolver resolver = new ResourcePathTypeResolver(
                 "META-INF/citrus/nonexistent/path", MockService.class);
 
-        resolver.resolve("unknownService");
+        assertThrows(CitrusRuntimeException.class, () -> resolver.resolve("unknownService"));
     }
 
     @Test
@@ -63,11 +65,11 @@ public class ServiceLoaderFallbackTest {
                 "META-INF/citrus/nonexistent/path", MockService.class);
 
         Map<String, MockService> services = resolver.resolveAll();
-        Assert.assertNotNull(services);
-        Assert.assertTrue(services.containsKey("fooService"));
-        Assert.assertTrue(services.containsKey("barService"));
-        Assert.assertEquals(services.get("fooService").getClass(), FooService.class);
-        Assert.assertEquals(services.get("barService").getClass(), BarService.class);
+        Assertions.assertNotNull(services);
+        Assertions.assertTrue(services.containsKey("fooService"));
+        Assertions.assertTrue(services.containsKey("barService"));
+        Assertions.assertEquals(FooService.class, services.get("fooService").getClass());
+        Assertions.assertEquals(BarService.class, services.get("barService").getClass());
     }
 
     @Test
@@ -76,11 +78,11 @@ public class ServiceLoaderFallbackTest {
                 "META-INF/mocks", MockService.class);
 
         Map<String, MockService> services = resolver.resolveAll();
-        Assert.assertNotNull(services);
-        Assert.assertTrue(services.containsKey("foo"), "Resource path result should be present");
-        Assert.assertTrue(services.containsKey("bar"), "Resource path result should be present");
-        Assert.assertTrue(services.containsKey("fooService"), "ServiceLoader result should be merged");
-        Assert.assertTrue(services.containsKey("barService"), "ServiceLoader result should be merged");
+        Assertions.assertNotNull(services);
+        Assertions.assertTrue(services.containsKey("foo"), "Resource path result should be present");
+        Assertions.assertTrue(services.containsKey("bar"), "Resource path result should be present");
+        Assertions.assertTrue(services.containsKey("fooService"), "ServiceLoader result should be merged");
+        Assertions.assertTrue(services.containsKey("barService"), "ServiceLoader result should be merged");
     }
 
     @Test
@@ -89,18 +91,18 @@ public class ServiceLoaderFallbackTest {
                 "META-INF/citrus/nonexistent/path");
 
         Map<String, Object> services = resolver.resolveAll();
-        Assert.assertNotNull(services);
-        Assert.assertTrue(services.isEmpty());
+        Assertions.assertNotNull(services);
+        Assertions.assertTrue(services.isEmpty());
     }
 
     @Test
     public void testNamedServiceAnnotation() {
         NamedService annotation = FooService.class.getAnnotation(NamedService.class);
-        Assert.assertNotNull(annotation);
-        Assert.assertEquals(annotation.name(), "fooService");
+        Assertions.assertNotNull(annotation);
+        Assertions.assertEquals("fooService", annotation.name());
 
         annotation = BarService.class.getAnnotation(NamedService.class);
-        Assert.assertNotNull(annotation);
-        Assert.assertEquals(annotation.name(), "barService");
+        Assertions.assertNotNull(annotation);
+        Assertions.assertEquals("barService", annotation.name());
     }
 }

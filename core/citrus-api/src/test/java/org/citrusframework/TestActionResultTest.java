@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -37,8 +37,8 @@ public class TestActionResultTest {
     public void toJsonMinimalResult() {
         var fixture = new TestActionResult("echo", "actions.0.echo");
 
-        Assert.assertEquals(fixture.toJson(),
-                "{ \"name\": \"echo\", \"path\": \"actions.0.echo\" }");
+        Assertions.assertEquals("{ \"name\": \"echo\", \"path\": \"actions.0.echo\" }",
+                fixture.toJson());
     }
 
     @Test
@@ -46,8 +46,8 @@ public class TestActionResultTest {
         var fixture = new TestActionResult("send", "actions.1.send");
         fixture.setError("Connection refused");
 
-        Assert.assertEquals(fixture.toJson(),
-                "{ \"name\": \"send\", \"path\": \"actions.1.send\", \"error\": \"Connection refused\" }");
+        Assertions.assertEquals("{ \"name\": \"send\", \"path\": \"actions.1.send\", \"error\": \"Connection refused\" }",
+                fixture.toJson());
     }
 
     @Test
@@ -55,8 +55,8 @@ public class TestActionResultTest {
         var fixture = new TestActionResult("send", "actions.0.send");
         fixture.setError("Expected \"hello\" but was \"world\"");
 
-        Assert.assertEquals(fixture.toJson(),
-                "{ \"name\": \"send\", \"path\": \"actions.0.send\", \"error\": \"Expected \\\"hello\\\" but was \\\"world\\\"\" }");
+        Assertions.assertEquals("{ \"name\": \"send\", \"path\": \"actions.0.send\", \"error\": \"Expected \\\"hello\\\" but was \\\"world\\\"\" }",
+                fixture.toJson());
     }
 
     @Test
@@ -74,13 +74,13 @@ public class TestActionResultTest {
         String headerDataBase64 = Base64.getEncoder().encodeToString("<SOAP-ENV:Header/>".getBytes());
         String payloadBase64 = Base64.getEncoder().encodeToString("Hello".getBytes(StandardCharsets.UTF_8));
 
-        Assert.assertEquals(fixture.toJson(),
-                "{ \"name\": \"send\", \"path\": \"actions.1.send\", " +
+        Assertions.assertEquals("{ \"name\": \"send\", \"path\": \"actions.1.send\", " +
                 "\"message\": { " +
                 "\"headers\": [ { \"name\": \"Content-Type\", \"value\": \"application/json\" } ], " +
                 "\"headerData\": [ \"%s\" ], ".formatted(headerDataBase64) +
                 "\"payload\": \"%s\"".formatted(payloadBase64) +
-                " } }");
+                " } }",
+                fixture.toJson());
     }
 
     @Test
@@ -93,9 +93,9 @@ public class TestActionResultTest {
         var fixture = new TestActionResult("receive", "actions.2.receive");
         fixture.setMessage(message);
 
-        Assert.assertEquals(fixture.toJson(),
-                "{ \"name\": \"receive\", \"path\": \"actions.2.receive\", " +
-                "\"message\": { \"headers\": [  ], \"headerData\": [], \"payload\": \"\" } }");
+        Assertions.assertEquals("{ \"name\": \"receive\", \"path\": \"actions.2.receive\", " +
+                "\"message\": { \"headers\": [  ], \"headerData\": [], \"payload\": \"\" } }",
+                fixture.toJson());
     }
 
     @Test
@@ -112,13 +112,13 @@ public class TestActionResultTest {
 
         String headerDataBase64 = Base64.getEncoder().encodeToString("<Header/>".getBytes());
 
-        Assert.assertEquals(fixture.toJson(),
-                "{ \"name\": \"send\", \"path\": \"actions.0.send\", " +
+        Assertions.assertEquals("{ \"name\": \"send\", \"path\": \"actions.0.send\", " +
                 "\"message\": { " +
                 "\"headers\": [ { \"name\": \"operation\", \"value\": \"greet\" } ], " +
                 "\"headerData\": [ \"%s\" ], ".formatted(headerDataBase64) +
                 "\"payload\": \"\"" +
-                " } }");
+                " } }",
+                fixture.toJson());
     }
 
     @Test
@@ -127,12 +127,12 @@ public class TestActionResultTest {
         fixture.addAction(new TestActionResult("echo", "actions.0.sequence.actions.0.echo"));
         fixture.addAction(new TestActionResult("send", "actions.0.sequence.actions.1.send"));
 
-        Assert.assertEquals(fixture.toJson(),
-                "{ \"name\": \"sequence\", \"path\": \"actions.0.sequence\", " +
+        Assertions.assertEquals("{ \"name\": \"sequence\", \"path\": \"actions.0.sequence\", " +
                 "\"actions\": [ " +
                 "{ \"name\": \"echo\", \"path\": \"actions.0.sequence.actions.0.echo\" }," +
                 "{ \"name\": \"send\", \"path\": \"actions.0.sequence.actions.1.send\" }" +
-                " ] }");
+                " ] }",
+                fixture.toJson());
     }
 
     @Test
@@ -141,12 +141,12 @@ public class TestActionResultTest {
         fixture.addIteration(new TestActionResult("0", "actions.0.iterate"));
         fixture.addIteration(new TestActionResult("1", "actions.0.iterate"));
 
-        Assert.assertEquals(fixture.toJson(),
-                "{ \"name\": \"iterate\", \"path\": \"actions.0.iterate\", " +
+        Assertions.assertEquals("{ \"name\": \"iterate\", \"path\": \"actions.0.iterate\", " +
                 "\"iterations\": [ " +
                 "{ \"name\": \"0\", \"path\": \"actions.0.iterate\" }," +
                 "{ \"name\": \"1\", \"path\": \"actions.0.iterate\" }" +
-                " ] }");
+                " ] }",
+                fixture.toJson());
     }
 
     @Test
@@ -168,13 +168,13 @@ public class TestActionResultTest {
 
         String payloadBase64 = Base64.getEncoder().encodeToString("payload".getBytes(StandardCharsets.UTF_8));
 
-        Assert.assertTrue(json.contains("\"name\": \"sequence\""));
-        Assert.assertTrue(json.contains("\"path\": \"actions.0.sequence\""));
-        Assert.assertTrue(json.contains("\"error\": \"validation failed\""));
-        Assert.assertTrue(json.contains("\"message\": {"));
-        Assert.assertTrue(json.contains("\"payload\": \"%s\"".formatted(payloadBase64)));
-        Assert.assertTrue(json.contains("\"actions\": ["));
-        Assert.assertTrue(json.contains("\"iterations\": ["));
+        Assertions.assertTrue(json.contains("\"name\": \"sequence\""));
+        Assertions.assertTrue(json.contains("\"path\": \"actions.0.sequence\""));
+        Assertions.assertTrue(json.contains("\"error\": \"validation failed\""));
+        Assertions.assertTrue(json.contains("\"message\": {"));
+        Assertions.assertTrue(json.contains("\"payload\": \"%s\"".formatted(payloadBase64)));
+        Assertions.assertTrue(json.contains("\"actions\": ["));
+        Assertions.assertTrue(json.contains("\"iterations\": ["));
     }
 
     @Test
@@ -192,8 +192,8 @@ public class TestActionResultTest {
 
         String json = fixture.toJson();
 
-        Assert.assertTrue(json.contains("{ \"name\": \"key1\", \"value\": \"value1\" }"));
-        Assert.assertTrue(json.contains("{ \"name\": \"key2\", \"value\": \"value2\" }"));
+        Assertions.assertTrue(json.contains("{ \"name\": \"key1\", \"value\": \"value1\" }"));
+        Assertions.assertTrue(json.contains("{ \"name\": \"key2\", \"value\": \"value2\" }"));
     }
 
     @Test
@@ -213,16 +213,16 @@ public class TestActionResultTest {
         String json = fixture.toJson();
         String payloadBase64 = Base64.getEncoder().encodeToString("{foo=[bar]}".getBytes(StandardCharsets.UTF_8));
 
-        Assert.assertTrue(json.contains("\"payload\": \"%s\"".formatted(payloadBase64)));
+        Assertions.assertTrue(json.contains("\"payload\": \"%s\"".formatted(payloadBase64)));
     }
 
     @Test
     public void toYamlMinimalResult() {
         var fixture = new TestActionResult("echo", "actions.0.echo");
 
-        Assert.assertEquals(fixture.toYaml(),
-                "name: \"echo\"\n" +
-                "path: \"actions.0.echo\"\n");
+        Assertions.assertEquals("name: \"echo\"\n" +
+                "path: \"actions.0.echo\"\n",
+                fixture.toYaml());
     }
 
     @Test
@@ -230,11 +230,11 @@ public class TestActionResultTest {
         var fixture = new TestActionResult("send", "actions.1.send");
         fixture.setError("Connection refused");
 
-        Assert.assertEquals(fixture.toYaml(),
-                "name: \"send\"\n" +
+        Assertions.assertEquals("name: \"send\"\n" +
                 "path: \"actions.1.send\"\n" +
                 "error: |\n" +
-                "  Connection refused\n");
+                "  Connection refused\n",
+                fixture.toYaml());
     }
 
     @Test
@@ -253,15 +253,15 @@ public class TestActionResultTest {
 
         String yaml = fixture.toYaml();
 
-        Assert.assertTrue(yaml.contains("name: \"send\""));
-        Assert.assertTrue(yaml.contains("path: \"actions.1.send\""));
-        Assert.assertTrue(yaml.contains("message:\n"));
-        Assert.assertTrue(yaml.contains("headers:\n"));
-        Assert.assertTrue(yaml.contains("- name: \"Content-Type\""));
-        Assert.assertTrue(yaml.contains("value: \"application/json\""));
-        Assert.assertTrue(yaml.contains("headerData: [ '%s' ]".formatted(headerDataBase64)));
-        Assert.assertTrue(yaml.contains("payload: |\n"));
-        Assert.assertTrue(yaml.contains("Hello"));
+        Assertions.assertTrue(yaml.contains("name: \"send\""));
+        Assertions.assertTrue(yaml.contains("path: \"actions.1.send\""));
+        Assertions.assertTrue(yaml.contains("message:\n"));
+        Assertions.assertTrue(yaml.contains("headers:\n"));
+        Assertions.assertTrue(yaml.contains("- name: \"Content-Type\""));
+        Assertions.assertTrue(yaml.contains("value: \"application/json\""));
+        Assertions.assertTrue(yaml.contains("headerData: [ '%s' ]".formatted(headerDataBase64)));
+        Assertions.assertTrue(yaml.contains("payload: |\n"));
+        Assertions.assertTrue(yaml.contains("Hello"));
     }
 
     @Test
@@ -276,10 +276,10 @@ public class TestActionResultTest {
 
         String yaml = fixture.toYaml();
 
-        Assert.assertTrue(yaml.contains("name: \"receive\""));
-        Assert.assertTrue(yaml.contains("message:\n"));
-        Assert.assertTrue(yaml.contains("headerData: []"));
-        Assert.assertTrue(yaml.contains("payload: |\n"));
+        Assertions.assertTrue(yaml.contains("name: \"receive\""));
+        Assertions.assertTrue(yaml.contains("message:\n"));
+        Assertions.assertTrue(yaml.contains("headerData: []"));
+        Assertions.assertTrue(yaml.contains("payload: |\n"));
     }
 
     @Test
@@ -298,10 +298,10 @@ public class TestActionResultTest {
 
         String yaml = fixture.toYaml();
 
-        Assert.assertTrue(yaml.contains("- name: \"operation\""));
-        Assert.assertTrue(yaml.contains("value: \"greet\""));
-        Assert.assertTrue(yaml.contains("headerData: [ '%s' ]".formatted(headerDataBase64)));
-        Assert.assertTrue(yaml.contains("payload: |\n"));
+        Assertions.assertTrue(yaml.contains("- name: \"operation\""));
+        Assertions.assertTrue(yaml.contains("value: \"greet\""));
+        Assertions.assertTrue(yaml.contains("headerData: [ '%s' ]".formatted(headerDataBase64)));
+        Assertions.assertTrue(yaml.contains("payload: |\n"));
     }
 
     @Test
@@ -312,12 +312,12 @@ public class TestActionResultTest {
 
         String yaml = fixture.toYaml();
 
-        Assert.assertTrue(yaml.contains("name: \"sequence\""));
-        Assert.assertTrue(yaml.contains("actions:\n"));
-        Assert.assertTrue(yaml.contains("name: \"echo\""));
-        Assert.assertTrue(yaml.contains("path: \"actions.0.sequence.actions.0.echo\""));
-        Assert.assertTrue(yaml.contains("name: \"send\""));
-        Assert.assertTrue(yaml.contains("path: \"actions.0.sequence.actions.1.send\""));
+        Assertions.assertTrue(yaml.contains("name: \"sequence\""));
+        Assertions.assertTrue(yaml.contains("actions:\n"));
+        Assertions.assertTrue(yaml.contains("name: \"echo\""));
+        Assertions.assertTrue(yaml.contains("path: \"actions.0.sequence.actions.0.echo\""));
+        Assertions.assertTrue(yaml.contains("name: \"send\""));
+        Assertions.assertTrue(yaml.contains("path: \"actions.0.sequence.actions.1.send\""));
     }
 
     @Test
@@ -328,11 +328,11 @@ public class TestActionResultTest {
 
         String yaml = fixture.toYaml();
 
-        Assert.assertTrue(yaml.contains("name: \"iterate\""));
-        Assert.assertTrue(yaml.contains("iterations:\n"));
-        Assert.assertTrue(yaml.contains("name: \"0\""));
-        Assert.assertTrue(yaml.contains("name: \"1\""));
-        Assert.assertTrue(yaml.contains("path: \"actions.0.iterate\""));
+        Assertions.assertTrue(yaml.contains("name: \"iterate\""));
+        Assertions.assertTrue(yaml.contains("iterations:\n"));
+        Assertions.assertTrue(yaml.contains("name: \"0\""));
+        Assertions.assertTrue(yaml.contains("name: \"1\""));
+        Assertions.assertTrue(yaml.contains("path: \"actions.0.iterate\""));
     }
 
     @Test
@@ -350,10 +350,10 @@ public class TestActionResultTest {
 
         String yaml = fixture.toYaml();
 
-        Assert.assertTrue(yaml.contains("- name: \"key1\""));
-        Assert.assertTrue(yaml.contains("value: \"value1\""));
-        Assert.assertTrue(yaml.contains("- name: \"key2\""));
-        Assert.assertTrue(yaml.contains("value: \"value2\""));
+        Assertions.assertTrue(yaml.contains("- name: \"key1\""));
+        Assertions.assertTrue(yaml.contains("value: \"value1\""));
+        Assertions.assertTrue(yaml.contains("- name: \"key2\""));
+        Assertions.assertTrue(yaml.contains("value: \"value2\""));
     }
 
     @Test
@@ -373,13 +373,13 @@ public class TestActionResultTest {
 
         String yaml = fixture.toYaml();
 
-        Assert.assertTrue(yaml.contains("name: \"sequence\""));
-        Assert.assertTrue(yaml.contains("path: \"actions.0.sequence\""));
-        Assert.assertTrue(yaml.contains("error: |"));
-        Assert.assertTrue(yaml.contains("validation failed"));
-        Assert.assertTrue(yaml.contains("message:\n"));
-        Assert.assertTrue(yaml.contains("payload: |"));
-        Assert.assertTrue(yaml.contains("actions:\n"));
-        Assert.assertTrue(yaml.contains("iterations:\n"));
+        Assertions.assertTrue(yaml.contains("name: \"sequence\""));
+        Assertions.assertTrue(yaml.contains("path: \"actions.0.sequence\""));
+        Assertions.assertTrue(yaml.contains("error: |"));
+        Assertions.assertTrue(yaml.contains("validation failed"));
+        Assertions.assertTrue(yaml.contains("message:\n"));
+        Assertions.assertTrue(yaml.contains("payload: |"));
+        Assertions.assertTrue(yaml.contains("actions:\n"));
+        Assertions.assertTrue(yaml.contains("iterations:\n"));
     }
 }

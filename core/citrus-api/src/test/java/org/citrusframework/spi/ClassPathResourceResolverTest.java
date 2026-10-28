@@ -19,9 +19,9 @@ package org.citrusframework.spi;
 import static java.lang.Thread.currentThread;
 import static java.util.Collections.enumeration;
 import static java.util.Objects.requireNonNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
-import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,15 +32,17 @@ import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ClassPathResourceResolverTest {
 
     public static final String LOAD_FROM_FAT_JAR_SPRING_BOOT = "loadFromFatJarSpringBoot";
     private final ClasspathResourceResolver fixture = new ClasspathResourceResolver();
 
-    @DataProvider(name = LOAD_FROM_FAT_JAR_SPRING_BOOT)
     public Object[][] loadFromFatJarSpringBoot() {
         return new Object[][]{
             {"META-INF/citrus/test/parser/core", "file"},
@@ -56,12 +58,14 @@ public class ClassPathResourceResolverTest {
         };
     }
 
-    @Test(dataProvider = LOAD_FROM_FAT_JAR_SPRING_BOOT)
+    @ParameterizedTest
+    @MethodSource("loadFromFatJarSpringBoot")
     public void loadFromFatJarAbsoluteUrl(String resourcePath, String nestedProtocol) throws IOException {
         verifyLoadedResourcesFromJar(nestedProtocol, "fatjar.jar", "!/BOOT-INF/lib/test-nested-jar.jar", resourcePath);
     }
 
-    @Test(dataProvider = LOAD_FROM_FAT_JAR_SPRING_BOOT)
+    @ParameterizedTest
+    @MethodSource("loadFromFatJarSpringBoot")
     public void loadFromFatJarRelativeUrl(String resourcePath, String nestedProtocol) throws IOException {
         verifyLoadedResourcesFromJar(nestedProtocol, "fatjar.jar", "!BOOT-INF/lib/test-nested-jar.jar", resourcePath);
     }

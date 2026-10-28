@@ -24,12 +24,13 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * @since 2.7
@@ -50,7 +51,7 @@ public class FileUtilsTest {
 
         String content = FileUtils.readToString(tempFile.toFile());
 
-        assertEquals(content, "hello citrus");
+        assertEquals("hello citrus", content);
         assertTrue(Files.deleteIfExists(tempFile), "File should be deletable after readToString — indicates InputStream was closed");
     }
 
@@ -62,7 +63,7 @@ public class FileUtilsTest {
         Resource resource = Resources.create(tempFile.toFile());
         String content = FileUtils.readToString(resource);
 
-        assertEquals(content, "hello citrus");
+        assertEquals("hello citrus", content);
         assertTrue(Files.deleteIfExists(tempFile), "File should be deletable after readToString — indicates InputStream was closed");
     }
 
@@ -76,28 +77,28 @@ public class FileUtilsTest {
 
     @Test
     public void testGetCharset() {
-        assertEquals(FileUtils.getCharset("/path/to/some/file.txt").displayName(), CitrusSettings.getFileEncoding());
-        assertEquals(FileUtils.getCharset("/path/to/some/file.txt" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1"), StandardCharsets.ISO_8859_1);
+        assertEquals(CitrusSettings.getFileEncoding(), FileUtils.getCharset("/path/to/some/file.txt").displayName());
+        assertEquals(StandardCharsets.ISO_8859_1, FileUtils.getCharset("/path/to/some/file.txt" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1"));
     }
 
     @Test
     public void testGetBaseName() {
-        Assert.assertNull(FileUtils.getBaseName(null));
-        assertEquals(FileUtils.getBaseName(""), "");
-        assertEquals(FileUtils.getBaseName("foo"), "foo");
-        assertEquals(FileUtils.getBaseName("foo.xml"), "foo");
-        assertEquals(FileUtils.getBaseName("/path/to/some/foo.xml"), "/path/to/some/foo");
-        assertEquals(FileUtils.getBaseName("foo.bar.java"), "foo.bar");
+        Assertions.assertNull(FileUtils.getBaseName(null));
+        assertEquals("", FileUtils.getBaseName(""));
+        assertEquals("foo", FileUtils.getBaseName("foo"));
+        assertEquals("foo", FileUtils.getBaseName("foo.xml"));
+        assertEquals("/path/to/some/foo", FileUtils.getBaseName("/path/to/some/foo.xml"));
+        assertEquals("foo.bar", FileUtils.getBaseName("foo.bar.java"));
     }
 
     @Test
     public void testGetFileName() {
-        assertEquals(FileUtils.getFileName(null), "");
-        assertEquals(FileUtils.getFileName(""), "");
-        assertEquals(FileUtils.getFileName("foo"), "foo");
-        assertEquals(FileUtils.getFileName("foo.xml"), "foo.xml");
-        assertEquals(FileUtils.getFileName("/path/to/some/foo.xml"), "foo.xml");
-        assertEquals(FileUtils.getFileName("foo.bar.java"), "foo.bar.java");
-        assertEquals(FileUtils.getFileName("/path/to/some/foo.bar.java"), "foo.bar.java");
+        assertEquals("", FileUtils.getFileName(null));
+        assertEquals("", FileUtils.getFileName(""));
+        assertEquals("foo", FileUtils.getFileName("foo"));
+        assertEquals("foo.xml", FileUtils.getFileName("foo.xml"));
+        assertEquals("foo.xml", FileUtils.getFileName("/path/to/some/foo.xml"));
+        assertEquals("foo.bar.java", FileUtils.getFileName("foo.bar.java"));
+        assertEquals("foo.bar.java", FileUtils.getFileName("/path/to/some/foo.bar.java"));
     }
 }

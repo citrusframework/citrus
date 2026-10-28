@@ -16,21 +16,21 @@
 
 package org.citrusframework.util;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class IsYamlPredicateTest {
 
     @Test
     public void shouldIdentifyYamlContent() {
-        Assert.assertTrue(IsYamlPredicate.getInstance().test(""));
-        Assert.assertTrue(IsYamlPredicate.getInstance().test("- route:"));
-        Assert.assertTrue(IsYamlPredicate.getInstance().test("- route: {}"));
-        Assert.assertTrue(IsYamlPredicate.getInstance().test("route:"));
-        Assert.assertTrue(IsYamlPredicate.getInstance().test("route:\n"));
-        Assert.assertTrue(IsYamlPredicate.getInstance().test("route: {}"));
-        Assert.assertTrue(IsYamlPredicate.getInstance().test("route: {}\n"));
-        Assert.assertFalse(IsYamlPredicate.getInstance().test("foo"));
+        Assertions.assertTrue(IsYamlPredicate.getInstance().test(""));
+        Assertions.assertTrue(IsYamlPredicate.getInstance().test("- route:"));
+        Assertions.assertTrue(IsYamlPredicate.getInstance().test("- route: {}"));
+        Assertions.assertTrue(IsYamlPredicate.getInstance().test("route:"));
+        Assertions.assertTrue(IsYamlPredicate.getInstance().test("route:\n"));
+        Assertions.assertTrue(IsYamlPredicate.getInstance().test("route: {}"));
+        Assertions.assertTrue(IsYamlPredicate.getInstance().test("route: {}\n"));
+        Assertions.assertFalse(IsYamlPredicate.getInstance().test("foo"));
     }
 
 }

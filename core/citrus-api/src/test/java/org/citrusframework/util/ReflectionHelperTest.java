@@ -1,7 +1,7 @@
 package org.citrusframework.util;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ReflectionHelperTest {
 
@@ -13,11 +13,11 @@ public class ReflectionHelperTest {
 
         ReflectionHelper.copyFields(SubClass.class, source, target);
 
-        Assert.assertEquals(target.name, "John Doe");
-        Assert.assertEquals(target.age, 30);
+        Assertions.assertEquals("John Doe", target.name);
+        Assertions.assertEquals(30, target.age);
 
-        Assert.assertEquals(target.superName, "Super John");
-        Assert.assertEquals(target.superAge, 60);
+        Assertions.assertEquals("Super John", target.superName);
+        Assertions.assertEquals(60, target.superAge);
 
     }
 

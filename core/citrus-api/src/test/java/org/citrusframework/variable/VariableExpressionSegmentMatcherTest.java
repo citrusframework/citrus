@@ -17,17 +17,19 @@
 package org.citrusframework.variable;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VariableExpressionSegmentMatcherTest {
 
-    @Test(dataProvider = "matcherDataprovider")
+    @ParameterizedTest
+    @MethodSource("matcherExpressions")
     public void testExpression(TestData testData) {
 
         VariableExpressionSegmentMatcher matcher = new VariableExpressionSegmentMatcher(testData.expression);
@@ -46,7 +48,6 @@ public class VariableExpressionSegmentMatcherTest {
                 () -> new VariableExpressionSegmentMatcher("var[9999999999]").nextMatch());
     }
 
-    @DataProvider(name = "matcherDataprovider")
     public static TestData[] matcherExpressions() {
         return new TestData[]
                 {

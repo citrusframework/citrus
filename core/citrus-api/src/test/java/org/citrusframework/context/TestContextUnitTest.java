@@ -3,8 +3,8 @@ package org.citrusframework.context;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.report.TestListener;
 import org.citrusframework.report.TestListeners;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,8 +17,8 @@ public class TestContextUnitTest {
 
     private TestContext fixture;
 
-    @BeforeTest
-    void beforeTestClass() {
+    @BeforeEach
+    void beforeEach() {
         fixture = new TestContext();
     }
 

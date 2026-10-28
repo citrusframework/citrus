@@ -18,13 +18,13 @@ package org.citrusframework;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.MessageStore;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
 
 public class QuestionTest {
 
@@ -36,19 +36,19 @@ public class QuestionTest {
     public void shouldStayAssignableFromLambda() {
         Question<String> question = (r, ctx) -> "answer";
 
-        assertEquals(question.answeredBy(runner, context), "answer");
+        assertEquals("answer", question.answeredBy(runner, context));
     }
 
     @Test
     public void shouldNameNamedClass() {
-        assertEquals(new TheOrderId().getName(), "the order id");
+        assertEquals("the order id", new TheOrderId().getName());
     }
 
     @Test
     public void shouldNameLambdaGenerically() {
         Question<String> question = (r, ctx) -> "answer";
 
-        assertEquals(question.getName(), "behavior");
+        assertEquals("behavior", question.getName());
     }
 
     @Test
@@ -60,15 +60,15 @@ public class QuestionTest {
             }
         };
 
-        assertEquals(question.getName(), "behavior");
+        assertEquals("behavior", question.getName());
     }
 
     @Test
     public void shouldUseExplicitNameForPureRead() {
         Question<String> question = Question.about("the order id", ctx -> "ORD-123");
 
-        assertEquals(question.getName(), "the order id");
-        assertEquals(question.answeredBy(runner, context), "ORD-123");
+        assertEquals("the order id", question.getName());
+        assertEquals("ORD-123", question.answeredBy(runner, context));
     }
 
     @Test
@@ -83,8 +83,8 @@ public class QuestionTest {
 
         Question<String> question = Question.variable("orderId", String.class);
 
-        assertEquals(question.getName(), "variable orderId");
-        assertEquals(question.answeredBy(runner, context), "ORD-123");
+        assertEquals("variable orderId", question.getName());
+        assertEquals("ORD-123", question.answeredBy(runner, context));
     }
 
     @Test
@@ -96,8 +96,8 @@ public class QuestionTest {
 
         Question<org.citrusframework.message.Message> question = Question.message("orders");
 
-        assertEquals(question.getName(), "message orders");
-        assertEquals(question.answeredBy(runner, context), message);
+        assertEquals("message orders", question.getName());
+        assertEquals(message, question.answeredBy(runner, context));
     }
 
     @Test

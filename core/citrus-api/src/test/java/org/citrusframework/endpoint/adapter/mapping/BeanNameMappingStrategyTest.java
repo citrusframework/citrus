@@ -19,9 +19,9 @@ package org.citrusframework.endpoint.adapter.mapping;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 public class BeanNameMappingStrategyTest {
 
@@ -36,14 +36,14 @@ public class BeanNameMappingStrategyTest {
         referenceResolver.bind("foo", fooEndpointAdapter);
         referenceResolver.bind("bar", barEndpointAdapter);
 
-        Assert.assertEquals(mappingStrategy.getEndpointAdapter("foo"), fooEndpointAdapter);
-        Assert.assertEquals(mappingStrategy.getEndpointAdapter("bar"), barEndpointAdapter);
+        Assertions.assertEquals(fooEndpointAdapter, mappingStrategy.getEndpointAdapter("foo"));
+        Assertions.assertEquals(barEndpointAdapter, mappingStrategy.getEndpointAdapter("bar"));
 
         try {
             mappingStrategy.getEndpointAdapter("unknown");
-            Assert.fail("Missing exception due to unknown mapping key");
+            Assertions.fail("Missing exception due to unknown mapping key");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unable to find bean reference for name 'unknown'");
+            Assertions.assertEquals("Unable to find bean reference for name 'unknown'", e.getMessage());
         }
 
     }

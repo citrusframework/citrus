@@ -17,13 +17,13 @@
 package org.citrusframework;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AnswerTest {
 
@@ -90,7 +90,7 @@ public class AnswerTest {
         answer.set(5);
 
         assertTrue(answer.isAnswered());
-        assertEquals(answer.get(), Integer.valueOf(5));
+        assertEquals(Integer.valueOf(5), answer.get());
     }
 
     @Test
@@ -129,7 +129,7 @@ public class AnswerTest {
         second.join();
 
         assertTrue(answer.isAnswered());
-        assertEquals(answer.get(), "ORD-123");
-        assertEquals(failures.get(), 1);
+        assertEquals("ORD-123", answer.get());
+        assertEquals(1, failures.get());
     }
 }

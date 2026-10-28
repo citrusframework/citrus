@@ -16,26 +16,26 @@
 
 package org.citrusframework.util;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class IsDynamicPathExpressionPredicateTest {
 
     @Test
     public void shouldIdentifyDynamicPathExpression() {
-        Assert.assertTrue(IsDynamicPathExpressionPredicate.getInstance().test("${VERSION_PATH}"));
-        Assert.assertTrue(IsDynamicPathExpressionPredicate.getInstance().test("boolean:${VERSION_PATH}"));
-        Assert.assertTrue(IsDynamicPathExpressionPredicate.getInstance().test("/root/version/${ATTRIBUTE}"));
-        Assert.assertTrue(IsDynamicPathExpressionPredicate.getInstance().test("${VERSION_PATH} "));
+        Assertions.assertTrue(IsDynamicPathExpressionPredicate.getInstance().test("${VERSION_PATH}"));
+        Assertions.assertTrue(IsDynamicPathExpressionPredicate.getInstance().test("boolean:${VERSION_PATH}"));
+        Assertions.assertTrue(IsDynamicPathExpressionPredicate.getInstance().test("/root/version/${ATTRIBUTE}"));
+        Assertions.assertTrue(IsDynamicPathExpressionPredicate.getInstance().test("${VERSION_PATH} "));
     }
 
     @Test
     public void shouldNotIdentifyStaticPathExpression() {
-        Assert.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test(null));
-        Assert.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test(""));
-        Assert.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test("  "));
-        Assert.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test("/root/version/@number"));
-        Assert.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test("$.version.number"));
-        Assert.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test("boolean:/root/version/@number"));
+        Assertions.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test(null));
+        Assertions.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test(""));
+        Assertions.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test("  "));
+        Assertions.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test("/root/version/@number"));
+        Assertions.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test("$.version.number"));
+        Assertions.assertFalse(IsDynamicPathExpressionPredicate.getInstance().test("boolean:/root/version/@number"));
     }
 }
