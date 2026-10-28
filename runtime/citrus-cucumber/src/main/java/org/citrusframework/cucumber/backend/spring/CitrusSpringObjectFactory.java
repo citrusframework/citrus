@@ -51,7 +51,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
     private TestContextFactoryBean testContextFactory;
 
     /** Static self reference */
-    private static CitrusSpringObjectFactory selfReference;
+    private static volatile CitrusSpringObjectFactory selfReference;
 
     /** Delegate object factory */
     private final SpringFactory delegate = new SpringFactory();
@@ -121,19 +121,22 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
      * @param applicationContext
      */
     private void initializeCitrus(ApplicationContext applicationContext) {
-        if (CitrusInstanceManager.hasInstance()) {
-            CitrusContext citrusContext = CitrusInstanceManager.getOrDefault().getCitrusContext();
+        // Per-thread factories in parallel runs must not create or replace the shared instance concurrently
+        synchronized (CitrusInstanceManager.class) {
+            if (CitrusInstanceManager.hasInstance()) {
+                CitrusContext citrusContext = CitrusInstanceManager.getOrDefault().getCitrusContext();
 
-            if (citrusContext instanceof CitrusSpringContext
-                    && !((CitrusSpringContext) citrusContext).getApplicationContext().equals(applicationContext)) {
-                logger.warn("Citrus instance has already been initialized - creating new instance and shutting down current instance");
-                citrusContext.close();
-            } else {
-                return;
+                if (citrusContext instanceof CitrusSpringContext
+                        && !((CitrusSpringContext) citrusContext).getApplicationContext().equals(applicationContext)) {
+                    logger.warn("Citrus instance has already been initialized - creating new instance and shutting down current instance");
+                    citrusContext.close();
+                } else {
+                    return;
+                }
             }
-        }
 
-        Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
+            Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
+        }
     }
 
     @Override
@@ -143,8 +146,11 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
 
     /**
      * Static access to self reference.
-     * @return
+     * @return the object factory constructed last.
+     * @deprecated Cucumber creates one object factory per thread when scenarios run in parallel, so the static
+     * reference may point to the factory of another thread. Inject the object factory or the Citrus resources instead.
      */
+    @Deprecated
     public static CitrusSpringObjectFactory instance() throws IllegalAccessException {
         if (selfReference == null) {
             throw new IllegalAccessException("Illegal access to self reference - not available yet");

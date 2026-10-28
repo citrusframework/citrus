@@ -42,7 +42,7 @@ public class CitrusObjectFactory implements ObjectFactory {
     private TestContext context;
 
     /** Static self reference */
-    private static CitrusObjectFactory selfReference;
+    private static volatile CitrusObjectFactory selfReference;
 
     /** In memory cache for created instances */
     private final Map<Class<?>, Object> instances = new HashMap<>();
@@ -102,8 +102,11 @@ public class CitrusObjectFactory implements ObjectFactory {
 
     /**
      * Static access to self reference.
-     * @return
+     * @return the object factory constructed last.
+     * @deprecated Cucumber creates one object factory per thread when scenarios run in parallel, so the static
+     * reference may point to the factory of another thread. Inject the object factory or the Citrus resources instead.
      */
+    @Deprecated
     public static CitrusObjectFactory instance() throws IllegalAccessException {
         if (selfReference == null) {
             throw new IllegalAccessException("Illegal access to self reference - not available yet");
