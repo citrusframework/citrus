@@ -87,6 +87,17 @@ public class CitrusSuiteHooksTest extends UnitTestSupport {
     }
 
     @Test
+    public void shouldStartPendingSuiteOnceWhenRunTwice() {
+        setInstance(null);
+
+        CitrusLifecycleHooks.beforeSuite();
+        CitrusLifecycleHooks.beforeSuite();
+        CitrusInstanceManager.newInstance(citrus::getCitrusContext);
+
+        verify(suiteListener, times(1)).onStart();
+    }
+
+    @Test
     public void shouldNotCreateInstanceOnAfterSuite() {
         setInstance(null);
 
@@ -115,6 +126,8 @@ public class CitrusSuiteHooksTest extends UnitTestSupport {
         verify(glue).addAfterHook(any(HookDefinition.class));
 
         assertEquals(beforeAll.getValue().getName(), Optional.of("CitrusLifecycleHooks.beforeSuite"));
+        assertEquals(beforeAll.getValue().getOrder(), CitrusLifecycleHooks.SUITE_HOOK_ORDER);
+        assertEquals(afterAll.getValue().getOrder(), CitrusLifecycleHooks.SUITE_HOOK_ORDER);
         assertEquals(beforeAll.getValue().getHookType(), Optional.of(StaticHookDefinition.HookType.BEFORE_ALL));
         assertEquals(afterAll.getValue().getName(), Optional.of("CitrusLifecycleHooks.afterSuite"));
         assertEquals(afterAll.getValue().getHookType(), Optional.of(StaticHookDefinition.HookType.AFTER_ALL));

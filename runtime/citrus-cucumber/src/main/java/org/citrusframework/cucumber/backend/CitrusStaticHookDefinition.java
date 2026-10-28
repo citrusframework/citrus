@@ -15,12 +15,13 @@
  */
 package org.citrusframework.cucumber.backend;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 import io.cucumber.core.backend.CucumberBackendException;
+import io.cucumber.core.backend.CucumberInvocationTargetException;
 import io.cucumber.core.backend.StaticHookDefinition;
-import org.citrusframework.util.ReflectionHelper;
 
 /**
  * Static hook definition invoking a static no-argument method once per Cucumber run.
@@ -40,8 +41,10 @@ public class CitrusStaticHookDefinition implements StaticHookDefinition {
     @Override
     public void execute() {
         try {
-            ReflectionHelper.invokeMethod(method, null);
-        } catch (IllegalArgumentException | IllegalStateException e) {
+            method.invoke(null);
+        } catch (InvocationTargetException e) {
+            throw new CucumberInvocationTargetException(this, e);
+        } catch (IllegalAccessException | IllegalArgumentException e) {
             throw new CucumberBackendException("Failed to invoke " + method, e);
         }
     }

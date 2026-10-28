@@ -17,10 +17,11 @@
 package org.citrusframework.cucumber;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusInstanceManager;
+import org.citrusframework.CitrusInstanceProcessor;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
@@ -35,11 +36,15 @@ import static java.lang.String.format;
  */
 public class CitrusLifecycleHooks {
 
-    /** Suite start waiting for the next Citrus instance to be created */
-    private static final AtomicBoolean suiteStartPending = new AtomicBoolean();
+    /**
+     * Order of the Citrus suite hooks, one below the Cucumber default order 10000. Cucumber runs before-all hooks in
+     * ascending and after-all hooks in descending order, so user hooks with the default order run after the Citrus suite
+     * has started and before it finishes.
+     */
+    public static final int SUITE_HOOK_ORDER = 9999;
 
-    /** Instance processor starting a pending suite is registered only once */
-    private static final AtomicBoolean suiteStartProcessorRegistered = new AtomicBoolean();
+    /** Instance processor starting the suite on the next Citrus instance created */
+    private static final AtomicReference<CitrusInstanceProcessor> pendingSuiteStart = new AtomicReference<>();
 
     @CitrusFramework
     protected Citrus citrus;
@@ -78,21 +83,26 @@ public class CitrusLifecycleHooks {
      * stay in charge of instance creation. When no instance exists yet the suite starts on the instance created next.
      */
     public static void beforeSuite() {
+        cancelPendingSuiteStart();
+
         Optional<Citrus> instance = CitrusInstanceManager.get();
         if (instance.isPresent()) {
-            suiteStartPending.set(false);
             instance.get().beforeSuite(CitrusReporter.SUITE_NAME);
             return;
         }
 
-        suiteStartPending.set(true);
-        if (suiteStartProcessorRegistered.compareAndSet(false, true)) {
-            CitrusInstanceManager.addInstanceProcessor(created -> {
-                if (suiteStartPending.compareAndSet(true, false)) {
+        CitrusInstanceProcessor suiteStart = new CitrusInstanceProcessor() {
+            @Override
+            public void process(Citrus created) {
+                if (pendingSuiteStart.compareAndSet(this, null)) {
+                    CitrusInstanceManager.removeInstanceProcessor(this);
                     created.beforeSuite(CitrusReporter.SUITE_NAME);
                 }
-            });
-        }
+            }
+        };
+
+        pendingSuiteStart.set(suiteStart);
+        CitrusInstanceManager.addInstanceProcessor(suiteStart);
     }
 
     /**
@@ -100,7 +110,14 @@ public class CitrusLifecycleHooks {
      * Does nothing when no Citrus instance has been created during the run.
      */
     public static void afterSuite() {
-        suiteStartPending.set(false);
+        cancelPendingSuiteStart();
         CitrusInstanceManager.get().ifPresent(instance -> instance.afterSuite(CitrusReporter.SUITE_NAME));
+    }
+
+    private static void cancelPendingSuiteStart() {
+        CitrusInstanceProcessor pending = pendingSuiteStart.getAndSet(null);
+        if (pending != null) {
+            CitrusInstanceManager.removeInstanceProcessor(pending);
+        }
     }
 }
