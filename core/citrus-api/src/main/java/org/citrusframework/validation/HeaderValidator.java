@@ -51,8 +51,18 @@ public interface HeaderValidator {
      */
     static Map<String, HeaderValidator> lookup() {
         synchronized (validators) {
+            if (!validators.isEmpty()) {
+                return validators;
+            }
+        }
+
+        // Resolve outside the lock: validators call lookup() from their static initializer, so instantiating
+        // them while holding the lock deadlocks with a thread that is initializing one of their classes
+        Map<String, HeaderValidator> resolved = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
+
+        synchronized (validators) {
             if (validators.isEmpty()) {
-                validators.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
+                validators.putAll(resolved);
 
                 if (logger.isTraceEnabled()) {
                     validators.forEach((k, v) -> logger.trace("Found header validator '{}' as {}", k, v.getClass()));
