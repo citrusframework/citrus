@@ -34,6 +34,7 @@ import org.citrusframework.spring.CitrusSpringContext;
 import org.citrusframework.cucumber.backend.CitrusBackend;
 import org.citrusframework.cucumber.container.StepTemplate;
 import org.citrusframework.cucumber.step.xml.XmlStepDefinition;
+import org.citrusframework.cucumber.step.xml.XmlSteps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -58,6 +59,9 @@ public class CitrusSpringBackend extends CitrusBackend {
         List<URI> gluePaths = request.getSelectorsByType(UriGlueDiscoverySelector.class).stream()
                 .map(UriGlueDiscoverySelector::uri)
                 .toList();
+
+        // XML step definitions run on XmlSteps, so object factories that only create registered glue classes need it
+        container.addClass(XmlSteps.class);
 
         XmlStepInstanceProcessor xmlSteps = new XmlStepInstanceProcessor(glue, gluePaths, lookup);
         Optional<Citrus> citrus = CitrusInstanceManager.get();
