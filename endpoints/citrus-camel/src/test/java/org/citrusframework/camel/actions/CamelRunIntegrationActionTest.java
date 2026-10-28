@@ -22,6 +22,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.citrusframework.context.TestContext;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.spi.Resources;
 import org.testng.annotations.Test;
 
@@ -141,5 +143,20 @@ public class CamelRunIntegrationActionTest {
         Path workingDir = Files.createTempDirectory("citrus-camel-run");
 
         assertTrue(CamelRunIntegrationAction.loadApplicationProperties(workingDir).isEmpty());
+    }
+
+    @Test
+    public void shouldAutoSetComponentPropertiesFromInfraServiceVariables() throws IOException {
+        CamelRunIntegrationAction action = new CamelRunIntegrationAction.Builder()
+                .integration("test", "from(\"kafka:topic\").to(\"log:info\")")
+                .build();
+
+        TestContext context = TestContextFactory.newInstance().getObject();
+        context.setVariable("CITRUS_CAMEL_INFRA_KAFKA_BOOTSTRAP_SERVERS", "localhost:9092");
+
+        Map<String, String> systemProperties = new HashMap<>();
+        action.autoSetComponentProperties(context, systemProperties, Files.createTempDirectory("citrus-camel-run"));
+
+        assertEquals(systemProperties.get("camel.component.kafka.brokers"), "localhost:9092");
     }
 }

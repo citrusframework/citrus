@@ -41,13 +41,21 @@ import org.slf4j.LoggerFactory;
  * Matching properties are returned as system properties using Camel component configuration syntax
  * (e.g. {@code camel.component.kafka.brokers=<bootstrap-servers>}).
  * <p>
- * Any inspection or catalog failure results in an empty result, so the resolution never fails the test.
+ * Only component options of a simple type (e.g. string, number, boolean) are resolved. Object options
+ * (e.g. Kafka configuration or Elasticsearch client) require a real object instance and are skipped.
+ * <p>
+ * Any inspection or catalog failure is logged and does not fail the test. The resolution may return
+ * partial results when a failure occurs while processing a single component.
  */
 public final class CamelComponentPropertyResolver {
 
     private static final Logger logger = LoggerFactory.getLogger(CamelComponentPropertyResolver.class);
 
-    private static final Pattern COMPONENT_SCHEME_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z0-9+.-]*):");
+    /**
+     * Pattern matching Camel component schemes in the route source code. Schemes followed by a double slash
+     * are treated as absolute URLs (e.g. {@code http://example.com}) and are not considered as component usage.
+     */
+    private static final Pattern COMPONENT_SCHEME_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z0-9+.-]*):(?!//)");
 
     private static final CamelCatalog CATALOG = new DefaultCamelCatalog();
 
@@ -92,7 +100,8 @@ public final class CamelComponentPropertyResolver {
      * by Camel infra services using the default Camel catalog.
      * @param sourceCode the Camel route source code
      * @param context the test context holding the exposed infra service variables
-     * @return matching component properties as system properties, never {@code null}
+     * @return matching component properties as system properties, never {@code null}. May contain partial
+     * results when a failure occurred while processing a single component.
      */
     public static Map<String, String> resolveProperties(String sourceCode, TestContext context) {
         return resolveProperties(sourceCode, CATALOG, context);
@@ -104,7 +113,8 @@ public final class CamelComponentPropertyResolver {
      * @param sourceCode the Camel route source code
      * @param catalog the Camel catalog used to detect components and look up component properties
      * @param context the test context holding the exposed infra service variables
-     * @return matching component properties as system properties, never {@code null}
+     * @return matching component properties as system properties, never {@code null}. May contain partial
+     * results when a failure occurred while processing a single component.
      */
     public static Map<String, String> resolveProperties(String sourceCode, CamelCatalog catalog, TestContext context) {
         Map<String, String> properties = new HashMap<>();
@@ -118,7 +128,8 @@ public final class CamelComponentPropertyResolver {
                 applyComponentProperties(component, catalog, context, properties);
             }
         } catch (Exception e) {
-            logger.warn("Failed to auto resolve Camel component properties from integration source", e);
+            logger.warn("Failed to auto resolve Camel component properties from integration source: {}", e.getMessage());
+            logger.debug("Failed to auto resolve Camel component properties from integration source", e);
         }
 
         return properties;
@@ -156,18 +167,24 @@ public final class CamelComponentPropertyResolver {
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
 
-        String variablePrefix = CamelInfraSettings.CAMEL_INFRA_ENV_PREFIX +
-                component.replaceAll("[^a-zA-Z0-9]", "_").toUpperCase() + "_";
-
         Map<String, String> aliases = COMPONENT_OPTION_ALIASES.getOrDefault(component, Map.of());
 
         context.getVariables().forEach((key, value) -> {
-            if (key == null || !key.startsWith(variablePrefix) || value == null) {
+            if (key == null || value == null) {
                 return;
             }
 
-            String infraKey = toCamelCase(key.substring(variablePrefix.length()));
+            String remainder = removeInfraVariablePrefix(key, component);
+            if (remainder == null) {
+                return;
+            }
+
+            String infraKey = toCamelCase(remainder);
             String optionName = resolveOptionName(infraKey, options, optionNames, aliases);
+            if (optionName == null) {
+                optionName = resolveQualifiedOptionName(remainder, options, optionNames, aliases);
+            }
+
             if (optionName == null) {
                 if (model.getComponentOptions().stream()
                         .anyMatch(option -> option.getName().equalsIgnoreCase(infraKey))) {
@@ -185,7 +202,68 @@ public final class CamelComponentPropertyResolver {
             }
 
             properties.put("camel.component.%s.%s".formatted(component, optionName), resolvedValue);
+            logger.info("Setting Camel component property '{}' from infra service property '{}'",
+                    context.getLogModifier().mask("camel.component.%s.%s".formatted(component, optionName)),
+                    context.getLogModifier().mask(resolvedValue));
         });
+    }
+
+    /**
+     * Removes the infra service variable prefix of the given component. Infra services may be started with
+     * an implementation qualifier (e.g. {@code kafka.strimzi}) which is part of the variable name
+     * (e.g. {@code CITRUS_CAMEL_INFRA_KAFKA_STRIMZI_BOOTSTRAP_SERVERS}).
+     * @param key the test variable name
+     * @param component the Camel component
+     * @return the remaining property name or {@code null} if the variable does not belong to the component
+     */
+    private static String removeInfraVariablePrefix(String key, String component) {
+        for (String token : infraServiceTokens(component)) {
+            String prefix = CamelInfraSettings.CAMEL_INFRA_ENV_PREFIX + token + "_";
+            if (key.startsWith(prefix)) {
+                return key.substring(prefix.length());
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Resolves the component option for an infra service property that is qualified with the infra service
+     * implementation name (e.g. {@code CITRUS_CAMEL_INFRA_KAFKA_STRIMZI_BOOTSTRAP_SERVERS}).
+     * @param remainder the property name without the infra service variable prefix
+     * @param options the available component options
+     * @param optionNames the names of the available component options
+     * @param aliases the optional aliases matching infra property keys to component option names
+     * @return the matching component option name or {@code null} if no option matches
+     */
+    private static String resolveQualifiedOptionName(String remainder, List<ComponentModel.ComponentOptionModel> options,
+            Set<String> optionNames, Map<String, String> aliases) {
+        int separator = remainder.indexOf('_');
+        if (separator < 0 || separator == remainder.length() - 1) {
+            return null;
+        }
+
+        return resolveOptionName(toCamelCase(remainder.substring(separator + 1)), options, optionNames, aliases);
+    }
+
+    /**
+     * Provides the infra service variable name tokens of the given component. Next to the component name
+     * itself the token without any digits is supported too (e.g. component {@code aws2-sqs} matches the
+     * infra service {@code aws.sqs} with token {@code AWS_SQS}).
+     * @param component the Camel component
+     * @return the infra service variable name tokens
+     */
+    private static List<String> infraServiceTokens(String component) {
+        String token = component.replaceAll("[^a-zA-Z0-9]", "_").toUpperCase();
+        String normalizedToken = token.replaceAll("[0-9]", "").replaceAll("_+", "_");
+
+        List<String> tokens = new ArrayList<>();
+        tokens.add(token);
+        if (!tokens.contains(normalizedToken)) {
+            tokens.add(normalizedToken);
+        }
+
+        return tokens;
     }
 
     private static String resolveOptionName(String infraKey, List<ComponentModel.ComponentOptionModel> options, Set<String> optionNames,
