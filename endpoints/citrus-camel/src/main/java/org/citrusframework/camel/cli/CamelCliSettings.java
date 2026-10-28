@@ -111,6 +111,11 @@ public final class CamelCliSettings {
     private static final String WAIT_FOR_RUNNING_STATE_ENV_FALLBACK = JBANG_ENV_PREFIX + "WAIT_FOR_RUNNING_STATE";
     private static final String WAIT_FOR_RUNNING_STATE_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "When set to true the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run.", type = "java.lang.Boolean", defaultValue = "true")
+    private static final String AUTO_SET_PROPERTIES_PROPERTY = "citrus.camel.run.auto.set.properties";
+    private static final String AUTO_SET_PROPERTIES_ENV = "CITRUS_CAMEL_RUN_AUTO_SET_PROPERTIES";
+    private static final String AUTO_SET_PROPERTIES_DEFAULT = "true";
+
     @CitrusConfigProperty(description = "Camel CLI launcher type.", defaultValue = "jbang")
     private static final String CLI_TYPE_PROPERTY = CLI_PROPERTY_PREFIX + "type";
     private static final String CLI_TYPE_ENV = CLI_ENV_PREFIX + "TYPE";
@@ -263,6 +268,16 @@ public final class CamelCliSettings {
         return Boolean.parseBoolean(Optional.ofNullable(resolve(WAIT_FOR_RUNNING_STATE_PROPERTY, WAIT_FOR_RUNNING_STATE_ENV,
                 WAIT_FOR_RUNNING_STATE_PROPERTY_FALLBACK, WAIT_FOR_RUNNING_STATE_ENV_FALLBACK))
                 .orElse(WAIT_FOR_RUNNING_STATE_DEFAULT));
+    }
+
+    /**
+     * When set to true the Camel CLI run action automatically resolves component properties from
+     * Camel infra service variables and sets them as system properties on the integration run.
+     */
+    public static boolean isAutoSetProperties() {
+        return Boolean.parseBoolean(Optional.ofNullable(resolve(AUTO_SET_PROPERTIES_PROPERTY, AUTO_SET_PROPERTIES_ENV,
+                AUTO_SET_PROPERTIES_PROPERTY, AUTO_SET_PROPERTIES_ENV))
+                .orElse(AUTO_SET_PROPERTIES_DEFAULT));
     }
 
     /**

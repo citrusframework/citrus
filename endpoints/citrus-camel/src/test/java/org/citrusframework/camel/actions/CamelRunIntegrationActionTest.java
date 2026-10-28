@@ -61,4 +61,23 @@ public class CamelRunIntegrationActionTest {
         assertEquals(props.get("greeting"), "Hello inline");
         assertEquals(props.get("server.host"), "localhost");
     }
+
+    @Test
+    public void shouldAutoSetPropertiesByDefault() {
+        CamelRunIntegrationAction action = new CamelRunIntegrationAction.Builder()
+                .integration("test", "from('timer:tick').log('hello')")
+                .build();
+
+        assertEquals(getField(action, "autoSetProperties"), true);
+    }
+
+    @Test
+    public void shouldDisableAutoSetProperties() {
+        CamelRunIntegrationAction action = new CamelRunIntegrationAction.Builder()
+                .integration("test", "from('timer:tick').log('hello')")
+                .autoSetProperties(false)
+                .build();
+
+        assertEquals(getField(action, "autoSetProperties"), false);
+    }
 }

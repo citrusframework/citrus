@@ -150,6 +150,11 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
             builder.dumpIntegrationOutput(enabled);
         }
 
+        @SchemaProperty(advanced = true, description = "When enabled component properties are automatically resolved from Camel infra service variables and set as system properties on the integration run.", defaultValue = "true")
+        public void setAutoSetProperties(boolean enabled) {
+            builder.autoSetProperties(enabled);
+        }
+
         @SchemaProperty(description = "The Camel integration.")
         public void setIntegration(Integration integration) {
             builder.integrationName(integration.name);

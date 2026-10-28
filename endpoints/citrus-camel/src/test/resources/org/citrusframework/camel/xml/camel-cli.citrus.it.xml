@@ -22,7 +22,7 @@
   <actions>
     <camel>
       <cli>
-        <run args="--verbose">
+        <run args="--verbose" auto-set-properties="false">
           <integration name="hello-xml"
                        file="classpath:org/citrusframework/camel/integration/route.yaml">
             <system-properties>
