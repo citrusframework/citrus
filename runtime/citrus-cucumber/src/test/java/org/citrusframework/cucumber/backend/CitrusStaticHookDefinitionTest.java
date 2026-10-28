@@ -18,11 +18,14 @@ package org.citrusframework.cucumber.backend;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+import io.cucumber.core.backend.CucumberInvocationTargetException;
 import io.cucumber.core.backend.StaticHookDefinition.HookType;
 import org.citrusframework.cucumber.CitrusLifecycleHooks;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.expectThrows;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -60,6 +63,16 @@ public class CitrusStaticHookDefinitionTest {
     }
 
     @Test
+    public void shouldReportHookFailureWithHookLocation() throws NoSuchMethodException {
+        CitrusStaticHookDefinition hook = new CitrusStaticHookDefinition(method("fail"), 10000, HookType.AFTER_ALL);
+
+        CucumberInvocationTargetException exception = expectThrows(CucumberInvocationTargetException.class, hook::execute);
+
+        assertSame(exception.getLocated(), hook);
+        assertEquals(exception.getInvocationTargetExceptionCause().getMessage(), "Suite action failed");
+    }
+
+    @Test
     public void shouldMatchStackTraceOfHookMethod() throws NoSuchMethodException {
         CitrusStaticHookDefinition hook = new CitrusStaticHookDefinition(method("count"), 10000, HookType.BEFORE_ALL);
 
@@ -77,6 +90,10 @@ public class CitrusStaticHookDefinitionTest {
 
         public static void count() {
             invocations++;
+        }
+
+        public static void fail() {
+            throw new IllegalStateException("Suite action failed");
         }
     }
 }

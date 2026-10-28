@@ -34,6 +34,9 @@ public class SuiteHooksSteps implements TestActionSupport {
     private static final AtomicInteger suiteFinishes = new AtomicInteger();
     private static boolean listenerRegistered;
 
+    /** The listener stays on the shared Citrus context, so it only counts during this run */
+    private static volatile boolean counting;
+
     @CitrusResource
     private TestCaseRunner runner;
 
@@ -44,6 +47,9 @@ public class SuiteHooksSteps implements TestActionSupport {
             CitrusInstanceManager.getOrDefault().getCitrusContext().getTestSuiteListeners()
                     .addTestSuiteListener(new CountingSuiteListener());
         }
+
+        suiteFinishes.set(0);
+        counting = true;
 
         runner.given(echo("Running without the Citrus reporter"));
     }
@@ -56,12 +62,27 @@ public class SuiteHooksSteps implements TestActionSupport {
     }
 
     /**
+     * Runs before the Citrus after-all hook: Cucumber runs after-all hooks in descending order and the default order
+     * 10000 is higher than the Citrus suite hook order.
+     */
+    @AfterAll
+    public static void verifySuiteNotFinishedForDefaultOrder() {
+        if (suiteFinishes.get() != 0) {
+            throw new AssertionError("Citrus suite finished before an after-all hook with the default order");
+        }
+    }
+
+    /**
      * Runs after the Citrus after-all hook, which has the higher order and therefore runs first.
      */
     @AfterAll(order = 0)
     public static void verifySuiteFinished() {
-        if (suiteFinishes.get() != 1) {
-            throw new AssertionError(String.format("Expected the Citrus suite to finish once but was %d", suiteFinishes.get()));
+        try {
+            if (suiteFinishes.get() != 1) {
+                throw new AssertionError(String.format("Expected the Citrus suite to finish once but was %d", suiteFinishes.get()));
+            }
+        } finally {
+            counting = false;
         }
     }
 
@@ -72,7 +93,9 @@ public class SuiteHooksSteps implements TestActionSupport {
 
         @Override
         public void onFinish() {
-            suiteFinishes.incrementAndGet();
+            if (counting) {
+                suiteFinishes.incrementAndGet();
+            }
         }
 
         @Override

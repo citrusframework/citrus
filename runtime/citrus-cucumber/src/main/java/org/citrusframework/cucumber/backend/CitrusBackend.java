@@ -79,10 +79,10 @@ public class CitrusBackend implements Backend {
                 glue.addAfterHook(new CitrusHookDefinition(afterMethod, "", 10000, lookup, HookType.AFTER));
 
                 Method beforeSuiteMethod = CitrusLifecycleHooks.class.getMethod("beforeSuite");
-                glue.addBeforeAllHook(new CitrusStaticHookDefinition(beforeSuiteMethod, 10000, StaticHookDefinition.HookType.BEFORE_ALL));
+                glue.addBeforeAllHook(new CitrusStaticHookDefinition(beforeSuiteMethod, CitrusLifecycleHooks.SUITE_HOOK_ORDER, StaticHookDefinition.HookType.BEFORE_ALL));
 
                 Method afterSuiteMethod = CitrusLifecycleHooks.class.getMethod("afterSuite");
-                glue.addAfterAllHook(new CitrusStaticHookDefinition(afterSuiteMethod, 10000, StaticHookDefinition.HookType.AFTER_ALL));
+                glue.addAfterAllHook(new CitrusStaticHookDefinition(afterSuiteMethod, CitrusLifecycleHooks.SUITE_HOOK_ORDER, StaticHookDefinition.HookType.AFTER_ALL));
             }
         } catch (NoSuchMethodException e) {
             throw new CucumberException("Unable to add Citrus lifecycle hooks");
