@@ -19,7 +19,9 @@ package org.citrusframework.util;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Clears the shared TypeConverter.converters map while racing lookups")
 public class TypeConverterTest {
 
     @Test
