@@ -21,11 +21,12 @@ import java.util.List;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SubstringFunctionTest extends UnitTestSupport {
     SubstringFunction function = new SubstringFunction();
@@ -35,12 +36,12 @@ public class SubstringFunctionTest extends UnitTestSupport {
         List<String> params = new ArrayList<>();
         params.add("Hallo,TestFramework");
         params.add("6");
-        Assert.assertEquals(function.execute(params, context), "TestFramework");
+        Assertions.assertEquals("TestFramework", function.execute(params, context));
 
         params.clear();
         params.add("This is a test");
         params.add("0");
-        Assert.assertEquals(function.execute(params, context), "This is a test");
+        Assertions.assertEquals("This is a test", function.execute(params, context));
     }
 
     @Test
@@ -49,38 +50,40 @@ public class SubstringFunctionTest extends UnitTestSupport {
         params.add("Hallo,TestFramework");
         params.add("6");
         params.add("10");
-        Assert.assertEquals(function.execute(params, context), "Test");
+        Assertions.assertEquals("Test", function.execute(params, context));
 
         params.clear();
         params.add("This is a test");
         params.add("0");
         params.add("4");
-        Assert.assertEquals(function.execute(params, context), "This");
+        Assertions.assertEquals("This", function.execute(params, context));
     }
 
-    @Test(expectedExceptions = {StringIndexOutOfBoundsException.class})
+    @Test
     public void testIndexOutOfBounds() {
         List<String> params = new ArrayList<>();
         params.add("Test");
         params.add("-1");
-        function.execute(params, context);
+        assertThrows(StringIndexOutOfBoundsException.class, () -> function.execute(params, context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testMissingBeginIndex() {
-        function.execute(singletonList("This is a test"), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(singletonList("This is a test"), context);
+        });
     }
 
-    @Test(expectedExceptions = {NumberFormatException.class})
+    @Test
     public void testNotANumber() {
         List<String> params = new ArrayList<>();
         params.add("Hallo,TestFramework");
         params.add("one");
-        function.execute(params, context);
+        assertThrows(NumberFormatException.class, () -> function.execute(params, context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(emptyList(), context));
     }
 }

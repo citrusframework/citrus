@@ -29,10 +29,10 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageQueue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -47,7 +47,7 @@ public class DirectEndpointSyncProducerTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupMocks() {
         context = new TestContext();
     }
@@ -65,7 +65,7 @@ public class DirectEndpointSyncProducerTest {
         reset(queue);
         doAnswer(invocation -> {
             Message request = invocation.getArgument(0);
-            Assert.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
+            Assertions.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
             ((MessageQueue) request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE)).send(response);
             return null;
         }).when(queue).send(any(Message.class));
@@ -88,8 +88,8 @@ public class DirectEndpointSyncProducerTest {
         reset(queue);
         doAnswer(invocation -> {
             Message request = invocation.getArgument(0);
-            Assert.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
-            Assert.assertEquals(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE), replyQueue);
+            Assertions.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
+            Assertions.assertEquals(replyQueue, request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
             replyQueue.send(response);
             return null;
         }).when(queue).send(any(Message.class));
@@ -114,7 +114,7 @@ public class DirectEndpointSyncProducerTest {
         when(resolver.resolve("testQueue", MessageQueue.class)).thenReturn(queue);
         doAnswer(invocation -> {
             Message request = invocation.getArgument(0);
-            Assert.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
+            Assertions.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
             ((MessageQueue) request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE)).send(response);
             return null;
         }).when(queue).send(any(Message.class));
@@ -135,7 +135,7 @@ public class DirectEndpointSyncProducerTest {
         reset(queue);
         doAnswer(invocation -> {
             Message request = invocation.getArgument(0);
-            Assert.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
+            Assertions.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
             ((MessageQueue) request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE)).send(response);
             return null;
         }).when(queue).send(any(Message.class));
@@ -145,8 +145,8 @@ public class DirectEndpointSyncProducerTest {
 
         Message replyMessage = channelSyncProducer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message),
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeader(MessageHeaders.ID), response.getId());
+        Assertions.assertEquals(response.getPayload(), replyMessage.getPayload());
+        Assertions.assertEquals(response.getId(), replyMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class DirectEndpointSyncProducerTest {
         reset(queue);
         doAnswer(invocation -> {
             Message request = invocation.getArgument(0);
-            Assert.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
+            Assertions.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
             ((MessageQueue) request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE)).send(response);
             return null;
         }).when(queue).send(any(Message.class));
@@ -174,8 +174,8 @@ public class DirectEndpointSyncProducerTest {
 
         Message replyMessage = channelSyncProducer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message),
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeader(MessageHeaders.ID), response.getId());
+        Assertions.assertEquals(response.getPayload(), replyMessage.getPayload());
+        Assertions.assertEquals(response.getId(), replyMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -193,7 +193,7 @@ public class DirectEndpointSyncProducerTest {
         reset(queue, messageCorrelator);
         doAnswer(invocation -> {
             Message request = invocation.getArgument(0);
-            Assert.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
+            Assertions.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
             ((MessageQueue) request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE)).send(response);
             return null;
         }).when(queue).send(any(Message.class));
@@ -206,8 +206,8 @@ public class DirectEndpointSyncProducerTest {
 
         Message replyMessage = channelSyncProducer.getCorrelationManager().find(MessageHeaders.ID + " = '123456789'",
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeader(MessageHeaders.ID), response.getId());
+        Assertions.assertEquals(response.getPayload(), replyMessage.getPayload());
+        Assertions.assertEquals(response.getId(), replyMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -221,19 +221,19 @@ public class DirectEndpointSyncProducerTest {
         when(queue.toString()).thenReturn("mockQueue");
         doAnswer(invocation -> {
             Message request = invocation.getArgument(0);
-            Assert.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
+            Assertions.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
             return null;
         }).when(queue).send(any(Message.class));
 
         try {
             endpoint.createProducer().send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Action timeout after 5000 milliseconds. " +
-                    "Failed to receive synchronous reply message on endpoint: 'mockQueue'");
+            Assertions.assertEquals("Action timeout after 5000 milliseconds. " +
+                    "Failed to receive synchronous reply message on endpoint: 'mockQueue'", e.getLocalizedMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of reply timeout");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " because of reply timeout");
     }
 
     @Test
@@ -248,7 +248,7 @@ public class DirectEndpointSyncProducerTest {
                 channelSyncProducer.toString(), context);
         channelSyncProducer.getCorrelationManager().store(channelSyncProducer.toString(), message);
 
-        Assert.assertEquals(channelSyncProducer.receive(context), message);
+        Assertions.assertEquals(message, channelSyncProducer.receive(context));
     }
 
     @Test
@@ -260,6 +260,6 @@ public class DirectEndpointSyncProducerTest {
         DirectSyncProducer channelSyncProducer = (DirectSyncProducer) endpoint.createProducer();
         channelSyncProducer.getCorrelationManager().store(new DefaultMessageCorrelator().getCorrelationKey(message), message);
 
-        Assert.assertEquals(channelSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context), message);
+        Assertions.assertEquals(message, channelSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context));
     }
 }

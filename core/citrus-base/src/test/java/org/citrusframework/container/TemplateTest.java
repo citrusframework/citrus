@@ -23,9 +23,9 @@ import org.citrusframework.TestAction;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -56,8 +56,8 @@ public class TemplateTest extends UnitTestSupport {
         parameters.put("param", "Parameter was set");
         parameters.put("myText", "${text}");
 
-        Assert.assertFalse(context.getVariables().containsKey("param"));
-        Assert.assertFalse(context.getVariables().containsKey("myText"));
+        Assertions.assertFalse(context.getVariables().containsKey("param"));
+        Assertions.assertFalse(context.getVariables().containsKey("myText"));
 
         Template template = new Template.Builder()
                 .actions(echo)
@@ -65,13 +65,13 @@ public class TemplateTest extends UnitTestSupport {
                 .build();
         template.execute(context);
 
-        Assert.assertTrue(context.getVariables().containsKey("param"),
+        Assertions.assertTrue(context.getVariables().containsKey("param"),
         "Missing new variable 'param' in global test context");
-        Assert.assertEquals(context.getVariable("param"), "Parameter was set");
+        Assertions.assertEquals("Parameter was set", context.getVariable("param"));
 
-        Assert.assertTrue(context.getVariables().containsKey("myText"),
+        Assertions.assertTrue(context.getVariables().containsKey("myText"),
                 "Missing new variable 'myText' in global test context");
-        Assert.assertEquals(context.getVariable("myText"), "Hello Citrus!");
+        Assertions.assertEquals("Hello Citrus!", context.getVariable("myText"));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class TemplateTest extends UnitTestSupport {
 
         EchoAction echo = new EchoAction.Builder().message("${myText}").build();
 
-        Assert.assertFalse(context.getVariables().containsKey("myText"));
+        Assertions.assertFalse(context.getVariables().containsKey("myText"));
 
         Template template = new Template.Builder()
                 .actions(echo)
@@ -89,7 +89,7 @@ public class TemplateTest extends UnitTestSupport {
                 .build();
         template.execute(context);
 
-        Assert.assertFalse(context.getVariables().containsKey("myText"),
+        Assertions.assertFalse(context.getVariables().containsKey("myText"),
                 "Variable 'myText' present in global test context, although global context was disabled before");
     }
 
@@ -108,6 +108,6 @@ public class TemplateTest extends UnitTestSupport {
             return;
         }
 
-        Assert.fail("Missing CitrusRuntimeException due to unknown parameter");
+        Assertions.fail("Missing CitrusRuntimeException due to unknown parameter");
     }
 }

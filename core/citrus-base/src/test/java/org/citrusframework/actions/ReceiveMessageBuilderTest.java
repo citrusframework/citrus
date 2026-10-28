@@ -51,21 +51,21 @@ import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.variable.dictionary.DataDictionary;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
+@ExtendWith(MockitoExtension.class)
 public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 	@Mock
@@ -73,19 +73,9 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 	private final TestContext context = TestContextFactory.newInstance().getObject();
 
-	@BeforeClass
-	public void setupMocks() {
-		MockitoAnnotations.openMocks(this);
-	}
-
-	@BeforeMethod
-	public void mocks() {
-		reset(resource);
-	}
-
 	@Test
 	void constructor() {
-		Assert.assertNotNull(new ReceiveMessageAction.Builder().build());
+		Assertions.assertNotNull(new ReceiveMessageAction.Builder().build());
 	}
 
 	@Test
@@ -99,7 +89,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
         builder.endpoint(endpoint);
 
         //THEN
-		assertEquals(endpoint, builder.build().getEndpoint());
+		assertEquals(builder.build().getEndpoint(), endpoint);
 	}
 
 	@Test
@@ -113,7 +103,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
         builder.endpoint(uri);
 
         //THEN
-		assertEquals(builder.build().getEndpointUri(), uri);
+		assertEquals(uri, builder.build().getEndpointUri());
 	}
 
 	@Test
@@ -125,7 +115,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
         builder.timeout(1000L);
 
         //THEN
-		assertEquals(builder.build().getReceiveTimeout(), 1000L);
+		assertEquals(1000L, builder.build().getReceiveTimeout());
 	}
 
 	@Test
@@ -139,7 +129,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
         builder.message(message);
 
         //THEN
-		Assert.assertNotNull(builder.build().getMessageBuilder());
+		Assertions.assertNotNull(builder.build().getMessageBuilder());
 	}
 
 	@Test
@@ -153,8 +143,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
         //THEN
         assertTrue(builder.build().getMessageBuilder() instanceof DefaultMessageBuilder);
 		assertEquals(
-            builder.build().getMessageBuilder().build(context, MessageType.PLAINTEXT.name()).getName(),
-            "foo");
+            "foo",
+            builder.build().getMessageBuilder().build(context, MessageType.PLAINTEXT.name()).getName());
 	}
 
 	@Test
@@ -166,7 +156,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().body("payload");
 
 		//THEN
-		assertEquals(getPayloadData(builder), "payload");
+		assertEquals("payload", getPayloadData(builder));
 	}
 
     @Test
@@ -179,8 +169,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
         builder.message().body("payload");
 
         //THEN
-        assertEquals(getPayloadData(builder), "payload");
-        Assert.assertNotNull(builder.build().getMessageBuilder());
+        assertEquals("payload", getPayloadData(builder));
+        Assertions.assertNotNull(builder.build().getMessageBuilder());
     }
 
     @Test
@@ -195,8 +185,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 
         //THEN
         assertEquals(
-            builder.build().getMessageBuilder().build(context, MessageType.PLAINTEXT.name()).getPayload(),
-            "payload");
+            "payload",
+            builder.build().getMessageBuilder().build(context, MessageType.PLAINTEXT.name()).getPayload());
     }
 
     @Test
@@ -212,7 +202,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().body(this.resource);
 
 		//THEN
-		assertEquals(getPayloadData(builder), "<message>Hello</message>");
+		assertEquals("<message>Hello</message>", getPayloadData(builder));
 	}
 
 	@Test
@@ -228,7 +218,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().body(this.resource, Charset.defaultCharset());
 
 		//THEN
-		assertEquals(getPayloadData(builder), "<message>Hello</message>");
+		assertEquals("<message>Hello</message>", getPayloadData(builder));
 	}
 
     @Test
@@ -243,10 +233,10 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		when(mocked.readAllBytes()).thenThrow(new IOException("Something went wrong"));
 
         //WHEN
-        final Assert.ThrowingRunnable setPayload = () -> builder.message().body(this.resource, Charset.defaultCharset()).getMessageBuilder().build(context, MessageType.PLAINTEXT.name());
+        final Executable setPayload = () -> builder.message().body(this.resource, Charset.defaultCharset()).getMessageBuilder().build(context, MessageType.PLAINTEXT.name());
 
         //THEN
-        Assert.assertThrows("Missing exception due to payload resource IOException", CitrusRuntimeException.class, setPayload);
+        Assertions.assertThrows(CitrusRuntimeException.class, setPayload, "Missing exception due to payload resource IOException");
     }
 
 	@Test
@@ -261,8 +251,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().header(headerName, headerValue);
 
 		//THEN
-		assertEquals(((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaders(context).get(headerName),
-            headerValue);
+		assertEquals(headerValue,
+            ((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaders(context).get(headerName));
 	}
 
 	@Test
@@ -278,7 +268,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().headers(headers);
 
 		//THEN
-		assertEquals(headers, ((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaders(context));
+		assertEquals(((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaders(context), headers);
 	}
 
 	@Test
@@ -292,8 +282,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().header(data);
 
 		//THEN
-		assertEquals(Collections.singletonList(data),
-				((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
+		assertEquals(((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context),
+				Collections.singletonList(data));
 	}
 
 	@Test
@@ -342,8 +332,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 		//THEN
 		final HeaderValidationContext.Builder headerValidationContext = builder.getHeaderValidationContext();
-		Assert.assertNotNull(headerValidationContext);
-		Assert.assertFalse(headerValidationContext.build().isHeaderNameIgnoreCase());
+		Assertions.assertNotNull(headerValidationContext);
+		Assertions.assertFalse(headerValidationContext.build().isHeaderNameIgnoreCase());
 	}
 
 	@Test
@@ -366,7 +356,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.findFirst()
 				.map(it -> (DefaultScriptValidationContext) it)
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(scriptValidationContext.getValidationScript(), "validation.txt");
+		assertEquals("validation.txt", scriptValidationContext.getValidationScript());
 	}
 
 	@Test
@@ -392,7 +382,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.findFirst()
 				.map(it -> (DefaultScriptValidationContext) it)
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(scriptValidationContext.getValidationScript(), "assert message == 'Hello'");
+		assertEquals("assert message == 'Hello'", scriptValidationContext.getValidationScript());
 	}
 
 	@Test
@@ -418,7 +408,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.findFirst()
 				.map(it -> (DefaultScriptValidationContext) it)
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(scriptValidationContext.getValidationScript(), "assert message == 'Hello'");
+		assertEquals("assert message == 'Hello'", scriptValidationContext.getValidationScript());
 	}
 
 	@Test
@@ -441,7 +431,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.findFirst()
 				.map(it -> (DefaultScriptValidationContext) it)
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(scriptValidationContext.getValidationScriptResourcePath(), "validation.txt");
+		assertEquals("validation.txt", scriptValidationContext.getValidationScriptResourcePath());
 	}
 
 	@Test
@@ -464,7 +454,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.findFirst()
 				.map(it -> (DefaultScriptValidationContext) it)
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(scriptValidationContext.getScriptType(), "bash");
+		assertEquals("bash", scriptValidationContext.getScriptType());
 	}
 
 	@Test
@@ -472,7 +462,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final MessageType messageType = MessageType.JSON;
 		builder.message().type(messageType);
-		assertEquals(messageType.name(), builder.build().getMessageType());
+		assertEquals(builder.build().getMessageType(), messageType.name());
 	}
 
 	@Test
@@ -486,8 +476,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().type(messageType);
 
 		//THEN
-		assertEquals(builder.build().getMessageType(), messageType);
-		assertEquals( builder.build().getValidationContexts().size(),1);
+		assertEquals(messageType, builder.build().getMessageType());
+		assertEquals( 1,builder.build().getValidationContexts().size());
 		assertTrue(builder.build().getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
 	}
 
@@ -525,8 +515,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.map(XmlMessageValidationContext.class::cast)
 				.findFirst()
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(xmlMessageValidationContext.getControlNamespaces().get("foo"),
-            "http://foo.com");
+		assertEquals("http://foo.com",
+            xmlMessageValidationContext.getControlNamespaces().get("foo"));
 	}
 
 	@Test
@@ -548,8 +538,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.map(JsonPathMessageValidationContext.class::cast)
 				.findFirst()
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(jsonMessageValidationContext.getJsonPathExpressions().get("$ResultCode"),
-            "Success");
+		assertEquals("Success",
+            jsonMessageValidationContext.getJsonPathExpressions().get("$ResultCode"));
 	}
 
 	@Test
@@ -571,8 +561,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.map(XpathMessageValidationContext.class::cast)
 				.findFirst()
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(xmlMessageValidationContext.getXpathExpressions().get("//ResultCode"),
-            "Success");
+		assertEquals("Success",
+            xmlMessageValidationContext.getXpathExpressions().get("//ResultCode"));
 	}
 
 	@Test
@@ -603,9 +593,9 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.map(XpathMessageValidationContext.class::cast)
 				.findFirst()
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(xmlMessageValidationContext.getXpathExpressions().get(key1), value1);
-		assertEquals(xmlMessageValidationContext.getXpathExpressions().get(key2), value2);
-		assertEquals(xmlMessageValidationContext.getXpathExpressions().get(key3), value3);
+		assertEquals(value1, xmlMessageValidationContext.getXpathExpressions().get(key1));
+		assertEquals(value2, xmlMessageValidationContext.getXpathExpressions().get(key2));
+		assertEquals(value3, xmlMessageValidationContext.getXpathExpressions().get(key3));
 	}
 
 	@Test
@@ -637,9 +627,9 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.findFirst()
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 
-		assertEquals(jsonPathValidationContext.getJsonPathExpressions().get(key1), value1);
-		assertEquals(jsonPathValidationContext.getJsonPathExpressions().get(key2), value2);
-		assertEquals(jsonPathValidationContext.getJsonPathExpressions().get(key3), value3);
+		assertEquals(value1, jsonPathValidationContext.getJsonPathExpressions().get(key1));
+		assertEquals(value2, jsonPathValidationContext.getJsonPathExpressions().get(key2));
+		assertEquals(value3, jsonPathValidationContext.getJsonPathExpressions().get(key3));
 	}
 
 	@Test
@@ -703,7 +693,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.map(XmlMessageValidationContext.class::cast)
 				.findFirst()
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(xmlMessageValidationContext.getSchema(), schemaName);
+		assertEquals(schemaName, xmlMessageValidationContext.getSchema());
 	}
 
 	@Test
@@ -724,7 +714,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.map(JsonMessageValidationContext.class::cast)
 				.findFirst()
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(jsonMessageValidationContext.getSchema(), schemaName);
+		assertEquals(schemaName, jsonMessageValidationContext.getSchema());
 	}
 
 	@Test
@@ -745,7 +735,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.map(XmlMessageValidationContext.class::cast)
 				.findFirst()
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(xmlMessageValidationContext.getSchemaRepository(), schemaRepository);
+		assertEquals(schemaRepository, xmlMessageValidationContext.getSchemaRepository());
 	}
 
 	@Test
@@ -766,7 +756,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 				.map(JsonMessageValidationContext.class::cast)
 				.findFirst()
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertEquals(jsonMessageValidationContext.getSchemaRepository(), schemaRepository);
+		assertEquals(schemaRepository, jsonMessageValidationContext.getSchemaRepository());
 	}
 
 	@Test
@@ -780,7 +770,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.selector(selector);
 
 		//THEN
-		assertEquals(builder.build().getMessageSelector(), selector);
+		assertEquals(selector, builder.build().getMessageSelector());
 	}
 
 	@Test
@@ -796,7 +786,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.selector(selectors);
 
 		//THEN
-		assertEquals(selectors.toString(), builder.build().getMessageSelectorMap().toString());
+		assertEquals(builder.build().getMessageSelectorMap().toString(), selectors.toString());
 	}
 
 	@Test
@@ -812,7 +802,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.validators(Arrays.asList(validator1, validator2, validator3));
 
 		//THEN
-		assertEquals(builder.build().getValidators().size(), 3);
+		assertEquals(3, builder.build().getValidators().size());
 	}
 
 	@Test
@@ -837,7 +827,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.validators(name1, name2, name3);
 
 		//THEN
-		assertEquals(builder.build().getValidators().size(), 3);
+		assertEquals(3, builder.build().getValidators().size());
 	}
 
 	@Test
@@ -856,7 +846,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 
 		final HeaderValidationContext.Builder headerValidationContext =
 				getFieldFromBuilder(builder, HeaderValidationContext.Builder.class, "headerValidationContext");
-		assertEquals(headerValidationContext.build().getValidators().size(), 3);
+		assertEquals(3, headerValidationContext.build().getValidators().size());
 	}
 
 	@Test
@@ -885,7 +875,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.build();
 		final HeaderValidationContext.Builder headerValidationContext =
 				getFieldFromBuilder(builder, HeaderValidationContext.Builder.class, "headerValidationContext");
-		assertEquals(headerValidationContext.build().getValidators().size(), 3);
+		assertEquals(3, headerValidationContext.build().getValidators().size());
 	}
 
 	@Test
@@ -899,7 +889,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().dictionary(dataDictionary);
 
 		//THEN
-		assertEquals(dataDictionary, builder.build().getDataDictionary());
+		assertEquals(builder.build().getDataDictionary(), dataDictionary);
 	}
 
 	@Test
@@ -918,7 +908,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().dictionary(name);
 
 		//THEN
-		assertEquals(dataDictionary, builder.build().getDataDictionary());
+		assertEquals(builder.build().getDataDictionary(), dataDictionary);
 	}
 
 	@Test
@@ -932,7 +922,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.validate(processor);
 
 		//THEN
-		assertEquals(processor, builder.build().getValidationProcessor());
+		assertEquals(builder.build().getValidationProcessor(), processor);
 	}
 
 	@Test
@@ -948,8 +938,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.withReferenceResolver(referenceResolver);
 
 		//THEN
-		assertEquals(referenceResolver, ReflectionHelper.getField(
-				ReflectionHelper.findField(ReceiveMessageAction.Builder.class, "referenceResolver"), builder));
+		assertEquals(ReflectionHelper.getField(
+				ReflectionHelper.findField(ReceiveMessageAction.Builder.class, "referenceResolver"), builder), referenceResolver);
 	}
 
     @Test
@@ -963,7 +953,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
         builder.message().type(messageType);
 
         //THEN
-		assertEquals(messageType.name(), builder.build().getMessageType());
+		assertEquals(builder.build().getMessageType(), messageType.name());
 	}
 
     @Test
@@ -977,13 +967,13 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
         builder.message().type(messageType);
 
         //THEN
-		assertEquals(builder.build().getMessageType(), messageType);
+		assertEquals(messageType, builder.build().getMessageType());
     }
 
 	private <T> T getFieldFromBuilder(ReceiveMessageAction.Builder builder, final Class<T> targetClass, final String fieldName) {
 		final T validationContext = targetClass.cast(
 				ReflectionHelper.getField(ReflectionHelper.findField(ReceiveMessageAction.Builder.class, fieldName), builder));
-		Assert.assertNotNull(validationContext);
+		Assertions.assertNotNull(validationContext);
 		return validationContext;
 	}
 

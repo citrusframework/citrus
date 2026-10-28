@@ -18,8 +18,8 @@ package org.citrusframework.base.validation.matcher.core;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -49,11 +49,11 @@ public class MatchesValidationMatcherTest extends UnitTestSupport {
     private void assertException(String value, List<String> control) {
     	try {
     		matcher.validate("field", value, control, context);
-    		Assert.fail("Expected exception not thrown!");
+    		Assertions.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
-			Assert.assertTrue(e.getMessage().contains("field"));
-			Assert.assertTrue(e.getMessage().contains(value));
-			Assert.assertTrue(e.getMessage().contains(control.get(0)));
+			Assertions.assertTrue(e.getMessage().contains("field"));
+			Assertions.assertTrue(e.getMessage().contains(value));
+			Assertions.assertTrue(e.getMessage().contains(control.get(0)));
 		}
     }
 }

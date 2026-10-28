@@ -20,10 +20,10 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.spi.ReferenceResolver;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class MessageStoreEndpointProducerTest {
 
@@ -31,7 +31,7 @@ public class MessageStoreEndpointProducerTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupMocks() {
         context = new TestContext();
     }
@@ -47,8 +47,8 @@ public class MessageStoreEndpointProducerTest {
         endpoint.createProducer().send(message, context);
 
         Message stored = context.getMessageStore().getMessage("myMessage");
-        Assert.assertNotNull(stored);
-        Assert.assertEquals(stored, message);
+        Assertions.assertNotNull(stored);
+        Assertions.assertEquals(message, stored);
     }
 
     @Test
@@ -63,8 +63,8 @@ public class MessageStoreEndpointProducerTest {
         endpoint.createProducer().send(message, context);
 
         Message stored = context.getMessageStore().getMessage("fooMessage");
-        Assert.assertNotNull(stored);
-        Assert.assertEquals(stored, message);
+        Assertions.assertNotNull(stored);
+        Assertions.assertEquals(message, stored);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class MessageStoreEndpointProducerTest {
         endpoint.createProducer().send(message, context);
 
         Message stored = context.getMessageStore().getMessage("myMessage");
-        Assert.assertNotNull(stored);
-        Assert.assertEquals(stored, message);
+        Assertions.assertNotNull(stored);
+        Assertions.assertEquals(message, stored);
     }
 }

@@ -19,14 +19,14 @@ package org.citrusframework.base.functions.core;
 import java.util.Collections;
 
 import org.citrusframework.base.UnitTestSupport;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class RandomUUIDFunctionTest extends UnitTestSupport {
     RandomUUIDFunction function = new RandomUUIDFunction();
 
     @Test
     public void testFunction() {
-        Assert.assertNotNull(function.execute(Collections.<String>emptyList(), context));
+        Assertions.assertNotNull(function.execute(Collections.<String>emptyList(), context));
     }
 }

@@ -19,8 +19,8 @@ package org.citrusframework.base.endpoint.adapter;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StaticEndpointAdapterTest extends UnitTestSupport {
 
@@ -29,15 +29,15 @@ public class StaticEndpointAdapterTest extends UnitTestSupport {
         StaticEndpointAdapter endpointAdapter = new StaticEndpointAdapter(new DefaultMessage("just works!"));
 
         Message received = endpointAdapter.handleMessage(new DefaultMessage("hello"));
-        Assert.assertEquals(received.getPayload(), "just works!");
+        Assertions.assertEquals("just works!", received.getPayload());
 
         received = endpointAdapter.getEndpoint().createConsumer().receive(context);
-        Assert.assertEquals(received.getPayload(), "just works!");
+        Assertions.assertEquals("just works!", received.getPayload());
 
         Message received2nd = endpointAdapter.handleMessage(new DefaultMessage("something else"));
-        Assert.assertEquals(received2nd.getPayload(), "just works!");
+        Assertions.assertEquals("just works!", received2nd.getPayload());
 
-        Assert.assertEquals(received.getId(), received2nd.getId());
+        Assertions.assertEquals(received2nd.getId(), received.getId());
     }
 
     @Test
@@ -46,12 +46,12 @@ public class StaticEndpointAdapterTest extends UnitTestSupport {
                 .withReuseMessage(false);
 
         Message received = endpointAdapter.handleMessage(new DefaultMessage("hello"));
-        Assert.assertEquals(received.getPayload(), "just works!");
+        Assertions.assertEquals("just works!", received.getPayload());
 
         Message received2nd = endpointAdapter.handleMessage(new DefaultMessage("something else"));
-        Assert.assertEquals(received2nd.getPayload(), "just works!");
+        Assertions.assertEquals("just works!", received2nd.getPayload());
 
-        Assert.assertNotEquals(received.getId(), received2nd.getId());
+        Assertions.assertNotEquals(received2nd.getId(), received.getId());
     }
 
     @Test
@@ -60,10 +60,10 @@ public class StaticEndpointAdapterTest extends UnitTestSupport {
         StaticEndpointAdapter endpointAdapter = new StaticEndpointAdapter();
 
         Message received = endpointAdapter.handleMessage(request);
-        Assert.assertEquals(received.getPayload(), "");
+        Assertions.assertEquals("", received.getPayload());
 
         received = endpointAdapter.getEndpoint().createConsumer().receive(context);
-        Assert.assertEquals(received.getPayload(), "");
+        Assertions.assertEquals("", received.getPayload());
 
         endpointAdapter.getEndpoint().createProducer().send(request, context);
     }

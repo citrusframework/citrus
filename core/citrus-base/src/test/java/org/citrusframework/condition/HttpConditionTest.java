@@ -20,9 +20,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.citrusframework.base.UnitTestSupport;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -48,7 +48,7 @@ public class HttpConditionTest extends UnitTestSupport {
         HttpCondition testling = new HttpCondition() {
             @Override
             protected HttpURLConnection openConnection(URL url) {
-                Assert.assertEquals(url.toExternalForm(), "https://citrusframework.org");
+                Assertions.assertEquals("https://citrusframework.org", url.toExternalForm());
 
                 return connection;
             }
@@ -58,7 +58,7 @@ public class HttpConditionTest extends UnitTestSupport {
         testling.setTimeout(timeout);
         testling.setHttpResponseCode(httpResponseCode);
 
-        Assert.assertTrue(testling.isSatisfied(context));
+        Assertions.assertTrue(testling.isSatisfied(context));
 
         verify(connection).setConnectTimeout(3000);
         verify(connection).setReadTimeout(3000);
@@ -79,7 +79,7 @@ public class HttpConditionTest extends UnitTestSupport {
         HttpCondition testling = new HttpCondition() {
             @Override
             protected HttpURLConnection openConnection(URL url) {
-                Assert.assertEquals(url.toExternalForm(), "https://citrusframework.org");
+                Assertions.assertEquals("https://citrusframework.org", url.toExternalForm());
 
                 return connection;
             }
@@ -89,7 +89,7 @@ public class HttpConditionTest extends UnitTestSupport {
         testling.setTimeout("${timeout}");
         testling.setHttpResponseCode("${httpResponseCode}");
 
-        Assert.assertTrue(testling.isSatisfied(context));
+        Assertions.assertTrue(testling.isSatisfied(context));
 
         verify(connection).setConnectTimeout(3000);
         verify(connection).setReadTimeout(3000);
@@ -107,6 +107,6 @@ public class HttpConditionTest extends UnitTestSupport {
         testling.setHttpResponseCode(httpResponseCode);
         testling.setTimeout(timeout);
 
-        Assert.assertFalse(testling.isSatisfied(context));
+        Assertions.assertFalse(testling.isSatisfied(context));
     }
 }

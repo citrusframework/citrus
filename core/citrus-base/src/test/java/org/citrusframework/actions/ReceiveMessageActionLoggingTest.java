@@ -31,7 +31,7 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.SelectiveConsumer;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

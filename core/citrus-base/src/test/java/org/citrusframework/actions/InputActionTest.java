@@ -20,9 +20,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import org.citrusframework.base.UnitTestSupport;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -44,7 +44,7 @@ public class InputActionTest extends UnitTestSupport {
 
         input.execute(context);
 
-        Assert.assertEquals(context.getVariable("userinput"), "yes");
+        Assertions.assertEquals("yes", context.getVariable("userinput"));
 
     }
 
@@ -61,7 +61,7 @@ public class InputActionTest extends UnitTestSupport {
 
 		input.execute(context);
 
-        Assert.assertEquals(context.getVariable("userinput"), "yes");
+        Assertions.assertEquals("yes", context.getVariable("userinput"));
 
 	}
 
@@ -80,7 +80,7 @@ public class InputActionTest extends UnitTestSupport {
 
         input.execute(context);
 
-        Assert.assertEquals(context.getVariable("userinput"), "no");
+        Assertions.assertEquals("no", context.getVariable("userinput"));
 
     }
 }

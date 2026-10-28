@@ -26,18 +26,18 @@ import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageQueue;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AskQuestionIT extends UnitTestSupport implements TestActionSupport {
 
     private DefaultTestCaseRunner runner;
     private DirectEndpoint orders;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         runner = new DefaultTestCaseRunner(context);
 
@@ -68,7 +68,7 @@ public class AskQuestionIT extends UnitTestSupport implements TestActionSupport 
         runner.run(receive(orders)
                 .message(new DefaultMessage(lookup)));
 
-        assertEquals(context.getVariable("orderIdCopy"), "ORD-12345");
+        assertEquals("ORD-12345", context.getVariable("orderIdCopy"));
     }
 
     static Question<String> theOrderId() {

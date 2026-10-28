@@ -23,9 +23,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.SelectiveConsumer;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -88,11 +88,11 @@ public class ReceiveTimeoutActionTest extends UnitTestSupport {
         try {
             receiveTimeout.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Message timeout validation failed! Received message while waiting for timeout on destination");
+            Assertions.assertEquals("Message timeout validation failed! Received message while waiting for timeout on destination", e.getMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because action did receive a message");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " because action did receive a message");
     }
 
     @Test

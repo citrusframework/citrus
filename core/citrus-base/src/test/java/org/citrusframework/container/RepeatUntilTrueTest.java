@@ -18,20 +18,24 @@ package org.citrusframework.container;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.base.UnitTestSupport;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RepeatUntilTrueTest extends UnitTestSupport {
 
     private TestAction action = Mockito.mock(TestAction.class);
 
-    @Test(dataProvider = "expressionProvider")
+    @ParameterizedTest
+    @MethodSource("expressionProvider")
     public void testRepeat(String expression) {
         reset(action);
 
@@ -42,13 +46,12 @@ public class RepeatUntilTrueTest extends UnitTestSupport {
                 .build();
         repeatUntilTrue.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "4");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("4", context.getVariable("${i}"));
 
         verify(action, times(4)).execute(context);
     }
 
-    @DataProvider
     public Object[][] expressionProvider() {
         return new Object[][] {
                 new Object[] {"i = 5"},
@@ -67,8 +70,8 @@ public class RepeatUntilTrueTest extends UnitTestSupport {
                 .build();
         repeatUntilTrue.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "1");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("1", context.getVariable("${i}"));
 
         verify(action).execute(context);
     }
@@ -84,8 +87,8 @@ public class RepeatUntilTrueTest extends UnitTestSupport {
                 .build();
         repeatUntilTrue.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "4");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("4", context.getVariable("${i}"));
 
         verify(action, times(4)).execute(context);
     }
@@ -101,8 +104,8 @@ public class RepeatUntilTrueTest extends UnitTestSupport {
                 .build();
         repeatUntilTrue.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "5");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("5", context.getVariable("${i}"));
 
         verify(action, times(5)).execute(context);
     }

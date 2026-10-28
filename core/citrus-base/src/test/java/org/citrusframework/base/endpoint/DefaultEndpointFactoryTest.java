@@ -28,9 +28,9 @@ import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -50,7 +50,7 @@ public class DefaultEndpointFactoryTest {
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("myEndpoint", context);
 
-        Assert.assertNotNull(endpoint);
+        Assertions.assertNotNull(endpoint);
     }
 
     @Test
@@ -66,8 +66,8 @@ public class DefaultEndpointFactoryTest {
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("custom:custom.queue", context);
 
-        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
-        Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "custom.queue");
+        Assertions.assertEquals(DirectEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals("custom.queue", ((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName());
     }
 
     @Test
@@ -83,8 +83,8 @@ public class DefaultEndpointFactoryTest {
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("custom:custom.queue?endpointName=foo", context);
 
-        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
-        Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "custom.queue");
+        Assertions.assertEquals(DirectEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals("custom.queue", ((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName());
     }
 
     @Test
@@ -100,8 +100,8 @@ public class DefaultEndpointFactoryTest {
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("custom?queueName=foo:bar", context);
 
-        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
-        Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "foo:bar");
+        Assertions.assertEquals(DirectEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals("foo:bar", ((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName());
     }
 
     @Test
@@ -117,8 +117,8 @@ public class DefaultEndpointFactoryTest {
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("jms:custom.queue", context);
 
-        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
-        Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "custom.queue");
+        Assertions.assertEquals(DirectEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals("custom.queue", ((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName());
     }
 
     @Test
@@ -131,9 +131,9 @@ public class DefaultEndpointFactoryTest {
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         try {
             factory.create("unknown:unknown", context);
-            Assert.fail("Missing exception due to unknown endpoint component");
+            Assertions.fail("Missing exception due to unknown endpoint component");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Unable to create endpoint component"));
+            Assertions.assertTrue(e.getMessage().startsWith("Unable to create endpoint component"));
         }
     }
 
@@ -146,19 +146,19 @@ public class DefaultEndpointFactoryTest {
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         try {
             factory.create("jms:", context);
-            Assert.fail("Missing exception due to invalid endpoint uri");
+            Assertions.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Invalid endpoint uri"));
+            Assertions.assertTrue(e.getMessage().startsWith("Invalid endpoint uri"));
         }
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 2L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
+        Assertions.assertEquals(2L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
     }
 }

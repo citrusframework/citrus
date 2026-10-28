@@ -18,20 +18,24 @@ package org.citrusframework.container;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.base.UnitTestSupport;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class IterateTest extends UnitTestSupport {
 
     private TestAction action = Mockito.mock(TestAction.class);
 
-    @Test(dataProvider = "expressionProvider")
+    @ParameterizedTest
+    @MethodSource("expressionProvider")
     public void testIteration(String expression) {
         reset(action);
 
@@ -42,13 +46,12 @@ public class IterateTest extends UnitTestSupport {
                 .build();
         iterate.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "5");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("5", context.getVariable("${i}"));
 
         verify(action, times(5)).execute(context);
     }
 
-    @DataProvider
     public Object[][] expressionProvider() {
         return new Object[][] {
             new Object[] {"i lt= 5"},
@@ -68,8 +71,8 @@ public class IterateTest extends UnitTestSupport {
                 .build();
         iterate.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "9");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("9", context.getVariable("${i}"));
 
         verify(action, times(5)).execute(context);
     }
@@ -87,8 +90,8 @@ public class IterateTest extends UnitTestSupport {
                 .build();
         iterate.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "10");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("10", context.getVariable("${i}"));
 
         verify(action, times(5)).execute(context);
     }
@@ -106,7 +109,7 @@ public class IterateTest extends UnitTestSupport {
                 .build();
         iterate.execute(context);
 
-        Assert.assertNull(context.getVariables().get("i"));
+        Assertions.assertNull(context.getVariables().get("i"));
     }
 
     @Test
@@ -127,8 +130,8 @@ public class IterateTest extends UnitTestSupport {
                 .build();
         iterate.execute(context);
 
-        Assert.assertNotNull(context.getVariables().get("i"));
-        Assert.assertEquals(context.getVariable("${i}"), "4");
+        Assertions.assertNotNull(context.getVariables().get("i"));
+        Assertions.assertEquals("4", context.getVariable("${i}"));
 
         verify(action, times(4)).execute(context);
     }
@@ -144,8 +147,8 @@ public class IterateTest extends UnitTestSupport {
                 .build();
         iterate.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "5");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("5", context.getVariable("${i}"));
 
         verify(action, times(5)).execute(context);
     }
@@ -161,8 +164,8 @@ public class IterateTest extends UnitTestSupport {
                 .build();
         iterate.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "5");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("5", context.getVariable("${i}"));
 
         verify(action, times(5)).execute(context);
     }

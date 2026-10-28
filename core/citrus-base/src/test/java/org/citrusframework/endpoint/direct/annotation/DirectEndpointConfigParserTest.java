@@ -27,16 +27,20 @@ import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.spi.ReferenceResolver;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class DirectEndpointConfigParserTest {
 
     @CitrusEndpoint
@@ -66,16 +70,11 @@ public class DirectEndpointConfigParserTest {
 
     private TestContext context = new TestContext();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-
         when(referenceResolver.resolve("myQueue", MessageQueue.class)).thenReturn(myQueue);
         when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
 
-    @BeforeMethod
-    public void setMocks() {
         context.setEndpointFactory(new DefaultEndpointFactory());
         context.setReferenceResolver(referenceResolver);
     }
@@ -85,34 +84,34 @@ public class DirectEndpointConfigParserTest {
         CitrusEndpointAnnotations.injectEndpoints(this, context);
 
         // 1st message receiver
-        Assert.assertEquals(directEndpoint1.getEndpointConfiguration().getQueueName(), "testQueue");
-        Assert.assertNull(directEndpoint1.getEndpointConfiguration().getQueue());
-        Assert.assertEquals(directEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("testQueue", directEndpoint1.getEndpointConfiguration().getQueueName());
+        Assertions.assertNull(directEndpoint1.getEndpointConfiguration().getQueue());
+        Assertions.assertEquals(5000L, directEndpoint1.getEndpointConfiguration().getTimeout());
 
         // 2nd message receiver
-        Assert.assertNull(directEndpoint2.getEndpointConfiguration().getQueueName());
-        Assert.assertNotNull(directEndpoint2.getEndpointConfiguration().getQueue());
-        Assert.assertEquals(directEndpoint2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertNull(directEndpoint2.getEndpointConfiguration().getQueueName());
+        Assertions.assertNotNull(directEndpoint2.getEndpointConfiguration().getQueue());
+        Assertions.assertEquals(10000L, directEndpoint2.getEndpointConfiguration().getTimeout());
 
         // 3rd message receiver
-        Assert.assertNull(directEndpoint3.getEndpointConfiguration().getQueueName());
-        Assert.assertNull(directEndpoint3.getEndpointConfiguration().getQueue());
+        Assertions.assertNull(directEndpoint3.getEndpointConfiguration().getQueueName());
+        Assertions.assertNull(directEndpoint3.getEndpointConfiguration().getQueue());
 
         // 4th message receiver
-        Assert.assertNotNull(directEndpoint4.getActor());
-        Assert.assertEquals(directEndpoint4.getActor(), testActor);
+        Assertions.assertNotNull(directEndpoint4.getActor());
+        Assertions.assertEquals(testActor, directEndpoint4.getActor());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 2L);
-        Assert.assertNotNull(validators.get("direct.async"));
-        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assertions.assertEquals(2L, validators.size());
+        Assertions.assertNotNull(validators.get("direct.async"));
+        Assertions.assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("direct.async").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("direct.async").isPresent());
     }
 }

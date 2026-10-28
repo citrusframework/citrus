@@ -46,17 +46,19 @@ import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class SendMessageActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
@@ -69,9 +71,6 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.openMocks(this);
-        when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
-
         TestContextFactory factory = super.createTestContextFactory();
         factory.getMessageValidatorRegistry().addMessageValidator("validator", validator);
 
@@ -85,9 +84,9 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "Foo");
-            Assert.assertNotNull(message.getHeader("operation"));
-            Assert.assertEquals(message.getHeader("operation"), "foo");
+            Assertions.assertEquals("Foo", message.getPayload(String.class));
+            Assertions.assertNotNull(message.getHeader("operation"));
+            Assertions.assertEquals("foo", message.getHeader("operation"));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
@@ -96,19 +95,19 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                             .header("additional", "additionalValue"));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "Foo");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "additionalValue");
+        Assertions.assertEquals("Foo", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals("foo", messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals("additionalValue", messageBuilder.buildMessageHeaders(context).get("additional"));
 
     }
 
@@ -119,9 +118,9 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(Integer.class), Integer.valueOf(10));
-            Assert.assertNotNull(message.getHeader("operation"));
-            Assert.assertEquals(message.getHeader("operation"), "foo");
+            Assertions.assertEquals(Integer.valueOf(10), message.getPayload(Integer.class));
+            Assertions.assertNotNull(message.getHeader("operation"));
+            Assertions.assertEquals("foo", message.getHeader("operation"));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         final Message message = new DefaultMessage(10).setHeader("operation", "foo");
@@ -130,26 +129,26 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .message(message));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), message.getPayload());
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
-        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
+        Assertions.assertEquals(message.getPayload(), messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(1L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("foo", messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals(message.getHeader(MessageHeaders.ID), messageBuilder.getMessage().getHeader(MessageHeaders.ID));
+        Assertions.assertEquals("foo", messageBuilder.getMessage().getHeader("operation"));
 
         final Message constructed = messageBuilder.build(new TestContext(), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(constructed.getHeaders().size(), message.getHeaders().size() + 1);
-        Assert.assertEquals(constructed.getHeader("operation"), "foo");
-        Assert.assertNotEquals(constructed.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals(message.getHeaders().size() + 1, constructed.getHeaders().size());
+        Assertions.assertEquals("foo", constructed.getHeader("operation"));
+        Assertions.assertNotEquals(message.getHeader(MessageHeaders.ID), constructed.getHeader(MessageHeaders.ID));
 
     }
 
@@ -160,11 +159,11 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(Integer.class), Integer.valueOf(10));
-            Assert.assertNotNull(message.getHeader("operation"));
-            Assert.assertEquals(message.getHeader("operation"), "foo");
-            Assert.assertNotNull(message.getHeader("additional"));
-            Assert.assertEquals(message.getHeader("additional"), "new");
+            Assertions.assertEquals(Integer.valueOf(10), message.getPayload(Integer.class));
+            Assertions.assertNotNull(message.getHeader("operation"));
+            Assertions.assertEquals("foo", message.getHeader("operation"));
+            Assertions.assertNotNull(message.getHeader("additional"));
+            Assertions.assertEquals("new", message.getHeader("additional"));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         final Message message = new DefaultMessage(10).setHeader("operation", "foo");
@@ -174,27 +173,27 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .header("additional", "new"));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), 10);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 2L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "new");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
-        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
+        Assertions.assertEquals(10, messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(2L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("new", messageBuilder.buildMessageHeaders(context).get("additional"));
+        Assertions.assertEquals("foo", messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals(message.getHeader(MessageHeaders.ID), messageBuilder.getMessage().getHeader(MessageHeaders.ID));
+        Assertions.assertEquals("foo", messageBuilder.getMessage().getHeader("operation"));
 
         final Message constructed = messageBuilder.build(new TestContext(), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(constructed.getHeaders().size(), message.getHeaders().size() + 2);
-        Assert.assertEquals(constructed.getHeader("operation"), "foo");
-        Assert.assertEquals(constructed.getHeader("additional"), "new");
+        Assertions.assertEquals(message.getHeaders().size() + 2, constructed.getHeaders().size());
+        Assertions.assertEquals("foo", constructed.getHeader("operation"));
+        Assertions.assertEquals("new", constructed.getHeader("additional"));
 
     }
 
@@ -207,7 +206,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+            Assertions.assertEquals("<TestRequest><Message>Hello Citrus!</Message></TestRequest>", message.getPayload(String.class));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -223,18 +222,18 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .body(payloadBuilder));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(DefaultMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assertions.assertEquals("<TestRequest><Message>Hello Citrus!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
 
     }
 
@@ -245,7 +244,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -255,18 +254,18 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(DefaultMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
 
     }
 
@@ -277,7 +276,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -289,18 +288,18 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .body(resource));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(DefaultMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
 
     }
 
@@ -311,7 +310,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -329,12 +328,12 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
-        Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
+        Assertions.assertEquals("send", action.getName());
+        Assertions.assertEquals("fooMessageEndpoint", action.getEndpointUri());
 
     }
 
@@ -345,11 +344,11 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertNotNull(message.getHeader("operation"));
-            Assert.assertEquals(message.getHeader("operation"), "foo");
-            Assert.assertNotNull(message.getHeader("language"));
-            Assert.assertEquals(message.getHeader("language"), "eng");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertNotNull(message.getHeader("operation"));
+            Assertions.assertEquals("foo", message.getHeader("operation"));
+            Assertions.assertNotNull(message.getHeader("language"));
+            Assertions.assertEquals("eng", message.getHeader("language"));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -362,21 +361,21 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .header("language", "eng"));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(DefaultMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 3L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("some"), "value");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("language"), "eng");
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(3L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("value", messageBuilder.buildMessageHeaders(context).get("some"));
+        Assertions.assertEquals("foo", messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals("eng", messageBuilder.buildMessageHeaders(context).get("language"));
 
     }
 
@@ -387,10 +386,10 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertNotNull(message.getHeaderData());
-            Assert.assertEquals(message.getHeaderData().size(), 1L);
-            Assert.assertEquals(message.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertNotNull(message.getHeaderData());
+            Assertions.assertEquals(1L, message.getHeaderData().size());
+            Assertions.assertEquals("<Header><Name>operation</Name><Value>foo</Value></Header>", message.getHeaderData().get(0));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -405,33 +404,33 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>"));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(2, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(1).getClass());
 
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(DefaultMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(1L, messageBuilder.buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo</Value></Header>", messageBuilder.buildMessageHeaderData(context).get(0));
 
         action = ((SendMessageAction)test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final StaticMessageBuilder staticMessageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(staticMessageBuilder.getMessage().getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(staticMessageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", staticMessageBuilder.getMessage().getPayload(String.class));
+        Assertions.assertEquals(0L, staticMessageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(1L, staticMessageBuilder.buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo</Value></Header>", staticMessageBuilder.buildMessageHeaderData(context).get(0));
 
     }
 
@@ -442,11 +441,11 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertNotNull(message.getHeaderData());
-            Assert.assertEquals(message.getHeaderData().size(), 2L);
-            Assert.assertEquals(message.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
-            Assert.assertEquals(message.getHeaderData().get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertNotNull(message.getHeaderData());
+            Assertions.assertEquals(2L, message.getHeaderData().size());
+            Assertions.assertEquals("<Header><Name>operation</Name><Value>foo1</Value></Header>", message.getHeaderData().get(0));
+            Assertions.assertEquals("<Header><Name>operation</Name><Value>foo2</Value></Header>", message.getHeaderData().get(1));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -463,35 +462,35 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                     .header("<Header><Name>operation</Name><Value>foo2</Value></Header>"));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(2, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(1).getClass());
 
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(DefaultMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 2L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(2L, messageBuilder.buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo1</Value></Header>", messageBuilder.buildMessageHeaderData(context).get(0));
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo2</Value></Header>", messageBuilder.buildMessageHeaderData(context).get(1));
 
         action = ((SendMessageAction)test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final StaticMessageBuilder staticMessageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(staticMessageBuilder.getMessage().getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(staticMessageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).size(), 2L);
-        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
-        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", staticMessageBuilder.getMessage().getPayload(String.class));
+        Assertions.assertEquals(0L, staticMessageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(2L, staticMessageBuilder.buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo1</Value></Header>", staticMessageBuilder.buildMessageHeaderData(context).get(0));
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo2</Value></Header>", staticMessageBuilder.buildMessageHeaderData(context).get(1));
 
     }
 
@@ -502,17 +501,17 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertNotNull(message.getHeaderData());
-            Assert.assertEquals(message.getHeaderData().size(), 1L);
-            Assert.assertEquals(message.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertNotNull(message.getHeaderData());
+            Assertions.assertEquals(1L, message.getHeaderData().size());
+            Assertions.assertEquals("<Header><Name>operation</Name><Value>foo1</Value></Header>", message.getHeaderData().get(0));
             return null;
         }).doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertNotNull(message.getHeaderData());
-            Assert.assertEquals(message.getHeaderData().size(), 1L);
-            Assert.assertEquals(message.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertNotNull(message.getHeaderData());
+            Assertions.assertEquals(1L, message.getHeaderData().size());
+            Assertions.assertEquals("<Header><Name>operation</Name><Value>foo2</Value></Header>", message.getHeaderData().get(0));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -530,33 +529,33 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .header(resource));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(2, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(1).getClass());
 
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(DefaultMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(1L, messageBuilder.buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo1</Value></Header>", messageBuilder.buildMessageHeaderData(context).get(0));
 
         action = ((SendMessageAction)test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         final StaticMessageBuilder staticMessageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(staticMessageBuilder.getMessage().getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(staticMessageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", staticMessageBuilder.getMessage().getPayload(String.class));
+        Assertions.assertEquals(0L, staticMessageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(1L, staticMessageBuilder.buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo2</Value></Header>", staticMessageBuilder.buildMessageHeaderData(context).get(0));
 
     }
 
@@ -569,7 +568,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>");
+            Assertions.assertEquals("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>", message.getPayload(String.class));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -579,19 +578,19 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                         .process(extractor));
 
-        Assert.assertNotNull(context.getVariable("messageId"));
+        Assertions.assertNotNull(context.getVariable("messageId"));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 1);
-        Assert.assertEquals(action.getVariableExtractors().get(0), extractor);
+        Assertions.assertEquals(1, action.getVariableExtractors().size());
+        Assertions.assertEquals(extractor, action.getVariableExtractors().get(0));
 
     }
 
@@ -602,7 +601,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>");
+            Assertions.assertEquals("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>", message.getPayload(String.class));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -617,24 +616,24 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                                 .header("operation", "operationHeader")
                                 .header("requestId", "id")));
 
-        Assert.assertNotNull(context.getVariable("operationHeader"));
-        Assert.assertNotNull(context.getVariable("id"));
-        Assert.assertEquals(context.getVariable("operationHeader"), "sayHello");
-        Assert.assertEquals(context.getVariable("id"), "123456");
+        Assertions.assertNotNull(context.getVariable("operationHeader"));
+        Assertions.assertNotNull(context.getVariable("id"));
+        Assertions.assertEquals("sayHello", context.getVariable("operationHeader"));
+        Assertions.assertEquals("123456", context.getVariable("id"));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 1);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
-        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
-        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
+        Assertions.assertEquals(1, action.getVariableExtractors().size());
+        Assertions.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        Assertions.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
+        Assertions.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
 
     }
 
@@ -648,8 +647,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class).replaceAll("\\s", ""),
-                    "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
+            Assertions.assertEquals("{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}",
+                    message.getPayload(String.class).replaceAll("\\s", ""));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -661,14 +660,14 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .dictionary(dictionary));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getDataDictionary(), dictionary);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(dictionary, action.getDataDictionary());
     }
 
     @Test
@@ -681,8 +680,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class).replaceAll("\\s", ""),
-                    "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
+            Assertions.assertEquals("{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}",
+                    message.getPayload(String.class).replaceAll("\\s", ""));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -701,13 +700,13 @@ public class SendMessageActionBuilderTest extends UnitTestSupport implements Tes
                         .dictionary("customDictionary"));
 
         final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, test.getActions().get(0).getClass());
 
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assertions.assertEquals("send", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getDataDictionary(), dictionary);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(dictionary, action.getDataDictionary());
     }
 }

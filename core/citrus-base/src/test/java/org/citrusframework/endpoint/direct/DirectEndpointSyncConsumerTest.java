@@ -29,11 +29,13 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageQueue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
@@ -52,7 +54,7 @@ public class DirectEndpointSyncConsumerTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupMocks() {
         context = new TestContext();
     }
@@ -73,14 +75,14 @@ public class DirectEndpointSyncConsumerTest {
         DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
-        Assert.assertEquals(receivedMessage.getHeader(DirectMessageHeaders.REPLY_QUEUE), message.getHeader(DirectMessageHeaders.REPLY_QUEUE));
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals(message.getHeader(DirectMessageHeaders.REPLY_QUEUE), receivedMessage.getHeader(DirectMessageHeaders.REPLY_QUEUE));
 
         MessageQueue savedReplyQueue = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertNotNull(savedReplyQueue);
-        Assert.assertEquals(savedReplyQueue, replyQueue);
+        Assertions.assertNotNull(savedReplyQueue);
+        Assertions.assertEquals(replyQueue, savedReplyQueue);
     }
 
     @Test
@@ -103,14 +105,14 @@ public class DirectEndpointSyncConsumerTest {
         DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
-        Assert.assertEquals(receivedMessage.getHeader(DirectMessageHeaders.REPLY_QUEUE), message.getHeader(DirectMessageHeaders.REPLY_QUEUE));
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals(message.getHeader(DirectMessageHeaders.REPLY_QUEUE), receivedMessage.getHeader(DirectMessageHeaders.REPLY_QUEUE));
 
         MessageQueue savedReplyQueue = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertNotNull(savedReplyQueue);
-        Assert.assertEquals(savedReplyQueue, replyQueue);
+        Assertions.assertNotNull(savedReplyQueue);
+        Assertions.assertEquals(replyQueue, savedReplyQueue);
     }
 
     @Test
@@ -131,14 +133,14 @@ public class DirectEndpointSyncConsumerTest {
         DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
-        Assert.assertEquals(receivedMessage.getHeader(DirectMessageHeaders.REPLY_QUEUE), "replyQueue");
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals("replyQueue", receivedMessage.getHeader(DirectMessageHeaders.REPLY_QUEUE));
 
         MessageQueue savedReplyQueue = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertNotNull(savedReplyQueue);
-        Assert.assertEquals(savedReplyQueue, replyQueue);
+        Assertions.assertNotNull(savedReplyQueue);
+        Assertions.assertEquals(replyQueue, savedReplyQueue);
     }
 
     @Test
@@ -159,13 +161,13 @@ public class DirectEndpointSyncConsumerTest {
         DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
 
         MessageQueue savedReplyQueue = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertNotNull(savedReplyQueue);
-        Assert.assertEquals(savedReplyQueue, replyQueue);
+        Assertions.assertNotNull(savedReplyQueue);
+        Assertions.assertEquals(replyQueue, savedReplyQueue);
     }
 
     @Test
@@ -192,17 +194,17 @@ public class DirectEndpointSyncConsumerTest {
         DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
 
-        Assert.assertNull(channelSyncConsumer.getCorrelationManager().find("", endpoint.getEndpointConfiguration().getTimeout()));
-        Assert.assertNull(channelSyncConsumer.getCorrelationManager().find(MessageHeaders.ID + " = 'totally_wrong'",
+        Assertions.assertNull(channelSyncConsumer.getCorrelationManager().find("", endpoint.getEndpointConfiguration().getTimeout()));
+        Assertions.assertNull(channelSyncConsumer.getCorrelationManager().find(MessageHeaders.ID + " = 'totally_wrong'",
                 endpoint.getEndpointConfiguration().getTimeout()));
 
         MessageQueue savedReplyQueue = channelSyncConsumer.getCorrelationManager().find(MessageHeaders.ID + " = '123456789'",
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertNotNull(savedReplyQueue);
-        Assert.assertEquals(savedReplyQueue, replyQueue);
+        Assertions.assertNotNull(savedReplyQueue);
+        Assertions.assertEquals(replyQueue, savedReplyQueue);
     }
 
     @Test
@@ -218,11 +220,11 @@ public class DirectEndpointSyncConsumerTest {
             DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.receive(context);
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
+            Assertions.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
             return;
         }
 
-        Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
+        Assertions.fail("Missing " + ActionTimeoutException.class + " because no message was received");
     }
 
     @Test
@@ -243,11 +245,11 @@ public class DirectEndpointSyncConsumerTest {
         DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
 
         MessageQueue savedReplyQueue = channelSyncConsumer.getCorrelationManager().find("", endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertNull(savedReplyQueue);
+        Assertions.assertNull(savedReplyQueue);
     }
 
     @Test
@@ -284,7 +286,7 @@ public class DirectEndpointSyncConsumerTest {
         reset(replyQueue);
 
         doAnswer(invocation -> {
-            Assert.assertEquals(((DefaultMessage)invocation.getArguments()[0]).getPayload(), message.getPayload());
+            Assertions.assertEquals(message.getPayload(), ((DefaultMessage)invocation.getArguments()[0]).getPayload());
             return null;
         }).when(replyQueue).send(any(Message.class));
 
@@ -307,11 +309,11 @@ public class DirectEndpointSyncConsumerTest {
             DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Failed to get correlation key for"), e.getMessage());
+            Assertions.assertTrue(e.getMessage().startsWith("Failed to get correlation key for"), e.getMessage());
             return;
         }
 
-        Assert.fail("Missing " + IllegalArgumentException.class + " because of missing correlation key");
+        Assertions.fail("Missing " + IllegalArgumentException.class + " because of missing correlation key");
     }
 
     @Test
@@ -334,14 +336,14 @@ public class DirectEndpointSyncConsumerTest {
             DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Failed to get correlation key"));
+            Assertions.assertTrue(e.getMessage().startsWith("Failed to get correlation key"));
             return;
         }
 
-        Assert.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
+        Assertions.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find reply channel for message correlation key: 123456789")
+    @Test
     public void testNoReplyDestinationFound() {
         DirectSyncEndpoint endpoint = new DirectSyncEndpoint();
 
@@ -358,14 +360,20 @@ public class DirectEndpointSyncConsumerTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
-        channelSyncConsumer.send(message, context);
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> {
+            channelSyncConsumer.send(message, context);
+        });
+        assertThat(thrown).hasMessage("Failed to find reply channel for message correlation key: 123456789");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Can not send empty message")
+    @Test
     public void testSendEmptyMessage() {
         DirectSyncEndpoint endpoint = new DirectSyncEndpoint();
         DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
-        channelSyncConsumer.send(null, context);
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> {
+            channelSyncConsumer.send(null, context);
+        });
+        assertThat(thrown).hasMessage("Can not send empty message");
     }
 
     @Test
@@ -383,11 +391,11 @@ public class DirectEndpointSyncConsumerTest {
             channelSyncConsumer.saveReplyMessageQueue(new DefaultMessage("").setHeader(DirectMessageHeaders.REPLY_QUEUE, replyQueue), context);
             channelSyncConsumer.send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getClass(), CitrusRuntimeException.class);
-            Assert.assertEquals(e.getLocalizedMessage(), "Internal error!");
+            Assertions.assertEquals(CitrusRuntimeException.class, e.getClass());
+            Assertions.assertEquals("Internal error!", e.getLocalizedMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of message channel template returned false");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " because of message channel template returned false");
     }
 }

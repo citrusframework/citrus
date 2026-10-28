@@ -31,9 +31,9 @@ import org.citrusframework.message.Message;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.ValidationStatus;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MessageStoreTest implements TestActionSupport {
 
@@ -44,7 +44,7 @@ public class MessageStoreTest implements TestActionSupport {
     private TestContext context;
     private TestCaseRunner t;
 
-    @BeforeMethod
+    @BeforeEach
     public void createTestContext() {
         context = TestContextFactory.newInstance().getObject();
         t = TestCaseRunnerFactory.createRunner(context);
@@ -52,7 +52,7 @@ public class MessageStoreTest implements TestActionSupport {
         context.getMessageValidatorRegistry().addMessageValidator("simple", new MessageValidator<>() {
             @Override
             public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
-                Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+                Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
                 validationContexts.forEach(ctx -> ctx.updateStatus(ValidationStatus.PASSED));
             }
 
@@ -71,8 +71,8 @@ public class MessageStoreTest implements TestActionSupport {
                 .name("request")
                 .body("Citrus rocks!"));
 
-        Assert.assertNotNull(context.getMessageStore().getMessage("request"));
-        Assert.assertEquals(context.getMessageStore().getMessage("request").getPayload(String.class), "Citrus rocks!");
+        Assertions.assertNotNull(context.getMessageStore().getMessage("request"));
+        Assertions.assertEquals("Citrus rocks!", context.getMessageStore().getMessage("request").getPayload(String.class));
 
         t.run(receive()
                 .endpoint(directEndpoint)
@@ -80,8 +80,8 @@ public class MessageStoreTest implements TestActionSupport {
                 .name("response")
                 .body("Citrus rocks!"));
 
-        Assert.assertNotNull(context.getMessageStore().getMessage("response"));
-        Assert.assertEquals(context.getMessageStore().getMessage("response").getPayload(String.class), "Citrus rocks!");
+        Assertions.assertNotNull(context.getMessageStore().getMessage("response"));
+        Assertions.assertEquals("Citrus rocks!", context.getMessageStore().getMessage("response").getPayload(String.class));
     }
 
     @Test
@@ -92,8 +92,8 @@ public class MessageStoreTest implements TestActionSupport {
                 .name("request")
                 .body("Citrus is awesome!"));
 
-        Assert.assertNotNull(context.getMessageStore().getMessage("request"));
-        Assert.assertEquals(context.getMessageStore().getMessage("request").getPayload(String.class), "Citrus is awesome!");
+        Assertions.assertNotNull(context.getMessageStore().getMessage("request"));
+        Assertions.assertEquals("Citrus is awesome!", context.getMessageStore().getMessage("request").getPayload(String.class));
 
         t.run(receive()
                 .endpoint(directEndpoint)
@@ -101,10 +101,10 @@ public class MessageStoreTest implements TestActionSupport {
                 .name("response")
                 .validate((message, context) -> {
                     Message request = context.getMessageStore().getMessage("request");
-                    Assert.assertEquals(message.getPayload(), request.getPayload());
+                    Assertions.assertEquals(request.getPayload(), message.getPayload());
                 }));
 
-        Assert.assertNotNull(context.getMessageStore().getMessage("response"));
-        Assert.assertEquals(context.getMessageStore().getMessage("response").getPayload(String.class), "Citrus is awesome!");
+        Assertions.assertNotNull(context.getMessageStore().getMessage("response"));
+        Assertions.assertEquals("Citrus is awesome!", context.getMessageStore().getMessage("response").getPayload(String.class));
     }
 }

@@ -26,16 +26,20 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.ValidationUtils;
 import org.citrusframework.validation.matcher.ValidationMatcher;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.citrusframework.validation.ValidationUtils.buildValueToBeInCollectionErrorMessage;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.5
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ValidationUtilsTest extends UnitTestSupport {
 
     @Override
@@ -45,19 +49,26 @@ public class ValidationUtilsTest extends UnitTestSupport {
         return factory;
     }
 
-    @Test(dataProvider = "testData")
+    @ParameterizedTest
+    @MethodSource("testData")
     public void testValidateValues(Object actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
-    @Test(dataProvider = "testDataFailed", expectedExceptions = ValidationException.class)
+    @ParameterizedTest
+    @MethodSource("testDataFailed")
     public void testValidateValuesFailure(Object actualValue, Object expectedValue, String path) {
-        ValidationUtils.validateValues(actualValue, expectedValue, path, context);
+        assertThrows(ValidationException.class, () -> {
+            ValidationUtils.validateValues(actualValue, expectedValue, path, context);
+        });
     }
 
-    @Test(dataProvider = "testDataTypeFailed", expectedExceptions = ValidationException.class)
+    @ParameterizedTest
+    @MethodSource("testDataTypeFailed")
     public void testValidateValuesTypeFailure(String actualValue, Object expectedValue, String path) {
-        ValidationUtils.validateValues(actualValue, expectedValue, path, context);
+        assertThrows(ValidationException.class, () -> {
+            ValidationUtils.validateValues(actualValue, expectedValue, path, context);
+        });
     }
 
     @Test
@@ -68,10 +79,9 @@ public class ValidationUtilsTest extends UnitTestSupport {
                 List.of("dolor", "sit", "amet")
         );
         String expected = "This is not right, expected 'lorem' to be in '[dolor, sit, amet]'";
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
-    @DataProvider
     public Object[][] testData() {
         return new Object[][] {
             new Object[] {"foo", "foo", "stringCompare"},
@@ -95,7 +105,6 @@ public class ValidationUtilsTest extends UnitTestSupport {
         };
     }
 
-    @DataProvider
     public Object[][] testDataFailed() {
         return new Object[][] {
                 new Object[] {"foo", "bar", "stringCompare"},
@@ -122,7 +131,6 @@ public class ValidationUtilsTest extends UnitTestSupport {
         };
     }
 
-    @DataProvider
     public Object[][] testDataTypeFailed() {
         return new Object[][] {
                 new Object[] {"foo", 0, "intCompare"},
@@ -134,9 +142,9 @@ public class ValidationUtilsTest extends UnitTestSupport {
         @Override
         public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
             if (controlParameters.get(0).equals("nullValue()")) {
-                Assert.assertNull(value);
+                Assertions.assertNull(value);
             } else if (controlParameters.get(0).equals("notNullValue()")) {
-                Assert.assertNotNull(value);
+                Assertions.assertNotNull(value);
             }
         }
     }

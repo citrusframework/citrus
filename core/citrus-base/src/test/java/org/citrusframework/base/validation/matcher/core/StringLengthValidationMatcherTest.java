@@ -20,7 +20,9 @@ import java.util.Collections;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.7.6
@@ -34,13 +36,17 @@ public class StringLengthValidationMatcherTest extends UnitTestSupport {
         matcher.validate("field", "value", Collections.singletonList("5"), context);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidateError() {
-        matcher.validate("field", "value", Collections.singletonList("4"), context);
+        assertThrows(ValidationException.class, () -> {
+            matcher.validate("field", "value", Collections.singletonList("4"), context);
+        });
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidateInvalidArgument() {
-        matcher.validate("field", "value", Collections.singletonList("foo"), context);
+        assertThrows(ValidationException.class, () -> {
+            matcher.validate("field", "value", Collections.singletonList("foo"), context);
+        });
     }
 }

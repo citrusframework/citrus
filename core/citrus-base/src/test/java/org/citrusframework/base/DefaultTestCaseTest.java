@@ -44,28 +44,29 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.base.functions.core.CurrentDateFunction;
 import org.citrusframework.report.TestListener;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonMap;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.TestResult.RESULT.FAILURE;
 import static org.citrusframework.TestResult.success;
 import static org.citrusframework.util.TestUtils.WAIT_THREAD_PREFIX;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertThrows;
 
 public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSupport {
 
     private DefaultTestCase fixture;
 
-    @BeforeMethod
-    void beforeMethodSetup() {
+    @BeforeEach
+    void beforeEach() {
         fixture = new DefaultTestCase();
     }
 
@@ -79,8 +80,8 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         var result = fixture.getTestResult();
         assertNotNull(result);
 
-        assertEquals(result.getCause(), throwableMock);
-        assertEquals(result.getResult(), FAILURE.name());
+        assertEquals(throwableMock, result.getCause());
+        assertEquals(FAILURE.name(), result.getResult());
         assertNotNull(result.getDuration());
     }
 
@@ -94,14 +95,14 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         var result = fixture.getTestResult();
         assertNotNull(result);
 
-        assertEquals(result.getCause(), throwableMock);
-        assertEquals(result.getResult(), FAILURE.name());
+        assertEquals(throwableMock, result.getCause());
+        assertEquals(FAILURE.name(), result.getResult());
         assertNotNull(result.getDuration());
     }
 
     @Test
     public void testExecution() {
-        fixture.setName("MyTestCase");
+        fixture.setName("DefaultTestCaseTest");
 
         fixture.addTestAction(new EchoAction.Builder().build());
 
@@ -113,7 +114,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
 
     @Test
     public void testWaitForFinish() {
-        fixture.setName("MyTestCase");
+        fixture.setName("DefaultTestCaseTest");
 
         fixture.addTestAction(new EchoAction.Builder().build());
         fixture.addTestAction(new AbstractAsyncTestAction() {
@@ -136,10 +137,10 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         }
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class, expectedExceptionsMessageRegExp = "Failed to wait for test container in test 'MyTestCase' to finish properly")
+    @Test
     public void testWaitForFinishTimeout() {
         fixture.setTimeout(500L);
-        fixture.setName("MyTestCase");
+        fixture.setName("DefaultTestCaseTest");
 
         fixture.addTestAction(new EchoAction.Builder().build());
         fixture.addTestAction(new AbstractAsyncTestAction() {
@@ -154,12 +155,13 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         });
 
         fixture.execute(context);
-        fixture.finish(context);
+        TestCaseFailedException thrown = assertThrows(TestCaseFailedException.class, () -> fixture.finish(context));
+        assertThat(thrown).hasMessage("Failed to wait for test container in test 'DefaultTestCaseTest' to finish properly");
     }
 
     @Test
     public void testWaitForFinishAsync() {
-        fixture.setName("MyTestCase");
+        fixture.setName("DefaultTestCaseTest");
 
         fixture.addTestAction(new Async.Builder().actions(() -> new AbstractAsyncTestAction() {
             @Override
@@ -178,7 +180,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         // Make sure that waiting thread is completed
         final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
         Optional<Thread> waitingThread = threads.keySet().stream()
-                .filter(t -> t.getName().startsWith(WAIT_THREAD_PREFIX.concat("MyTestCase")))
+                .filter(t -> t.getName().startsWith(WAIT_THREAD_PREFIX.concat("DefaultTestCaseTest")))
                 .filter(Thread::isAlive)
                 .findAny();
 
@@ -313,7 +315,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
 
     @Test
     public void testExecutionWithVariables() {
-        fixture.setName("MyTestCase");
+        fixture.setName("DefaultTestCaseTest");
 
         final Map<String, Object> variables = new LinkedHashMap<>();
         variables.put("name", "Citrus");
@@ -325,14 +327,14 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         fixture.setVariableDefinitions(variables);
 
         fixture.addTestAction(action(context -> {
-            assertEquals(context.getVariables().get(CitrusSettings.getTestNameVariable()), "MyTestCase");
-            assertEquals(context.getVariables().get(CitrusSettings.getTestPackageVariable()), DefaultTestCase.class.getPackage().getName());
-            assertEquals(context.getVariable("${name}"), "Citrus");
-            assertEquals(context.getVariable("${framework}"), "Citrus");
-            assertEquals(context.getVariable("${hello}"), "Hello Citrus!");
-            assertEquals(context.getVariable("${goodbye}"), "Goodbye Citrus!");
-            assertEquals(context.getVariable("${welcome}"), "Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<>(), context) + "!");
-            assertEquals(context.getVariable("${singleQuote}"), "'Citrus'");
+            assertEquals("DefaultTestCaseTest", context.getVariables().get(CitrusSettings.getTestNameVariable()));
+            assertEquals(DefaultTestCase.class.getPackage().getName(), context.getVariables().get(CitrusSettings.getTestPackageVariable()));
+            assertEquals("Citrus", context.getVariable("${name}"));
+            assertEquals("Citrus", context.getVariable("${framework}"));
+            assertEquals("Hello Citrus!", context.getVariable("${hello}"));
+            assertEquals("Goodbye Citrus!", context.getVariable("${goodbye}"));
+            assertEquals("Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<>(), context) + "!", context.getVariable("${welcome}"));
+            assertEquals("'Citrus'", context.getVariable("${singleQuote}"));
         }));
 
         fixture.execute(context);
@@ -341,46 +343,49 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         verifyDurationHasBeenMeasured(fixture.getTestResult());
     }
 
-    @Test(expectedExceptions = {TestCaseFailedException.class})
+    @Test
     public void testUnknownVariable() {
-        fixture.setName("MyTestCase");
+        fixture.setName("DefaultTestCaseTest");
 
         var message = "Hello TestFramework!";
         fixture.setVariableDefinitions(singletonMap("text", message));
 
-        fixture.addTestAction(action(context -> assertEquals(context.getVariable("${unknown}"), message)));
+        fixture.addTestAction(action(context -> assertEquals(message, context.getVariable("${unknown}"))));
 
-        fixture.execute(context);
-        fixture.finish(context);
-
-        verifyDurationHasBeenMeasured(fixture.getTestResult());
+        assertThrows(TestCaseFailedException.class, () -> {
+            fixture.execute(context);
+            fixture.finish(context);
+        });
     }
 
-    @Test(expectedExceptions = {TestCaseFailedException.class}, expectedExceptionsMessageRegExp = "This failed in forked action")
+    @Test
     public void testExceptionInContext() {
-        fixture.setName("MyTestCase");
+        fixture.setName("DefaultTestCaseTest");
 
         fixture.addTestAction(action(context -> context.addException(new CitrusRuntimeException("This failed in forked action"))).build());
 
         fixture.addTestAction(new EchoAction.Builder().message("Everything is fine!").build());
 
-        fixture.execute(context);
-        fixture.finish(context);
+        TestCaseFailedException thrown = assertThrows(TestCaseFailedException.class, () -> {
+            fixture.execute(context);
+            fixture.finish(context);
+        });
+        assertThat(thrown).hasMessage("This failed in forked action");
     }
 
-    @Test(expectedExceptions = {TestCaseFailedException.class})
+    @Test
     public void testExceptionInContextInFinish() {
-        fixture.setName("MyTestCase");
+        fixture.setName("DefaultTestCaseTest");
 
         fixture.addTestAction(action(context -> context.addException(new CitrusRuntimeException("This failed in forked action"))).build());
 
         fixture.execute(context);
-        fixture.finish(context);
+        assertThrows(TestCaseFailedException.class, () -> fixture.finish(context));
     }
 
     @Test
     public void testFinalActions() {
-        fixture.setName("MyTestCase");
+        fixture.setName("DefaultTestCaseTest");
 
         fixture.addTestAction(new EchoAction.Builder().build());
         fixture.addFinalAction(new EchoAction.Builder().build());
@@ -393,7 +398,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
 
     @Test
     public void testThreadLeak() {
-        fixture.setName("ThreadLeakTest");
+        fixture.setName("ThreadLeakDefaultTestCaseTest");
         fixture.addTestAction(new EchoAction.Builder().build());
 
         fixture.execute(context);
@@ -401,7 +406,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
 
         final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
         Optional<Thread> waitingThread = threads.keySet().stream()
-                .filter(t -> t.getName().startsWith(WAIT_THREAD_PREFIX.concat("ThreadLeakTest")))
+                .filter(t -> t.getName().startsWith(WAIT_THREAD_PREFIX.concat("ThreadLeakDefaultTestCaseTest")))
                 .filter(Thread::isAlive)
                 .findAny();
 

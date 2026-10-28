@@ -16,16 +16,18 @@
 
 package org.citrusframework.base.report;
 
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Isolated;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 import uk.org.webcompere.systemstubs.properties.SystemProperties;
-import uk.org.webcompere.systemstubs.testng.SystemStub;
-import uk.org.webcompere.systemstubs.testng.SystemStubsListener;
+import uk.org.webcompere.systemstubs.jupiter.SystemStub;
+import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Listeners(SystemStubsListener.class)
+@Isolated("Replaces the JVM-wide environment variables and system properties")
+@ExtendWith(SystemStubsExtension.class)
 public class TestFlowReporterSettingsTest {
 
     private static final String HISTORY_PROPERTY = "citrus.test.flow.report.history";

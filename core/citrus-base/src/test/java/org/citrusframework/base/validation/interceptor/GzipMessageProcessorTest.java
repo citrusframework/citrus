@@ -31,9 +31,11 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.interceptor.GzipMessageProcessor;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GzipMessageProcessorTest extends UnitTestSupport {
 
@@ -53,7 +55,7 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
                 processor.process(message, context);
 
                 //THEN
-                assertEquals(message.getPayload(), gzipOutputStream);
+                assertEquals(gzipOutputStream, message.getPayload());
             }
         }
     }
@@ -69,11 +71,11 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
         processor.process(message, context);
 
         //THEN
-        assertEquals(message.getType(), MessageType.GZIP.name());
+        assertEquals(MessageType.GZIP.name(), message.getType());
         try (ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
              GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)))) {
             unzipped.write(gzipInputStream.readAllBytes());
-            assertEquals(unzipped.toByteArray(), "foo".getBytes(StandardCharsets.UTF_8));
+            assertArrayEquals("foo".getBytes(StandardCharsets.UTF_8), unzipped.toByteArray());
         }
     }
 
@@ -88,11 +90,11 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
         processor.process(message, context);
 
         //THEN
-        assertEquals(message.getType(), MessageType.GZIP.name());
+        assertEquals(MessageType.GZIP.name(), message.getType());
         try (ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
              GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)))) {
             unzipped.write(gzipInputStream.readAllBytes());
-            assertEquals(unzipped.toByteArray(), "foo".getBytes(StandardCharsets.UTF_8));
+            assertArrayEquals("foo".getBytes(StandardCharsets.UTF_8), unzipped.toByteArray());
         }
     }
 
@@ -107,11 +109,11 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
         processor.process(message, context);
 
         //THEN
-        assertEquals(message.getType(), MessageType.GZIP.name());
+        assertEquals(MessageType.GZIP.name(), message.getType());
         try (ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
              GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)))) {
             unzipped.write(gzipInputStream.readAllBytes());
-            assertEquals(unzipped.toByteArray(), "foo".getBytes(StandardCharsets.UTF_8));
+            assertArrayEquals("foo".getBytes(StandardCharsets.UTF_8), unzipped.toByteArray());
         }
     }
 
@@ -126,15 +128,15 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
         processor.process(message, context);
 
         //THEN
-        assertEquals(message.getType(), MessageType.GZIP.name());
+        assertEquals(MessageType.GZIP.name(), message.getType());
         try (ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
              GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(message.getPayload(byte[].class)))) {
             unzipped.write(gzipInputStream.readAllBytes());
-            assertEquals(unzipped.toByteArray(), FileUtils.copyToByteArray(getTestFile().getInputStream()));
+            assertArrayEquals(FileUtils.copyToByteArray(getTestFile().getInputStream()), unzipped.toByteArray());
         }
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testProcessMessageResourceNotFound() {
 
         //GIVEN
@@ -142,7 +144,7 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
         message.setType(MessageType.PLAINTEXT);
 
         //WHEN
-        processor.process(message, context);
+        assertThrows(CitrusRuntimeException.class, () -> processor.process(message, context));
 
         //THEN should throw exception
     }

@@ -20,15 +20,16 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.base.UnitTestSupport;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
 
+@ExtendWith(MockitoExtension.class)
 public class ApplyTestBehaviorActionTest extends UnitTestSupport {
 
     @Mock
@@ -36,11 +37,6 @@ public class ApplyTestBehaviorActionTest extends UnitTestSupport {
 
     @Mock
     private TestAction mock;
-
-    @BeforeMethod
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void shouldApply() {
@@ -51,8 +47,8 @@ public class ApplyTestBehaviorActionTest extends UnitTestSupport {
         applyBehavior.execute(context);
 
         verify(mock).execute(context);
-        assertEquals(applyBehavior.getExecutedActions().size(), 1);
-        assertSame(applyBehavior.getExecutedActions().get(0), mock);
+        assertEquals(1, applyBehavior.getExecutedActions().size());
+        assertSame(mock, applyBehavior.getExecutedActions().get(0));
     }
 
     private class FooBehavior implements TestBehavior {

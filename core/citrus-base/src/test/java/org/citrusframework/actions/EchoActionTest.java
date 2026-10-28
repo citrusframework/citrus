@@ -18,7 +18,9 @@ package org.citrusframework.actions;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EchoActionTest extends UnitTestSupport {
 
@@ -42,9 +44,9 @@ public class EchoActionTest extends UnitTestSupport {
 		echo.execute(context);
 	}
 
-	@Test(expectedExceptions = {CitrusRuntimeException.class})
+	@Test
 	public void testEchoMessageWithUnknownVariables() {
 		EchoAction echo = new EchoAction.Builder().message("${greeting} Citrus!").build();
-		echo.execute(context);
+		assertThrows(CitrusRuntimeException.class, () -> echo.execute(context));
 	}
 }

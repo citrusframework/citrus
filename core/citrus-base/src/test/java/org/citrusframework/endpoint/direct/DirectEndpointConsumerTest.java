@@ -29,10 +29,10 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.selector.DelegatingMessageSelector;
 import org.citrusframework.message.selector.HeaderMatchingMessageSelector;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -47,7 +47,7 @@ public class DirectEndpointConsumerTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupMocks() {
         context = new TestContext();
     }
@@ -66,8 +66,8 @@ public class DirectEndpointConsumerTest {
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -89,8 +89,8 @@ public class DirectEndpointConsumerTest {
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -108,8 +108,8 @@ public class DirectEndpointConsumerTest {
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -127,8 +127,8 @@ public class DirectEndpointConsumerTest {
 
         Message receivedMessage = endpoint.createConsumer().receive(context, 25000L);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -142,9 +142,9 @@ public class DirectEndpointConsumerTest {
 
         try {
             endpoint.createConsumer().receive(context);
-            Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
+            Assertions.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
+            Assertions.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
         }
     }
 
@@ -157,9 +157,9 @@ public class DirectEndpointConsumerTest {
 
         try {
             endpoint.createConsumer().receive("Operation = 'sayHello'", context);
-            Assert.fail("Missing exception due to unsupported operation");
+            Assertions.fail("Missing exception due to unsupported operation");
         } catch (CitrusRuntimeException e) {
-            Assert.assertNotNull(e.getMessage());
+            Assertions.assertNotNull(e.getMessage());
         }
 
         MessageQueue queueQueue = Mockito.mock(MessageQueue.class);
@@ -171,9 +171,9 @@ public class DirectEndpointConsumerTest {
         endpoint.getEndpointConfiguration().setQueue(queueQueue);
         Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
-        Assert.assertEquals(receivedMessage.getHeader("Operation"), "sayHello");
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals("sayHello", receivedMessage.getHeader("Operation"));
 
     }
 
@@ -189,9 +189,9 @@ public class DirectEndpointConsumerTest {
 
         try {
             endpoint.createConsumer().receive("Operation = 'sayHello'", context, 1500L);
-            Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
+            Assertions.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 1500 milliseconds. Failed to receive message on endpoint"));
+            Assertions.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 1500 milliseconds. Failed to receive message on endpoint"));
         }
 
     }

@@ -28,8 +28,8 @@ import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.message.builder.DefaultHeaderDataBuilder;
 import org.citrusframework.message.builder.FileResourceHeaderDataBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StaticMessageBuilderTest extends UnitTestSupport {
 
@@ -43,11 +43,11 @@ public class StaticMessageBuilderTest extends UnitTestSupport {
         messageBuilder = new StaticMessageBuilder(testMessage);
 
         final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
-        Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
-        Assert.assertEquals(message.getHeaders().size(), testMessage.getHeaders().size() + 1);
-        Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
-        Assert.assertEquals(message.getType(), MessageType.PLAINTEXT.name());
+        Assertions.assertEquals(testMessage.getPayload(), message.getPayload());
+        Assertions.assertNotEquals(testMessage.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals(testMessage.getHeaders().size() + 1, message.getHeaders().size());
+        Assertions.assertEquals(testMessage.getHeader("header1"), message.getHeader("header1"));
+        Assertions.assertEquals(MessageType.PLAINTEXT.name(), message.getType());
     }
 
     @Test
@@ -59,10 +59,10 @@ public class StaticMessageBuilderTest extends UnitTestSupport {
         messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(Collections.singletonMap("additional", "new")));
 
         final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
-        Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
-        Assert.assertNotNull(message.getHeader("additional"));
-        Assert.assertEquals(message.getHeader("additional"), "new");
+        Assertions.assertEquals(testMessage.getPayload(), message.getPayload());
+        Assertions.assertNotEquals(testMessage.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
+        Assertions.assertNotNull(message.getHeader("additional"));
+        Assertions.assertEquals("new", message.getHeader("additional"));
     }
 
     @Test
@@ -74,10 +74,10 @@ public class StaticMessageBuilderTest extends UnitTestSupport {
         messageBuilder.addHeaderBuilder(new DefaultHeaderDataBuilder("TestMessageData"));
 
         final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
-        Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
-        Assert.assertEquals(message.getHeaderData().size(), 1L);
-        Assert.assertEquals(message.getHeaderData().get(0), "TestMessageData");
+        Assertions.assertEquals(testMessage.getPayload(), message.getPayload());
+        Assertions.assertNotEquals(testMessage.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals(1L, message.getHeaderData().size());
+        Assertions.assertEquals("TestMessageData", message.getHeaderData().get(0));
     }
 
     @Test
@@ -90,12 +90,12 @@ public class StaticMessageBuilderTest extends UnitTestSupport {
         messageBuilder.addHeaderBuilder(new DefaultHeaderDataBuilder("TestMessageData2"));
 
         final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
-        Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
-        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
-        Assert.assertEquals(message.getHeaderData().size(), 2L);
-        Assert.assertEquals(message.getHeaderData().get(0), "TestMessageData1");
-        Assert.assertEquals(message.getHeaderData().get(1), "TestMessageData2");
+        Assertions.assertEquals(testMessage.getPayload(), message.getPayload());
+        Assertions.assertEquals(testMessage.getHeader("header1"), message.getHeader("header1"));
+        Assertions.assertNotEquals(testMessage.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals(2L, message.getHeaderData().size());
+        Assertions.assertEquals("TestMessageData1", message.getHeaderData().get(0));
+        Assertions.assertEquals("TestMessageData2", message.getHeaderData().get(1));
     }
 
     @Test
@@ -108,11 +108,11 @@ public class StaticMessageBuilderTest extends UnitTestSupport {
                 new FileResourceHeaderDataBuilder("classpath:org/citrusframework/base/validation/builder/payload-data-resource.txt"));
 
         final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
-        Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
-        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
-        Assert.assertEquals(message.getHeaderData().size(), 1L);
-        Assert.assertEquals(message.getHeaderData().get(0), "TestMessageData");
+        Assertions.assertEquals(testMessage.getPayload(), message.getPayload());
+        Assertions.assertEquals(testMessage.getHeader("header1"), message.getHeader("header1"));
+        Assertions.assertNotEquals(testMessage.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals(1L, message.getHeaderData().size());
+        Assertions.assertEquals("TestMessageData", message.getHeaderData().get(0));
     }
 
     @Test
@@ -126,9 +126,9 @@ public class StaticMessageBuilderTest extends UnitTestSupport {
         messageBuilder = new StaticMessageBuilder(testMessage);
 
         final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
-        Assert.assertEquals(message.getPayload(), "TestMessage");
-        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
-        Assert.assertEquals(message.getHeader("header1"), "value1");
+        Assertions.assertEquals("TestMessage", message.getPayload());
+        Assertions.assertNotEquals(testMessage.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals("value1", message.getHeader("header1"));
     }
 
     @Test
@@ -139,9 +139,9 @@ public class StaticMessageBuilderTest extends UnitTestSupport {
         messageBuilder = new StaticMessageBuilder(testMessage);
 
         final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
-        Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
-        Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
+        Assertions.assertEquals(testMessage.getPayload(), message.getPayload());
+        Assertions.assertNotEquals(testMessage.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals(testMessage.getHeader("header1"), message.getHeader("header1"));
     }
 
     @Test
@@ -155,10 +155,10 @@ public class StaticMessageBuilderTest extends UnitTestSupport {
         final Map<String, Object> headers = messageBuilder.buildMessageHeaders(context);
 
         //THEN
-        Assert.assertTrue(headers.containsKey("bar"));
-        Assert.assertNull(headers.get("bar"));
-        Assert.assertTrue(headers.containsKey("foo"));
-        Assert.assertNotNull(headers.get("foo"));
-        Assert.assertEquals(headers.get("foo"), "bar");
+        Assertions.assertTrue(headers.containsKey("bar"));
+        Assertions.assertNull(headers.get("bar"));
+        Assertions.assertTrue(headers.containsKey("foo"));
+        Assertions.assertNotNull(headers.get("foo"));
+        Assertions.assertEquals("bar", headers.get("foo"));
     }
 }

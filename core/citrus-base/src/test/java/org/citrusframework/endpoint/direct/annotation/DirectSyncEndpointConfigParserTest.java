@@ -30,15 +30,19 @@ import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.spi.ReferenceResolver;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class DirectSyncEndpointConfigParserTest {
 
     @CitrusEndpoint
@@ -93,18 +97,13 @@ public class DirectSyncEndpointConfigParserTest {
 
     private TestContext context = new TestContext();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-
         when(referenceResolver.resolve("myQueue", MessageQueue.class)).thenReturn(myQueue);
         when(referenceResolver.resolve("endpointNameResolver", EndpointUriResolver.class)).thenReturn(endpointNameResolver);
         when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
         when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
 
-    @BeforeMethod
-    public void setMocks() {
         context.setEndpointFactory(new DefaultEndpointFactory());
         context.setReferenceResolver(referenceResolver);
     }
@@ -114,61 +113,61 @@ public class DirectSyncEndpointConfigParserTest {
         CitrusEndpointAnnotations.injectEndpoints(this, context);
 
         // 1st message receiver
-        Assert.assertEquals(directSyncEndpoint1.getEndpointConfiguration().getQueueName(), "testQueue");
-        Assert.assertNull(directSyncEndpoint1.getEndpointConfiguration().getQueue());
-        Assert.assertEquals(directSyncEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(directSyncEndpoint1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+        Assertions.assertEquals("testQueue", directSyncEndpoint1.getEndpointConfiguration().getQueueName());
+        Assertions.assertNull(directSyncEndpoint1.getEndpointConfiguration().getQueue());
+        Assertions.assertEquals(5000L, directSyncEndpoint1.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, directSyncEndpoint1.getEndpointConfiguration().getCorrelator().getClass());
 
         // 2nd message receiver
-        Assert.assertNull(directSyncEndpoint2.getEndpointConfiguration().getQueueName());
-        Assert.assertNotNull(directSyncEndpoint2.getEndpointConfiguration().getQueue());
-        Assert.assertEquals(directSyncEndpoint2.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(directSyncEndpoint2.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+        Assertions.assertNull(directSyncEndpoint2.getEndpointConfiguration().getQueueName());
+        Assertions.assertNotNull(directSyncEndpoint2.getEndpointConfiguration().getQueue());
+        Assertions.assertEquals(10000L, directSyncEndpoint2.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(messageCorrelator, directSyncEndpoint2.getEndpointConfiguration().getCorrelator());
 
         // 3rd message receiver
-        Assert.assertNull(directSyncEndpoint3.getEndpointConfiguration().getQueueName());
-        Assert.assertNull(directSyncEndpoint3.getEndpointConfiguration().getQueue());
-        Assert.assertEquals(directSyncEndpoint3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+        Assertions.assertNull(directSyncEndpoint3.getEndpointConfiguration().getQueueName());
+        Assertions.assertNull(directSyncEndpoint3.getEndpointConfiguration().getQueue());
+        Assertions.assertEquals(messageCorrelator, directSyncEndpoint3.getEndpointConfiguration().getCorrelator());
 
         // 4th message receiver
-        Assert.assertNotNull(directSyncEndpoint4.getActor());
-        Assert.assertEquals(directSyncEndpoint4.getActor(), testActor);
+        Assertions.assertNotNull(directSyncEndpoint4.getActor());
+        Assertions.assertEquals(testActor, directSyncEndpoint4.getActor());
 
         // 5th message receiver
-        Assert.assertEquals(directSyncEndpoint5.getEndpointConfiguration().getQueueName(), "testQueue");
-        Assert.assertNull(directSyncEndpoint5.getEndpointConfiguration().getQueue());
-        Assert.assertEquals(directSyncEndpoint5.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(directSyncEndpoint5.getEndpointConfiguration().getPollingInterval(), 500L);
-        Assert.assertEquals(directSyncEndpoint5.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+        Assertions.assertEquals("testQueue", directSyncEndpoint5.getEndpointConfiguration().getQueueName());
+        Assertions.assertNull(directSyncEndpoint5.getEndpointConfiguration().getQueue());
+        Assertions.assertEquals(5000L, directSyncEndpoint5.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(500L, directSyncEndpoint5.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, directSyncEndpoint5.getEndpointConfiguration().getCorrelator().getClass());
 
         // 6th message sender
-        Assert.assertNull(directSyncEndpoint6.getEndpointConfiguration().getQueueName());
-        Assert.assertNotNull(directSyncEndpoint6.getEndpointConfiguration().getQueue());
-        Assert.assertEquals(directSyncEndpoint6.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(directSyncEndpoint6.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+        Assertions.assertNull(directSyncEndpoint6.getEndpointConfiguration().getQueueName());
+        Assertions.assertNotNull(directSyncEndpoint6.getEndpointConfiguration().getQueue());
+        Assertions.assertEquals(10000L, directSyncEndpoint6.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(messageCorrelator, directSyncEndpoint6.getEndpointConfiguration().getCorrelator());
 
         // 7th message sender
-        Assert.assertNull(directSyncEndpoint7.getEndpointConfiguration().getQueueName());
-        Assert.assertNull(directSyncEndpoint7.getEndpointConfiguration().getQueue());
-        Assert.assertEquals(directSyncEndpoint7.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+        Assertions.assertNull(directSyncEndpoint7.getEndpointConfiguration().getQueueName());
+        Assertions.assertNull(directSyncEndpoint7.getEndpointConfiguration().getQueue());
+        Assertions.assertEquals(messageCorrelator, directSyncEndpoint7.getEndpointConfiguration().getCorrelator());
 
         // 8th message sender
-        Assert.assertNotNull(directSyncEndpoint8.getEndpointConfiguration().getPollingInterval());
-        Assert.assertEquals(directSyncEndpoint8.getEndpointConfiguration().getPollingInterval(), 250L);
-        Assert.assertNotNull(directSyncEndpoint8.getActor());
-        Assert.assertEquals(directSyncEndpoint8.getActor(), testActor);
+        Assertions.assertNotNull(directSyncEndpoint8.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertEquals(250L, directSyncEndpoint8.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertNotNull(directSyncEndpoint8.getActor());
+        Assertions.assertEquals(testActor, directSyncEndpoint8.getActor());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 2L);
-        Assert.assertNotNull(validators.get("direct.sync"));
-        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assertions.assertEquals(2L, validators.size());
+        Assertions.assertNotNull(validators.get("direct.sync"));
+        Assertions.assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("direct.sync").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("direct.sync").isPresent());
     }
 }

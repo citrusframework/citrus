@@ -26,11 +26,11 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Asserts the semantics of applying a test behavior: execution order, variable visibility and timing,
@@ -43,7 +43,7 @@ public class ApplyTestBehaviorInvarianceTest extends UnitTestSupport implements 
 
     private DefaultTestCaseRunner runner;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupRunner() {
         log.clear();
         runner = new DefaultTestCaseRunner(context);
@@ -58,7 +58,7 @@ public class ApplyTestBehaviorInvarianceTest extends UnitTestSupport implements 
         }));
         runner.run(record("after"));
 
-        assertEquals(log, List.of("before", "first", "second", "after"));
+        assertEquals(List.of("before", "first", "second", "after"), log);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ApplyTestBehaviorInvarianceTest extends UnitTestSupport implements 
                 record("after")
         ));
 
-        assertEquals(log, List.of("before", "inside", "after"));
+        assertEquals(List.of("before", "inside", "after"), log);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ApplyTestBehaviorInvarianceTest extends UnitTestSupport implements 
             behavior.run(record("outer end"));
         }));
 
-        assertEquals(log, List.of("outer start", "inner", "outer end"));
+        assertEquals(List.of("outer start", "inner", "outer end"), log);
     }
 
     @Test
@@ -95,8 +95,8 @@ public class ApplyTestBehaviorInvarianceTest extends UnitTestSupport implements 
         }));
         runner.run(recordVariable("fromBehavior"));
 
-        assertEquals(log, List.of("caller=visible", "fromBehavior=published"));
-        assertEquals(context.getVariable("fromBehavior"), "published");
+        assertEquals(List.of("caller=visible", "fromBehavior=published"), log);
+        assertEquals("published", context.getVariable("fromBehavior"));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class ApplyTestBehaviorInvarianceTest extends UnitTestSupport implements 
         }));
         runner.run(recordVariable("counter"));
 
-        assertEquals(log, List.of("counter=1", "counter=2", "counter=2"));
+        assertEquals(List.of("counter=1", "counter=2", "counter=2"), log);
     }
 
     @Test
@@ -118,32 +118,32 @@ public class ApplyTestBehaviorInvarianceTest extends UnitTestSupport implements 
 
         runner.run(apply(behavior -> behavior.run(createVariables().variable("shared", "behavior"))));
 
-        assertEquals(context.getVariable("shared"), "behavior");
+        assertEquals("behavior", context.getVariable("shared"));
     }
 
     @Test
     public void shouldKeepExceptionPropagation() {
-        TestCaseFailedException failure = expectThrows(TestCaseFailedException.class, () -> runner.run(apply(behavior -> {
+        TestCaseFailedException failure = assertThrows(TestCaseFailedException.class, () -> runner.run(apply(behavior -> {
             behavior.run(record("before failure"));
             behavior.run(fail("boom"));
             behavior.run(record("never"));
         })));
 
-        assertEquals(failure.getMessage(), "boom");
-        assertEquals(causeChain(failure), List.of(TestCaseFailedException.class, TestCaseFailedException.class, CitrusRuntimeException.class));
-        assertEquals(log, List.of("before failure"));
+        assertEquals("boom", failure.getMessage());
+        assertEquals(List.of(TestCaseFailedException.class, TestCaseFailedException.class, CitrusRuntimeException.class), causeChain(failure));
+        assertEquals(List.of("before failure"), log);
     }
 
     @Test
     public void shouldKeepExceptionPropagationInContainer() {
-        TestCaseFailedException failure = expectThrows(TestCaseFailedException.class, () -> runner.run(sequential().actions(
+        TestCaseFailedException failure = assertThrows(TestCaseFailedException.class, () -> runner.run(sequential().actions(
                 runner.applyBehavior(behavior -> behavior.run(fail("boom"))),
                 record("never")
         )));
 
-        assertEquals(failure.getMessage(), "boom");
-        assertEquals(causeChain(failure), List.of(TestCaseFailedException.class, TestCaseFailedException.class, CitrusRuntimeException.class));
-        assertEquals(log, List.of());
+        assertEquals("boom", failure.getMessage());
+        assertEquals(List.of(TestCaseFailedException.class, TestCaseFailedException.class, CitrusRuntimeException.class), causeChain(failure));
+        assertEquals(List.of(), log);
     }
 
     @Test
@@ -158,7 +158,7 @@ public class ApplyTestBehaviorInvarianceTest extends UnitTestSupport implements 
             behavior.run(record("continued"));
         }));
 
-        assertEquals(log, List.of("caught boom", "continued"));
+        assertEquals(List.of("caught boom", "continued"), log);
     }
 
     @Test
@@ -172,7 +172,7 @@ public class ApplyTestBehaviorInvarianceTest extends UnitTestSupport implements 
         runner.run(record("after"));
         runner.stop();
 
-        assertEquals(log, List.of("behavior", "after", "test finally", "behavior finally"));
+        assertEquals(List.of("behavior", "after", "test finally", "behavior finally"), log);
     }
 
     @Test
@@ -185,7 +185,7 @@ public class ApplyTestBehaviorInvarianceTest extends UnitTestSupport implements 
         runner.run(record("after"));
         runner.stop();
 
-        assertEquals(log, List.of("inside", "after", "behavior finally"));
+        assertEquals(List.of("inside", "after", "behavior finally"), log);
     }
 
     private TestActionBuilder<?> record(String entry) {

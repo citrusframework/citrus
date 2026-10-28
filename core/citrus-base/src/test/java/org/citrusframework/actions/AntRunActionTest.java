@@ -25,8 +25,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AntRunActionTest extends UnitTestSupport {
 
@@ -38,13 +38,13 @@ public class AntRunActionTest extends UnitTestSupport {
                 .listener(new AssertingBuildListener() {
                     @Override
                     public void taskStarted(BuildEvent event) {
-                        Assert.assertEquals(event.getTarget().getName(), "sayHello");
+                        Assertions.assertEquals("sayHello", event.getTarget().getName());
                     }
 
                     @Override
                     public void messageLogged(BuildEvent event) {
                         if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
-                            Assert.assertEquals(event.getMessage(), "Welcome to Citrus!");
+                            Assertions.assertEquals("Welcome to Citrus!", event.getMessage());
                         }
                     }
                 })
@@ -78,13 +78,13 @@ public class AntRunActionTest extends UnitTestSupport {
 
         ant.execute(context);
 
-        Assert.assertEquals(executedTargets.size(), 2L);
-        Assert.assertEquals(executedTargets.get(0), "sayHello");
-        Assert.assertEquals(executedTargets.get(1), "sayGoodbye");
+        Assertions.assertEquals(2L, executedTargets.size());
+        Assertions.assertEquals("sayHello", executedTargets.get(0));
+        Assertions.assertEquals("sayGoodbye", executedTargets.get(1));
 
-        Assert.assertEquals(echoMessages.size(), 2L);
-        Assert.assertEquals(echoMessages.get(0), "Welcome to Citrus!");
-        Assert.assertEquals(echoMessages.get(1), "Goodbye!");
+        Assertions.assertEquals(2L, echoMessages.size());
+        Assertions.assertEquals("Welcome to Citrus!", echoMessages.get(0));
+        Assertions.assertEquals("Goodbye!", echoMessages.get(1));
     }
 
 	@Test
@@ -99,13 +99,13 @@ public class AntRunActionTest extends UnitTestSupport {
                 .listener(new AssertingBuildListener() {
                     @Override
                     public void taskStarted(BuildEvent event) {
-                        Assert.assertEquals(event.getTarget().getName(), "sayHello");
+                        Assertions.assertEquals("sayHello", event.getTarget().getName());
                     }
 
                     @Override
                     public void messageLogged(BuildEvent event) {
                         if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
-                            Assert.assertEquals(event.getMessage(), "Welcome!");
+                            Assertions.assertEquals("Welcome!", event.getMessage());
                         }
                     }
                 })
@@ -123,13 +123,13 @@ public class AntRunActionTest extends UnitTestSupport {
                 .listener(new AssertingBuildListener() {
                     @Override
                     public void taskStarted(BuildEvent event) {
-                        Assert.assertEquals(event.getTarget().getName(), "sayHello");
+                        Assertions.assertEquals("sayHello", event.getTarget().getName());
                     }
 
                     @Override
                     public void messageLogged(BuildEvent event) {
                         if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
-                            Assert.assertEquals(event.getMessage(), "Welcome with property file!");
+                            Assertions.assertEquals("Welcome with property file!", event.getMessage());
                         }
                     }
                 })
@@ -151,13 +151,13 @@ public class AntRunActionTest extends UnitTestSupport {
                 .listener(new AssertingBuildListener() {
                     @Override
                     public void taskStarted(BuildEvent event) {
-                        Assert.assertEquals(event.getTarget().getName(), "sayHello");
+                        Assertions.assertEquals("sayHello", event.getTarget().getName());
                     }
 
                     @Override
                     public void messageLogged(BuildEvent event) {
                         if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
-                            Assert.assertEquals(event.getMessage(), "Welcome with property file!");
+                            Assertions.assertEquals("Welcome with property file!", event.getMessage());
                         }
                     }
                 })
@@ -178,7 +178,7 @@ public class AntRunActionTest extends UnitTestSupport {
                 .listener(new AssertingBuildListener() {
                     @Override
                     public void taskStarted(BuildEvent event) {
-                        Assert.assertEquals(event.getTarget().getName(), "checkMe");
+                        Assertions.assertEquals("checkMe", event.getTarget().getName());
                     }
                 })
                 .build();
@@ -195,11 +195,11 @@ public class AntRunActionTest extends UnitTestSupport {
 
         try {
             ant.execute(context);
-            Assert.fail("Missing build exception due to missing property");
+            Assertions.fail("Missing build exception due to missing property");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getCause().getClass(), BuildException.class);
-            Assert.assertEquals(e.getMessage(), "Failed to run ANT build file");
-            Assert.assertTrue(e.getCause().getMessage().contains("Failed with missing property"));
+            Assertions.assertEquals(BuildException.class, e.getCause().getClass());
+            Assertions.assertEquals("Failed to run ANT build file", e.getMessage());
+            Assertions.assertTrue(e.getCause().getMessage().contains("Failed with missing property"));
         }
     }
 
@@ -212,11 +212,11 @@ public class AntRunActionTest extends UnitTestSupport {
 
         try {
             ant.execute(context);
-            Assert.fail("Missing build exception due to unknown target");
+            Assertions.fail("Missing build exception due to unknown target");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getCause().getClass(), BuildException.class);
-            Assert.assertEquals(e.getMessage(), "Failed to run ANT build file");
-            Assert.assertTrue(e.getCause().getMessage().contains("\"unknownTarget\" does not exist in the project"));
+            Assertions.assertEquals(BuildException.class, e.getCause().getClass());
+            Assertions.assertEquals("Failed to run ANT build file", e.getMessage());
+            Assertions.assertTrue(e.getCause().getMessage().contains("\"unknownTarget\" does not exist in the project"));
         }
     }
 

@@ -20,20 +20,24 @@ import java.util.Collections;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class StringLengthFunctionTest extends UnitTestSupport {
     StringLengthFunction function = new StringLengthFunction();
 
     @Test
     public void testFunction() {
-        Assert.assertEquals(function.execute(Collections.singletonList("Hallo"), context), "5");
-        Assert.assertEquals(function.execute(Collections.singletonList("Hallo TestFramework!"), context), "20");
+        Assertions.assertEquals("5", function.execute(Collections.singletonList("Hallo"), context));
+        Assertions.assertEquals("20", function.execute(Collections.singletonList("Hallo TestFramework!"), context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(Collections.<String>emptyList(), context);
+        });
     }
 }

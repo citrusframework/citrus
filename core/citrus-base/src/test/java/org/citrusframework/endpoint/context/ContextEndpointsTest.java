@@ -19,23 +19,23 @@ package org.citrusframework.endpoint.context;
 import java.util.Map;
 
 import org.citrusframework.endpoint.EndpointBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ContextEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("context"));
-        Assert.assertTrue(endpointBuilders.containsKey("context.messageStore"));
+        Assertions.assertTrue(endpointBuilders.containsKey("context"));
+        Assertions.assertTrue(endpointBuilders.containsKey("context.messageStore"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("context").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("context").get().getClass(), ContextEndpointsBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("context.messageStore").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("context.messageStore").get().getClass(), MessageStoreEndpointBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("context").isPresent());
+        Assertions.assertEquals(ContextEndpointsBuilder.class, EndpointBuilder.lookup("context").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("context.messageStore").isPresent());
+        Assertions.assertEquals(MessageStoreEndpointBuilder.class, EndpointBuilder.lookup("context.messageStore").get().getClass());
     }
 }

@@ -22,8 +22,8 @@ import java.util.Map;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StaticResponseEndpointAdapterTest extends UnitTestSupport {
 
@@ -41,9 +41,9 @@ public class StaticResponseEndpointAdapterTest extends UnitTestSupport {
         Message response = endpointAdapter.handleMessage(
                 new DefaultMessage("<TestMessage>Hello World!</TestMessage>"));
 
-        Assert.assertEquals(response.getPayload(), "<TestMessage>Hello User!</TestMessage>");
-        Assert.assertNotNull(response.getHeader("Operation"));
-        Assert.assertEquals(response.getHeader("Operation"), "UnitTest");
+        Assertions.assertEquals("<TestMessage>Hello User!</TestMessage>", response.getPayload());
+        Assertions.assertNotNull(response.getHeader("Operation"));
+        Assertions.assertEquals("UnitTest", response.getHeader("Operation"));
     }
 
     @Test
@@ -60,9 +60,9 @@ public class StaticResponseEndpointAdapterTest extends UnitTestSupport {
         Message response = endpointAdapter.handleMessage(
                 new DefaultMessage("<TestMessage>Hello World!</TestMessage>"));
 
-        Assert.assertEquals(response.getPayload(String.class).trim(), "<TestMessage>Hello User!</TestMessage>");
-        Assert.assertNotNull(response.getHeader("Operation"));
-        Assert.assertEquals(response.getHeader("Operation"), "UnitTest");
+        Assertions.assertEquals("<TestMessage>Hello User!</TestMessage>", response.getPayload(String.class).trim());
+        Assertions.assertNotNull(response.getHeader("Operation"));
+        Assertions.assertEquals("UnitTest", response.getHeader("Operation"));
     }
 
     @Test
@@ -90,12 +90,12 @@ public class StaticResponseEndpointAdapterTest extends UnitTestSupport {
                 new DefaultMessage(request)
                 .setHeader("Id", "987654321"));
 
-        Assert.assertEquals(response.getPayload(), String.format("<TestResponse><Text>Length is %s!</Text></TestResponse>", request.length()));
-        Assert.assertNotNull(response.getHeader("Operation"));
-        Assert.assertEquals(response.getHeader("Operation"), "UNITTEST");
-        Assert.assertNotNull(response.getHeader("RequestId"));
-        Assert.assertEquals(response.getHeader("RequestId"), "987654321");
-        Assert.assertNotNull(response.getHeader("ResponseId"));
-        Assert.assertEquals(response.getHeader("ResponseId"), "123456789");
+        Assertions.assertEquals(String.format("<TestResponse><Text>Length is %s!</Text></TestResponse>", request.length()), response.getPayload());
+        Assertions.assertNotNull(response.getHeader("Operation"));
+        Assertions.assertEquals("UNITTEST", response.getHeader("Operation"));
+        Assertions.assertNotNull(response.getHeader("RequestId"));
+        Assertions.assertEquals("987654321", response.getHeader("RequestId"));
+        Assertions.assertNotNull(response.getHeader("ResponseId"));
+        Assertions.assertEquals("123456789", response.getHeader("ResponseId"));
     }
 }

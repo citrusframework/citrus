@@ -23,12 +23,13 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.NoSuchValidationMatcherLibraryException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class ValidationMatcherRegistryTest extends UnitTestSupport {
 
     private ValidationMatcherLibrary validationMatcherLibrary = new ValidationMatcherLibrary();
@@ -36,17 +37,13 @@ public class ValidationMatcherRegistryTest extends UnitTestSupport {
     @Mock
     private ValidationMatcher matcher;
 
-    @BeforeClass
-    public void setupMocks() {
-        MockitoAnnotations.openMocks(this);
-
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        // Called by the superclass @BeforeEach, which runs before any @BeforeEach of this class
         validationMatcherLibrary.setName("fooValidationMatcherLibrary");
         validationMatcherLibrary.setPrefix("foo:");
         validationMatcherLibrary.setMembers(Collections.singletonMap("customMatcher", matcher));
-    }
 
-    @Override
-    protected TestContextFactory createTestContextFactory() {
         TestContextFactory factory = super.createTestContextFactory();
         factory.getValidationMatcherRegistry().addValidationMatcherLibrary(validationMatcherLibrary);
         return factory;
@@ -54,7 +51,7 @@ public class ValidationMatcherRegistryTest extends UnitTestSupport {
 
     @Test
     public void testGetValidationMatcherLibrary() {
-        Assert.assertEquals(context.getValidationMatcherRegistry().getLibraryForPrefix("foo:"), validationMatcherLibrary);
+        Assertions.assertEquals(validationMatcherLibrary, context.getValidationMatcherRegistry().getLibraryForPrefix("foo:"));
     }
 
     @Test
@@ -62,7 +59,7 @@ public class ValidationMatcherRegistryTest extends UnitTestSupport {
         try {
             context.getValidationMatcherRegistry().getLibraryForPrefix("unknown:");
         } catch (NoSuchValidationMatcherLibraryException e) {
-            Assert.assertTrue(e.getMessage().contains("unknown:"));
+            Assertions.assertTrue(e.getMessage().contains("unknown:"));
         }
     }
 }

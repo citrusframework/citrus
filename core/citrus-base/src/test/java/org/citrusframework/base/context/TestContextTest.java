@@ -36,15 +36,16 @@ import org.citrusframework.message.Message;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.variable.SegmentVariableExtractor;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.testng.Assert.fail;
 
 public class TestContextTest extends UnitTestSupport {
 
@@ -63,12 +64,12 @@ public class TestContextTest extends UnitTestSupport {
         testContext.setGlobalVariables(globalVariables);
         testcase.execute(testContext);
 
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestNameVariable()), "MyTestCase");
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestPackageVariable()), DefaultTestCase.class.getPackage().getName());
-        Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
-        Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
-        Assert.assertTrue(testContext.getVariables().containsKey("test1Var"));
-        Assert.assertEquals(testContext.getVariables().get("test1Var"), "456");
+        Assertions.assertEquals("MyTestCase", testContext.getVariables().get(CitrusSettings.getTestNameVariable()));
+        Assertions.assertEquals(DefaultTestCase.class.getPackage().getName(), testContext.getVariables().get(CitrusSettings.getTestPackageVariable()));
+        Assertions.assertTrue(testContext.getVariables().containsKey("defaultVar"));
+        Assertions.assertEquals("123", testContext.getVariables().get("defaultVar"));
+        Assertions.assertTrue(testContext.getVariables().containsKey("test1Var"));
+        Assertions.assertEquals("456", testContext.getVariables().get("test1Var"));
 
         DefaultTestCase testcase2 = new DefaultTestCase();
         testcase2.setName("MyTestCase2");
@@ -80,13 +81,13 @@ public class TestContextTest extends UnitTestSupport {
         testContext.setGlobalVariables(globalVariables);
         testcase2.execute(testContext);
 
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestNameVariable()), "MyTestCase2");
-        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.getTestPackageVariable()), TestCase.class.getPackage().getName());
-        Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
-        Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
-        Assert.assertTrue(testContext.getVariables().containsKey("test2Var"));
-        Assert.assertEquals(testContext.getVariables().get("test2Var"), "456");
-        Assert.assertFalse(testContext.getVariables().containsKey("test1Var"));
+        Assertions.assertEquals("MyTestCase2", testContext.getVariables().get(CitrusSettings.getTestNameVariable()));
+        Assertions.assertEquals(TestCase.class.getPackage().getName(), testContext.getVariables().get(CitrusSettings.getTestPackageVariable()));
+        Assertions.assertTrue(testContext.getVariables().containsKey("defaultVar"));
+        Assertions.assertEquals("123", testContext.getVariables().get("defaultVar"));
+        Assertions.assertTrue(testContext.getVariables().containsKey("test2Var"));
+        Assertions.assertEquals("456", testContext.getVariables().get("test2Var"));
+        Assertions.assertFalse(testContext.getVariables().containsKey("test1Var"));
     }
 
     @Test
@@ -105,8 +106,8 @@ public class TestContextTest extends UnitTestSupport {
         testContext.setGlobalVariables(globalVariables);
         testcase.execute(testContext);
 
-        Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
-        Assert.assertEquals(testContext.getVariables().get("defaultVar"), "ABC");
+        Assertions.assertTrue(testContext.getVariables().containsKey("defaultVar"));
+        Assertions.assertEquals("ABC", testContext.getVariables().get("defaultVar"));
 
         TestCase testcase2 = new DefaultTestCase();
         testcase2.setName("MyTestCase2");
@@ -115,23 +116,23 @@ public class TestContextTest extends UnitTestSupport {
         testContext.setGlobalVariables(globalVariables);
         testcase2.execute(testContext);
 
-        Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
-        Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
+        Assertions.assertTrue(testContext.getVariables().containsKey("defaultVar"));
+        Assertions.assertEquals("123", testContext.getVariables().get("defaultVar"));
     }
 
     @Test
     public void testGetVariable() {
         context.getVariables().put("test", "123");
 
-        Assert.assertEquals(context.getVariable("${test}"), "123");
-        Assert.assertEquals(context.getVariable("test"), "123");
+        Assertions.assertEquals("123", context.getVariable("${test}"));
+        Assertions.assertEquals("123", context.getVariable("test"));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testUnknownVariable() {
         context.getVariables().put("test", "123");
 
-        context.getVariable("${test_wrong}");
+        assertThrows(CitrusRuntimeException.class, () -> context.getVariable("${test_wrong}"));
     }
 
     @Test
@@ -155,16 +156,16 @@ public class TestContextTest extends UnitTestSupport {
 
         context.setVariable("containerArray", containerArray);
 
-        Assert.assertEquals(context.getVariable("${helloData}"), DataContainer.class.getName());
-        Assert.assertEquals(context.getVariable("${helloData.data}"), "hello");
-        Assert.assertEquals(context.getVariable("${helloData.number}"), "99");
-        Assert.assertEquals(context.getVariable("${helloData.CONSTANT}"), "FOO");
-        Assert.assertEquals(context.getVariable("${container.data}"), DataContainer.class.getName());
-        Assert.assertEquals(context.getVariable("${container.data.data}"), "nested");
-        Assert.assertEquals(context.getVariable("${container.data.number}"), "99");
-        Assert.assertEquals(context.getVariable("${container.data.CONSTANT}"), "FOO");
-        Assert.assertEquals(context.getVariable("${container.intVals[1]}"), "1");
-        Assert.assertEquals(context.getVariable("${containerArray[3].data[1].data}"), "B");
+        Assertions.assertEquals(DataContainer.class.getName(), context.getVariable("${helloData}"));
+        Assertions.assertEquals("hello", context.getVariable("${helloData.data}"));
+        Assertions.assertEquals("99", context.getVariable("${helloData.number}"));
+        Assertions.assertEquals("FOO", context.getVariable("${helloData.CONSTANT}"));
+        Assertions.assertEquals(DataContainer.class.getName(), context.getVariable("${container.data}"));
+        Assertions.assertEquals("nested", context.getVariable("${container.data.data}"));
+        Assertions.assertEquals("99", context.getVariable("${container.data.number}"));
+        Assertions.assertEquals("FOO", context.getVariable("${container.data.CONSTANT}"));
+        Assertions.assertEquals("1", context.getVariable("${container.intVals[1]}"));
+        Assertions.assertEquals("B", context.getVariable("${containerArray[3].data[1].data}"));
      }
 
     @Test
@@ -172,17 +173,17 @@ public class TestContextTest extends UnitTestSupport {
         context.setVariable("listContainer", new DataContainer("hello"));
         context.setVariable("manyArr", new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
 
-        Assert.assertEquals(context.getVariable("${listContainer.strVals[1]}"), "B");
-        Assert.assertEquals(context.getVariable("${listContainer.intList[0]}"), "1");
-        Assert.assertEquals(context.getVariable("${listContainer.items[1].code}"), "Y");
-        Assert.assertEquals(context.getVariable("${listContainer.manyVals[12]}"), "v12");
-        Assert.assertEquals(context.getVariable("${manyArr[12]}"), "12");
-        Assert.assertThrows(IndexOutOfBoundsException.class, () -> context.getVariable("${listContainer.strVals[9]}"));
+        Assertions.assertEquals("B", context.getVariable("${listContainer.strVals[1]}"));
+        Assertions.assertEquals("1", context.getVariable("${listContainer.intList[0]}"));
+        Assertions.assertEquals("Y", context.getVariable("${listContainer.items[1].code}"));
+        Assertions.assertEquals("v12", context.getVariable("${listContainer.manyVals[12]}"));
+        Assertions.assertEquals("12", context.getVariable("${manyArr[12]}"));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> context.getVariable("${listContainer.strVals[9]}"));
 
         context.setVariable("mapVar", Map.of("list", List.of("A", "B")));
-        Assert.assertEquals(context.getVariable("${mapVar.list[0]}"), "A");
+        Assertions.assertEquals("A", context.getVariable("${mapVar.list[0]}"));
 
-        Assert.assertThrows(CitrusRuntimeException.class, () -> context.getVariable("${listContainer.nullList[0]}"));
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> context.getVariable("${listContainer.nullList[0]}"));
      }
 
     @Test
@@ -198,7 +199,7 @@ public class TestContextTest extends UnitTestSupport {
         Mockito.doReturn(true).when(jsonExtractorMock).canExtract(Mockito.eq(context), Mockito.eq(json), Mockito.any());
         Mockito.doReturn("Peter").when(jsonExtractorMock).extractValue(Mockito.eq(context), Mockito.eq(json), Mockito.any());
 
-        Assert.assertEquals(context.getVariable(String.format("${%s}", variableExpression)), "Peter");
+        Assertions.assertEquals("Peter", context.getVariable(String.format("${%s}", variableExpression)));
     }
 
     @Test
@@ -214,7 +215,7 @@ public class TestContextTest extends UnitTestSupport {
         Mockito.doReturn(true).when(jsonExtractorMock).canExtract(Mockito.eq(context), Mockito.eq(json), Mockito.any());
         Mockito.doThrow(new CitrusRuntimeException()).when(jsonExtractorMock).extractValue(Mockito.eq(context), Mockito.eq(json), Mockito.any());
 
-        Assert.assertThrows(() -> context.getVariable(String.format("${%s}", variableExpression)));
+        Assertions.assertThrows(Throwable.class, () -> context.getVariable(String.format("${%s}", variableExpression)));
     }
 
     @Test
@@ -230,7 +231,7 @@ public class TestContextTest extends UnitTestSupport {
         Mockito.doReturn(true).when(xpathExtractorMock).canExtract(Mockito.eq(context), Mockito.eq(xml), Mockito.any());
         Mockito.doReturn("Peter").when(xpathExtractorMock).extractValue(Mockito.eq(context), Mockito.eq(xml), Mockito.any());
 
-        Assert.assertEquals(context.getVariable(String.format("${%s}", variableExpression)), "Peter");
+        Assertions.assertEquals("Peter", context.getVariable(String.format("${%s}", variableExpression)));
     }
 
     @Test
@@ -246,7 +247,7 @@ public class TestContextTest extends UnitTestSupport {
         Mockito.doReturn(true).when(xpathExtractorMock).canExtract(Mockito.eq(context), Mockito.eq(xml), Mockito.any());
         Mockito.doThrow(new CitrusRuntimeException()).when(xpathExtractorMock).extractValue(Mockito.eq(context), Mockito.eq(xml), Mockito.any());
 
-        Assert.assertThrows(() -> context.getVariable(String.format("${%s}", variableExpression)));
+        Assertions.assertThrows(Throwable.class, () -> context.getVariable(String.format("${%s}", variableExpression)));
     }
 
     @Test
@@ -254,10 +255,10 @@ public class TestContextTest extends UnitTestSupport {
         context.setVariable("helloData", new DataContainer("hello"));
         context.setVariable("container", new DataContainer(new DataContainer("nested")));
 
-        Assert.assertThrows(() ->context.getVariable("${helloData.unknown}")) ;
-        Assert.assertThrows(() ->context.getVariable("${container.data.unknown}")) ;
-        Assert.assertThrows(() ->context.getVariable("${something.else}")) ;
-        Assert.assertThrows(() ->context.getVariable("${helloData[1]}")) ;
+        Assertions.assertThrows(Throwable.class, () ->context.getVariable("${helloData.unknown}")) ;
+        Assertions.assertThrows(Throwable.class, () ->context.getVariable("${container.data.unknown}")) ;
+        Assertions.assertThrows(Throwable.class, () ->context.getVariable("${something.else}")) ;
+        Assertions.assertThrows(Throwable.class, () ->context.getVariable("${helloData[1]}")) ;
 
     }
 
@@ -265,41 +266,41 @@ public class TestContextTest extends UnitTestSupport {
     public void testReplaceDynamicContentInString() {
         context.getVariables().put("test", "456");
 
-        Assert.assertEquals(context.replaceDynamicContentInString("Variable test is: ${test}"), "Variable test is: 456");
-        Assert.assertEquals(context.replaceDynamicContentInString("${test} is the value of variable test"), "456 is the value of variable test");
-        Assert.assertEquals(context.replaceDynamicContentInString("123${test}789"), "123456789");
+        Assertions.assertEquals("Variable test is: 456", context.replaceDynamicContentInString("Variable test is: ${test}"));
+        Assertions.assertEquals("456 is the value of variable test", context.replaceDynamicContentInString("${test} is the value of variable test"));
+        Assertions.assertEquals("123456789", context.replaceDynamicContentInString("123${test}789"));
 
-        Assert.assertEquals(context.replaceDynamicContentInString("Hello TestFramework!"), "Hello TestFramework!");
-        Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('Hello', ' TestFramework!')"), "Hello TestFramework!");
-        Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('citrus', ':citrus')"), "citrus:citrus");
-        Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('citrus:citrus')"), "citrus:citrus");
+        Assertions.assertEquals("Hello TestFramework!", context.replaceDynamicContentInString("Hello TestFramework!"));
+        Assertions.assertEquals("Hello TestFramework!", context.replaceDynamicContentInString("citrus:concat('Hello', ' TestFramework!')"));
+        Assertions.assertEquals("citrus:citrus", context.replaceDynamicContentInString("citrus:concat('citrus', ':citrus')"));
+        Assertions.assertEquals("citrus:citrus", context.replaceDynamicContentInString("citrus:concat('citrus:citrus')"));
 
-        Assert.assertEquals(context.replaceDynamicContentInString("Variable test is: ${test}", true), "Variable test is: '456'");
-        Assert.assertEquals(context.replaceDynamicContentInString("${test} is the value of variable test", true), "'456' is the value of variable test");
-        Assert.assertEquals(context.replaceDynamicContentInString("123${test}789", true), "123'456'789");
+        Assertions.assertEquals("Variable test is: '456'", context.replaceDynamicContentInString("Variable test is: ${test}", true));
+        Assertions.assertEquals("'456' is the value of variable test", context.replaceDynamicContentInString("${test} is the value of variable test", true));
+        Assertions.assertEquals("123'456'789", context.replaceDynamicContentInString("123${test}789", true));
 
-        Assert.assertEquals(context.replaceDynamicContentInString("Hello TestFramework!", true), "Hello TestFramework!");
-        Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('Hello', ' TestFramework!')", true), "'Hello TestFramework!'");
+        Assertions.assertEquals("Hello TestFramework!", context.replaceDynamicContentInString("Hello TestFramework!", true));
+        Assertions.assertEquals("'Hello TestFramework!'", context.replaceDynamicContentInString("citrus:concat('Hello', ' TestFramework!')", true));
 
-        Assert.assertEquals(context.replaceDynamicContentInString("Hello TestFramework!"), "Hello TestFramework!");
-        Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('Hello', ' TestFramework!')"), "Hello TestFramework!");
+        Assertions.assertEquals("Hello TestFramework!", context.replaceDynamicContentInString("Hello TestFramework!"));
+        Assertions.assertEquals("Hello TestFramework!", context.replaceDynamicContentInString("citrus:concat('Hello', ' TestFramework!')"));
 
-        Assert.assertEquals(context.replaceDynamicContentInString("Hello TestFramework!", true), "Hello TestFramework!");
-        Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('Hello', ' TestFramework!')", true), "'Hello TestFramework!'");
+        Assertions.assertEquals("Hello TestFramework!", context.replaceDynamicContentInString("Hello TestFramework!", true));
+        Assertions.assertEquals("'Hello TestFramework!'", context.replaceDynamicContentInString("citrus:concat('Hello', ' TestFramework!')", true));
 
-        Assert.assertEquals(context.replaceDynamicContentInString("123 ${test}789"), "123 456789");
-        Assert.assertEquals(context.replaceDynamicContentInString("123 ${test}789", true), "123 '456'789");
+        Assertions.assertEquals("123 456789", context.replaceDynamicContentInString("123 ${test}789"));
+        Assertions.assertEquals("123 '456'789", context.replaceDynamicContentInString("123 ${test}789", true));
     }
 
     @Test
     public void testVariableExpressionEscaped() {
-        Assert.assertEquals(context.replaceDynamicContentInString("${//escaped//}"), "${escaped}");
-        Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('${////escaped////}', ' That is ok!')"), "${escaped} That is ok!");
+        Assertions.assertEquals("${escaped}", context.replaceDynamicContentInString("${//escaped//}"));
+        Assertions.assertEquals("${escaped} That is ok!", context.replaceDynamicContentInString("citrus:concat('${////escaped////}', ' That is ok!')"));
 
         context.setVariable("/value/", "123");
         context.setVariable("value", "456");
-        Assert.assertEquals(context.replaceDynamicContentInString("${/value/}"), "123");
-        Assert.assertEquals(context.replaceDynamicContentInString("${//value//}"), "${value}");
+        Assertions.assertEquals("123", context.replaceDynamicContentInString("${/value/}"));
+        Assertions.assertEquals("${value}", context.replaceDynamicContentInString("${//value//}"));
     }
 
     @Test
@@ -307,18 +308,18 @@ public class TestContextTest extends UnitTestSupport {
         context.setVariable("${test1}", "123");
         context.setVariable("${test2}", "");
 
-        Assert.assertEquals(context.getVariable("test1"), "123");
-        Assert.assertEquals(context.getVariable("test2"), "");
+        Assertions.assertEquals("123", context.getVariable("test1"));
+        Assertions.assertEquals("", context.getVariable("test2"));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testFailSetVariableNoName() {
-        context.setVariable("", "123");
+        assertThrows(CitrusRuntimeException.class, () -> context.setVariable("", "123"));
     }
 
-    @Test(expectedExceptions = {VariableNullValueException.class})
+    @Test
     public void testFailSetVariableNoValue() {
-        context.setVariable("${test}", null);
+        assertThrows(VariableNullValueException.class, () -> context.setVariable("${test}", null));
     }
 
     @Test
@@ -329,8 +330,8 @@ public class TestContextTest extends UnitTestSupport {
 
         context.addVariables(vars);
 
-        Assert.assertEquals(context.getVariable("test1"), "123");
-        Assert.assertEquals(context.getVariable("test2"), "");
+        Assertions.assertEquals("123", context.getVariable("test1"));
+        Assertions.assertEquals("", context.getVariable("test2"));
     }
 
     @Test
@@ -344,11 +345,11 @@ public class TestContextTest extends UnitTestSupport {
         context.addVariables(variableNames, variableValues);
 
         //THEN
-        Assert.assertEquals(context.getVariable("variable1"), "value1");
-        Assert.assertEquals(context.getVariable("variable2"), "");
+        Assertions.assertEquals("value1", context.getVariable("variable1"));
+        Assertions.assertEquals("", context.getVariable("variable2"));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testAddVariablesThrowsExceptionIfArraysHaveDifferentSize() {
 
         //GIVEN
@@ -356,7 +357,7 @@ public class TestContextTest extends UnitTestSupport {
         Object[] variableValues= {"value1"};
 
         //WHEN
-        context.addVariables(variableNames, variableValues);
+        assertThrows(CitrusRuntimeException.class, () -> context.addVariables(variableNames, variableValues));
 
         //THEN
         //Exception is thrown
@@ -372,14 +373,14 @@ public class TestContextTest extends UnitTestSupport {
 
         testMap = context.resolveDynamicValuesInMap(testMap);
 
-        Assert.assertEquals(testMap.get("value"), "123");
+        Assertions.assertEquals("123", testMap.get("value"));
 
         testMap.clear();
         testMap.put("value", "test");
 
         testMap = context.resolveDynamicValuesInMap(testMap);
 
-        Assert.assertEquals(testMap.get("value"), "test");
+        Assertions.assertEquals("test", testMap.get("value"));
 
         testMap.clear();
         testMap.put("${test}", "value");
@@ -387,9 +388,9 @@ public class TestContextTest extends UnitTestSupport {
         testMap = context.resolveDynamicValuesInMap(testMap);
 
         // Should be null due to variable substitution
-        Assert.assertNull(testMap.get("${test}"));
+        Assertions.assertNull(testMap.get("${test}"));
         // Should return "test" after variable substitution
-        Assert.assertEquals(testMap.get("123"), "value");
+        Assertions.assertEquals("value", testMap.get("123"));
     }
 
     @Test
@@ -403,9 +404,9 @@ public class TestContextTest extends UnitTestSupport {
 
         List<String> replaceValues = context.resolveDynamicValuesInList(testList);
 
-        Assert.assertEquals(replaceValues.get(0), "Hello TestFramework!");
-        Assert.assertEquals(replaceValues.get(1), "123");
-        Assert.assertEquals(replaceValues.get(2), "test");
+        Assertions.assertEquals("Hello TestFramework!", replaceValues.get(0));
+        Assertions.assertEquals("123", replaceValues.get(1));
+        Assertions.assertEquals("test", replaceValues.get(2));
     }
 
     @Test
@@ -416,19 +417,19 @@ public class TestContextTest extends UnitTestSupport {
 
         String[] replaceValues = context.resolveDynamicValuesInArray(testArray);
 
-        Assert.assertEquals(replaceValues[0], "Hello TestFramework!");
-        Assert.assertEquals(replaceValues[1], "123");
-        Assert.assertEquals(replaceValues[2], "test");
+        Assertions.assertEquals("Hello TestFramework!", replaceValues[0]);
+        Assertions.assertEquals("123", replaceValues[1]);
+        Assertions.assertEquals("test", replaceValues[2]);
     }
 
     @Test
     public void testResolveDynamicValue() {
         context.getVariables().put("test", "testtesttest");
 
-        Assert.assertEquals(context.resolveDynamicValue("${test}"), "testtesttest");
-        Assert.assertEquals(context.resolveDynamicValue(
-                "citrus:concat('Hello', ' TestFramework!')"), "Hello TestFramework!");
-        Assert.assertEquals(context.resolveDynamicValue("nonDynamicValue"), "nonDynamicValue");
+        Assertions.assertEquals("testtesttest", context.resolveDynamicValue("${test}"));
+        Assertions.assertEquals("Hello TestFramework!", context.resolveDynamicValue(
+                "citrus:concat('Hello', ' TestFramework!')"));
+        Assertions.assertEquals("nonDynamicValue", context.resolveDynamicValue("nonDynamicValue"));
     }
 
     @Test
@@ -446,8 +447,8 @@ public class TestContextTest extends UnitTestSupport {
             // ok
         }
 
-        Assert.assertTrue(context.stopTimer(timerId));
-        Assert.assertFalse(context.stopTimer("?????"));
+        Assertions.assertTrue(context.stopTimer(timerId));
+        Assertions.assertFalse(context.stopTimer("?????"));
         context.stopTimers();
 
         verify(timer, times(2)).stopTimer();

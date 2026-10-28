@@ -22,8 +22,11 @@ import java.util.Collections;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.7.4
@@ -35,21 +38,24 @@ public class SystemPropertyFunctionTest extends UnitTestSupport {
     @Test
     public void testFunction() {
         System.setProperty("foo.property", "Citrus rocks!");
-        Assert.assertEquals(function.execute(Collections.singletonList("foo.property"), context), "Citrus rocks!");
+        Assertions.assertEquals("Citrus rocks!", function.execute(Collections.singletonList("foo.property"), context));
     }
 
     @Test
     public void testFunctionDefaultValue() {
-        Assert.assertEquals(function.execute(Arrays.asList("bar.property", "This is a default"), context), "This is a default");
+        Assertions.assertEquals("This is a default", function.execute(Arrays.asList("bar.property", "This is a default"), context));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class}, expectedExceptionsMessageRegExp = "Failed to resolve system property 'bar.property'")
+    @Test
     public void testPropertyNotFound() {
-        function.execute(Collections.singletonList("bar.property"), context);
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> {
+            function.execute(Collections.singletonList("bar.property"), context);
+        });
+        assertThat(thrown).hasMessageMatching("Failed to resolve system property 'bar.property'");
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(Collections.emptyList(), context));
     }
 }

@@ -26,14 +26,14 @@ import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.FinallySequence;
 import org.citrusframework.container.Sequence;
 import org.citrusframework.dsl.TestActionSupport;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
 
 public class TestActionRunnerInjectorTest extends UnitTestSupport implements TestActionSupport {
 
@@ -45,8 +45,8 @@ public class TestActionRunnerInjectorTest extends UnitTestSupport implements Tes
 
         TestActionRunnerInjector.inject(builder, runner);
 
-        assertSame(builder.runner, runner);
-        assertEquals(builder.injections, 1);
+        assertSame(runner, builder.runner);
+        assertEquals(1, builder.injections);
     }
 
     @Test
@@ -59,8 +59,8 @@ public class TestActionRunnerInjectorTest extends UnitTestSupport implements Tes
                 iterate().condition("i lt 2").actions(deeplyNested)
         ), runner);
 
-        assertSame(nested.runner, runner);
-        assertSame(deeplyNested.runner, runner);
+        assertSame(runner, nested.runner);
+        assertSame(runner, deeplyNested.runner);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class TestActionRunnerInjectorTest extends UnitTestSupport implements Tes
 
         TestActionRunnerInjector.inject(new DelegatingBuilder(delegate), runner);
 
-        assertSame(delegate.runner, runner);
+        assertSame(runner, delegate.runner);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class TestActionRunnerInjectorTest extends UnitTestSupport implements Tes
 
         TestActionRunnerInjector.inject(sequential().actions(shared, sequential().actions(shared)), runner);
 
-        assertEquals(shared.injections, 1);
+        assertEquals(1, shared.injections);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class TestActionRunnerInjectorTest extends UnitTestSupport implements Tes
 
         TestActionRunnerInjector.inject(container, runner);
 
-        assertEquals(nested.injections, 1);
+        assertEquals(1, nested.injections);
     }
 
     @Test
@@ -108,8 +108,8 @@ public class TestActionRunnerInjectorTest extends UnitTestSupport implements Tes
         ));
 
         List<TestAction> finalActions = ((DefaultTestCase) testCaseRunner.getTestCase()).getFinalActions();
-        assertEquals(finalActions.size(), 1);
-        assertEquals(((EchoAction) finalActions.get(0)).getMessage(), "behaviorFinally");
+        assertEquals(1, finalActions.size());
+        assertEquals("behaviorFinally", ((EchoAction) finalActions.get(0)).getMessage());
         assertTrue(context.getFinalActions().isEmpty());
     }
 
@@ -135,8 +135,8 @@ public class TestActionRunnerInjectorTest extends UnitTestSupport implements Tes
         ))));
 
         List<TestAction> finalActions = ((DefaultTestCase) testCaseRunner.getTestCase()).getFinalActions();
-        assertEquals(finalActions.size(), 1);
-        assertEquals(((EchoAction) finalActions.get(0)).getMessage(), "innerFinally");
+        assertEquals(1, finalActions.size());
+        assertEquals("innerFinally", ((EchoAction) finalActions.get(0)).getMessage());
     }
 
     @Test
@@ -149,7 +149,7 @@ public class TestActionRunnerInjectorTest extends UnitTestSupport implements Tes
         ));
         testCaseRunner.stop();
 
-        assertEquals(context.getVariable("cleanedUp"), "true");
+        assertEquals("true", context.getVariable("cleanedUp"));
     }
 
     private static class RunnerAwareBuilder implements TestActionBuilder<TestAction>, TestActionRunnerAware {

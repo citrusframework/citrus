@@ -19,9 +19,11 @@ package org.citrusframework.sharding;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.citrusframework.TestCase;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Array;
 import java.util.List;
@@ -33,6 +35,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.range;
 import static org.citrusframework.sharding.Shard.createShard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.clearInvocations;
@@ -40,9 +43,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.openMocks;
-import static org.testng.AssertJUnit.assertFalse;
 
+@ExtendWith(MockitoExtension.class)
 public class ShardTest {
 
     private static final List<TestCase> TEST_CASES = createTestCases(10);
@@ -56,11 +58,6 @@ public class ShardTest {
 
     @Mock
     protected ShardingConfiguration shardingConfigurationMock;
-
-    @BeforeMethod
-    public void beforeMethodSetup() {
-        openMocks(this);
-    }
 
     protected void configureShardingConfiguration(int totalNumberOfShards, int shardNumber) {
         doReturn(totalNumberOfShards).when(shardingConfigurationMock).getTotalNumberOfShards();
@@ -106,7 +103,8 @@ public class ShardTest {
         return Pair.of(shard1, shard2);
     }
 
-    public static class ArrayApiTest extends ShardTest {
+    @Nested
+    public class ArrayApiTest {
 
         @Test
         public void unsharded() {
@@ -148,7 +146,8 @@ public class ShardTest {
         }
     }
 
-    public static class StreamApiTest extends ShardTest {
+    @Nested
+    public class StreamApiTest {
 
         @Test
         public void unsharded() {

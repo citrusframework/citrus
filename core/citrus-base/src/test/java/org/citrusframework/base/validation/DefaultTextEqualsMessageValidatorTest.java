@@ -24,16 +24,22 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.context.DefaultValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DefaultTextEqualsMessageValidatorTest extends UnitTestSupport {
 
     private final DefaultTextEqualsMessageValidator validator = new DefaultTextEqualsMessageValidator();
     private final DefaultValidationContext validationContext = new DefaultValidationContext();
 
-    @Test(dataProvider = "successTests")
+    @ParameterizedTest
+    @MethodSource("successTests")
     public void testValidate(Object received, Object control) {
         Message receivedMessage = new DefaultMessage(received);
         Message controlMessage = new DefaultMessage(control);
@@ -41,28 +47,30 @@ public class DefaultTextEqualsMessageValidatorTest extends UnitTestSupport {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
-    @Test(dataProvider = "errorTests", expectedExceptions = ValidationException.class)
+    @ParameterizedTest
+    @MethodSource("errorTests")
     public void testValidateError(Object received, Object control) {
         Message receivedMessage = new DefaultMessage(received);
         Message controlMessage = new DefaultMessage(control);
 
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        assertThrows(ValidationException.class, () -> {
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        });
     }
 
     @Test
     public void testFirstDiff() {
-        Assert.assertEquals(validator.getFirstDiff("Hello", "Hello"), "");
-        Assert.assertEquals(validator.getFirstDiff("Hello", "Hi"), "at position 2 expected 'i', but was 'ello'");
-        Assert.assertEquals(validator.getFirstDiff("Hello bar", "Hello foo"), "at position 7 expected 'foo', but was 'bar'");
-        Assert.assertEquals(validator.getFirstDiff("Hello foo, how are you doing!", "Hello foo, how are you doing?"), "at position 29 expected '?', but was '!'");
-        Assert.assertEquals(validator.getFirstDiff("Hello foo, how are you doing!", "Hello foo, how are you doing"), "at position 29 expected '', but was '!'");
-        Assert.assertEquals(validator.getFirstDiff("Hello foo, how are you doing", "Hello foo, how are you doing!"), "at position 29 expected '!', but was ''");
-        Assert.assertEquals(validator.getFirstDiff("1", "2"), "at position 1 expected '2', but was '1'");
-        Assert.assertEquals(validator.getFirstDiff("1234", "1243"), "at position 3 expected '43', but was '34'");
-        Assert.assertEquals(validator.getFirstDiff("nospacesatall", "no spaces at all"), "at position 3 expected ' spaces at all', but was 'spacesatall'");
+        Assertions.assertEquals("", validator.getFirstDiff("Hello", "Hello"));
+        Assertions.assertEquals("at position 2 expected 'i', but was 'ello'", validator.getFirstDiff("Hello", "Hi"));
+        Assertions.assertEquals("at position 7 expected 'foo', but was 'bar'", validator.getFirstDiff("Hello bar", "Hello foo"));
+        Assertions.assertEquals("at position 29 expected '?', but was '!'", validator.getFirstDiff("Hello foo, how are you doing!", "Hello foo, how are you doing?"));
+        Assertions.assertEquals("at position 29 expected '', but was '!'", validator.getFirstDiff("Hello foo, how are you doing!", "Hello foo, how are you doing"));
+        Assertions.assertEquals("at position 29 expected '!', but was ''", validator.getFirstDiff("Hello foo, how are you doing", "Hello foo, how are you doing!"));
+        Assertions.assertEquals("at position 1 expected '2', but was '1'", validator.getFirstDiff("1", "2"));
+        Assertions.assertEquals("at position 3 expected '43', but was '34'", validator.getFirstDiff("1234", "1243"));
+        Assertions.assertEquals("at position 3 expected ' spaces at all', but was 'spacesatall'", validator.getFirstDiff("nospacesatall", "no spaces at all"));
     }
 
-    @DataProvider
     private Object[][] successTests() {
         return new Object[][] {
            new Object[]{ null, null },
@@ -82,7 +90,6 @@ public class DefaultTextEqualsMessageValidatorTest extends UnitTestSupport {
         };
     }
 
-    @DataProvider
     private Object[][] errorTests() {
         return new Object[][] {
            new Object[]{ null, "Hello World!" },

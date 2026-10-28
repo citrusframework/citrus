@@ -21,31 +21,28 @@ import java.util.Optional;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.SystemProvider;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.citrusframework.sharding.ShardingConfiguration.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.openMocks;
-import static org.testng.Assert.expectThrows;
 
+@ExtendWith(MockitoExtension.class)
 public class ShardingConfigurationTest {
 
     @Mock
     private SystemProvider systemProviderMock;
 
-    @BeforeMethod
-    void beforeMethodSetup() {
-        openMocks(this);
-    }
-
-    @DataProvider
     private static Object[] shardNumbers() {
         return new Object[]{
                 1, 2
@@ -69,19 +66,21 @@ public class ShardingConfigurationTest {
 
     @Test
     public void configureWithoutTotalNumberOfShards() {
-        var exception = expectThrows(CitrusRuntimeException.class, () -> new ShardingConfiguration(0, 0));
+        var exception = assertThrows(CitrusRuntimeException.class, () -> new ShardingConfiguration(0, 0));
         assertEquals("Number of total shards must be configured!", exception.getMessage());
     }
 
-    @Test(dataProvider = "shardNumbers")
+    @ParameterizedTest
+    @MethodSource("shardNumbers")
     public void configureWithNegativeShardNumber(int shardNumber) {
-        var exception = expectThrows(CitrusRuntimeException.class, () -> new ShardingConfiguration(1, shardNumber * -1));
+        var exception = assertThrows(CitrusRuntimeException.class, () -> new ShardingConfiguration(1, shardNumber * -1));
         assertEquals("Shard number cannot be negative!", exception.getMessage());
     }
 
-    @Test(dataProvider = "shardNumbers")
+    @ParameterizedTest
+    @MethodSource("shardNumbers")
     public void configureWithInvalidShardNumber(int shardNumber) {
-        var exception = expectThrows(CitrusRuntimeException.class, () -> new ShardingConfiguration(1, shardNumber));
+        var exception = assertThrows(CitrusRuntimeException.class, () -> new ShardingConfiguration(1, shardNumber));
         assertEquals("Shard number must be less than the total number of shards!", exception.getMessage());
     }
 
@@ -127,15 +126,16 @@ public class ShardingConfigurationTest {
     public void stringTotalNumberOfShardsNumberFormatException() {
         doReturn(Optional.of("non-numeric")).when(systemProviderMock).getEnv(TOTAL_SHARD_NUMBER_ENV_VAR_NAME);
 
-        var exception = expectThrows(CitrusRuntimeException.class, () -> new ShardingConfiguration(systemProviderMock));
+        var exception = assertThrows(CitrusRuntimeException.class, () -> new ShardingConfiguration(systemProviderMock));
         assertEquals("Failed to calculate number of total shards, received string instead of number!", exception.getMessage());
     }
 
     @Test
     public void stringShardNumberFormatException() {
-        doReturn(Optional.of("non-numeric")).when(systemProviderMock).getEnv(SHARD_NUMBER_ENV_VAR_NAME);
+        // getEnv(TOTAL_SHARD_NUMBER_ENV_VAR_NAME) runs first and relies on the default answer, Optional.empty()
+        lenient().doReturn(Optional.of("non-numeric")).when(systemProviderMock).getEnv(SHARD_NUMBER_ENV_VAR_NAME);
 
-        var exception = expectThrows(CitrusRuntimeException.class, () -> new ShardingConfiguration(systemProviderMock));
+        var exception = assertThrows(CitrusRuntimeException.class, () -> new ShardingConfiguration(systemProviderMock));
         assertEquals("Failed to calculate shard number, received string instead of number!", exception.getMessage());
     }
 }

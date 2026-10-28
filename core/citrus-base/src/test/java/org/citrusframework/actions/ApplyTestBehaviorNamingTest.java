@@ -26,18 +26,17 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.container.Sequence;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ApplyTestBehaviorNamingTest extends UnitTestSupport implements TestActionSupport {
 
     private DefaultTestCaseRunner runner;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupRunner() {
         runner = new DefaultTestCaseRunner(context);
     }
@@ -46,35 +45,35 @@ public class ApplyTestBehaviorNamingTest extends UnitTestSupport implements Test
     public void shouldNameActionAfterNamedClass() {
         runner.run(apply(new PlaceAnOrder()));
 
-        assertEquals(appliedAction(0).getName(), "place an order");
+        assertEquals("place an order", appliedAction(0).getName());
     }
 
     @Test
     public void shouldNameActionAfterRecord() {
         runner.run(apply(new SayHello("Hello")));
 
-        assertEquals(appliedAction(0).getName(), "say hello");
+        assertEquals("say hello", appliedAction(0).getName());
     }
 
     @Test
     public void shouldNameLambdaGenerically() {
         runner.run(apply(behavior -> behavior.run(echo("lambda"))));
 
-        assertEquals(appliedAction(0).getName(), "behavior");
+        assertEquals("behavior", appliedAction(0).getName());
     }
 
     @Test
     public void shouldUseExplicitBehaviorName() {
         runner.run(apply(TestBehavior.named("sign in", behavior -> behavior.run(echo("signed in")))));
 
-        assertEquals(appliedAction(0).getName(), "sign in");
+        assertEquals("sign in", appliedAction(0).getName());
     }
 
     @Test
     public void shouldPreferActionNameOverBehaviorName() {
         runner.run(apply(new PlaceAnOrder()).name("order SKU-1"));
 
-        assertEquals(appliedAction(0).getName(), "order SKU-1");
+        assertEquals("order SKU-1", appliedAction(0).getName());
     }
 
     @Test
@@ -82,16 +81,16 @@ public class ApplyTestBehaviorNamingTest extends UnitTestSupport implements Test
         runner.run(sequential().actions(apply(new PlaceAnOrder())));
 
         Sequence sequence = (Sequence) runner.getTestCase().getActions().get(0);
-        assertEquals(sequence.getExecutedActions().get(0).getName(), "place an order");
+        assertEquals("place an order", sequence.getExecutedActions().get(0).getName());
     }
 
     @Test
     public void shouldKeepDefaultNameWithoutBehavior() {
         ApplyTestBehaviorAction action = new ApplyTestBehaviorAction.Builder().build();
 
-        assertEquals(action.getName(), "apply-behavior");
-        CitrusRuntimeException failure = expectThrows(CitrusRuntimeException.class, () -> action.execute(context));
-        assertEquals(failure.getMessage(), "Missing test behavior to apply");
+        assertEquals("apply-behavior", action.getName());
+        CitrusRuntimeException failure = assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        assertEquals("Missing test behavior to apply", failure.getMessage());
     }
 
     @Test
@@ -101,8 +100,8 @@ public class ApplyTestBehaviorNamingTest extends UnitTestSupport implements Test
         runner.run(apply(signIn.andThen(new PlaceAnOrder())));
 
         ApplyTestBehaviorAction composite = appliedAction(0);
-        assertEquals(composite.getName(), "sign in then place an order");
-        assertEquals(runner.getTestCase().getActionCount(), 1);
+        assertEquals("sign in then place an order", composite.getName());
+        assertEquals(1, runner.getTestCase().getActionCount());
         assertEchoMessages(composite.getExecutedActions(), "signed in", "order placed");
     }
 
@@ -114,7 +113,7 @@ public class ApplyTestBehaviorNamingTest extends UnitTestSupport implements Test
         runner.run(apply(List.of(signIn, new PlaceAnOrder(), signOut)));
 
         ApplyTestBehaviorAction composite = appliedAction(0);
-        assertEquals(composite.getName(), "sign in then place an order then sign out");
+        assertEquals("sign in then place an order then sign out", composite.getName());
         assertEchoMessages(composite.getExecutedActions(), "signed in", "order placed", "signed out");
     }
 
@@ -122,7 +121,7 @@ public class ApplyTestBehaviorNamingTest extends UnitTestSupport implements Test
     public void shouldComposeSingletonList() {
         runner.run(apply(List.of(new PlaceAnOrder())));
 
-        assertEquals(appliedAction(0).getName(), "place an order");
+        assertEquals("place an order", appliedAction(0).getName());
     }
 
     @Test
@@ -138,9 +137,9 @@ public class ApplyTestBehaviorNamingTest extends UnitTestSupport implements Test
         })));
 
         ApplyTestBehaviorAction checkOut = appliedAction(0);
-        assertEquals(checkOut.getExecutedActions().size(), 2);
+        assertEquals(2, checkOut.getExecutedActions().size());
         ApplyTestBehaviorAction placeAnOrder = (ApplyTestBehaviorAction) checkOut.getExecutedActions().get(0);
-        assertEquals(placeAnOrder.getName(), "place an order");
+        assertEquals("place an order", placeAnOrder.getName());
         assertEchoMessages(placeAnOrder.getExecutedActions(), "order placed");
     }
 
@@ -149,7 +148,7 @@ public class ApplyTestBehaviorNamingTest extends UnitTestSupport implements Test
     }
 
     private static void assertEchoMessages(List<TestAction> actions, String... messages) {
-        assertEquals(actions.stream().map(action -> ((EchoAction) action).getMessage()).toList(), List.of(messages));
+        assertEquals(List.of(messages), actions.stream().map(action -> ((EchoAction) action).getMessage()).toList());
     }
 
     private static class PlaceAnOrder implements TestBehavior, TestActionSupport {

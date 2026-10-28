@@ -22,8 +22,10 @@ import java.util.List;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ConcatFunctionTest extends UnitTestSupport {
     ConcatFunction function = new ConcatFunction();
@@ -35,11 +37,13 @@ public class ConcatFunctionTest extends UnitTestSupport {
         params.add("TestFramework");
         params.add("!");
 
-        Assert.assertEquals(function.execute(params, context), "Hallo TestFramework!");
+        Assertions.assertEquals("Hallo TestFramework!", function.execute(params, context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(Collections.<String>emptyList(), context);
+        });
     }
 }

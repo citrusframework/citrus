@@ -23,8 +23,8 @@ import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageStore;
 import org.citrusframework.message.MessageStore;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.6
@@ -36,14 +36,14 @@ public class DefaultMessageStoreTest extends UnitTestSupport {
     @Test
     public void testStoreAndGetMessage() {
         messageStore.storeMessage("request", new DefaultMessage("RequestMessage"));
-        Assert.assertEquals(messageStore.getMessage("request").getPayload(String.class), "RequestMessage");
-        Assert.assertNull(messageStore.getMessage("unknown"));
+        Assertions.assertEquals("RequestMessage", messageStore.getMessage("request").getPayload(String.class));
+        Assertions.assertNull(messageStore.getMessage("unknown"));
     }
 
     @Test
     public void testConstructMessageName() {
         Endpoint endpoint = new DirectEndpoint();
         endpoint.setName("testEndpoint");
-        Assert.assertEquals(messageStore.constructMessageName(new SendMessageAction.Builder().build(), endpoint), "send(testEndpoint)");
+        Assertions.assertEquals("send(testEndpoint)", messageStore.constructMessageName(new SendMessageAction.Builder().build(), endpoint));
     }
 }

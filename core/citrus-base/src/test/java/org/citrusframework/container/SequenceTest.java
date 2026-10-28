@@ -20,9 +20,10 @@ import org.citrusframework.TestAction;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
@@ -59,7 +60,7 @@ public class SequenceTest extends UnitTestSupport {
         verify(action3).execute(context);
     }
 
-    @Test(expectedExceptions=CitrusRuntimeException.class)
+    @Test
     public void testFirstActionFailing() {
         TestAction action1 = Mockito.mock(TestAction.class);
         TestAction action2 = Mockito.mock(TestAction.class);
@@ -70,10 +71,10 @@ public class SequenceTest extends UnitTestSupport {
         Sequence sequenceAction = new Sequence.Builder()
                 .actions(new FailAction.Builder().build(), action1, action2, action3)
                 .build();
-        sequenceAction.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> sequenceAction.execute(context));
     }
 
-    @Test(expectedExceptions=CitrusRuntimeException.class)
+    @Test
     public void testLastActionFailing() {
         TestAction action1 = Mockito.mock(TestAction.class);
         TestAction action2 = Mockito.mock(TestAction.class);
@@ -84,13 +85,13 @@ public class SequenceTest extends UnitTestSupport {
         Sequence sequenceAction = new Sequence.Builder()
                 .actions(action1, action2, action3, new FailAction.Builder().build())
                 .build();
-        sequenceAction.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> sequenceAction.execute(context));
         verify(action1).execute(context);
         verify(action2).execute(context);
         verify(action3).execute(context);
     }
 
-    @Test(expectedExceptions=CitrusRuntimeException.class)
+    @Test
     public void testFailingAction() {
         TestAction action1 = Mockito.mock(TestAction.class);
         TestAction action2 = Mockito.mock(TestAction.class);
@@ -101,7 +102,7 @@ public class SequenceTest extends UnitTestSupport {
         Sequence sequenceAction = new Sequence.Builder()
                 .actions(action1, new FailAction.Builder().build(), action2, action3)
                 .build();
-        sequenceAction.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> sequenceAction.execute(context));
         verify(action1).execute(context);
     }
 }

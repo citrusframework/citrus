@@ -16,7 +16,7 @@
 
 package org.citrusframework.base;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestMetaInfoTest {
 

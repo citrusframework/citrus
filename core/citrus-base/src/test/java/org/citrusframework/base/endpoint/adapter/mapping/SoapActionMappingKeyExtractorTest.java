@@ -19,8 +19,8 @@ package org.citrusframework.base.endpoint.adapter.mapping;
 import org.citrusframework.endpoint.adapter.mapping.SoapActionMappingKeyExtractor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SoapActionMappingKeyExtractorTest {
 
@@ -28,9 +28,9 @@ public class SoapActionMappingKeyExtractorTest {
     public void testExtractMappingKey() {
         SoapActionMappingKeyExtractor extractor = new SoapActionMappingKeyExtractor();
 
-        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage("Foo")
+        Assertions.assertEquals("foo", extractor.extractMappingKey(new DefaultMessage("Foo")
                 .setHeader("citrus_soap_action", "foo")
-                .setHeader("Bar", "bar")), "foo");
+                .setHeader("Bar", "bar")));
     }
 
     @Test
@@ -41,9 +41,9 @@ public class SoapActionMappingKeyExtractorTest {
             extractor.extractMappingKey(new DefaultMessage("Foo")
                     .setHeader("Foo", "foo")
                     .setHeader("Bar", "bar"));
-            Assert.fail("Missing exception due to unknown header");
+            Assertions.fail("Missing exception due to unknown header");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Unable to find header 'citrus_soap_action'"));
+            Assertions.assertTrue(e.getMessage().startsWith("Unable to find header 'citrus_soap_action'"));
         }
     }
 }

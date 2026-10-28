@@ -20,7 +20,9 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AssertTest extends UnitTestSupport {
 
@@ -94,7 +96,7 @@ public class AssertTest extends UnitTestSupport {
         assertAction.execute(context);
     }
 
-    @Test(expectedExceptions=CitrusRuntimeException.class)
+    @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAssertExceptionWrongMessageCheck() {
         FailAction.Builder fail = new FailAction.Builder()
@@ -107,10 +109,10 @@ public class AssertTest extends UnitTestSupport {
                 .exception(exceptionClass)
                 .message("Excpected error is something else")
                 .build();
-        assertAction.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> assertAction.execute(context));
     }
 
-    @Test(expectedExceptions=CitrusRuntimeException.class)
+    @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMissingException() {
         Class exceptionClass = CitrusRuntimeException.class;
@@ -119,6 +121,6 @@ public class AssertTest extends UnitTestSupport {
                 .actions(new EchoAction.Builder())
                 .exception(exceptionClass)
                 .build();
-        assertAction.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> assertAction.execute(context));
     }
 }

@@ -21,9 +21,9 @@ import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
@@ -51,7 +51,7 @@ public class AbstractEndpointAdapterTest {
             }
         };
 
-        Assert.assertNull(abstractEndpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
+        Assertions.assertNull(abstractEndpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class AbstractEndpointAdapterTest {
         abstractEndpointAdapter.setFallbackEndpointAdapter(endpointAdapter);
         Message response = abstractEndpointAdapter.handleMessage(request);
 
-        Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload(String.class), "OK");
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals("OK", response.getPayload(String.class));
     }
 }

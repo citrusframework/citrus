@@ -20,24 +20,28 @@ import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RandomPatternFunctionTest {
 
     private final RandomPatternFunction function = new RandomPatternFunction();
     private final TestContext context = new TestContext();
 
-    @Test(expectedExceptions = InvalidFunctionUsageException.class)
+    @Test
     public void testExecuteWithNullParameterList() {
-        function.execute((List<String>) null, context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute((List<String>) null, context));
     }
 
-    @Test(expectedExceptions = InvalidFunctionUsageException.class)
+    @Test
     public void testExecuteWithEmptyPattern() {
-        function.execute(List.of(""), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(List.of(""), context));
     }
 
     @Test
@@ -47,13 +51,12 @@ public class RandomPatternFunctionTest {
         assertTrue(result.matches(pattern), "Generated string does not match the pattern");
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void testExecuteWithInvalidPattern() {
         String pattern = "[0-3]([a-c]|[e-g]{1"; // Invalid regex pattern with "Character range is out of order"
-        function.execute(List.of(pattern), context);
+        assertThrows(IllegalArgumentException.class, () -> function.execute(List.of(pattern), context));
     }
 
-    @DataProvider(name = "patternProvider")
     public Object[][] patternProvider() {
         return new Object[][]{
                 {"testExecuteWithComplexPattern", "(foo|bar)[0-9]{2,4}"},
@@ -64,7 +67,8 @@ public class RandomPatternFunctionTest {
         };
     }
 
-    @Test(dataProvider = "patternProvider")
+    @ParameterizedTest
+    @MethodSource("patternProvider")
     public void testPatterns(String description, String pattern) {
         for (int i = 0; i < 100; i++) {
             String result = function.execute(List.of(pattern), context);

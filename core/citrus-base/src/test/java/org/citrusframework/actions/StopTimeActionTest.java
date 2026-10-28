@@ -17,8 +17,8 @@
 package org.citrusframework.actions;
 
 import org.citrusframework.base.UnitTestSupport;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StopTimeActionTest extends UnitTestSupport {
 
@@ -27,23 +27,23 @@ public class StopTimeActionTest extends UnitTestSupport {
 		StopTimeAction stopTime = new StopTimeAction.Builder()
                 .build();
 
-        Assert.assertFalse(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID));
-        Assert.assertFalse(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX));
+        Assertions.assertFalse(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID));
+        Assertions.assertFalse(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX));
 
 		stopTime.execute(context);
-        Assert.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID));
-        Assert.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX));
-		Assert.assertEquals(context.getVariable(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX, Long.class), 0L);
+        Assertions.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID));
+        Assertions.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX));
+		Assertions.assertEquals(0L, context.getVariable(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX, Long.class));
 		Thread.sleep(100L);
 		stopTime.execute(context);
-        Assert.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID));
-        Assert.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX));
-		Assert.assertTrue(context.getVariable(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX, Long.class) >= 100L);
+        Assertions.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID));
+        Assertions.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX));
+		Assertions.assertTrue(context.getVariable(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX, Long.class) >= 100L);
 		Thread.sleep(100L);
 		stopTime.execute(context);
-        Assert.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID));
-        Assert.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX));
-		Assert.assertTrue(context.getVariable(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX, Long.class) >= 200L);
+        Assertions.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID));
+        Assertions.assertTrue(context.getVariables().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX));
+		Assertions.assertTrue(context.getVariable(StopTimeAction.DEFAULT_TIMELINE_ID + StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX, Long.class) >= 200L);
 	}
 
 	@Test
@@ -53,24 +53,24 @@ public class StopTimeActionTest extends UnitTestSupport {
                 .suffix("_time")
                 .build();
 
-        Assert.assertFalse(context.getVariables().containsKey("stopMe"));
-        Assert.assertFalse(context.getVariables().containsKey("stopMe_time"));
+        Assertions.assertFalse(context.getVariables().containsKey("stopMe"));
+        Assertions.assertFalse(context.getVariables().containsKey("stopMe_time"));
 
         stopTime.execute(context);
-        Assert.assertTrue(context.getVariables().containsKey("stopMe"));
-        Assert.assertTrue(context.getVariables().containsKey("stopMe_time"));
-        Assert.assertEquals(context.getVariable("stopMe_time", Long.class), 0L);
+        Assertions.assertTrue(context.getVariables().containsKey("stopMe"));
+        Assertions.assertTrue(context.getVariables().containsKey("stopMe_time"));
+        Assertions.assertEquals(0L, context.getVariable("stopMe_time", Long.class));
 
         Thread.sleep(100L);
         stopTime.execute(context);
-        Assert.assertTrue(context.getVariables().containsKey("stopMe"));
-        Assert.assertTrue(context.getVariables().containsKey("stopMe_time"));
-        Assert.assertTrue(context.getVariable("stopMe_time", Long.class) >= 100L);
+        Assertions.assertTrue(context.getVariables().containsKey("stopMe"));
+        Assertions.assertTrue(context.getVariables().containsKey("stopMe_time"));
+        Assertions.assertTrue(context.getVariable("stopMe_time", Long.class) >= 100L);
         Thread.sleep(100L);
         stopTime.execute(context);
-        Assert.assertTrue(context.getVariables().containsKey("stopMe"));
-        Assert.assertTrue(context.getVariables().containsKey("stopMe_time"));
-        Assert.assertTrue(context.getVariable("stopMe_time", Long.class) >= 200L);
+        Assertions.assertTrue(context.getVariables().containsKey("stopMe"));
+        Assertions.assertTrue(context.getVariables().containsKey("stopMe_time"));
+        Assertions.assertTrue(context.getVariable("stopMe_time", Long.class) >= 200L);
     }
 
 	@Test
@@ -82,34 +82,34 @@ public class StopTimeActionTest extends UnitTestSupport {
                 .id("stopUs")
                 .build();
 
-        Assert.assertFalse(context.getVariables().containsKey("stopThem"));
-        Assert.assertFalse(context.getVariables().containsKey("stopThem_VALUE"));
-        Assert.assertFalse(context.getVariables().containsKey("stopUs"));
-        Assert.assertFalse(context.getVariables().containsKey("stopUs_VALUE"));
+        Assertions.assertFalse(context.getVariables().containsKey("stopThem"));
+        Assertions.assertFalse(context.getVariables().containsKey("stopThem_VALUE"));
+        Assertions.assertFalse(context.getVariables().containsKey("stopUs"));
+        Assertions.assertFalse(context.getVariables().containsKey("stopUs_VALUE"));
 
         stopTime1.execute(context);
-        Assert.assertTrue(context.getVariables().containsKey("stopThem"));
-        Assert.assertTrue(context.getVariables().containsKey("stopThem_VALUE"));
-        Assert.assertFalse(context.getVariables().containsKey("stopUs"));
-        Assert.assertFalse(context.getVariables().containsKey("stopUs_VALUE"));
-        Assert.assertEquals(context.getVariable("stopThem_VALUE", Long.class), 0L);
+        Assertions.assertTrue(context.getVariables().containsKey("stopThem"));
+        Assertions.assertTrue(context.getVariables().containsKey("stopThem_VALUE"));
+        Assertions.assertFalse(context.getVariables().containsKey("stopUs"));
+        Assertions.assertFalse(context.getVariables().containsKey("stopUs_VALUE"));
+        Assertions.assertEquals(0L, context.getVariable("stopThem_VALUE", Long.class));
 
         Thread.sleep(100L);
         stopTime2.execute(context);
-        Assert.assertTrue(context.getVariables().containsKey("stopThem"));
-        Assert.assertTrue(context.getVariables().containsKey("stopThem_VALUE"));
-        Assert.assertTrue(context.getVariables().containsKey("stopUs"));
-        Assert.assertTrue(context.getVariables().containsKey("stopUs_VALUE"));
-        Assert.assertEquals(context.getVariable("stopThem_VALUE", Long.class), 0L);
-        Assert.assertEquals(context.getVariable("stopUs_VALUE", Long.class), 0L);
+        Assertions.assertTrue(context.getVariables().containsKey("stopThem"));
+        Assertions.assertTrue(context.getVariables().containsKey("stopThem_VALUE"));
+        Assertions.assertTrue(context.getVariables().containsKey("stopUs"));
+        Assertions.assertTrue(context.getVariables().containsKey("stopUs_VALUE"));
+        Assertions.assertEquals(0L, context.getVariable("stopThem_VALUE", Long.class));
+        Assertions.assertEquals(0L, context.getVariable("stopUs_VALUE", Long.class));
         Thread.sleep(100L);
         stopTime1.execute(context);
         stopTime2.execute(context);
-        Assert.assertTrue(context.getVariables().containsKey("stopThem"));
-        Assert.assertTrue(context.getVariables().containsKey("stopThem_VALUE"));
-        Assert.assertTrue(context.getVariables().containsKey("stopUs"));
-        Assert.assertTrue(context.getVariables().containsKey("stopUs_VALUE"));
-        Assert.assertTrue(context.getVariable("stopThem_VALUE", Long.class) >= 200L);
-        Assert.assertTrue(context.getVariable("stopUs_VALUE", Long.class) >= 100L);
+        Assertions.assertTrue(context.getVariables().containsKey("stopThem"));
+        Assertions.assertTrue(context.getVariables().containsKey("stopThem_VALUE"));
+        Assertions.assertTrue(context.getVariables().containsKey("stopUs"));
+        Assertions.assertTrue(context.getVariables().containsKey("stopUs_VALUE"));
+        Assertions.assertTrue(context.getVariable("stopThem_VALUE", Long.class) >= 200L);
+        Assertions.assertTrue(context.getVariable("stopUs_VALUE", Long.class) >= 100L);
     }
 }

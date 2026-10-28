@@ -24,15 +24,15 @@ import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MessageStoreEndpointConsumerTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupMocks() {
         context = new TestContext();
     }
@@ -49,8 +49,8 @@ public class MessageStoreEndpointConsumerTest {
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -65,8 +65,8 @@ public class MessageStoreEndpointConsumerTest {
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -77,9 +77,9 @@ public class MessageStoreEndpointConsumerTest {
 
         try {
             endpoint.createConsumer().receive(context);
-            Assert.fail("Missing " + MessageTimeoutException.class + " because no message was received");
+            Assertions.fail("Missing " + MessageTimeoutException.class + " because no message was received");
         } catch(MessageTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
+            Assertions.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
         }
     }
 

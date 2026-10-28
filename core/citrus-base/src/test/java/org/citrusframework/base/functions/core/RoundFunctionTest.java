@@ -20,32 +20,38 @@ import java.util.Collections;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RoundFunctionTest extends UnitTestSupport {
     RoundFunction function = new RoundFunction();
 
     @Test
     public void testFunction() {
-        Assert.assertEquals(function.execute(Collections.singletonList("5.0"), context), "5");
-        Assert.assertEquals(function.execute(Collections.singletonList("5.2"), context), "5");
-        Assert.assertEquals(function.execute(Collections.singletonList("5.7"), context), "6");
-        Assert.assertEquals(function.execute(Collections.singletonList("-5.0"), context), "-5");
-        Assert.assertEquals(function.execute(Collections.singletonList("-5.2"), context), "-5");
-        Assert.assertEquals(function.execute(Collections.singletonList("-5.7"), context), "-6");
-        Assert.assertEquals(function.execute(Collections.singletonList("5"), context), "5");
-        Assert.assertEquals(function.execute(Collections.singletonList("-5"), context), "-5");
-        Assert.assertEquals(function.execute(Collections.singletonList("5.5"), context), "6");
+        Assertions.assertEquals("5", function.execute(Collections.singletonList("5.0"), context));
+        Assertions.assertEquals("5", function.execute(Collections.singletonList("5.2"), context));
+        Assertions.assertEquals("6", function.execute(Collections.singletonList("5.7"), context));
+        Assertions.assertEquals("-5", function.execute(Collections.singletonList("-5.0"), context));
+        Assertions.assertEquals("-5", function.execute(Collections.singletonList("-5.2"), context));
+        Assertions.assertEquals("-6", function.execute(Collections.singletonList("-5.7"), context));
+        Assertions.assertEquals("5", function.execute(Collections.singletonList("5"), context));
+        Assertions.assertEquals("-5", function.execute(Collections.singletonList("-5"), context));
+        Assertions.assertEquals("6", function.execute(Collections.singletonList("5.5"), context));
     }
 
-    @Test(expectedExceptions = {NumberFormatException.class})
+    @Test
     public void testWrongParameterUsage() {
-        function.execute(Collections.singletonList("no digit"), context);
+        assertThrows(NumberFormatException.class, () -> {
+            function.execute(Collections.singletonList("no digit"), context);
+        });
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(Collections.<String>emptyList(), context);
+        });
     }
 }

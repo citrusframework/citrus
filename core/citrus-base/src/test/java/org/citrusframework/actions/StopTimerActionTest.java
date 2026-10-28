@@ -19,9 +19,9 @@ package org.citrusframework.actions;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.api.container.StopTimer;
 import org.citrusframework.context.TestContext;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.verify;
 
@@ -40,7 +40,7 @@ public class StopTimerActionTest extends UnitTestSupport {
                 .id(timerId)
                 .build();
 
-        Assert.assertEquals(stopTimer.getTimerId(), timerId);
+        Assertions.assertEquals(timerId, stopTimer.getTimerId());
 
         stopTimer.execute(context);
 

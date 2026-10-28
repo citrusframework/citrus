@@ -20,7 +20,7 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import org.citrusframework.base.UnitTestSupport;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class SleepActionTest extends UnitTestSupport {
 

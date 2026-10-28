@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.base.functions.core.RandomStringFunction;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.base.functions.Functions.changeDate;
 import static org.citrusframework.base.functions.Functions.currentDate;
@@ -32,9 +32,9 @@ import static org.citrusframework.base.functions.Functions.randomNumber;
 import static org.citrusframework.base.functions.Functions.randomString;
 import static org.citrusframework.base.functions.Functions.randomUUID;
 import static org.citrusframework.base.functions.Functions.unixTimestamp;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FunctionsTest extends UnitTestSupport {
 
@@ -50,28 +50,28 @@ public class FunctionsTest extends UnitTestSupport {
 
     @Test
     public void testChangeDate() {
-        assertEquals(changeDate("01.01.2014", "+1y", context), "01.01.2015");
-        assertEquals(changeDate("2014-01-01T12:00:00", "+1y", "yyyy-MM-dd'T'HH:mm:ss", context), "2015-01-01T12:00:00");
+        assertEquals("01.01.2015", changeDate("01.01.2014", "+1y", context));
+        assertEquals("2015-01-01T12:00:00", changeDate("2014-01-01T12:00:00", "+1y", "yyyy-MM-dd'T'HH:mm:ss", context));
     }
 
     @Test
     public void testEncodeBase64() {
-        assertEquals(encodeBase64("Foo", context), "Rm9v");
+        assertEquals("Rm9v", encodeBase64("Foo", context));
     }
 
     @Test
     public void testEncodeBase64WithCharset() {
-        assertEquals(encodeBase64("Foo", StandardCharsets.UTF_8, context), "Rm9v");
+        assertEquals("Rm9v", encodeBase64("Foo", StandardCharsets.UTF_8, context));
     }
 
     @Test
     public void testDecodeBase64() {
-        assertEquals(decodeBase64("Rm9v", context), "Foo");
+        assertEquals("Foo", decodeBase64("Rm9v", context));
     }
 
     @Test
     public void testDecodeBase64WithCharset() {
-        assertEquals(decodeBase64("Rm9v", StandardCharsets.UTF_8, context), "Foo");
+        assertEquals("Foo", decodeBase64("Rm9v", StandardCharsets.UTF_8, context));
     }
 
     @Test
@@ -96,18 +96,18 @@ public class FunctionsTest extends UnitTestSupport {
 
     @Test
     public void testRandomString() {
-        assertEquals(randomString(10L, context).length(), 10);
+        assertEquals(10, randomString(10L, context).length());
     }
 
     @Test
     public void testRandomStringWithParams() {
-        assertEquals(randomString(10L, false, context).length(), 10);
-        assertEquals(randomString(10L, RandomStringFunction.NotationMethod.LOWERCASE.name(), context).length(), 10);
-        assertEquals(randomString(10L, RandomStringFunction.NotationMethod.UPPERCASE.name(), false, context).length(), 10);
+        assertEquals(10, randomString(10L, false, context).length());
+        assertEquals(10, randomString(10L, RandomStringFunction.NotationMethod.LOWERCASE.name(), context).length());
+        assertEquals(10, randomString(10L, RandomStringFunction.NotationMethod.UPPERCASE.name(), false, context).length());
     }
 
     @Test
     public void testUnixTimestamp() {
-        assertEquals(String.valueOf(System.currentTimeMillis() / 1000L), unixTimestamp(context));
+        assertEquals(unixTimestamp(context), String.valueOf(System.currentTimeMillis() / 1000L));
     }
 }

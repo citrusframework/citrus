@@ -23,8 +23,8 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AbstractMessageProcessorTest extends UnitTestSupport {
 
@@ -50,11 +50,11 @@ public class AbstractMessageProcessorTest extends UnitTestSupport {
         Message in = new DefaultMessage("Hello Citrus!");
         in.setType(MessageType.XML.name());
         processor.process(in, context);
-        Assert.assertEquals(in.getPayload(String.class), "Processed!");
+        Assertions.assertEquals("Processed!", in.getPayload(String.class));
 
         in = new DefaultMessage("Hello Citrus!");
         in.setType(MessageType.PLAINTEXT.name());
         processor.process(in, context);
-        Assert.assertEquals(in.getPayload(String.class), "Hello Citrus!");
+        Assertions.assertEquals("Hello Citrus!", in.getPayload(String.class));
     }
 }

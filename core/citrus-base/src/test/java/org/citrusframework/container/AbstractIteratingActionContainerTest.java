@@ -4,19 +4,20 @@ import static java.lang.Thread.currentThread;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.container.AbstractIteratingActionContainerTest.Fixture.FixtureBuilder.fixture;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.time.Duration;
 import org.apache.commons.lang3.time.StopWatch;
 import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class AbstractIteratingActionContainerTest {
 
     public static final Duration ONE_SECOND = Duration.ofSeconds(1);
@@ -24,15 +25,12 @@ public class AbstractIteratingActionContainerTest {
     @Mock
     private TestContext testContext;
 
-    private AutoCloseable mockitoContext;
-
     private static StopWatch getStartedStopWatch() {
         var stopWatch = new StopWatch();
         stopWatch.start();
         return stopWatch;
     }
 
-    @DataProvider
     public static Fixture[] synchronousIterations() {
         return new Fixture[]{
             fixture(ONE_SECOND, null).doBuild(),
@@ -41,17 +39,8 @@ public class AbstractIteratingActionContainerTest {
         };
     }
 
-    @BeforeMethod
-    public void beforeMethodSetup() {
-        mockitoContext = openMocks(this);
-    }
-
-    @AfterMethod
-    public void afterMethodTeardown() throws Exception {
-        mockitoContext.close();
-    }
-
-    @Test(dataProvider = "synchronousIterations")
+    @ParameterizedTest
+    @MethodSource("synchronousIterations")
     public void synchronousIteration(Fixture iteratingActionContainer) {
         var stopWatch = getStartedStopWatch();
 

@@ -22,8 +22,10 @@ import java.util.List;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TranslateFunctionTest extends UnitTestSupport {
     TranslateFunction function = new TranslateFunction();
@@ -35,19 +37,21 @@ public class TranslateFunctionTest extends UnitTestSupport {
         params.add("\\.");
         params.add("a");
 
-        Assert.assertEquals(function.execute(params, context), "Hallo TestFramework");
+        Assertions.assertEquals("Hallo TestFramework", function.execute(params, context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testMissingParameter() {
         List<String> params = new ArrayList<>();
         params.add("H.llo TestFr.mework");
         params.add("\\.");
-        function.execute(params, context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(params, context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(Collections.<String>emptyList(), context);
+        });
     }
 }

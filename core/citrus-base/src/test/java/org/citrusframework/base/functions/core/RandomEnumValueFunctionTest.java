@@ -23,10 +23,11 @@ import java.util.Random;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test the {@link RandomEnumValueFunction} function.
@@ -67,18 +68,18 @@ public class RandomEnumValueFunctionTest extends UnitTestSupport {
 		}
 	}
 
-	@Test(expectedExceptions = {InvalidFunctionUsageException.class})
+	@Test
 	public void testWithBoth() {
 		RandomEnumValueFunction testee = new RandomEnumValueFunction();
 		testee.setValues(generateRandomValues());
 		final List<String> params = generateRandomValues();
-		testee.execute(params, context);
+		assertThrows(InvalidFunctionUsageException.class, () -> testee.execute(params, context));
 	}
 
-	@Test(expectedExceptions = {InvalidFunctionUsageException.class})
+	@Test
 	public void testWithNone() {
 		RandomEnumValueFunction testee = new RandomEnumValueFunction();
 		final List<String> noParameters = Collections.emptyList();
-		testee.execute(noParameters, context);
+		assertThrows(InvalidFunctionUsageException.class, () -> testee.execute(noParameters, context));
 	}
 }

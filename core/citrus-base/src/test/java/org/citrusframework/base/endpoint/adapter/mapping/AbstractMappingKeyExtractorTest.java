@@ -19,8 +19,8 @@ package org.citrusframework.base.endpoint.adapter.mapping;
 import org.citrusframework.endpoint.adapter.mapping.AbstractMappingKeyExtractor;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4
@@ -37,12 +37,12 @@ public class AbstractMappingKeyExtractorTest {
         };
 
         mappingKeyExtractor.setMappingKeyPrefix("pre_");
-        Assert.assertEquals(mappingKeyExtractor.extractMappingKey(new DefaultMessage("")), "pre_key");
+        Assertions.assertEquals("pre_key", mappingKeyExtractor.extractMappingKey(new DefaultMessage("")));
 
         mappingKeyExtractor.setMappingKeySuffix("_end");
-        Assert.assertEquals(mappingKeyExtractor.extractMappingKey(new DefaultMessage("")), "pre_key_end");
+        Assertions.assertEquals("pre_key_end", mappingKeyExtractor.extractMappingKey(new DefaultMessage("")));
 
         mappingKeyExtractor.setMappingKeyPrefix("");
-        Assert.assertEquals(mappingKeyExtractor.extractMappingKey(new DefaultMessage("")), "key_end");
+        Assertions.assertEquals("key_end", mappingKeyExtractor.extractMappingKey(new DefaultMessage("")));
     }
 }

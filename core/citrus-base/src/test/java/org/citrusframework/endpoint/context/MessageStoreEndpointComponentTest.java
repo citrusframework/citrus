@@ -23,15 +23,17 @@ import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MessageStoreEndpointComponentTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupMocks() {
         context = TestContextFactory.newInstance().getObject();
     }
@@ -42,17 +44,17 @@ public class MessageStoreEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("message-store", context);
 
-        Assert.assertEquals(endpoint.getClass(), MessageStoreEndpoint.class);
+        Assertions.assertEquals(MessageStoreEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals(5000L, ((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint.createProducer().send(new DefaultMessage("Message#0"), context);
 
         Message received = endpoint.createConsumer().receive(context);
-        Assert.assertNotNull(received);
-        Assert.assertEquals(received.getPayload(String.class), "Message#0");
+        Assertions.assertNotNull(received);
+        Assertions.assertEquals("Message#0", received.getPayload(String.class));
 
-        Assert.assertEquals(context.getMessageStore().getMessage("message-store.message"), received);
+        Assertions.assertEquals(received, context.getMessageStore().getMessage("message-store.message"));
     }
 
     @Test
@@ -61,17 +63,17 @@ public class MessageStoreEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("message-store:myMessage", context);
 
-        Assert.assertEquals(endpoint.getClass(), MessageStoreEndpoint.class);
+        Assertions.assertEquals(MessageStoreEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals(5000L, ((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint.createProducer().send(new DefaultMessage("Message#1"), context);
 
         Message received = endpoint.createConsumer().receive(context);
-        Assert.assertNotNull(received);
-        Assert.assertEquals(received.getPayload(String.class), "Message#1");
+        Assertions.assertNotNull(received);
+        Assertions.assertEquals("Message#1", received.getPayload(String.class));
 
-        Assert.assertEquals(context.getMessageStore().getMessage("myMessage"), received);
+        Assertions.assertEquals(received, context.getMessageStore().getMessage("myMessage"));
     }
 
     @Test
@@ -80,17 +82,17 @@ public class MessageStoreEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("message-store?messageName=myMessage", context);
 
-        Assert.assertEquals(endpoint.getClass(), MessageStoreEndpoint.class);
+        Assertions.assertEquals(MessageStoreEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals(5000L, ((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint.createProducer().send(new DefaultMessage("Message#2"), context);
 
         Message received = endpoint.createConsumer().receive(context);
-        Assert.assertNotNull(received);
-        Assert.assertEquals(received.getPayload(String.class), "Message#2");
+        Assertions.assertNotNull(received);
+        Assertions.assertEquals("Message#2", received.getPayload(String.class));
 
-        Assert.assertEquals(context.getMessageStore().getMessage("myMessage"), received);
+        Assertions.assertEquals(received, context.getMessageStore().getMessage("myMessage"));
     }
 
     @Test
@@ -99,17 +101,17 @@ public class MessageStoreEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("message-store:someName?messageName=fooMessage", context);
 
-        Assert.assertEquals(endpoint.getClass(), MessageStoreEndpoint.class);
+        Assertions.assertEquals(MessageStoreEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals(5000L, ((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint.createProducer().send(new DefaultMessage("Message#2b"), context);
 
         Message received = endpoint.createConsumer().receive(context);
-        Assert.assertNotNull(received);
-        Assert.assertEquals(received.getPayload(String.class), "Message#2b");
+        Assertions.assertNotNull(received);
+        Assertions.assertEquals("Message#2b", received.getPayload(String.class));
 
-        Assert.assertEquals(context.getMessageStore().getMessage("fooMessage"), received);
+        Assertions.assertEquals(received, context.getMessageStore().getMessage("fooMessage"));
     }
 
     @Test
@@ -118,32 +120,32 @@ public class MessageStoreEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("message-store://myMessage?timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), MessageStoreEndpoint.class);
+        Assertions.assertEquals(MessageStoreEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals(10000L, ((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
         context.getMessageStore().storeMessage("myMessage", new DefaultMessage("Message#3"));
 
         Message received = endpoint.createConsumer().receive(context);
-        Assert.assertNotNull(received);
-        Assert.assertEquals(received.getPayload(String.class), "Message#3");
+        Assertions.assertNotNull(received);
+        Assertions.assertEquals("Message#3", received.getPayload(String.class));
     }
 
-    @Test(expectedExceptions = MessageTimeoutException.class)
+    @Test
     public void shouldTimeoutWhenNoMessage() {
         MessageStoreEndpointComponent component = new MessageStoreEndpointComponent();
 
         Endpoint endpoint = component.createEndpoint("message-store:myMessage", context);
 
-        Assert.assertEquals(endpoint.getClass(), MessageStoreEndpoint.class);
+        Assertions.assertEquals(MessageStoreEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals(5000L, ((MessageStoreEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
-        endpoint.createConsumer().receive(context);
+        assertThrows(MessageTimeoutException.class, () -> endpoint.createConsumer().receive(context));
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("message-store").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("message-store").isPresent());
     }
 }

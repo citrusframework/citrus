@@ -26,9 +26,11 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.interceptor.BinaryMessageProcessor;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BinaryMessageProcessorTest extends UnitTestSupport {
 
@@ -45,7 +47,7 @@ public class BinaryMessageProcessorTest extends UnitTestSupport {
         processor.process(message, context);
 
         //THEN
-        assertEquals(message.getPayload(), "foo".getBytes(StandardCharsets.UTF_8));
+        assertArrayEquals("foo".getBytes(StandardCharsets.UTF_8), message.getPayload(byte[].class));
     }
 
     @Test
@@ -59,8 +61,8 @@ public class BinaryMessageProcessorTest extends UnitTestSupport {
         processor.process(message, context);
 
         //THEN
-        assertEquals(message.getPayload(), "foo".getBytes(StandardCharsets.UTF_8));
-        assertEquals(message.getType(), MessageType.BINARY.name());
+        assertArrayEquals("foo".getBytes(StandardCharsets.UTF_8), message.getPayload(byte[].class));
+        assertEquals(MessageType.BINARY.name(), message.getType());
     }
 
     @Test
@@ -74,11 +76,11 @@ public class BinaryMessageProcessorTest extends UnitTestSupport {
         processor.process(message, context);
 
         //THEN
-        assertEquals(message.getPayload(), FileUtils.copyToByteArray(getTestFile().getInputStream()));
-        assertEquals(message.getType(), MessageType.BINARY.name());
+        assertArrayEquals(FileUtils.copyToByteArray(getTestFile().getInputStream()), message.getPayload(byte[].class));
+        assertEquals(MessageType.BINARY.name(), message.getType());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testMessageResourceNotFound() {
 
         //GIVEN
@@ -86,7 +88,7 @@ public class BinaryMessageProcessorTest extends UnitTestSupport {
         message.setType(MessageType.PLAINTEXT);
 
         //WHEN
-        processor.process(message, context);
+        assertThrows(CitrusRuntimeException.class, () -> processor.process(message, context));
 
         //THEN should throw exception
     }

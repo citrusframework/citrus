@@ -22,8 +22,10 @@ import java.util.List;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MaxFunctionTest extends UnitTestSupport {
     MaxFunction function = new MaxFunction();
@@ -35,16 +37,20 @@ public class MaxFunctionTest extends UnitTestSupport {
         params.add("5.2");
         params.add("4.7");
 
-        Assert.assertEquals(function.execute(params, context), "5.2");
+        Assertions.assertEquals("5.2", function.execute(params, context));
     }
 
-    @Test(expectedExceptions = {NumberFormatException.class})
+    @Test
     public void testWrongParameterUsage() {
-        function.execute(Collections.singletonList("no digit"), context);
+        assertThrows(NumberFormatException.class, () -> {
+            function.execute(Collections.singletonList("no digit"), context);
+        });
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(Collections.<String>emptyList(), context);
+        });
     }
 }

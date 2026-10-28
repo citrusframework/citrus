@@ -23,15 +23,15 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 public class ValidationMatcherUtilsTest extends UnitTestSupport {
 
     private ValidationMatcherLibrary validationMatcherLibrary = new ValidationMatcherLibrary();
@@ -39,17 +39,13 @@ public class ValidationMatcherUtilsTest extends UnitTestSupport {
     @Mock
     private ValidationMatcher validationMatcher;
 
-    @BeforeClass
-    public void setupMocks() {
-        MockitoAnnotations.openMocks(this);
-
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        // Called by the superclass @BeforeEach, which runs before any @BeforeEach of this class
         validationMatcherLibrary.setName("fooValidationMatcherLibrary");
         validationMatcherLibrary.setPrefix("foo:");
         validationMatcherLibrary.setMembers(Collections.singletonMap("customMatcher", validationMatcher));
-    }
 
-    @Override
-    protected TestContextFactory createTestContextFactory() {
         TestContextFactory factory = super.createTestContextFactory();
         factory.getValidationMatcherRegistry().addValidationMatcherLibrary(validationMatcherLibrary);
         return factory;
@@ -71,8 +67,6 @@ public class ValidationMatcherUtilsTest extends UnitTestSupport {
 
     @Test
     public void testResolveCustomValidationMatcher() {
-        reset(validationMatcher);
-
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@foo:customMatcher('value')@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@foo:customMatcher(value)@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@${foo:customMatcher('value')}@", context);

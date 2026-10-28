@@ -20,9 +20,10 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.TestAction;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -107,7 +108,7 @@ public class ConditionalTest extends UnitTestSupport {
         verify(action3).execute(this.context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testFirstActionFailing() {
         final TestAction action1 = Mockito.mock(TestAction.class);
         final TestAction action2 = Mockito.mock(TestAction.class);
@@ -119,11 +120,10 @@ public class ConditionalTest extends UnitTestSupport {
                 .when("1 = 1")
                 .actions(new FailAction.Builder().build(), action1, action2, action3)
                 .build();
-        conditionalAction.execute(this.context);
-
+        assertThrows(CitrusRuntimeException.class, () -> conditionalAction.execute(this.context));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testLastActionFailing() {
         final TestAction action1 = Mockito.mock(TestAction.class);
         final TestAction action2 = Mockito.mock(TestAction.class);
@@ -135,14 +135,14 @@ public class ConditionalTest extends UnitTestSupport {
                 .when("1 = 1")
                 .actions(action1, action2, action3, new FailAction.Builder().build())
                 .build();
-        conditionalAction.execute(this.context);
+        assertThrows(CitrusRuntimeException.class, () -> conditionalAction.execute(this.context));
 
         verify(action1).execute(this.context);
         verify(action2).execute(this.context);
         verify(action3).execute(this.context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testFailingAction() {
         final TestAction action1 = Mockito.mock(TestAction.class);
         final TestAction action2 = Mockito.mock(TestAction.class);
@@ -154,7 +154,7 @@ public class ConditionalTest extends UnitTestSupport {
                 .when("1 = 1")
                 .actions(action1, new FailAction.Builder().build(), action2, action3)
                 .build();
-        conditionalAction.execute(this.context);
+        assertThrows(CitrusRuntimeException.class, () -> conditionalAction.execute(this.context));
 
         verify(action1).execute(this.context);
     }

@@ -32,12 +32,15 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.report.TestResults;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,12 +52,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 
+@Isolated("Sets the JVM-wide report directory and flow report history system properties")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class TestFlowReporterTest {
 
     @Mock
@@ -70,23 +73,9 @@ public class TestFlowReporterTest {
     @Mock
     private Sequence sequence;
 
-    private AutoCloseable mocks;
-
     private static final String REPORT_DIRECTORY_PROPERTY = "citrus.report.directory";
 
     private static final String REPORT_HISTORY_PROPERTY = "citrus.test.flow.report.history";
-
-    @BeforeClass
-    public void setupMocks() {
-        mocks = openMocks(this);
-    }
-
-    @AfterClass
-    public void teardownMocks() throws Exception {
-        if (nonNull(mocks)) {
-            mocks.close();
-        }
-    }
 
     @Test
     public void shouldGetJsonReport() {
@@ -99,7 +88,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -161,7 +149,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -232,7 +219,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.failed("fooTest", "FooTest", new CitrusRuntimeException("This went totally wrong!"));
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -308,7 +294,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -404,7 +389,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest", parameters);
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -460,7 +444,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.failed("fooTest", "FooTest", new CitrusRuntimeException("Something went completely wrong"));
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -525,7 +508,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -620,7 +602,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -725,7 +706,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -748,7 +728,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getYamlReport(), """
+        Assertions.assertEquals("""
         - name: "fooTest"
           result:
             name: "fooTest"
@@ -762,7 +742,7 @@ public class TestFlowReporterTest {
             path: "actions.1.send"
           - name: "receive"
             path: "actions.2.receive"
-        """);
+        """, reporter.getYamlReport());
     }
     @Test
     public void shouldGetYamlReportWithContainers() {
@@ -775,7 +755,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -801,7 +780,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getYamlReport(), """
+        Assertions.assertEquals("""
         - name: "fooTest"
           result:
             name: "fooTest"
@@ -818,7 +797,7 @@ public class TestFlowReporterTest {
               path: "actions.0.sequence.actions.0.send"
             - name: "receive"
               path: "actions.0.sequence.actions.1.receive"
-        """);
+        """, reporter.getYamlReport());
     }
 
     @Test
@@ -832,7 +811,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.failed("fooTest", "FooTest", new CitrusRuntimeException("This went totally wrong!"));
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -858,7 +836,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getYamlReport(), """
+        Assertions.assertEquals("""
         - name: "fooTest"
           result:
             name: "fooTest"
@@ -881,7 +859,7 @@ public class TestFlowReporterTest {
               path: "actions.0.sequence.actions.0.send"
             - name: "receive"
               path: "actions.0.sequence.actions.1.receive"
-        """);
+        """, reporter.getYamlReport());
     }
 
 
@@ -897,7 +875,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -924,7 +901,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getYamlReport(), """
+        Assertions.assertEquals("""
         - name: "fooTest"
           result:
             name: "fooTest"
@@ -951,7 +928,7 @@ public class TestFlowReporterTest {
                 path: "actions.0.iterate.actions.1.send"
               - name: "receive"
                 path: "actions.0.iterate.actions.0.receive"
-        """);
+        """, reporter.getYamlReport());
     }
 
     @Test
@@ -969,7 +946,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest", parameters);
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -984,7 +960,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getYamlReport(), """
+        Assertions.assertEquals("""
         - name: "fooTest"
           result:
             name: "fooTest"
@@ -999,7 +975,7 @@ public class TestFlowReporterTest {
           actions:
           - name: "echo"
             path: "actions.0.echo"
-        """);
+        """, reporter.getYamlReport());
     }
 
     @Test
@@ -1013,7 +989,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.failed("fooTest", "FooTest", new CitrusRuntimeException("Something went completely wrong"));
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -1036,7 +1011,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getYamlReport(), """
+        Assertions.assertEquals("""
         - name: "fooTest"
           result:
             name: "fooTest"
@@ -1056,7 +1031,7 @@ public class TestFlowReporterTest {
             path: "actions.2.receive"
             error: |
               Something went completely wrong
-        """);
+        """, reporter.getYamlReport());
     }
 
     @Test
@@ -1070,7 +1045,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -1095,7 +1069,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getYamlReport(), """
+        Assertions.assertEquals("""
         - name: "fooTest"
           result:
             name: "fooTest"
@@ -1112,7 +1086,7 @@ public class TestFlowReporterTest {
             path: "finally.1.receive"
             error: |
               Failed to stop container
-        """);
+        """, reporter.getYamlReport());
     }
 
     @Test
@@ -1132,7 +1106,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success("fooTest", "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn("fooTest");
         when(test.getMetaInfo()).thenReturn(metaInfo);
@@ -1160,7 +1133,7 @@ public class TestFlowReporterTest {
         reporter.onTestSuccess(test);
 
         reporter.generate(results);
-        Assert.assertEquals(reporter.getYamlReport(), """
+        Assertions.assertEquals("""
         - name: "fooTest"
           result:
             name: "fooTest"
@@ -1196,7 +1169,7 @@ public class TestFlowReporterTest {
               headerData: []
               payload: |
                 Citrus rocks!
-        """.formatted(messageSent.getId(), messageSent.getHeader(MessageHeaders.TIMESTAMP), messageReceived.getId(), messageReceived.getHeader(MessageHeaders.TIMESTAMP)));
+        """.formatted(messageSent.getId(), messageSent.getHeader(MessageHeaders.TIMESTAMP), messageReceived.getId(), messageReceived.getHeader(MessageHeaders.TIMESTAMP)), reporter.getYamlReport());
     }
 
     @Test
@@ -1316,7 +1289,6 @@ public class TestFlowReporterTest {
         TestResult result = TestResult.success(testName, "FooTest");
         result.withDuration(Duration.ofSeconds(2));
         results.addResult(result);
-        reset(test);
 
         when(test.getName()).thenReturn(testName);
         when(test.getMetaInfo()).thenReturn(metaInfo);

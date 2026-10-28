@@ -21,16 +21,17 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.actions.SleepAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 /**
  * @since 2.5
@@ -70,10 +71,10 @@ public class TimerTest extends UnitTestSupport {
         verify(action, times(defaultRepeatCount)).execute(context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void shouldFailPropagatingErrorUpCallStack() {
         Timer timer = createDefaultTimerWithNestedActionThatFails(false);
-        timer.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> timer.execute(context));
     }
 
     @Test
@@ -138,6 +139,6 @@ public class TimerTest extends UnitTestSupport {
     }
 
     private void assertTimerIndex(int expectedValue, Timer timer) {
-        assertEquals(context.getVariable(timer.getTimerId() + Timer.INDEX_SUFFIX), String.valueOf(expectedValue));
+        assertEquals(String.valueOf(expectedValue), context.getVariable(timer.getTimerId() + Timer.INDEX_SUFFIX));
     }
 }

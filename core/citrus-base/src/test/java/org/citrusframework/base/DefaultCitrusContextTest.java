@@ -19,9 +19,12 @@ package org.citrusframework.base;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.BindToRegistry;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DefaultCitrusContextTest {
 
@@ -30,12 +33,12 @@ public class DefaultCitrusContextTest {
         CitrusContext context = CitrusContext.create();
         context.parseConfiguration(FooConfig.class);
 
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("foo"));
-        Assert.assertEquals(context.getReferenceResolver().resolve("foo"), "Foo");
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("bar"));
-        Assert.assertEquals(context.getReferenceResolver().resolve("bar"), "Bar");
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("foobar"));
-        Assert.assertEquals(context.getReferenceResolver().resolve("foobar"), "FooBar");
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("foo"));
+        Assertions.assertEquals("Foo", context.getReferenceResolver().resolve("foo"));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("bar"));
+        Assertions.assertEquals("Bar", context.getReferenceResolver().resolve("bar"));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("foobar"));
+        Assertions.assertEquals("FooBar", context.getReferenceResolver().resolve("foobar"));
     }
 
     public static class FooConfig {
@@ -53,11 +56,13 @@ public class DefaultCitrusContextTest {
         }
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing or non-accessible default constructor on custom configuration class")
+    @Test
     public void shouldRaiseErrorWithNoDefaultConstructor() {
         CitrusContext context = CitrusContext.create();
-        context.parseConfiguration(NoDefaultConstructorConfig.class);
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> {
+            context.parseConfiguration(NoDefaultConstructorConfig.class);
+        });
+        assertThat(thrown).hasMessage("Missing or non-accessible default constructor on custom configuration class");
     }
 
     public static class NoDefaultConstructorConfig {
@@ -66,11 +71,13 @@ public class DefaultCitrusContextTest {
         }
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Failed to invoke configuration method")
+    @Test
     public void shouldRaiseErrorWithPrivateMethod() {
         CitrusContext context = CitrusContext.create();
-        context.parseConfiguration(PrivateMethodConfig.class);
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> {
+            context.parseConfiguration(PrivateMethodConfig.class);
+        });
+        assertThat(thrown).hasMessage("Failed to invoke configuration method");
     }
 
     public static class PrivateMethodConfig {

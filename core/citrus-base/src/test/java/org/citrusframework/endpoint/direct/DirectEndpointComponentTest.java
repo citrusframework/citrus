@@ -20,15 +20,15 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DirectEndpointComponentTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupMocks() {
         context = TestContextFactory.newInstance().getObject();
     }
@@ -37,41 +37,41 @@ public class DirectEndpointComponentTest {
     public void testCreateDirectEndpointWithQueueName() {
         DirectEndpointComponent component = new DirectEndpointComponent();
 
-        Assert.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
+        Assertions.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
         Endpoint endpoint = component.createEndpoint("direct?queueName=queueName", context);
 
-        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
+        Assertions.assertEquals(DirectEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "queueName");
-        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("queueName"));
+        Assertions.assertEquals("queueName", ((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName());
+        Assertions.assertEquals(5000L, ((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout());
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("queueName"));
     }
 
     @Test
     public void testCreateDirectEndpoint() {
         DirectEndpointComponent component = new DirectEndpointComponent();
 
-        Assert.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
+        Assertions.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
         Endpoint endpoint = component.createEndpoint("direct:queueName", context);
 
-        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
+        Assertions.assertEquals(DirectEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "queueName");
-        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("queueName"));
+        Assertions.assertEquals("queueName", ((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName());
+        Assertions.assertEquals(5000L, ((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout());
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("queueName"));
     }
 
     @Test
     public void testCreateSyncDirectEndpoint() {
         DirectEndpointComponent component = new DirectEndpointComponent();
 
-        Assert.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
+        Assertions.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
         Endpoint endpoint = component.createEndpoint("direct:sync:queueName", context);
 
-        Assert.assertEquals(endpoint.getClass(), DirectSyncEndpoint.class);
+        Assertions.assertEquals(DirectSyncEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((DirectSyncEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "queueName");
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("queueName"));
+        Assertions.assertEquals("queueName", ((DirectSyncEndpoint)endpoint).getEndpointConfiguration().getQueueName());
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("queueName"));
     }
 
     @Test
@@ -80,14 +80,14 @@ public class DirectEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("direct:queueName?timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
+        Assertions.assertEquals(DirectEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "queueName");
-        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("queueName", ((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName());
+        Assertions.assertEquals(10000L, ((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("direct").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("direct").isPresent());
     }
 }

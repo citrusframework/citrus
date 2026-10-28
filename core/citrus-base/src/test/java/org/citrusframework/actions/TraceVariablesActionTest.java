@@ -18,7 +18,9 @@ package org.citrusframework.actions;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TraceVariablesActionTest extends UnitTestSupport {
 
@@ -39,11 +41,11 @@ public class TraceVariablesActionTest extends UnitTestSupport {
         trace.execute(context);
     }
 
-	@Test(expectedExceptions=CitrusRuntimeException.class)
+	@Test
     public void testTraceUnknownVariable() {
         TraceVariablesAction trace = new TraceVariablesAction.Builder()
                 .variable("myVariable")
                 .build();
-        trace.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> trace.execute(context));
     }
 }

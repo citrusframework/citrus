@@ -23,11 +23,12 @@ import java.util.Set;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RandomStringFunctionTest extends UnitTestSupport {
 
@@ -38,31 +39,31 @@ public class RandomStringFunctionTest extends UnitTestSupport {
         List<String> params = new ArrayList<>();
         params.add("3");
 
-        Assert.assertEquals(function.execute(params, context).length(), 3);
+        Assertions.assertEquals(3, function.execute(params, context).length());
 
         params = new ArrayList<>();
         params.add("3");
         params.add("UPPERCASE");
 
-        Assert.assertEquals(function.execute(params, context).length(), 3);
+        Assertions.assertEquals(3, function.execute(params, context).length());
 
         params = new ArrayList<>();
         params.add("3");
         params.add("LOWERCASE");
 
-        Assert.assertEquals(function.execute(params, context).length(), 3);
+        Assertions.assertEquals(3, function.execute(params, context).length());
 
         params = new ArrayList<>();
         params.add("3");
         params.add("MIXED");
 
-        Assert.assertEquals(function.execute(params, context).length(), 3);
+        Assertions.assertEquals(3, function.execute(params, context).length());
 
         params = new ArrayList<>();
         params.add("3");
         params.add("UNKNOWN");
 
-        Assert.assertEquals(function.execute(params, context).length(), 3);
+        Assertions.assertEquals(3, function.execute(params, context).length());
     }
 
     @Test
@@ -73,41 +74,41 @@ public class RandomStringFunctionTest extends UnitTestSupport {
         params.add("UPPERCASE");
         params.add("true");
 
-        Assert.assertEquals(function.execute(params, context).length(), 10);
+        Assertions.assertEquals(10, function.execute(params, context).length());
 
         params = new ArrayList<>();
         params.add("10");
         params.add("LOWERCASE");
         params.add("true");
 
-        Assert.assertEquals(function.execute(params, context).length(), 10);
+        Assertions.assertEquals(10, function.execute(params, context).length());
 
         params = new ArrayList<>();
         params.add("10");
         params.add("MIXED");
         params.add("true");
 
-        Assert.assertEquals(function.execute(params, context).length(), 10);
+        Assertions.assertEquals(10, function.execute(params, context).length());
 
         params = new ArrayList<>();
         params.add("10");
         params.add("UNKNOWN");
         params.add("true");
 
-        Assert.assertEquals(function.execute(params, context).length(), 10);
+        Assertions.assertEquals(10, function.execute(params, context).length());
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testWrongParameterUsage() {
-        function.execute(singletonList("-1"), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(singletonList("-1"), context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(emptyList(), context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testTooManyParameters() {
         List<String> params = new ArrayList<>();
         params.add("3");
@@ -116,7 +117,7 @@ public class RandomStringFunctionTest extends UnitTestSupport {
         params.add("0");
         params.add("too many");
 
-        function.execute(params, context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(params, context));
     }
 
     @Test
@@ -135,8 +136,8 @@ public class RandomStringFunctionTest extends UnitTestSupport {
             sizes.add(text.length());
         }
 
-        Assert.assertTrue(sizes.contains(8));
-        Assert.assertTrue(sizes.contains(9));
-        Assert.assertTrue(sizes.contains(10));
+        Assertions.assertTrue(sizes.contains(8));
+        Assertions.assertTrue(sizes.contains(9));
+        Assertions.assertTrue(sizes.contains(10));
     }
 }

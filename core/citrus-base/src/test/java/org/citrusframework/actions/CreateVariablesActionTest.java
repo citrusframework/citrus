@@ -20,8 +20,8 @@ import javax.script.ScriptException;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateVariablesActionTest extends UnitTestSupport {
 
@@ -31,8 +31,8 @@ public class CreateVariablesActionTest extends UnitTestSupport {
 
 		createVariablesAction.execute(context);
 
-		Assert.assertNotNull(context.getVariable("${myVariable}"));
-        Assert.assertEquals(context.getVariable("${myVariable}"), "value");
+		Assertions.assertNotNull(context.getVariable("${myVariable}"));
+        Assertions.assertEquals("value", context.getVariable("${myVariable}"));
 	}
 
 	@Test
@@ -44,10 +44,10 @@ public class CreateVariablesActionTest extends UnitTestSupport {
 
         createVariablesAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${myVariable}"));
-        Assert.assertEquals(context.getVariable("${myVariable}"), "value1");
-        Assert.assertNotNull(context.getVariable("${anotherVariable}"));
-        Assert.assertEquals(context.getVariable("${anotherVariable}"), "value2");
+        Assertions.assertNotNull(context.getVariable("${myVariable}"));
+        Assertions.assertEquals("value1", context.getVariable("${myVariable}"));
+        Assertions.assertNotNull(context.getVariable("${anotherVariable}"));
+        Assertions.assertEquals("value2", context.getVariable("${anotherVariable}"));
     }
 
 	@Test
@@ -60,8 +60,8 @@ public class CreateVariablesActionTest extends UnitTestSupport {
 
         createVariablesAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${myVariable}"));
-        Assert.assertEquals(context.getVariable("${myVariable}"), "newValue");
+        Assertions.assertNotNull(context.getVariable("${myVariable}"));
+        Assertions.assertEquals("newValue", context.getVariable("${myVariable}"));
     }
 
 	@Test
@@ -72,8 +72,8 @@ public class CreateVariablesActionTest extends UnitTestSupport {
 
         createVariablesAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${myVariable}"));
-        Assert.assertEquals(context.getVariable("${myVariable}"), "Hello Citrus");
+        Assertions.assertNotNull(context.getVariable("${myVariable}"));
+        Assertions.assertEquals("Hello Citrus", context.getVariable("${myVariable}"));
     }
 
 	@Test
@@ -84,8 +84,8 @@ public class CreateVariablesActionTest extends UnitTestSupport {
 
         createVariablesAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${myVariable}"));
-        Assert.assertEquals(context.getVariable("${myVariable}"), "10");
+        Assertions.assertNotNull(context.getVariable("${myVariable}"));
+        Assertions.assertEquals("10", context.getVariable("${myVariable}"));
     }
 
 	@Test
@@ -98,8 +98,8 @@ public class CreateVariablesActionTest extends UnitTestSupport {
 
         createVariablesAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${myVariable}"));
-        Assert.assertEquals(context.getVariable("${myVariable}"), "10");
+        Assertions.assertNotNull(context.getVariable("${myVariable}"));
+        Assertions.assertEquals("10", context.getVariable("${myVariable}"));
     }
 
 	@Test
@@ -111,11 +111,11 @@ public class CreateVariablesActionTest extends UnitTestSupport {
         try {
             createVariablesAction.execute(context);
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("invalidScriptEngine"));
+            Assertions.assertTrue(e.getMessage().contains("invalidScriptEngine"));
             return;
         }
 
-        Assert.fail("Missing CitrusRuntimeException because of invalid script engine");
+        Assertions.fail("Missing CitrusRuntimeException because of invalid script engine");
     }
 
     @Test
@@ -127,10 +127,10 @@ public class CreateVariablesActionTest extends UnitTestSupport {
         try {
             createVariablesAction.execute(context);
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getCause() instanceof ScriptException);
+            Assertions.assertTrue(e.getCause() instanceof ScriptException);
             return;
         }
 
-        Assert.fail("Missing CitrusRuntimeException because of invalid groovy script");
+        Assertions.fail("Missing CitrusRuntimeException because of invalid groovy script");
     }
 }

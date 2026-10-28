@@ -18,6 +18,7 @@ package org.citrusframework.base.report;
 
 import java.time.Duration;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import org.citrusframework.base.DefaultTestCase;
@@ -27,11 +28,14 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.log.LogColors;
 import org.citrusframework.report.LoggingReporter;
 import org.citrusframework.report.TestResults;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
@@ -39,6 +43,7 @@ import static org.citrusframework.TestResult.failed;
 import static org.citrusframework.TestResult.skipped;
 import static org.citrusframework.TestResult.success;
 import static org.citrusframework.util.ReflectionHelper.findField;
+import static org.citrusframework.util.ReflectionHelper.getField;
 import static org.citrusframework.util.ReflectionHelper.setField;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -46,8 +51,9 @@ import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.openMocks;
 
+@Isolated("Replaces LoggingReporter's static logger and resets its static banner flag")
+@ExtendWith(MockitoExtension.class)
 public class LoggingReporterTest {
 
     @Mock
@@ -59,12 +65,8 @@ public class LoggingReporterTest {
 
     private LoggingReporter fixture;
 
-    private AutoCloseable mocks;
-
-    @BeforeMethod
-    public void beforeMethod() {
-        mocks = openMocks(this);
-
+    @BeforeEach
+    public void beforeEach() {
         LogColors.setColorEnabled(false);
 
         test = new DefaultTestCase();
@@ -83,6 +85,9 @@ public class LoggingReporterTest {
 
     @Test
     void onStartPrintsBannerExactlyOnce() {
+        // Another test may have printed the banner already: it is printed once per JVM
+        ((AtomicBoolean) getField(requireNonNull(findField(LoggingReporter.class, "initialized")), null)).set(false);
+
         // Print citrus information on startup
         fixture.onStart();
 
@@ -252,10 +257,9 @@ public class LoggingReporterTest {
         fixture.generate(testResults);
     }
 
-    @AfterMethod
-    void afterMethodTeardown() throws Exception {
+    @AfterEach
+    void afterEach() throws Exception {
         LogColors.resetColorsEnabled();
-        mocks.close();
     }
 
     private void verifyResultSummaryLog(int total, int success, int failed, int skipped, long performance) {
