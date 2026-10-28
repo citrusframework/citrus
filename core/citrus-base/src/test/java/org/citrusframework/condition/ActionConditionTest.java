@@ -25,9 +25,9 @@ import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
 
@@ -42,7 +42,7 @@ public class ActionConditionTest {
     public void isSatisfiedShouldSucceed() {
         ActionCondition testling = new ActionCondition(new EchoAction.Builder().build());
 
-        Assert.assertTrue(testling.isSatisfied(context));
+        Assertions.assertTrue(testling.isSatisfied(context));
     }
 
     @Test
@@ -51,14 +51,14 @@ public class ActionConditionTest {
 
         when(context.replaceDynamicContentInString("Fail!")).thenReturn("Fail!");
 
-        Assert.assertFalse(testling.isSatisfied(context));
+        Assertions.assertFalse(testling.isSatisfied(context));
     }
 
     @Test
     public void isSatisfiedShouldReturnFalseWithNullAction() {
         ActionCondition testling = new ActionCondition();
 
-        Assert.assertFalse(testling.isSatisfied(context));
+        Assertions.assertFalse(testling.isSatisfied(context));
     }
 
     @Test
@@ -74,17 +74,17 @@ public class ActionConditionTest {
             }
         });
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 1);
-        Assert.assertNotNull(testling.getCaughtException());
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertEquals(1, executionCount.get());
+        Assertions.assertNotNull(testling.getCaughtException());
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 2);
-        Assert.assertNotNull(testling.getCaughtException());
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertEquals(2, executionCount.get());
+        Assertions.assertNotNull(testling.getCaughtException());
 
-        Assert.assertTrue(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 3);
-        Assert.assertNull(testling.getCaughtException());
+        Assertions.assertTrue(testling.isSatisfied(context));
+        Assertions.assertEquals(3, executionCount.get());
+        Assertions.assertNull(testling.getCaughtException());
     }
 
     @Test
@@ -100,12 +100,12 @@ public class ActionConditionTest {
             }
         });
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertNotNull(testling.getCaughtException());
-        Assert.assertTrue(testling.getCaughtException().getMessage().contains("First call fails"));
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertNotNull(testling.getCaughtException());
+        Assertions.assertTrue(testling.getCaughtException().getMessage().contains("First call fails"));
 
-        Assert.assertTrue(testling.isSatisfied(context));
-        Assert.assertNull(testling.getCaughtException());
+        Assertions.assertTrue(testling.isSatisfied(context));
+        Assertions.assertNull(testling.getCaughtException());
     }
 
     @Test
@@ -119,14 +119,14 @@ public class ActionConditionTest {
             }
         });
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertTrue(testling.getCaughtException().getMessage().contains("Failure #1"));
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertTrue(testling.getCaughtException().getMessage().contains("Failure #1"));
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertTrue(testling.getCaughtException().getMessage().contains("Failure #2"));
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertTrue(testling.getCaughtException().getMessage().contains("Failure #2"));
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertTrue(testling.getCaughtException().getMessage().contains("Failure #3"));
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertTrue(testling.getCaughtException().getMessage().contains("Failure #3"));
     }
 
     @Test
@@ -142,14 +142,14 @@ public class ActionConditionTest {
             }
         });
 
-        Assert.assertFalse(testling.isSatisfied(context));
+        Assertions.assertFalse(testling.isSatisfied(context));
         String errorMessage = testling.getErrorMessage(context);
-        Assert.assertTrue(errorMessage.contains("did not perform as expected"));
-        Assert.assertTrue(errorMessage.contains("Action not ready"));
+        Assertions.assertTrue(errorMessage.contains("did not perform as expected"));
+        Assertions.assertTrue(errorMessage.contains("Action not ready"));
 
-        Assert.assertTrue(testling.isSatisfied(context));
+        Assertions.assertTrue(testling.isSatisfied(context));
         String successMessage = testling.getSuccessMessage(context);
-        Assert.assertTrue(successMessage.contains("did perform as expected"));
+        Assertions.assertTrue(successMessage.contains("did perform as expected"));
     }
 
     @Test
@@ -166,17 +166,17 @@ public class ActionConditionTest {
             }
         });
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 1);
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertEquals(1, executionCount.get());
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 2);
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertEquals(2, executionCount.get());
 
-        Assert.assertTrue(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 3);
+        Assertions.assertTrue(testling.isSatisfied(context));
+        Assertions.assertEquals(3, executionCount.get());
 
-        Assert.assertTrue(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 3);
+        Assertions.assertTrue(testling.isSatisfied(context));
+        Assertions.assertEquals(3, executionCount.get());
     }
 
     @Test
@@ -186,15 +186,15 @@ public class ActionConditionTest {
 
         ActionCondition testling = new ActionCondition(new CompletableTestAction(executionCount, done));
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 1);
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertEquals(1, executionCount.get());
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 1);
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertEquals(1, executionCount.get());
 
         done.set(true);
-        Assert.assertTrue(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 1);
+        Assertions.assertTrue(testling.isSatisfied(context));
+        Assertions.assertEquals(1, executionCount.get());
     }
 
     @Test
@@ -204,23 +204,23 @@ public class ActionConditionTest {
 
         ActionCondition testling = new ActionCondition(new CompletableTestAction(executionCount, done));
 
-        Assert.assertTrue(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 1);
+        Assertions.assertTrue(testling.isSatisfied(context));
+        Assertions.assertEquals(1, executionCount.get());
 
-        Assert.assertTrue(testling.isSatisfied(context));
-        Assert.assertEquals(executionCount.get(), 1);
+        Assertions.assertTrue(testling.isSatisfied(context));
+        Assertions.assertEquals(1, executionCount.get());
     }
 
     @Test
     public void shouldHandleCompletableActionExecutionFailure() {
         ActionCondition testling = new ActionCondition(new FailingCompletableTestAction());
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertNotNull(testling.getCaughtException());
-        Assert.assertTrue(testling.getCaughtException().getMessage().contains("Execution failed"));
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertNotNull(testling.getCaughtException());
+        Assertions.assertTrue(testling.getCaughtException().getMessage().contains("Execution failed"));
 
-        Assert.assertFalse(testling.isSatisfied(context));
-        Assert.assertNotNull(testling.getCaughtException());
+        Assertions.assertFalse(testling.isSatisfied(context));
+        Assertions.assertNotNull(testling.getCaughtException());
     }
 
     private static class FailingCompletableTestAction extends AbstractTestAction implements Completable {

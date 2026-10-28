@@ -23,12 +23,14 @@ import org.citrusframework.TestCaseRunnerProvider;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.util.ReflectionHelper;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Isolated("Swaps the type resolver of the JVM-wide TestCaseRunnerFactory instance that createRunner() uses")
 @SuppressWarnings("unchecked")
 public class TestCaseRunnerFactoryTest {
 
@@ -38,10 +40,10 @@ public class TestCaseRunnerFactoryTest {
     public void testDefaultRunnerWithGivenContext()  {
         TestContext testContext = new TestContext();
         TestCaseRunner runner = TestCaseRunnerFactory.createRunner(testContext);
-        assertEquals(runner.getClass(), DefaultTestCaseRunner.class);
+        assertEquals(DefaultTestCaseRunner.class, runner.getClass());
 
         DefaultTestCaseRunner defaultTestCaseRunner = (DefaultTestCaseRunner) runner;
-        assertEquals(defaultTestCaseRunner.getContext(), testContext);
+        assertEquals(testContext, defaultTestCaseRunner.getContext());
         assertTrue(defaultTestCaseRunner.getTestCase() instanceof  DefaultTestCase);
     }
 
@@ -51,11 +53,11 @@ public class TestCaseRunnerFactoryTest {
         TestCase testCase = new DefaultTestCase();
 
         TestCaseRunner runner = TestCaseRunnerFactory.createRunner(testCase, testContext);
-        assertEquals(runner.getClass(), DefaultTestCaseRunner.class);
+        assertEquals(DefaultTestCaseRunner.class, runner.getClass());
 
         DefaultTestCaseRunner defaultTestCaseRunner = (DefaultTestCaseRunner) runner;
-        assertEquals(defaultTestCaseRunner.getContext(), testContext);
-        assertEquals(defaultTestCaseRunner.getTestCase(), testCase);
+        assertEquals(testContext, defaultTestCaseRunner.getContext());
+        assertEquals(testCase, defaultTestCaseRunner.getTestCase());
     }
 
     @Test
@@ -71,10 +73,10 @@ public class TestCaseRunnerFactoryTest {
                     testCaseRunnerFactory, resolverMock);
             TestCaseRunner runner = TestCaseRunnerFactory.createRunner(testContext);
 
-            assertEquals(runner.getClass(), CustomTestCaseRunner.class);
+            assertEquals(CustomTestCaseRunner.class, runner.getClass());
 
             CustomTestCaseRunner defaultTestCaseRunner = (CustomTestCaseRunner) runner;
-            assertEquals(defaultTestCaseRunner.getContext(), testContext);
+            assertEquals(testContext, defaultTestCaseRunner.getContext());
         } finally {
             ReflectionHelper.setField(ReflectionHelper.findField(TestCaseRunnerFactory.class, "typeResolver"),
                     testCaseRunnerFactory, currentResolver);
@@ -97,11 +99,11 @@ public class TestCaseRunnerFactoryTest {
                     testCaseRunnerFactory, resolverMock);
             TestCaseRunner runner = TestCaseRunnerFactory.createRunner(testCase, testContext);
 
-            assertEquals(runner.getClass(), CustomTestCaseRunner.class);
+            assertEquals(CustomTestCaseRunner.class, runner.getClass());
 
             CustomTestCaseRunner defaultTestCaseRunner = (CustomTestCaseRunner) runner;
-            assertEquals(defaultTestCaseRunner.getContext(), testContext);
-            assertEquals(defaultTestCaseRunner.getTestCase(), testCase);
+            assertEquals(testContext, defaultTestCaseRunner.getContext());
+            assertEquals(testCase, defaultTestCaseRunner.getTestCase());
         } finally {
             ReflectionHelper.setField(ReflectionHelper.findField(TestCaseRunnerFactory.class, "typeResolver"),
                     testCaseRunnerFactory, currentResolver);

@@ -23,22 +23,24 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessagePrinter;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessagePrinterLayout;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DefaultMessageTest extends UnitTestSupport {
 
-    @BeforeClass
+    @BeforeAll
     public void setup() {
         DefaultMessagePrinter.setDefaultLayout(MessagePrinterLayout.COMPACT);
     }
 
-    @AfterClass
+    @AfterAll
     public void teardown() {
         DefaultMessagePrinter.resetDefaultLayout();
     }
@@ -136,10 +138,10 @@ public class DefaultMessageTest extends UnitTestSupport {
         DefaultMessage copiedMessage = new DefaultMessage(originalMessage);
 
         // Then
-        assertEquals(originalMessage.getHeader(MessageHeaders.ID), copiedMessage.getHeader(MessageHeaders.ID));
-        assertEquals(originalMessage.getHeader(MessageHeaders.TIMESTAMP), copiedMessage.getHeader(MessageHeaders.TIMESTAMP));
-        assertEquals(originalMessage.getHeader("k1"), copiedMessage.getHeader("k1"));
-        assertEquals(originalMessage.getPayload(), copiedMessage.getPayload());
+        assertEquals(copiedMessage.getHeader(MessageHeaders.ID), originalMessage.getHeader(MessageHeaders.ID));
+        assertEquals(copiedMessage.getHeader(MessageHeaders.TIMESTAMP), originalMessage.getHeader(MessageHeaders.TIMESTAMP));
+        assertEquals(copiedMessage.getHeader("k1"), originalMessage.getHeader("k1"));
+        assertEquals(copiedMessage.getPayload(), originalMessage.getPayload());
 
     }
 
@@ -154,10 +156,10 @@ public class DefaultMessageTest extends UnitTestSupport {
         DefaultMessage copiedMessage = new DefaultMessage(originalMessage, true);
 
         // Then
-        assertNotEquals(originalMessage.getHeader(MessageHeaders.ID), copiedMessage.getHeader(MessageHeaders.ID));
-        assertNotEquals(originalMessage.getHeader(MessageHeaders.TIMESTAMP), copiedMessage.getHeader(MessageHeaders.TIMESTAMP));
-        assertEquals(originalMessage.getHeader("k1"), copiedMessage.getHeader("k1"));
-        assertEquals(originalMessage.getPayload(), copiedMessage.getPayload());
+        assertNotEquals(copiedMessage.getHeader(MessageHeaders.ID), originalMessage.getHeader(MessageHeaders.ID));
+        assertNotEquals(copiedMessage.getHeader(MessageHeaders.TIMESTAMP), originalMessage.getHeader(MessageHeaders.TIMESTAMP));
+        assertEquals(copiedMessage.getHeader("k1"), originalMessage.getHeader("k1"));
+        assertEquals(copiedMessage.getPayload(), originalMessage.getPayload());
 
     }
 }

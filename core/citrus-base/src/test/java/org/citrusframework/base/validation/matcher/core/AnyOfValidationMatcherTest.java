@@ -19,12 +19,13 @@ package org.citrusframework.base.validation.matcher.core;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AnyOfValidationMatcherTest extends UnitTestSupport {
 
@@ -59,14 +60,16 @@ public class AnyOfValidationMatcherTest extends UnitTestSupport {
         }
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void shouldRejectZeroSubExpressions() {
-        matcher.validate("field", "value", List.of(), context);
+        assertThrows(CitrusRuntimeException.class, () -> matcher.validate("field", "value", List.of(), context));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void shouldRejectOneSubExpression() {
-        matcher.validate("field", "value", List.of("startsWith('a')"), context);
+        assertThrows(CitrusRuntimeException.class, () -> {
+            matcher.validate("field", "value", List.of("startsWith('a')"), context);
+        });
     }
 
     @Test

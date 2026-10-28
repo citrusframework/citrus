@@ -19,8 +19,8 @@ package org.citrusframework.base.validation.matcher.core;
 import java.util.List;
 
 import org.citrusframework.base.UnitTestSupport;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateVariableValidationMatcherTest extends UnitTestSupport {
 
@@ -30,20 +30,20 @@ public class CreateVariableValidationMatcherTest extends UnitTestSupport {
     public void testValidateSuccess() {
         matcher.validate("field", "This is a test", List.of(), context);
 
-        Assert.assertEquals(context.getVariable("field"), "This is a test");
+        Assertions.assertEquals("This is a test", context.getVariable("field"));
 
         matcher.validate("field", "This is a 2nd test", List.of(), context);
 
-        Assert.assertEquals(context.getVariable("field"), "This is a 2nd test");
+        Assertions.assertEquals("This is a 2nd test", context.getVariable("field"));
 
         context.setVariable("foo", "bar");
 
         matcher.validate("field", "Another test", List.of("foo"), context);
 
-        Assert.assertEquals(context.getVariable("field"), "This is a 2nd test");
-        Assert.assertEquals(context.getVariable("foo"), "Another test");
+        Assertions.assertEquals("This is a 2nd test", context.getVariable("field"));
+        Assertions.assertEquals("Another test", context.getVariable("foo"));
 
         matcher.validate("field", "This is a 3rd test", (List<String>) null, context);
-        Assert.assertEquals(context.getVariable("field"), "This is a 3rd test");
+        Assertions.assertEquals("This is a 3rd test", context.getVariable("field"));
     }
 }

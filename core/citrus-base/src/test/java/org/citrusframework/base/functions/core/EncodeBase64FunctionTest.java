@@ -23,34 +23,36 @@ import java.util.Collections;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EncodeBase64FunctionTest extends UnitTestSupport {
     private final EncodeBase64Function function = new EncodeBase64Function();
 
     @Test
     public void testFunction() {
-        Assert.assertEquals(function.execute(Collections.singletonList("foo"), context), "Zm9v");
+        Assertions.assertEquals("Zm9v", function.execute(Collections.singletonList("foo"), context));
     }
 
     @Test
     public void testCustomCharset() {
-        Assert.assertEquals(function.execute(Arrays.asList("foo", "UTF-8"), context), "Zm9v");
+        Assertions.assertEquals("Zm9v", function.execute(Arrays.asList("foo", "UTF-8"), context));
     }
 
     @Test
     public void testUnsupportedCharset() {
         try {
             function.execute(Arrays.asList("foo", "UNKNOWN"), context);
-            Assert.fail("Missing exception due to unsupported charset encoding");
+            Assertions.fail("Missing exception due to unsupported charset encoding");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getCause().getClass().equals(UnsupportedEncodingException.class));
+            Assertions.assertTrue(e.getCause().getClass().equals(UnsupportedEncodingException.class));
         }
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(Collections.emptyList(), context));
     }
 }

@@ -20,8 +20,8 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.selector.HeaderMatchingMessageSelector;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class HeaderMatchingMessageSelectorTest extends UnitTestSupport {
 
@@ -35,8 +35,8 @@ public class HeaderMatchingMessageSelectorTest extends UnitTestSupport {
         Message declineMessage = new DefaultMessage("FooTest")
                 .setHeader("operation", "foobar");
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -49,8 +49,8 @@ public class HeaderMatchingMessageSelectorTest extends UnitTestSupport {
         Message declineMessage = new DefaultMessage("FooTest")
                 .setHeader("operation", "bar");
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -64,8 +64,8 @@ public class HeaderMatchingMessageSelectorTest extends UnitTestSupport {
         Message declineMessage = new DefaultMessage("FooTest")
                 .setHeader("operation", "foo");
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -77,8 +77,8 @@ public class HeaderMatchingMessageSelectorTest extends UnitTestSupport {
 
         Message declineMessage = new DefaultMessage("FooTest");
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -91,12 +91,12 @@ public class HeaderMatchingMessageSelectorTest extends UnitTestSupport {
         Message declineMessage = new DefaultMessage(new DefaultMessage("FooTest")
                 .setHeader("operation", "foobar"));
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
         messageSelector = new HeaderMatchingMessageSelector(MessageHeaders.ID, acceptMessage.getId().toString(), context);
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 }

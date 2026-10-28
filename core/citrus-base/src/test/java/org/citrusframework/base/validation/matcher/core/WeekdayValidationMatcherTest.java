@@ -18,16 +18,20 @@ package org.citrusframework.base.validation.matcher.core;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class WeekdayValidationMatcherTest extends UnitTestSupport {
 
     private WeekdayValidationMatcher matcher = new WeekdayValidationMatcher();
@@ -46,9 +50,9 @@ public class WeekdayValidationMatcherTest extends UnitTestSupport {
 
         try {
             matcher.validate("fieldName", defaultDateFormat.format(getNext(Calendar.MONDAY).getTime()), singletonList("SUNDAY"), context);
-            Assert.fail("Missing validation matcher failed exception");
+            Assertions.fail("Missing validation matcher failed exception");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().endsWith("expected date to be a 'SUNDAY'"));
+            Assertions.assertTrue(e.getMessage().endsWith("expected date to be a 'SUNDAY'"));
         }
     }
 
@@ -66,42 +70,48 @@ public class WeekdayValidationMatcherTest extends UnitTestSupport {
 
         try {
             matcher.validate("fieldName", dateFormat.format(getNext(Calendar.MONDAY).getTime()), List.of("SUNDAY", "yyyy-MM-dd"), context);
-            Assert.fail("Missing validation matcher failed exception");
+            Assertions.fail("Missing validation matcher failed exception");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().endsWith("expected date to be a 'SUNDAY'"));
+            Assertions.assertTrue(e.getMessage().endsWith("expected date to be a 'SUNDAY'"));
         }
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testInvalidDefaultDateFormat() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        matcher.validate("fieldName", dateFormat.format(getNext(Calendar.MONDAY).getTime()), singletonList("MONDAY"), context);
+        assertThrows(CitrusRuntimeException.class, () -> {
+            matcher.validate("fieldName", dateFormat.format(getNext(Calendar.MONDAY).getTime()), singletonList("MONDAY"), context);
+        });
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testInvalidCustomDateFormat() {
-        matcher.validate("fieldName", defaultDateFormat.format(getNext(Calendar.MONDAY).getTime()), List.of("MONDAY", "dd-MM-yyyy"), context);
+        assertThrows(CitrusRuntimeException.class, () -> {
+            matcher.validate("fieldName", defaultDateFormat.format(getNext(Calendar.MONDAY).getTime()), List.of("MONDAY", "dd-MM-yyyy"), context);
+        });
     }
 
-    @Test(expectedExceptions = {IllegalArgumentException.class})
+    @Test
     public void testInvalidDateFormatSyntax() {
-        matcher.validate("fieldName", defaultDateFormat.format(getNext(Calendar.MONDAY).getTime()), List.of("MONDAY", "ABC"), context);
+        assertThrows(IllegalArgumentException.class, () -> {
+            matcher.validate("fieldName", defaultDateFormat.format(getNext(Calendar.MONDAY).getTime()), List.of("MONDAY", "ABC"), context);
+        });
     }
 
-    @DataProvider
     public Object[][] validParameters() {
         return new Object[][]{
                 {"MONDAY", singletonList("MONDAY")},
                 {"MONDAY('yyyy-MM-dd')", List.of("MONDAY", "yyyy-MM-dd")},
         };
     }
-    @Test(dataProvider = "validParameters")
+    @ParameterizedTest
+    @MethodSource("validParameters")
     public void shouldExtractParametersSuccessfully(String controlExpression, List<String> expectedParameters) {
         List<String> controlValues = matcher.extractControlValues(controlExpression, null);
-        Assert.assertEquals(controlValues.size(), expectedParameters.size());
+        Assertions.assertEquals(expectedParameters.size(), controlValues.size());
 
         for (int i = 0; i < controlValues.size(); i++) {
-            Assert.assertEquals(controlValues.get(i), expectedParameters.get(i));
+            Assertions.assertEquals(expectedParameters.get(i), controlValues.get(i));
         }
     }
 

@@ -20,8 +20,8 @@ import org.citrusframework.CitrusContext;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.spi.BindToRegistry;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SequenceAfterTestTest extends UnitTestSupport {
 
@@ -30,12 +30,12 @@ public class SequenceAfterTestTest extends UnitTestSupport {
         CitrusContext citrusContext = CitrusContext.create();
         CitrusAnnotations.parseConfiguration(this, citrusContext);
 
-        Assert.assertTrue(citrusContext.getReferenceResolver().isResolvable(SequenceAfterTest.class));
+        Assertions.assertTrue(citrusContext.getReferenceResolver().isResolvable(SequenceAfterTest.class));
         SequenceAfterTest sequenceAfterTest = citrusContext.getReferenceResolver().resolve(SequenceAfterTest.class);
 
-        Assert.assertEquals(sequenceAfterTest.getActions().size(), 1L);
-        Assert.assertTrue(sequenceAfterTest.getActions().get(0) instanceof ReferenceResolverAwareTestAction);
-        Assert.assertEquals(((ReferenceResolverAwareTestAction) sequenceAfterTest.getActions().get(0)).getReferenceResolver(), citrusContext.getReferenceResolver());
+        Assertions.assertEquals(1L, sequenceAfterTest.getActions().size());
+        Assertions.assertTrue(sequenceAfterTest.getActions().get(0) instanceof ReferenceResolverAwareTestAction);
+        Assertions.assertEquals(citrusContext.getReferenceResolver(), ((ReferenceResolverAwareTestAction) sequenceAfterTest.getActions().get(0)).getReferenceResolver());
     }
 
     @BindToRegistry

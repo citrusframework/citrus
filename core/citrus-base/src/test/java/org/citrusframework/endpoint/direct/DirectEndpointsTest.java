@@ -19,26 +19,26 @@ package org.citrusframework.endpoint.direct;
 import java.util.Map;
 
 import org.citrusframework.endpoint.EndpointBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DirectEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("direct"));
-        Assert.assertTrue(endpointBuilders.containsKey("direct.sync"));
-        Assert.assertTrue(endpointBuilders.containsKey("direct.async"));
+        Assertions.assertTrue(endpointBuilders.containsKey("direct"));
+        Assertions.assertTrue(endpointBuilders.containsKey("direct.sync"));
+        Assertions.assertTrue(endpointBuilders.containsKey("direct.async"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("direct").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("direct").get().getClass(), DirectEndpointsBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("direct.sync").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("direct.sync").get().getClass(), DirectSyncEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("direct.async").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("direct.async").get().getClass(), DirectEndpointBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("direct").isPresent());
+        Assertions.assertEquals(DirectEndpointsBuilder.class, EndpointBuilder.lookup("direct").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("direct.sync").isPresent());
+        Assertions.assertEquals(DirectSyncEndpointBuilder.class, EndpointBuilder.lookup("direct.sync").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("direct.async").isPresent());
+        Assertions.assertEquals(DirectEndpointBuilder.class, EndpointBuilder.lookup("direct.async").get().getClass());
     }
 }

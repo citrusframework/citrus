@@ -21,10 +21,11 @@ import java.util.List;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SubstringAfterFunctionTest extends UnitTestSupport {
     SubstringAfterFunction function = new SubstringAfterFunction();
@@ -34,16 +35,16 @@ public class SubstringAfterFunctionTest extends UnitTestSupport {
         List<String> params = new ArrayList<>();
         params.add("Hallo,TestFramework");
         params.add(",");
-        Assert.assertEquals(function.execute(params, context), "TestFramework");
+        Assertions.assertEquals("TestFramework", function.execute(params, context));
 
         params.clear();
         params.add("This is a test");
         params.add("a");
-        Assert.assertEquals(function.execute(params, context), " test");
+        Assertions.assertEquals(" test", function.execute(params, context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(emptyList(), context));
     }
 }

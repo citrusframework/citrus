@@ -20,8 +20,8 @@ import java.util.Collections;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.server.Server;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;

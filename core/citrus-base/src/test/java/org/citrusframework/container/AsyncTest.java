@@ -21,11 +21,11 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
@@ -110,9 +111,9 @@ public class AsyncTest extends UnitTestSupport {
 
         waitForDone(container, context, 2000);
 
-        Assert.assertEquals(context.getExceptions().size(), 1L);
-        Assert.assertEquals(context.getExceptions().get(0).getClass(), CitrusRuntimeException.class);
-        Assert.assertEquals(context.getExceptions().get(0).getMessage(), "Generated error to interrupt test execution");
+        Assertions.assertEquals(1L, context.getExceptions().size());
+        Assertions.assertEquals(CitrusRuntimeException.class, context.getExceptions().get(0).getClass());
+        Assertions.assertEquals("Generated error to interrupt test execution", context.getExceptions().get(0).getMessage());
 
         verify(action1).execute(context);
         verify(action2, times(0)).execute(context);
@@ -121,7 +122,7 @@ public class AsyncTest extends UnitTestSupport {
         verify(success, times(0)).execute(context);
     }
 
-    @Test(expectedExceptions = TimeoutException.class)
+    @Test
     public void testWaitForFinishTimeout() throws Exception {
         reset(action, success, error);
 
@@ -135,7 +136,7 @@ public class AsyncTest extends UnitTestSupport {
                 .build();
         container.execute(context);
 
-        waitForDone(container, context, 100);
+        assertThrows(TimeoutException.class, () -> waitForDone(container, context, 100));
     }
 
     @Test
@@ -151,9 +152,9 @@ public class AsyncTest extends UnitTestSupport {
 
         waitForDone(container, context, 2000);
 
-        Assert.assertEquals(context.getExceptions().size(), 1L);
-        Assert.assertEquals(context.getExceptions().get(0).getClass(), CitrusRuntimeException.class);
-        Assert.assertEquals(context.getExceptions().get(0).getMessage(), "FAILED!");
+        Assertions.assertEquals(1L, context.getExceptions().size());
+        Assertions.assertEquals(CitrusRuntimeException.class, context.getExceptions().get(0).getClass());
+        Assertions.assertEquals("FAILED!", context.getExceptions().get(0).getMessage());
     }
 
     private void waitForDone(Async container, TestContext context, long timeout) throws InterruptedException, ExecutionException, TimeoutException {

@@ -23,8 +23,10 @@ import java.util.List;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.apache.commons.codec.binary.Base64;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.4
@@ -44,8 +46,8 @@ public class ReadFileResourceFunctionTest extends UnitTestSupport {
         String path = "classpath:org/citrusframework/base/functions/${filename}";
         String result = function.execute(List.of(path), context);
 
-        Assert.assertTrue(result.startsWith("This is a sample file content!"));
-        Assert.assertTrue(result.contains("'Christoph'"));
+        Assertions.assertTrue(result.startsWith("This is a sample file content!"));
+        Assertions.assertTrue(result.contains("'Christoph'"));
     }
 
     @Test
@@ -60,7 +62,7 @@ public class ReadFileResourceFunctionTest extends UnitTestSupport {
         String resolvedFileContent = "This is a sample file content! We can also use variables 'Christoph' and functions 1999-12-09";
 
         String expected = Base64.encodeBase64String(resolvedFileContent.getBytes(StandardCharsets.UTF_8));
-        Assert.assertEquals(result, expected);
+        Assertions.assertEquals(expected, result);
     }
 
     @Test
@@ -75,11 +77,11 @@ public class ReadFileResourceFunctionTest extends UnitTestSupport {
         String path = "classpath:org/citrusframework/base/functions/${filename}";
         String result = function.execute(List.of(path, "true"), context);
 
-        Assert.assertEquals(result, expectedBase64WithoutReplacement);
+        Assertions.assertEquals(expectedBase64WithoutReplacement, result);
     }
 
-    @Test(expectedExceptions = InvalidFunctionUsageException.class)
+    @Test
     public void testInvalidFunctionUsage() {
-        function.execute(Collections.emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(Collections.emptyList(), context));
     }
 }

@@ -17,13 +17,19 @@
 package org.citrusframework.base.functions.core;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -36,7 +42,7 @@ public class AdvancedRandomNumberFunctionTest {
     private AdvancedRandomNumberFunction functionWithRandomZero;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         function = new AdvancedRandomNumberFunction();
 
@@ -58,28 +64,28 @@ public class AdvancedRandomNumberFunctionTest {
         context = new TestContext();
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testRandomNumberWithNullParameter() {
         assertThatThrownBy(() -> function.execute(null, context))
             .isInstanceOf(InvalidFunctionUsageException.class)
             .hasMessage("Function parameters must not be null.");
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testRandomNumberWithDefaultValues() {
         List<String> params = List.of();
         String result = function.execute(params, context);
         assertThat(result).isNotNull().matches("-?\\d*\\.\\d{2}");
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testRandomNumberWithDecimalPlaces() {
         List<String> params = List.of("2");
         String result = function.execute(params, context);
         assertThat(result).isNotNull().matches("-?\\d*\\.\\d{2}");
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testRandomNumberWithinRange() {
         List<String> params = List.of("2", "10.5", "20.5");
         String result = function.execute(params, context);
@@ -130,7 +136,7 @@ public class AdvancedRandomNumberFunctionTest {
             .isLessThan(BigDecimal.valueOf(20.5));
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testRandomInteger32EdgeCase() {
         List<String> params = List.of("0", "-2147483648", "2147483647", "false", "false");
 
@@ -147,7 +153,7 @@ public class AdvancedRandomNumberFunctionTest {
             .isLessThanOrEqualTo(BigDecimal.valueOf(Integer.MAX_VALUE));
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testRandomInteger32EdgeCaseExcluded() {
         List<String> params = List.of("0", "-2147483648", "2147483647", "true", "true");
 
@@ -162,7 +168,7 @@ public class AdvancedRandomNumberFunctionTest {
             BigDecimal.valueOf(Integer.MAX_VALUE));
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testRandomInteger32MinEqualsMaxEdgeCase() {
         List<String> params = List.of("0", "3", "3", "false", "false");
         String result = function.execute(params, context);
@@ -171,7 +177,7 @@ public class AdvancedRandomNumberFunctionTest {
             within(BigDecimal.valueOf(1e-10)));
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testRandomDouble32MinEqualsMaxEdgeCase() {
         List<String> params = List.of("2", "3.1", "3.1", "false", "false");
         String result = function.execute(params, context);
@@ -264,7 +270,7 @@ public class AdvancedRandomNumberFunctionTest {
         assertThat(new BigDecimal(result)).isLessThan(new BigDecimal("1.7976931348623157E308"));
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testInvalidDecimalPlaces() {
         List<String> params = List.of("-1");
         assertThatThrownBy(() -> function.execute(params, context))
@@ -272,7 +278,7 @@ public class AdvancedRandomNumberFunctionTest {
             .hasMessage("Decimal places must be a non-negative integer value.");
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testInvalidRange() {
         List<String> params = List.of("2", "20.5", "10.5");
         assertThatThrownBy(() -> function.execute(params, context))
@@ -280,7 +286,7 @@ public class AdvancedRandomNumberFunctionTest {
             .hasMessage("Min value must be less than max value.");
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testInvalidDecimalPlacesFormat() {
         List<String> params = List.of("xxx");
         assertThatThrownBy(() -> function.execute(params, context))
@@ -288,7 +294,7 @@ public class AdvancedRandomNumberFunctionTest {
             .hasMessage("Invalid parameter at index 1. xxx must be parsable to Integer.");
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testInvalidMinValueFormat() {
         List<String> params = List.of("1", "xxx");
         assertThatThrownBy(() -> function.execute(params, context))
@@ -296,7 +302,7 @@ public class AdvancedRandomNumberFunctionTest {
             .hasMessage("Invalid parameter at index 2. xxx must be parsable to BigDecimal.");
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testInvalidMaxValueFormat() {
         List<String> params = List.of("1", "1.1", "xxx"); // invalid max value
         assertThatThrownBy(() -> function.execute(params, context)).isInstanceOf(
@@ -304,7 +310,7 @@ public class AdvancedRandomNumberFunctionTest {
             .hasMessage("Invalid parameter at index 3. xxx must be parsable to BigDecimal.");
     }
 
-    @Test(invocationCount = 100)
+    @RepeatedTest(100)
     public void testSpecificFormat() {
         List<String> params = List.of("3", "1234567", "1234568", "false", "false", "null", "#,###.000" ); // invalid max value
         String result = function.execute(params, context);
@@ -319,7 +325,6 @@ public class AdvancedRandomNumberFunctionTest {
         assertThat(result).isEqualTo("1.235E6");
     }
 
-    @DataProvider(name = "testRandomNumber")
     public static Object[][] testRandomNumber() {
         return new Object[][]{
             {0, 12, null, null, false, false},
@@ -417,7 +422,14 @@ public class AdvancedRandomNumberFunctionTest {
         };
     }
 
-    @Test(dataProvider = "testRandomNumber", invocationCount = 100)
+    /** Every row runs 100 times, as with TestNG's invocationCount = 100. */
+    static Stream<Arguments> testRandomNumberRepeated() {
+        return IntStream.range(0, 100).boxed()
+            .flatMap(i -> Arrays.stream(testRandomNumber()).map(Arguments::of));
+    }
+
+    @ParameterizedTest
+    @MethodSource("testRandomNumberRepeated")
     void testRandomNumber(Number decimalPlaces, Number multipleOf, Number minimum, Number maximum,
         boolean exclusiveMinimum, boolean exclusiveMaximum) {
 

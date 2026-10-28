@@ -23,29 +23,34 @@ import java.util.Map;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test the {@link MapValueFunction} function.
  *
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MapValueFunctionTest extends UnitTestSupport {
 	private final Map<String, String> map = new HashMap<>();
 
-	@BeforeClass
+	@BeforeAll
 	public void init() {
 		map.put("401", "Unauthorized");
 		map.put("200", "OK");
 		map.put("500", "Internal Server Error");
 	}
 
-	@Test(expectedExceptions = {CitrusRuntimeException.class},
-			expectedExceptionsMessageRegExp = "MapValueFunction must not use an empty value map")
+	@Test
 	public void testNoMapping() {
 		MapValueFunction testee = new MapValueFunction();
-		testee.initialize();
+		CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> testee.initialize());
+		assertThat(thrown).hasMessage("MapValueFunction must not use an empty value map");
 	}
 
 	@Test
@@ -54,15 +59,15 @@ public class MapValueFunctionTest extends UnitTestSupport {
 		testee.setMap(map);
 		for (String key : map.keySet()) {
 			String result = testee.execute(Collections.singletonList(key), context);
-			Assert.assertEquals(result, map.get(key));
+			Assertions.assertEquals(map.get(key), result);
 		}
 	}
 
-	@Test(expectedExceptions = {InvalidFunctionUsageException.class})
+	@Test
 	public void testMissingMapping() {
 		MapValueFunction testee = new MapValueFunction();
 		testee.setMap(map);
-		Assert.assertFalse(map.containsKey("303"));
-		testee.execute(Collections.singletonList("303"), context);
+		Assertions.assertFalse(map.containsKey("303"));
+		assertThrows(InvalidFunctionUsageException.class, () -> testee.execute(Collections.singletonList("303"), context));
 	}
 }

@@ -21,8 +21,8 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;

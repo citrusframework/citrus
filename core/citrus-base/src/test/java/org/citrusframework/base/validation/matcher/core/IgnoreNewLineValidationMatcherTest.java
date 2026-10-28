@@ -20,7 +20,9 @@ import java.util.Collections;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.7.6
@@ -42,8 +44,10 @@ public class IgnoreNewLineValidationMatcherTest extends UnitTestSupport {
         matcher.validate("field", "value1 \r\n\r\n\r\nvalue2 \r\n\r\nvalue3!", Collections.singletonList("value1 \r\nvalue2 \r\nvalue3!"), context);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidateError() {
-        matcher.validate("field", "value1 \nvalue2 \nvalue3!", Collections.singletonList("value1! value2! value3!"), context);
+        assertThrows(ValidationException.class, () -> {
+            matcher.validate("field", "value1 \nvalue2 \nvalue3!", Collections.singletonList("value1! value2! value3!"), context);
+        });
     }
 }

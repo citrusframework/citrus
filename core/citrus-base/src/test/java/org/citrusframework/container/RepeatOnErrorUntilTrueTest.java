@@ -20,35 +20,27 @@ import org.citrusframework.TestAction;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.openMocks;
 
+@ExtendWith(MockitoExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
 
     @Mock
     private TestAction action;
-
-    private AutoCloseable openedMocks;
-
-    @BeforeMethod
-    public void beforeMethodSetup() {
-        openedMocks = openMocks(this);
-    }
-
-    @AfterMethod
-    public void afterMethodTearDown() throws Exception {
-        openedMocks.close();
-    }
 
     @SuppressWarnings({"deprecation", "removal"})
     @Test
@@ -83,7 +75,6 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
                 );
     }
 
-    @DataProvider
     public Object[][] expressionProvider() {
         return new Object[][]{
                 new Object[]{"i = 5"},
@@ -91,7 +82,8 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
         };
     }
 
-    @Test(dataProvider = "expressionProvider")
+    @ParameterizedTest
+    @MethodSource("expressionProvider")
     public void testSuccessOnFirstIteration(String expression) {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
                 .condition(expression)
@@ -104,7 +96,7 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
         verify(action).execute(context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testRepeatOnErrorNoSuccess() {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
                 .condition("i = 5")
@@ -113,12 +105,12 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
                 .actions(() -> action, new FailAction.Builder())
                 .build();
 
-        repeat.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> repeat.execute(context));
 
         verify(action, times(4)).execute(context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testRepeatOnErrorNoSuccessConditionExpression() {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
                 .condition((index, context) -> index == 5)
@@ -127,7 +119,7 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
                 .actions(() -> action, new FailAction.Builder())
                 .build();
 
-        repeat.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> repeat.execute(context));
 
         verify(action, times(4)).execute(context);
     }
@@ -145,7 +137,7 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
         verify(action).execute(context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testRepeatOnErrorNoSuccessTimes() {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
                 .times(5)
@@ -154,7 +146,7 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
                 .actions(() -> action, new FailAction.Builder())
                 .build();
 
-        repeat.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> repeat.execute(context));
 
         verify(action, times(5)).execute(context);
     }

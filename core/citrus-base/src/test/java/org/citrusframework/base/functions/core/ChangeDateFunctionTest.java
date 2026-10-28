@@ -20,12 +20,14 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.FunctionParameterHelper;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ChangeDateFunctionTest extends UnitTestSupport {
 
@@ -38,132 +40,134 @@ public class ChangeDateFunctionTest extends UnitTestSupport {
     public void testDefaultDateFormat() {
         Calendar calendar = defaultBaseCalendar();
         calendar.add(Calendar.YEAR, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE + "', '+1y'"), context),
-                String.format("%1$td.%1$tm.%1$tY", calendar));
+        Assertions.assertEquals(String.format("%1$td.%1$tm.%1$tY", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE + "', '+1y'"), context));
 
         calendar = defaultBaseCalendar();
         calendar.add(Calendar.MONTH, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE + "', '+1M'"), context),
-                String.format("%1$td.%1$tm.%1$tY", calendar));
+        Assertions.assertEquals(String.format("%1$td.%1$tm.%1$tY", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE + "', '+1M'"), context));
 
         calendar = defaultBaseCalendar();
         calendar.add(Calendar.DAY_OF_YEAR, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE + "', '+1d'"), context),
-                String.format("%1$td.%1$tm.%1$tY", calendar));
+        Assertions.assertEquals(String.format("%1$td.%1$tm.%1$tY", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE + "', '+1d'"), context));
     }
 
     @Test
     public void testFunction() {
         Calendar calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.YEAR, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.MONTH, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1M', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1M', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.DAY_OF_YEAR, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1d', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1d', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.HOUR, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1h', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1h', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.MINUTE, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1m', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1m', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.SECOND, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1s', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1s', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.YEAR, 10);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+10y', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+10y', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.YEAR, 1);
         calendar.add(Calendar.MONTH, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y+1M', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y+1M', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar.add(Calendar.DAY_OF_YEAR, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y+1M+1d', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y+1M+1d', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar.add(Calendar.HOUR, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y+1M+1d+1h', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y+1M+1d+1h', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar.add(Calendar.MINUTE, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y+1M+1d+1h+1m', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y+1M+1d+1h+1m', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar.add(Calendar.SECOND, 1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y+1M+1d+1h+1m+1s', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y+1M+1d+1h+1m+1s', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.YEAR, -1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1y', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1y', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.MONTH, -1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1M', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1M', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.DAY_OF_YEAR, -1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1d', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1d', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.HOUR, -1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1h', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1h', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.MINUTE, -1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1m', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1m', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.SECOND, -1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1s', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1s', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.YEAR, -1);
         calendar.add(Calendar.MONTH, 1);
         calendar.add(Calendar.DAY_OF_YEAR, -1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1y+1M-1d', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '-1y+1M-1d', 'yyyy-MM-dd HH:mm:ss'"), context));
 
         calendar = dateTimeBaseCalendar();
         calendar.add(Calendar.YEAR, 1);
         calendar.add(Calendar.MONTH, -1);
         calendar.add(Calendar.DAY_OF_YEAR, -1);
-        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y-1M-1d', 'yyyy-MM-dd HH:mm:ss'"), context),
-                String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar));
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1y-1M-1d', 'yyyy-MM-dd HH:mm:ss'"), context));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testWrongDateFormatUsage() {
-        fixture.execute(FunctionParameterHelper.getParameterList("'1970-01-01', '+1y'"), context);
+        assertThrows(CitrusRuntimeException.class, () -> {
+            fixture.execute(FunctionParameterHelper.getParameterList("'1970-01-01', '+1y'"), context);
+        });
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        fixture.execute(Collections.emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> fixture.execute(Collections.emptyList(), context));
     }
 
     private Calendar defaultBaseCalendar() {

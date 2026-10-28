@@ -21,9 +21,11 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.util.PropertyUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Sets JVM-wide citrus.endpoint.* system properties")
 public class PropertyUtilsTest extends UnitTestSupport {
 
     @Test
@@ -36,8 +38,8 @@ public class PropertyUtilsTest extends UnitTestSupport {
 
         PropertyUtils.configure("foo", endpoint, context.getReferenceResolver());
 
-        Assert.assertEquals(endpoint.getEndpointConfiguration().getQueueName(), "fooQueue");
-        Assert.assertEquals(endpoint.getEndpointConfiguration().getTimeout(), 100L);
+        Assertions.assertEquals("fooQueue", endpoint.getEndpointConfiguration().getQueueName());
+        Assertions.assertEquals(100L, endpoint.getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -52,7 +54,7 @@ public class PropertyUtilsTest extends UnitTestSupport {
 
         PropertyUtils.configure("bar", endpoint, context.getReferenceResolver());
 
-        Assert.assertEquals(endpoint.getEndpointConfiguration().getQueue(), context.getReferenceResolver().resolve("fooQueue"));
-        Assert.assertEquals(endpoint.getActor(), context.getReferenceResolver().resolve("testActor"));
+        Assertions.assertEquals(context.getReferenceResolver().resolve("fooQueue"), endpoint.getEndpointConfiguration().getQueue());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("testActor"), endpoint.getActor());
     }
 }

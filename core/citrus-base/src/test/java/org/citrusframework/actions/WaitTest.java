@@ -23,13 +23,13 @@ import org.citrusframework.condition.ActionCondition;
 import org.citrusframework.container.Wait;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.fail;
 
 /**
  * @since 2.4
@@ -173,8 +173,8 @@ public class WaitTest {
         testling.execute(contextMock);
         stopTimer();
 
-        Assert.assertTrue(executionCount.get() >= 3, "Action should have been executed at least 3 times");
-        Assert.assertNull(actionCondition.getCaughtException());
+        Assertions.assertTrue(executionCount.get() >= 3, "Action should have been executed at least 3 times");
+        Assertions.assertNull(actionCondition.getCaughtException());
     }
 
     @Test
@@ -204,11 +204,11 @@ public class WaitTest {
             testling.execute(contextMock);
             fail("Was expecting CitrusRuntimeException to be thrown");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("did not perform as expected"));
+            Assertions.assertTrue(e.getMessage().contains("did not perform as expected"));
         }
         stopTimer();
 
-        Assert.assertTrue(executionCount.get() > 1, "Action should have been retried multiple times");
+        Assertions.assertTrue(executionCount.get() > 1, "Action should have been retried multiple times");
         assertConditionExecutedWithinSeconds("2");
     }
 
@@ -237,7 +237,7 @@ public class WaitTest {
 
         testling.execute(contextMock);
 
-        Assert.assertEquals(executionCount.get(), 4, "Action should have been executed exactly 4 times (3 failures + 1 success)");
+        Assertions.assertEquals(4, executionCount.get(), "Action should have been executed exactly 4 times (3 failures + 1 success)");
     }
 
     private void prepareContextMock(String waitTime, String interval) {

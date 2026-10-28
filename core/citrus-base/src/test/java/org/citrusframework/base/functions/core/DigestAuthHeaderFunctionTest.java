@@ -20,8 +20,10 @@ import java.util.Collections;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.FunctionParameterHelper;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DigestAuthHeaderFunctionTest extends UnitTestSupport {
 
@@ -31,18 +33,22 @@ public class DigestAuthHeaderFunctionTest extends UnitTestSupport {
     public void testFunction() {
         String digestHeader = function.execute(FunctionParameterHelper.getParameterList("'username', 'password', 'authRealm', 'acegi', 'POST', 'http://localhost:8080', 'citrus', 'md5'"), context);
 
-        Assert.assertTrue(digestHeader.startsWith("Digest username=username,realm=authRealm,nonce="));
-        Assert.assertTrue(digestHeader.contains("uri=http://localhost:8080,response="));
-        Assert.assertTrue(digestHeader.contains("algorithm=md5"));
+        Assertions.assertTrue(digestHeader.startsWith("Digest username=username,realm=authRealm,nonce="));
+        Assertions.assertTrue(digestHeader.contains("uri=http://localhost:8080,response="));
+        Assertions.assertTrue(digestHeader.contains("algorithm=md5"));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(Collections.<String>emptyList(), context);
+        });
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testMissingParameters() {
-        function.execute(FunctionParameterHelper.getParameterList("'username', 'password', 'authRealm', 'http://localhost:8080', 'citrus', 'md5'"), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(FunctionParameterHelper.getParameterList("'username', 'password', 'authRealm', 'http://localhost:8080', 'citrus', 'md5'"), context);
+        });
     }
 }

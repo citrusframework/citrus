@@ -22,7 +22,9 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.7
@@ -69,7 +71,7 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidateMessageHeadersIgnoreCaseError() {
         Message receivedMessage = new DefaultMessage("Hello World!")
                 .setHeader("X-Foo", "foo_test")
@@ -79,7 +81,9 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
                 .setHeader("x-foo", "foo_test")
                 .setHeader("x-bar", "bar_test");
 
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        assertThrows(ValidationException.class, () -> {
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        });
     }
 
     @Test
@@ -110,7 +114,7 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidateError() {
         Message receivedMessage = new DefaultMessage("Hello World!")
                 .setHeader("foo", "other_value")
@@ -119,10 +123,12 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
                 .setHeader("foo", "foo_test")
                 .setHeader("bar", "bar_test");
 
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        assertThrows(ValidationException.class, () -> {
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        });
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidateErrorMissingHeader() {
         Message receivedMessage = new DefaultMessage("Hello World!")
                 .setHeader("bar", "bar_test");
@@ -130,17 +136,21 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
                 .setHeader("foo", "foo_test")
                 .setHeader("bar", "bar_test");
 
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        assertThrows(ValidationException.class, () -> {
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        });
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidateCorrelationIdHeaderMismatch() {
         Message receivedMessage = new DefaultMessage("Hello World!")
                 .setHeader("correlationId", "my-correlation-id");
         Message controlMessage = new DefaultMessage("Hello World!")
                 .setHeader("correlationId", "NOT-my-correlation-id");
 
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        assertThrows(ValidationException.class, () -> {
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        });
     }
 
     @Test
@@ -153,13 +163,15 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidateCorrelationIdHeaderMissing() {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello World!")
                 .setHeader("correlationId", "my-correlation-id");
 
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        assertThrows(ValidationException.class, () -> {
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        });
     }
 
     @Test

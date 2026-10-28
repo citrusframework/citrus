@@ -25,9 +25,10 @@ import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.actions.SleepAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
@@ -88,7 +89,7 @@ public class ParallelTest extends UnitTestSupport {
         parallelAction.execute(context);
     }
 
-    @Test(expectedExceptions=CitrusRuntimeException.class)
+    @Test
     public void testOneActionThatIsFailing() {
         Parallel parallelAction = new Parallel.Builder().build();
 
@@ -97,10 +98,10 @@ public class ParallelTest extends UnitTestSupport {
 
         parallelAction.setActions(actionList);
 
-        parallelAction.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> parallelAction.execute(context));
     }
 
-    @Test(expectedExceptions=CitrusRuntimeException.class)
+    @Test
     public void testOnlyActionFailingActions() {
         Parallel parallelAction = new Parallel.Builder().build();
 
@@ -111,10 +112,10 @@ public class ParallelTest extends UnitTestSupport {
 
         parallelAction.setActions(actionList);
 
-        parallelAction.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> parallelAction.execute(context));
     }
 
-    @Test(expectedExceptions=CitrusRuntimeException.class)
+    @Test
     public void testSingleFailingAction() {
         Parallel parallelAction = new Parallel.Builder().build();
 
@@ -125,10 +126,10 @@ public class ParallelTest extends UnitTestSupport {
 
         parallelAction.setActions(actionList);
 
-        parallelAction.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> parallelAction.execute(context));
     }
 
-    @Test(expectedExceptions=CitrusRuntimeException.class)
+    @Test
     public void testSomeFailingActions() {
         Parallel parallelAction = new Parallel.Builder().build();
 
@@ -142,7 +143,7 @@ public class ParallelTest extends UnitTestSupport {
 
         parallelAction.setActions(actionList);
 
-        parallelAction.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> parallelAction.execute(context));
 
         verify(action).execute(context);
     }

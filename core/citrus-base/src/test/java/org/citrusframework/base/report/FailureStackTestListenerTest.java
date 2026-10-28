@@ -28,8 +28,8 @@ import org.citrusframework.container.Sequence;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.report.FailureStackElement;
 import org.citrusframework.report.FailureStackTestListener;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FailureStackTestListenerTest {
 
@@ -64,12 +64,12 @@ public class FailureStackTestListenerTest {
 
         List<FailureStackElement> failureStack = FailureStackTestListener.getFailureStack(test);
 
-        Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertEquals(failureStack.size(), 1);
+        Assertions.assertFalse(failureStack.isEmpty());
+        Assertions.assertEquals(1, failureStack.size());
 
         FailureStackElement failureStackElement = failureStack.get(0);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":13)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 13L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":13)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(13L, failureStackElement.getLineNumberStart().longValue());
     }
 
     @Test
@@ -103,11 +103,11 @@ public class FailureStackTestListenerTest {
 
         List<FailureStackElement> failureStack = FailureStackTestListener.getFailureStack(test);
 
-        Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertEquals(failureStack.size(), 1);
+        Assertions.assertFalse(failureStack.isEmpty());
+        Assertions.assertEquals(1, failureStack.size());
         FailureStackElement failureStackElement = failureStack.get(0);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":34)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 34L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":34)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(34L, failureStackElement.getLineNumberStart().longValue());
     }
 
     @Test
@@ -141,11 +141,11 @@ public class FailureStackTestListenerTest {
 
         List<FailureStackElement> failureStack = FailureStackTestListener.getFailureStack(test);
 
-        Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertEquals(failureStack.size(), 1);
+        Assertions.assertFalse(failureStack.isEmpty());
+        Assertions.assertEquals(1, failureStack.size());
         FailureStackElement failureStackElement = failureStack.get(0);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":24)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 24L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":24)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(24L, failureStackElement.getLineNumberStart().longValue());
     }
 
     @Test
@@ -181,15 +181,15 @@ public class FailureStackTestListenerTest {
 
         List<FailureStackElement> failureStack = FailureStackTestListener.getFailureStack(test);
 
-        Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertEquals(failureStack.size(), 2);
+        Assertions.assertFalse(failureStack.isEmpty());
+        Assertions.assertEquals(2, failureStack.size());
         FailureStackElement failureStackElement = failureStack.get(1);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":29)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 29L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":29)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(29L, failureStackElement.getLineNumberStart().longValue());
 
         failureStackElement = failureStack.get(0);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(sequential:25)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 25L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(sequential:25)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(25L, failureStackElement.getLineNumberStart().longValue());
     }
 
     public void testActionFailingInContainerHierarchy() {
@@ -228,19 +228,19 @@ public class FailureStackTestListenerTest {
 
         List<FailureStackElement> failureStack = FailureStackTestListener.getFailureStack(test);
 
-        Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertEquals(failureStack.size(), 3);
+        Assertions.assertFalse(failureStack.isEmpty());
+        Assertions.assertEquals(3, failureStack.size());
         FailureStackElement failureStackElement = failureStack.get(2);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":31)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 31L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":31)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(31L, failureStackElement.getLineNumberStart().longValue());
 
         failureStackElement = failureStack.get(1);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(iterate:30)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 30L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(iterate:30)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(30L, failureStackElement.getLineNumberStart().longValue());
 
         failureStackElement = failureStack.get(0);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(sequential:25)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 25L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(sequential:25)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(25L, failureStackElement.getLineNumberStart().longValue());
     }
 
     @Test
@@ -276,16 +276,16 @@ public class FailureStackTestListenerTest {
 
         List<FailureStackElement> failureStack = FailureStackTestListener.getFailureStack(test);
 
-        Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertEquals(failureStack.size(), 2);
+        Assertions.assertFalse(failureStack.isEmpty());
+        Assertions.assertEquals(2, failureStack.size());
         FailureStackElement failureStackElement = failureStack.get(1);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":17-22)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 17L);
-        Assert.assertEquals(failureStackElement.getLineNumberEnd().longValue(), 22L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":17-22)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(17L, failureStackElement.getLineNumberStart().longValue());
+        Assertions.assertEquals(22L, failureStackElement.getLineNumberEnd().longValue());
 
         failureStackElement = failureStack.get(0);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(parallel:14)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 14L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(parallel:14)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(14L, failureStackElement.getLineNumberStart().longValue());
     }
 
     @Test
@@ -319,12 +319,12 @@ public class FailureStackTestListenerTest {
 
         List<FailureStackElement> failureStack = FailureStackTestListener.getFailureStack(test);
 
-        Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertEquals(failureStack.size(), 1);
+        Assertions.assertFalse(failureStack.isEmpty());
+        Assertions.assertEquals(1, failureStack.size());
         FailureStackElement failureStackElement = failureStack.get(0);
-        Assert.assertEquals(failureStackElement.getStackMessage(), "at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":35-37)");
-        Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 35L);
-        Assert.assertEquals(failureStackElement.getLineNumberEnd().longValue(), 37L);
+        Assertions.assertEquals("at org/citrusframework/base/report/FailureStackExampleTest(" + failedAction.getName() + ":35-37)", failureStackElement.getStackMessage());
+        Assertions.assertEquals(35L, failureStackElement.getLineNumberStart().longValue());
+        Assertions.assertEquals(37L, failureStackElement.getLineNumberEnd().longValue());
     }
 
     private void setActiveActions(TestActionContainer container, TestAction failedAction) {

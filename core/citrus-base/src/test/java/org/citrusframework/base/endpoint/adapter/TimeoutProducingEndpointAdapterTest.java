@@ -18,8 +18,8 @@ package org.citrusframework.base.endpoint.adapter;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TimeoutProducingEndpointAdapterTest {
 
@@ -29,6 +29,6 @@ public class TimeoutProducingEndpointAdapterTest {
         Message response = endpointAdapter.handleMessage(
                 new DefaultMessage("<TestMessage>Hello World!</TestMessage>"));
 
-        Assert.assertNull(response);
+        Assertions.assertNull(response);
     }
 }

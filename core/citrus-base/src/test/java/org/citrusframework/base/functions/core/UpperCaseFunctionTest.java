@@ -20,21 +20,25 @@ import java.util.Collections;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UpperCaseFunctionTest extends UnitTestSupport {
     UpperCaseFunction function = new UpperCaseFunction();
 
     @Test
     public void testFunction() {
-        Assert.assertEquals(function.execute(Collections.singletonList("1000"), context), "1000");
-        Assert.assertEquals(function.execute(Collections.singletonList("Hallo TestFramework!"), context), "HALLO TESTFRAMEWORK!");
-        Assert.assertEquals(function.execute(Collections.singletonList("Today is: 09.02.2009"), context), "TODAY IS: 09.02.2009");
+        Assertions.assertEquals("1000", function.execute(Collections.singletonList("1000"), context));
+        Assertions.assertEquals("HALLO TESTFRAMEWORK!", function.execute(Collections.singletonList("Hallo TestFramework!"), context));
+        Assertions.assertEquals("TODAY IS: 09.02.2009", function.execute(Collections.singletonList("Today is: 09.02.2009"), context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(Collections.<String>emptyList(), context);
+        });
     }
 }

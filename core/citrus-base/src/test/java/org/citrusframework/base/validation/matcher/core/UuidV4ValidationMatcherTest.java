@@ -18,7 +18,7 @@ package org.citrusframework.base.validation.matcher.core;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Fail.fail;

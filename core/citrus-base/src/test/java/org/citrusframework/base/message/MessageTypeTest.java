@@ -18,22 +18,22 @@ package org.citrusframework.base.message;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.message.MessageType;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MessageTypeTest extends UnitTestSupport {
 
     @Test
     public void testKnowsMessageType() {
-        Assert.assertEquals(MessageType.knows("xml"), true);
-        Assert.assertEquals(MessageType.knows("XML"), true);
+        Assertions.assertEquals(true, MessageType.knows("xml"));
+        Assertions.assertEquals(true, MessageType.knows("XML"));
 
-        Assert.assertEquals(MessageType.knows("PLAINTEXT"), true);
-        Assert.assertEquals(MessageType.knows("plaintext"), true);
-        Assert.assertEquals(MessageType.knows("json"), true);
-        Assert.assertEquals(MessageType.knows("csv"), true);
+        Assertions.assertEquals(true, MessageType.knows("PLAINTEXT"));
+        Assertions.assertEquals(true, MessageType.knows("plaintext"));
+        Assertions.assertEquals(true, MessageType.knows("json"));
+        Assertions.assertEquals(true, MessageType.knows("csv"));
 
-        Assert.assertEquals(MessageType.knows("msexcel"), false);
-        Assert.assertEquals(MessageType.knows(""), false);
+        Assertions.assertEquals(false, MessageType.knows("msexcel"));
+        Assertions.assertEquals(false, MessageType.knows(""));
     }
 }

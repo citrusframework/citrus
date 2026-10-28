@@ -22,9 +22,11 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.6.2
@@ -39,26 +41,32 @@ public class LoadMessageFunctionTest extends UnitTestSupport {
     @Test
     public void testLoadMessagePayload() {
         context.getMessageStore().storeMessage("request", message);
-        assertEquals(function.execute(Collections.singletonList("request"), context), "This is a sample message");
-        assertEquals(function.execute(Collections.singletonList("request.body()"), context), "This is a sample message");
+        assertEquals("This is a sample message", function.execute(Collections.singletonList("request"), context));
+        assertEquals("This is a sample message", function.execute(Collections.singletonList("request.body()"), context));
     }
 
     @Test
     public void testLoadMessageHeader() {
         context.getMessageStore().storeMessage("request", message);
-        assertEquals(function.execute(Collections.singletonList("request.header(operation)"), context), "sampleOperation");
-        assertEquals(function.execute(Collections.singletonList("request.header('operation')"), context), "sampleOperation");
+        assertEquals("sampleOperation", function.execute(Collections.singletonList("request.header(operation)"), context));
+        assertEquals("sampleOperation", function.execute(Collections.singletonList("request.header('operation')"), context));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing header name.*")
+    @Test
     public void testLoadMessageHeaderEmpty() {
         context.getMessageStore().storeMessage("request", message);
-        function.execute(Collections.singletonList("request.header()"), context);
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> {
+            function.execute(Collections.singletonList("request.header()"), context);
+        });
+        assertThat(thrown).hasMessageMatching("Missing header name.*");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find header 'wrong'.*")
+    @Test
     public void testLoadMessageHeaderUnknown() {
         context.getMessageStore().storeMessage("request", message);
-        function.execute(Collections.singletonList("request.header('wrong')"), context);
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> {
+            function.execute(Collections.singletonList("request.header('wrong')"), context);
+        });
+        assertThat(thrown).hasMessageMatching("Failed to find header 'wrong'.*");
     }
 }

@@ -53,16 +53,22 @@ import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
-import uk.org.webcompere.systemstubs.testng.SystemStub;
-import uk.org.webcompere.systemstubs.testng.SystemStubsListener;
+import uk.org.webcompere.systemstubs.jupiter.SystemStub;
+import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -78,6 +84,8 @@ import static org.citrusframework.message.MessageType.JSON;
 import static org.citrusframework.message.MessageType.PLAINTEXT;
 import static org.citrusframework.message.MessageType.XHTML;
 import static org.citrusframework.message.MessageType.XML;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
@@ -89,13 +97,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
 
+@Isolated("Replaces the JVM-wide environment variables, which every CitrusSettings lookup reads")
 @SuppressWarnings("unchecked")
-@Listeners(SystemStubsListener.class)
+@ExtendWith({MockitoExtension.class, SystemStubsExtension.class})
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ReceiveMessageActionTest extends UnitTestSupport {
 
     @Mock
@@ -124,8 +131,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        openMocks(this);
-
         when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
 
         TestContextFactory factory = super.createTestContextFactory();
@@ -152,7 +157,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -184,7 +189,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -221,7 +226,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -259,7 +264,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()));
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -294,7 +299,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -333,7 +338,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()));
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -370,7 +375,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()));
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -411,7 +416,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -452,7 +457,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -493,7 +498,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -532,7 +537,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -545,7 +550,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         try {
             receiveAction.execute(context);
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myOperation'");
+            Assertions.assertEquals("Unknown variable 'myOperation'", e.getMessage());
         }
     }
 
@@ -569,7 +574,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -582,7 +587,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         try {
             receiveAction.execute(context);
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myText'");
+            Assertions.assertEquals("Unknown variable 'myText'", e.getMessage());
         }
     }
 
@@ -617,7 +622,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -630,8 +635,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable(extractionKey));
-        Assert.assertEquals(context.getVariable(extractionKey), headerValue);
+        Assertions.assertNotNull(context.getVariable(extractionKey));
+        Assertions.assertEquals(headerValue, context.getVariable(extractionKey));
     }
 
     @Test
@@ -664,8 +669,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .process(headerVariableExtractor)
                 .build();
 
-        UnknownElementException exception = expectThrows(UnknownElementException.class, () -> receiveAction.execute(context));
-        assertEquals(exception.getMessage(), "Could not find header element invalid-header-key in received header");
+        UnknownElementException exception = assertThrows(UnknownElementException.class, () -> receiveAction.execute(context));
+        assertEquals("Could not find header element invalid-header-key in received header", exception.getMessage());
     }
 
     @Test
@@ -691,7 +696,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -704,8 +709,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        Assertions.assertNotNull(context.getVariable("messageVar"));
+        Assertions.assertEquals("Hello World!", context.getVariable("messageVar"));
     }
 
     @Test
@@ -728,7 +733,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -767,7 +772,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -806,7 +811,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -847,7 +852,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -887,7 +892,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -921,7 +926,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -934,11 +939,11 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         try {
             receiveAction.execute(context);
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to receive message - message is not available");
+            Assertions.assertEquals("Failed to receive message - message is not available", e.getMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving no message");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " for receiving no message");
     }
 
     @Test
@@ -961,7 +966,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -996,7 +1001,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -1033,7 +1038,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -1124,7 +1129,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -1173,7 +1178,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assertions.assertEquals(control.getPayload(String.class).trim(), received.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             validationContextList.forEach(vc -> vc.updateStatus(ValidationStatus.PASSED));
             return null;
@@ -1188,14 +1193,13 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         receiveAction.execute(context);
     }
 
-    @Test(
-            description = """
+    @Test
+    @DisplayName("""
                     With EXCLUSIVE message validation strategy,
                     default validators should still be invoked, whenever NO custom validator is present.
 
                     Requirement: https://github.com/citrusframework/citrus/issues/1419
-                    """
-    )
+                    """)
     public void testReceiveMessage_shouldInvokeValidationContexts_whenNoCustomValidatorIsPresent() {
         var testActor = new TestActor();
         testActor.setName("TESTACTOR");
@@ -1224,14 +1228,13 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .doesNotThrowAnyException();
     }
 
-    @Test(
-            description = """
+    @Test
+    @DisplayName("""
                     With EXCLUSIVE message validation strategy,
                     default validators will be skipped, whenever a custom validator is present.
 
                     Requirement: https://github.com/citrusframework/citrus/issues/1419
-                    """
-    )
+                    """)
     public void testReceiveMessage_shouldIgnoreValidationContexts_whenCustomValidatorIsPresent_andValidationStrategyIsExclusive() {
         var testActor = new TestActor();
         testActor.setName("TESTACTOR");
@@ -1257,14 +1260,13 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         verifyNoInteractions(validator);
     }
 
-    @Test(
-            description = """
+    @Test
+    @DisplayName("""
                     With COMBINED message validation strategy,
                     BOTH custom and default validators should be executed.
 
                     Requirement: https://github.com/citrusframework/citrus/issues/1419
-                    """
-    )
+                    """)
     public void testReceiveMessage_shouldInvokeBothCustomValidator_andValidationContexts_whenValidationStrategyIsCombined() {
         environmentVariables.set(CUSTOM_VALIDATOR_STRATEGY_ENV, "COMBINED");
 
@@ -1306,7 +1308,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .isTrue();
     }
 
-    public static class AssumeMessageTypeTest {
+    @Nested
+    public class AssumeMessageTypeTest {
 
         @Mock
         private Message messageMock;
@@ -1326,14 +1329,10 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         @Mock
         private Endpoint endpointMock;
 
-        private AutoCloseable mocks;
-
         private ReceiveMessageAction fixture;
 
-        @BeforeMethod
+        @BeforeEach
         public void setup() {
-            mocks = openMocks(this);
-
             doReturn(logModifierMock).when(contextMock).getLogModifier();
             doReturn(messageStoreMock).when(contextMock).getMessageStore();
             doReturn(messageValidatorRegistryMock).when(contextMock).getMessageValidatorRegistry();
@@ -1346,22 +1345,18 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                     .build();
         }
 
-        @AfterMethod
-        public void teardown() throws Exception {
-            mocks.close();
-        }
-
-        @DataProvider(name = "jsonPayload")
         public static String[] jsonPayload() {
             return new String[]{"{", "[", " {", " ["};
         }
 
-        @Test(dataProvider = "jsonPayload")
+        @ParameterizedTest
+        @MethodSource("jsonPayload")
         void shouldAssumeJSONMessageType_forJSONPayload(String payload) {
             shouldAssumeMessageTypeOnPayload(payload, JSON);
         }
 
-        @Test(dataProvider = "jsonPayload")
+        @ParameterizedTest
+        @MethodSource("jsonPayload")
         void shouldAssumeJSONMessageType_forJSONPayload_andPreviouslyEmptyMessageType(String payload) {
             doReturn(payload).when(messageMock).getPayload(String.class);
 
@@ -1373,17 +1368,18 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             assertThat(fixture.getMessageType()).isEqualTo(JSON.name());
         }
 
-        @DataProvider(name = "xmlPayload")
         public static String[] xmlPayload() {
             return new String[]{"<", " <"};
         }
 
-        @Test(dataProvider = "xmlPayload")
+        @ParameterizedTest
+        @MethodSource("xmlPayload")
         void shouldAssumeXMLMessageType_forXMLPayload(String payload) {
             shouldAssumeMessageTypeOnPayload(payload, XML);
         }
 
-        @Test(dataProvider = "xmlPayload")
+        @ParameterizedTest
+        @MethodSource("xmlPayload")
         void shouldAssumeXMLMessageType_forXMLPayload_andPreviouslyEmptyMessageType(String payload) {
             doReturn(payload).when(messageMock).getPayload(String.class);
 
@@ -1400,12 +1396,12 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             shouldAssumeMessageTypeOnPayload("foo", XML);
         }
 
-        @DataProvider(name = "emptyOrNullString")
         public static String[] emptyOrNullString() {
             return new String[]{null, "", " "};
         }
 
-        @Test(dataProvider = "emptyOrNullString")
+        @ParameterizedTest
+        @MethodSource("emptyOrNullString")
         void shouldAssumePlaintext_forEmptyPayload(String payload) {
             shouldAssumeMessageTypeOnPayload(payload, PLAINTEXT);
         }
@@ -1420,17 +1416,20 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             assertThat(fixture.getMessageType()).isEqualTo(messageType.name());
         }
 
-        @Test(dataProvider = "emptyOrNullString")
+        @ParameterizedTest
+        @MethodSource("emptyOrNullString")
         void shouldNotAssumeTypeOnEmptyControlPayload(String controlPayload) {
             shouldAssumeMessageTypeOnControlPayload("{}", controlPayload, JSON);
         }
 
-        @Test(dataProvider = "jsonPayload")
+        @ParameterizedTest
+        @MethodSource("jsonPayload")
         void shouldAssumeMessageOnControlPayload_withJSONPayload(String jsonPayload) {
             shouldAssumeMessageTypeOnControlPayload("<>", jsonPayload, JSON);
         }
 
-        @Test(dataProvider = "xmlPayload")
+        @ParameterizedTest
+        @MethodSource("xmlPayload")
         void shouldAssumeMessageOnControlPayload_withXMLPayload(String xmlPayload) {
             shouldAssumeMessageTypeOnControlPayload("{}", xmlPayload, XML);
         }
@@ -1453,7 +1452,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             assertThat(fixture.getMessageType()).isEqualTo(messageType.name());
         }
 
-        @Test(dataProvider = "xmlPayload")
+        @ParameterizedTest
+        @MethodSource("xmlPayload")
         void shouldAcceptXMLLikeMessageType_XHTML_andNotAlterIt(String xmlPayload) {
             doReturn(xmlPayload).when(messageMock).getPayload(String.class);
 
@@ -1475,7 +1475,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
             assertThat(fixture.getMessageType()).isEqualTo(xhtmlMessageType);
         }
 
-        @Test(dataProvider = "jsonPayload")
+        @ParameterizedTest
+        @MethodSource("jsonPayload")
         void shouldNotOverrideExplicitMessageType(String jsonPayload) {
             doReturn(jsonPayload).when(messageMock).getPayload(String.class);
 

@@ -21,12 +21,13 @@ import java.util.List;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RandomNumberFunctionTest extends UnitTestSupport {
     private final RandomNumberFunction function = new RandomNumberFunction();
@@ -36,78 +37,78 @@ public class RandomNumberFunctionTest extends UnitTestSupport {
         List<String> params = new ArrayList<>();
         params.add("3");
 
-        Assert.assertTrue(parseInt(function.execute(params, context)) < 1000);
+        Assertions.assertTrue(parseInt(function.execute(params, context)) < 1000);
 
         params = new ArrayList<>();
         params.add("3");
         params.add("false");
 
         String generated = function.execute(params, context);
-        Assert.assertTrue(generated.length() <= 3);
-        Assert.assertTrue(!generated.isEmpty());
+        Assertions.assertTrue(generated.length() <= 3);
+        Assertions.assertTrue(!generated.isEmpty());
     }
 
     @Test
     public void testLeadingZeroNumbers() {
         String generated = RandomNumberFunction.checkLeadingZeros("0001", true);
-        Assert.assertTrue(parseInt(generated.substring(0, 1)) > 0);
+        Assertions.assertTrue(parseInt(generated.substring(0, 1)) > 0);
 
         generated = RandomNumberFunction.checkLeadingZeros("0009", true);
-        Assert.assertEquals(generated.length(), 4);
+        Assertions.assertEquals(4, generated.length());
 
         generated = RandomNumberFunction.checkLeadingZeros("00000", true);
-        Assert.assertEquals(generated.length(), 5);
-        Assert.assertTrue(parseInt(generated.substring(0, 1)) > 0);
-        Assert.assertTrue(generated.endsWith("0000"));
+        Assertions.assertEquals(5, generated.length());
+        Assertions.assertTrue(parseInt(generated.substring(0, 1)) > 0);
+        Assertions.assertTrue(generated.endsWith("0000"));
 
         generated = RandomNumberFunction.checkLeadingZeros("009809", true);
-        Assert.assertEquals(generated.length(), 6);
-        Assert.assertTrue(parseInt(generated.substring(0, 1)) > 0);
-        Assert.assertTrue(generated.endsWith("09809"));
+        Assertions.assertEquals(6, generated.length());
+        Assertions.assertTrue(parseInt(generated.substring(0, 1)) > 0);
+        Assertions.assertTrue(generated.endsWith("09809"));
 
         generated = RandomNumberFunction.checkLeadingZeros("01209", true);
-        Assert.assertEquals(generated.length(), 5);
-        Assert.assertTrue(parseInt(generated.substring(0, 1)) > 0);
-        Assert.assertTrue(generated.endsWith("1209"));
+        Assertions.assertEquals(5, generated.length());
+        Assertions.assertTrue(parseInt(generated.substring(0, 1)) > 0);
+        Assertions.assertTrue(generated.endsWith("1209"));
 
         generated = RandomNumberFunction.checkLeadingZeros("1209", true);
-        Assert.assertEquals(generated.length(), 4);
-        Assert.assertEquals(generated, "1209");
+        Assertions.assertEquals(4, generated.length());
+        Assertions.assertEquals("1209", generated);
 
         generated = RandomNumberFunction.checkLeadingZeros("00000", false);
-        Assert.assertEquals(generated.length(), 1);
-        Assert.assertEquals(generated, "0");
+        Assertions.assertEquals(1, generated.length());
+        Assertions.assertEquals("0", generated);
 
         generated = RandomNumberFunction.checkLeadingZeros("0009", false);
-        Assert.assertEquals(generated.length(), 1);
-        Assert.assertEquals(generated, "9");
+        Assertions.assertEquals(1, generated.length());
+        Assertions.assertEquals("9", generated);
 
         generated = RandomNumberFunction.checkLeadingZeros("01209", false);
-        Assert.assertEquals(generated.length(), 4);
-        Assert.assertEquals(generated, "1209");
+        Assertions.assertEquals(4, generated.length());
+        Assertions.assertEquals("1209", generated);
 
         generated = RandomNumberFunction.checkLeadingZeros("1209", false);
-        Assert.assertEquals(generated.length(), 4);
-        Assert.assertEquals(generated, "1209");
+        Assertions.assertEquals(4, generated.length());
+        Assertions.assertEquals("1209", generated);
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testWrongParameterUsage() {
-        function.execute(singletonList("-1"), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(singletonList("-1"), context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(emptyList(), context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testTooManyParameters() {
         List<String> params = new ArrayList<>();
         params.add("3");
         params.add("true");
         params.add("too much");
 
-        function.execute(params, context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(params, context));
     }
 }

@@ -20,7 +20,7 @@ import java.io.File;
 import java.time.Duration;
 
 import org.citrusframework.report.TestResults;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.String.format;
 import static org.citrusframework.TestResult.failed;
@@ -28,8 +28,8 @@ import static org.citrusframework.TestResult.skipped;
 import static org.citrusframework.TestResult.success;
 import static org.citrusframework.util.FileUtils.readToString;
 import static org.citrusframework.util.TestUtils.normalizeLineEndings;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @since 2.7.5
@@ -48,21 +48,19 @@ public class JUnitReporterTest {
         String testSuiteFile = readToString(new File(reporter.getReportDirectory() + File.separator + format(reporter.getReportFileNamePattern(), reporter.getSuiteName())));
 
         assertEquals(
-                normalizeLineEndings(reportFile),
                 """
                         <?xml version="1.0" encoding="UTF-8"?>
                         <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="0.100" tests="1" errors="0" skipped="0" failures="0">
                             <testcase name="fooTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.100"/>
-                        </testsuite>"""
-        );
+                        </testsuite>""",
+                normalizeLineEndings(reportFile));
 
         assertEquals(
-                normalizeLineEndings(testSuiteFile),
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                         "<testsuite name=\"" + reporter.getSuiteName() + "\" time=\"0.100\" tests=\"1\" errors=\"0\" skipped=\"0\" failures=\"0\">\n" +
                         "    <testcase name=\"fooTest\" classname=\"org.citrusframework.base.report.JUnitReporterTest\" time=\"0.100\"/>\n" +
-                        "</testsuite>"
-        );
+                        "</testsuite>",
+                normalizeLineEndings(testSuiteFile));
     }
 
     @Test
@@ -75,13 +73,13 @@ public class JUnitReporterTest {
         String reportFile = readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
 
         assertEquals(
-                normalizeLineEndings(reportFile),
                 """
                         <?xml version="1.0" encoding="UTF-8"?>
                         <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="2.623" tests="2" errors="0" skipped="0" failures="0">
                             <testcase name="fooTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.123"/>
                             <testcase name="barTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="2.500"/>
-                        </testsuite>""");
+                        </testsuite>""",
+                normalizeLineEndings(reportFile));
     }
 
     @Test
@@ -105,8 +103,7 @@ public class JUnitReporterTest {
                                               <failure type="java.lang.NullPointerException" message="Something went wrong!">
                                                 <![CDATA[
                                                 java.lang.NullPointerException: Something went wrong!"""
-                        )
-        );
+                        ));
 
         assertTrue(testSuiteFile.contains("<testsuite name=\"" + reporter.getSuiteName() + "\""));
         assertTrue(testSuiteFile.contains("tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\""));
@@ -123,13 +120,13 @@ public class JUnitReporterTest {
         String reportFile = readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
 
         assertEquals(
-                normalizeLineEndings(reportFile),
                 """
                         <?xml version="1.0" encoding="UTF-8"?>
                         <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="0.100" tests="2" errors="0" skipped="1" failures="0">
                             <testcase name="fooTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.100"/>
                             <testcase name="barTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.000"/>
-                        </testsuite>""");
+                        </testsuite>""",
+                normalizeLineEndings(reportFile));
     }
 
     @Test
@@ -153,8 +150,7 @@ public class JUnitReporterTest {
                                               <failure type="java.lang.NullPointerException" message="Something &quot;went wrong!">
                                                 <![CDATA[
                                                 java.lang.NullPointerException: Something "went wrong!"""
-                        )
-        );
+                        ));
 
         assertTrue(testSuiteFile.contains("<testsuite name=\"" + reporter.getSuiteName() + "\""));
         assertTrue(testSuiteFile.contains("tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\""));
@@ -180,8 +176,7 @@ public class JUnitReporterTest {
                                             <testcase name="fooTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="5.500"/>
                                             <testcase name="barTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="6.500">
                                               <failure type="" message="Something went wrong!">"""
-                        )
-        );
+                        ));
 
         assertTrue(testSuiteFile.contains("<testsuite name=\"" + reporter.getSuiteName() + "\""));
         assertTrue(testSuiteFile.contains("tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\""));

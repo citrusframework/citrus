@@ -17,8 +17,8 @@
 package org.citrusframework.actions;
 
 import org.citrusframework.base.UnitTestSupport;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TransformActionTest extends UnitTestSupport {
 
@@ -39,7 +39,7 @@ public class TransformActionTest extends UnitTestSupport {
 				.build();
 		transformAction.execute(context);
 
-		Assert.assertEquals(context.getVariable("var").trim(), "Message: Hello World!");
+		Assertions.assertEquals("Message: Hello World!", context.getVariable("var").trim());
 	}
 
 	@Test
@@ -51,6 +51,6 @@ public class TransformActionTest extends UnitTestSupport {
 				.build();
 		transformAction.execute(context);
 
-		Assert.assertEquals(context.getVariable("var").trim(), "Message: Hello World!");
+		Assertions.assertEquals("Message: Hello World!", context.getVariable("var").trim());
 	}
 }

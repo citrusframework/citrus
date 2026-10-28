@@ -23,13 +23,15 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageSelector;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DirectEndpointAdapterTest {
 
     private MessageQueue queue = new DefaultMessageQueue("testQueue");
@@ -39,7 +41,7 @@ public class DirectEndpointAdapterTest {
     private TestContextFactory testContextFactory = TestContextFactory.newInstance();
     private TestContext context;
 
-    @BeforeClass
+    @BeforeAll
     public void setup() {
         endpointConfiguration = new DirectSyncEndpointConfiguration();
         endpointConfiguration.setQueue(queue);
@@ -49,7 +51,7 @@ public class DirectEndpointAdapterTest {
         endpointAdapter.setTestContextFactory(testContextFactory);
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void purgeQueue() {
         context = new TestContext();
         queue.purge(new MessageSelector.AllAcceptingMessageSelector());
@@ -63,8 +65,8 @@ public class DirectEndpointAdapterTest {
         try {
             executorService.execute(() -> {
                 Message receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(context, endpointConfiguration.getTimeout());
-                Assert.assertNotNull(receivedMessage);
-                Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());
+                Assertions.assertNotNull(receivedMessage);
+                Assertions.assertEquals(request.getPayload(), receivedMessage.getPayload());
 
                 endpointAdapter.getEndpoint().createProducer().send(new DefaultMessage("OK"), context);
             });
@@ -73,12 +75,12 @@ public class DirectEndpointAdapterTest {
         }
 
         Message response = endpointAdapter.handleMessage(request);
-        Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload(String.class), "OK");
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals("OK", response.getPayload(String.class));
     }
 
     @Test
     public void testNoResponse() {
-        Assert.assertNull(endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
+        Assertions.assertNull(endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
     }
 }

@@ -19,13 +19,13 @@ package org.citrusframework.base.message.correlation;
 import org.citrusframework.endpoint.direct.DirectSyncEndpointConfiguration;
 import org.citrusframework.message.correlation.ObjectStore;
 import org.citrusframework.message.correlation.PollingCorrelationManager;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 
 public class PollingCorrelationManagerTest {
 
@@ -43,7 +43,7 @@ public class PollingCorrelationManagerTest {
 
         correlationManager.store("foo", "bar");
         assertNull(correlationManager.find("bar"));
-        assertEquals(correlationManager.find("foo"), "bar");
+        assertEquals("bar", correlationManager.find("foo"));
 
         //2nd invocation with same correlation key
         assertNull(correlationManager.find("foo"));
@@ -53,7 +53,7 @@ public class PollingCorrelationManagerTest {
         }
 
         for (String key : new String[]{"1", "5", "3", "2", "4"}) {
-            assertEquals(correlationManager.find(key), "value" + key);
+            assertEquals("value" + key, correlationManager.find(key));
             assertNull(correlationManager.find(key));
         }
     }
@@ -70,7 +70,7 @@ public class PollingCorrelationManagerTest {
 
         reset(objectStore);
         when(objectStore.remove("foo")).thenReturn(null).thenReturn("bar");
-        assertEquals(correlationManager.find("foo"), "bar");
+        assertEquals("bar", correlationManager.find("foo"));
 
     }
 

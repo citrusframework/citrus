@@ -24,17 +24,17 @@ import org.citrusframework.container.WaitActionConditionBuilder;
 import org.citrusframework.container.WaitFileConditionBuilder;
 import org.citrusframework.container.WaitHttpConditionBuilder;
 import org.citrusframework.container.WaitMessageConditionBuilder;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
 
 public class WaitBuilderTest {
 
     private Wait.Builder<Condition> waitBuilder;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup(){
         waitBuilder = new Wait.Builder<>();
     }
@@ -49,7 +49,7 @@ public class WaitBuilderTest {
         waitBuilder.condition(conditionMock);
 
         //THEN
-        assertEquals(waitBuilder.build().getCondition(), conditionMock);
+        assertEquals(conditionMock, waitBuilder.build().getCondition());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class WaitBuilderTest {
         final WaitHttpConditionBuilder builder = waitBuilder.http().url(url);
 
         //THEN
-        assertEquals(builder.getCondition().getUrl(), url);
+        assertEquals(url, builder.getCondition().getUrl());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class WaitBuilderTest {
         final WaitMessageConditionBuilder builder = waitBuilder.message().name(messageName);
 
         //THEN
-        assertEquals(builder.getCondition().getMessageName(), messageName);
+        assertEquals(messageName, builder.getCondition().getMessageName());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class WaitBuilderTest {
         final WaitActionConditionBuilder builder = waitBuilder.execution().action(echo);
 
         //THEN
-        assertEquals(builder.getCondition().getAction(), echo);
+        assertEquals(echo, builder.getCondition().getAction());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class WaitBuilderTest {
         final WaitFileConditionBuilder builder = waitBuilder.file().path(path);
 
         //THEN
-        assertEquals(builder.getCondition().getFilePath(), path);
+        assertEquals(path, builder.getCondition().getFilePath());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class WaitBuilderTest {
         final WaitFileConditionBuilder builder = waitBuilder.file().resource(file);
 
         //THEN
-        assertEquals(builder.getCondition().getFile(), file);
+        assertEquals(file, builder.getCondition().getFile());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class WaitBuilderTest {
         final Wait.Builder<Condition> builder = waitBuilder.seconds(seconds);
 
         //THEN
-        assertEquals(builder.build().getTime(), "42000");
+        assertEquals("42000", builder.build().getTime());
     }
 
     @Test
@@ -140,7 +140,7 @@ public class WaitBuilderTest {
         final Wait.Builder<Condition> builder = waitBuilder.seconds(seconds);
 
         //THEN
-        assertEquals(builder.build().getTime(), "42000");
+        assertEquals("42000", builder.build().getTime());
     }
 
     @Test
@@ -153,7 +153,7 @@ public class WaitBuilderTest {
         final Wait.Builder<Condition> builder = waitBuilder.milliseconds(milliseconds);
 
         //THEN
-        assertEquals(builder.build().getTime(), "400");
+        assertEquals("400", builder.build().getTime());
     }
 
     @Test
@@ -166,6 +166,6 @@ public class WaitBuilderTest {
         final Wait.Builder<Condition> builder = waitBuilder.interval(interval);
 
         //THEN
-        assertEquals(builder.build().getInterval(), "100");
+        assertEquals("100", builder.build().getInterval());
     }
 }

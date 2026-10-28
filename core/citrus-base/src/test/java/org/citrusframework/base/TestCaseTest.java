@@ -34,16 +34,19 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.base.functions.core.CurrentDateFunction;
 import org.citrusframework.util.TestUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
 
     @Test
     public void testExecution() {
         final TestCase testcase = new DefaultTestCase();
-        testcase.setName("MyTestCase");
+        testcase.setName("TestCaseTest");
 
         testcase.addTestAction(new EchoAction.Builder().build());
 
@@ -54,7 +57,7 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
     @Test
     public void testWaitForFinish() {
         final TestCase testcase = new DefaultTestCase();
-        testcase.setName("MyTestCase");
+        testcase.setName("TestCaseTest");
 
         testcase.addTestAction(new EchoAction.Builder().build());
         testcase.addTestAction(new AbstractAsyncTestAction() {
@@ -72,12 +75,11 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
         testcase.finish(context);
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class,
-          expectedExceptionsMessageRegExp = "Failed to wait for test container in test 'MyTestCase' to finish properly")
+    @Test
     public void testWaitForFinishTimeout() {
         final DefaultTestCase testcase = new DefaultTestCase();
         testcase.setTimeout(500L);
-        testcase.setName("MyTestCase");
+        testcase.setName("TestCaseTest");
 
         testcase.addTestAction(new EchoAction.Builder().build());
         testcase.addTestAction(new AbstractAsyncTestAction() {
@@ -92,13 +94,14 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
         });
 
         testcase.execute(context);
-        testcase.finish(context);
+        TestCaseFailedException thrown = assertThrows(TestCaseFailedException.class, () -> testcase.finish(context));
+        assertThat(thrown).hasMessage("Failed to wait for test container in test 'TestCaseTest' to finish properly");
     }
 
     @Test
     public void testWaitForFinishAsync() {
         final TestCase testcase = new DefaultTestCase();
-        testcase.setName("MyTestCase");
+        testcase.setName("TestCaseTest");
 
         testcase.addTestAction(new Async.Builder().actions(() -> new AbstractAsyncTestAction() {
             @Override
@@ -117,18 +120,18 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
         // Make sure that waiting thread is completed
         final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
         Optional<Thread> waitingThread = threads.keySet().stream()
-                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("MyTestCase")))
+                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("TestCaseTest")))
                 .filter(Thread::isAlive)
                 .findAny();
 
         waitingThread.ifPresent(thread -> LoggerFactory.getLogger("TestWaitForFinishAsync").warn(Arrays.toString(threads.get(thread))));
-        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread)));
+        waitingThread.ifPresent(thread -> Assertions.fail(String.format("Waiting thread still alive: %s", thread)));
     }
 
     @Test
     public void testExecutionWithVariables() {
         final DefaultTestCase testcase = new DefaultTestCase();
-        testcase.setName("MyTestCase");
+        testcase.setName("TestCaseTest");
 
         final Map<String, Object> variables = new LinkedHashMap<>();
         variables.put("name", "Citrus");
@@ -139,61 +142,66 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
         testcase.setVariableDefinitions(variables);
 
         testcase.addTestAction(action(context -> {
-            Assert.assertEquals(context.getVariables().get(CitrusSettings.getTestNameVariable()), "MyTestCase");
-            Assert.assertEquals(context.getVariables().get(CitrusSettings.getTestPackageVariable()), DefaultTestCase.class.getPackage().getName());
-            Assert.assertEquals(context.getVariable("${name}"), "Citrus");
-            Assert.assertEquals(context.getVariable("${framework}"), "Citrus");
-            Assert.assertEquals(context.getVariable("${hello}"), "Hello Citrus!");
-            Assert.assertEquals(context.getVariable("${goodbye}"), "Goodbye Citrus!");
-            Assert.assertEquals(context.getVariable("${welcome}"), "Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<>(), context) + "!");
+            Assertions.assertEquals("TestCaseTest", context.getVariables().get(CitrusSettings.getTestNameVariable()));
+            Assertions.assertEquals(DefaultTestCase.class.getPackage().getName(), context.getVariables().get(CitrusSettings.getTestPackageVariable()));
+            Assertions.assertEquals("Citrus", context.getVariable("${name}"));
+            Assertions.assertEquals("Citrus", context.getVariable("${framework}"));
+            Assertions.assertEquals("Hello Citrus!", context.getVariable("${hello}"));
+            Assertions.assertEquals("Goodbye Citrus!", context.getVariable("${goodbye}"));
+            Assertions.assertEquals("Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<>(), context) + "!", context.getVariable("${welcome}"));
         }));
 
         testcase.execute(context);
         testcase.finish(context);
     }
 
-    @Test(expectedExceptions = {TestCaseFailedException.class})
+    @Test
     public void testUnknownVariable() {
         final DefaultTestCase testcase = new DefaultTestCase();
-        testcase.setName("MyTestCase");
+        testcase.setName("TestCaseTest");
 
         final String message = "Hello TestFramework!";
         testcase.setVariableDefinitions(Collections.singletonMap("text", message));
 
-        testcase.addTestAction(action(context -> Assert.assertEquals(context.getVariable("${unknown}"), message)));
+        testcase.addTestAction(action(context -> Assertions.assertEquals(message, context.getVariable("${unknown}"))));
 
-        testcase.execute(context);
-        testcase.finish(context);
+        assertThrows(TestCaseFailedException.class, () -> {
+            testcase.execute(context);
+            testcase.finish(context);
+        });
     }
 
-    @Test(expectedExceptions = {TestCaseFailedException.class}, expectedExceptionsMessageRegExp = "This failed in forked action")
+    @Test
     public void testExceptionInContext() {
         final TestCase testcase = new DefaultTestCase();
-        testcase.setName("MyTestCase");
+        testcase.setName("TestCaseTest");
 
         testcase.addTestAction(action(context -> context.addException(new CitrusRuntimeException("This failed in forked action"))).build());
 
         testcase.addTestAction(new EchoAction.Builder().message("Everything is fine!").build());
 
-        testcase.execute(context);
-        testcase.finish(context);
+        TestCaseFailedException thrown = assertThrows(TestCaseFailedException.class, () -> {
+            testcase.execute(context);
+            testcase.finish(context);
+        });
+        assertThat(thrown).hasMessage("This failed in forked action");
     }
 
-    @Test(expectedExceptions = {TestCaseFailedException.class})
+    @Test
     public void testExceptionInContextInFinish() {
         final TestCase testcase = new DefaultTestCase();
-        testcase.setName("MyTestCase");
+        testcase.setName("TestCaseTest");
 
         testcase.addTestAction(action(context -> context.addException(new CitrusRuntimeException("This failed in forked action"))).build());
 
         testcase.execute(context);
-        testcase.finish(context);
+        assertThrows(TestCaseFailedException.class, () -> testcase.finish(context));
     }
 
     @Test
     public void testFinalActions() {
         final TestCase testcase = new DefaultTestCase();
-        testcase.setName("MyTestCase");
+        testcase.setName("TestCaseTest");
 
         testcase.addTestAction(new EchoAction.Builder().build());
         testcase.addFinalAction(new EchoAction.Builder().build());
@@ -207,7 +215,7 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
 
         //GIVEN
         final TestCase testcase = new DefaultTestCase();
-        testcase.setName("ThreadLeakTest");
+        testcase.setName("ThreadLeakTestCaseTest");
         testcase.addTestAction(new EchoAction.Builder().build());
 
         //WHEN
@@ -217,10 +225,10 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
         //THEN
         final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
         Optional<Thread> waitingThread = threads.keySet().stream()
-                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("ThreadLeakTest")))
+                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("ThreadLeakTestCaseTest")))
                 .filter(Thread::isAlive)
                 .findAny();
 
-        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread)));
+        waitingThread.ifPresent(thread -> Assertions.fail(String.format("Waiting thread still alive: %s", thread)));
     }
 }

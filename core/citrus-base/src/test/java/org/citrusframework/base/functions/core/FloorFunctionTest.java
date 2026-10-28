@@ -20,29 +20,35 @@ import java.util.Collections;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FloorFunctionTest extends UnitTestSupport {
     FloorFunction function = new FloorFunction();
 
     @Test
     public void testFunction() {
-        Assert.assertEquals(function.execute(Collections.singletonList("0.0"), context), "0.0");
-        Assert.assertEquals(function.execute(Collections.singletonList("0"), context), "0.0");
-        Assert.assertEquals(function.execute(Collections.singletonList("0.3"), context), "0.0");
-        Assert.assertEquals(function.execute(Collections.singletonList("1"), context), "1.0");
-        Assert.assertEquals(function.execute(Collections.singletonList("-1.5"), context), "-2.0");
-        Assert.assertEquals(function.execute(Collections.singletonList("1.3"), context), "1.0");
+        Assertions.assertEquals("0.0", function.execute(Collections.singletonList("0.0"), context));
+        Assertions.assertEquals("0.0", function.execute(Collections.singletonList("0"), context));
+        Assertions.assertEquals("0.0", function.execute(Collections.singletonList("0.3"), context));
+        Assertions.assertEquals("1.0", function.execute(Collections.singletonList("1"), context));
+        Assertions.assertEquals("-2.0", function.execute(Collections.singletonList("-1.5"), context));
+        Assertions.assertEquals("1.0", function.execute(Collections.singletonList("1.3"), context));
     }
 
-    @Test(expectedExceptions = {NumberFormatException.class})
+    @Test
     public void testWrongParameterUsage() {
-        function.execute(Collections.singletonList("no digit"), context);
+        assertThrows(NumberFormatException.class, () -> {
+            function.execute(Collections.singletonList("no digit"), context);
+        });
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(Collections.<String>emptyList(), context);
+        });
     }
 }

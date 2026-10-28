@@ -19,8 +19,8 @@ package org.citrusframework.base.message.selector;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.selector.PayloadMatchingMessageSelector;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class PayloadMessageSelectorTest extends UnitTestSupport {
 
@@ -28,23 +28,23 @@ public class PayloadMessageSelectorTest extends UnitTestSupport {
     public void testPayloadEvaluation() {
         PayloadMatchingMessageSelector messageSelector = new PayloadMatchingMessageSelector("payload", "foobar", context);
 
-        Assert.assertTrue(messageSelector.accept(new DefaultMessage("foobar")));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage("barfoo")));
+        Assertions.assertTrue(messageSelector.accept(new DefaultMessage("foobar")));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage("barfoo")));
     }
 
     @Test
     public void testPayloadEvaluationValidationMatcher() {
         PayloadMatchingMessageSelector messageSelector = new PayloadMatchingMessageSelector("payload", "@startsWith(foo)@", context);
 
-        Assert.assertTrue(messageSelector.accept(new DefaultMessage("foobar")));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage("barfoo")));
+        Assertions.assertTrue(messageSelector.accept(new DefaultMessage("foobar")));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage("barfoo")));
     }
 
     @Test
     public void testPayloadEvaluationWithMessageObjectPayload() {
         PayloadMatchingMessageSelector messageSelector = new PayloadMatchingMessageSelector("payload", "foobar", context);
 
-        Assert.assertTrue(messageSelector.accept(new DefaultMessage(new DefaultMessage("foobar"))));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage(new DefaultMessage("barfoo"))));
+        Assertions.assertTrue(messageSelector.accept(new DefaultMessage(new DefaultMessage("foobar"))));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage(new DefaultMessage("barfoo"))));
     }
 }

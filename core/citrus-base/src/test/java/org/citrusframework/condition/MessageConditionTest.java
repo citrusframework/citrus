@@ -19,9 +19,9 @@ package org.citrusframework.condition;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageStore;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -45,7 +45,7 @@ public class MessageConditionTest {
         when(context.replaceDynamicContentInString(messageName)).thenReturn(messageName);
         when(context.getMessageStore()).thenReturn(messageStore);
         when(messageStore.getMessage(messageName)).thenReturn(new DefaultMessage("OK"));
-        Assert.assertTrue(testling.isSatisfied(context));
+        Assertions.assertTrue(testling.isSatisfied(context));
     }
 
     @Test
@@ -59,6 +59,6 @@ public class MessageConditionTest {
         when(context.replaceDynamicContentInString(messageName)).thenReturn(messageName);
         when(context.getMessageStore()).thenReturn(messageStore);
         when(messageStore.getMessage(messageName)).thenReturn(null);
-        Assert.assertFalse(testling.isSatisfied(context));
+        Assertions.assertFalse(testling.isSatisfied(context));
     }
 }

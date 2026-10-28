@@ -27,19 +27,19 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AskActionTest extends UnitTestSupport implements TestActionSupport {
 
     private DefaultTestCaseRunner runner;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupRunner() {
         runner = new DefaultTestCaseRunner(context);
     }
@@ -50,7 +50,7 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
 
         runner.run(ask(new TheOrderId()).into(orderId));
 
-        assertEquals(orderId.get(), "ORD-123");
+        assertEquals("ORD-123", orderId.get());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
         runner.run(ask(new TheOrderId()).into(orderId));
 
         AskAction<?> action = (AskAction<?>) runner.getTestCase().getActions().get(0);
-        assertEquals(action.getName(), "ask: the order id");
+        assertEquals("ask: the order id", action.getName());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
             throw new IllegalStateException("no DB");
         });
 
-        TestCaseFailedException e = expectThrows(TestCaseFailedException.class,
+        TestCaseFailedException e = assertThrows(TestCaseFailedException.class,
                 () -> runner.run(ask(broken).into(holder)));
         assertTrue(e.getMessage().contains("the order id"));
     }
@@ -84,7 +84,7 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
             throw new AssertionError("expected ORD- but was nothing");
         });
 
-        TestCaseFailedException e = expectThrows(TestCaseFailedException.class,
+        TestCaseFailedException e = assertThrows(TestCaseFailedException.class,
                 () -> runner.run(ask(asserting).into(holder)));
         assertTrue(e.getMessage().contains("the order id"));
         assertTrue(e.getMessage().contains("expected ORD- but was nothing"));
@@ -98,7 +98,7 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
             throw new IllegalStateException();
         });
 
-        TestCaseFailedException e = expectThrows(TestCaseFailedException.class,
+        TestCaseFailedException e = assertThrows(TestCaseFailedException.class,
                 () -> runner.run(ask(broken).into(holder)));
         assertTrue(e.getMessage().contains("the order id"));
         assertTrue(e.getMessage().contains("IllegalStateException"));
@@ -122,8 +122,8 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
 
         runner.run(ask(new TheOrderId()).into(orderId).saveAs("orderId"));
 
-        assertEquals(orderId.get(), "ORD-123");
-        assertEquals(context.getVariable("orderId"), "ORD-123");
+        assertEquals("ORD-123", orderId.get());
+        assertEquals("ORD-123", context.getVariable("orderId"));
 
         runner.run(echo("order is ${orderId}"));
     }
@@ -150,7 +150,7 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
                 ask(capturing).into(holder)
         ));
 
-        assertEquals(holder.get(), "ORD-123");
+        assertEquals("ORD-123", holder.get());
         assertTrue(answeringRunner.get() != null);
     }
 
@@ -176,12 +176,12 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
 
         runner.run(apply(r -> r.run(ask(runnerCapturing).into(holder)))) ;
 
-        assertEquals(holder.get(), "ORD-123");
+        assertEquals("ORD-123", holder.get());
         assertTrue(answeringRunner.get() != null);
 
         Answer<String> nested = new Answer<>();
         runner.run(apply(r -> r.run(ask(capturing).into(nested))));
-        assertEquals(nested.get(), "ORD-123");
+        assertEquals("ORD-123", nested.get());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
 
         runner.run(ask(Question.about("first question", ctx -> "one")).into(holder));
 
-        TestCaseFailedException e = expectThrows(TestCaseFailedException.class,
+        TestCaseFailedException e = assertThrows(TestCaseFailedException.class,
                 () -> runner.run(ask(Question.about("second question", ctx -> "two")).into(holder)));
         assertTrue(e.getMessage().contains("first question"));
     }
@@ -199,7 +199,7 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
     public void shouldRejectBlankSaveAs() {
         Answer<String> holder = new Answer<>();
 
-        expectThrows(IllegalArgumentException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> new AskAction.Builder<String>().question(new TheOrderId()).into(holder).saveAs(" ").build());
     }
 
@@ -209,14 +209,14 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
 
         AskAction<String> action = new AskAction.Builder<String>().into(holder).build();
 
-        expectThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
     }
 
     @Test
     public void shouldRejectMissingHolder() {
         AskAction<String> action = new AskAction.Builder<String>().question(new TheOrderId()).build();
 
-        CitrusRuntimeException e = expectThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
         assertTrue(e.getMessage().contains("the order id"));
     }
 
@@ -251,7 +251,7 @@ public class AskActionTest extends UnitTestSupport implements TestActionSupport 
 
         runner.run(ask(Question.about("line count", ctx -> 5)).into(count));
 
-        assertSame(count.get(), 5);
+        assertSame(5, count.get());
     }
 
     private static class TheOrderId implements Question<String> {

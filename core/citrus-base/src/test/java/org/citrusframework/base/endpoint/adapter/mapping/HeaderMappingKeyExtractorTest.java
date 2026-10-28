@@ -19,8 +19,8 @@ package org.citrusframework.base.endpoint.adapter.mapping;
 import org.citrusframework.endpoint.adapter.mapping.HeaderMappingKeyExtractor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class HeaderMappingKeyExtractorTest {
 
@@ -29,9 +29,9 @@ public class HeaderMappingKeyExtractorTest {
         HeaderMappingKeyExtractor extractor = new HeaderMappingKeyExtractor();
         extractor.setHeaderName("Foo");
 
-        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage("Foo")
+        Assertions.assertEquals("foo", extractor.extractMappingKey(new DefaultMessage("Foo")
                 .setHeader("Foo", "foo")
-                .setHeader("Bar", "bar")), "foo");
+                .setHeader("Bar", "bar")));
     }
 
     @Test
@@ -42,9 +42,9 @@ public class HeaderMappingKeyExtractorTest {
             extractor.extractMappingKey(new DefaultMessage("Foo")
                     .setHeader("Foo", "foo")
                     .setHeader("Bar", "bar"));
-            Assert.fail("Missing exception due to unknown header");
+            Assertions.fail("Missing exception due to unknown header");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Unable to find header"));
+            Assertions.assertTrue(e.getMessage().startsWith("Unable to find header"));
         }
     }
 
@@ -56,9 +56,9 @@ public class HeaderMappingKeyExtractorTest {
             extractor.extractMappingKey(new DefaultMessage("Foo")
                     .setHeader("Foo", "foo")
                     .setHeader("Bar", "bar"));
-            Assert.fail("Missing exception due to unknown header");
+            Assertions.fail("Missing exception due to unknown header");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Unable to find header 'UNKNOWN'"));
+            Assertions.assertTrue(e.getMessage().startsWith("Unable to find header 'UNKNOWN'"));
         }
     }
 }

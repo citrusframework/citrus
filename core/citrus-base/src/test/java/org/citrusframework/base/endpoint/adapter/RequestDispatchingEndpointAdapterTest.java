@@ -19,8 +19,8 @@ package org.citrusframework.base.endpoint.adapter;
 import org.citrusframework.endpoint.adapter.mapping.SimpleMappingStrategy;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.singletonMap;
 
@@ -38,6 +38,6 @@ public class RequestDispatchingEndpointAdapterTest {
 
         Message response = endpointAdapter.handleMessage(new DefaultMessage("<TestMessage>Hello World!</TestMessage>"));
 
-        Assert.assertEquals(response.getPayload(), "");
+        Assertions.assertEquals("", response.getPayload());
     }
 }

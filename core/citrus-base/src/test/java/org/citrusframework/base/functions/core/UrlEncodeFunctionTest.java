@@ -23,34 +23,36 @@ import java.util.Collections;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UrlEncodeFunctionTest extends UnitTestSupport {
     private final UrlEncodeFunction function = new UrlEncodeFunction();
 
     @Test
     public void testFunction() {
-        Assert.assertEquals(function.execute(Collections.singletonList("foo@citrusframework"), context), "foo%40citrusframework");
+        Assertions.assertEquals("foo%40citrusframework", function.execute(Collections.singletonList("foo@citrusframework"), context));
     }
 
     @Test
     public void testCustomCharset() {
-        Assert.assertEquals(function.execute(Arrays.asList("foo@citrusframework", "UTF-8"), context), "foo%40citrusframework");
+        Assertions.assertEquals("foo%40citrusframework", function.execute(Arrays.asList("foo@citrusframework", "UTF-8"), context));
     }
 
     @Test
     public void testUnsupportedCharset() {
         try {
             function.execute(Arrays.asList("foo@citrusframework", "UNKNOWN"), context);
-            Assert.fail("Missing exception due to unsupported charset encoding");
+            Assertions.fail("Missing exception due to unsupported charset encoding");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getCause().getClass().equals(UnsupportedEncodingException.class));
+            Assertions.assertTrue(e.getCause().getClass().equals(UnsupportedEncodingException.class));
         }
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(Collections.emptyList(), context));
     }
 }

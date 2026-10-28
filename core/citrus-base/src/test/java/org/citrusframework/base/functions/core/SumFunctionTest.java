@@ -21,11 +21,12 @@ import java.util.List;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SumFunctionTest extends UnitTestSupport {
     SumFunction function = new SumFunction();
@@ -38,16 +39,16 @@ public class SumFunctionTest extends UnitTestSupport {
         params.add("4.7");
         params.add("0");
 
-        Assert.assertEquals(function.execute(params, context), "13.0");
+        Assertions.assertEquals("13.0", function.execute(params, context));
     }
 
-    @Test(expectedExceptions = {NumberFormatException.class})
+    @Test
     public void testWrongParameterUsage() {
-        function.execute(singletonList("no digit"), context);
+        assertThrows(NumberFormatException.class, () -> function.execute(singletonList("no digit"), context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(emptyList(), context));
     }
 }

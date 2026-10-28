@@ -45,8 +45,8 @@ import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
@@ -319,11 +319,11 @@ public class SendMessageActionTest extends UnitTestSupport {
         try {
             sendAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myText'");
+            Assertions.assertEquals("Unknown variable 'myText'", e.getMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
     }
 
     @Test
@@ -347,11 +347,11 @@ public class SendMessageActionTest extends UnitTestSupport {
         try {
             sendAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myOperation'");
+            Assertions.assertEquals("Unknown variable 'myOperation'", e.getMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
     }
 
     @Test
@@ -393,8 +393,8 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .build();
         sendAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("myOperation"));
-        Assert.assertNotNull(context.getVariable("correlationId"));
+        Assertions.assertNotNull(context.getVariable("myOperation"));
+        Assertions.assertNotNull(context.getVariable("correlationId"));
     }
 
     @Test
@@ -484,7 +484,7 @@ public class SendMessageActionTest extends UnitTestSupport {
         try {
             sendAction.execute(context);
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getCause() instanceof UnsupportedEncodingException);
+            Assertions.assertTrue(e.getCause() instanceof UnsupportedEncodingException);
         }
 
         verify(producer).send(any(Message.class), any(TestContext.class));
@@ -690,7 +690,7 @@ public class SendMessageActionTest extends UnitTestSupport {
     }
 
     private void validateMessageToSend(Message toSend, Message controlMessage) {
-        Assert.assertEquals(TestUtils.normalizeLineEndings(toSend.getPayload(String.class).trim()), controlMessage.getPayload(String.class).trim());
+        Assertions.assertEquals(controlMessage.getPayload(String.class).trim(), TestUtils.normalizeLineEndings(toSend.getPayload(String.class).trim()));
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
         validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext.Builder().build());
     }
@@ -709,8 +709,8 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
 
-        Assert.assertThrows(CitrusRuntimeException.class, () -> sendAction.execute(context));
-        Assert.assertTrue(sendAction.isDone(context));
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> sendAction.execute(context));
+        Assertions.assertTrue(sendAction.isDone(context));
         verify(producer, never()).send(any(Message.class), any(TestContext.class));
     }
 

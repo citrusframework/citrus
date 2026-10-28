@@ -22,10 +22,10 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
@@ -40,7 +40,7 @@ public class DirectEndpointProducerTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupMocks() {
         context = new TestContext();
     }
@@ -94,13 +94,13 @@ public class DirectEndpointProducerTest {
         try {
             endpoint.createProducer().send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Failed to send message to queue: "));
-            Assert.assertNotNull(e.getCause());
-            Assert.assertEquals(e.getCause().getClass(), RuntimeException.class);
-            Assert.assertEquals(e.getCause().getLocalizedMessage(), "Internal error!");
+            Assertions.assertTrue(e.getLocalizedMessage().startsWith("Failed to send message to queue: "));
+            Assertions.assertNotNull(e.getCause());
+            Assertions.assertEquals(RuntimeException.class, e.getCause().getClass());
+            Assertions.assertEquals("Internal error!", e.getCause().getLocalizedMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because no message was received");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " because no message was received");
     }
 }

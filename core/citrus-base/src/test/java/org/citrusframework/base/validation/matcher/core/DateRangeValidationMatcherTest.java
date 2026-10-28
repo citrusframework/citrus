@@ -16,23 +16,25 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.testng.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @since 2.5
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DateRangeValidationMatcherTest {
 
     DateRangeValidationMatcher testling = new DateRangeValidationMatcher();
 
-    @Test(dataProvider = "validateData")
+    @ParameterizedTest
+    @MethodSource("validateData")
     public void validateDateRanges(String value, List<String> params, String expectedErrorMessage) {
         try {
             testling.validate("xyz", value, params, null);
@@ -43,11 +45,10 @@ public class DateRangeValidationMatcherTest {
             if (expectedErrorMessage == null) {
                 fail("Was not expecting exception but got one", e);
             }
-            Assert.assertTrue(e.getMessage().contains(expectedErrorMessage), String.format("Expected error '%s' not found in '%s'", expectedErrorMessage, e.getMessage()));
+            Assertions.assertTrue(e.getMessage().contains(expectedErrorMessage), String.format("Expected error '%s' not found in '%s'", expectedErrorMessage, e.getMessage()));
         }
     }
 
-    @DataProvider
     public Object[][] validateData() {
         String noErrorExpected = null;
 
@@ -64,7 +65,6 @@ public class DateRangeValidationMatcherTest {
         };
     }
 
-    @DataProvider
     public Object[][] invalidControlData() {
         return new Object[][]{
                 {"'2015-12-01'"},
@@ -73,12 +73,12 @@ public class DateRangeValidationMatcherTest {
         };
     }
 
-    @Test(dataProvider = "validDates")
+    @ParameterizedTest
+    @MethodSource("validDates")
     public void shouldSucceedParsingDate(String date, String dateFormat) {
         testling.toCalender(date, dateFormat);
     }
 
-    @DataProvider
     public Object[][] validDates() {
         return new Object[][]{
                 {"2015-12-01", "yyyy-MM-dd"},

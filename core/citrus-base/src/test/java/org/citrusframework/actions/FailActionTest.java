@@ -18,8 +18,8 @@ package org.citrusframework.actions;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FailActionTest extends UnitTestSupport {
 
@@ -30,11 +30,11 @@ public class FailActionTest extends UnitTestSupport {
 		try {
 		    fail.execute(context);
 		} catch(CitrusRuntimeException e) {
-		    Assert.assertEquals("Generated error to interrupt test execution", e.getMessage());
+		    Assertions.assertEquals("Generated error to interrupt test execution", e.getMessage());
 		    return;
 		}
 
-		Assert.fail("Missing CitrusRuntimeException");
+		Assertions.fail("Missing CitrusRuntimeException");
 	}
 
 	@Test
@@ -46,11 +46,11 @@ public class FailActionTest extends UnitTestSupport {
         try {
             fail.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals("Failed because I said so", e.getMessage());
+            Assertions.assertEquals("Failed because I said so", e.getMessage());
             return;
         }
 
-        Assert.fail("Missing CitrusRuntimeException");
+        Assertions.fail("Missing CitrusRuntimeException");
     }
 
 	@Test
@@ -64,10 +64,10 @@ public class FailActionTest extends UnitTestSupport {
         try {
             fail.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals("Failed because I said so, period!", e.getMessage());
+            Assertions.assertEquals("Failed because I said so, period!", e.getMessage());
             return;
         }
 
-        Assert.fail("Missing CitrusRuntimeException");
+        Assertions.fail("Missing CitrusRuntimeException");
     }
 }

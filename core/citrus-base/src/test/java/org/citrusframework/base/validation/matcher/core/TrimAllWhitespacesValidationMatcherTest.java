@@ -18,9 +18,10 @@ package org.citrusframework.base.validation.matcher.core;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TrimAllWhitespacesValidationMatcherTest extends UnitTestSupport {
 
@@ -34,8 +35,10 @@ public class TrimAllWhitespacesValidationMatcherTest extends UnitTestSupport {
         matcher.validate("field", "    This is a value    ", singletonList("This is a value    "), context);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidateError() {
-        matcher.validate("field", " This is a value ", singletonList("This is a wrong value"), context);
+        assertThrows(ValidationException.class, () -> {
+            matcher.validate("field", " This is a value ", singletonList("This is a wrong value"), context);
+        });
     }
 }

@@ -19,8 +19,10 @@ import java.util.Collections;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LocalHostAddressFunctionTest extends UnitTestSupport {
 
@@ -28,11 +30,13 @@ public class LocalHostAddressFunctionTest extends UnitTestSupport {
 
     @Test
     public void testFunction() {
-        Assert.assertNotNull(function.execute(Collections.<String>emptyList(), context));
+        Assertions.assertNotNull(function.execute(Collections.<String>emptyList(), context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>singletonList("foo"), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            function.execute(Collections.<String>singletonList("foo"), context);
+        });
     }
 }

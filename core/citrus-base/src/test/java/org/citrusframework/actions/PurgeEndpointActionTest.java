@@ -25,8 +25,8 @@ import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.SelectiveConsumer;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;

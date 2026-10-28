@@ -23,23 +23,28 @@ import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.DefaultHeaderValidator;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.7.6
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DefaultHeaderValidatorTest extends UnitTestSupport {
 
     private final DefaultHeaderValidator validator = new DefaultHeaderValidator();
     private final HeaderValidationContext validationContext = new HeaderValidationContext.Builder().build();
 
-    @Test(dataProvider = "successData")
+    @ParameterizedTest
+    @MethodSource("successData")
     public void testValidateHeader(Object receivedValue, Object controlValue) {
         validator.validateHeader("foo", receivedValue, controlValue, context, validationContext);
     }
 
-    @DataProvider
     public Object[][] successData() {
         return new Object[][] {
             new Object[] { "foo", "foo" },
@@ -64,12 +69,14 @@ public class DefaultHeaderValidatorTest extends UnitTestSupport {
         validator.validateHeader("foo", "bar", "@hasLength(3)@", context, validationContext);
     }
 
-    @Test(dataProvider = "errorData", expectedExceptions = ValidationException.class)
+    @ParameterizedTest
+    @MethodSource("errorData")
     public void testValidateHeaderError(Object receivedValue, Object controlValue) {
-        validator.validateHeader("foo", receivedValue, controlValue, context, validationContext);
+        assertThrows(ValidationException.class, () -> {
+            validator.validateHeader("foo", receivedValue, controlValue, context, validationContext);
+        });
     }
 
-    @DataProvider
     public Object[][] errorData() {
         return new Object[][] {
                 new Object[] { "foo", "wrong" },

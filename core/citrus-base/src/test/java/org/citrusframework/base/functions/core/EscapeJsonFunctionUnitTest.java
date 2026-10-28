@@ -20,18 +20,21 @@ import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.Function;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(MockitoExtension.class)
 public class EscapeJsonFunctionUnitTest {
 
     @Mock
@@ -39,10 +42,9 @@ public class EscapeJsonFunctionUnitTest {
 
     private EscapeJsonFunction fixture;
 
-    @BeforeTest
-    public void beforeTestSetup() {
+    @BeforeEach
+    public void beforeEach() {
         fixture = new EscapeJsonFunction();
-        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -51,8 +53,7 @@ public class EscapeJsonFunctionUnitTest {
                 .isInstanceOf(Function.class);
     }
 
-    @DataProvider(name = "testChangeParameterProvider")
-    public Object[][] testChangeParameter() {
+    public static Object[][] testChangeParameter() {
         return new Object[][]{
                 {"{\"mySuperJson\": \"[{\"pippin\":\"nooooo\"}, {\"gandalf\":\"fly you fools\"}]\"}", "{\\\"mySuperJson\\\": \\\"[{\\\"pippin\\\":\\\"nooooo\\\"}, {\\\"gandalf\\\":\\\"fly you fools\\\"}]\\\"}"},
                 {"{\"mySuperJson\": \"{\"pippin\":\"nooooo\"}\"}", "{\\\"mySuperJson\\\": \\\"{\\\"pippin\\\":\\\"nooooo\\\"}\\\"}"},
@@ -62,14 +63,14 @@ public class EscapeJsonFunctionUnitTest {
         };
     }
 
-    @Test(dataProvider = "testChangeParameterProvider")
+    @ParameterizedTest
+    @MethodSource("testChangeParameter")
     public void testChangeParameter(String string, String expectedResult) {
         String newValue = fixture.execute(List.of(string), context);
         assertEquals(expectedResult, newValue);
     }
 
-    @DataProvider(name = "testMalformedParameterListProvider")
-    public Object[][] testMalformedParameterListProvider() {
+    public static Object[][] testMalformedParameterListProvider() {
         return new Object[][]{
                 {emptyList()},
                 {singletonList("")},
@@ -77,7 +78,8 @@ public class EscapeJsonFunctionUnitTest {
         };
     }
 
-    @Test(dataProvider = "testMalformedParameterListProvider")
+    @ParameterizedTest
+    @MethodSource("testMalformedParameterListProvider")
     public void testMalformedParameterList(List<String> parameters) {
         assertThrows(Exception.class, () -> fixture.execute(parameters, context));
     }

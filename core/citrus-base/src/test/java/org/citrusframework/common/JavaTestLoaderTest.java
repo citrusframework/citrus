@@ -25,7 +25,7 @@ import org.citrusframework.TestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.base.UnitTestSupport;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -22,7 +22,9 @@ import java.util.List;
 
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class JavaActionTest extends UnitTestSupport {
 
@@ -152,7 +154,7 @@ public class JavaActionTest extends UnitTestSupport {
         action.execute(context);
     }
 
-	@Test(expectedExceptions = {CitrusRuntimeException.class})
+	@Test
 	public void testJavaCallWrongConstructorArgs() {
 		List<Object> args = new ArrayList<>();
 		args.add("Wrong");
@@ -164,10 +166,10 @@ public class JavaActionTest extends UnitTestSupport {
 				.method("invoke")
 				.constructorArgs(args)
 				.build();
-		action.execute(context);
+		assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 	}
 
-	@Test(expectedExceptions = {CitrusRuntimeException.class})
+	@Test
 	public void testJavaCallWrongMethodParameters() {
 		List<Object> args = new ArrayList<>();
 		args.add("Wrong");
@@ -179,24 +181,24 @@ public class JavaActionTest extends UnitTestSupport {
 				.method("invoke")
 				.methodArgs(args)
 				.build();
-		action.execute(context);
+		assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 	}
 
-	@Test(expectedExceptions = {CitrusRuntimeException.class})
+	@Test
 	public void testJavaCallClassNotFound() {
 		JavaAction action = new JavaAction.Builder()
 				.className("org.citrusframework.util.DoesNotExist")
 				.method("invoke")
 				.build();
-		action.execute(context);
+		assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 	}
 
-	@Test(expectedExceptions = {CitrusRuntimeException.class})
+	@Test
 	public void testJavaCallNoSuchMethod() {
 		JavaAction action = new JavaAction.Builder()
 				.className("org.citrusframework.actions.InvocationDummy")
 				.method("doesNotExist")
 				.build();
-		action.execute(context);
+		assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 	}
 }

@@ -28,13 +28,13 @@ import org.citrusframework.container.Iterate;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestActionSupport {
 
@@ -50,7 +50,7 @@ public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestA
                 .variable("scratch", "temporary"));
     };
 
-    @BeforeMethod
+    @BeforeEach
     public void setupRunner() {
         log.clear();
         runner = new DefaultTestCaseRunner(context);
@@ -62,16 +62,16 @@ public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestA
         runner.run(apply(createOrder));
 
         assertTrue(((ApplyTestBehaviorAction) runner.getTestCase().getActions().get(0)).isGlobalContext());
-        assertEquals(context.getVariable("orderId"), "1001");
-        assertEquals(context.getVariable("customer"), "overwritten");
+        assertEquals("1001", context.getVariable("orderId"));
+        assertEquals("overwritten", context.getVariable("customer"));
     }
 
     @Test
     public void shouldIsolateVariables() {
         runner.run(apply(createOrder).isolated());
 
-        assertEquals(log, List.of("customer=alice"));
-        assertEquals(context.getVariable("customer"), "alice");
+        assertEquals(List.of("customer=alice"), log);
+        assertEquals("alice", context.getVariable("customer"));
         assertFalse(context.getVariables().containsKey("orderId"));
         assertFalse(context.getVariables().containsKey("scratch"));
     }
@@ -81,15 +81,15 @@ public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestA
         runner.run(apply(createOrder).globalContext(false));
 
         assertFalse(context.getVariables().containsKey("orderId"));
-        assertEquals(context.getVariable("customer"), "alice");
+        assertEquals("alice", context.getVariable("customer"));
     }
 
     @Test
     public void shouldPublishVariablesFromIsolatedScope() {
         runner.run(apply(createOrder).isolated().publish("orderId"));
 
-        assertEquals(context.getVariable("orderId"), "1001");
-        assertEquals(context.getVariable("customer"), "alice");
+        assertEquals("1001", context.getVariable("orderId"));
+        assertEquals("alice", context.getVariable("customer"));
         assertFalse(context.getVariables().containsKey("scratch"));
     }
 
@@ -97,8 +97,8 @@ public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestA
     public void shouldPublishVariableExpression() {
         runner.run(apply(createOrder).isolated().publish("${orderId}", "customer"));
 
-        assertEquals(context.getVariable("orderId"), "1001");
-        assertEquals(context.getVariable("customer"), "overwritten");
+        assertEquals("1001", context.getVariable("orderId"));
+        assertEquals("overwritten", context.getVariable("customer"));
     }
 
     @Test
@@ -109,30 +109,30 @@ public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestA
                 .isolated()
                 .publish("order"));
 
-        assertEquals(context.getVariableObject("order"), order);
+        assertEquals(order, context.getVariableObject("order"));
     }
 
     @Test
     public void shouldFailWhenPublishedVariableIsMissing() {
-        TestCaseFailedException failure = expectThrows(TestCaseFailedException.class,
+        TestCaseFailedException failure = assertThrows(TestCaseFailedException.class,
                 () -> runner.run(apply(TestBehavior.named("create order", createOrder)).isolated().publish("invoiceId")));
 
-        assertEquals(failure.getMessage(), "Test behavior 'create order' did not set published variable 'invoiceId'");
+        assertEquals("Test behavior 'create order' did not set published variable 'invoiceId'", failure.getMessage());
     }
 
     @Test
     public void shouldFailWhenPublishedVariableIsMissingInGlobalScope() {
-        TestCaseFailedException failure = expectThrows(TestCaseFailedException.class,
+        TestCaseFailedException failure = assertThrows(TestCaseFailedException.class,
                 () -> runner.run(apply(TestBehavior.named("create order", createOrder)).publish("invoiceId")));
 
-        assertEquals(failure.getMessage(), "Test behavior 'create order' did not set published variable 'invoiceId'");
+        assertEquals("Test behavior 'create order' did not set published variable 'invoiceId'", failure.getMessage());
     }
 
     @Test
     public void shouldPublishInGlobalScope() {
         runner.run(apply(createOrder).publish("orderId"));
 
-        assertEquals(context.getVariable("orderId"), "1001");
+        assertEquals("1001", context.getVariable("orderId"));
     }
 
     @Test
@@ -140,8 +140,8 @@ public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestA
         runner.run(apply(behavior -> behavior.run(action(scope -> scope.addException(new CitrusRuntimeException("forked failure")))))
                 .isolated());
 
-        assertEquals(context.getExceptions().size(), 1);
-        assertEquals(context.getExceptions().get(0).getMessage(), "forked failure");
+        assertEquals(1, context.getExceptions().size());
+        assertEquals("forked failure", context.getExceptions().get(0).getMessage());
     }
 
     @Test
@@ -153,19 +153,19 @@ public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestA
         isolatedScope.get().addException(new CitrusRuntimeException("late forked failure"));
 
         assertTrue(applied.isDone(context));
-        assertEquals(context.getExceptions().size(), 1);
-        assertEquals(context.getExceptions().get(0).getMessage(), "late forked failure");
+        assertEquals(1, context.getExceptions().size());
+        assertEquals("late forked failure", context.getExceptions().get(0).getMessage());
     }
 
     @Test
     public void shouldRaisePendingExceptionBeforeIsolatedBehavior() {
-        TestCaseFailedException failure = expectThrows(TestCaseFailedException.class,
+        TestCaseFailedException failure = assertThrows(TestCaseFailedException.class,
                 () -> runner.run(sequential().actions(
                         action(caller -> caller.addException(new CitrusRuntimeException("pending failure"))),
                         apply(createOrder).isolated()
                 )));
 
-        assertEquals(failure.getMessage(), "pending failure");
+        assertEquals("pending failure", failure.getMessage());
         assertTrue(log.isEmpty());
     }
 
@@ -178,32 +178,32 @@ public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestA
 
         applied.execute(context);
 
-        assertEquals(context.getFinalActions().size(), 1);
-        assertEquals(((EchoAction) context.getFinalActions().get(0).build()).getMessage(), "cleanup");
+        assertEquals(1, context.getFinalActions().size());
+        assertEquals("cleanup", ((EchoAction) context.getFinalActions().get(0).build()).getMessage());
     }
 
     @Test
     public void shouldRunWithRequiredVariables() {
         runner.run(apply(createOrder).requires("customer", "${customer}"));
 
-        assertEquals(log, List.of("customer=alice"));
+        assertEquals(List.of("customer=alice"), log);
     }
 
     @Test
     public void shouldFailBeforeAnyActionWhenRequiredVariableIsMissing() {
-        TestCaseFailedException failure = expectThrows(TestCaseFailedException.class,
+        TestCaseFailedException failure = assertThrows(TestCaseFailedException.class,
                 () -> runner.run(apply(TestBehavior.named("create order", createOrder)).requires("customer", "product")));
 
-        assertEquals(failure.getMessage(), "Missing required variable 'product' for test behavior 'create order'");
-        assertEquals(failure.getCause().getClass(), CitrusRuntimeException.class);
+        assertEquals("Missing required variable 'product' for test behavior 'create order'", failure.getMessage());
+        assertEquals(CitrusRuntimeException.class, failure.getCause().getClass());
         assertTrue(log.isEmpty());
-        assertEquals(((ApplyTestBehaviorAction) runner.getTestCase().getActions().get(0)).getExecutedActions().size(), 0);
+        assertEquals(0, ((ApplyTestBehaviorAction) runner.getTestCase().getActions().get(0)).getExecutedActions().size());
         assertFalse(context.getVariables().containsKey("orderId"));
     }
 
     @Test
     public void shouldCheckRequiredVariablesInIsolatedScope() {
-        expectThrows(TestCaseFailedException.class,
+        assertThrows(TestCaseFailedException.class,
                 () -> runner.run(apply(createOrder).isolated().requires("product")));
 
         assertTrue(log.isEmpty());
@@ -216,17 +216,17 @@ public class ApplyTestBehaviorScopeTest extends UnitTestSupport implements TestA
                 .actions(apply(behavior -> behavior.run(echo("iteration ${i}")))));
 
         Iterate iterate = (Iterate) runner.getTestCase().getActions().get(0);
-        assertEquals(iterate.getExecutedActions().size(), 3);
+        assertEquals(3, iterate.getExecutedActions().size());
         for (int i = 0; i < 3; i++) {
             ApplyTestBehaviorAction applied = (ApplyTestBehaviorAction) iterate.getExecutedActions().get(i);
-            assertEquals(applied.getExecutedActions().size(), 1);
-            assertEquals(applied.getActionCount(), 1);
+            assertEquals(1, applied.getExecutedActions().size());
+            assertEquals(1, applied.getActionCount());
         }
     }
 
     @Test
     public void shouldRejectStaticNestedActions() {
-        CitrusRuntimeException failure = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException failure = assertThrows(CitrusRuntimeException.class,
                 () -> new ApplyTestBehaviorAction.Builder().behavior(createOrder).actions(echo("static")).build());
 
         assertTrue(failure.getMessage().startsWith("Test behavior action does not accept nested actions"));

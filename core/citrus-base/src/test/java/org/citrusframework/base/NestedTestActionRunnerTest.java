@@ -41,17 +41,17 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.validation.Validations;
 import org.citrusframework.variable.VariableExtractors;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
 
 public class NestedTestActionRunnerTest extends UnitTestSupport implements TestActionSupport {
 
@@ -59,7 +59,7 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
 
     private Sequence container;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupContainer() {
         log.clear();
         container = new Sequence.Builder().build();
@@ -73,10 +73,10 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
         runner.run(echo("nested"));
         runner.run(createVariables().variable("foo", "bar"));
 
-        assertEquals(container.getActionCount(), 2);
-        assertEquals(container.getExecutedActions().size(), 2);
-        assertEquals(((EchoAction) container.getExecutedActions().get(0)).getMessage(), "nested");
-        assertEquals(context.getVariable("foo"), "bar");
+        assertEquals(2, container.getActionCount());
+        assertEquals(2, container.getExecutedActions().size());
+        assertEquals("nested", ((EchoAction) container.getExecutedActions().get(0)).getMessage());
+        assertEquals("bar", context.getVariable("foo"));
         verifyNoInteractions(outer);
     }
 
@@ -89,7 +89,7 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
         runner.run(doFinally);
 
         verify(outer).run(doFinally);
-        assertEquals(container.getActionCount(), 0);
+        assertEquals(0, container.getActionCount());
         assertTrue(context.getFinalActions().isEmpty());
     }
 
@@ -102,10 +102,10 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
         runner.run(doFinally().actions(echo("behaviorFinally")));
 
         List<TestAction> finalActions = ((DefaultTestCase) outer.getTestCase()).getFinalActions();
-        assertEquals(finalActions.size(), 1);
-        assertEquals(((EchoAction) finalActions.get(0)).getMessage(), "behaviorFinally");
-        assertEquals(container.getActionCount(), 1);
-        assertEquals(outer.getTestCase().getActionCount(), 0);
+        assertEquals(1, finalActions.size());
+        assertEquals("behaviorFinally", ((EchoAction) finalActions.get(0)).getMessage());
+        assertEquals(1, container.getActionCount());
+        assertEquals(0, outer.getTestCase().getActionCount());
     }
 
     @Test
@@ -118,8 +118,8 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
                 .on(outer));
 
         List<TestAction> finalActions = ((DefaultTestCase) delegate.getTestCase()).getFinalActions();
-        assertEquals(finalActions.size(), 1);
-        assertEquals(((EchoAction) finalActions.get(0)).getMessage(), "behaviorFinally");
+        assertEquals(1, finalActions.size());
+        assertEquals("behaviorFinally", ((EchoAction) finalActions.get(0)).getMessage());
     }
 
     @Test
@@ -128,9 +128,9 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
 
         runner.run(doFinally().actions(echo("behaviorFinally")));
 
-        assertEquals(container.getActionCount(), 1);
-        assertEquals(context.getFinalActions().size(), 1);
-        assertEquals(((EchoAction) context.getFinalActions().get(0).build()).getMessage(), "behaviorFinally");
+        assertEquals(1, container.getActionCount());
+        assertEquals(1, context.getFinalActions().size());
+        assertEquals("behaviorFinally", ((EchoAction) context.getFinalActions().get(0).build()).getMessage());
     }
 
     @Test
@@ -140,7 +140,7 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
 
         runner.run(builder);
 
-        assertSame(builder.referenceResolver, context.getReferenceResolver());
+        assertSame(context.getReferenceResolver(), builder.referenceResolver);
     }
 
     @Test
@@ -152,19 +152,19 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
         runner.run(direct);
         runner.run(sequential().actions(nested));
 
-        assertSame(direct.runner, runner);
-        assertSame(nested.runner, runner);
+        assertSame(runner, direct.runner);
+        assertSame(runner, nested.runner);
     }
 
     @Test
     public void shouldWrapFailureLikeTestCase() {
         NestedTestActionRunner runner = new NestedTestActionRunner(container, context, null);
 
-        TestCaseFailedException failure = expectThrows(TestCaseFailedException.class, () -> runner.run(fail("boom")));
+        TestCaseFailedException failure = assertThrows(TestCaseFailedException.class, () -> runner.run(fail("boom")));
 
-        assertEquals(failure.getMessage(), "boom");
-        assertEquals(failure.getCause().getClass(), CitrusRuntimeException.class);
-        assertEquals(container.getExecutedActions().size(), 1);
+        assertEquals("boom", failure.getMessage());
+        assertEquals(CitrusRuntimeException.class, failure.getCause().getClass());
+        assertEquals(1, container.getExecutedActions().size());
     }
 
     @Test
@@ -181,7 +181,7 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
         }));
         outer.stop();
 
-        assertEquals(log, List.of("caught boom"));
+        assertEquals(List.of("caught boom"), log);
         assertTrue(outer.getTestCase().getTestResult().isSuccess());
     }
 
@@ -191,10 +191,10 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
         CitrusRuntimeException pending = new CitrusRuntimeException("async failure");
         context.addException(pending);
 
-        CitrusRuntimeException failure = expectThrows(CitrusRuntimeException.class, () -> runner.run(echo("never")));
+        CitrusRuntimeException failure = assertThrows(CitrusRuntimeException.class, () -> runner.run(echo("never")));
 
-        assertSame(failure, pending);
-        assertEquals(container.getExecutedActions().size(), 0);
+        assertSame(pending, failure);
+        assertEquals(0, container.getExecutedActions().size());
     }
 
     @Test
@@ -215,7 +215,7 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
         runner.run(disabled);
 
         assertTrue(log.isEmpty());
-        assertEquals(container.getExecutedActions().size(), 1);
+        assertEquals(1, container.getExecutedActions().size());
     }
 
     @Test
@@ -225,9 +225,9 @@ public class NestedTestActionRunnerTest extends UnitTestSupport implements TestA
 
         runner.run(runner.applyBehavior(inner));
 
-        assertEquals(container.getActionCount(), 1);
+        assertEquals(1, container.getActionCount());
         ApplyTestBehaviorAction applied = (ApplyTestBehaviorAction) container.getExecutedActions().get(0);
-        assertEquals(applied.getActionCount(), 1);
+        assertEquals(1, applied.getActionCount());
     }
 
     @Test

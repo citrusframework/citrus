@@ -23,10 +23,13 @@ import java.util.concurrent.TimeUnit;
 import org.citrusframework.base.UnitTestSupport;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.7
@@ -57,10 +60,10 @@ public class AbstractAsyncTestActionTest extends UnitTestSupport {
             }
         }.execute(context);
 
-        Assert.assertTrue(result.get(1000, TimeUnit.MILLISECONDS));
+        Assertions.assertTrue(result.get(1000, TimeUnit.MILLISECONDS));
     }
 
-    @Test(expectedExceptions = ExecutionException.class, expectedExceptionsMessageRegExp = "org.citrusframework.exceptions.CitrusRuntimeException: Failed!")
+    @Test
     public void testOnError() throws Exception {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
 
@@ -81,6 +84,9 @@ public class AbstractAsyncTestActionTest extends UnitTestSupport {
             }
         }.execute(context);
 
-        Assert.assertTrue(result.get(1000, TimeUnit.MILLISECONDS));
+        ExecutionException thrown = assertThrows(ExecutionException.class, () -> {
+            Assertions.assertTrue(result.get(1000, TimeUnit.MILLISECONDS));
+        });
+        assertThat(thrown).hasMessageMatching("org.citrusframework.exceptions.CitrusRuntimeException: Failed!");
     }
 }
