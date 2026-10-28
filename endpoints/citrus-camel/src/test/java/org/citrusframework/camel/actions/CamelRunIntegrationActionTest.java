@@ -16,6 +16,10 @@
 
 package org.citrusframework.camel.actions;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.spi.Resources;
@@ -23,6 +27,8 @@ import org.testng.annotations.Test;
 
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 public class CamelRunIntegrationActionTest {
 
@@ -79,5 +85,61 @@ public class CamelRunIntegrationActionTest {
                 .build();
 
         assertEquals(getField(action, "autoSetProperties"), false);
+    }
+
+    @Test
+    public void shouldNotOverwriteUserDefinedSystemProperties() {
+        Map<String, String> systemProperties = new HashMap<>();
+        systemProperties.put("camel.component.kafka.brokers", "user-defined:9092");
+
+        CamelRunIntegrationAction.applyAutoSetComponentProperties(
+                systemProperties,
+                Map.of(),
+                Map.of("camel.component.kafka.brokers", "auto-set:9092"));
+
+        assertEquals(systemProperties.get("camel.component.kafka.brokers"), "user-defined:9092");
+    }
+
+    @Test
+    public void shouldNotOverwriteUserDefinedApplicationProperties() {
+        Map<String, String> systemProperties = new HashMap<>();
+
+        CamelRunIntegrationAction.applyAutoSetComponentProperties(
+                systemProperties,
+                Map.of("camel.component.kafka.brokers", "application.properties:9092"),
+                Map.of("camel.component.kafka.brokers", "auto-set:9092"));
+
+        assertFalse(systemProperties.containsKey("camel.component.kafka.brokers"));
+    }
+
+    @Test
+    public void shouldAddAutoSetProperties() {
+        Map<String, String> systemProperties = new HashMap<>();
+
+        CamelRunIntegrationAction.applyAutoSetComponentProperties(
+                systemProperties,
+                Map.of(),
+                Map.of("camel.component.kafka.brokers", "auto-set:9092"));
+
+        assertEquals(systemProperties.get("camel.component.kafka.brokers"), "auto-set:9092");
+    }
+
+    @Test
+    public void shouldReadApplicationPropertiesOfIntegration() throws IOException {
+        Path workingDir = Files.createTempDirectory("citrus-camel-run");
+        Files.writeString(workingDir.resolve("application.properties"),
+                "camel.component.kafka.brokers=application.properties:9092\ncamel.main.name=test\n");
+
+        Map<String, String> userDefinedProperties = CamelRunIntegrationAction.loadApplicationProperties(workingDir);
+
+        assertEquals(userDefinedProperties.get("camel.component.kafka.brokers"), "application.properties:9092");
+        assertEquals(userDefinedProperties.get("camel.main.name"), "test");
+    }
+
+    @Test
+    public void shouldReadNoApplicationPropertiesIfMissing() throws IOException {
+        Path workingDir = Files.createTempDirectory("citrus-camel-run");
+
+        assertTrue(CamelRunIntegrationAction.loadApplicationProperties(workingDir).isEmpty());
     }
 }

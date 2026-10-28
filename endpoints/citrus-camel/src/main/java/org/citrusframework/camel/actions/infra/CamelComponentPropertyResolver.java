@@ -61,6 +61,28 @@ public final class CamelComponentPropertyResolver {
             "elasticsearch", Map.of("elasticSearchHost", "hostAddresses", "username", "user"),
             "nats", Map.of("serviceAddress", "servers"));
 
+    /**
+     * Java types that can be set from a plain string value.
+     */
+    private static final Set<String> SIMPLE_JAVA_TYPES = Set.of(
+            "java.lang.String",
+            "java.lang.Boolean",
+            "java.lang.Integer",
+            "java.lang.Long",
+            "java.lang.Double",
+            "java.lang.Float",
+            "java.lang.Short",
+            "java.lang.Byte",
+            "java.lang.Character",
+            "boolean",
+            "int",
+            "long",
+            "double",
+            "float",
+            "short",
+            "byte",
+            "char");
+
     private CamelComponentPropertyResolver() {
         // prevent instantiation of utility class
     }
@@ -125,7 +147,11 @@ public final class CamelComponentPropertyResolver {
             return;
         }
 
-        Set<String> optionNames = model.getComponentOptions().stream()
+        List<ComponentModel.ComponentOptionModel> options = model.getComponentOptions().stream()
+                .filter(CamelComponentPropertyResolver::isSimpleType)
+                .toList();
+
+        Set<String> optionNames = options.stream()
                 .map(ComponentModel.ComponentOptionModel::getName)
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
@@ -141,9 +167,15 @@ public final class CamelComponentPropertyResolver {
             }
 
             String infraKey = toCamelCase(key.substring(variablePrefix.length()));
-            String optionName = resolveOptionName(infraKey, model, optionNames, aliases);
+            String optionName = resolveOptionName(infraKey, options, optionNames, aliases);
             if (optionName == null) {
-                logger.debug("No matching component option found for infra service property '{}' on component '{}'", key, component);
+                if (model.getComponentOptions().stream()
+                        .anyMatch(option -> option.getName().equalsIgnoreCase(infraKey))) {
+                    logger.debug("Skipping Camel component property '{}' on component '{}' - only simple types are supported",
+                            infraKey, component);
+                } else {
+                    logger.debug("No matching component option found for infra service property '{}' on component '{}'", key, component);
+                }
                 return;
             }
 
@@ -156,9 +188,9 @@ public final class CamelComponentPropertyResolver {
         });
     }
 
-    private static String resolveOptionName(String infraKey, ComponentModel model, Set<String> optionNames,
+    private static String resolveOptionName(String infraKey, List<ComponentModel.ComponentOptionModel> options, Set<String> optionNames,
             Map<String, String> aliases) {
-        for (ComponentModel.ComponentOptionModel option : model.getComponentOptions()) {
+        for (ComponentModel.ComponentOptionModel option : options) {
             if (option.getName().equalsIgnoreCase(infraKey)) {
                 return option.getName();
             }
@@ -170,6 +202,26 @@ public final class CamelComponentPropertyResolver {
         }
 
         return null;
+    }
+
+    /**
+     * Checks if the given component option is of a simple type that can be set from a plain string value.
+     * Object options (e.g. Kafka configuration or Elasticsearch client) require a real object instance
+     * and cannot be set via a system property.
+     * @param option the component option to check
+     * @return true if the option can be set with a plain string value
+     */
+    private static boolean isSimpleType(ComponentModel.ComponentOptionModel option) {
+        if ("object".equalsIgnoreCase(option.getType())) {
+            return false;
+        }
+
+        String javaType = option.getJavaType();
+        if (javaType == null || javaType.isBlank()) {
+            return true;
+        }
+
+        return SIMPLE_JAVA_TYPES.contains(javaType);
     }
 
     private static String toCamelCase(String key) {
