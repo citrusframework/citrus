@@ -215,7 +215,7 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
 
         //GIVEN
         final TestCase testcase = new DefaultTestCase();
-        testcase.setName("ThreadLeakTestCaseTest");
+        testcase.setName("ThreadLeakTestCase");
         testcase.addTestAction(new EchoAction.Builder().build());
 
         //WHEN
@@ -225,7 +225,7 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
         //THEN
         final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
         Optional<Thread> waitingThread = threads.keySet().stream()
-                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("ThreadLeakTestCaseTest")))
+                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("ThreadLeakTestCase")))
                 .filter(Thread::isAlive)
                 .findAny();
 

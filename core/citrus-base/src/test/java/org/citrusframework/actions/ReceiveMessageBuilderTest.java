@@ -89,7 +89,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
         builder.endpoint(endpoint);
 
         //THEN
-		assertEquals(builder.build().getEndpoint(), endpoint);
+		assertEquals(endpoint, builder.build().getEndpoint());
 	}
 
 	@Test
@@ -268,7 +268,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().headers(headers);
 
 		//THEN
-		assertEquals(((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaders(context), headers);
+		assertEquals(headers, ((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaders(context));
 	}
 
 	@Test
@@ -282,8 +282,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().header(data);
 
 		//THEN
-		assertEquals(((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context),
-				Collections.singletonList(data));
+		assertEquals(Collections.singletonList(data),
+				((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
@@ -462,7 +462,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final MessageType messageType = MessageType.JSON;
 		builder.message().type(messageType);
-		assertEquals(builder.build().getMessageType(), messageType.name());
+		assertEquals(messageType.name(), builder.build().getMessageType());
 	}
 
 	@Test
@@ -786,7 +786,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.selector(selectors);
 
 		//THEN
-		assertEquals(builder.build().getMessageSelectorMap().toString(), selectors.toString());
+		assertEquals(selectors.toString(), builder.build().getMessageSelectorMap().toString());
 	}
 
 	@Test
@@ -889,7 +889,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().dictionary(dataDictionary);
 
 		//THEN
-		assertEquals(builder.build().getDataDictionary(), dataDictionary);
+		assertEquals(dataDictionary, builder.build().getDataDictionary());
 	}
 
 	@Test
@@ -908,7 +908,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.message().dictionary(name);
 
 		//THEN
-		assertEquals(builder.build().getDataDictionary(), dataDictionary);
+		assertEquals(dataDictionary, builder.build().getDataDictionary());
 	}
 
 	@Test
@@ -922,7 +922,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.validate(processor);
 
 		//THEN
-		assertEquals(builder.build().getValidationProcessor(), processor);
+		assertEquals(processor, builder.build().getValidationProcessor());
 	}
 
 	@Test
@@ -938,8 +938,8 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
 		builder.withReferenceResolver(referenceResolver);
 
 		//THEN
-		assertEquals(ReflectionHelper.getField(
-				ReflectionHelper.findField(ReceiveMessageAction.Builder.class, "referenceResolver"), builder), referenceResolver);
+		assertEquals(referenceResolver, ReflectionHelper.getField(
+				ReflectionHelper.findField(ReceiveMessageAction.Builder.class, "referenceResolver"), builder));
 	}
 
     @Test
@@ -953,7 +953,7 @@ public class ReceiveMessageBuilderTest implements TestActionSupport {
         builder.message().type(messageType);
 
         //THEN
-		assertEquals(builder.build().getMessageType(), messageType.name());
+		assertEquals(messageType.name(), builder.build().getMessageType());
 	}
 
     @Test

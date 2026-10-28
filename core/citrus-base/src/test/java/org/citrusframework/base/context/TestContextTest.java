@@ -56,7 +56,7 @@ public class TestContextTest extends UnitTestSupport {
         globalVariables.getVariables().put("defaultVar", "123");
 
         DefaultTestCase testcase = new DefaultTestCase();
-        testcase.setName("MyTestCase");
+        testcase.setName("TestContextTest");
 
         testcase.setVariableDefinitions(Collections.singletonMap("test1Var", "456"));
 
@@ -64,7 +64,7 @@ public class TestContextTest extends UnitTestSupport {
         testContext.setGlobalVariables(globalVariables);
         testcase.execute(testContext);
 
-        Assertions.assertEquals("MyTestCase", testContext.getVariables().get(CitrusSettings.getTestNameVariable()));
+        Assertions.assertEquals("TestContextTest", testContext.getVariables().get(CitrusSettings.getTestNameVariable()));
         Assertions.assertEquals(DefaultTestCase.class.getPackage().getName(), testContext.getVariables().get(CitrusSettings.getTestPackageVariable()));
         Assertions.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assertions.assertEquals("123", testContext.getVariables().get("defaultVar"));
@@ -72,7 +72,7 @@ public class TestContextTest extends UnitTestSupport {
         Assertions.assertEquals("456", testContext.getVariables().get("test1Var"));
 
         DefaultTestCase testcase2 = new DefaultTestCase();
-        testcase2.setName("MyTestCase2");
+        testcase2.setName("TestContextTest2");
         testcase2.setPackageName("org.citrusframework");
 
         testcase2.setVariableDefinitions(Collections.singletonMap("test2Var", "456"));
@@ -81,7 +81,7 @@ public class TestContextTest extends UnitTestSupport {
         testContext.setGlobalVariables(globalVariables);
         testcase2.execute(testContext);
 
-        Assertions.assertEquals("MyTestCase2", testContext.getVariables().get(CitrusSettings.getTestNameVariable()));
+        Assertions.assertEquals("TestContextTest2", testContext.getVariables().get(CitrusSettings.getTestNameVariable()));
         Assertions.assertEquals(TestCase.class.getPackage().getName(), testContext.getVariables().get(CitrusSettings.getTestPackageVariable()));
         Assertions.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assertions.assertEquals("123", testContext.getVariables().get("defaultVar"));
@@ -95,7 +95,7 @@ public class TestContextTest extends UnitTestSupport {
         globalVariables.getVariables().put("defaultVar", "123");
 
         TestCase testcase = new DefaultTestCase();
-        testcase.setName("MyTestCase");
+        testcase.setName("TestContextTest");
 
         CreateVariablesAction varSetting = new CreateVariablesAction.Builder()
                 .variable("defaultVar", "ABC")
@@ -110,7 +110,7 @@ public class TestContextTest extends UnitTestSupport {
         Assertions.assertEquals("ABC", testContext.getVariables().get("defaultVar"));
 
         TestCase testcase2 = new DefaultTestCase();
-        testcase2.setName("MyTestCase2");
+        testcase2.setName("TestContextTest2");
 
         testContext = testContextFactory.getObject();
         testContext.setGlobalVariables(globalVariables);
