@@ -16,8 +16,17 @@
 
 package org.citrusframework.validation;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.citrusframework.util.ConcurrencyTestUtils;
 import org.junit.jupiter.api.Assertions;
@@ -44,5 +53,69 @@ public class HeaderValidatorTest {
     public void shouldLookupValidatorsOnceWhenCalledConcurrently() throws Exception {
         ConcurrencyTestUtils.raceRepeatedly(10_000, 16, HeaderValidator.validators::clear, HeaderValidator::lookup,
                 () -> Assertions.assertEquals(Set.of("defaultHeaderValidator"), HeaderValidator.validators.keySet()));
+    }
+
+    @Test
+    public void shouldNotDeadlockWhenValidatorClassesInitializeConcurrently() throws Exception {
+        // Both validators call lookup() from their static initializer, and lookup() instantiates DefaultHeaderValidator.
+        // A class is initialized once per class loader, so every round races the two initializers in a fresh loader.
+        ExecutorService executor = Executors.newFixedThreadPool(2, runnable -> {
+            Thread thread = new Thread(runnable);
+            thread.setDaemon(true);
+            return thread;
+        });
+        try {
+            for (int round = 0; round < 50; round++) {
+                ClassLoader loader = new CitrusClassesFirstClassLoader(HeaderValidatorTest.class.getClassLoader());
+                CyclicBarrier start = new CyclicBarrier(2);
+                List<Future<?>> results = new ArrayList<>();
+                for (String type : List.of(DefaultHeaderValidator.class.getName(), DefaultMessageHeaderValidator.class.getName())) {
+                    results.add(executor.submit(() -> {
+                        Thread.currentThread().setContextClassLoader(loader);
+                        start.await();
+                        return Class.forName(type, true, loader);
+                    }));
+                }
+
+                for (Future<?> result : results) {
+                    result.get(10, TimeUnit.SECONDS);
+                }
+            }
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    /**
+     * Defines its own copy of every org.citrusframework class, so their static initializers run again.
+     */
+    private static final class CitrusClassesFirstClassLoader extends ClassLoader {
+
+        CitrusClassesFirstClassLoader(ClassLoader parent) {
+            super(parent);
+        }
+
+        @Override
+        protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+            if (!name.startsWith("org.citrusframework.")) {
+                return super.loadClass(name, resolve);
+            }
+
+            synchronized (getClassLoadingLock(name)) {
+                Class<?> type = findLoadedClass(name);
+                if (type == null) {
+                    try (InputStream in = getParent().getResourceAsStream(name.replace('.', '/') + ".class")) {
+                        if (in == null) {
+                            throw new ClassNotFoundException(name);
+                        }
+                        byte[] bytes = in.readAllBytes();
+                        type = defineClass(name, bytes, 0, bytes.length);
+                    } catch (IOException e) {
+                        throw new ClassNotFoundException(name, e);
+                    }
+                }
+                return type;
+            }
+        }
     }
 }
