@@ -16,20 +16,21 @@
 
 package org.citrusframework;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Instance creation manager creates new Citrus instances or always a singleton based on instance creation strategy.
+ * Instance creation is thread-safe, so concurrent callers of {@link #getOrDefault()} share one instance.
  */
 public class CitrusInstanceManager {
 
     /** Singleton */
-    private static Citrus citrus;
+    private static volatile Citrus citrus;
 
     /** List of instance resolvers capable of taking part in Citrus instance creation process */
-    private static final List<CitrusInstanceProcessor> instanceProcessors = new ArrayList<>();
+    private static final List<CitrusInstanceProcessor> instanceProcessors = new CopyOnWriteArrayList<>();
 
     /** Strategy decides which instances are created */
     protected static CitrusInstanceStrategy strategy = CitrusInstanceStrategy.NEW;
@@ -47,7 +48,7 @@ public class CitrusInstanceManager {
      * such as test listeners and test context factory.
      * @return
      */
-    public static Citrus newInstance() {
+    public static synchronized Citrus newInstance() {
         return newInstance(CitrusContextProvider.lookup());
     }
 
@@ -56,7 +57,7 @@ public class CitrusInstanceManager {
      * @param contextProvider
      * @return
      */
-    public static Citrus newInstance(CitrusContextProvider contextProvider) {
+    public static synchronized Citrus newInstance(CitrusContextProvider contextProvider) {
         if (strategy.equals(CitrusInstanceStrategy.NEW) || citrus == null) {
             citrus = new Citrus(contextProvider.create());
             instanceProcessors.forEach(processor -> processor.process(citrus));
@@ -69,7 +70,7 @@ public class CitrusInstanceManager {
      * Sets the instance creation strategy.
      * @param mode
      */
-    public static void mode(CitrusInstanceStrategy mode) {
+    public static synchronized void mode(CitrusInstanceStrategy mode) {
         strategy = mode;
     }
 
@@ -86,11 +87,18 @@ public class CitrusInstanceManager {
      * Create new instance if it has not been initialized yet.
      */
     public static Citrus getOrDefault() {
-        if (citrus == null) {
-            citrus = newInstance();
+        Citrus instance = citrus;
+        if (instance != null) {
+            return instance;
         }
 
-        return citrus;
+        synchronized (CitrusInstanceManager.class) {
+            if (citrus == null) {
+                citrus = newInstance();
+            }
+
+            return citrus;
+        }
     }
 
     /**
@@ -103,7 +111,7 @@ public class CitrusInstanceManager {
     /**
      * Removes current Citrus instance if any.
      */
-    public static void reset() {
+    public static synchronized void reset() {
         if (citrus != null) {
             citrus.close();
             DefaultCitrusContextProvider.reset();
