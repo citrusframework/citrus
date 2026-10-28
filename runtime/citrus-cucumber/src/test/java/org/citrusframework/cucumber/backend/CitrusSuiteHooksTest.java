@@ -24,10 +24,11 @@ import io.cucumber.core.backend.Lookup;
 import io.cucumber.core.backend.StaticHookDefinition;
 import io.cucumber.core.backend.discovery.GlueDiscoveryRequest;
 import org.citrusframework.Citrus;
+import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.cucumber.CitrusLifecycleHooks;
-import org.citrusframework.cucumber.UnitTestSupport;
 import org.citrusframework.report.TestSuiteListener;
+import org.citrusframework.report.TestSuiteListeners;
 import org.mockito.ArgumentCaptor;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.AfterMethod;
@@ -43,23 +44,35 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
-public class CitrusSuiteHooksTest extends UnitTestSupport {
+/**
+ * Uses its own Citrus instance on a mocked context instead of the shared Spring test context, and puts the previous
+ * instance back without closing anything, so other test classes keep their instance and application context.
+ */
+public class CitrusSuiteHooksTest {
 
     private TestSuiteListener suiteListener;
 
-    private Optional<Citrus> originalInstance;
+    private CitrusContext citrusContext;
+
+    private Citrus originalInstance;
 
     @BeforeMethod
-    public void registerSuiteListener() {
-        originalInstance = CitrusInstanceManager.get();
+    public void createCitrus() {
+        originalInstance = CitrusInstanceManager.get().orElse(null);
+
         suiteListener = mock(TestSuiteListener.class);
-        citrus.getCitrusContext().getTestSuiteListeners().addTestSuiteListener(suiteListener);
+        TestSuiteListeners suiteListeners = new TestSuiteListeners();
+        suiteListeners.addTestSuiteListener(suiteListener);
+
+        citrusContext = mock(CitrusContext.class);
+        when(citrusContext.getTestSuiteListeners()).thenReturn(suiteListeners);
+
+        CitrusInstanceManager.newInstance(() -> citrusContext);
     }
 
     @AfterMethod(alwaysRun = true)
     public void restoreInstance() {
-        // Listener list is unmodifiable, the inert mock stays registered
-        setInstance(originalInstance.orElse(null));
+        setInstance(originalInstance);
     }
 
     @Test
@@ -79,10 +92,10 @@ public class CitrusSuiteHooksTest extends UnitTestSupport {
         assertFalse(CitrusInstanceManager.hasInstance());
         verify(suiteListener, never()).onStart();
 
-        CitrusInstanceManager.newInstance(citrus::getCitrusContext);
+        CitrusInstanceManager.newInstance(() -> citrusContext);
         verify(suiteListener).onStart();
 
-        CitrusInstanceManager.newInstance(citrus::getCitrusContext);
+        CitrusInstanceManager.newInstance(() -> citrusContext);
         verify(suiteListener, times(1)).onStart();
     }
 
@@ -92,7 +105,7 @@ public class CitrusSuiteHooksTest extends UnitTestSupport {
 
         CitrusLifecycleHooks.beforeSuite();
         CitrusLifecycleHooks.beforeSuite();
-        CitrusInstanceManager.newInstance(citrus::getCitrusContext);
+        CitrusInstanceManager.newInstance(() -> citrusContext);
 
         verify(suiteListener, times(1)).onStart();
     }
@@ -105,7 +118,7 @@ public class CitrusSuiteHooksTest extends UnitTestSupport {
         CitrusLifecycleHooks.afterSuite();
         assertFalse(CitrusInstanceManager.hasInstance());
 
-        CitrusInstanceManager.newInstance(citrus::getCitrusContext);
+        CitrusInstanceManager.newInstance(() -> citrusContext);
         verify(suiteListener, never()).onStart();
         verify(suiteListener, never()).onFinish();
     }
