@@ -117,10 +117,10 @@ NOTE: `cucumber.glue.classes` is experimental in Cucumber 8 (`@API(status = EXPE
 change in later 8.x releases. The stable alternative is a narrow `cucumber.glue` package as described in
 <<cucumber-glue-discovery,glue discovery>>.
 
-In case you want to have the usual Citrus test results reported you can add the special Citrus reporter implementation
-`org.citrusframework.cucumber.CitrusReporter`. This class is responsible for printing the Citrus test summary. This reporter
-extends the default Cucumber reporter so the default Cucumber report summary is also printed to the console.
 Citrus starts and finishes its test suite with Cucumber `BeforeAll` and `AfterAll` hooks, see <<cucumber-suite-hooks,suite hooks>>.
+These hooks also print the usual Citrus test summary, so no plugin is required for it. The Citrus reporter
+`org.citrusframework.cucumber.CitrusReporter` used in the examples adds the default Cucumber summary to the console output,
+the same as Cucumber's built-in `summary` plugin.
 Some Cucumber report plugins need Jackson on the classpath, see <<cucumber-report-plugins,report plugins and Jackson>>.
 
 That completes the suite class configuration. Now we are able to add feature stories and step definitions to the package
