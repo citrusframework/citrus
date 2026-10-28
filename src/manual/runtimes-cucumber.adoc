@@ -116,9 +116,11 @@ to scan a glue package for step definitions. You can also use a glue package wit
 NOTE: `cucumber.glue.classes` is experimental in Cucumber 8 (`@API(status = EXPERIMENTAL, since = "8.0.0")`) and may
 change in later 8.x releases. The stable alternative is a narrow `cucumber.glue` package as described in
 <<cucumber-glue-discovery,glue discovery>>.
+
 In case you want to have the usual Citrus test results reported you can add the special Citrus reporter implementation
 `org.citrusframework.cucumber.CitrusReporter`. This class is responsible for printing the Citrus test summary. This reporter
 extends the default Cucumber reporter so the default Cucumber report summary is also printed to the console.
+Citrus starts and finishes its test suite with Cucumber `BeforeAll` and `AfterAll` hooks, see <<cucumber-suite-hooks,suite hooks>>.
 Some Cucumber report plugins need Jackson on the classpath, see <<cucumber-report-plugins,report plugins and Jackson>>.
 
 That completes the suite class configuration. Now we are able to add feature stories and step definitions to the package
@@ -467,6 +469,51 @@ a `CucumberException` that lists the missing dependencies.
 The Citrus termination log reporter (`org.citrusframework.cucumber.report.json.TerminationLogReporter`) always requires Jackson 3
 (`tools.jackson.core:jackson-databind`). The `citrus-cucumber` module does not bring Jackson with it, so add the
 dependency to your project when you use this reporter.
+
+[[cucumber-suite-hooks]]
+=== Suite hooks
+
+Citrus registers two Cucumber static hooks that run once per Cucumber run: `CitrusLifecycleHooks.beforeSuite` as
+`BeforeAll` hook and `CitrusLifecycleHooks.afterSuite` as `AfterAll` hook. They run the Citrus before suite and after suite
+actions and notify the Citrus test suite listeners. Both hooks use order `10000`, the Cucumber default, and show up with
+these names in Cucumber hook messages and reports.
+
+The suite is finished by the `AfterAll` hook, not by the Citrus reporter, so the after suite actions also run when you do
+not register `org.citrusframework.cucumber.CitrusReporter`. Your own `@AfterAll` hooks with a lower order run after the
+Citrus suite has finished.
+
+The `BeforeAll` hook does not create a Citrus instance. When no instance exists yet, the suite starts as soon as the
+object factory creates one. This keeps the Spring object factory in charge of creating the Citrus instance from the
+Spring application context.
+
+[[cucumber-docstring-datatable]]
+=== DocString and DataTable on one step
+
+A Gherkin step can carry a DocString and a DataTable at the same time. The DocString comes first, then the DataTable.
+The Java step definition receives both as its last two arguments in that order.
+
+.DocString and DataTable
+[source,gherkin]
+----
+Given message
+  """
+  Hello Citrus
+  """
+  | operation | greeting |
+  | language  | en       |
+----
+
+.Step definition
+[source,java]
+----
+@Given("^message$")
+public void message(String body, DataTable headers) {
+    runner.given(createVariable("body", body));
+    headers.asMap().forEach((name, value) -> runner.given(createVariable(name, value)));
+}
+----
+
+XML step templates pass every argument as `String`, so use a Java step definition for DataTable arguments.
 
 [[cucumber-xml-steps]]
 === Cucumber XML steps
