@@ -15,6 +15,11 @@
   -->
 
 <test name="SchemaSample" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <endpoints>
+    <direct>
+      <asynchronous name="orders" queue="order.placed" auto-create-queue="true"/>
+    </direct>
+  </endpoints>
   <actions>
     <async>
       <actions><echo><message>Try</message></echo></actions>

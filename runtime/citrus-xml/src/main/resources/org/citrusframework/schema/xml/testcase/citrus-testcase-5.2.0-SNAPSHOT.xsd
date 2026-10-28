@@ -339,6 +339,7 @@
     <xs:attribute name="name" type="xs:ID"/>
     <xs:attribute name="queue" type="xs:string"/>
     <xs:attribute name="queue-name" type="xs:string"/>
+    <xs:attribute name="auto-create-queue" type="xs:boolean"/>
     <xs:attribute name="actor" type="xs:string"/>
     <xs:attribute name="timeout" type="xs:string"/>
   </xs:complexType>
