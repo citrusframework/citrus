@@ -129,4 +129,24 @@ public class CamelComponentPropertyResolverTest extends UnitTestSupport {
 
         assertTrue(properties.isEmpty());
     }
+
+    @Test
+    public void shouldResolveImplementationQualifiedInfraProperties() {
+        context.setVariable("CITRUS_CAMEL_INFRA_KAFKA_STRIMZI_BOOTSTRAP_SERVERS", "localhost:9092");
+
+        Map<String, String> properties = CamelComponentPropertyResolver.resolveProperties(
+                KAFKA_ROUTE, new DefaultCamelCatalog(), context);
+
+        assertEquals(properties.get("camel.component.kafka.brokers"), "localhost:9092");
+    }
+
+    @Test
+    public void shouldIgnoreAbsoluteUrls() {
+        context.setVariable("CITRUS_CAMEL_INFRA_HTTP_PROXY_HOST", "localhost");
+
+        Map<String, String> properties = CamelComponentPropertyResolver.resolveProperties(
+                "from(\"http://example.com/api\")", new DefaultCamelCatalog(), context);
+
+        assertTrue(properties.isEmpty());
+    }
 }

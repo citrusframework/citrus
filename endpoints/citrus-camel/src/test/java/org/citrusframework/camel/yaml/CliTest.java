@@ -67,7 +67,7 @@ public class CliTest extends AbstractYamlActionTest {
 
         CamelRunIntegrationAction action = (CamelRunIntegrationAction) result.getTestAction(actionIndex++);
         Assert.assertEquals(action.getIntegrationName(), "hello-yaml");
-        Assert.assertEquals(getField(action, "autoSetProperties"), false);
+        Assert.assertEquals(getField(action, "autoSetProperties"), true);
 
         CamelVerifyIntegrationAction verifyAction = (CamelVerifyIntegrationAction) result.getTestAction(actionIndex);
         Assert.assertEquals(verifyAction.getIntegrationName(), "hello-yaml");

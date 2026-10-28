@@ -175,7 +175,7 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
         }
     }
 
-    private void autoSetComponentProperties(TestContext context, Map<String, String> systemProperties, Path workingDir) {
+    void autoSetComponentProperties(TestContext context, Map<String, String> systemProperties, Path workingDir) {
         try {
             String routeSource = sourceCode;
             if (!StringUtils.hasText(routeSource) && integrationResource != null) {
@@ -187,7 +187,8 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
 
             applyAutoSetComponentProperties(systemProperties, userDefinedProperties, autoSetProperties);
         } catch (IOException e) {
-            logger.warn("Failed to auto set Camel component properties - skipping automatic property resolution", e);
+            logger.warn("Failed to auto set Camel component properties - skipping automatic property resolution: {}", e.getMessage());
+            logger.debug("Failed to auto set Camel component properties", e);
         }
     }
 
