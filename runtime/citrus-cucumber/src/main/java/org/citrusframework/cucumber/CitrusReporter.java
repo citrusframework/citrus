@@ -22,8 +22,10 @@ import io.cucumber.plugin.ConcurrentEventListener;
 import io.cucumber.plugin.event.EventPublisher;
 
 /**
- * Prints the default Cucumber summary. The Citrus suite itself is started and finished by the
- * static hooks in {@link CitrusLifecycleHooks}.
+ * Prints the default Cucumber summary, the same as Cucumber's built-in {@code summary} plugin.
+ * The Citrus suite is started and finished by the {@code BeforeAll} and {@code AfterAll} hooks that
+ * the Citrus backend registers for {@link CitrusLifecycleHooks#beforeSuite()} and {@link CitrusLifecycleHooks#afterSuite()},
+ * whether or not this reporter is used.
  * @since 2.6
  */
 public class CitrusReporter implements ColorAware, ConcurrentEventListener {

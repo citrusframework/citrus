@@ -475,12 +475,21 @@ dependency to your project when you use this reporter.
 
 Citrus registers two Cucumber static hooks that run once per Cucumber run: `CitrusLifecycleHooks.beforeSuite` as
 `BeforeAll` hook and `CitrusLifecycleHooks.afterSuite` as `AfterAll` hook. They run the Citrus before suite and after suite
-actions and notify the Citrus test suite listeners. Both hooks use order `10000`, the Cucumber default, and show up with
-these names in Cucumber hook messages and reports.
+actions and notify the Citrus test suite listeners. Both hooks show up with these names in Cucumber hook messages and
+reports.
+
+Both hooks use order `9999`, one below the Cucumber default order `10000`. Cucumber runs `BeforeAll` hooks in ascending
+and `AfterAll` hooks in descending order, so your own hooks with the default order run inside the Citrus suite:
+
+* `@BeforeAll` hooks with a higher order, including the default, run after the Citrus suite has started. Hooks with a
+lower order run before it.
+* `@AfterAll` hooks with a higher order, including the default, run before the Citrus suite finishes. Hooks with a lower
+order run after it.
+
+Avoid order `9999` for your own suite hooks, because Cucumber does not define the order between hooks with equal order.
 
 The suite is finished by the `AfterAll` hook, not by the Citrus reporter, so the after suite actions also run when you do
-not register `org.citrusframework.cucumber.CitrusReporter`. Your own `@AfterAll` hooks with a lower order run after the
-Citrus suite has finished.
+not register `org.citrusframework.cucumber.CitrusReporter`.
 
 The `BeforeAll` hook does not create a Citrus instance. When no instance exists yet, the suite starts as soon as the
 object factory creates one. This keeps the Spring object factory in charge of creating the Citrus instance from the
@@ -519,7 +528,8 @@ cucumber.execution.parallel.config.fixed.max-pool-size=4
 Each scenario still gets its own Citrus test case, test context and test variables, and both Java and XML step
 definitions can run in parallel. All scenarios share one Citrus
 instance, so the endpoints, components and before/after suite actions configured in the Citrus context are shared as well.
-The <<cucumber-suite-hooks,suite hooks>> still run once per Cucumber run.
+The <<cucumber-suite-hooks,suite hooks>> still run once per Cucumber run, and the before suite actions finish before
+any scenario starts.
 
 Keep the following in mind when you run scenarios in parallel:
 
