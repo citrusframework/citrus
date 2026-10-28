@@ -16,7 +16,11 @@
 
 package org.citrusframework.cucumber;
 
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.citrusframework.Citrus;
+import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
@@ -30,6 +34,12 @@ import static java.lang.String.format;
  * @since 2.6
  */
 public class CitrusLifecycleHooks {
+
+    /** Suite start waiting for the next Citrus instance to be created */
+    private static final AtomicBoolean suiteStartPending = new AtomicBoolean();
+
+    /** Instance processor starting a pending suite is registered only once */
+    private static final AtomicBoolean suiteStartProcessorRegistered = new AtomicBoolean();
 
     @CitrusFramework
     protected Citrus citrus;
@@ -60,5 +70,37 @@ public class CitrusLifecycleHooks {
 
             runner.stop();
         }
+    }
+
+    /**
+     * Starts the Citrus suite. Runs as Cucumber before-all hook once per Cucumber run.
+     * Never creates a Citrus instance itself so object factories such as the Spring object factory
+     * stay in charge of instance creation. When no instance exists yet the suite starts on the instance created next.
+     */
+    public static void beforeSuite() {
+        Optional<Citrus> instance = CitrusInstanceManager.get();
+        if (instance.isPresent()) {
+            suiteStartPending.set(false);
+            instance.get().beforeSuite(CitrusReporter.SUITE_NAME);
+            return;
+        }
+
+        suiteStartPending.set(true);
+        if (suiteStartProcessorRegistered.compareAndSet(false, true)) {
+            CitrusInstanceManager.addInstanceProcessor(created -> {
+                if (suiteStartPending.compareAndSet(true, false)) {
+                    created.beforeSuite(CitrusReporter.SUITE_NAME);
+                }
+            });
+        }
+    }
+
+    /**
+     * Finishes the Citrus suite. Runs as Cucumber after-all hook once per Cucumber run.
+     * Does nothing when no Citrus instance has been created during the run.
+     */
+    public static void afterSuite() {
+        suiteStartPending.set(false);
+        CitrusInstanceManager.get().ifPresent(instance -> instance.afterSuite(CitrusReporter.SUITE_NAME));
     }
 }
