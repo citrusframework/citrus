@@ -1029,6 +1029,13 @@
           "default": true,
           "$comment": "group:advanced"
         },
+        "autoSetProperties": {
+          "type": "boolean",
+          "title": "AutoSetProperties",
+          "description": "When enabled component properties are automatically resolved from Camel infra service variables and set as system properties on the integration run.",
+          "default": true,
+          "$comment": "group:advanced"
+        },
         "dumpIntegrationOutput": {
           "type": "boolean",
           "title": "DumpIntegrationOutput",
