@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -50,6 +51,8 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.ws.endpoint.builder.WebServiceEndpoints;
 import org.citrusframework.ws.server.WebServiceServer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -579,6 +582,19 @@ class GeneratedRestApiIT {
 
                 @Nested
                 class Array implements TestActionSupport {
+
+                    private Locale originalLocale;
+
+                    @BeforeEach
+                    void setEnglishLocale() {
+                        originalLocale = Locale.getDefault();
+                        Locale.setDefault(Locale.ENGLISH);
+                    }
+
+                    @AfterEach
+                    void restoreLocale() {
+                        Locale.setDefault(originalLocale);
+                    }
 
                     /**
                      * Non exploded representation is currently not supported by validator.
@@ -2329,6 +2345,19 @@ class GeneratedRestApiIT {
          */
         @Nested
         class FailOnInvalidResponse implements TestActionSupport {
+
+            private Locale originalLocale;
+
+            @BeforeEach
+            void setEnglishLocale() {
+                originalLocale = Locale.getDefault();
+                Locale.setDefault(Locale.ENGLISH);
+            }
+
+            @AfterEach
+            void restoreLocale() {
+                Locale.setDefault(originalLocale);
+            }
 
             @Test
             @CitrusTestSource(type = TestLoader.SPRING, packageName = "org.citrusframework.openapi.generator.GeneratedApiTest", name = "withFailOnInvalidResponseTest")
