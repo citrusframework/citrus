@@ -21,11 +21,12 @@ import java.util.Map;
 
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.cucumber.container.StepTemplate;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -38,7 +39,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class StepTemplateParserTest {
 
     /** Application context holding bean definitions parsed */
-    protected ApplicationContext beanDefinitionContext;
+    protected ConfigurableApplicationContext beanDefinitionContext;
 
     @BeforeAll
     void parseBeanDefinitions() {
@@ -48,6 +49,13 @@ public class StepTemplateParserTest {
                         StepTemplateParserTest.class.getPackage().getName().replace('.', '/')
                                 + "/" + StepTemplateParserTest.class.getSimpleName() + "-context.xml"},
                 true);
+    }
+
+    @AfterAll
+    void closeBeanDefinitions() {
+        if (beanDefinitionContext != null) {
+            beanDefinitionContext.close();
+        }
     }
 
     @Test
