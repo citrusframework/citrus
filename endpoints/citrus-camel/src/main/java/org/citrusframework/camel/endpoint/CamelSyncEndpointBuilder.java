@@ -18,11 +18,7 @@ package org.citrusframework.camel.endpoint;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.camel.message.CamelMessageConverter;
-import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Endpoint;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.api.yaml.SchemaType;
@@ -32,29 +28,16 @@ import org.citrusframework.api.yaml.SchemaType;
  */
 @SchemaType(module = "citrus-camel")
 @XmlType(name = "", propOrder = {})
-public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncEndpoint> {
+public class CamelSyncEndpointBuilder extends AbstractCamelEndpointBuilder<CamelSyncEndpoint, CamelSyncEndpointBuilder> {
 
-    /** Endpoint target */
     private final CamelSyncEndpoint endpoint = new CamelSyncEndpoint();
 
-    private String camelContext;
-    private String messageConverter;
     private String correlator;
 
     @Override
     public CamelSyncEndpoint build() {
-        if (referenceResolver != null) {
-            if (StringUtils.hasText(camelContext)) {
-                camelContext(referenceResolver.resolve(camelContext, CamelContext.class));
-            }
-
-            if (StringUtils.hasText(messageConverter)) {
-                messageConverter(referenceResolver.resolve(messageConverter, CamelMessageConverter.class));
-            }
-
-            if (StringUtils.hasText(correlator)) {
-                correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
-            }
+        if (referenceResolver != null && StringUtils.hasText(correlator)) {
+            correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
         }
 
         return super.build();
@@ -63,56 +46,6 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
     @Override
     protected CamelSyncEndpoint getEndpoint() {
         return endpoint;
-    }
-
-    /**
-     * Sets the endpointUri property.
-     */
-    public CamelSyncEndpointBuilder endpointUri(String endpointUri) {
-        endpoint.getEndpointConfiguration().setEndpointUri(endpointUri);
-        return this;
-    }
-
-    @SchemaProperty(description = "The Camel endpoint uri.")
-    @XmlAttribute(name = "endpoint-uri")
-    public void setEndpointUri(String endpointUri) {
-        endpointUri(endpointUri);
-    }
-
-    /**
-     * Sets the endpoint property.
-     */
-    public CamelSyncEndpointBuilder endpoint(Endpoint camelEndpoint) {
-        endpoint.getEndpointConfiguration().setEndpoint(camelEndpoint);
-        return this;
-    }
-
-    /**
-     * Sets the camelContext property.
-     */
-    public CamelSyncEndpointBuilder camelContext(CamelContext camelContext) {
-        endpoint.getEndpointConfiguration().setCamelContext(camelContext);
-        return this;
-    }
-
-    @SchemaProperty(description = "The Camel context to use.")
-    @XmlAttribute(name = "camel-context")
-    public void setCamelContext(String camelContext) {
-        this.camelContext = camelContext;
-    }
-
-    /**
-     * Sets the messageConverter property.
-     */
-    public CamelSyncEndpointBuilder messageConverter(CamelMessageConverter messageConverter) {
-        endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
-        return this;
-    }
-
-    @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
-    @XmlAttribute(name = "message-converter")
-    public void setMessageConverter(String messageConverter) {
-        this.messageConverter = messageConverter;
     }
 
     /**
@@ -141,19 +74,5 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
     @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
-    }
-
-    /**
-     * Sets the default timeout.
-     */
-    public CamelSyncEndpointBuilder timeout(long timeout) {
-        endpoint.getEndpointConfiguration().setTimeout(timeout);
-        return this;
-    }
-
-    @SchemaProperty(description = "The endpoint timeout when waiting for messages.")
-    @XmlAttribute
-    public void setTimeout(long timeout) {
-        timeout(timeout);
     }
 }

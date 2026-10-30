@@ -5162,225 +5162,265 @@
                   "type": "object",
                   "properties": {
                     "asynchronous": {
+                      "type": "object",
+                      "properties": {
+                        "autoStart": {
+                          "type": "boolean",
+                          "title": "AutoStart",
+                          "description": "When enabled the JMS consumer is started right after the endpoint is created.",
+                          "$comment": "group:publishSubscribe"
+                        },
+                        "connectionFactory": {
+                          "type": "string",
+                          "title": "ConnectionFactory",
+                          "description": "The JMS connection factory."
+                        },
+                        "destination": {
+                          "type": "string",
+                          "title": "Destination",
+                          "description": "The JMS destination name."
+                        },
+                        "destinationNameResolver": {
+                          "type": "string",
+                          "title": "DestinationNameResolver",
+                          "description": "Sets the destination name resolver.",
+                          "$comment": "group:advanced"
+                        },
+                        "destinationResolver": {
+                          "type": "string",
+                          "title": "DestinationResolver",
+                          "description": "Sets the destination resolver.",
+                          "$comment": "group:advanced"
+                        },
+                        "durableSubscriberName": {
+                          "type": "string",
+                          "title": "DurableSubscriberName",
+                          "description": "Sets the durable subscriber name.",
+                          "$comment": "group:publishSubscribe"
+                        },
+                        "durableSubscription": {
+                          "type": "boolean",
+                          "title": "DurableSubscription",
+                          "description": "Enables/disables durable subscription mode.",
+                          "$comment": "group:publishSubscribe"
+                        },
+                        "filterInternalHeaders": {
+                          "type": "boolean",
+                          "title": "FilterInternalHeaders",
+                          "description": "Filter internal headers.",
+                          "$comment": "group:advanced"
+                        },
+                        "jmsTemplate": {
+                          "type": "string",
+                          "title": "JmsTemplate",
+                          "description": "Sets the JMS template.",
+                          "$comment": "group:advanced"
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "pubSubDomain": {
+                          "type": "boolean",
+                          "title": "PubSubDomain",
+                          "description": "When enabled the endpoint uses publish/subscribe mode.",
+                          "$comment": "group:publishSubscribe"
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "Sets the receive timeout when the consumer waits for messages to arrive.",
+                          "default": 5000
+                        },
+                        "useObjectMessages": {
+                          "type": "boolean",
+                          "title": "UseObjectMessages",
+                          "description": "When enabled the endpoint uses object messages.",
+                          "$comment": "group:advanced"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Asynchronous",
+                      "description": "Sets the Jms endpoint."
+                    },
+                    "autoStart": {
+                      "type": "boolean",
+                      "title": "AutoStart",
+                      "description": "When enabled the JMS consumer is started right after the endpoint is created.",
+                      "$comment": "group:publishSubscribe"
+                    },
+                    "connectionFactory": {
+                      "type": "string",
+                      "title": "ConnectionFactory",
+                      "description": "The JMS connection factory."
+                    },
+                    "destination": {
+                      "type": "string",
+                      "title": "Destination",
+                      "description": "The JMS destination name."
+                    },
+                    "destinationNameResolver": {
+                      "type": "string",
+                      "title": "DestinationNameResolver",
+                      "description": "Sets the destination name resolver.",
+                      "$comment": "group:advanced"
+                    },
+                    "destinationResolver": {
+                      "type": "string",
+                      "title": "DestinationResolver",
+                      "description": "Sets the destination resolver.",
+                      "$comment": "group:advanced"
+                    },
+                    "durableSubscriberName": {
+                      "type": "string",
+                      "title": "DurableSubscriberName",
+                      "description": "Sets the durable subscriber name.",
+                      "$comment": "group:publishSubscribe"
+                    },
+                    "durableSubscription": {
+                      "type": "boolean",
+                      "title": "DurableSubscription",
+                      "description": "Enables/disables durable subscription mode.",
+                      "$comment": "group:publishSubscribe"
+                    },
+                    "filterInternalHeaders": {
+                      "type": "boolean",
+                      "title": "FilterInternalHeaders",
+                      "description": "Filter internal headers.",
+                      "$comment": "group:advanced"
+                    },
+                    "jmsTemplate": {
+                      "type": "string",
+                      "title": "JmsTemplate",
+                      "description": "Sets the JMS template.",
+                      "$comment": "group:advanced"
+                    },
+                    "messageConverter": {
+                      "type": "string",
+                      "title": "MessageConverter",
+                      "description": "Sets the message converter bean reference.",
+                      "$comment": "group:advanced"
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "Name",
+                      "description": "The name of the endpoint."
+                    },
+                    "pubSubDomain": {
+                      "type": "boolean",
+                      "title": "PubSubDomain",
+                      "description": "When enabled the endpoint uses publish/subscribe mode.",
+                      "$comment": "group:publishSubscribe"
                     },
                     "synchronous": {
+                      "type": "object",
+                      "properties": {
+                        "connectionFactory": {
+                          "type": "string",
+                          "title": "ConnectionFactory",
+                          "description": "The JMS connection factory."
+                        },
+                        "correlator": {
+                          "type": "string",
+                          "title": "Correlator",
+                          "description": "Sets the message correlator.",
+                          "$comment": "group:advanced"
+                        },
+                        "destination": {
+                          "type": "string",
+                          "title": "Destination",
+                          "description": "The JMS destination name."
+                        },
+                        "destinationNameResolver": {
+                          "type": "string",
+                          "title": "DestinationNameResolver",
+                          "description": "Sets the destination name resolver.",
+                          "$comment": "group:advanced"
+                        },
+                        "destinationResolver": {
+                          "type": "string",
+                          "title": "DestinationResolver",
+                          "description": "Sets the destination resolver.",
+                          "$comment": "group:advanced"
+                        },
+                        "filterInternalHeaders": {
+                          "type": "boolean",
+                          "title": "FilterInternalHeaders",
+                          "description": "Filter internal headers.",
+                          "$comment": "group:advanced"
+                        },
+                        "jmsTemplate": {
+                          "type": "string",
+                          "title": "JmsTemplate",
+                          "description": "Sets the JMS template.",
+                          "$comment": "group:advanced"
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "pollingInterval": {
+                          "type": "integer",
+                          "title": "PollingInterval",
+                          "description": "Sets the polling interval.",
+                          "$comment": "group:advanced"
+                        },
+                        "pubSubDomain": {
+                          "type": "boolean",
+                          "title": "PubSubDomain",
+                          "description": "When enabled the endpoint uses publish/subscribe mode.",
+                          "$comment": "group:publishSubscribe"
+                        },
+                        "replyDestination": {
+                          "type": "string",
+                          "title": "ReplyDestination",
+                          "description": "Sets the reply destination name."
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "Sets the receive timeout when the consumer waits for messages to arrive.",
+                          "default": 5000
+                        },
+                        "useObjectMessages": {
+                          "type": "boolean",
+                          "title": "UseObjectMessages",
+                          "description": "When enabled the endpoint uses object messages.",
+                          "$comment": "group:advanced"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Synchronous",
+                      "description": "Sets the synchronous Jms endpoint."
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "title": "Timeout",
+                      "description": "Sets the receive timeout when the consumer waits for messages to arrive.",
+                      "default": 5000
+                    },
+                    "useObjectMessages": {
+                      "type": "boolean",
+                      "title": "UseObjectMessages",
+                      "description": "When enabled the endpoint uses object messages.",
+                      "$comment": "group:advanced"
                     }
                   },
                   "additionalProperties": false,
-                  "anyOf": [
-                    {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "asynchronous": {
-                              "type": "object",
-                              "properties": {
-                                "autoStart": {
-                                  "type": "boolean",
-                                  "title": "AutoStart",
-                                  "description": "When enabled the JMS consumer is started right after the endpoint is created.",
-                                  "$comment": "group:publishSubscribe"
-                                },
-                                "connectionFactory": {
-                                  "type": "string",
-                                  "title": "ConnectionFactory",
-                                  "description": "The JMS connection factory."
-                                },
-                                "destination": {
-                                  "type": "string",
-                                  "title": "Destination",
-                                  "description": "The JMS destination name."
-                                },
-                                "destinationNameResolver": {
-                                  "type": "string",
-                                  "title": "DestinationNameResolver",
-                                  "description": "Sets the destination name resolver.",
-                                  "$comment": "group:advanced"
-                                },
-                                "destinationResolver": {
-                                  "type": "string",
-                                  "title": "DestinationResolver",
-                                  "description": "Sets the destination resolver.",
-                                  "$comment": "group:advanced"
-                                },
-                                "durableSubscriberName": {
-                                  "type": "string",
-                                  "title": "DurableSubscriberName",
-                                  "description": "Sets the durable subscriber name.",
-                                  "$comment": "group:publishSubscribe"
-                                },
-                                "durableSubscription": {
-                                  "type": "boolean",
-                                  "title": "DurableSubscription",
-                                  "description": "Enables/disables durable subscription mode.",
-                                  "$comment": "group:publishSubscribe"
-                                },
-                                "filterInternalHeaders": {
-                                  "type": "boolean",
-                                  "title": "FilterInternalHeaders",
-                                  "description": "Filter internal headers.",
-                                  "$comment": "group:advanced"
-                                },
-                                "jmsTemplate": {
-                                  "type": "string",
-                                  "title": "JmsTemplate",
-                                  "description": "Sets the JMS template.",
-                                  "$comment": "group:advanced"
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "pubSubDomain": {
-                                  "type": "boolean",
-                                  "title": "PubSubDomain",
-                                  "description": "When enabled the endpoint uses publish/subscribe mode.",
-                                  "$comment": "group:publishSubscribe"
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "Sets the receive timeout when the consumer waits for messages to arrive.",
-                                  "default": 5000
-                                },
-                                "useObjectMessages": {
-                                  "type": "boolean",
-                                  "title": "UseObjectMessages",
-                                  "description": "When enabled the endpoint uses object messages.",
-                                  "$comment": "group:advanced"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Asynchronous",
-                              "description": "Sets the Jms endpoint."
-                            }
-                          },
-                          "required": [
-                            "asynchronous"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "synchronous": {
-                              "type": "object",
-                              "properties": {
-                                "connectionFactory": {
-                                  "type": "string",
-                                  "title": "ConnectionFactory",
-                                  "description": "The JMS connection factory."
-                                },
-                                "correlator": {
-                                  "type": "string",
-                                  "title": "Correlator",
-                                  "description": "Sets the message correlator.",
-                                  "$comment": "group:advanced"
-                                },
-                                "destination": {
-                                  "type": "string",
-                                  "title": "Destination",
-                                  "description": "The JMS destination name."
-                                },
-                                "destinationNameResolver": {
-                                  "type": "string",
-                                  "title": "DestinationNameResolver",
-                                  "description": "Sets the destination name resolver.",
-                                  "$comment": "group:advanced"
-                                },
-                                "destinationResolver": {
-                                  "type": "string",
-                                  "title": "DestinationResolver",
-                                  "description": "Sets the destination resolver.",
-                                  "$comment": "group:advanced"
-                                },
-                                "filterInternalHeaders": {
-                                  "type": "boolean",
-                                  "title": "FilterInternalHeaders",
-                                  "description": "When enabled the endpoint removes all internal headers before sending a message.",
-                                  "$comment": "group:advanced"
-                                },
-                                "jmsTemplate": {
-                                  "type": "string",
-                                  "title": "JmsTemplate",
-                                  "description": "Sets the JMS template.",
-                                  "$comment": "group:advanced"
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "pollingInterval": {
-                                  "type": "integer",
-                                  "title": "PollingInterval",
-                                  "description": "Sets the polling interval.",
-                                  "$comment": "group:advanced"
-                                },
-                                "pubSubDomain": {
-                                  "type": "boolean",
-                                  "title": "PubSubDomain",
-                                  "description": "When enabled the endpoint uses publish/subscribe mode.",
-                                  "$comment": "group:advanced"
-                                },
-                                "replyDestination": {
-                                  "type": "string",
-                                  "title": "ReplyDestination",
-                                  "description": "Sets the reply destination name."
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "Sets the receive timeout when the consumer waits for messages to arrive."
-                                },
-                                "useObjectMessages": {
-                                  "type": "boolean",
-                                  "title": "UseObjectMessages",
-                                  "description": "When enabled the endpoint uses object messages.",
-                                  "$comment": "group:advanced"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Synchronous",
-                              "description": "Sets the synchronous Jms endpoint."
-                            }
-                          },
-                          "required": [
-                            "synchronous"
-                          ]
-                        },
-                        {
-                          "not": {
-                            "anyOf": [
-                              {
-                                "required": [
-                                  "asynchronous"
-                                ]
-                              },
-                              {
-                                "required": [
-                                  "synchronous"
-                                ]
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ],
                   "title": "JMS",
                   "description": "JMS endpoint"
                 }
@@ -5395,168 +5435,174 @@
                 "vertx": {
                   "type": "object",
                   "properties": {
+                    "address": {
+                      "type": "string",
+                      "title": "Address",
+                      "description": "The event bus address."
+                    },
                     "asynchronous": {
+                      "type": "object",
+                      "properties": {
+                        "address": {
+                          "type": "string",
+                          "title": "Address",
+                          "description": "The event bus address."
+                        },
+                        "host": {
+                          "type": "string",
+                          "title": "Host",
+                          "description": "The Vert.x event bus host."
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "pollingInterval": {
+                          "type": "integer",
+                          "title": "PollingInterval",
+                          "description": "Sets the polling interval when consuming messages."
+                        },
+                        "port": {
+                          "type": "integer",
+                          "title": "Port",
+                          "description": "The Vert.x event bus port."
+                        },
+                        "pubSubDomain": {
+                          "type": "boolean",
+                          "title": "PubSubDomain",
+                          "description": "When enabled the endpoint uses publish/subscribe mode.",
+                          "$comment": "group:advanced"
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "The endpoint timeout when waiting for messages."
+                        },
+                        "vertxFactory": {
+                          "type": "string",
+                          "title": "VertxFactory",
+                          "description": "Sets a custom Vert.x factory.",
+                          "$comment": "group:advanced"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Asynchronous",
+                      "description": "Sets the Vert.x endpoint."
+                    },
+                    "host": {
+                      "type": "string",
+                      "title": "Host",
+                      "description": "The Vert.x event bus host."
+                    },
+                    "messageConverter": {
+                      "type": "string",
+                      "title": "MessageConverter",
+                      "description": "Sets the message converter as a bean reference.",
+                      "$comment": "group:advanced"
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "Name",
+                      "description": "The name of the endpoint."
+                    },
+                    "pollingInterval": {
+                      "type": "integer",
+                      "title": "PollingInterval",
+                      "description": "Sets the polling interval when consuming messages."
+                    },
+                    "port": {
+                      "type": "integer",
+                      "title": "Port",
+                      "description": "The Vert.x event bus port."
+                    },
+                    "pubSubDomain": {
+                      "type": "boolean",
+                      "title": "PubSubDomain",
+                      "description": "When enabled the endpoint uses publish/subscribe mode.",
+                      "$comment": "group:advanced"
                     },
                     "synchronous": {
+                      "type": "object",
+                      "properties": {
+                        "address": {
+                          "type": "string",
+                          "title": "Address",
+                          "description": "The event bus address."
+                        },
+                        "correlator": {
+                          "type": "string",
+                          "title": "Correlator",
+                          "description": "Sets the message correlator.",
+                          "$comment": "group:advanced"
+                        },
+                        "host": {
+                          "type": "string",
+                          "title": "Host",
+                          "description": "The Vert.x event bus host."
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "pollingInterval": {
+                          "type": "integer",
+                          "title": "PollingInterval",
+                          "description": "Sets the polling interval when consuming messages."
+                        },
+                        "port": {
+                          "type": "integer",
+                          "title": "Port",
+                          "description": "The Vert.x event bus port."
+                        },
+                        "pubSubDomain": {
+                          "type": "boolean",
+                          "title": "PubSubDomain",
+                          "description": "When enabled the endpoint uses publish/subscribe mode.",
+                          "$comment": "group:advanced"
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "The endpoint timeout when waiting for messages."
+                        },
+                        "vertxFactory": {
+                          "type": "string",
+                          "title": "VertxFactory",
+                          "description": "Sets a custom Vert.x factory.",
+                          "$comment": "group:advanced"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Synchronous",
+                      "description": "Sets the synchronous Vert.x endpoint."
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "title": "Timeout",
+                      "description": "The endpoint timeout when waiting for messages."
+                    },
+                    "vertxFactory": {
+                      "type": "string",
+                      "title": "VertxFactory",
+                      "description": "Sets a custom Vert.x factory.",
+                      "$comment": "group:advanced"
                     }
                   },
                   "additionalProperties": false,
-                  "anyOf": [
-                    {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "asynchronous": {
-                              "type": "object",
-                              "properties": {
-                                "address": {
-                                  "type": "string",
-                                  "title": "Address",
-                                  "description": "The event bus address."
-                                },
-                                "host": {
-                                  "type": "string",
-                                  "title": "Host",
-                                  "description": "The Vert.x event bus host."
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "pollingInterval": {
-                                  "type": "integer",
-                                  "title": "PollingInterval",
-                                  "description": "Sets the polling interval when consuming messages."
-                                },
-                                "port": {
-                                  "type": "integer",
-                                  "title": "Port",
-                                  "description": "The Vert.x event bus port."
-                                },
-                                "pubSubDomain": {
-                                  "type": "boolean",
-                                  "title": "PubSubDomain",
-                                  "description": "When enabled the endpoint uses publish/subscribe mode.",
-                                  "$comment": "group:advanced"
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "The endpoint timeout when waiting for messages."
-                                },
-                                "vertxFactory": {
-                                  "type": "string",
-                                  "title": "VertxFactory",
-                                  "description": "Sets a custom Vert.x factory.",
-                                  "$comment": "group:advanced"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Asynchronous",
-                              "description": "Sets the Vert.x endpoint."
-                            }
-                          },
-                          "required": [
-                            "asynchronous"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "synchronous": {
-                              "type": "object",
-                              "properties": {
-                                "address": {
-                                  "type": "string",
-                                  "title": "Address",
-                                  "description": "The event bus address."
-                                },
-                                "correlator": {
-                                  "type": "string",
-                                  "title": "Correlator",
-                                  "description": "Sets the message correlator.",
-                                  "$comment": "group:advanced"
-                                },
-                                "host": {
-                                  "type": "string",
-                                  "title": "Host",
-                                  "description": "The Vert.x event bus host."
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "pollingInterval": {
-                                  "type": "integer",
-                                  "title": "PollingInterval",
-                                  "description": "Sets the polling interval when consuming messages."
-                                },
-                                "port": {
-                                  "type": "integer",
-                                  "title": "Port",
-                                  "description": "The Vert.x event bus port."
-                                },
-                                "pubSubDomain": {
-                                  "type": "boolean",
-                                  "title": "PubSubDomain",
-                                  "description": "When enabled the endpoint uses publish/subscribe mode.",
-                                  "$comment": "group:advanced"
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "The endpoint timeout when waiting for messages."
-                                },
-                                "vertxFactory": {
-                                  "type": "string",
-                                  "title": "VertxFactory",
-                                  "description": "Sets a custom Vert.x factory.",
-                                  "$comment": "group:advanced"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Synchronous",
-                              "description": "Sets the synchronous Vert.x endpoint."
-                            }
-                          },
-                          "required": [
-                            "synchronous"
-                          ]
-                        },
-                        {
-                          "not": {
-                            "anyOf": [
-                              {
-                                "required": [
-                                  "asynchronous"
-                                ]
-                              },
-                              {
-                                "required": [
-                                  "synchronous"
-                                ]
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ],
                   "title": "Vert.x",
                   "description": "Vert.x endpoint."
                 }
@@ -5572,116 +5618,94 @@
                   "type": "object",
                   "properties": {
                     "asynchronous": {
+                      "type": "object",
+                      "properties": {
+                        "autoCreateQueue": {
+                          "type": "boolean",
+                          "title": "AutoCreateQueue",
+                          "description": "When set the queue is automatically created when it does not exist in bean registry."
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "queue": {
+                          "type": "string",
+                          "title": "Queue",
+                          "description": "The queue name."
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "The timeout when receiving messages from the queue."
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Asynchronous",
+                      "description": "Sets the direct endpoint."
+                    },
+                    "autoCreateQueue": {
+                      "type": "boolean",
+                      "title": "AutoCreateQueue",
+                      "description": "When set the queue is automatically created when it does not exist in bean registry."
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "Name",
+                      "description": "The name of the endpoint."
+                    },
+                    "queue": {
+                      "type": "string",
+                      "title": "Queue",
+                      "description": "The queue name."
                     },
                     "synchronous": {
+                      "type": "object",
+                      "properties": {
+                        "autoCreateQueue": {
+                          "type": "boolean",
+                          "title": "AutoCreateQueue",
+                          "description": "When set the queue is automatically created when it does not exist in bean registry."
+                        },
+                        "correlator": {
+                          "type": "string",
+                          "title": "Correlator",
+                          "description": "Sets the message correlator.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "pollingInterval": {
+                          "type": "integer",
+                          "title": "PollingInterval",
+                          "description": "Sets the polling interval when consuming messages."
+                        },
+                        "queue": {
+                          "type": "string",
+                          "title": "Queue",
+                          "description": "The queue name."
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "The timeout when receiving messages from the queue."
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Synchronous",
+                      "description": "Sets the synchronous direct endpoint."
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "title": "Timeout",
+                      "description": "The timeout when receiving messages from the queue."
                     }
                   },
                   "additionalProperties": false,
-                  "anyOf": [
-                    {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "asynchronous": {
-                              "type": "object",
-                              "properties": {
-                                "autoCreateQueue": {
-                                  "type": "boolean",
-                                  "title": "AutoCreateQueue",
-                                  "description": "When set the queue is automatically created when it does not exist in bean registry."
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "queue": {
-                                  "type": "string",
-                                  "title": "Queue",
-                                  "description": "The queue name."
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "The timeout when receiving messages from the queue."
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Asynchronous",
-                              "description": "Sets the direct endpoint."
-                            }
-                          },
-                          "required": [
-                            "asynchronous"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "synchronous": {
-                              "type": "object",
-                              "properties": {
-                                "autoCreateQueue": {
-                                  "type": "boolean",
-                                  "title": "AutoCreateQueue",
-                                  "description": "When set the queue is automatically created when it does not exist in bean registry."
-                                },
-                                "correlator": {
-                                  "type": "string",
-                                  "title": "Correlator",
-                                  "description": "Sets the message correlator.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "pollingInterval": {
-                                  "type": "integer",
-                                  "title": "PollingInterval",
-                                  "description": "Sets the polling interval when consuming messages."
-                                },
-                                "queue": {
-                                  "type": "string",
-                                  "title": "Queue",
-                                  "description": "The queue name."
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "The timeout when receiving messages from the queue."
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Synchronous",
-                              "description": "Sets the synchronous direct endpoint."
-                            }
-                          },
-                          "required": [
-                            "synchronous"
-                          ]
-                        },
-                        {
-                          "not": {
-                            "anyOf": [
-                              {
-                                "required": [
-                                  "asynchronous"
-                                ]
-                              },
-                              {
-                                "required": [
-                                  "synchronous"
-                                ]
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ],
                   "title": "Direct",
                   "description": "Direct endpoint."
                 }
@@ -5697,295 +5721,356 @@
                   "type": "object",
                   "properties": {
                     "asynchronous": {
+                      "type": "object",
+                      "properties": {
+                        "autoCommit": {
+                          "type": "boolean",
+                          "title": "AutoCommit",
+                          "description": "Sets auto commit handling for this endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "autoCommitInterval": {
+                          "type": "integer",
+                          "title": "AutoCommitInterval",
+                          "description": "Sets the auto commit interval.",
+                          "$comment": "group:consume"
+                        },
+                        "bootstrapServers": {
+                          "type": "string",
+                          "title": "BootstrapServers",
+                          "description": "Sets the Kafka bootstrap servers."
+                        },
+                        "clientId": {
+                          "type": "string",
+                          "title": "ClientId",
+                          "description": "Sets the client id used to connect to the Kafka server.",
+                          "$comment": "group:advanced"
+                        },
+                        "consumerGroup": {
+                          "type": "string",
+                          "title": "ConsumerGroup",
+                          "description": "Sets the consumer group used by the endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "consumerProperties": {
+                          "type": "object",
+                          "title": "ConsumerProperties",
+                          "description": "Sets the Kafka consumer properties.",
+                          "$comment": "group:consume"
+                        },
+                        "headerMapper": {
+                          "type": "string",
+                          "title": "HeaderMapper",
+                          "description": "Sets the Kafka header mapper.",
+                          "$comment": "group:advanced"
+                        },
+                        "keyDeserializer": {
+                          "type": "string",
+                          "title": "KeyDeserializer",
+                          "description": "Sets the fully qualified key deserializer type class name.",
+                          "$comment": "group:deserialize"
+                        },
+                        "keySerializer": {
+                          "type": "string",
+                          "title": "KeySerializer",
+                          "description": "Sets the fully qualified key serializer type class name.",
+                          "$comment": "group:serialize"
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "offsetReset": {
+                          "type": "string",
+                          "title": "OffsetReset",
+                          "description": "Sets the offset reset.",
+                          "$comment": "group:consume"
+                        },
+                        "partition": {
+                          "type": "integer",
+                          "title": "Partition",
+                          "description": "Sets the Kafka topic partition."
+                        },
+                        "producerProperties": {
+                          "type": "object",
+                          "title": "ProducerProperties",
+                          "description": "Sets the Kafka producer properties.",
+                          "$comment": "group:produce"
+                        },
+                        "server": {
+                          "type": "string",
+                          "title": "Server",
+                          "description": "Sets the Kafka bootstrap server."
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "Sets the Kafka consumer timeout.",
+                          "$comment": "group:consume"
+                        },
+                        "topic": {
+                          "type": "string",
+                          "title": "Topic",
+                          "description": "Sets the Kafka topic."
+                        },
+                        "useThreadSafeConsumer": {
+                          "type": "boolean",
+                          "title": "UseThreadSafeConsumer",
+                          "description": "Sets thread safe consumer option for this endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "valueDeserializer": {
+                          "type": "string",
+                          "title": "ValueDeserializer",
+                          "description": "Sets the fully qualified value deserializer type class name.",
+                          "$comment": "group:deserialize"
+                        },
+                        "valueSerializer": {
+                          "type": "string",
+                          "title": "ValueSerializer",
+                          "description": "Sets the fully qualified value serializer type class name.",
+                          "$comment": "group:serialize"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Asynchronous",
+                      "description": "Sets the Kafka endpoint."
+                    },
+                    "autoCommit": {
+                      "type": "boolean",
+                      "title": "AutoCommit",
+                      "description": "Sets auto commit handling for this endpoint.",
+                      "$comment": "group:consume"
+                    },
+                    "autoCommitInterval": {
+                      "type": "integer",
+                      "title": "AutoCommitInterval",
+                      "description": "Sets the auto commit interval.",
+                      "$comment": "group:consume"
+                    },
+                    "bootstrapServers": {
+                      "type": "string",
+                      "title": "BootstrapServers",
+                      "description": "Sets the Kafka bootstrap servers."
+                    },
+                    "clientId": {
+                      "type": "string",
+                      "title": "ClientId",
+                      "description": "Sets the client id used to connect to the Kafka server.",
+                      "$comment": "group:advanced"
+                    },
+                    "consumerGroup": {
+                      "type": "string",
+                      "title": "ConsumerGroup",
+                      "description": "Sets the consumer group used by the endpoint.",
+                      "$comment": "group:consume"
+                    },
+                    "headerMapper": {
+                      "type": "string",
+                      "title": "HeaderMapper",
+                      "description": "Sets the Kafka header mapper.",
+                      "$comment": "group:advanced"
+                    },
+                    "keyDeserializer": {
+                      "type": "string",
+                      "title": "KeyDeserializer",
+                      "description": "Sets the fully qualified key deserializer type class name.",
+                      "$comment": "group:deserialize"
+                    },
+                    "keySerializer": {
+                      "type": "string",
+                      "title": "KeySerializer",
+                      "description": "Sets the fully qualified key serializer type class name.",
+                      "$comment": "group:serialize"
+                    },
+                    "messageConverter": {
+                      "type": "string",
+                      "title": "MessageConverter",
+                      "description": "Sets the message converter as a bean reference.",
+                      "$comment": "group:advanced"
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "Name",
+                      "description": "The name of the endpoint."
+                    },
+                    "offsetReset": {
+                      "type": "string",
+                      "title": "OffsetReset",
+                      "description": "Sets the offset reset.",
+                      "$comment": "group:consume"
+                    },
+                    "partition": {
+                      "type": "integer",
+                      "title": "Partition",
+                      "description": "Sets the Kafka topic partition."
+                    },
+                    "server": {
+                      "type": "string",
+                      "title": "Server",
+                      "description": "Sets the Kafka bootstrap server."
                     },
                     "synchronous": {
+                      "type": "object",
+                      "properties": {
+                        "autoCommit": {
+                          "type": "boolean",
+                          "title": "AutoCommit",
+                          "description": "Sets auto commit handling for this endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "autoCommitInterval": {
+                          "type": "integer",
+                          "title": "AutoCommitInterval",
+                          "description": "Sets the auto commit interval.",
+                          "$comment": "group:consume"
+                        },
+                        "bootstrapServers": {
+                          "type": "string",
+                          "title": "BootstrapServers",
+                          "description": "Sets the Kafka bootstrap servers."
+                        },
+                        "clientId": {
+                          "type": "string",
+                          "title": "ClientId",
+                          "description": "Sets the client id used to connect to the Kafka server.",
+                          "$comment": "group:advanced"
+                        },
+                        "consumerGroup": {
+                          "type": "string",
+                          "title": "ConsumerGroup",
+                          "description": "Sets the consumer group used by the endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "consumerProperties": {
+                          "type": "object",
+                          "title": "ConsumerProperties",
+                          "description": "Sets the Kafka consumer properties.",
+                          "$comment": "group:consume"
+                        },
+                        "headerMapper": {
+                          "type": "string",
+                          "title": "HeaderMapper",
+                          "description": "Sets the Kafka header mapper.",
+                          "$comment": "group:advanced"
+                        },
+                        "keyDeserializer": {
+                          "type": "string",
+                          "title": "KeyDeserializer",
+                          "description": "Sets the fully qualified key deserializer type class name.",
+                          "$comment": "group:deserialize"
+                        },
+                        "keySerializer": {
+                          "type": "string",
+                          "title": "KeySerializer",
+                          "description": "Sets the fully qualified key serializer type class name.",
+                          "$comment": "group:serialize"
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "offsetReset": {
+                          "type": "string",
+                          "title": "OffsetReset",
+                          "description": "Sets the offset reset.",
+                          "$comment": "group:consume"
+                        },
+                        "partition": {
+                          "type": "integer",
+                          "title": "Partition",
+                          "description": "Sets the Kafka topic partition."
+                        },
+                        "producerProperties": {
+                          "type": "object",
+                          "title": "ProducerProperties",
+                          "description": "Sets the Kafka producer properties.",
+                          "$comment": "group:produce"
+                        },
+                        "server": {
+                          "type": "string",
+                          "title": "Server",
+                          "description": "Sets the Kafka bootstrap server."
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "Sets the Kafka consumer timeout.",
+                          "$comment": "group:consume"
+                        },
+                        "topic": {
+                          "type": "string",
+                          "title": "Topic",
+                          "description": "Sets the Kafka topic."
+                        },
+                        "useThreadSafeConsumer": {
+                          "type": "boolean",
+                          "title": "UseThreadSafeConsumer",
+                          "description": "Sets thread safe consumer option for this endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "valueDeserializer": {
+                          "type": "string",
+                          "title": "ValueDeserializer",
+                          "description": "Sets the fully qualified value deserializer type class name.",
+                          "$comment": "group:deserialize"
+                        },
+                        "valueSerializer": {
+                          "type": "string",
+                          "title": "ValueSerializer",
+                          "description": "Sets the fully qualified value serializer type class name.",
+                          "$comment": "group:serialize"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Synchronous",
+                      "description": "Sets the synchronous Kafka endpoint."
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "title": "Timeout",
+                      "description": "Sets the Kafka consumer timeout.",
+                      "$comment": "group:consume"
+                    },
+                    "topic": {
+                      "type": "string",
+                      "title": "Topic",
+                      "description": "Sets the Kafka topic."
+                    },
+                    "useThreadSafeConsumer": {
+                      "type": "boolean",
+                      "title": "UseThreadSafeConsumer",
+                      "description": "Sets thread safe consumer option for this endpoint.",
+                      "$comment": "group:consume"
+                    },
+                    "valueDeserializer": {
+                      "type": "string",
+                      "title": "ValueDeserializer",
+                      "description": "Sets the fully qualified value deserializer type class name.",
+                      "$comment": "group:deserialize"
+                    },
+                    "valueSerializer": {
+                      "type": "string",
+                      "title": "ValueSerializer",
+                      "description": "Sets the fully qualified value serializer type class name.",
+                      "$comment": "group:serialize"
                     }
                   },
                   "additionalProperties": false,
-                  "anyOf": [
-                    {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "asynchronous": {
-                              "type": "object",
-                              "properties": {
-                                "autoCommit": {
-                                  "type": "boolean",
-                                  "title": "AutoCommit",
-                                  "description": "Sets auto commit handling for this endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "autoCommitInterval": {
-                                  "type": "integer",
-                                  "title": "AutoCommitInterval",
-                                  "description": "Sets the auto commit interval.",
-                                  "$comment": "group:consume"
-                                },
-                                "bootstrapServers": {
-                                  "type": "string",
-                                  "title": "BootstrapServers",
-                                  "description": "Sets the Kafka bootstrap servers."
-                                },
-                                "clientId": {
-                                  "type": "string",
-                                  "title": "ClientId",
-                                  "description": "Sets the client id used to connect to the Kafka server.",
-                                  "$comment": "group:advanced"
-                                },
-                                "consumerGroup": {
-                                  "type": "string",
-                                  "title": "ConsumerGroup",
-                                  "description": "Sets the consumer group used by the endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "consumerProperties": {
-                                  "type": "object",
-                                  "title": "ConsumerProperties",
-                                  "description": "Sets the Kafka consumer properties.",
-                                  "$comment": "group:consume"
-                                },
-                                "headerMapper": {
-                                  "type": "string",
-                                  "title": "HeaderMapper",
-                                  "description": "Sets the Kafka header mapper.",
-                                  "$comment": "group:advanced"
-                                },
-                                "keyDeserializer": {
-                                  "type": "string",
-                                  "title": "KeyDeserializer",
-                                  "description": "Sets the fully qualified key deserializer type class name.",
-                                  "$comment": "group:deserialize"
-                                },
-                                "keySerializer": {
-                                  "type": "string",
-                                  "title": "KeySerializer",
-                                  "description": "Sets the fully qualified key serializer type class name.",
-                                  "$comment": "group:serialize"
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "offsetReset": {
-                                  "type": "string",
-                                  "title": "OffsetReset",
-                                  "description": "Sets the offset reset.",
-                                  "$comment": "group:consume"
-                                },
-                                "partition": {
-                                  "type": "integer",
-                                  "title": "Partition",
-                                  "description": "Sets the Kafka topic partition."
-                                },
-                                "producerProperties": {
-                                  "type": "object",
-                                  "title": "ProducerProperties",
-                                  "description": "Sets the Kafka producer properties.",
-                                  "$comment": "group:produce"
-                                },
-                                "server": {
-                                  "type": "string",
-                                  "title": "Server",
-                                  "description": "Sets the Kafka bootstrap server."
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "Sets the Kafka consumer timeout.",
-                                  "$comment": "group:consume"
-                                },
-                                "topic": {
-                                  "type": "string",
-                                  "title": "Topic",
-                                  "description": "Sets the Kafka topic."
-                                },
-                                "useThreadSafeConsumer": {
-                                  "type": "boolean",
-                                  "title": "UseThreadSafeConsumer",
-                                  "description": "Sets thread safe consumer option for this endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "valueDeserializer": {
-                                  "type": "string",
-                                  "title": "ValueDeserializer",
-                                  "description": "Sets the fully qualified value deserializer type class name.",
-                                  "$comment": "group:deserialize"
-                                },
-                                "valueSerializer": {
-                                  "type": "string",
-                                  "title": "ValueSerializer",
-                                  "description": "Sets the fully qualified value serializer type class name.",
-                                  "$comment": "group:serialize"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Asynchronous",
-                              "description": "Sets the Kafka endpoint."
-                            }
-                          },
-                          "required": [
-                            "asynchronous"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "synchronous": {
-                              "type": "object",
-                              "properties": {
-                                "autoCommit": {
-                                  "type": "boolean",
-                                  "title": "AutoCommit",
-                                  "description": "Sets auto commit handling for this endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "autoCommitInterval": {
-                                  "type": "integer",
-                                  "title": "AutoCommitInterval",
-                                  "description": "Sets the auto commit interval.",
-                                  "$comment": "group:consume"
-                                },
-                                "bootstrapServers": {
-                                  "type": "string",
-                                  "title": "BootstrapServers",
-                                  "description": "Sets the Kafka bootstrap servers."
-                                },
-                                "clientId": {
-                                  "type": "string",
-                                  "title": "ClientId",
-                                  "description": "Sets the client id used to connect to the Kafka server.",
-                                  "$comment": "group:advanced"
-                                },
-                                "consumerGroup": {
-                                  "type": "string",
-                                  "title": "ConsumerGroup",
-                                  "description": "Sets the consumer group used by the endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "consumerProperties": {
-                                  "type": "object",
-                                  "title": "ConsumerProperties",
-                                  "description": "Sets the Kafka consumer properties.",
-                                  "$comment": "group:consume"
-                                },
-                                "headerMapper": {
-                                  "type": "string",
-                                  "title": "HeaderMapper",
-                                  "description": "Sets the Kafka header mapper.",
-                                  "$comment": "group:advanced"
-                                },
-                                "keyDeserializer": {
-                                  "type": "string",
-                                  "title": "KeyDeserializer",
-                                  "description": "Sets the fully qualified key deserializer type class name.",
-                                  "$comment": "group:deserialize"
-                                },
-                                "keySerializer": {
-                                  "type": "string",
-                                  "title": "KeySerializer",
-                                  "description": "Sets the fully qualified key serializer type class name.",
-                                  "$comment": "group:serialize"
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "offsetReset": {
-                                  "type": "string",
-                                  "title": "OffsetReset",
-                                  "description": "Sets the offset reset.",
-                                  "$comment": "group:consume"
-                                },
-                                "partition": {
-                                  "type": "integer",
-                                  "title": "Partition",
-                                  "description": "Sets the Kafka topic partition."
-                                },
-                                "producerProperties": {
-                                  "type": "object",
-                                  "title": "ProducerProperties",
-                                  "description": "Sets the Kafka producer properties.",
-                                  "$comment": "group:produce"
-                                },
-                                "server": {
-                                  "type": "string",
-                                  "title": "Server",
-                                  "description": "Sets the Kafka bootstrap server."
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "Sets the Kafka consumer timeout.",
-                                  "$comment": "group:consume"
-                                },
-                                "topic": {
-                                  "type": "string",
-                                  "title": "Topic",
-                                  "description": "Sets the Kafka topic."
-                                },
-                                "useThreadSafeConsumer": {
-                                  "type": "boolean",
-                                  "title": "UseThreadSafeConsumer",
-                                  "description": "Sets thread safe consumer option for this endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "valueDeserializer": {
-                                  "type": "string",
-                                  "title": "ValueDeserializer",
-                                  "description": "Sets the fully qualified value deserializer type class name.",
-                                  "$comment": "group:deserialize"
-                                },
-                                "valueSerializer": {
-                                  "type": "string",
-                                  "title": "ValueSerializer",
-                                  "description": "Sets the fully qualified value serializer type class name.",
-                                  "$comment": "group:serialize"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Synchronous",
-                              "description": "Sets the synchronous Kafka endpoint."
-                            }
-                          },
-                          "required": [
-                            "synchronous"
-                          ]
-                        },
-                        {
-                          "not": {
-                            "anyOf": [
-                              {
-                                "required": [
-                                  "asynchronous"
-                                ]
-                              },
-                              {
-                                "required": [
-                                  "synchronous"
-                                ]
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ],
                   "title": "Kafka",
                   "description": "Kafka endpoint."
                 }
@@ -6001,128 +6086,112 @@
                   "type": "object",
                   "properties": {
                     "asynchronous": {
+                      "type": "object",
+                      "properties": {
+                        "camelContext": {
+                          "type": "string",
+                          "title": "CamelContext",
+                          "description": "The Camel context to use."
+                        },
+                        "endpointUri": {
+                          "type": "string",
+                          "title": "EndpointUri",
+                          "description": "The Camel endpoint uri."
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "The endpoint timeout when waiting for messages."
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Asynchronous",
+                      "description": "Sets the Camel endpoint."
+                    },
+                    "camelContext": {
+                      "type": "string",
+                      "title": "CamelContext",
+                      "description": "The Camel context to use."
+                    },
+                    "endpointUri": {
+                      "type": "string",
+                      "title": "EndpointUri",
+                      "description": "The Camel endpoint uri."
+                    },
+                    "messageConverter": {
+                      "type": "string",
+                      "title": "MessageConverter",
+                      "description": "Sets the message converter as a bean reference.",
+                      "$comment": "group:advanced"
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "Name",
+                      "description": "The name of the endpoint."
                     },
                     "synchronous": {
+                      "type": "object",
+                      "properties": {
+                        "camelContext": {
+                          "type": "string",
+                          "title": "CamelContext",
+                          "description": "The Camel context to use."
+                        },
+                        "correlator": {
+                          "type": "string",
+                          "title": "Correlator",
+                          "description": "Sets the message correlator.",
+                          "$comment": "group:advanced"
+                        },
+                        "endpointUri": {
+                          "type": "string",
+                          "title": "EndpointUri",
+                          "description": "The Camel endpoint uri."
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "pollingInterval": {
+                          "type": "integer",
+                          "title": "PollingInterval",
+                          "description": "Sets the polling interval when consuming messages."
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "The endpoint timeout when waiting for messages."
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Synchronous",
+                      "description": "Sets the synchronous Camel endpoint."
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "title": "Timeout",
+                      "description": "The endpoint timeout when waiting for messages."
                     }
                   },
                   "additionalProperties": false,
-                  "anyOf": [
-                    {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "asynchronous": {
-                              "type": "object",
-                              "properties": {
-                                "camelContext": {
-                                  "type": "string",
-                                  "title": "CamelContext",
-                                  "description": "The Camel context to use."
-                                },
-                                "endpointUri": {
-                                  "type": "string",
-                                  "title": "EndpointUri",
-                                  "description": "The Camel endpoint uri."
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "The endpoint timeout when waiting for messages."
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Asynchronous",
-                              "description": "Sets the Camel endpoint."
-                            }
-                          },
-                          "required": [
-                            "asynchronous"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "synchronous": {
-                              "type": "object",
-                              "properties": {
-                                "camelContext": {
-                                  "type": "string",
-                                  "title": "CamelContext",
-                                  "description": "The Camel context to use."
-                                },
-                                "correlator": {
-                                  "type": "string",
-                                  "title": "Correlator",
-                                  "description": "Sets the message correlator.",
-                                  "$comment": "group:advanced"
-                                },
-                                "endpointUri": {
-                                  "type": "string",
-                                  "title": "EndpointUri",
-                                  "description": "The Camel endpoint uri."
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "pollingInterval": {
-                                  "type": "integer",
-                                  "title": "PollingInterval",
-                                  "description": "Sets the polling interval when consuming messages."
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "The endpoint timeout when waiting for messages."
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Synchronous",
-                              "description": "Sets the synchronous Camel endpoint."
-                            }
-                          },
-                          "required": [
-                            "synchronous"
-                          ]
-                        },
-                        {
-                          "not": {
-                            "anyOf": [
-                              {
-                                "required": [
-                                  "asynchronous"
-                                ]
-                              },
-                              {
-                                "required": [
-                                  "synchronous"
-                                ]
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ],
                   "title": "Camel",
                   "description": "Camel endpoint."
                 }
@@ -6138,169 +6207,173 @@
                   "type": "object",
                   "properties": {
                     "asynchronous": {
+                      "type": "object",
+                      "properties": {
+                        "channel": {
+                          "type": "string",
+                          "title": "Channel",
+                          "description": "The Spring message channel name."
+                        },
+                        "channelResolver": {
+                          "type": "string",
+                          "title": "ChannelResolver",
+                          "description": "The channel destination resolver.",
+                          "$comment": "group:advanced"
+                        },
+                        "filterInternalHeaders": {
+                          "type": "boolean",
+                          "title": "FilterInternalHeaders",
+                          "description": "When enabled the endpoint removes all internal headers before sending a message.",
+                          "$comment": "group:advanced"
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "messagingTemplate": {
+                          "type": "string",
+                          "title": "MessagingTemplate",
+                          "description": "Sets a custom messaging template.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "Sets the receive timeout when waiting for messages.",
+                          "default": 5000
+                        },
+                        "useObjectMessages": {
+                          "type": "boolean",
+                          "title": "UseObjectMessages",
+                          "description": "When enabled the endpoint uses object messages.",
+                          "$comment": "group:advanced"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Asynchronous",
+                      "description": "Sets the Spring message channel endpoint."
+                    },
+                    "channel": {
+                      "type": "string",
+                      "title": "Channel",
+                      "description": "The Spring message channel name."
+                    },
+                    "channelResolver": {
+                      "type": "string",
+                      "title": "ChannelResolver",
+                      "description": "The channel destination resolver.",
+                      "$comment": "group:advanced"
+                    },
+                    "filterInternalHeaders": {
+                      "type": "boolean",
+                      "title": "FilterInternalHeaders",
+                      "description": "When enabled the endpoint removes all internal headers before sending a message.",
+                      "$comment": "group:advanced"
+                    },
+                    "messageConverter": {
+                      "type": "string",
+                      "title": "MessageConverter",
+                      "description": "Sets the message converter as a bean reference.",
+                      "$comment": "group:advanced"
+                    },
+                    "messagingTemplate": {
+                      "type": "string",
+                      "title": "MessagingTemplate",
+                      "description": "Sets a custom messaging template.",
+                      "$comment": "group:advanced"
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "Name",
+                      "description": "The name of the endpoint."
                     },
                     "synchronous": {
+                      "type": "object",
+                      "properties": {
+                        "channel": {
+                          "type": "string",
+                          "title": "Channel",
+                          "description": "The Spring message channel name."
+                        },
+                        "channelResolver": {
+                          "type": "string",
+                          "title": "ChannelResolver",
+                          "description": "The channel destination resolver.",
+                          "$comment": "group:advanced"
+                        },
+                        "correlator": {
+                          "type": "string",
+                          "title": "Correlator",
+                          "description": "Sets the message correlator.",
+                          "$comment": "group:advanced"
+                        },
+                        "filterInternalHeaders": {
+                          "type": "boolean",
+                          "title": "FilterInternalHeaders",
+                          "description": "When enabled the endpoint removes all internal headers before sending a message.",
+                          "$comment": "group:advanced"
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "messagingTemplate": {
+                          "type": "string",
+                          "title": "MessagingTemplate",
+                          "description": "Sets a custom messaging template.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "pollingInterval": {
+                          "type": "integer",
+                          "title": "PollingInterval",
+                          "description": "Sets the polling interval.",
+                          "$comment": "group:advanced"
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "Sets the receive timeout when waiting for messages.",
+                          "default": 5000
+                        },
+                        "useObjectMessages": {
+                          "type": "boolean",
+                          "title": "UseObjectMessages",
+                          "description": "When enabled the endpoint uses object messages.",
+                          "$comment": "group:advanced"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Synchronous",
+                      "description": "Sets the synchronous Spring message channel endpoint."
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "title": "Timeout",
+                      "description": "Sets the receive timeout when waiting for messages.",
+                      "default": 5000
+                    },
+                    "useObjectMessages": {
+                      "type": "boolean",
+                      "title": "UseObjectMessages",
+                      "description": "When enabled the endpoint uses object messages.",
+                      "$comment": "group:advanced"
                     }
                   },
                   "additionalProperties": false,
-                  "anyOf": [
-                    {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "asynchronous": {
-                              "type": "object",
-                              "properties": {
-                                "channel": {
-                                  "type": "string",
-                                  "title": "Channel",
-                                  "description": "The Spring message channel name."
-                                },
-                                "channelResolver": {
-                                  "type": "string",
-                                  "title": "ChannelResolver",
-                                  "description": "The channel destination resolver.",
-                                  "$comment": "group:advanced"
-                                },
-                                "filterInternalHeaders": {
-                                  "type": "boolean",
-                                  "title": "FilterInternalHeaders",
-                                  "description": "When enabled the endpoint removes all internal headers before sending a message.",
-                                  "$comment": "group:advanced"
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "messagingTemplate": {
-                                  "type": "string",
-                                  "title": "MessagingTemplate",
-                                  "description": "Sets a custom messaging template.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "Sets the receive timeout when waiting for messages.",
-                                  "default": 5000
-                                },
-                                "useObjectMessages": {
-                                  "type": "boolean",
-                                  "title": "UseObjectMessages",
-                                  "description": "When enabled the endpoint uses object messages.",
-                                  "$comment": "group:advanced"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Asynchronous",
-                              "description": "Sets the Spring message channel endpoint."
-                            }
-                          },
-                          "required": [
-                            "asynchronous"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "synchronous": {
-                              "type": "object",
-                              "properties": {
-                                "channel": {
-                                  "type": "string",
-                                  "title": "Channel",
-                                  "description": "The Spring message channel name."
-                                },
-                                "channelResolver": {
-                                  "type": "string",
-                                  "title": "ChannelResolver",
-                                  "description": "The channel destination resolver.",
-                                  "$comment": "group:advanced"
-                                },
-                                "correlator": {
-                                  "type": "string",
-                                  "title": "Correlator",
-                                  "description": "Sets the message correlator.",
-                                  "$comment": "group:advanced"
-                                },
-                                "filterInternalHeaders": {
-                                  "type": "boolean",
-                                  "title": "FilterInternalHeaders",
-                                  "description": "When enabled the endpoint removes all internal headers before sending a message.",
-                                  "$comment": "group:advanced"
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "messagingTemplate": {
-                                  "type": "string",
-                                  "title": "MessagingTemplate",
-                                  "description": "Sets a custom messaging template.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "pollingInterval": {
-                                  "type": "integer",
-                                  "title": "PollingInterval",
-                                  "description": "Sets the polling interval.",
-                                  "$comment": "group:advanced"
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "Sets the receive timeout when waiting for messages.",
-                                  "default": 5000
-                                },
-                                "useObjectMessages": {
-                                  "type": "boolean",
-                                  "title": "UseObjectMessages",
-                                  "description": "When enabled the endpoint uses object messages.",
-                                  "$comment": "group:advanced"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Synchronous",
-                              "description": "Sets the synchronous Spring message channel endpoint."
-                            }
-                          },
-                          "required": [
-                            "synchronous"
-                          ]
-                        },
-                        {
-                          "not": {
-                            "anyOf": [
-                              {
-                                "required": [
-                                  "asynchronous"
-                                ]
-                              },
-                              {
-                                "required": [
-                                  "synchronous"
-                                ]
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ],
                   "title": "Spring channel",
                   "description": "Spring channel endpoint."
                 }
