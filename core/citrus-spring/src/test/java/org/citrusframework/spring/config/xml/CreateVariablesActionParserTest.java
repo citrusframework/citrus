@@ -16,11 +16,10 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.actions.CreateVariablesAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateVariablesActionParserTest extends AbstractActionParserTest<CreateVariablesAction> {
 
@@ -30,9 +29,9 @@ public class CreateVariablesActionParserTest extends AbstractActionParserTest<Cr
         assertActionClassAndName(CreateVariablesAction.class, "create-variables");
 
         CreateVariablesAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getVariables().size(), 3);
-        Assert.assertEquals(action.getVariables().get("text"), "Hello");
-        Assert.assertEquals(action.getVariables().get("sum"), "script:<groovy>(1+2+3+4+5)");
-        Assert.assertEquals(action.getVariables().get("embeddedXml"), "<embeddedXml>This is an embedded Xml variable value</embeddedXml>");
+        Assertions.assertEquals(3, action.getVariables().size());
+        Assertions.assertEquals("Hello", action.getVariables().get("text"));
+        Assertions.assertEquals("script:<groovy>(1+2+3+4+5)", action.getVariables().get("sum"));
+        Assertions.assertEquals("<embeddedXml>This is an embedded Xml variable value</embeddedXml>", action.getVariables().get("embeddedXml"));
     }
 }

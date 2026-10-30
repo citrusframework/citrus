@@ -18,15 +18,15 @@ package org.citrusframework.spring.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class NamespaceContextParserTest extends AbstractBeanDefinitionParserTest {
 
-    @BeforeClass
+    @BeforeAll
     @Override
     protected void parseBeanDefinitions() {
     }
@@ -36,12 +36,12 @@ public class NamespaceContextParserTest extends AbstractBeanDefinitionParserTest
         beanDefinitionContext = createApplicationContext("context");
         Map<String, NamespaceContextBuilder> namespaceContexts = beanDefinitionContext.getBeansOfType(NamespaceContextBuilder.class);
 
-        Assert.assertEquals(namespaceContexts.size(), 1L);
+        Assertions.assertEquals(1L, namespaceContexts.size());
 
         NamespaceContextBuilder namespaceContextBean = namespaceContexts.values().iterator().next();
-        Assert.assertEquals(namespaceContextBean.getNamespaceMappings().size(), 3L);
-        Assert.assertEquals(namespaceContextBean.getNamespaceMappings().get("ns0"), "http://citrusframework.org/schemas/1");
-        Assert.assertEquals(namespaceContextBean.getNamespaceMappings().get("ns1"), "http://citrusframework.org/schemas/2");
-        Assert.assertEquals(namespaceContextBean.getNamespaceMappings().get("ns2"), "http://citrusframework.org/schemas/3");
+        Assertions.assertEquals(3L, namespaceContextBean.getNamespaceMappings().size());
+        Assertions.assertEquals("http://citrusframework.org/schemas/1", namespaceContextBean.getNamespaceMappings().get("ns0"));
+        Assertions.assertEquals("http://citrusframework.org/schemas/2", namespaceContextBean.getNamespaceMappings().get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/schemas/3", namespaceContextBean.getNamespaceMappings().get("ns2"));
     }
 }

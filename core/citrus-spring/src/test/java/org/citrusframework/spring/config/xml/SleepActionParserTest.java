@@ -18,11 +18,10 @@ package org.citrusframework.spring.config.xml;
 
 import java.util.concurrent.TimeUnit;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.actions.SleepAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SleepActionParserTest extends AbstractActionParserTest<SleepAction> {
 
@@ -32,19 +31,19 @@ public class SleepActionParserTest extends AbstractActionParserTest<SleepAction>
         assertActionClassAndName(SleepAction.class, "sleep");
 
         SleepAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getTime(), "5000");
-        Assert.assertEquals(action.getTimeUnit(), TimeUnit.MILLISECONDS);
+        Assertions.assertEquals("5000", action.getTime());
+        Assertions.assertEquals(TimeUnit.MILLISECONDS, action.getTimeUnit());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getTime(), "1.5");
-        Assert.assertEquals(action.getTimeUnit(), TimeUnit.SECONDS);
+        Assertions.assertEquals("1.5", action.getTime());
+        Assertions.assertEquals(TimeUnit.SECONDS, action.getTimeUnit());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getTime(), "1.5");
-        Assert.assertEquals(action.getTimeUnit(), TimeUnit.SECONDS);
+        Assertions.assertEquals("1.5", action.getTime());
+        Assertions.assertEquals(TimeUnit.SECONDS, action.getTimeUnit());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getTime(), "1500");
-        Assert.assertEquals(action.getTimeUnit(), TimeUnit.MILLISECONDS);
+        Assertions.assertEquals("1500", action.getTime());
+        Assertions.assertEquals(TimeUnit.MILLISECONDS, action.getTimeUnit());
     }
 }

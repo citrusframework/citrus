@@ -16,11 +16,10 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.actions.EchoAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class EchoActionParserTest extends AbstractActionParserTest<EchoAction> {
 
@@ -30,7 +29,7 @@ public class EchoActionParserTest extends AbstractActionParserTest<EchoAction> {
         assertActionClassAndName(EchoAction.class, "echo");
 
         EchoAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getDescription(), "This action prints messages to console logger");
-        Assert.assertEquals(action.getMessage(), "This is a test!");
+        Assertions.assertEquals("This action prints messages to console logger", action.getDescription());
+        Assertions.assertEquals("This is a test!", action.getMessage());
     }
 }

@@ -23,24 +23,26 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.functions.Function;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 /**
  * @since 2.7.4
  */
-public class EnvironmentPropertyFunctionTest extends AbstractTestNGUnitTest {
+public class EnvironmentPropertyFunctionTest extends AbstractUnitTest {
 
     private final Environment environment = Mockito.mock(Environment.class);
     private final EnvironmentPropertyFunction function = new EnvironmentPropertyFunction();
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         function.setEnvironment(environment);
     }
@@ -48,29 +50,32 @@ public class EnvironmentPropertyFunctionTest extends AbstractTestNGUnitTest {
     @Test
     public void testFunction() {
         when(environment.getProperty("foo.property")).thenReturn("Citrus rocks!");
-        Assert.assertEquals(function.execute(Collections.singletonList("foo.property"), context), "Citrus rocks!");
+        Assertions.assertEquals("Citrus rocks!", function.execute(Collections.singletonList("foo.property"), context));
     }
 
     @Test
     public void testFunctionDefaultValue() {
-        Assert.assertEquals(function.execute(Arrays.asList("bar.property", "This is a default"), context), "This is a default");
+        Assertions.assertEquals("This is a default", function.execute(Arrays.asList("bar.property", "This is a default"), context));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class}, expectedExceptionsMessageRegExp = "Failed to resolve property 'bar.property' in environment")
+    @Test
     public void testPropertyNotFound() {
-        function.execute(Collections.singletonList("bar.property"), context);
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> {
+            function.execute(Collections.singletonList("bar.property"), context);
+        });
+        assertThat(thrown).hasMessageMatching("Failed to resolve property 'bar.property' in environment");
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(Collections.emptyList(), context));
     }
 
     @Test
     public void shouldLookupFunction() {
-        Assert.assertTrue(Function.lookup().containsKey("env"));
-        Assert.assertEquals(Function.lookup().get("env").getClass(), EnvironmentPropertyFunction.class);
+        Assertions.assertTrue(Function.lookup().containsKey("env"));
+        Assertions.assertEquals(EnvironmentPropertyFunction.class, Function.lookup().get("env").getClass());
 
-        Assert.assertEquals(new DefaultFunctionLibrary().getFunction("env").getClass(), EnvironmentPropertyFunction.class);
+        Assertions.assertEquals(EnvironmentPropertyFunction.class, new DefaultFunctionLibrary().getFunction("env").getClass());
     }
 }

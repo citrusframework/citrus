@@ -19,9 +19,9 @@ package org.citrusframework.spring.functions;
 import org.citrusframework.spring.UnitTestSupport;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.spring.functions.core.EnvironmentPropertyFunction;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 public class DefaultFunctionLibraryFactoryTest extends UnitTestSupport {
 
@@ -30,8 +30,8 @@ public class DefaultFunctionLibraryFactoryTest extends UnitTestSupport {
 
     @Test
     public void shouldKnowEnvironmentPropertyFunction() {
-        Assert.assertTrue(library.getMembers().containsKey("env"));
-        Assert.assertEquals(library.getMembers().get("env").getClass(), EnvironmentPropertyFunction.class);
-        Assert.assertNotNull(((EnvironmentPropertyFunction) library.getMembers().get("env")).getEnvironment());
+        Assertions.assertTrue(library.getMembers().containsKey("env"));
+        Assertions.assertEquals(EnvironmentPropertyFunction.class, library.getMembers().get("env").getClass());
+        Assertions.assertNotNull(((EnvironmentPropertyFunction) library.getMembers().get("env")).getEnvironment());
     }
 }

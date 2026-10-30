@@ -16,12 +16,12 @@
 
 package org.citrusframework.spring.config.xml;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import org.citrusframework.actions.JavaAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.citrusframework.spring.util.InvocationDummy;
 
 public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
@@ -32,40 +32,40 @@ public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
         assertActionClassAndName(JavaAction.class, "java");
 
         JavaAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getClassName(), "org.citrusframework.spring.util.InvocationDummy");
-        Assert.assertEquals(action.getMethodName(), "invoke");
-        Assert.assertEquals(action.getConstructorArgs().size(), 1);
-        Assert.assertEquals(action.getConstructorArgs().get(0), "Test Invocation");
-        Assert.assertEquals(action.getMethodArgs().size(), 1);
-        Assert.assertEquals(action.getMethodArgs().get(0), new String[] {"1", "2"});
+        Assertions.assertEquals("org.citrusframework.spring.util.InvocationDummy", action.getClassName());
+        Assertions.assertEquals("invoke", action.getMethodName());
+        Assertions.assertEquals(1, action.getConstructorArgs().size());
+        Assertions.assertEquals("Test Invocation", action.getConstructorArgs().get(0));
+        Assertions.assertEquals(1, action.getMethodArgs().size());
+        Assertions.assertArrayEquals( new String[] {"1", "2"}, (String[]) action.getMethodArgs().get(0));
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getClassName(), "org.citrusframework.spring.util.InvocationDummy");
-        Assert.assertEquals(action.getMethodName(), "invoke");
-        Assert.assertEquals(action.getConstructorArgs().size(), 0);
-        Assert.assertEquals(action.getMethodArgs().size(), 3);
-        Assert.assertEquals(action.getMethodArgs().get(0), 4);
-        Assert.assertEquals(action.getMethodArgs().get(1), "Test");
-        Assert.assertEquals(action.getMethodArgs().get(2), true);
+        Assertions.assertEquals("org.citrusframework.spring.util.InvocationDummy", action.getClassName());
+        Assertions.assertEquals("invoke", action.getMethodName());
+        Assertions.assertEquals(0, action.getConstructorArgs().size());
+        Assertions.assertEquals(3, action.getMethodArgs().size());
+        Assertions.assertEquals(4, action.getMethodArgs().get(0));
+        Assertions.assertEquals("Test", action.getMethodArgs().get(1));
+        Assertions.assertEquals(true, action.getMethodArgs().get(2));
 
         action = getNextTestActionFromTest();
-        Assert.assertNull(action.getClassName());
-        Assert.assertNotNull(action.getInstance());
-        Assert.assertEquals(action.getInstance().getClass(), InvocationDummy.class);
-        Assert.assertEquals(action.getMethodName(), "invoke");
-        Assert.assertEquals(action.getConstructorArgs().size(), 0);
-        Assert.assertEquals(action.getMethodArgs().get(0), 0);
-        Assert.assertEquals(action.getMethodArgs().get(1), "Test invocation");
-        Assert.assertEquals(action.getMethodArgs().get(2), false);
+        Assertions.assertNull(action.getClassName());
+        Assertions.assertNotNull(action.getInstance());
+        Assertions.assertEquals(InvocationDummy.class, action.getInstance().getClass());
+        Assertions.assertEquals("invoke", action.getMethodName());
+        Assertions.assertEquals(0, action.getConstructorArgs().size());
+        Assertions.assertEquals(0, action.getMethodArgs().get(0));
+        Assertions.assertEquals("Test invocation", action.getMethodArgs().get(1));
+        Assertions.assertEquals(false, action.getMethodArgs().get(2));
     }
 
     @Test
     public void testUnsupportedMethodType() {
         try {
             createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to unsupported method type");
+            Assertions.fail("Missing bean creation exception due to unsupported method type");
         } catch (BeanDefinitionStoreException e) {
-            Assert.assertTrue(e.getCause().getMessage().contains(
+            Assertions.assertTrue(e.getCause().getMessage().contains(
                     "unsupported method argument type: 'integer'"));
         }
     }

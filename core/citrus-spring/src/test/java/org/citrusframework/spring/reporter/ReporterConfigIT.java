@@ -20,7 +20,7 @@ import org.citrusframework.spring.UnitTestSupport;
 import org.citrusframework.base.report.HtmlReporter;
 import org.citrusframework.base.report.JUnitReporter;
 import org.citrusframework.report.LoggingReporter;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_HTML_REPORTER;

@@ -23,8 +23,10 @@ import java.util.Date;
 import org.citrusframework.spring.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.variable.GlobalVariables;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
 
@@ -40,8 +42,8 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
 
         propertyLoader.afterPropertiesSet();
 
-        Assert.assertEquals(globalVariables.getVariables().size(), 1);
-        Assert.assertTrue(globalVariables.getVariables().containsKey("property.load.test"));
+        Assertions.assertEquals(1, globalVariables.getVariables().size());
+        Assertions.assertTrue(globalVariables.getVariables().containsKey("property.load.test"));
     }
 
     @Test
@@ -57,12 +59,12 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
 
         propertyLoader.afterPropertiesSet();
 
-        Assert.assertEquals(globalVariables.getVariables().size(), 1);
-        Assert.assertTrue(globalVariables.getVariables().containsKey("property.load.test"));
-        Assert.assertNotEquals(globalVariables.getVariables().get("property.load.test"), "InitialValue");
+        Assertions.assertEquals(1, globalVariables.getVariables().size());
+        Assertions.assertTrue(globalVariables.getVariables().containsKey("property.load.test"));
+        Assertions.assertNotEquals("InitialValue", globalVariables.getVariables().get("property.load.test"));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testPropertyFileDoesNotExist() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
         propertyLoader.setPropertyFiles(Collections.singletonList("classpath:file_not_exists.properties"));
@@ -72,7 +74,7 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(testContextFactory.getFunctionRegistry());
 
-        propertyLoader.afterPropertiesSet();
+        assertThrows(CitrusRuntimeException.class, propertyLoader::afterPropertiesSet);
     }
 
     @Test
@@ -87,10 +89,10 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
 
         propertyLoader.afterPropertiesSet();
 
-        Assert.assertNotNull(globalVariables.getVariables().get("globalUserName"));
-        Assert.assertEquals(globalVariables.getVariables().get("globalUserName"), "Citrus");
-        Assert.assertNotNull(globalVariables.getVariables().get("globalWelcomeText"));
-        Assert.assertEquals(globalVariables.getVariables().get("globalWelcomeText"), "Hello Citrus!");
+        Assertions.assertNotNull(globalVariables.getVariables().get("globalUserName"));
+        Assertions.assertEquals("Citrus", globalVariables.getVariables().get("globalUserName"));
+        Assertions.assertNotNull(globalVariables.getVariables().get("globalWelcomeText"));
+        Assertions.assertEquals("Hello Citrus!", globalVariables.getVariables().get("globalWelcomeText"));
     }
 
     @Test
@@ -105,9 +107,9 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
 
         propertyLoader.afterPropertiesSet();
 
-        Assert.assertNotNull(globalVariables.getVariables().get("globalDate"));
-        Assert.assertEquals(globalVariables.getVariables().get("globalDate"),
-                "Today is " + new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())) + "!");
+        Assertions.assertNotNull(globalVariables.getVariables().get("globalDate"));
+        Assertions.assertEquals("Today is " + new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())) + "!",
+                globalVariables.getVariables().get("globalDate"));
     }
 
     @Test
@@ -123,11 +125,11 @@ public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
         try {
             propertyLoader.afterPropertiesSet();
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(globalVariables.getVariables().isEmpty());
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'unknownVar'");
+            Assertions.assertTrue(globalVariables.getVariables().isEmpty());
+            Assertions.assertEquals("Unknown variable 'unknownVar'", e.getMessage());
             return;
         }
 
-        Assert.fail("Missing exception because of unknown variable in global variable property loader");
+        Assertions.fail("Missing exception because of unknown variable in global variable property loader");
     }
 }

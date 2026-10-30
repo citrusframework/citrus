@@ -17,12 +17,12 @@
 package org.citrusframework.spring.config.xml;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.container.Catch;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CatchParserTest extends AbstractActionParserTest<Catch> {
 
@@ -32,8 +32,8 @@ public class CatchParserTest extends AbstractActionParserTest<Catch> {
         assertActionClassAndName(Catch.class, "catch");
 
         Catch action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getException(), CitrusRuntimeException.class.getName());
-        Assert.assertEquals(action.getActionCount(), 1);
-        Assert.assertEquals(action.getActions().get(0).getClass(), FailAction.class);
+        Assertions.assertEquals(CitrusRuntimeException.class.getName(), action.getException());
+        Assertions.assertEquals(1, action.getActionCount());
+        Assertions.assertEquals(FailAction.class, action.getActions().get(0).getClass());
     }
 }

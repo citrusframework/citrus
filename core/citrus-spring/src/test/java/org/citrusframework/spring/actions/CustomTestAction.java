@@ -19,9 +19,9 @@ package org.citrusframework.spring.actions;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.Assert;
 
 /**
  * @since 2.0
@@ -34,6 +34,6 @@ public class CustomTestAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        Assert.assertNotNull(endpoint);
+        Assertions.assertNotNull(endpoint);
     }
 }

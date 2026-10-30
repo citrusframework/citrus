@@ -16,12 +16,12 @@
 
 package org.citrusframework.spring.config.xml;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import org.citrusframework.actions.LoadPropertiesAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 
 public class LoadPropertiesActionParserTest extends AbstractActionParserTest<LoadPropertiesAction> {
 
@@ -31,16 +31,16 @@ public class LoadPropertiesActionParserTest extends AbstractActionParserTest<Loa
         assertActionClassAndName(LoadPropertiesAction.class, "load");
 
         LoadPropertiesAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getFilePath(), "classpath:org/citrusframework/spring/actions/load.properties");
+        Assertions.assertEquals("classpath:org/citrusframework/spring/actions/load.properties", action.getFilePath());
     }
 
     @Test
     public void testLoadPropertiesActionParserError() {
         try {
             createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to missing properties file");
+            Assertions.fail("Missing bean creation exception due to missing properties file");
         } catch (BeanDefinitionStoreException e) {
-            Assert.assertTrue(e.getCause().getMessage().contains("Missing properties file"));
+            Assertions.assertTrue(e.getCause().getMessage().contains("Missing properties file"));
         }
     }
 }

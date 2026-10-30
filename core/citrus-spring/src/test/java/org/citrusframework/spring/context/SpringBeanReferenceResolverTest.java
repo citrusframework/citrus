@@ -20,12 +20,14 @@ import org.citrusframework.spring.UnitTestSupport;
 import org.citrusframework.api.xml.Marshaller;
 import org.citrusframework.spring.xml.MarshallerAdapter;
 import org.citrusframework.api.xml.Unmarshaller;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class SpringBeanReferenceResolverTest extends UnitTestSupport {
 
     private SpringBeanReferenceResolver resolver;
@@ -36,9 +38,8 @@ public class SpringBeanReferenceResolverTest extends UnitTestSupport {
     @Mock
     private org.springframework.oxm.Unmarshaller unmarshaller;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
         resolver = new SpringBeanReferenceResolver(applicationContext);
     }
 
@@ -46,33 +47,33 @@ public class SpringBeanReferenceResolverTest extends UnitTestSupport {
     public void shouldResolveMarshallerAlias() {
         String marshallerName = "springOxmMarshaller";
 
-        Assert.assertFalse(resolver.isResolvable(Marshaller.class));
-        Assert.assertFalse(resolver.isResolvable(marshallerName, Marshaller.class));
-        Assert.assertEquals(resolver.resolveAll(Marshaller.class).size(), 0L);
+        Assertions.assertFalse(resolver.isResolvable(Marshaller.class));
+        Assertions.assertFalse(resolver.isResolvable(marshallerName, Marshaller.class));
+        Assertions.assertEquals(0L, resolver.resolveAll(Marshaller.class).size());
 
         resolver.bind(marshallerName, marshaller);
 
-        Assert.assertTrue(resolver.isResolvable(Marshaller.class));
-        Assert.assertTrue(resolver.isResolvable(marshallerName, Marshaller.class));
-        Assert.assertEquals(resolver.resolve(Marshaller.class).getClass(), MarshallerAdapter.class);
-        Assert.assertEquals(resolver.resolve(marshallerName, Marshaller.class).getClass(), MarshallerAdapter.class);
-        Assert.assertEquals(resolver.resolveAll(Marshaller.class).size(), 1L);
+        Assertions.assertTrue(resolver.isResolvable(Marshaller.class));
+        Assertions.assertTrue(resolver.isResolvable(marshallerName, Marshaller.class));
+        Assertions.assertEquals(MarshallerAdapter.class, resolver.resolve(Marshaller.class).getClass());
+        Assertions.assertEquals(MarshallerAdapter.class, resolver.resolve(marshallerName, Marshaller.class).getClass());
+        Assertions.assertEquals(1L, resolver.resolveAll(Marshaller.class).size());
     }
 
     @Test
     public void shouldResolveUnmarshallerAlias() {
         String unmarshallerName = "springOxmUnmarshaller";
 
-        Assert.assertFalse(resolver.isResolvable(Unmarshaller.class));
-        Assert.assertFalse(resolver.isResolvable(unmarshallerName, Unmarshaller.class));
-        Assert.assertEquals(resolver.resolveAll(Unmarshaller.class).size(), 0L);
+        Assertions.assertFalse(resolver.isResolvable(Unmarshaller.class));
+        Assertions.assertFalse(resolver.isResolvable(unmarshallerName, Unmarshaller.class));
+        Assertions.assertEquals(0L, resolver.resolveAll(Unmarshaller.class).size());
 
         resolver.bind(unmarshallerName, unmarshaller);
 
-        Assert.assertTrue(resolver.isResolvable(Unmarshaller.class));
-        Assert.assertTrue(resolver.isResolvable(unmarshallerName, Unmarshaller.class));
-        Assert.assertEquals(resolver.resolve(Unmarshaller.class).getClass(), MarshallerAdapter.class);
-        Assert.assertEquals(resolver.resolve(unmarshallerName, Unmarshaller.class).getClass(), MarshallerAdapter.class);
-        Assert.assertEquals(resolver.resolveAll(Unmarshaller.class).size(), 1L);
+        Assertions.assertTrue(resolver.isResolvable(Unmarshaller.class));
+        Assertions.assertTrue(resolver.isResolvable(unmarshallerName, Unmarshaller.class));
+        Assertions.assertEquals(MarshallerAdapter.class, resolver.resolve(Unmarshaller.class).getClass());
+        Assertions.assertEquals(MarshallerAdapter.class, resolver.resolve(unmarshallerName, Unmarshaller.class).getClass());
+        Assertions.assertEquals(1L, resolver.resolveAll(Unmarshaller.class).size());
     }
 }

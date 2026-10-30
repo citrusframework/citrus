@@ -17,9 +17,9 @@
 package org.citrusframework.spring.config.xml;
 
 import org.citrusframework.actions.StopTimerAction;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.5
@@ -32,9 +32,9 @@ public class StopTimerParserTest extends AbstractActionParserTest<StopTimerActio
         assertActionClassAndName(StopTimerAction.class, "stop-timer");
 
         StopTimerAction action = getNextTestActionFromTest();
-        Assert.assertNull(action.getTimerId());
+        Assertions.assertNull(action.getTimerId());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getTimerId(), "timer#1");
+        Assertions.assertEquals("timer#1", action.getTimerId());
     }
 }

@@ -20,25 +20,25 @@ import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.util.xml.DomUtils;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 public class CustomTestCaseParserTest extends AbstractActionParserTest<EchoAction> {
 
-    @BeforeClass
+    @BeforeAll
     public void parseBeanDefinitions() {
         CitrusNamespaceParserRegistry.registerParser("testcase", new CustomTestCaseParser());
         CitrusNamespaceParserRegistry.registerParser("meta-info", new CustomTestCaseMetaInfoParser());
         super.parseBeanDefinitions();
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() {
         CitrusNamespaceParserRegistry.registerParser("testcase", new TestCaseParser());
         CitrusNamespaceParserRegistry.registerParser("meta-info", new TestCaseMetaInfoParser());
@@ -46,9 +46,9 @@ public class CustomTestCaseParserTest extends AbstractActionParserTest<EchoActio
 
     @Test
     public void testCustomTestCaseParser() {
-        Assert.assertTrue(getTestCase() instanceof CustomTestCase);
-        Assert.assertTrue(getTestCase().getMetaInfo() instanceof CustomTestCaseMetaInfo);
-        Assert.assertEquals(((CustomTestCaseMetaInfo)getTestCase().getMetaInfo()).getDescription(), "Foo bar: F#!$§ed up beyond all repair");
+        Assertions.assertTrue(getTestCase() instanceof CustomTestCase);
+        Assertions.assertTrue(getTestCase().getMetaInfo() instanceof CustomTestCaseMetaInfo);
+        Assertions.assertEquals("Foo bar: F#!$§ed up beyond all repair", ((CustomTestCaseMetaInfo)getTestCase().getMetaInfo()).getDescription());
     }
 
     public static class CustomTestCase extends DefaultTestCase {

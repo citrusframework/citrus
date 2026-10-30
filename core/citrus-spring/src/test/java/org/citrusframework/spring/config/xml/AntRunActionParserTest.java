@@ -17,11 +17,11 @@
 package org.citrusframework.spring.config.xml;
 
 import org.apache.tools.ant.DefaultLogger;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import org.citrusframework.actions.AntRunAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AntRunActionParserTest extends AbstractActionParserTest<AntRunAction> {
 
@@ -31,38 +31,38 @@ public class AntRunActionParserTest extends AbstractActionParserTest<AntRunActio
         assertActionClassAndName(AntRunAction.class, "antrun");
 
         AntRunAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getBuildFilePath(), "classpath:org/citrusframework/spring/actions/build.xml");
-        Assert.assertEquals(action.getTarget(), "sayHello");
-        Assert.assertNull(action.getTargets());
-        Assert.assertEquals(action.getProperties().size(), 0L);
-        Assert.assertNull(action.getPropertyFilePath());
-        Assert.assertNull(action.getBuildListener());
+        Assertions.assertEquals("classpath:org/citrusframework/spring/actions/build.xml", action.getBuildFilePath());
+        Assertions.assertEquals("sayHello", action.getTarget());
+        Assertions.assertNull(action.getTargets());
+        Assertions.assertEquals(0L, action.getProperties().size());
+        Assertions.assertNull(action.getPropertyFilePath());
+        Assertions.assertNull(action.getBuildListener());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getBuildFilePath(), "classpath:org/citrusframework/spring/actions/build.xml");
-        Assert.assertNull(action.getTarget());
-        Assert.assertEquals(action.getTargets(), "sayHello,sayGoodbye");
-        Assert.assertEquals(action.getProperties().size(), 0L);
-        Assert.assertNull(action.getPropertyFilePath());
-        Assert.assertNull(action.getBuildListener());
+        Assertions.assertEquals("classpath:org/citrusframework/spring/actions/build.xml", action.getBuildFilePath());
+        Assertions.assertNull(action.getTarget());
+        Assertions.assertEquals("sayHello,sayGoodbye", action.getTargets());
+        Assertions.assertEquals(0L, action.getProperties().size());
+        Assertions.assertNull(action.getPropertyFilePath());
+        Assertions.assertNull(action.getBuildListener());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getBuildFilePath(), "classpath:org/citrusframework/spring/actions/build.xml");
-        Assert.assertEquals(action.getTarget(), "sayHello");
-        Assert.assertNull(action.getTargets());
-        Assert.assertEquals(action.getProperties().size(), 2L);
-        Assert.assertEquals(action.getProperties().get("welcomeText"), "Hello World!");
-        Assert.assertEquals(action.getProperties().get("goodbyeText"), "Goodbye!");
-        Assert.assertNull(action.getPropertyFilePath());
-        Assert.assertNull(action.getBuildListener());
+        Assertions.assertEquals("classpath:org/citrusframework/spring/actions/build.xml", action.getBuildFilePath());
+        Assertions.assertEquals("sayHello", action.getTarget());
+        Assertions.assertNull(action.getTargets());
+        Assertions.assertEquals(2L, action.getProperties().size());
+        Assertions.assertEquals("Hello World!", action.getProperties().get("welcomeText"));
+        Assertions.assertEquals("Goodbye!", action.getProperties().get("goodbyeText"));
+        Assertions.assertNull(action.getPropertyFilePath());
+        Assertions.assertNull(action.getBuildListener());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getBuildFilePath(), "classpath:org/citrusframework/spring/actions/build.xml");
-        Assert.assertEquals(action.getTarget(), "sayHello");
-        Assert.assertNull(action.getTargets());
-        Assert.assertEquals(action.getProperties().size(), 0L);
-        Assert.assertEquals(action.getPropertyFilePath(), "classpath:org/citrusframework/spring/actions/build.properties");
-        Assert.assertNotNull(action.getBuildListener());
-        Assert.assertEquals(action.getBuildListener().getClass(), DefaultLogger.class);
+        Assertions.assertEquals("classpath:org/citrusframework/spring/actions/build.xml", action.getBuildFilePath());
+        Assertions.assertEquals("sayHello", action.getTarget());
+        Assertions.assertNull(action.getTargets());
+        Assertions.assertEquals(0L, action.getProperties().size());
+        Assertions.assertEquals("classpath:org/citrusframework/spring/actions/build.properties", action.getPropertyFilePath());
+        Assertions.assertNotNull(action.getBuildListener());
+        Assertions.assertEquals(DefaultLogger.class, action.getBuildListener().getClass());
     }
 }

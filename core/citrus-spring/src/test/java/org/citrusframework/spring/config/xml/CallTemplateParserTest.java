@@ -16,13 +16,13 @@
 
 package org.citrusframework.spring.config.xml;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import org.citrusframework.container.Template;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 
 public class CallTemplateParserTest extends AbstractActionParserTest<Template> {
 
@@ -31,22 +31,22 @@ public class CallTemplateParserTest extends AbstractActionParserTest<Template> {
         assertActionCount(2);
 
         Template action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getName(), "call-template:myTemplate");
+        Assertions.assertEquals("call-template:myTemplate", action.getName());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getName(), "call-template:print");
-        Assert.assertEquals(action.getParameter().size(), 2);
-        Assert.assertEquals(action.getParameter().get("text"), "Hello Template");
-        Assert.assertTrue(action.getParameter().get("message").contains("<Text>Hello Template</Text>"));
+        Assertions.assertEquals("call-template:print", action.getName());
+        Assertions.assertEquals(2, action.getParameter().size());
+        Assertions.assertEquals("Hello Template", action.getParameter().get("text"));
+        Assertions.assertTrue(action.getParameter().get("message").contains("<Text>Hello Template</Text>"));
     }
 
     @Test
     public void testCallTemplateParserUnknownTemplate() {
         try {
             createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to unknown template");
+            Assertions.fail("Missing bean creation exception due to unknown template");
         } catch (BeanCreationException e) {
-            Assert.assertTrue(e.getMessage().contains("Could not resolve parent bean definition 'unknownTemplate'"));
+            Assertions.assertTrue(e.getMessage().contains("Could not resolve parent bean definition 'unknownTemplate'"));
         }
     }
 
@@ -54,9 +54,9 @@ public class CallTemplateParserTest extends AbstractActionParserTest<Template> {
     public void testCallTemplateParserInvalidParam() {
         try {
             createApplicationContext("invalid-param");
-            Assert.fail("Missing bean creation exception due to invalid parameter value");
+            Assertions.fail("Missing bean creation exception due to invalid parameter value");
         } catch (BeanDefinitionStoreException e) {
-            Assert.assertTrue(e.getCause().getMessage().contains(
+            Assertions.assertTrue(e.getCause().getMessage().contains(
                     "Please provide either value attribute or value element for parameter"));
         }
     }
