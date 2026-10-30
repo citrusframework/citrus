@@ -19,26 +19,37 @@ package org.citrusframework;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
  * Instance creation manager creates new Citrus instances or always a singleton based on instance creation strategy.
- * Instance creation is thread-safe, so concurrent callers of {@link #getOrDefault()} share one instance.
- * A new instance is published to other threads only after all instance processors have run on it.
+ * <p>
+ * Instance creation is thread-safe: concurrent callers of {@link #getOrDefault()} share one instance.
+ * A new instance is published to other threads only after all instance processors have run on it,
+ * so the creating thread sees the instance while the processors run and every other thread waits for them to finish.
+ * The instance is published even when a processor fails, so a failing processor does not trigger another creation.
+ * <p>
+ * Instance processors run while the manager holds its creation lock. A processor must not wait for another thread
+ * that accesses the manager, such as a thread calling {@link #getOrDefault()}, otherwise both threads block forever.
  */
 public class CitrusInstanceManager {
 
-    /** Singleton */
+    /** Published instance, visible to all threads once its instance processors have run */
     private static volatile Citrus citrus;
 
-    /** Instance being created, visible only to the creating thread while the instance processors run */
-    private static Citrus initializing;
+    /** Instance under creation, visible only to the creating thread while its instance processors run */
+    private static final ThreadLocal<Citrus> initializing = new ThreadLocal<>();
+
+    /** Guards instance creation, replacement and removal */
+    private static final ReentrantLock lock = new ReentrantLock();
 
     /** List of instance resolvers capable of taking part in Citrus instance creation process */
     private static final List<CitrusInstanceProcessor> instanceProcessors = new CopyOnWriteArrayList<>();
 
     /** Strategy decides which instances are created */
-    protected static CitrusInstanceStrategy strategy = CitrusInstanceStrategy.NEW;
+    protected static volatile CitrusInstanceStrategy strategy = CitrusInstanceStrategy.NEW;
 
     /**
      * Add instance processor.
@@ -61,7 +72,7 @@ public class CitrusInstanceManager {
      * such as test listeners and test context factory.
      * @return
      */
-    public static synchronized Citrus newInstance() {
+    public static Citrus newInstance() {
         return newInstance(CitrusContextProvider.lookup());
     }
 
@@ -70,26 +81,15 @@ public class CitrusInstanceManager {
      * @param contextProvider
      * @return
      */
-    public static synchronized Citrus newInstance(CitrusContextProvider contextProvider) {
-        if (strategy.equals(CitrusInstanceStrategy.NEW) || citrus == null) {
-            Citrus created = new Citrus(contextProvider.create());
-            initializing = created;
-            try {
-                instanceProcessors.forEach(processor -> processor.process(created));
-            } finally {
-                initializing = null;
-                citrus = created;
-            }
-        }
-
-        return citrus;
+    public static Citrus newInstance(CitrusContextProvider contextProvider) {
+        return locked(() -> strategy == CitrusInstanceStrategy.NEW || citrus == null ? create(contextProvider) : citrus);
     }
 
     /**
      * Sets the instance creation strategy.
      * @param mode
      */
-    public static synchronized void mode(CitrusInstanceStrategy mode) {
+    public static void mode(CitrusInstanceStrategy mode) {
         strategy = mode;
     }
 
@@ -110,42 +110,26 @@ public class CitrusInstanceManager {
     }
 
     /**
-     * Provide access to the current Citrus instance or create one with the given context provider.
-     * Compound check-then-act sequences on the instance must run via
-     * {@link #runSynchronized(Runnable)} or {@link #supplySynchronized(Supplier)}
-     * instead of synchronizing on {@code CitrusInstanceManager.class} from outside.
+     * Atomically reuses the current Citrus instance when it is reusable, otherwise closes it
+     * and creates a new instance with the given context provider.
+     * @param reusable decides whether the current instance can be reused.
+     * @param contextProvider supplies the context provider for a new instance, only called when an instance is created.
+     * @return the reused or the newly created instance.
      */
-    public static Citrus getOrCreate(Supplier<CitrusContextProvider> contextProvider) {
-        Citrus instance = current();
-        if (instance != null) {
-            return instance;
-        }
+    public static Citrus getOrReplace(Predicate<? super Citrus> reusable,
+                                      Supplier<? extends CitrusContextProvider> contextProvider) {
+        return locked(() -> {
+            Citrus instance = current();
+            if (instance != null) {
+                if (reusable.test(instance)) {
+                    return instance;
+                }
 
-        synchronized (CitrusInstanceManager.class) {
-            if (citrus == null) {
-                newInstance(contextProvider.get());
+                instance.close();
             }
 
-            return citrus;
-        }
-    }
-
-    /**
-     * Runs the given action while holding the manager's instance creation lock.
-     * Use this for check-then-act sequences that must stay atomic with instance creation,
-     * instead of synchronizing on {@code CitrusInstanceManager.class} from outside.
-     */
-    public static synchronized void runSynchronized(Runnable action) {
-        action.run();
-    }
-
-    /**
-     * Calls the given action while holding the manager's instance creation lock and returns its result.
-     * Use this for check-then-act sequences that must stay atomic with instance creation,
-     * instead of synchronizing on {@code CitrusInstanceManager.class} from outside.
-     */
-    public static synchronized <T> T supplySynchronized(Supplier<T> action) {
-        return action.get();
+            return create(contextProvider.get());
+        });
     }
 
     /**
@@ -156,26 +140,67 @@ public class CitrusInstanceManager {
     }
 
     /**
-     * Current instance. The thread creating a new instance sees it while the instance processors run,
-     * all other threads see it once the processors have finished.
+     * Removes current Citrus instance if any.
      */
-    private static Citrus current() {
-        if (Thread.holdsLock(CitrusInstanceManager.class) && initializing != null) {
-            return initializing;
-        }
+    public static void reset() {
+        locked(() -> {
+            if (citrus != null) {
+                citrus.close();
+                DefaultCitrusContextProvider.reset();
+            }
 
-        return citrus;
+            citrus = null;
+            return null;
+        });
     }
 
     /**
-     * Removes current Citrus instance if any.
+     * Current instance or a new one created with the given context provider.
+     * Skips the creation lock once an instance has been published.
      */
-    public static synchronized void reset() {
-        if (citrus != null) {
-            citrus.close();
-            DefaultCitrusContextProvider.reset();
+    static Citrus getOrCreate(Supplier<? extends CitrusContextProvider> contextProvider) {
+        Citrus instance = current();
+        return instance != null ? instance : getOrReplace(existing -> true, contextProvider);
+    }
+
+    /**
+     * Creates a new instance, runs the instance processors on it and publishes it.
+     * Supports nested creation from within an instance processor.
+     */
+    private static Citrus create(CitrusContextProvider contextProvider) {
+        Citrus created = new Citrus(contextProvider.create());
+        Citrus enclosing = initializing.get();
+
+        initializing.set(created);
+        try {
+            instanceProcessors.forEach(processor -> processor.process(created));
+        } finally {
+            if (enclosing != null) {
+                initializing.set(enclosing);
+            } else {
+                initializing.remove();
+            }
+
+            citrus = created;
         }
 
-        citrus = null;
+        return created;
+    }
+
+    /**
+     * The instance under creation for the creating thread, the published instance for all other threads.
+     */
+    private static Citrus current() {
+        Citrus instance = initializing.get();
+        return instance != null ? instance : citrus;
+    }
+
+    private static <T> T locked(Supplier<T> action) {
+        lock.lock();
+        try {
+            return action.get();
+        } finally {
+            lock.unlock();
+        }
     }
 }

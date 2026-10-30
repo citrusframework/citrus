@@ -38,7 +38,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @Isolated("Resets the shared Citrus instance and changes the instance strategy")
 public class CitrusInstanceManagerTest {
@@ -153,17 +155,66 @@ public class CitrusInstanceManagerTest {
     }
 
     @Test
-    public void shouldRunActionsUnderManagerLock() {
-        AtomicBoolean lockedInRunnable = new AtomicBoolean();
-        CitrusInstanceManager.runSynchronized(() ->
-                lockedInRunnable.set(Thread.holdsLock(CitrusInstanceManager.class)));
-        assertThat(lockedInRunnable.get()).isTrue();
+    public void shouldReuseInstanceWhenReusable() {
+        Citrus current = CitrusInstanceManager.newInstance(() -> mock(CitrusContext.class));
+        AtomicInteger created = new AtomicInteger();
 
-        String result = CitrusInstanceManager.supplySynchronized(() -> {
-            assertThat(Thread.holdsLock(CitrusInstanceManager.class)).isTrue();
-            return "done";
+        Citrus result = CitrusInstanceManager.getOrReplace(instance -> true, () -> () -> {
+            created.incrementAndGet();
+            return mock(CitrusContext.class);
         });
-        assertThat(result).isEqualTo("done");
+
+        assertThat(result).isSameAs(current);
+        assertThat(created).hasValue(0);
+    }
+
+    @Test
+    public void shouldCloseAndReplaceInstanceWhenNotReusable() {
+        CitrusContext currentContext = mock(CitrusContext.class);
+        Citrus current = CitrusInstanceManager.newInstance(() -> currentContext);
+
+        Citrus result = CitrusInstanceManager.getOrReplace(instance -> false, () -> () -> mock(CitrusContext.class));
+
+        assertThat(result).isNotSameAs(current);
+        assertThat(CitrusInstanceManager.get()).containsSame(result);
+        verify(currentContext).close();
+    }
+
+    @Test
+    public void shouldCreateInstanceWhenNoneExists() {
+        Citrus result = CitrusInstanceManager.getOrReplace(instance -> false, () -> () -> mock(CitrusContext.class));
+
+        assertThat(CitrusInstanceManager.get()).containsSame(result);
+    }
+
+    @Test
+    public void shouldRestoreEnclosingInstanceAfterNestedCreation() {
+        AtomicBoolean nested = new AtomicBoolean();
+        AtomicReference<Citrus> nestedInstance = new AtomicReference<>();
+        AtomicReference<Citrus> seenAfterNested = new AtomicReference<>();
+        register(instance -> {
+            if (nested.compareAndSet(false, true)) {
+                nestedInstance.set(CitrusInstanceManager.newInstance(() -> mock(CitrusContext.class)));
+                seenAfterNested.set(CitrusInstanceManager.getOrDefault());
+            }
+        });
+
+        Citrus outer = CitrusInstanceManager.newInstance(() -> mock(CitrusContext.class));
+
+        assertThat(nestedInstance.get()).isNotNull().isNotSameAs(outer);
+        assertThat(seenAfterNested.get()).isSameAs(outer);
+        assertThat(CitrusInstanceManager.get()).containsSame(outer);
+    }
+
+    @Test
+    public void shouldPublishInstanceWhenProcessorFails() {
+        register(instance -> {
+            throw new IllegalStateException("processor failed");
+        });
+
+        assertThatThrownBy(() -> CitrusInstanceManager.newInstance(() -> mock(CitrusContext.class)))
+                .isInstanceOf(IllegalStateException.class);
+        assertThat(CitrusInstanceManager.hasInstance()).isTrue();
     }
 
     @Test
