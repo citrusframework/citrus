@@ -17,10 +17,12 @@
 package org.citrusframework.spring.config.xml;
 
 import org.citrusframework.actions.PurgeEndpointAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PurgeEndpointActionParserTest extends AbstractActionParserTest<PurgeEndpointAction> {
 
@@ -30,51 +32,53 @@ public class PurgeEndpointActionParserTest extends AbstractActionParserTest<Purg
         assertActionClassAndName(PurgeEndpointAction.class, "purge-endpoint");
 
         PurgeEndpointAction action = getNextTestActionFromTest();
-        Assert.assertNull(action.getMessageSelector());
-        Assert.assertNotNull(action.getMessageSelectorMap());
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
-        Assert.assertEquals(action.getEndpoints().size(), 0);
-        Assert.assertEquals(action.getEndpointNames().size(), 3);
-        Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
-        Assert.assertEquals(action.getEndpointNames().get(1), "testEndpoint2");
-        Assert.assertEquals(action.getEndpointNames().get(2), "testEndpoint3");
+        Assertions.assertNull(action.getMessageSelector());
+        Assertions.assertNotNull(action.getMessageSelectorMap());
+        Assertions.assertEquals(0, action.getMessageSelectorMap().size());
+        Assertions.assertEquals(0, action.getEndpoints().size());
+        Assertions.assertEquals(3, action.getEndpointNames().size());
+        Assertions.assertEquals("testEndpoint1", action.getEndpointNames().get(0));
+        Assertions.assertEquals("testEndpoint2", action.getEndpointNames().get(1));
+        Assertions.assertEquals("testEndpoint3", action.getEndpointNames().get(2));
 
         action = getNextTestActionFromTest();
-        Assert.assertNull(action.getMessageSelector());
-        Assert.assertNotNull(action.getMessageSelectorMap());
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
-        Assert.assertEquals(action.getEndpoints().size(), 1);
-        Assert.assertEquals(action.getEndpointNames().size(), 3);
-        Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
-        Assert.assertEquals(action.getEndpointNames().get(1), "testEndpoint2");
-        Assert.assertEquals(action.getEndpointNames().get(2), "testEndpoint3");
+        Assertions.assertNull(action.getMessageSelector());
+        Assertions.assertNotNull(action.getMessageSelectorMap());
+        Assertions.assertEquals(0, action.getMessageSelectorMap().size());
+        Assertions.assertEquals(1, action.getEndpoints().size());
+        Assertions.assertEquals(3, action.getEndpointNames().size());
+        Assertions.assertEquals("testEndpoint1", action.getEndpointNames().get(0));
+        Assertions.assertEquals("testEndpoint2", action.getEndpointNames().get(1));
+        Assertions.assertEquals("testEndpoint3", action.getEndpointNames().get(2));
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessageSelector(), "operation = 'sayHello'");
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
-        Assert.assertEquals(action.getEndpoints().size(), 1);
-        Assert.assertEquals(action.getEndpointNames().size(), 1);
-        Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
+        Assertions.assertEquals("operation = 'sayHello'", action.getMessageSelector());
+        Assertions.assertEquals(0, action.getMessageSelectorMap().size());
+        Assertions.assertEquals(1, action.getEndpoints().size());
+        Assertions.assertEquals(1, action.getEndpointNames().size());
+        Assertions.assertEquals("testEndpoint1", action.getEndpointNames().get(0));
 
         action = getNextTestActionFromTest();
-        Assert.assertNull(action.getMessageSelector());
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 2);
-        Assert.assertEquals(action.getMessageSelectorMap().get("operation"), "sayHello");
-        Assert.assertEquals(action.getMessageSelectorMap().get("id"), "12345");
-        Assert.assertEquals(action.getEndpoints().size(), 0);
-        Assert.assertEquals(action.getEndpointNames().size(), 1);
-        Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
+        Assertions.assertNull(action.getMessageSelector());
+        Assertions.assertEquals(2, action.getMessageSelectorMap().size());
+        Assertions.assertEquals("sayHello", action.getMessageSelectorMap().get("operation"));
+        Assertions.assertEquals("12345", action.getMessageSelectorMap().get("id"));
+        Assertions.assertEquals(0, action.getEndpoints().size());
+        Assertions.assertEquals(1, action.getEndpointNames().size());
+        Assertions.assertEquals("testEndpoint1", action.getEndpointNames().get(0));
     }
 
-    @Test(expectedExceptions = BeanDefinitionStoreException.class)
+    @Test
     public void testPurgeEndpointActionParserFailed() {
-        try {
-            createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to empty endpoint attributes");
-        } catch (BeanDefinitionStoreException e) {
-            Assert.assertNotNull(e.getRootCause());
-            Assert.assertTrue(e.getRootCause().getMessage().endsWith("Element 'endpoint' must set one of the attributes 'name' or 'ref'"));
-            throw e;
-        }
+        assertThrows(BeanDefinitionStoreException.class, () -> {
+            try {
+                createApplicationContext("failed");
+                Assertions.fail("Missing bean creation exception due to empty endpoint attributes");
+            } catch (BeanDefinitionStoreException e) {
+                Assertions.assertNotNull(e.getRootCause());
+                Assertions.assertTrue(e.getRootCause().getMessage().endsWith("Element 'endpoint' must set one of the attributes 'name' or 'ref'"));
+                throw e;
+            }
+        });
     }
 }

@@ -17,10 +17,10 @@
 package org.citrusframework.spring.config.xml;
 
 import org.citrusframework.actions.TransformAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.citrusframework.util.StringUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TransformActionParserTest extends AbstractActionParserTest<TransformAction> {
 
@@ -30,19 +30,19 @@ public class TransformActionParserTest extends AbstractActionParserTest<Transfor
         assertActionClassAndName(TransformAction.class, "transform");
 
         TransformAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getTargetVariable(), "result");
-        Assert.assertTrue(StringUtils.hasText(action.getXmlData()));
-        Assert.assertNull(action.getXmlResourcePath());
-        Assert.assertTrue(StringUtils.hasText(action.getXsltData()));
-        Assert.assertNull(action.getXsltResourcePath());
+        Assertions.assertEquals("result", action.getTargetVariable());
+        Assertions.assertTrue(StringUtils.hasText(action.getXmlData()));
+        Assertions.assertNull(action.getXmlResourcePath());
+        Assertions.assertTrue(StringUtils.hasText(action.getXsltData()));
+        Assertions.assertNull(action.getXsltResourcePath());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getTargetVariable(), "result");
-        Assert.assertFalse(StringUtils.hasText(action.getXmlData()));
-        Assert.assertNotNull(action.getXmlResourcePath());
-        Assert.assertEquals(action.getXmlResourcePath(), "classpath:org/citrusframework/spring/actions/transform-source.xml");
-        Assert.assertFalse(StringUtils.hasText(action.getXsltData()));
-        Assert.assertNotNull(action.getXsltResourcePath());
-        Assert.assertEquals(action.getXsltResourcePath(), "classpath:org/citrusframework/spring/actions/transform.xslt");
+        Assertions.assertEquals("result", action.getTargetVariable());
+        Assertions.assertFalse(StringUtils.hasText(action.getXmlData()));
+        Assertions.assertNotNull(action.getXmlResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/spring/actions/transform-source.xml", action.getXmlResourcePath());
+        Assertions.assertFalse(StringUtils.hasText(action.getXsltData()));
+        Assertions.assertNotNull(action.getXsltResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/spring/actions/transform.xslt", action.getXsltResourcePath());
     }
 }

@@ -18,11 +18,11 @@ package org.citrusframework.spring.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.MessageValidatorRegistry;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.0
@@ -33,12 +33,12 @@ public class MessageValidatorRegistryParserTest extends AbstractBeanDefinitionPa
     public void testNamespaceContextParser() {
         Map<String, MessageValidatorRegistry> messageValidators = beanDefinitionContext.getBeansOfType(MessageValidatorRegistry.class);
 
-        Assert.assertEquals(messageValidators.size(), 1L);
+        Assertions.assertEquals(1L, messageValidators.size());
 
         MessageValidatorRegistry messageValidatorBean = messageValidators.values().iterator().next();
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().size(), 3L);
-        Assert.assertEquals(messageValidatorBean.getMessageValidator(DefaultMessageHeaderValidator.class.getName()).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidator("validator1"), beanDefinitionContext.getBean("validator1"));
-        Assert.assertEquals(messageValidatorBean.getMessageValidator("validator2"), beanDefinitionContext.getBean("validator2"));
+        Assertions.assertEquals(3L, messageValidatorBean.getMessageValidators().size());
+        Assertions.assertEquals(DefaultMessageHeaderValidator.class, messageValidatorBean.getMessageValidator(DefaultMessageHeaderValidator.class.getName()).getClass());
+        Assertions.assertEquals(beanDefinitionContext.getBean("validator1"), messageValidatorBean.getMessageValidator("validator1"));
+        Assertions.assertEquals(beanDefinitionContext.getBean("validator2"), messageValidatorBean.getMessageValidator("validator2"));
     }
 }

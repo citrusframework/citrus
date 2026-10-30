@@ -17,19 +17,19 @@
 package org.citrusframework.spring;
 
 import org.citrusframework.CitrusContextProvider;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CitrusSpringContextProviderTest {
 
     @Test
     public void testLookup() {
         CitrusContextProvider provider = CitrusContextProvider.lookup();
-        Assert.assertEquals(provider.getClass(), CitrusSpringContextProvider.class);
+        Assertions.assertEquals(CitrusSpringContextProvider.class, provider.getClass());
     }
 
     @Test
     public void testTestLookup() {
-        Assert.assertTrue(CitrusContextProvider.lookup(CitrusContextProvider.SPRING).isPresent());
+        Assertions.assertTrue(CitrusContextProvider.lookup(CitrusContextProvider.SPRING).isPresent());
     }
 }

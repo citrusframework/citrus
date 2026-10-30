@@ -21,13 +21,15 @@ import java.util.Map;
 import org.citrusframework.spring.BeanDefinitionParserTestSupport;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.spring.variable.GlobalVariablesPropertyLoader;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GlobalVariablesParserTest extends BeanDefinitionParserTestSupport {
 
-    @BeforeClass
+    @BeforeAll
     @Override
     protected void parseBeanDefinitions() {
     }
@@ -38,19 +40,19 @@ public class GlobalVariablesParserTest extends BeanDefinitionParserTestSupport {
         Map<String, GlobalVariables> globalVariables = beanDefinitionContext.getBeansOfType(GlobalVariables.class);
         Map<String, GlobalVariablesPropertyLoader> globalVariablesPropertyLoaders = beanDefinitionContext.getBeansOfType(GlobalVariablesPropertyLoader.class);
 
-        Assert.assertEquals(globalVariables.size(), 1L);
-        Assert.assertEquals(globalVariablesPropertyLoaders.size(), 1L);
+        Assertions.assertEquals(1L, globalVariables.size());
+        Assertions.assertEquals(1L, globalVariablesPropertyLoaders.size());
 
         GlobalVariables globalVariablesBean = globalVariables.values().iterator().next();
-        Assert.assertEquals(globalVariablesBean.getVariables().size(), 4L);
-        Assert.assertEquals(globalVariablesBean.getVariables().get("var1"), "val1");
-        Assert.assertEquals(globalVariablesBean.getVariables().get("var2"), "val2");
-        Assert.assertEquals(globalVariablesBean.getVariables().get("var3"), "val3");
-        Assert.assertEquals(globalVariablesBean.getVariables().get("property.load.test"), "Globale Variable geladen");
+        Assertions.assertEquals(4L, globalVariablesBean.getVariables().size());
+        Assertions.assertEquals("val1", globalVariablesBean.getVariables().get("var1"));
+        Assertions.assertEquals("val2", globalVariablesBean.getVariables().get("var2"));
+        Assertions.assertEquals("val3", globalVariablesBean.getVariables().get("var3"));
+        Assertions.assertEquals("Globale Variable geladen", globalVariablesBean.getVariables().get("property.load.test"));
 
         GlobalVariablesPropertyLoader globalVariablesPropertyLoaderBean = globalVariablesPropertyLoaders.values().iterator().next();
-        Assert.assertEquals(globalVariablesPropertyLoaderBean.getPropertyFiles().size(), 1L);
-        Assert.assertEquals(globalVariablesPropertyLoaderBean.getPropertyFiles().get(0), "classpath:org/citrusframework/spring/variable/loadtest.properties");
+        Assertions.assertEquals(1L, globalVariablesPropertyLoaderBean.getPropertyFiles().size());
+        Assertions.assertEquals("classpath:org/citrusframework/spring/variable/loadtest.properties", globalVariablesPropertyLoaderBean.getPropertyFiles().get(0));
     }
 
     @Test
@@ -58,9 +60,9 @@ public class GlobalVariablesParserTest extends BeanDefinitionParserTestSupport {
         beanDefinitionContext = createApplicationContext("empty");
         Map<String, GlobalVariables> globalVariables = beanDefinitionContext.getBeansOfType(GlobalVariables.class);
 
-        Assert.assertEquals(globalVariables.size(), 1L);
+        Assertions.assertEquals(1L, globalVariables.size());
 
         GlobalVariables globalVariablesBean = globalVariables.values().iterator().next();
-        Assert.assertEquals(globalVariablesBean.getVariables().size(), 0L);
+        Assertions.assertEquals(0L, globalVariablesBean.getVariables().size());
     }
 }

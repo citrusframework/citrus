@@ -16,11 +16,10 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.actions.StopTimeAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StopTimeActionParserTest extends AbstractActionParserTest<StopTimeAction> {
 
@@ -30,11 +29,11 @@ public class StopTimeActionParserTest extends AbstractActionParserTest<StopTimeA
         assertActionClassAndName(StopTimeAction.class, "stop-time");
 
         StopTimeAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getId(), StopTimeAction.DEFAULT_TIMELINE_ID);
-        Assert.assertEquals(action.getSuffix(), StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX);
+        Assertions.assertEquals(StopTimeAction.DEFAULT_TIMELINE_ID, action.getId());
+        Assertions.assertEquals(StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX, action.getSuffix());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getId(), "custom");
-        Assert.assertEquals(action.getSuffix(), "_time");
+        Assertions.assertEquals("custom", action.getId());
+        Assertions.assertEquals("_time", action.getSuffix());
     }
 }

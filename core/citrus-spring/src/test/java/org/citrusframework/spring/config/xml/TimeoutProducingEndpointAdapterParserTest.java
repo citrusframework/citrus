@@ -19,9 +19,9 @@ package org.citrusframework.spring.config.xml;
 import java.util.Map;
 
 import org.citrusframework.base.endpoint.adapter.TimeoutProducingEndpointAdapter;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4
@@ -32,10 +32,10 @@ public class TimeoutProducingEndpointAdapterParserTest extends AbstractBeanDefin
     public void testParseBeanDefinition() {
         Map<String, TimeoutProducingEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(TimeoutProducingEndpointAdapter.class);
 
-        Assert.assertEquals(adapters.size(), 1);
+        Assertions.assertEquals(1, adapters.size());
 
         // 1st endpoint adapter
         TimeoutProducingEndpointAdapter adapter = adapters.get("endpointAdapter");
-        Assert.assertNotNull(adapter);
+        Assertions.assertNotNull(adapter);
     }
 }

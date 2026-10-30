@@ -16,11 +16,10 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.actions.InputAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class InputActionParserTest extends AbstractActionParserTest<InputAction> {
 
@@ -30,23 +29,23 @@ public class InputActionParserTest extends AbstractActionParserTest<InputAction>
         assertActionClassAndName(InputAction.class, "input");
 
         InputAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessage(), "Press return key to continue ...");
-        Assert.assertNull(action.getValidAnswers());
-        Assert.assertEquals(action.getVariable(), "userinput");
+        Assertions.assertEquals("Press return key to continue ...", action.getMessage());
+        Assertions.assertNull(action.getValidAnswers());
+        Assertions.assertEquals("userinput", action.getVariable());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessage(), "Do you want to continue?");
-        Assert.assertNull(action.getValidAnswers());
-        Assert.assertEquals(action.getVariable(), "userinput");
+        Assertions.assertEquals("Do you want to continue?", action.getMessage());
+        Assertions.assertNull(action.getValidAnswers());
+        Assertions.assertEquals("userinput", action.getVariable());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessage(), "Do you want to continue?");
-        Assert.assertEquals(action.getValidAnswers(), "yes/no");
-        Assert.assertEquals(action.getVariable(), "userinput");
+        Assertions.assertEquals("Do you want to continue?", action.getMessage());
+        Assertions.assertEquals("yes/no", action.getValidAnswers());
+        Assertions.assertEquals("userinput", action.getVariable());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessage(), "Do you want to continue?");
-        Assert.assertEquals(action.getValidAnswers(), "y/n");
-        Assert.assertEquals(action.getVariable(), "inputVar");
+        Assertions.assertEquals("Do you want to continue?", action.getMessage());
+        Assertions.assertEquals("y/n", action.getValidAnswers());
+        Assertions.assertEquals("inputVar", action.getVariable());
     }
 }

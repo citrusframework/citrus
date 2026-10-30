@@ -16,14 +16,14 @@
 
 package org.citrusframework.spring.config.xml;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.actions.EchoAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 
 public class ActionParserTest extends AbstractActionParserTest<TestAction> {
 
@@ -31,17 +31,17 @@ public class ActionParserTest extends AbstractActionParserTest<TestAction> {
     public void testActionParser() {
         assertActionCount(1);
 
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "action:echoAction");
+        Assertions.assertEquals(EchoAction.class, getTestCase().getActions().get(0).getClass());
+        Assertions.assertEquals("action:echoAction", getTestCase().getActions().get(0).getName());
     }
 
     @Test
     public void testActionParserBrokenReference() {
         try {
             createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to broken bean reference");
+            Assertions.fail("Missing bean creation exception due to broken bean reference");
         } catch (BeanCreationException e) {
-            Assert.assertTrue(e.getMessage().contains("Could not resolve parent bean definition 'brokenRef'"));
+            Assertions.assertTrue(e.getMessage().contains("Could not resolve parent bean definition 'brokenRef'"));
         }
     }
 
@@ -49,9 +49,9 @@ public class ActionParserTest extends AbstractActionParserTest<TestAction> {
     public void testActionParserMissingReference() {
         try {
             createApplicationContext("missing-ref");
-            Assert.fail("Missing bean creation exception due to missing bean reference");
+            Assertions.fail("Missing bean creation exception due to missing bean reference");
         } catch (BeanDefinitionStoreException e) {
-            Assert.assertEquals(e.getCause().getMessage(), "Must specify proper reference attribute to bean");
+            Assertions.assertEquals("Must specify proper reference attribute to bean", e.getCause().getMessage());
         }
     }
 }

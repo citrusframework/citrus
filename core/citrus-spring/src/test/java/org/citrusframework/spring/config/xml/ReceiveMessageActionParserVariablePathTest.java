@@ -17,13 +17,13 @@
 package org.citrusframework.spring.config.xml;
 
 import org.citrusframework.actions.ReceiveMessageAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.context.path.DynamicPathExpressionValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Regression test for GitHub issue #676.
@@ -40,29 +40,29 @@ public class ReceiveMessageActionParserVariablePathTest extends AbstractActionPa
         assertActionClassAndName(ReceiveMessageAction.class, "receive");
 
         ReceiveMessageAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DynamicPathExpressionValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().get(0) instanceof DynamicPathExpressionValidationContext);
+        Assertions.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
 
         DynamicPathExpressionValidationContext dynamicValidationContext =
                 (DynamicPathExpressionValidationContext) action.getValidationContexts().get(0);
-        Assert.assertEquals(dynamicValidationContext.getExpressions().size(), 1);
-        Assert.assertEquals(dynamicValidationContext.getExpressions().get("${VERSION_PATH}"), "1.0");
-        Assert.assertTrue(dynamicValidationContext.requiresValidator());
+        Assertions.assertEquals(1, dynamicValidationContext.getExpressions().size());
+        Assertions.assertEquals("1.0", dynamicValidationContext.getExpressions().get("${VERSION_PATH}"));
+        Assertions.assertTrue(dynamicValidationContext.requiresValidator());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DynamicPathExpressionValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().get(0) instanceof DynamicPathExpressionValidationContext);
+        Assertions.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
 
         dynamicValidationContext = (DynamicPathExpressionValidationContext) action.getValidationContexts().get(0);
-        Assert.assertEquals(dynamicValidationContext.getExpressions().size(), 1);
-        Assert.assertEquals(dynamicValidationContext.getExpressions().get("${JSON_PATH}"), "1.0");
+        Assertions.assertEquals(1, dynamicValidationContext.getExpressions().size());
+        Assertions.assertEquals("1.0", dynamicValidationContext.getExpressions().get("${JSON_PATH}"));
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XpathMessageValidationContext);
-        Assert.assertFalse(action.getValidationContexts().get(0) instanceof JsonPathMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().get(0) instanceof XpathMessageValidationContext);
+        Assertions.assertFalse(action.getValidationContexts().get(0) instanceof JsonPathMessageValidationContext);
+        Assertions.assertTrue(action.getValidationContexts().get(1) instanceof HeaderValidationContext);
     }
 }

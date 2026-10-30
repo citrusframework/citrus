@@ -21,9 +21,9 @@ import java.util.Map;
 import org.citrusframework.base.endpoint.adapter.RequestDispatchingEndpointAdapter;
 import org.citrusframework.endpoint.adapter.mapping.EndpointAdapterMappingStrategy;
 import org.citrusframework.endpoint.adapter.mapping.MappingKeyExtractor;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class RequestDispatchingEndpointAdapterParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -31,11 +31,11 @@ public class RequestDispatchingEndpointAdapterParserTest extends AbstractBeanDef
     public void testParseBeanDefinition() {
         Map<String, RequestDispatchingEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(RequestDispatchingEndpointAdapter.class);
 
-        Assert.assertEquals(adapters.size(), 1);
+        Assertions.assertEquals(1, adapters.size());
 
         // 1st endpoint adapter
         RequestDispatchingEndpointAdapter adapter = adapters.get("endpointAdapter");
-        Assert.assertEquals(adapter.getMappingKeyExtractor(), beanDefinitionContext.getBean("mappingKeyExtractor", MappingKeyExtractor.class));
-        Assert.assertEquals(adapter.getMappingStrategy(), beanDefinitionContext.getBean("mappingStrategy", EndpointAdapterMappingStrategy.class));
+        Assertions.assertEquals(beanDefinitionContext.getBean("mappingKeyExtractor", MappingKeyExtractor.class), adapter.getMappingKeyExtractor());
+        Assertions.assertEquals(beanDefinitionContext.getBean("mappingStrategy", EndpointAdapterMappingStrategy.class), adapter.getMappingStrategy());
     }
 }

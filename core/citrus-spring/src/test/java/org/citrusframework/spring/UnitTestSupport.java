@@ -16,27 +16,22 @@
 
 package org.citrusframework.spring;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
-import org.citrusframework.Citrus;
-import org.citrusframework.spring.config.CitrusSpringConfig;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
-import org.citrusframework.spring.context.TestContextFactoryBean;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.base.report.HtmlReporter;
 import org.citrusframework.base.report.JUnitReporter;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.citrusframework.spring.context.TestContextFactoryBean;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Reporter;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
 
+@ExtendWith(CitrusSuiteExtension.class)
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-public class UnitTestSupport extends AbstractTestNGUnitTest {
+public class UnitTestSupport extends AbstractUnitTest {
 
     /** Factory bean for test context */
     @Autowired
@@ -48,37 +43,7 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
     @Autowired(required = false)
     private JUnitReporter jUnitReporter;
 
-    /** Citrus instance */
-    protected Citrus citrus;
-
-    @BeforeSuite(alwaysRun = true)
-    @Override
-    public void beforeSuite() throws Exception {
-        super.beforeSuite();
-
-        citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
-        citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-            Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())
-                    .flatMap(method -> Arrays.stream(method.getGroups()))
-                    .collect(Collectors.toSet())
-                    .toArray(new String[]{}));
-    }
-
-    /**
-     * Runs tasks after test suite.
-     */
-    @AfterSuite(alwaysRun = true)
-    public void afterSuite() {
-        if (citrus != null) {
-            citrus.afterSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-                Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())
-                        .flatMap(method -> Arrays.stream(method.getGroups()))
-                        .collect(Collectors.toSet())
-                        .toArray(new String[]{}));
-        }
-    }
-
-    @BeforeMethod
+    @BeforeEach
     @Override
     public void prepareTest() {
         if (htmlReporter != null) {

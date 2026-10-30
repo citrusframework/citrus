@@ -19,9 +19,9 @@ package org.citrusframework.spring.config.xml;
 import java.util.Map;
 
 import org.citrusframework.container.Template;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TemplateParserTest extends AbstractActionParserTest<Template> {
 
@@ -29,18 +29,18 @@ public class TemplateParserTest extends AbstractActionParserTest<Template> {
     public void testActionParser() {
         Map<String, Template> templates = beanDefinitionContext.getBeansOfType(Template.class);
 
-        Assert.assertEquals(templates.size(), 2);
+        Assertions.assertEquals(2, templates.size());
 
         Template template = templates.get("myTemplate");
-        Assert.assertEquals(template.getName(), "template(myTemplate)");
-        Assert.assertEquals(template.getParameter().size(), 0);
-        Assert.assertEquals(template.getActions().size(), 1);
-        Assert.assertTrue(template.isGlobalContext());
+        Assertions.assertEquals("template(myTemplate)", template.getName());
+        Assertions.assertEquals(0, template.getParameter().size());
+        Assertions.assertEquals(1, template.getActions().size());
+        Assertions.assertTrue(template.isGlobalContext());
 
         template = templates.get("my2ndTemplate");
-        Assert.assertEquals(template.getName(), "template(my2ndTemplate)");
-        Assert.assertEquals(template.getParameter().size(), 0);
-        Assert.assertEquals(template.getActions().size(), 2);
-        Assert.assertFalse(template.isGlobalContext());
+        Assertions.assertEquals("template(my2ndTemplate)", template.getName());
+        Assertions.assertEquals(0, template.getParameter().size());
+        Assertions.assertEquals(2, template.getActions().size());
+        Assertions.assertFalse(template.isGlobalContext());
     }
 }

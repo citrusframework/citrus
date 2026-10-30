@@ -16,11 +16,10 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.container.Sequence;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SequenceParserTest extends AbstractActionParserTest<Sequence> {
 
@@ -30,6 +29,6 @@ public class SequenceParserTest extends AbstractActionParserTest<Sequence> {
         assertActionClassAndName(Sequence.class, "sequential");
 
         Sequence action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getActionCount(), 2);
+        Assertions.assertEquals(2, action.getActionCount());
     }
 }
