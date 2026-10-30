@@ -21,50 +21,70 @@ import java.util.Map;
 
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.cucumber.container.StepTemplate;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
+ * Loads the step template definitions without the TestNG Spring test support,
+ * following the JUnit Jupiter migration of the Cucumber backend tests.
+ *
  * @since 2.6
  */
-public class StepTemplateParserTest extends AbstractBeanDefinitionParserTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class StepTemplateParserTest {
+
+    /** Application context holding bean definitions parsed */
+    protected ApplicationContext beanDefinitionContext;
+
+    @BeforeAll
+    void parseBeanDefinitions() {
+        beanDefinitionContext = new ClassPathXmlApplicationContext(
+                new String[]{
+                        "component-lifecycle-context.xml",
+                        StepTemplateParserTest.class.getPackage().getName().replace('.', '/')
+                                + "/" + StepTemplateParserTest.class.getSimpleName() + "-context.xml"},
+                true);
+    }
 
     @Test
     public void testStepTemplateParser() {
         Map<String, StepTemplate> templates = beanDefinitionContext.getBeansOfType(StepTemplate.class);
 
-        Assert.assertEquals(templates.size(), 4);
+        Assertions.assertEquals(4, templates.size());
         Iterator<StepTemplate> it = templates.values().iterator();
 
         // 1st template
         StepTemplate template = it.next();
-        Assert.assertEquals(template.getPattern().toString(), "^My name is (.*)$");
-        Assert.assertEquals(template.getParameterNames().size(), 1L);
-        Assert.assertEquals(template.getParameterNames().get(0), "username");
-        Assert.assertEquals(template.getActions().size(), 1L);
-        Assert.assertEquals(((EchoAction)template.getActions().get(0)).getMessage(), "${username}");
+        Assertions.assertEquals("^My name is (.*)$", template.getPattern().toString());
+        Assertions.assertEquals(1L, template.getParameterNames().size());
+        Assertions.assertEquals("username", template.getParameterNames().get(0));
+        Assertions.assertEquals(1L, template.getActions().size());
+        Assertions.assertEquals("${username}", ((EchoAction)template.getActions().get(0)).getMessage());
 
         // 2nd template
         template = it.next();
-        Assert.assertEquals(template.getPattern().toString(), "^I say hello.*$");
-        Assert.assertEquals(template.getParameterNames().size(), 0L);
-        Assert.assertEquals(template.getActions().size(), 1L);
-        Assert.assertEquals(((EchoAction)template.getActions().get(0)).getMessage(), "Hello, my name is ${username}!");
+        Assertions.assertEquals("^I say hello.*$", template.getPattern().toString());
+        Assertions.assertEquals(0L, template.getParameterNames().size());
+        Assertions.assertEquals(1L, template.getActions().size());
+        Assertions.assertEquals("Hello, my name is ${username}!", ((EchoAction)template.getActions().get(0)).getMessage());
 
         // 3rd template
         template = it.next();
-        Assert.assertEquals(template.getPattern().toString(), "^I say goodbye.*$");
-        Assert.assertEquals(template.getParameterNames().size(), 0L);
-        Assert.assertEquals(template.getActions().size(), 1L);
-        Assert.assertEquals(((EchoAction)template.getActions().get(0)).getMessage(), "Goodbye from ${username}!");
+        Assertions.assertEquals("^I say goodbye.*$", template.getPattern().toString());
+        Assertions.assertEquals(0L, template.getParameterNames().size());
+        Assertions.assertEquals(1L, template.getActions().size());
+        Assertions.assertEquals("Goodbye from ${username}!", ((EchoAction)template.getActions().get(0)).getMessage());
 
         // 4th template
         template = it.next();
-        Assert.assertEquals(template.getPattern().toString(), "^the service should return: \"([^\"]*)\"$");
-        Assert.assertEquals(template.getParameterNames().size(), 1L);
-        Assert.assertEquals(template.getParameterNames().get(0), "body");
-        Assert.assertEquals(template.getActions().size(), 1L);
-        Assert.assertEquals(((EchoAction)template.getActions().get(0)).getMessage(), "You just said: ${body}");
+        Assertions.assertEquals("^the service should return: \"([^\"]*)\"$", template.getPattern().toString());
+        Assertions.assertEquals(1L, template.getParameterNames().size());
+        Assertions.assertEquals("body", template.getParameterNames().get(0));
+        Assertions.assertEquals(1L, template.getActions().size());
+        Assertions.assertEquals("You just said: ${body}", ((EchoAction)template.getActions().get(0)).getMessage());
     }
 }

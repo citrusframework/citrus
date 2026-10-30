@@ -22,8 +22,8 @@ import org.citrusframework.TestSource;
 import org.citrusframework.cucumber.integration.echo.EchoFeatureIT;
 import org.citrusframework.api.main.TestEngine;
 import org.citrusframework.api.main.TestRunConfiguration;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CucumberTestEngineTest {
 
@@ -49,6 +49,6 @@ public class CucumberTestEngineTest {
     public void shouldResolveCucumberEngine() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setEngine("cucumber");
-        Assert.assertEquals(TestEngine.lookup(configuration).getClass(), CucumberTestEngine.class);
+        Assertions.assertEquals(CucumberTestEngine.class, TestEngine.lookup(configuration).getClass());
     }
 }

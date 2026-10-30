@@ -17,20 +17,23 @@
 package org.citrusframework.cucumber.backend.spring;
 
 import org.citrusframework.CitrusInstanceManager;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * @since 2.6
  */
 public class CitrusSpringObjectFactoryTest {
 
-    @BeforeMethod
+    @BeforeEach
     public void resetCitrus() {
-        // Need to reset Citrus here because other tests with Spring test support might have initialized a
-        // Citrus instance before and this would be closed by the SpringObjectFactory leading to errors in those tests
-        CitrusInstanceManager.reset();
+        // Drop the Citrus instance without closing it: other tests with Spring test support share the
+        // cached Spring application context, and closing it here would poison the Spring test context
+        // cache (the next context load fails with "LifecycleProcessor not initialized"). Detaching is
+        // enough, otherwise the Spring object factory would shut down the shared instance and context.
+        ReflectionTestUtils.setField(CitrusInstanceManager.class, "citrus", null);
     }
 
     @Test
@@ -41,8 +44,8 @@ public class CitrusSpringObjectFactoryTest {
         // Scenario 1
         factory.start();
         final SpringRunnerSteps steps = factory.getInstance(SpringRunnerSteps.class);
-        Assert.assertNotNull(steps.getTestRunner());
-        Assert.assertNotNull(steps.getTestContext());
+        Assertions.assertNotNull(steps.getTestRunner());
+        Assertions.assertNotNull(steps.getTestContext());
         factory.stop();
     }
 }

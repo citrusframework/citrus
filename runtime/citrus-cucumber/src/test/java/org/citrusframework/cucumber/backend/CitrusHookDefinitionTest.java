@@ -21,9 +21,8 @@ import java.util.Optional;
 
 import io.cucumber.core.backend.HookDefinition.HookType;
 import io.cucumber.core.backend.Lookup;
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CitrusHookDefinitionTest {
 
@@ -38,20 +37,20 @@ public class CitrusHookDefinitionTest {
     public void shouldExposeBeforeHookMetadata() throws NoSuchMethodException {
         CitrusHookDefinition hook = new CitrusHookDefinition(method("before"), "", 10000, lookup, HookType.BEFORE);
 
-        assertEquals(hook.getName(), Optional.of("HookMethods.before"));
-        assertEquals(hook.getHookType(), Optional.of(HookType.BEFORE));
-        assertEquals(hook.getOrder(), 10000);
-        assertEquals(hook.getTagExpression(), "");
+        Assertions.assertEquals(Optional.of("HookMethods.before"), hook.getName());
+        Assertions.assertEquals(Optional.of(HookType.BEFORE), hook.getHookType());
+        Assertions.assertEquals(10000, hook.getOrder());
+        Assertions.assertEquals("", hook.getTagExpression());
     }
 
     @Test
     public void shouldExposeAfterHookMetadata() throws NoSuchMethodException {
         CitrusHookDefinition hook = new CitrusHookDefinition(method("after"), "", 10000, lookup, HookType.AFTER);
 
-        assertEquals(hook.getName(), Optional.of("HookMethods.after"));
-        assertEquals(hook.getHookType(), Optional.of(HookType.AFTER));
-        assertEquals(hook.getOrder(), 10000);
-        assertEquals(hook.getTagExpression(), "");
+        Assertions.assertEquals(Optional.of("HookMethods.after"), hook.getName());
+        Assertions.assertEquals(Optional.of(HookType.AFTER), hook.getHookType());
+        Assertions.assertEquals(10000, hook.getOrder());
+        Assertions.assertEquals("", hook.getTagExpression());
     }
 
     @Test
@@ -59,18 +58,18 @@ public class CitrusHookDefinitionTest {
         CitrusHookDefinition hook = new CitrusHookDefinition(method("before"), "", 10000, lookup,
                 "Citrus lifecycle before", HookType.BEFORE);
 
-        assertEquals(hook.getName(), Optional.of("Citrus lifecycle before"));
-        assertEquals(hook.getHookType(), Optional.of(HookType.BEFORE));
+        Assertions.assertEquals(Optional.of("Citrus lifecycle before"), hook.getName());
+        Assertions.assertEquals(Optional.of(HookType.BEFORE), hook.getHookType());
     }
 
     @Test
     public void shouldKeepEmptyMetadataForLegacyConstructor() throws NoSuchMethodException {
         CitrusHookDefinition hook = new CitrusHookDefinition(method("before"), "", 10000, lookup);
 
-        assertEquals(hook.getName(), Optional.empty());
-        assertEquals(hook.getHookType(), Optional.empty());
-        assertEquals(hook.getOrder(), 10000);
-        assertEquals(hook.getTagExpression(), "");
+        Assertions.assertEquals(Optional.empty(), hook.getName());
+        Assertions.assertEquals(Optional.empty(), hook.getHookType());
+        Assertions.assertEquals(10000, hook.getOrder());
+        Assertions.assertEquals("", hook.getTagExpression());
     }
 
     private static Method method(String name) throws NoSuchMethodException {
