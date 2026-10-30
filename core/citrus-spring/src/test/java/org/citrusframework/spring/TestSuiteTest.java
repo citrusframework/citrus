@@ -37,25 +37,27 @@ import org.citrusframework.report.TestReporters;
 import org.citrusframework.report.TestSuiteListener;
 import org.citrusframework.report.TestSuiteListeners;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class TestSuiteTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class TestSuiteTest extends AbstractUnitTest {
 
     @Mock
     private TestSuiteListeners testSuiteListeners;
@@ -73,16 +75,14 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
     private BeforeSuite beforeActions;
     private AfterSuite afterActions;
 
-    @BeforeMethod
+    @BeforeEach
     public void resetMocks() {
-        MockitoAnnotations.openMocks(this);
-
         testSuiteListeners = new TestSuiteListeners();
         testSuiteListeners.addTestSuiteListener(testSuiteListener);
         beforeActions = new SequenceBeforeSuite.Builder().build();
         afterActions = new SequenceAfterSuite.Builder().build();
 
-        when(testContextFactory.getObject()).thenReturn(context);
+        Mockito.lenient().when(testContextFactory.getObject()).thenReturn(context);
 
         when(applicationContextMock.getBean(FunctionRegistry.class)).thenThrow(NoSuchBeanDefinitionException.class);
         when(applicationContextMock.getBean(ValidationMatcherRegistry.class)).thenThrow(NoSuchBeanDefinitionException.class);
@@ -129,7 +129,7 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
             return;
         }
 
-        Assert.fail("Missing CitrusRuntimeException due to failing before suite action");
+        Assertions.fail("Missing CitrusRuntimeException due to failing before suite action");
     }
 
     @Test
@@ -152,7 +152,7 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
             return;
         }
 
-        Assert.fail("Missing CitrusRuntimeException due to failing before suite action");
+        Assertions.fail("Missing CitrusRuntimeException due to failing before suite action");
     }
 
     @Test
@@ -180,7 +180,7 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
             return;
         }
 
-        Assert.fail("Missing CitrusRuntimeException due to failing after suite action");
+        Assertions.fail("Missing CitrusRuntimeException due to failing after suite action");
     }
 
     @Test
@@ -205,11 +205,11 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
 
             beforeTestActions.execute(context);
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed!");
+            Assertions.assertEquals("Failed!", e.getMessage());
             verify(actionMock).execute(any(TestContext.class));
             return;
         }
 
-        Assert.fail("Missing CitrusRuntimeException due to failing before suite action");
+        Assertions.fail("Missing CitrusRuntimeException due to failing before suite action");
     }
 }

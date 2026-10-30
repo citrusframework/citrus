@@ -16,11 +16,10 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.actions.TraceVariablesAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TraceVariablesActionParserTest extends AbstractActionParserTest<TraceVariablesAction> {
 
@@ -30,10 +29,10 @@ public class TraceVariablesActionParserTest extends AbstractActionParserTest<Tra
         assertActionClassAndName(TraceVariablesAction.class, "trace");
 
         TraceVariablesAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getVariableNames().size(), 0);
+        Assertions.assertEquals(0, action.getVariableNames().size());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getVariableNames().size(), 1);
-        Assert.assertEquals(action.getVariableNames().get(0), "foo");
+        Assertions.assertEquals(1, action.getVariableNames().size());
+        Assertions.assertEquals("foo", action.getVariableNames().get(0));
     }
 }

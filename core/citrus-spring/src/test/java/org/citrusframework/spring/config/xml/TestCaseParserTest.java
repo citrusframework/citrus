@@ -20,9 +20,9 @@ import java.util.Map;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.EchoAction;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.4
@@ -36,9 +36,9 @@ public class TestCaseParserTest extends AbstractActionParserTest<EchoAction> {
 
         TestCase test = getTestCase();
         Map<String, Object> variables = test.getVariableDefinitions();
-        Assert.assertEquals(variables.size(), 3);
-        Assert.assertEquals(variables.get("text"), "Hello");
-        Assert.assertEquals(variables.get("sum"), "15");
-        Assert.assertEquals(variables.get("embeddedXml"), "<embeddedXml>works!</embeddedXml>");
+        Assertions.assertEquals(3, variables.size());
+        Assertions.assertEquals("Hello", variables.get("text"));
+        Assertions.assertEquals("15", variables.get("sum"));
+        Assertions.assertEquals("<embeddedXml>works!</embeddedXml>", variables.get("embeddedXml"));
     }
 }

@@ -17,13 +17,13 @@
 package org.citrusframework.spring.config.xml;
 
 import org.citrusframework.container.RepeatUntilTrue;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class RepeatUntilTrueParserTest extends AbstractActionParserTest<RepeatUntilTrue> {
 
@@ -33,24 +33,24 @@ public class RepeatUntilTrueParserTest extends AbstractActionParserTest<RepeatUn
         assertActionClassAndName(RepeatUntilTrue.class, "repeat-until-true");
 
         RepeatUntilTrue action = getNextTestActionFromTest();
-        assertEquals(action.getCondition(), "i lt 3");
-        assertEquals(action.getIndexName(), "i");
-        assertEquals(action.getStart(), 1);
-        assertEquals(action.getActionCount(), 1);
+        assertEquals("i lt 3", action.getCondition());
+        assertEquals("i", action.getIndexName());
+        assertEquals(1, action.getStart());
+        assertEquals(1, action.getActionCount());
         assertNull(action.getTimeout());
 
         action = getNextTestActionFromTest();
-        assertEquals(action.getCondition(), "index lt= 2");
-        assertEquals(action.getIndexName(), "index");
-        assertEquals(action.getStart(), 1);
-        assertEquals(action.getActionCount(), 1);
+        assertEquals("index lt= 2", action.getCondition());
+        assertEquals("index", action.getIndexName());
+        assertEquals(1, action.getStart());
+        assertEquals(1, action.getActionCount());
         assertNull(action.getTimeout());
 
         action = getNextTestActionFromTest();
-        assertEquals(action.getCondition(), "i lt= 10");
-        assertEquals(action.getIndexName(), "i");
-        assertEquals(action.getStart(), 1);
-        assertEquals(action.getActionCount(), 2);
-        assertEquals(action.getTimeout(), Duration.ofSeconds(2));
+        assertEquals("i lt= 10", action.getCondition());
+        assertEquals("i", action.getIndexName());
+        assertEquals(1, action.getStart());
+        assertEquals(2, action.getActionCount());
+        assertEquals(Duration.ofSeconds(2), action.getTimeout());
     }
 }

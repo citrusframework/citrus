@@ -16,11 +16,10 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AssertParserTest extends AbstractActionParserTest<org.citrusframework.container.Assert> {
 
@@ -30,8 +29,8 @@ public class AssertParserTest extends AbstractActionParserTest<org.citrusframewo
         assertActionClassAndName(org.citrusframework.container.Assert.class, "assert");
 
         org.citrusframework.container.Assert action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getDescription(), "This action asserts an exception in nested actions");
-        Assert.assertEquals(action.getMessage(), "This went wrong");
-        Assert.assertEquals(action.getException(), CitrusRuntimeException.class);
+        Assertions.assertEquals("This action asserts an exception in nested actions", action.getDescription());
+        Assertions.assertEquals("This went wrong", action.getMessage());
+        Assertions.assertEquals(CitrusRuntimeException.class, action.getException());
     }
 }

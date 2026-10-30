@@ -21,17 +21,17 @@ import java.util.Map;
 import org.citrusframework.spring.actions.CustomTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.SequenceBeforeTest;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.0
  */
 public class SequenceBeforeTestParserTest extends AbstractBeanDefinitionParserTest {
 
-    @BeforeClass
+    @BeforeAll
     @Override
     protected void parseBeanDefinitions() {
     }
@@ -41,95 +41,95 @@ public class SequenceBeforeTestParserTest extends AbstractBeanDefinitionParserTe
         beanDefinitionContext = createApplicationContext("context");
         Map<String, SequenceBeforeTest> container = beanDefinitionContext.getBeansOfType(SequenceBeforeTest.class);
 
-        Assert.assertEquals(container.size(), 5L);
+        Assertions.assertEquals(5L, container.size());
 
         SequenceBeforeTest sequenceBefore = container.get("beforeTest");
-        Assert.assertEquals(sequenceBefore.getName(), "beforeTest");
-        Assert.assertNull(sequenceBefore.getNamePattern());
-        Assert.assertNull(sequenceBefore.getPackageNamePattern());
-        Assert.assertEquals(sequenceBefore.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceBefore.getActionCount(), 3L);
+        Assertions.assertEquals("beforeTest", sequenceBefore.getName());
+        Assertions.assertNull(sequenceBefore.getNamePattern());
+        Assertions.assertNull(sequenceBefore.getPackageNamePattern());
+        Assertions.assertEquals(0L, sequenceBefore.getTestGroups().size());
+        Assertions.assertEquals(3L, sequenceBefore.getActionCount());
 
-        Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(sequenceBefore.getActions().get(1).getClass(), CustomTestAction.class);
-        Assert.assertEquals(sequenceBefore.getActions().get(2).getClass(), EchoAction.class);
+        Assertions.assertEquals(EchoAction.class, sequenceBefore.getActions().get(0).getClass());
+        Assertions.assertEquals(CustomTestAction.class, sequenceBefore.getActions().get(1).getClass());
+        Assertions.assertEquals(EchoAction.class, sequenceBefore.getActions().get(2).getClass());
 
-        Assert.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework", null));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", null));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Interface_OK_Test", "org.citrusframework", new String[]{"unit"}));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Database_Failed_Test", "org.citrusframework.database", null));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework", null));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", null));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Interface_OK_Test", "org.citrusframework", new String[]{"unit"}));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Database_Failed_Test", "org.citrusframework.database", null));
 
         sequenceBefore = container.get("beforeTest2");
-        Assert.assertEquals(sequenceBefore.getName(), "beforeTest2");
+        Assertions.assertEquals("beforeTest2", sequenceBefore.getName());
 
-        Assert.assertEquals(sequenceBefore.getNamePattern(), "*OK_Test");
-        Assert.assertNull(sequenceBefore.getPackageNamePattern());
-        Assert.assertEquals(sequenceBefore.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceBefore.getActionCount(), 1L);
+        Assertions.assertEquals("*OK_Test", sequenceBefore.getNamePattern());
+        Assertions.assertNull(sequenceBefore.getPackageNamePattern());
+        Assertions.assertEquals(0L, sequenceBefore.getTestGroups().size());
+        Assertions.assertEquals(1L, sequenceBefore.getActionCount());
 
-        Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
+        Assertions.assertEquals(EchoAction.class, sequenceBefore.getActions().get(0).getClass());
 
-        Assert.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework", null));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", null));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Interface_OK_Test", "org.citrusframework", new String[]{"unit"}));
-        Assert.assertFalse(sequenceBefore.shouldExecute("Database_Failed_Test", "org.citrusframework.database", null));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework", null));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", null));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Interface_OK_Test", "org.citrusframework", new String[]{"unit"}));
+        Assertions.assertFalse(sequenceBefore.shouldExecute("Database_Failed_Test", "org.citrusframework.database", null));
 
         sequenceBefore = container.get("beforeTest3");
-        Assert.assertEquals(sequenceBefore.getName(), "beforeTest3");
-        Assert.assertNull(sequenceBefore.getNamePattern());
-        Assert.assertEquals(sequenceBefore.getPackageNamePattern(), "org.citrusframework.database");
-        Assert.assertEquals(sequenceBefore.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceBefore.getActionCount(), 1L);
+        Assertions.assertEquals("beforeTest3", sequenceBefore.getName());
+        Assertions.assertNull(sequenceBefore.getNamePattern());
+        Assertions.assertEquals("org.citrusframework.database", sequenceBefore.getPackageNamePattern());
+        Assertions.assertEquals(0L, sequenceBefore.getTestGroups().size());
+        Assertions.assertEquals(1L, sequenceBefore.getActionCount());
 
-        Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
+        Assertions.assertEquals(EchoAction.class, sequenceBefore.getActions().get(0).getClass());
 
-        Assert.assertFalse(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework", null));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", null));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Interface_OK_Test", "org.citrusframework.database", new String[]{"unit"}));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Database_Failed_Test", "org.citrusframework.database", null));
+        Assertions.assertFalse(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework", null));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", null));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Interface_OK_Test", "org.citrusframework.database", new String[]{"unit"}));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Database_Failed_Test", "org.citrusframework.database", null));
 
         sequenceBefore.execute(context);
 
         sequenceBefore = container.get("beforeTest4");
-        Assert.assertEquals(sequenceBefore.getName(), "beforeTest4");
-        Assert.assertEquals(sequenceBefore.getNamePattern(), "*OK_Test");
-        Assert.assertEquals(sequenceBefore.getPackageNamePattern(), "org.citrusframework.database");
-        Assert.assertEquals(sequenceBefore.getTestGroups().size(), 2L);
-        Assert.assertEquals(sequenceBefore.getActionCount(), 1L);
+        Assertions.assertEquals("beforeTest4", sequenceBefore.getName());
+        Assertions.assertEquals("*OK_Test", sequenceBefore.getNamePattern());
+        Assertions.assertEquals("org.citrusframework.database", sequenceBefore.getPackageNamePattern());
+        Assertions.assertEquals(2L, sequenceBefore.getTestGroups().size());
+        Assertions.assertEquals(1L, sequenceBefore.getActionCount());
 
-        Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
+        Assertions.assertEquals(EchoAction.class, sequenceBefore.getActions().get(0).getClass());
 
-        Assert.assertFalse(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework", null));
-        Assert.assertFalse(sequenceBefore.shouldExecute("Database_Failed_Test", "org.citrusframework.database", null));
-        Assert.assertFalse(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", null));
-        Assert.assertFalse(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", new String[]{}));
-        Assert.assertFalse(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework", new String[]{"unit"}));
-        Assert.assertFalse(sequenceBefore.shouldExecute("Database_Failed_Test", "org.citrusframework.database", new String[]{"unit"}));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", new String[]{"unit"}));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Interface_OK_Test", "org.citrusframework.database", new String[]{"e2e"}));
-        Assert.assertTrue(sequenceBefore.shouldExecute("OK_Test", "org.citrusframework.database", new String[]{"unit"}));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework.database", new String[]{"other", "unit", "e2e"}));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework.database", new String[]{"e2e"}));
-        Assert.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework.database", new String[]{"other", "unit", "e2e"}));
+        Assertions.assertFalse(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework", null));
+        Assertions.assertFalse(sequenceBefore.shouldExecute("Database_Failed_Test", "org.citrusframework.database", null));
+        Assertions.assertFalse(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", null));
+        Assertions.assertFalse(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", new String[]{}));
+        Assertions.assertFalse(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework", new String[]{"unit"}));
+        Assertions.assertFalse(sequenceBefore.shouldExecute("Database_Failed_Test", "org.citrusframework.database", new String[]{"unit"}));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Database_OK_Test", "org.citrusframework.database", new String[]{"unit"}));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Interface_OK_Test", "org.citrusframework.database", new String[]{"e2e"}));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("OK_Test", "org.citrusframework.database", new String[]{"unit"}));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework.database", new String[]{"other", "unit", "e2e"}));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework.database", new String[]{"e2e"}));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework.database", new String[]{"other", "unit", "e2e"}));
 
         sequenceBefore.execute(context);
 
         sequenceBefore = container.get("beforeTest5");
-        Assert.assertEquals(sequenceBefore.getName(), "beforeTest5");
-        Assert.assertNull(sequenceBefore.getNamePattern());
-        Assert.assertNull(sequenceBefore.getPackageNamePattern());
-        Assert.assertEquals(sequenceBefore.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceBefore.getEnv().size(), 0L);
-        Assert.assertEquals(sequenceBefore.getSystemProperties().size(), 1L);
-        Assert.assertEquals(sequenceBefore.getActionCount(), 1L);
+        Assertions.assertEquals("beforeTest5", sequenceBefore.getName());
+        Assertions.assertNull(sequenceBefore.getNamePattern());
+        Assertions.assertNull(sequenceBefore.getPackageNamePattern());
+        Assertions.assertEquals(0L, sequenceBefore.getTestGroups().size());
+        Assertions.assertEquals(0L, sequenceBefore.getEnv().size());
+        Assertions.assertEquals(1L, sequenceBefore.getSystemProperties().size());
+        Assertions.assertEquals(1L, sequenceBefore.getActionCount());
 
-        Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
+        Assertions.assertEquals(EchoAction.class, sequenceBefore.getActions().get(0).getClass());
 
-        Assert.assertFalse(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework", null));
+        Assertions.assertFalse(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework", null));
         System.setProperty("before-test", "false");
-        Assert.assertFalse(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework", null));
+        Assertions.assertFalse(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework", null));
         System.setProperty("before-test", "true");
-        Assert.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework", null));
+        Assertions.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "org.citrusframework", null));
 
         sequenceBefore.execute(context);
     }

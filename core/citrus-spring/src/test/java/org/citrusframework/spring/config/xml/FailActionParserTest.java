@@ -16,11 +16,10 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.actions.FailAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FailActionParserTest extends AbstractActionParserTest<FailAction> {
 
@@ -30,9 +29,9 @@ public class FailActionParserTest extends AbstractActionParserTest<FailAction> {
         assertActionClassAndName(FailAction.class, "fail");
 
         FailAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessage(), "Something went wrong");
+        Assertions.assertEquals("Something went wrong", action.getMessage());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessage(), "Generated error to interrupt test execution");
+        Assertions.assertEquals("Generated error to interrupt test execution", action.getMessage());
     }
 }

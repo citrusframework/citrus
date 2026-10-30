@@ -19,9 +19,9 @@ package org.citrusframework.spring.config.xml;
 import java.util.Map;
 
 import org.citrusframework.base.endpoint.adapter.StaticResponseEndpointAdapter;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4
@@ -32,16 +32,16 @@ public class StaticResponseEndpointAdapterParserTest extends AbstractBeanDefinit
     public void testParseBeanDefinition() {
         Map<String, StaticResponseEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(StaticResponseEndpointAdapter.class);
 
-        Assert.assertEquals(adapters.size(), 2);
+        Assertions.assertEquals(2, adapters.size());
 
         // 1st endpoint adapter
         StaticResponseEndpointAdapter adapter = adapters.get("endpointAdapter1");
-        Assert.assertEquals(adapter.getMessagePayload().replaceAll("\\s", ""), "<TestMessage><Text>Hello!</Text></TestMessage>");
-        Assert.assertEquals(adapter.getMessageHeader().get("Operation"), "sayHello");
+        Assertions.assertEquals("<TestMessage><Text>Hello!</Text></TestMessage>", adapter.getMessagePayload().replaceAll("\\s", ""));
+        Assertions.assertEquals("sayHello", adapter.getMessageHeader().get("Operation"));
 
         adapter = adapters.get("endpointAdapter2");
-        Assert.assertEquals(adapter.getMessagePayload(), "");
-        Assert.assertEquals(adapter.getMessagePayloadResource(), "classpath:org/citrusframework/spring/response-data.xml");
-        Assert.assertEquals(adapter.getMessageHeader().get("Operation"), "sayHello");
+        Assertions.assertEquals("", adapter.getMessagePayload());
+        Assertions.assertEquals("classpath:org/citrusframework/spring/response-data.xml", adapter.getMessagePayloadResource());
+        Assertions.assertEquals("sayHello", adapter.getMessageHeader().get("Operation"));
     }
 }

@@ -16,11 +16,10 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.container.Conditional;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.2
@@ -34,6 +33,6 @@ public class ConditionalParserTest extends AbstractActionParserTest<Conditional>
         this.assertActionClassAndName(Conditional.class, "conditional");
 
         final Conditional action = this.getNextTestActionFromTest();
-        Assert.assertEquals(action.getActionCount(), 2);
+        Assertions.assertEquals(2, action.getActionCount());
     }
 }

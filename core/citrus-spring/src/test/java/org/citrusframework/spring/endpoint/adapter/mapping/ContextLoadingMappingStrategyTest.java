@@ -17,9 +17,9 @@
 package org.citrusframework.spring.endpoint.adapter.mapping;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @since 1.4
@@ -31,14 +31,14 @@ public class ContextLoadingMappingStrategyTest {
         ContextLoadingMappingStrategy mappingStrategy = new ContextLoadingMappingStrategy();
         mappingStrategy.setContextConfigLocation("classpath:org/citrusframework/spring/endpoint/adapter-mapping-context.xml");
 
-        Assert.assertNotNull(mappingStrategy.getEndpointAdapter("emptyResponseEndpointAdapter"));
-        Assert.assertNotNull(mappingStrategy.getEndpointAdapter("staticResponseEndpointAdapter"));
+        Assertions.assertNotNull(mappingStrategy.getEndpointAdapter("emptyResponseEndpointAdapter"));
+        Assertions.assertNotNull(mappingStrategy.getEndpointAdapter("staticResponseEndpointAdapter"));
 
         try {
             mappingStrategy.getEndpointAdapter("Unknown");
-            Assert.fail("Missing exception due to unknown mapping key");
+            Assertions.fail("Missing exception due to unknown mapping key");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
+            Assertions.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
         }
     }
 }

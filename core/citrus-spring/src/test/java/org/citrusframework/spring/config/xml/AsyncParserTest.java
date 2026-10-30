@@ -18,9 +18,9 @@ package org.citrusframework.spring.config.xml;
 
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Async;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AsyncParserTest extends AbstractActionParserTest<Async> {
 
@@ -30,15 +30,15 @@ public class AsyncParserTest extends AbstractActionParserTest<Async> {
         assertActionClassAndName(Async.class, "async");
 
         Async action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getActionCount(), 2L);
-        Assert.assertEquals(action.getSuccessActions().size(), 0L);
-        Assert.assertEquals(action.getErrorActions().size(), 0L);
+        Assertions.assertEquals(2L, action.getActionCount());
+        Assertions.assertEquals(0L, action.getSuccessActions().size());
+        Assertions.assertEquals(0L, action.getErrorActions().size());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getActionCount(), 1L);
-        Assert.assertEquals(action.getSuccessActions().size(), 1L);
-        Assert.assertEquals(((EchoAction)action.getSuccessActions().get(0)).getMessage(), "Success!");
-        Assert.assertEquals(action.getErrorActions().size(), 1L);
-        Assert.assertEquals(((EchoAction)action.getErrorActions().get(0)).getMessage(), "Failed!");
+        Assertions.assertEquals(1L, action.getActionCount());
+        Assertions.assertEquals(1L, action.getSuccessActions().size());
+        Assertions.assertEquals("Success!", ((EchoAction)action.getSuccessActions().get(0)).getMessage());
+        Assertions.assertEquals(1L, action.getErrorActions().size());
+        Assertions.assertEquals("Failed!", ((EchoAction)action.getErrorActions().get(0)).getMessage());
     }
 }

@@ -24,17 +24,17 @@ import org.citrusframework.functions.FunctionParameterHelper;
 import org.citrusframework.base.functions.core.ConcatFunction;
 import org.citrusframework.base.functions.core.RandomNumberFunction;
 import org.citrusframework.base.functions.core.RandomStringFunction;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.0
  */
 public class FunctionLibraryParserTest extends AbstractBeanDefinitionParserTest {
 
-    @BeforeClass
+    @BeforeAll
     @Override
     protected void parseBeanDefinitions() {
     }
@@ -44,25 +44,25 @@ public class FunctionLibraryParserTest extends AbstractBeanDefinitionParserTest 
         beanDefinitionContext = createApplicationContext("context");
         Map<String, FunctionLibrary> functionLibraries = beanDefinitionContext.getBeansOfType(FunctionLibrary.class);
 
-        Assert.assertEquals(functionLibraries.size(), 2L);
+        Assertions.assertEquals(2L, functionLibraries.size());
 
         FunctionLibrary functionLibraryBean = functionLibraries.get("functionLib");
-        Assert.assertEquals(functionLibraryBean.getName(), "functionLib");
-        Assert.assertEquals(functionLibraryBean.getPrefix(), "foo");
-        Assert.assertEquals(functionLibraryBean.getMembers().size(), 3L);
-        Assert.assertEquals(functionLibraryBean.getMembers().get("randomNr").getClass(), RandomNumberFunction.class);
-        Assert.assertEquals(functionLibraryBean.getMembers().get("randomStr").getClass(), RandomStringFunction.class);
-        Assert.assertEquals(functionLibraryBean.getMembers().get("custom").getClass(), CustomFunction.class);
+        Assertions.assertEquals("functionLib", functionLibraryBean.getName());
+        Assertions.assertEquals("foo", functionLibraryBean.getPrefix());
+        Assertions.assertEquals(3L, functionLibraryBean.getMembers().size());
+        Assertions.assertEquals(RandomNumberFunction.class, functionLibraryBean.getMembers().get("randomNr").getClass());
+        Assertions.assertEquals(RandomStringFunction.class, functionLibraryBean.getMembers().get("randomStr").getClass());
+        Assertions.assertEquals(CustomFunction.class, functionLibraryBean.getMembers().get("custom").getClass());
 
-        Assert.assertEquals(functionLibraryBean.getMembers().get("custom").execute(FunctionParameterHelper.getParameterList("Christoph"), context), "Hello Christoph!");
+        Assertions.assertEquals("Hello Christoph!", functionLibraryBean.getMembers().get("custom").execute(FunctionParameterHelper.getParameterList("Christoph"), context));
 
         functionLibraryBean = functionLibraries.get("functionLib2");
-        Assert.assertEquals(functionLibraryBean.getName(), "functionLib2");
-        Assert.assertEquals(functionLibraryBean.getPrefix(), "bar");
-        Assert.assertEquals(functionLibraryBean.getMembers().size(), 2L);
-        Assert.assertEquals(functionLibraryBean.getMembers().get("concat").getClass(), ConcatFunction.class);
-        Assert.assertEquals(functionLibraryBean.getMembers().get("custom").getClass(), CustomFunction.class);
+        Assertions.assertEquals("functionLib2", functionLibraryBean.getName());
+        Assertions.assertEquals("bar", functionLibraryBean.getPrefix());
+        Assertions.assertEquals(2L, functionLibraryBean.getMembers().size());
+        Assertions.assertEquals(ConcatFunction.class, functionLibraryBean.getMembers().get("concat").getClass());
+        Assertions.assertEquals(CustomFunction.class, functionLibraryBean.getMembers().get("custom").getClass());
 
-        Assert.assertEquals(functionLibraryBean.getMembers().get("custom").execute(FunctionParameterHelper.getParameterList("Citrus"), context), "Hello Citrus!");
+        Assertions.assertEquals("Hello Citrus!", functionLibraryBean.getMembers().get("custom").execute(FunctionParameterHelper.getParameterList("Citrus"), context));
     }
 }

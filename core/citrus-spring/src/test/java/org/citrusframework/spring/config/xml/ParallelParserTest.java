@@ -16,12 +16,11 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Parallel;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ParallelParserTest extends AbstractActionParserTest<Parallel> {
 
@@ -31,15 +30,15 @@ public class ParallelParserTest extends AbstractActionParserTest<Parallel> {
         assertActionClassAndName(Parallel.class, "parallel");
 
         Parallel action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getActionCount(), 2);
-        Assert.assertEquals(action.getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(action.getActions().get(1).getClass(), EchoAction.class);
+        Assertions.assertEquals(2, action.getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getActions().get(0).getClass());
+        Assertions.assertEquals(EchoAction.class, action.getActions().get(1).getClass());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getActionCount(), 3);
-        Assert.assertEquals(action.getActions().get(0).getClass(), Parallel.class);
-        Assert.assertEquals(((Parallel)action.getActions().get(0)).getActionCount(), 2);
-        Assert.assertEquals(action.getActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(action.getActions().get(2).getClass(), EchoAction.class);
+        Assertions.assertEquals(3, action.getActionCount());
+        Assertions.assertEquals(Parallel.class, action.getActions().get(0).getClass());
+        Assertions.assertEquals(2, ((Parallel)action.getActions().get(0)).getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getActions().get(1).getClass());
+        Assertions.assertEquals(EchoAction.class, action.getActions().get(2).getClass());
     }
 }

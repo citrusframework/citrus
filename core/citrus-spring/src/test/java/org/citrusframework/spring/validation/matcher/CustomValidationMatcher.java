@@ -22,9 +22,9 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.Assert;
 
 /**
  * @since 2.0
@@ -37,6 +37,6 @@ public class CustomValidationMatcher implements ValidationMatcher {
 
     @Override
     public void validate(String fieldName, String value, List<String> control, TestContext context) throws ValidationException {
-        Assert.assertNotNull(endpoint);
+        Assertions.assertNotNull(endpoint);
     }
 }

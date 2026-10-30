@@ -18,9 +18,9 @@ package org.citrusframework.spring.config.xml;
 
 import org.citrusframework.actions.StopServerAction;
 import org.citrusframework.server.Server;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.2
@@ -33,12 +33,12 @@ public class StopServerActionParserTest extends AbstractActionParserTest<StopSer
         assertActionClassAndName(StopServerAction.class, "stop-server");
 
         StopServerAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getServers().size(), 1L);
-        Assert.assertEquals(action.getServers().get(0), beanDefinitionContext.getBean("myServer", Server.class));
+        Assertions.assertEquals(1L, action.getServers().size());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myServer", Server.class), action.getServers().get(0));
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getServers().size(), 2L);
-        Assert.assertEquals(action.getServers().get(0), beanDefinitionContext.getBean("myFooServer", Server.class));
-        Assert.assertEquals(action.getServers().get(1), beanDefinitionContext.getBean("myBarServer", Server.class));
+        Assertions.assertEquals(2L, action.getServers().size());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myFooServer", Server.class), action.getServers().get(0));
+        Assertions.assertEquals(beanDefinitionContext.getBean("myBarServer", Server.class), action.getServers().get(1));
     }
 }

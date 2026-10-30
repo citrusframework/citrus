@@ -17,12 +17,12 @@
 package org.citrusframework.spring.config.xml;
 
 import org.citrusframework.endpoint.Endpoint;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import org.citrusframework.actions.ReceiveTimeoutAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 
 public class ReceiveTimeoutActionParserTest extends AbstractActionParserTest<ReceiveTimeoutAction> {
 
@@ -32,38 +32,38 @@ public class ReceiveTimeoutActionParserTest extends AbstractActionParserTest<Rec
         assertActionClassAndName(ReceiveTimeoutAction.class, "expect-timeout:myMessageEndpoint");
 
         ReceiveTimeoutAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getTimeout(), 1000L);
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
-        Assert.assertNull(action.getEndpointUri());
-        Assert.assertNull(action.getMessageSelector());
+        Assertions.assertEquals(1000L, action.getTimeout());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class), action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
+        Assertions.assertNull(action.getMessageSelector());
 
         action = getNextTestActionFromTest();
-        Assert.assertNull(action.getEndpoint());
-        Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
+        Assertions.assertNull(action.getEndpoint());
+        Assertions.assertEquals("channel:myMessageEndpoint", action.getEndpointUri());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getTimeout(), 10000L);
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
-        Assert.assertNull(action.getEndpointUri());
-        Assert.assertEquals(action.getMessageSelector(), "operation='Test'");
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 0L);
+        Assertions.assertEquals(10000L, action.getTimeout());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class), action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
+        Assertions.assertEquals("operation='Test'", action.getMessageSelector());
+        Assertions.assertEquals(0L, action.getMessageSelectorMap().size());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getTimeout(), 10000L);
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
-        Assert.assertNull(action.getEndpointUri());
-        Assert.assertNull(action.getMessageSelector());
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 1L);
-        Assert.assertEquals(action.getMessageSelectorMap().get("operation"), "Test");
+        Assertions.assertEquals(10000L, action.getTimeout());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class), action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
+        Assertions.assertNull(action.getMessageSelector());
+        Assertions.assertEquals(1L, action.getMessageSelectorMap().size());
+        Assertions.assertEquals("Test", action.getMessageSelectorMap().get("operation"));
     }
 
     @Test
     public void testEmptyEndpointReferenceTemplate() {
         try {
             createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to missing endpoint reference");
+            Assertions.fail("Missing bean creation exception due to missing endpoint reference");
         } catch (BeanDefinitionStoreException e) {
-            Assert.assertTrue(e.getCause().getMessage().startsWith("Missing proper message endpoint reference"));
+            Assertions.assertTrue(e.getCause().getMessage().startsWith("Missing proper message endpoint reference"));
         }
     }
 }

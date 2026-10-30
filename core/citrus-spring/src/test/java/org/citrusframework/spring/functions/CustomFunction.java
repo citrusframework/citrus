@@ -21,9 +21,9 @@ import java.util.List;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.functions.Function;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.Assert;
 
 /**
  * @since 2.0
@@ -36,7 +36,7 @@ public class CustomFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        Assert.assertNotNull(endpoint);
+        Assertions.assertNotNull(endpoint);
 
         return String.format("Hello %s!", parameterList.get(0));
     }

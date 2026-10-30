@@ -16,15 +16,15 @@
 
 package org.citrusframework.spring.config.xml;
 
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.spring.validation.matcher.CustomValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
 import org.citrusframework.base.validation.matcher.core.EndsWithValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.IsNumberValidationMatcher;
 import org.citrusframework.base.validation.matcher.core.StartsWithValidationMatcher;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -35,7 +35,7 @@ import static java.util.Collections.singletonList;
  */
 public class ValidationMatcherLibraryParserTest extends AbstractBeanDefinitionParserTest {
 
-    @BeforeClass
+    @BeforeAll
     @Override
     protected void parseBeanDefinitions() {
     }
@@ -45,24 +45,24 @@ public class ValidationMatcherLibraryParserTest extends AbstractBeanDefinitionPa
         beanDefinitionContext = createApplicationContext("context");
         Map<String, ValidationMatcherLibrary> matcherLibraries = beanDefinitionContext.getBeansOfType(ValidationMatcherLibrary.class);
 
-        Assert.assertEquals(matcherLibraries.size(), 2L);
+        Assertions.assertEquals(2L, matcherLibraries.size());
 
         ValidationMatcherLibrary matcherLibraryBean = matcherLibraries.get("matcherLib");
-        Assert.assertEquals(matcherLibraryBean.getName(), "matcherLib");
-        Assert.assertEquals(matcherLibraryBean.getPrefix(), "foo");
-        Assert.assertEquals(matcherLibraryBean.getMembers().size(), 3L);
-        Assert.assertEquals(matcherLibraryBean.getMembers().get("start").getClass(), StartsWithValidationMatcher.class);
-        Assert.assertEquals(matcherLibraryBean.getMembers().get("end").getClass(), EndsWithValidationMatcher.class);
-        Assert.assertEquals(matcherLibraryBean.getMembers().get("custom").getClass(), CustomValidationMatcher.class);
+        Assertions.assertEquals("matcherLib", matcherLibraryBean.getName());
+        Assertions.assertEquals("foo", matcherLibraryBean.getPrefix());
+        Assertions.assertEquals(3L, matcherLibraryBean.getMembers().size());
+        Assertions.assertEquals(StartsWithValidationMatcher.class, matcherLibraryBean.getMembers().get("start").getClass());
+        Assertions.assertEquals(EndsWithValidationMatcher.class, matcherLibraryBean.getMembers().get("end").getClass());
+        Assertions.assertEquals(CustomValidationMatcher.class, matcherLibraryBean.getMembers().get("custom").getClass());
 
         matcherLibraryBean.getMembers().get("custom").validate("field", "Hello Citrus!", singletonList("Hello Citrus!"), context);
 
         matcherLibraryBean = matcherLibraries.get("matcherLib2");
-        Assert.assertEquals(matcherLibraryBean.getName(), "matcherLib2");
-        Assert.assertEquals(matcherLibraryBean.getPrefix(), "bar");
-        Assert.assertEquals(matcherLibraryBean.getMembers().size(), 2L);
-        Assert.assertEquals(matcherLibraryBean.getMembers().get("isNumber").getClass(), IsNumberValidationMatcher.class);
-        Assert.assertEquals(matcherLibraryBean.getMembers().get("custom").getClass(), CustomValidationMatcher.class);
+        Assertions.assertEquals("matcherLib2", matcherLibraryBean.getName());
+        Assertions.assertEquals("bar", matcherLibraryBean.getPrefix());
+        Assertions.assertEquals(2L, matcherLibraryBean.getMembers().size());
+        Assertions.assertEquals(IsNumberValidationMatcher.class, matcherLibraryBean.getMembers().get("isNumber").getClass());
+        Assertions.assertEquals(CustomValidationMatcher.class, matcherLibraryBean.getMembers().get("custom").getClass());
 
         matcherLibraryBean.getMembers().get("custom").validate("field", "Hello Citrus!", singletonList("Hello Citrus!"), context);
     }

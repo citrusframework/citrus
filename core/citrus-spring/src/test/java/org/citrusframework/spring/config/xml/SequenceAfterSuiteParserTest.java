@@ -22,17 +22,17 @@ import org.citrusframework.spring.actions.CustomTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.SleepAction;
 import org.citrusframework.container.SequenceAfterSuite;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.0
  */
 public class SequenceAfterSuiteParserTest extends AbstractBeanDefinitionParserTest {
 
-    @BeforeClass
+    @BeforeAll
     @Override
     protected void parseBeanDefinitions() {
     }
@@ -42,62 +42,62 @@ public class SequenceAfterSuiteParserTest extends AbstractBeanDefinitionParserTe
         beanDefinitionContext = createApplicationContext("context");
         Map<String, SequenceAfterSuite> container = beanDefinitionContext.getBeansOfType(SequenceAfterSuite.class);
 
-        Assert.assertEquals(container.size(), 3L);
+        Assertions.assertEquals(3L, container.size());
 
         SequenceAfterSuite sequenceAfter = container.get("afterSuite");
-        Assert.assertEquals(sequenceAfter.getName(), "afterSuite");
-        Assert.assertEquals(sequenceAfter.getSuiteNames().size(), 0L);
-        Assert.assertEquals(sequenceAfter.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceAfter.getActionCount(), 3L);
+        Assertions.assertEquals("afterSuite", sequenceAfter.getName());
+        Assertions.assertEquals(0L, sequenceAfter.getSuiteNames().size());
+        Assertions.assertEquals(0L, sequenceAfter.getTestGroups().size());
+        Assertions.assertEquals(3L, sequenceAfter.getActionCount());
 
-        Assert.assertEquals(sequenceAfter.getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(sequenceAfter.getActions().get(1).getClass(), CustomTestAction.class);
-        Assert.assertEquals(sequenceAfter.getActions().get(2).getClass(), EchoAction.class);
+        Assertions.assertEquals(EchoAction.class, sequenceAfter.getActions().get(0).getClass());
+        Assertions.assertEquals(CustomTestAction.class, sequenceAfter.getActions().get(1).getClass());
+        Assertions.assertEquals(EchoAction.class, sequenceAfter.getActions().get(2).getClass());
 
-        Assert.assertTrue(sequenceAfter.shouldExecute("", null));
-        Assert.assertTrue(sequenceAfter.shouldExecute("suiteA", null));
-        Assert.assertTrue(sequenceAfter.shouldExecute("suiteB", null));
-        Assert.assertTrue(sequenceAfter.shouldExecute("suiteZ", new String[] {"unit"}));
+        Assertions.assertTrue(sequenceAfter.shouldExecute("", null));
+        Assertions.assertTrue(sequenceAfter.shouldExecute("suiteA", null));
+        Assertions.assertTrue(sequenceAfter.shouldExecute("suiteB", null));
+        Assertions.assertTrue(sequenceAfter.shouldExecute("suiteZ", new String[] {"unit"}));
 
         sequenceAfter.execute(context);
 
         sequenceAfter = container.get("afterSuite2");
-        Assert.assertEquals(sequenceAfter.getName(), "afterSuite2");
-        Assert.assertEquals(sequenceAfter.getSuiteNames().size(), 2L);
-        Assert.assertEquals(sequenceAfter.getTestGroups().size(), 2L);
-        Assert.assertEquals(sequenceAfter.getActionCount(), 1L);
+        Assertions.assertEquals("afterSuite2", sequenceAfter.getName());
+        Assertions.assertEquals(2L, sequenceAfter.getSuiteNames().size());
+        Assertions.assertEquals(2L, sequenceAfter.getTestGroups().size());
+        Assertions.assertEquals(1L, sequenceAfter.getActionCount());
 
-        Assert.assertFalse(sequenceAfter.shouldExecute("", null));
-        Assert.assertFalse(sequenceAfter.shouldExecute("suiteA", null));
-        Assert.assertFalse(sequenceAfter.shouldExecute("suiteB", null));
-        Assert.assertFalse(sequenceAfter.shouldExecute("suiteZ", null));
-        Assert.assertFalse(sequenceAfter.shouldExecute("suiteZ", new String[]{}));
-        Assert.assertFalse(sequenceAfter.shouldExecute("suiteZ", new String[]{"unit"}));
-        Assert.assertFalse(sequenceAfter.shouldExecute("suiteZ", new String[]{"e2e"}));
-        Assert.assertFalse(sequenceAfter.shouldExecute("suiteA", new String[]{"other"}));
-        Assert.assertTrue(sequenceAfter.shouldExecute("suiteA", new String[]{"unit"}));
-        Assert.assertTrue(sequenceAfter.shouldExecute("suiteB", new String[]{"other", "unit", "e2e"}));
-        Assert.assertTrue(sequenceAfter.shouldExecute("suiteA", new String[] {"e2e"}));
-        Assert.assertTrue(sequenceAfter.shouldExecute("suiteB", new String[] {"other", "unit", "e2e"}));
+        Assertions.assertFalse(sequenceAfter.shouldExecute("", null));
+        Assertions.assertFalse(sequenceAfter.shouldExecute("suiteA", null));
+        Assertions.assertFalse(sequenceAfter.shouldExecute("suiteB", null));
+        Assertions.assertFalse(sequenceAfter.shouldExecute("suiteZ", null));
+        Assertions.assertFalse(sequenceAfter.shouldExecute("suiteZ", new String[]{}));
+        Assertions.assertFalse(sequenceAfter.shouldExecute("suiteZ", new String[]{"unit"}));
+        Assertions.assertFalse(sequenceAfter.shouldExecute("suiteZ", new String[]{"e2e"}));
+        Assertions.assertFalse(sequenceAfter.shouldExecute("suiteA", new String[]{"other"}));
+        Assertions.assertTrue(sequenceAfter.shouldExecute("suiteA", new String[]{"unit"}));
+        Assertions.assertTrue(sequenceAfter.shouldExecute("suiteB", new String[]{"other", "unit", "e2e"}));
+        Assertions.assertTrue(sequenceAfter.shouldExecute("suiteA", new String[] {"e2e"}));
+        Assertions.assertTrue(sequenceAfter.shouldExecute("suiteB", new String[] {"other", "unit", "e2e"}));
 
-        Assert.assertEquals(sequenceAfter.getActions().get(0).getClass(), SleepAction.class);
+        Assertions.assertEquals(SleepAction.class, sequenceAfter.getActions().get(0).getClass());
 
         sequenceAfter.execute(context);
 
         sequenceAfter = container.get("afterSuite3");
-        Assert.assertEquals(sequenceAfter.getName(), "afterSuite3");
-        Assert.assertEquals(sequenceAfter.getSuiteNames().size(), 0L);
-        Assert.assertEquals(sequenceAfter.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceAfter.getEnv().size(), 0L);
-        Assert.assertEquals(sequenceAfter.getSystemProperties().size(), 1L);
-        Assert.assertEquals(sequenceAfter.getActionCount(), 1L);
+        Assertions.assertEquals("afterSuite3", sequenceAfter.getName());
+        Assertions.assertEquals(0L, sequenceAfter.getSuiteNames().size());
+        Assertions.assertEquals(0L, sequenceAfter.getTestGroups().size());
+        Assertions.assertEquals(0L, sequenceAfter.getEnv().size());
+        Assertions.assertEquals(1L, sequenceAfter.getSystemProperties().size());
+        Assertions.assertEquals(1L, sequenceAfter.getActionCount());
 
-        Assert.assertFalse(sequenceAfter.shouldExecute("suiteA", null));
+        Assertions.assertFalse(sequenceAfter.shouldExecute("suiteA", null));
         System.setProperty("after-suite", "false");
-        Assert.assertFalse(sequenceAfter.shouldExecute("suiteA", null));
+        Assertions.assertFalse(sequenceAfter.shouldExecute("suiteA", null));
         System.setProperty("after-suite", "true");
-        Assert.assertTrue(sequenceAfter.shouldExecute("suiteA", null));
-        Assert.assertEquals(sequenceAfter.getActions().get(0).getClass(), SleepAction.class);
+        Assertions.assertTrue(sequenceAfter.shouldExecute("suiteA", null));
+        Assertions.assertEquals(SleepAction.class, sequenceAfter.getActions().get(0).getClass());
 
         sequenceAfter.execute(context);
     }

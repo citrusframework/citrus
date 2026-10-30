@@ -19,18 +19,18 @@ package org.citrusframework.spring.util;
 import java.util.Map;
 
 import org.citrusframework.util.TypeConverter;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TypeConverterTest {
 
     @Test
     public void testLookup() {
         Map<String, TypeConverter> converters = TypeConverter.lookup();
-        Assert.assertEquals(converters.size(), 1L);
-        Assert.assertEquals(converters.get(TypeConverter.SPRING).getClass(), SpringBeanTypeConverter.class);
-        Assert.assertEquals(converters.get(TypeConverter.SPRING), TypeConverter.lookupDefault());
+        Assertions.assertEquals(1L, converters.size());
+        Assertions.assertEquals(SpringBeanTypeConverter.class, converters.get(TypeConverter.SPRING).getClass());
+        Assertions.assertEquals(TypeConverter.lookupDefault(), converters.get(TypeConverter.SPRING));
 
-        Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.DEFAULT));
+        Assertions.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.DEFAULT));
     }
 }

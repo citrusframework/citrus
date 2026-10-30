@@ -20,9 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileUrlResource;
-import org.testng.annotations.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;

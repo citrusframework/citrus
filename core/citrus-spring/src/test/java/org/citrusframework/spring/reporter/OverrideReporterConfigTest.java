@@ -20,11 +20,11 @@ import org.citrusframework.spring.UnitTestSupport;
 import org.citrusframework.base.report.HtmlReporter;
 import org.citrusframework.base.report.JUnitReporter;
 import org.citrusframework.report.LoggingReporter;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_HTML_REPORTER;
 import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_JUNIT_REPORTER;
@@ -35,17 +35,17 @@ public class OverrideReporterConfigTest extends UnitTestSupport {
 
     @Test
     public void testOverridesLoggingReporter() {
-        Assert.assertTrue(applicationContext.getBean(CITRUS_LOGGING_REPORTER) instanceof OverrideLoggingReporter);
+        Assertions.assertTrue(applicationContext.getBean(CITRUS_LOGGING_REPORTER) instanceof OverrideLoggingReporter);
     }
 
     @Test
     public void testOverridesJunitReporter() {
-        Assert.assertTrue(applicationContext.getBean(CITRUS_JUNIT_REPORTER) instanceof OverrideJUnitReporter);
+        Assertions.assertTrue(applicationContext.getBean(CITRUS_JUNIT_REPORTER) instanceof OverrideJUnitReporter);
     }
 
     @Test
     public void testOverridesHtmlReporter() {
-        Assert.assertTrue(applicationContext.getBean(CITRUS_HTML_REPORTER) instanceof OverrideHtmlReporter);
+        Assertions.assertTrue(applicationContext.getBean(CITRUS_HTML_REPORTER) instanceof OverrideHtmlReporter);
     }
 
     @Configuration

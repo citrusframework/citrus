@@ -21,26 +21,26 @@ import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_JUNIT_RE
 import static org.citrusframework.spring.reporter.ReporterConfig.CITRUS_LOGGING_REPORTER;
 
 import org.citrusframework.spring.UnitTestSupport;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.test.context.TestPropertySource;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 @TestPropertySource(value = "classpath:org/citrusframework/spring/reporter/default-logger-disabled.properties")
 public class ReporterConfigDisabledTest extends UnitTestSupport {
 
     @Test
     public void testDefaultLoggingReporter() {
-        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_LOGGING_REPORTER));
+        Assertions.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_LOGGING_REPORTER));
     }
 
     @Test
     public void testDefaultJunitReporter() {
-        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_JUNIT_REPORTER));
+        Assertions.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_JUNIT_REPORTER));
     }
 
     @Test
     public void testDefaultHtmlReporter() {
-        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_HTML_REPORTER));
+        Assertions.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_HTML_REPORTER));
     }
 }

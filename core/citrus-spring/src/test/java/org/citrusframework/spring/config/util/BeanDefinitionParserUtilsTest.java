@@ -16,13 +16,13 @@
 
 package org.citrusframework.spring.config.util;
 
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
-public class BeanDefinitionParserUtilsTest extends AbstractTestNGUnitTest {
+public class BeanDefinitionParserUtilsTest extends AbstractUnitTest {
 
     @Test
     public void testSetPropertyReference() {
@@ -30,9 +30,9 @@ public class BeanDefinitionParserUtilsTest extends AbstractTestNGUnitTest {
 
         BeanDefinitionParserUtils.setPropertyReference(builder, "beanref", "propertyname");
 
-        Assert.assertTrue(builder.getBeanDefinition().getPropertyValues().contains("propertyname"));
-        Assert.assertEquals(builder.getBeanDefinition().getPropertyValues().getPropertyValue("propertyname").getValue().getClass(), RuntimeBeanReference.class);
-        Assert.assertEquals(((RuntimeBeanReference)builder.getBeanDefinition().getPropertyValues().getPropertyValue("propertyname").getValue()).getBeanName(), "beanref");
+        Assertions.assertTrue(builder.getBeanDefinition().getPropertyValues().contains("propertyname"));
+        Assertions.assertEquals(RuntimeBeanReference.class, builder.getBeanDefinition().getPropertyValues().getPropertyValue("propertyname").getValue().getClass());
+        Assertions.assertEquals("beanref", ((RuntimeBeanReference)builder.getBeanDefinition().getPropertyValues().getPropertyValue("propertyname").getValue()).getBeanName());
     }
 
     @Test
@@ -41,8 +41,8 @@ public class BeanDefinitionParserUtilsTest extends AbstractTestNGUnitTest {
 
         BeanDefinitionParserUtils.setPropertyValue(builder, "propertyvalue", "propertyname");
 
-        Assert.assertTrue(builder.getBeanDefinition().getPropertyValues().contains("propertyname"));
-        Assert.assertEquals(builder.getBeanDefinition().getPropertyValues().getPropertyValue("propertyname").getValue(), "propertyvalue");
+        Assertions.assertTrue(builder.getBeanDefinition().getPropertyValues().contains("propertyname"));
+        Assertions.assertEquals("propertyvalue", builder.getBeanDefinition().getPropertyValues().getPropertyValue("propertyname").getValue());
     }
 
     @Test
@@ -51,9 +51,9 @@ public class BeanDefinitionParserUtilsTest extends AbstractTestNGUnitTest {
 
         BeanDefinitionParserUtils.addConstructorArgReference(builder, "beanref");
 
-        Assert.assertEquals(builder.getBeanDefinition().getConstructorArgumentValues().getArgumentCount(), 1);
-        Assert.assertEquals(builder.getBeanDefinition().getConstructorArgumentValues().getArgumentValue(0, String.class).getValue().getClass(), RuntimeBeanReference.class);
-        Assert.assertEquals(((RuntimeBeanReference)builder.getBeanDefinition().getConstructorArgumentValues().getArgumentValue(0, String.class).getValue()).getBeanName(), "beanref");
+        Assertions.assertEquals(1, builder.getBeanDefinition().getConstructorArgumentValues().getArgumentCount());
+        Assertions.assertEquals(RuntimeBeanReference.class, builder.getBeanDefinition().getConstructorArgumentValues().getArgumentValue(0, String.class).getValue().getClass());
+        Assertions.assertEquals("beanref", ((RuntimeBeanReference)builder.getBeanDefinition().getConstructorArgumentValues().getArgumentValue(0, String.class).getValue()).getBeanName());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class BeanDefinitionParserUtilsTest extends AbstractTestNGUnitTest {
 
         BeanDefinitionParserUtils.setPropertyReference(builder, null, "propertyname");
 
-        Assert.assertFalse(builder.getBeanDefinition().getPropertyValues().contains("propertyname"));
+        Assertions.assertFalse(builder.getBeanDefinition().getPropertyValues().contains("propertyname"));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class BeanDefinitionParserUtilsTest extends AbstractTestNGUnitTest {
 
         BeanDefinitionParserUtils.setPropertyValue(builder, null, "propertyname");
 
-        Assert.assertFalse(builder.getBeanDefinition().getPropertyValues().contains("propertyname"));
+        Assertions.assertFalse(builder.getBeanDefinition().getPropertyValues().contains("propertyname"));
     }
 
     @Test
@@ -80,6 +80,6 @@ public class BeanDefinitionParserUtilsTest extends AbstractTestNGUnitTest {
 
         BeanDefinitionParserUtils.addConstructorArgReference(builder, null);
 
-        Assert.assertEquals(builder.getBeanDefinition().getConstructorArgumentValues().getArgumentCount(), 0);
+        Assertions.assertEquals(0, builder.getBeanDefinition().getConstructorArgumentValues().getArgumentCount());
     }
 }

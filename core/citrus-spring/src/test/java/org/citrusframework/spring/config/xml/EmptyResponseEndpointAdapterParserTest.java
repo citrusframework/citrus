@@ -19,9 +19,9 @@ package org.citrusframework.spring.config.xml;
 import java.util.Map;
 
 import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4
@@ -32,10 +32,10 @@ public class EmptyResponseEndpointAdapterParserTest extends AbstractBeanDefiniti
     public void testParseBeanDefinition() {
         Map<String, EmptyResponseEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(EmptyResponseEndpointAdapter.class);
 
-        Assert.assertEquals(adapters.size(), 1);
+        Assertions.assertEquals(1, adapters.size());
 
         // 1st endpoint adapter
         EmptyResponseEndpointAdapter adapter = adapters.get("endpointAdapter");
-        Assert.assertNotNull(adapter);
+        Assertions.assertNotNull(adapter);
     }
 }

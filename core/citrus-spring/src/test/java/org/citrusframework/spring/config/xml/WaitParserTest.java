@@ -20,9 +20,9 @@ import org.citrusframework.actions.EchoAction;
 import org.citrusframework.api.condition.Condition;
 import org.citrusframework.container.Wait;
 import org.citrusframework.condition.*;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.4
@@ -92,35 +92,35 @@ public class WaitParserTest extends AbstractActionParserTest<Wait> {
     }
 
     private void validateWaitAction(Wait action, String expectedMilliseconds, String expectedInterval, Condition expectedCondition) {
-        Assert.assertEquals(action.getTime(), expectedMilliseconds);
-        Assert.assertEquals(action.getInterval(), expectedInterval);
+        Assertions.assertEquals(expectedMilliseconds, action.getTime());
+        Assertions.assertEquals(expectedInterval, action.getInterval());
 
         if (!(expectedCondition instanceof ActionCondition)) {
-            Assert.assertEquals(action.getCondition().getClass(), expectedCondition.getClass());
+            Assertions.assertEquals(expectedCondition.getClass(), action.getCondition().getClass());
         }
 
         if (expectedCondition instanceof HttpCondition) {
             HttpCondition condition = (HttpCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getName(), expectedCondition.getName());
-            Assert.assertEquals(condition.getUrl(), ((HttpCondition) expectedCondition).getUrl());
-            Assert.assertEquals(condition.getTimeout(), ((HttpCondition) expectedCondition).getTimeout());
-            Assert.assertEquals(condition.getMethod(), ((HttpCondition) expectedCondition).getMethod());
+            Assertions.assertNotNull(condition);
+            Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+            Assertions.assertEquals(((HttpCondition) expectedCondition).getUrl(), condition.getUrl());
+            Assertions.assertEquals(((HttpCondition) expectedCondition).getTimeout(), condition.getTimeout());
+            Assertions.assertEquals(((HttpCondition) expectedCondition).getMethod(), condition.getMethod());
         } else if (expectedCondition instanceof FileCondition) {
             FileCondition condition = (FileCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getName(), expectedCondition.getName());
-            Assert.assertEquals(condition.getFilePath(), ((FileCondition) expectedCondition).getFilePath());
+            Assertions.assertNotNull(condition);
+            Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+            Assertions.assertEquals(((FileCondition) expectedCondition).getFilePath(), condition.getFilePath());
         } else if (expectedCondition instanceof MessageCondition) {
             MessageCondition condition = (MessageCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getName(), expectedCondition.getName());
-            Assert.assertEquals(condition.getMessageName(), ((MessageCondition) expectedCondition).getMessageName());
+            Assertions.assertNotNull(condition);
+            Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+            Assertions.assertEquals(((MessageCondition) expectedCondition).getMessageName(), condition.getMessageName());
         } else if (expectedCondition instanceof ActionCondition) {
             ActionCondition condition = (ActionCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getAction().getName(), ((ActionCondition) expectedCondition).getAction().getName());
-            Assert.assertEquals(((EchoAction) condition.getAction()).getMessage(), ((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage());
+            Assertions.assertNotNull(condition);
+            Assertions.assertEquals(((ActionCondition) expectedCondition).getAction().getName(), condition.getAction().getName());
+            Assertions.assertEquals(((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage(), ((EchoAction) condition.getAction()).getMessage());
         }
     }
 }
