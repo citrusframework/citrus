@@ -1944,7 +1944,7 @@ Settings use the `citrus.camel.cli.*` prefix. The older `citrus.camel.jbang.*` p
 | citrus.camel.cli.wait.for.running.state
 | When set to true, Camel CLI will automatically wait for each integration created to be in running state. (default="true")
 
-| citrus.camel.run.auto.set.properties
+| citrus.camel.cli.run.auto.set.properties
 | When set to true, the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run. (default="true")
 
 | citrus.camel.cli.trust.url
@@ -1995,7 +1995,7 @@ Settings use the `citrus.camel.cli.*` prefix. The older `citrus.camel.jbang.*` p
 | CITRUS_CAMEL_CLI_TRUST_URL
 | Comma-separated list of trust URLs for JBang.
 
-| CITRUS_CAMEL_RUN_AUTO_SET_PROPERTIES
+| CITRUS_CAMEL_CLI_RUN_AUTO_SET_PROPERTIES
 | When set to true, the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run.
 
 |===

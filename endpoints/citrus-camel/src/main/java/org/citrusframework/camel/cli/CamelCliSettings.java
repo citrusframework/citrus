@@ -33,14 +33,6 @@ public final class CamelCliSettings {
     private static final String CLI_PROPERTY_PREFIX = "citrus.camel.cli.";
     private static final String CLI_ENV_PREFIX = "CITRUS_CAMEL_CLI_";
 
-    /**
-     * Settings of the Camel CLI run action. These settings are not related to the Camel CLI tooling
-     * itself but to the actions running an integration with the Camel CLI. Therefore, they use a
-     * dedicated property and environment variable prefix.
-     */
-    private static final String RUN_PROPERTY_PREFIX = "citrus.camel.run.";
-    private static final String RUN_ENV_PREFIX = "CITRUS_CAMEL_RUN_";
-
     private static final String JBANG_PROPERTY_PREFIX = "citrus.camel.jbang.";
     private static final String JBANG_ENV_PREFIX = "CITRUS_CAMEL_JBANG_";
 
@@ -120,8 +112,10 @@ public final class CamelCliSettings {
     private static final String WAIT_FOR_RUNNING_STATE_DEFAULT = "true";
 
     @CitrusConfigProperty(description = "When set to true the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run.", type = "java.lang.Boolean", defaultValue = "true")
-    private static final String AUTO_SET_PROPERTIES_PROPERTY = RUN_PROPERTY_PREFIX + "auto.set.properties";
-    private static final String AUTO_SET_PROPERTIES_ENV = RUN_ENV_PREFIX + "AUTO_SET_PROPERTIES";
+    private static final String AUTO_SET_PROPERTIES_PROPERTY = CLI_PROPERTY_PREFIX + "run.auto.set.properties";
+    private static final String AUTO_SET_PROPERTIES_ENV = CLI_ENV_PREFIX + "RUN_AUTO_SET_PROPERTIES";
+    private static final String AUTO_SET_PROPERTIES_PROPERTY_FALLBACK = JBANG_PROPERTY_PREFIX + "run.auto.set.properties";
+    private static final String AUTO_SET_PROPERTIES_ENV_FALLBACK = JBANG_ENV_PREFIX + "RUN_AUTO_SET_PROPERTIES";
     private static final String AUTO_SET_PROPERTIES_DEFAULT = "true";
 
     @CitrusConfigProperty(description = "Camel CLI launcher type.", defaultValue = "jbang")
@@ -290,7 +284,8 @@ public final class CamelCliSettings {
      * Camel infra service variables and sets them as system properties on the integration run.
      */
     public static boolean isAutoSetProperties() {
-        return Boolean.parseBoolean(Optional.ofNullable(resolve(AUTO_SET_PROPERTIES_PROPERTY, AUTO_SET_PROPERTIES_ENV))
+        return Boolean.parseBoolean(Optional.ofNullable(resolve(AUTO_SET_PROPERTIES_PROPERTY, AUTO_SET_PROPERTIES_ENV,
+                AUTO_SET_PROPERTIES_PROPERTY_FALLBACK, AUTO_SET_PROPERTIES_ENV_FALLBACK))
                 .orElse(AUTO_SET_PROPERTIES_DEFAULT));
     }
 
