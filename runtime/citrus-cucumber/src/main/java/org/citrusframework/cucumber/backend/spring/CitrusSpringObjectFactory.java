@@ -121,8 +121,9 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
      * @param applicationContext
      */
     private void initializeCitrus(ApplicationContext applicationContext) {
-        // Per-thread factories in parallel runs must not create or replace the shared instance concurrently
-        synchronized (CitrusInstanceManager.class) {
+        // Per-thread factories in parallel runs must not create or replace the shared instance concurrently.
+        // Runs under the manager lock via its public API so callers stay decoupled from its locking strategy.
+        CitrusInstanceManager.runSynchronized(() -> {
             if (CitrusInstanceManager.hasInstance()) {
                 CitrusContext citrusContext = CitrusInstanceManager.getOrDefault().getCitrusContext();
 
@@ -136,7 +137,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
             }
 
             Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
-        }
+        });
     }
 
     @Override

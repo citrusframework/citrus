@@ -45,7 +45,7 @@ public class CitrusSpringBackend extends CitrusBackend {
     private static final Logger logger = LoggerFactory.getLogger(CitrusSpringBackend.class);
 
     /** XML step definitions waiting for the Citrus instance, loaded on the runner thread */
-    private XmlStepInstanceProcessor pendingXmlSteps;
+    private volatile XmlStepInstanceProcessor pendingXmlSteps;
 
     /**
      * Constructor using resource loader.
@@ -68,6 +68,7 @@ public class CitrusSpringBackend extends CitrusBackend {
         if (citrus.isPresent()) {
             xmlSteps.process(citrus.get());
         } else {
+            logger.debug("No Citrus instance yet, deferring XML step definitions until buildWorld");
             pendingXmlSteps = xmlSteps;
         }
 
@@ -81,11 +82,19 @@ public class CitrusSpringBackend extends CitrusBackend {
      */
     @Override
     public void buildWorld() {
-        if (pendingXmlSteps != null) {
-            CitrusInstanceManager.get().ifPresent(citrus -> {
-                pendingXmlSteps.process(citrus);
-                pendingXmlSteps = null;
-            });
+        XmlStepInstanceProcessor pending = pendingXmlSteps;
+        if (pending != null) {
+            Optional<Citrus> citrus = CitrusInstanceManager.get();
+            if (citrus.isPresent()) {
+                synchronized (this) {
+                    if (pendingXmlSteps != null) {
+                        pendingXmlSteps.process(citrus.get());
+                        pendingXmlSteps = null;
+                    }
+                }
+            } else {
+                logger.debug("No Citrus instance yet, keeping deferred XML step definitions for the next buildWorld");
+            }
         }
 
         super.buildWorld();

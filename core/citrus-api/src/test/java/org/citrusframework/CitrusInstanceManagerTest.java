@@ -153,6 +153,20 @@ public class CitrusInstanceManagerTest {
     }
 
     @Test
+    public void shouldRunActionsUnderManagerLock() {
+        AtomicBoolean lockedInRunnable = new AtomicBoolean();
+        CitrusInstanceManager.runSynchronized(() ->
+                lockedInRunnable.set(Thread.holdsLock(CitrusInstanceManager.class)));
+        assertThat(lockedInRunnable.get()).isTrue();
+
+        String result = CitrusInstanceManager.supplySynchronized(() -> {
+            assertThat(Thread.holdsLock(CitrusInstanceManager.class)).isTrue();
+            return "done";
+        });
+        assertThat(result).isEqualTo("done");
+    }
+
+    @Test
     public void shouldRemoveInstanceProcessor() {
         AtomicInteger invocations = new AtomicInteger();
         CitrusInstanceProcessor processor = instance -> invocations.incrementAndGet();
