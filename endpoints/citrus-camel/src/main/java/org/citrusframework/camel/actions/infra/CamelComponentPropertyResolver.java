@@ -204,7 +204,7 @@ public final class CamelComponentPropertyResolver {
             properties.put("camel.component.%s.%s".formatted(component, optionName), resolvedValue);
             logger.info("Setting Camel component property '{}' from infra service property '{}'",
                     context.getLogModifier().mask("camel.component.%s.%s".formatted(component, optionName)),
-                    context.getLogModifier().mask(resolvedValue));
+                    context.getLogModifier().mask(key));
         });
     }
 

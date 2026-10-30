@@ -19,12 +19,16 @@ package org.citrusframework.camel.actions;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.spi.Resources;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import static org.springframework.test.util.ReflectionTestUtils.getField;
@@ -33,6 +37,31 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class CamelRunIntegrationActionTest {
+
+    private final List<Path> tempDirectories = new ArrayList<>();
+
+    @AfterMethod
+    public void cleanup() throws IOException {
+        for (Path tempDirectory : tempDirectories) {
+            if (Files.exists(tempDirectory)) {
+                try (var paths = Files.walk(tempDirectory)) {
+                    paths.sorted(Comparator.reverseOrder()).forEach(path -> {
+                        try {
+                            Files.deleteIfExists(path);
+                        } catch (IOException e) {
+                            // ignore - cleanup is best effort
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private Path createTempDirectory(String prefix) throws IOException {
+        Path tempDirectory = Files.createTempDirectory(prefix);
+        tempDirectories.add(tempDirectory);
+        return tempDirectory;
+    }
 
     @Test
     @SuppressWarnings("unchecked")
@@ -128,7 +157,7 @@ public class CamelRunIntegrationActionTest {
 
     @Test
     public void shouldReadApplicationPropertiesOfIntegration() throws IOException {
-        Path workingDir = Files.createTempDirectory("citrus-camel-run");
+        Path workingDir = createTempDirectory("citrus-camel-run");
         Files.writeString(workingDir.resolve("application.properties"),
                 "camel.component.kafka.brokers=application.properties:9092\ncamel.main.name=test\n");
 
@@ -140,7 +169,7 @@ public class CamelRunIntegrationActionTest {
 
     @Test
     public void shouldReadNoApplicationPropertiesIfMissing() throws IOException {
-        Path workingDir = Files.createTempDirectory("citrus-camel-run");
+        Path workingDir = createTempDirectory("citrus-camel-run");
 
         assertTrue(CamelRunIntegrationAction.loadApplicationProperties(workingDir).isEmpty());
     }
@@ -155,7 +184,7 @@ public class CamelRunIntegrationActionTest {
         context.setVariable("CITRUS_CAMEL_INFRA_KAFKA_BOOTSTRAP_SERVERS", "localhost:9092");
 
         Map<String, String> systemProperties = new HashMap<>();
-        action.autoSetComponentProperties(context, systemProperties, Files.createTempDirectory("citrus-camel-run"));
+        action.autoSetComponentProperties(context, systemProperties, createTempDirectory("citrus-camel-run"));
 
         assertEquals(systemProperties.get("camel.component.kafka.brokers"), "localhost:9092");
     }
