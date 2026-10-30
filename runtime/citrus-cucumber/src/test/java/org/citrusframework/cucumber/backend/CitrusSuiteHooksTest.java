@@ -29,11 +29,12 @@ import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.cucumber.CitrusLifecycleHooks;
 import org.citrusframework.report.TestSuiteListener;
 import org.citrusframework.report.TestSuiteListeners;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -41,8 +42,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 
 /**
  * Uses its own Citrus instance on a mocked context instead of the shared Spring test context, and puts the previous
@@ -56,7 +55,7 @@ public class CitrusSuiteHooksTest {
 
     private Citrus originalInstance;
 
-    @BeforeMethod
+    @BeforeEach
     public void createCitrus() {
         originalInstance = CitrusInstanceManager.get().orElse(null);
 
@@ -70,7 +69,7 @@ public class CitrusSuiteHooksTest {
         CitrusInstanceManager.newInstance(() -> citrusContext);
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterEach
     public void restoreInstance() {
         setInstance(originalInstance);
     }
@@ -89,7 +88,7 @@ public class CitrusSuiteHooksTest {
         setInstance(null);
 
         CitrusLifecycleHooks.beforeSuite();
-        assertFalse(CitrusInstanceManager.hasInstance());
+        Assertions.assertFalse(CitrusInstanceManager.hasInstance());
         verify(suiteListener, never()).onStart();
 
         CitrusInstanceManager.newInstance(() -> citrusContext);
@@ -116,7 +115,7 @@ public class CitrusSuiteHooksTest {
 
         CitrusLifecycleHooks.beforeSuite();
         CitrusLifecycleHooks.afterSuite();
-        assertFalse(CitrusInstanceManager.hasInstance());
+        Assertions.assertFalse(CitrusInstanceManager.hasInstance());
 
         CitrusInstanceManager.newInstance(() -> citrusContext);
         verify(suiteListener, never()).onStart();
@@ -138,12 +137,12 @@ public class CitrusSuiteHooksTest {
         verify(glue).addBeforeHook(any(HookDefinition.class));
         verify(glue).addAfterHook(any(HookDefinition.class));
 
-        assertEquals(beforeAll.getValue().getName(), Optional.of("CitrusLifecycleHooks.beforeSuite"));
-        assertEquals(beforeAll.getValue().getOrder(), CitrusLifecycleHooks.SUITE_HOOK_ORDER);
-        assertEquals(afterAll.getValue().getOrder(), CitrusLifecycleHooks.SUITE_HOOK_ORDER);
-        assertEquals(beforeAll.getValue().getHookType(), Optional.of(StaticHookDefinition.HookType.BEFORE_ALL));
-        assertEquals(afterAll.getValue().getName(), Optional.of("CitrusLifecycleHooks.afterSuite"));
-        assertEquals(afterAll.getValue().getHookType(), Optional.of(StaticHookDefinition.HookType.AFTER_ALL));
+        Assertions.assertEquals(Optional.of("CitrusLifecycleHooks.beforeSuite"), beforeAll.getValue().getName());
+        Assertions.assertEquals(CitrusLifecycleHooks.SUITE_HOOK_ORDER, beforeAll.getValue().getOrder());
+        Assertions.assertEquals(CitrusLifecycleHooks.SUITE_HOOK_ORDER, afterAll.getValue().getOrder());
+        Assertions.assertEquals(Optional.of(StaticHookDefinition.HookType.BEFORE_ALL), beforeAll.getValue().getHookType());
+        Assertions.assertEquals(Optional.of("CitrusLifecycleHooks.afterSuite"), afterAll.getValue().getName());
+        Assertions.assertEquals(Optional.of(StaticHookDefinition.HookType.AFTER_ALL), afterAll.getValue().getHookType());
     }
 
     private static void setInstance(Citrus instance) {
