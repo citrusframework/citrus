@@ -21,13 +21,8 @@ import java.util.Optional;
 import io.cucumber.core.backend.CucumberInvocationTargetException;
 import io.cucumber.core.backend.StaticHookDefinition.HookType;
 import org.citrusframework.cucumber.CitrusLifecycleHooks;
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CitrusStaticHookDefinitionTest {
 
@@ -36,10 +31,10 @@ public class CitrusStaticHookDefinitionTest {
         CitrusStaticHookDefinition hook = new CitrusStaticHookDefinition(
                 CitrusLifecycleHooks.class.getMethod("beforeSuite"), 10000, HookType.BEFORE_ALL);
 
-        assertEquals(hook.getName(), Optional.of("CitrusLifecycleHooks.beforeSuite"));
-        assertEquals(hook.getHookType(), Optional.of(HookType.BEFORE_ALL));
-        assertEquals(hook.getOrder(), 10000);
-        assertEquals(hook.getLocation(), "org.citrusframework.cucumber.CitrusLifecycleHooks#beforeSuite");
+        Assertions.assertEquals(Optional.of("CitrusLifecycleHooks.beforeSuite"), hook.getName());
+        Assertions.assertEquals(Optional.of(HookType.BEFORE_ALL), hook.getHookType());
+        Assertions.assertEquals(10000, hook.getOrder());
+        Assertions.assertEquals("org.citrusframework.cucumber.CitrusLifecycleHooks#beforeSuite", hook.getLocation());
     }
 
     @Test
@@ -47,9 +42,9 @@ public class CitrusStaticHookDefinitionTest {
         CitrusStaticHookDefinition hook = new CitrusStaticHookDefinition(
                 CitrusLifecycleHooks.class.getMethod("afterSuite"), 10000, HookType.AFTER_ALL);
 
-        assertEquals(hook.getName(), Optional.of("CitrusLifecycleHooks.afterSuite"));
-        assertEquals(hook.getHookType(), Optional.of(HookType.AFTER_ALL));
-        assertEquals(hook.getOrder(), 10000);
+        Assertions.assertEquals(Optional.of("CitrusLifecycleHooks.afterSuite"), hook.getName());
+        Assertions.assertEquals(Optional.of(HookType.AFTER_ALL), hook.getHookType());
+        Assertions.assertEquals(10000, hook.getOrder());
     }
 
     @Test
@@ -59,25 +54,25 @@ public class CitrusStaticHookDefinitionTest {
 
         hook.execute();
 
-        assertEquals(HookMethods.invocations, 1);
+        Assertions.assertEquals(1, HookMethods.invocations);
     }
 
     @Test
     public void shouldReportHookFailureWithHookLocation() throws NoSuchMethodException {
         CitrusStaticHookDefinition hook = new CitrusStaticHookDefinition(method("fail"), 10000, HookType.AFTER_ALL);
 
-        CucumberInvocationTargetException exception = expectThrows(CucumberInvocationTargetException.class, hook::execute);
+        CucumberInvocationTargetException exception = Assertions.assertThrows(CucumberInvocationTargetException.class, hook::execute);
 
-        assertSame(exception.getLocated(), hook);
-        assertEquals(exception.getInvocationTargetExceptionCause().getMessage(), "Suite action failed");
+        Assertions.assertSame(hook, exception.getLocated());
+        Assertions.assertEquals("Suite action failed", exception.getInvocationTargetExceptionCause().getMessage());
     }
 
     @Test
     public void shouldMatchStackTraceOfHookMethod() throws NoSuchMethodException {
         CitrusStaticHookDefinition hook = new CitrusStaticHookDefinition(method("count"), 10000, HookType.BEFORE_ALL);
 
-        assertTrue(hook.isDefinedAt(new StackTraceElement(HookMethods.class.getName(), "count", null, 0)));
-        assertFalse(hook.isDefinedAt(new StackTraceElement(HookMethods.class.getName(), "other", null, 0)));
+        Assertions.assertTrue(hook.isDefinedAt(new StackTraceElement(HookMethods.class.getName(), "count", null, 0)));
+        Assertions.assertFalse(hook.isDefinedAt(new StackTraceElement(HookMethods.class.getName(), "other", null, 0)));
     }
 
     private static Method method(String name) throws NoSuchMethodException {
