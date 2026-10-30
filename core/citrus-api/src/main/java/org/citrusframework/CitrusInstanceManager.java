@@ -111,8 +111,11 @@ public class CitrusInstanceManager {
 
     /**
      * Provide access to the current Citrus instance or create one with the given context provider.
+     * Compound check-then-act sequences on the instance must run via
+     * {@link #runSynchronized(Runnable)} or {@link #supplySynchronized(Supplier)}
+     * instead of synchronizing on {@code CitrusInstanceManager.class} from outside.
      */
-    static Citrus getOrCreate(Supplier<CitrusContextProvider> contextProvider) {
+    public static Citrus getOrCreate(Supplier<CitrusContextProvider> contextProvider) {
         Citrus instance = current();
         if (instance != null) {
             return instance;
@@ -125,6 +128,24 @@ public class CitrusInstanceManager {
 
             return citrus;
         }
+    }
+
+    /**
+     * Runs the given action while holding the manager's instance creation lock.
+     * Use this for check-then-act sequences that must stay atomic with instance creation,
+     * instead of synchronizing on {@code CitrusInstanceManager.class} from outside.
+     */
+    public static synchronized void runSynchronized(Runnable action) {
+        action.run();
+    }
+
+    /**
+     * Calls the given action while holding the manager's instance creation lock and returns its result.
+     * Use this for check-then-act sequences that must stay atomic with instance creation,
+     * instead of synchronizing on {@code CitrusInstanceManager.class} from outside.
+     */
+    public static synchronized <T> T supplySynchronized(Supplier<T> action) {
+        return action.get();
     }
 
     /**
