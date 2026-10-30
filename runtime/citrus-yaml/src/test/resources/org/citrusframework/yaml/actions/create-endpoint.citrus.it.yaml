@@ -26,3 +26,13 @@ actions:
           autoCreateQueue: true
           queue: "howdy"
           timeout: 3000
+  - createEndpoint:
+      direct:
+        name: simplified
+        queue: "simpleQueue"
+        timeout: 5000
+  - createEndpoint:
+      direct:
+        name: simplifiedSync
+        synchronous:
+          pollingInterval: 2000

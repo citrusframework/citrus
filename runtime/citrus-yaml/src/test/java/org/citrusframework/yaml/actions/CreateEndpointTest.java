@@ -38,7 +38,7 @@ public class CreateEndpointTest extends AbstractYamlActionTest {
         Assert.assertEquals(result.getName(), "CreateEndpointTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
+        Assert.assertEquals(result.getActionCount(), 6L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CreateEndpointAction.class);
         Assert.assertEquals(((CreateEndpointAction) result.getTestAction(0)).getEndpointUri(), "direct:hello");
         Assert.assertEquals(((CreateEndpointAction) result.getTestAction(1)).getEndpointUri(), "direct?autoClose=true&autoRemove=true&queueName=hello&timeout=2000");
@@ -58,5 +58,18 @@ public class CreateEndpointTest extends AbstractYamlActionTest {
         Assert.assertEquals(((DirectSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 3000L);
 
         Assert.assertTrue(context.getReferenceResolver().isResolvable("howdy", MessageQueue.class));
+
+        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(4)).getEndpointBuilder());
+        endpoint = ((CreateEndpointAction) result.getTestAction(4)).getEndpointBuilder().build();
+        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
+        Assert.assertEquals(endpoint.getName(), "simplified");
+        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getQueueName(), "simpleQueue");
+        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+
+        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(5)).getEndpointBuilder());
+        endpoint = ((CreateEndpointAction) result.getTestAction(5)).getEndpointBuilder().build();
+        Assert.assertEquals(endpoint.getClass(), DirectSyncEndpoint.class);
+        Assert.assertEquals(endpoint.getName(), "simplifiedSync");
+        Assert.assertEquals(((DirectSyncEndpoint) endpoint).getEndpointConfiguration().getPollingInterval(), 2000);
     }
 }
