@@ -20,7 +20,6 @@ import io.cucumber.core.backend.CucumberBackendException;
 import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.spring.SpringFactory;
 import org.citrusframework.Citrus;
-import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.spring.CitrusSpringContext;
 import org.citrusframework.spring.CitrusSpringContextProvider;
@@ -121,23 +120,22 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
      * @param applicationContext
      */
     private void initializeCitrus(ApplicationContext applicationContext) {
-        // Per-thread factories in parallel runs must not create or replace the shared instance concurrently.
-        // Runs under the manager lock via its public API so callers stay decoupled from its locking strategy.
-        CitrusInstanceManager.runSynchronized(() -> {
-            if (CitrusInstanceManager.hasInstance()) {
-                CitrusContext citrusContext = CitrusInstanceManager.getOrDefault().getCitrusContext();
+        // Atomic check and replace, so per-thread factories in parallel runs share one instance.
+        CitrusInstanceManager.getOrReplace(citrus -> isReusable(citrus, applicationContext),
+                () -> new CitrusSpringContextProvider(applicationContext));
+    }
 
-                if (citrusContext instanceof CitrusSpringContext
-                        && !((CitrusSpringContext) citrusContext).getApplicationContext().equals(applicationContext)) {
-                    logger.warn("Citrus instance has already been initialized - creating new instance and shutting down current instance");
-                    citrusContext.close();
-                } else {
-                    return;
-                }
-            }
+    /**
+     * Citrus instance is reusable unless it is backed by a different Spring application context.
+     */
+    private static boolean isReusable(Citrus citrus, ApplicationContext applicationContext) {
+        if (citrus.getCitrusContext() instanceof CitrusSpringContext springContext
+                && !springContext.getApplicationContext().equals(applicationContext)) {
+            logger.warn("Citrus instance has already been initialized - creating new instance and shutting down current instance");
+            return false;
+        }
 
-            Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
-        });
+        return true;
     }
 
     @Override
