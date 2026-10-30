@@ -37,7 +37,7 @@ public class CreateEndpointTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getName(), "CreateEndpointTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
+        Assert.assertEquals(result.getActionCount(), 4L);
         Assert.assertEquals(result.getTestAction(0).getClass(), CreateEndpointAction.class);
         Assert.assertEquals(((CreateEndpointAction) result.getTestAction(0)).getEndpointUri(), "direct:hello");
         Assert.assertEquals(((CreateEndpointAction) result.getTestAction(1)).getEndpointUri(), "direct?autoClose=true&autoRemove=true&queueName=hello&timeout=2000");
@@ -52,5 +52,16 @@ public class CreateEndpointTest extends AbstractXmlActionTest {
         Assert.assertEquals(directEndpoint.getEndpointConfiguration().getQueueName(), "fooQueue");
         Assert.assertTrue(context.getReferenceResolver().isResolvable("fooQueue", MessageQueue.class),
                 "Expected auto-create-queue to create the message queue in the reference resolver");
+
+        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder());
+        Assert.assertEquals(((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder().getClass(), DirectEndpointsBuilder.class);
+
+        DirectEndpointsBuilder simplifiedBuilder = (DirectEndpointsBuilder) ((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder();
+        simplifiedBuilder.setReferenceResolver(context.getReferenceResolver());
+
+        DirectEndpoint simplifiedEndpoint = (DirectEndpoint) simplifiedBuilder.build();
+        Assert.assertEquals(simplifiedEndpoint.getName(), "simplified");
+        Assert.assertEquals(simplifiedEndpoint.getEndpointConfiguration().getQueueName(), "simpleQueue");
+        Assert.assertEquals(simplifiedEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
     }
 }

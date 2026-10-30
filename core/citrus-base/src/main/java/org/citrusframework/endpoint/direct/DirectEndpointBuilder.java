@@ -16,106 +16,15 @@
 
 package org.citrusframework.endpoint.direct;
 
-import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
-import org.citrusframework.message.DefaultMessageQueue;
-import org.citrusframework.message.MessageQueue;
-import org.citrusframework.util.PropertyUtils;
-import org.citrusframework.util.StringUtils;
-import org.citrusframework.api.yaml.SchemaProperty;
 
 @XmlType(name = "", propOrder = {})
-public class DirectEndpointBuilder extends AbstractEndpointBuilder<DirectEndpoint> {
+public class DirectEndpointBuilder extends AbstractDirectEndpointBuilder<DirectEndpoint, DirectEndpointBuilder> {
 
-    /** Endpoint target */
     private final DirectEndpoint endpoint = new DirectEndpoint();
-
-    private boolean autoCreateQueue;
-
-    @Override
-    public DirectEndpoint build() {
-        if (referenceResolver != null) {
-            if (autoCreateQueue) {
-                String createdQueue = null;
-                if (StringUtils.hasText(endpoint.getEndpointConfiguration().getQueueName()) &&
-                        !referenceResolver.isResolvable(endpoint.getEndpointConfiguration().getQueueName(), MessageQueue.class)) {
-                    DefaultMessageQueue messageQueue = new DefaultMessageQueue(endpoint.getEndpointConfiguration().getQueueName());
-                    PropertyUtils.configure(endpoint.getEndpointConfiguration().getQueueName(), messageQueue, referenceResolver);
-                    referenceResolver.bind(endpoint.getEndpointConfiguration().getQueueName(), messageQueue);
-                    createdQueue = messageQueue.getName();
-                } else if (endpoint.getEndpointConfiguration().getQueue() != null &&
-                        !referenceResolver.isResolvable(endpoint.getEndpointConfiguration().getQueue().getName(), MessageQueue.class)) {
-                    referenceResolver.bind(endpoint.getEndpointConfiguration().getQueue().getName(), endpoint.getEndpointConfiguration().getQueue());
-                    createdQueue = endpoint.getEndpointConfiguration().getQueue().getName();
-                }
-
-                if (StringUtils.hasText(createdQueue)) {
-                    logger.info("Automatically created queue '{}'", createdQueue);
-                }
-            }
-        }
-
-        return super.build();
-    }
 
     @Override
     protected DirectEndpoint getEndpoint() {
         return endpoint;
-    }
-
-    /**
-     * Sets the queueName property.
-     */
-    public DirectEndpointBuilder queue(String queueName) {
-        endpoint.getEndpointConfiguration().setQueueName(queueName);
-        return this;
-    }
-
-    @SchemaProperty(description = "The queue name.")
-    @XmlAttribute
-    public void setQueue(String queueName) {
-        queue(queueName);
-    }
-
-    @XmlAttribute(name = "queue-name")
-    public void setQueueName(String queueName) {
-        queue(queueName);
-    }
-
-    /**
-     * Sets the queue property.
-     */
-    public DirectEndpointBuilder queue(MessageQueue queue) {
-        endpoint.getEndpointConfiguration().setQueue(queue);
-        return this;
-    }
-
-    /**
-     * When set the queue is automatically created when it does not exist in bean registry.
-     */
-    public DirectEndpointBuilder autoCreateQueue(boolean autoCreate) {
-        this.autoCreateQueue = autoCreate;
-        return this;
-    }
-
-    @SchemaProperty(description = "When set the queue is automatically created when it does not exist in bean registry.")
-    @XmlAttribute(name = "auto-create-queue")
-    public void setAutoCreateQueue(boolean autoCreate) {
-        autoCreateQueue(autoCreate);
-    }
-
-    /**
-     * Sets the default timeout.
-     */
-    public DirectEndpointBuilder timeout(long timeout) {
-        endpoint.getEndpointConfiguration().setTimeout(timeout);
-        return this;
-    }
-
-    @SchemaProperty(description = "The timeout when receiving messages from the queue.")
-    @XmlAttribute
-    public void setTimeout(long timeout) {
-        timeout(timeout);
     }
 }

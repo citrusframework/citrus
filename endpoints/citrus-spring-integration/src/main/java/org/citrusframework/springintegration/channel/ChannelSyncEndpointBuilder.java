@@ -18,48 +18,26 @@ package org.citrusframework.springintegration.channel;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.api.yaml.SchemaType;
-import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.core.DestinationResolver;
 
 /**
  * @since 2.7.6
  */
 @SchemaType(module = "citrus-spring-integration")
 @XmlType(name = "", propOrder = {})
-public class ChannelSyncEndpointBuilder extends AbstractEndpointBuilder<ChannelSyncEndpoint> {
+public class ChannelSyncEndpointBuilder extends AbstractChannelEndpointBuilder<ChannelSyncEndpoint, ChannelSyncEndpointBuilder> {
 
-    /** Endpoint target */
     private final ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
 
-    private String messagingTemplate;
-    private String messageConverter;
     private String correlator;
-    private String channelResolver;
 
     @Override
     public ChannelSyncEndpoint build() {
-        if (referenceResolver != null) {
-            if (StringUtils.hasText(messagingTemplate)) {
-                messagingTemplate(referenceResolver.resolve(messagingTemplate, MessagingTemplate.class));
-            }
-
-            if (StringUtils.hasText(messageConverter)) {
-                messageConverter(referenceResolver.resolve(messageConverter, ChannelMessageConverter.class));
-            }
-
-            if (StringUtils.hasText(correlator)) {
-                correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
-            }
-
-            if (StringUtils.hasText(channelResolver)) {
-                channelResolver(referenceResolver.resolve(channelResolver, DestinationResolver.class));
-            }
+        if (referenceResolver != null && StringUtils.hasText(correlator)) {
+            correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
         }
 
         return super.build();
@@ -68,106 +46,6 @@ public class ChannelSyncEndpointBuilder extends AbstractEndpointBuilder<ChannelS
     @Override
     protected ChannelSyncEndpoint getEndpoint() {
         return endpoint;
-    }
-
-    /**
-     * Sets the channelName property.
-     */
-    public ChannelSyncEndpointBuilder channel(String channelName) {
-        endpoint.getEndpointConfiguration().setChannelName(channelName);
-        return this;
-    }
-
-    @SchemaProperty(description = "The Spring message channel name.")
-    @XmlAttribute
-    public void setChannel(String channelName) {
-        channel(channelName);
-    }
-
-    @XmlAttribute(name = "channel-name")
-    public void setChannelName(String channelName) {
-        channel(channelName);
-    }
-
-    /**
-     * Sets the channel property.
-     */
-    public ChannelSyncEndpointBuilder channel(MessageChannel channel) {
-        endpoint.getEndpointConfiguration().setChannel(channel);
-        return this;
-    }
-
-    /**
-     * Sets the messagingTemplate property.
-     */
-    public ChannelSyncEndpointBuilder messagingTemplate(MessagingTemplate messagingTemplate) {
-        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
-        return this;
-    }
-
-    @SchemaProperty(advanced = true, description = "Sets a custom messaging template.")
-    @XmlAttribute(name = "messaging-template")
-    public void setMessagingTemplate(String messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
-    }
-
-    /**
-     * Sets the messageConverter property.
-     */
-    public ChannelSyncEndpointBuilder messageConverter(ChannelMessageConverter messageConverter) {
-        endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
-        return this;
-    }
-
-    @SchemaProperty(advanced = true, description = "Sets the message converter as a bean reference.")
-    @XmlAttribute(name = "message-converter")
-    public void setMessageConverter(String messageConverter) {
-        this.messageConverter = messageConverter;
-    }
-
-    /**
-     * Sets the channel resolver.
-     */
-    @SuppressWarnings("unchecked")
-    public ChannelSyncEndpointBuilder channelResolver(DestinationResolver resolver) {
-        endpoint.getEndpointConfiguration().setChannelResolver(resolver);
-        return this;
-    }
-
-    @SchemaProperty(advanced = true, description = "The channel destination resolver.")
-    @XmlAttribute(name = "channel-resolver")
-    public void setChannelResolver(String resolver) {
-        this.channelResolver = resolver;
-    }
-
-    /**
-     * Sets the useObjectMessages property.
-     */
-    public ChannelSyncEndpointBuilder useObjectMessages(boolean useObjectMessages) {
-        endpoint.getEndpointConfiguration().setUseObjectMessages(useObjectMessages);
-        return this;
-    }
-
-    @SchemaProperty(advanced = true, description = "When enabled the endpoint uses object messages.")
-    @XmlAttribute(name = "use-object-messages")
-    public void setUseObjectMessages(boolean useObjectMessages) {
-        useObjectMessages(useObjectMessages);
-    }
-
-    /**
-     * Sets the filterInternalHeaders property.
-     */
-    public ChannelSyncEndpointBuilder filterInternalHeaders(boolean filterInternalHeaders) {
-        endpoint.getEndpointConfiguration().setFilterInternalHeaders(filterInternalHeaders);
-        return this;
-    }
-
-    @SchemaProperty(
-            advanced = true,
-            description = "When enabled the endpoint removes all internal headers before sending a message.")
-    @XmlAttribute(name = "filter-internal-headers")
-    public void setFilterInternalHeaders(boolean filterInternalHeaders) {
-        filterInternalHeaders(filterInternalHeaders);
     }
 
     /**
@@ -196,19 +74,5 @@ public class ChannelSyncEndpointBuilder extends AbstractEndpointBuilder<ChannelS
     @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
-    }
-
-    /**
-     * Sets the default timeout.
-     */
-    public ChannelSyncEndpointBuilder timeout(long timeout) {
-        endpoint.getEndpointConfiguration().setTimeout(timeout);
-        return this;
-    }
-
-    @SchemaProperty(description = "Sets the receive timeout when waiting for messages.", defaultValue = "5000")
-    @XmlAttribute
-    public void setTimeout(long timeout) {
-        timeout(timeout);
     }
 }

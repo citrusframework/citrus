@@ -18,48 +18,21 @@ package org.citrusframework.endpoint.direct;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
-import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageCorrelator;
-import org.citrusframework.message.MessageQueue;
-import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
 
 @XmlType(name = "", propOrder = {})
-public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyncEndpoint> {
+public class DirectSyncEndpointBuilder extends AbstractDirectEndpointBuilder<DirectSyncEndpoint, DirectSyncEndpointBuilder> {
 
-    /** Endpoint target */
     private final DirectSyncEndpoint endpoint = new DirectSyncEndpoint();
 
     private String correlator;
-    private boolean autoCreateQueue;
 
     @Override
     public DirectSyncEndpoint build() {
-        if (referenceResolver != null) {
-            if (StringUtils.hasText(correlator)) {
-                correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
-            }
-
-            if (autoCreateQueue) {
-                String createdQueue = null;
-                if (StringUtils.hasText(endpoint.getEndpointConfiguration().getQueueName()) &&
-                        !referenceResolver.isResolvable(endpoint.getEndpointConfiguration().getQueueName(), MessageQueue.class)) {
-                    DefaultMessageQueue messageQueue = new DefaultMessageQueue(endpoint.getEndpointConfiguration().getQueueName());
-                    PropertyUtils.configure(endpoint.getEndpointConfiguration().getQueueName(), messageQueue, referenceResolver);
-                    referenceResolver.bind(endpoint.getEndpointConfiguration().getQueueName(), messageQueue);
-                    createdQueue = messageQueue.getName();
-                } else if (endpoint.getEndpointConfiguration().getQueue() != null &&
-                        !referenceResolver.isResolvable(endpoint.getEndpointConfiguration().getQueue().getName(), MessageQueue.class)) {
-                    referenceResolver.bind(endpoint.getEndpointConfiguration().getQueue().getName(), endpoint.getEndpointConfiguration().getQueue());
-                    createdQueue = endpoint.getEndpointConfiguration().getQueue().getName();
-                }
-
-                if (StringUtils.hasText(createdQueue)) {
-                    logger.info("Automatically created queue '{}'", createdQueue);
-                }
-            }
+        if (referenceResolver != null && StringUtils.hasText(correlator)) {
+            correlator(referenceResolver.resolve(correlator, MessageCorrelator.class));
         }
 
         return super.build();
@@ -68,47 +41,6 @@ public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyn
     @Override
     protected DirectSyncEndpoint getEndpoint() {
         return endpoint;
-    }
-
-    /**
-     * Sets the queueName property.
-     */
-    public DirectSyncEndpointBuilder queue(String queueName) {
-        endpoint.getEndpointConfiguration().setQueueName(queueName);
-        return this;
-    }
-
-    @SchemaProperty(description = "The queue name.")
-    @XmlAttribute
-    public void setQueue(String queueName) {
-        queue(queueName);
-    }
-
-    @XmlAttribute(name = "queue-name")
-    public void setQueueName(String queueName) {
-        queue(queueName);
-    }
-
-    /**
-     * Sets the queue property.
-     */
-    public DirectSyncEndpointBuilder queue(MessageQueue queue) {
-        endpoint.getEndpointConfiguration().setQueue(queue);
-        return this;
-    }
-
-    /**
-     * When set the queue is automatically created when it does not exist in bean registry.
-     */
-    public DirectSyncEndpointBuilder autoCreateQueue(boolean autoCreate) {
-        this.autoCreateQueue = autoCreate;
-        return this;
-    }
-
-    @SchemaProperty(description = "When set the queue is automatically created when it does not exist in bean registry.")
-    @XmlAttribute(name = "auto-create-queue")
-    public void setAutoCreateQueue(boolean autoCreate) {
-        autoCreateQueue(autoCreate);
     }
 
     /**
@@ -137,19 +69,5 @@ public class DirectSyncEndpointBuilder extends AbstractEndpointBuilder<DirectSyn
     @XmlAttribute(name = "message-correlator")
     public void setCorrelator(String correlator) {
         this.correlator = correlator;
-    }
-
-    /**
-     * Sets the default timeout.
-     */
-    public DirectSyncEndpointBuilder timeout(long timeout) {
-        endpoint.getEndpointConfiguration().setTimeout(timeout);
-        return this;
-    }
-
-    @SchemaProperty(description = "The timeout when receiving messages from the queue.")
-    @XmlAttribute
-    public void setTimeout(long timeout) {
-        timeout(timeout);
     }
 }

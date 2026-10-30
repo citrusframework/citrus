@@ -31,5 +31,8 @@
         <asynchronous queue="fooQueue" auto-create-queue="true"/>
       </direct>
     </create-endpoint>
+    <create-endpoint>
+      <direct name="simplified" queue="simpleQueue" timeout="5000"/>
+    </create-endpoint>
   </actions>
 </test>

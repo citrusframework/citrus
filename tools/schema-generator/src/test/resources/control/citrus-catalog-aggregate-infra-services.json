@@ -539,15 +539,6 @@
     "title": "Opa",
     "description": "Open Policy Agent, a policy engine evaluating Rego policies"
   },
-  "openldap": {
-    "kind": "testInfraService",
-    "version": "${camel.version}",
-    "name": "openldap",
-    "group": "camel-test-infra",
-    "module": "org.apache.camel:camel-test-infra-openldap",
-    "title": "Openldap",
-    "description": "OpenLDAP is an implementation of the Lightweight Directory Access Protocol"
-  },
   "openfga": {
     "kind": "testInfraService",
     "version": "${camel.version}",
@@ -556,6 +547,15 @@
     "module": "org.apache.camel:camel-test-infra-openfga",
     "title": "Openfga",
     "description": "OpenFGA, a relationship-based fine-grained authorization engine"
+  },
+  "openldap": {
+    "kind": "testInfraService",
+    "version": "${camel.version}",
+    "name": "openldap",
+    "group": "camel-test-infra",
+    "module": "org.apache.camel:camel-test-infra-openldap",
+    "title": "Openldap",
+    "description": "OpenLDAP is an implementation of the Lightweight Directory Access Protocol"
   },
   "opensearch": {
     "kind": "testInfraService",
