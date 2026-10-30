@@ -19,8 +19,8 @@ package org.citrusframework.cucumber.backend;
 import io.cucumber.core.exception.CucumberException;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.6
@@ -35,8 +35,8 @@ public class CitrusObjectFactoryTest {
         // Scenario 1
         factory.start();
         final TestRunnerSteps steps = factory.getInstance(TestRunnerSteps.class);
-        Assert.assertNotNull(steps.getTestRunner());
-        Assert.assertNotNull(steps.getTestContext());
+        Assertions.assertNotNull(steps.getTestRunner());
+        Assertions.assertNotNull(steps.getTestContext());
         factory.stop();
     }
 
@@ -47,8 +47,8 @@ public class CitrusObjectFactoryTest {
 
         factory.start();
         final PackagePrivateSteps steps = factory.getInstance(PackagePrivateSteps.class);
-        Assert.assertNotNull(steps);
-        Assert.assertNotNull(steps.runner);
+        Assertions.assertNotNull(steps);
+        Assertions.assertNotNull(steps.runner);
         factory.stop();
     }
 
@@ -59,8 +59,8 @@ public class CitrusObjectFactoryTest {
 
         factory.start();
         final ProtectedSteps steps = factory.getInstance(ProtectedSteps.class);
-        Assert.assertNotNull(steps);
-        Assert.assertNotNull(steps.runner);
+        Assertions.assertNotNull(steps);
+        Assertions.assertNotNull(steps.runner);
         factory.stop();
     }
 
@@ -71,9 +71,9 @@ public class CitrusObjectFactoryTest {
 
         factory.start();
         try {
-            CucumberException e = Assert.expectThrows(CucumberException.class,
+            CucumberException e = Assertions.assertThrows(CucumberException.class,
                     () -> factory.getInstance(PrivateConstructorSteps.class));
-            Assert.assertTrue(e.getMessage().contains(PrivateConstructorSteps.class.getName()), e.getMessage());
+            Assertions.assertTrue(e.getMessage().contains(PrivateConstructorSteps.class.getName()), e.getMessage());
         } finally {
             factory.stop();
         }

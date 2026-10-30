@@ -25,11 +25,11 @@ import io.cucumber.core.options.CucumberPropertiesParser;
 import io.cucumber.core.options.RuntimeOptions;
 import io.cucumber.core.plugin.Options;
 import org.citrusframework.api.main.TestRunConfiguration;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
 import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
@@ -45,17 +45,17 @@ public class CucumberTestEngineSuiteOptionsTest {
         CucumberTestEngine engine = new CucumberTestEngine(new TestRunConfiguration());
         RuntimeOptions options = engine.parseSuiteOptions(SuiteConfiguration.class, propertiesFileOptions(), features);
 
-        Assert.assertEquals(features, List.of("classpath:" + ECHO_PACKAGE.replace('.', '/')));
+        Assertions.assertEquals(List.of("classpath:" + ECHO_PACKAGE.replace('.', '/')), features);
 
-        Assert.assertTrue(options.getGlueDiscoveryRequest().getSelectorsByType(UriGlueDiscoverySelector.class).stream()
+        Assertions.assertTrue(options.getGlueDiscoveryRequest().getSelectorsByType(UriGlueDiscoverySelector.class).stream()
                 .map(UriGlueDiscoverySelector::uri)
                 .anyMatch(uri -> glueUri(ECHO_PACKAGE).equals(uri.toString())));
 
         List<String> plugins = options.plugins().stream()
                 .map(Options.Plugin::pluginString)
                 .toList();
-        Assert.assertTrue(plugins.contains("pretty"));
-        Assert.assertTrue(plugins.contains("org.citrusframework.cucumber.CitrusReporter"));
+        Assertions.assertTrue(plugins.contains("pretty"));
+        Assertions.assertTrue(plugins.contains("org.citrusframework.cucumber.CitrusReporter"));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class CucumberTestEngineSuiteOptionsTest {
         CucumberTestEngine engine = new CucumberTestEngine(new TestRunConfiguration());
         RuntimeOptions options = engine.parseSuiteOptions(DefaultGlueSuiteConfiguration.class, propertiesFileOptions(), features);
 
-        Assert.assertTrue(options.getGlueDiscoveryRequest().getSelectorsByType(UriGlueDiscoverySelector.class).stream()
+        Assertions.assertTrue(options.getGlueDiscoveryRequest().getSelectorsByType(UriGlueDiscoverySelector.class).stream()
                 .map(UriGlueDiscoverySelector::uri)
                 .anyMatch(uri -> glueUri(getClass().getPackageName()).equals(uri.toString())));
     }

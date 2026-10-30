@@ -16,9 +16,6 @@
 
 package org.citrusframework.cucumber;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import org.citrusframework.Citrus;
 import org.citrusframework.spring.CitrusSpringContextProvider;
 import org.citrusframework.spring.config.CitrusSpringConfig;
@@ -28,20 +25,27 @@ import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.base.report.HtmlReporter;
 import org.citrusframework.base.report.JUnitReporter;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Reporter;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-public class UnitTestSupport extends AbstractTestNGUnitTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class UnitTestSupport {
 
     /** Factory bean for test context */
     @Autowired
     protected TestContextFactoryBean testContextFactory;
+
+    @Autowired
+    protected ApplicationContext applicationContext;
 
     @Autowired
     private HtmlReporter htmlReporter;
@@ -49,51 +53,47 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
     @Autowired
     private JUnitReporter jUnitReporter;
 
+    /** Factory for test context */
+    protected TestContextFactory contextFactory;
+
+    /** Test context */
+    protected TestContext context;
+
     /** Citrus instance */
     protected Citrus citrus;
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeAll
     public void beforeSuite() {
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
-        citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-            Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())
-                    .flatMap(method -> Arrays.stream(method.getGroups()))
-                    .collect(Collectors.toSet())
-                    .toArray(new String[]{}));
+        citrus.beforeSuite(getClass().getSimpleName());
     }
 
     /**
      * Runs tasks after test suite.
      */
-    @AfterClass(alwaysRun = true)
+    @AfterAll
     public void afterSuite() {
         if (citrus != null) {
-            citrus.afterSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-                Arrays.stream(Reporter.getCurrentTestResult().getTestContext().getAllTestMethods())
-                        .flatMap(method -> Arrays.stream(method.getGroups()))
-                        .collect(Collectors.toSet())
-                        .toArray(new String[]{}));
+            citrus.afterSuite(getClass().getSimpleName());
         }
     }
 
-    @BeforeMethod
-    @Override
+    @BeforeEach
     public void prepareTest() {
         htmlReporter.setEnabled(false);
         jUnitReporter.setEnabled(false);
-        super.prepareTest();
+        contextFactory = createTestContextFactory();
+        context = createTestContext();
     }
 
-    @Override
     protected TestContext createTestContext() {
         try {
-            return super.createTestContext();
+            return contextFactory.getObject();
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to create test context", e);
         }
     }
 
-    @Override
     protected TestContextFactory createTestContextFactory() {
         return testContextFactory;
     }
