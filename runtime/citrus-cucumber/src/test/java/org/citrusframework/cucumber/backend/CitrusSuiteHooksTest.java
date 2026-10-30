@@ -145,6 +145,10 @@ public class CitrusSuiteHooksTest {
         Assertions.assertEquals(Optional.of(StaticHookDefinition.HookType.AFTER_ALL), afterAll.getValue().getHookType());
     }
 
+    /**
+     * Sets the instance directly instead of calling {@link CitrusInstanceManager#reset()}, which would close the previous
+     * instance and its Spring application context. Fails with an {@link IllegalArgumentException} if the field is renamed.
+     */
     private static void setInstance(Citrus instance) {
         ReflectionTestUtils.setField(CitrusInstanceManager.class, "citrus", instance);
     }
