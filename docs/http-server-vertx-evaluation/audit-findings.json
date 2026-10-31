@@ -1,0 +1,274 @@
+[
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:433–471",
+    "trigger_condition": "An oversized or concurrent slow request is fully aggregated by `request.body()` before either the body-size check or admission permit is applied.",
+    "guard_snippet": "Acquire admission before reading; count streamed chunks and terminate the read as soon as the configured limit is exceeded. Cancel/drain or close timed-out reads. Add chunked oversize and incomplete-body tests required by T10.",
+    "potential_consequence": "The advertised 1 MiB/32-request limits do not bound buffered memory or concurrent body readers. The existing oversize test establishes eventual 413 only, while T10 is marked complete.",
+    "lens": "adversarial",
+    "id": "A01",
+    "audit_observation": "probe.log: no rejection while an 8-byte chunked body was incomplete with maxBodySizeBytes=4; 413 only after the final chunk."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:224–263",
+    "trigger_condition": "`stop()` is called after requests have created exchange-worker threads, without immediately calling `destroy()`.",
+    "guard_snippet": "Terminate the endpoint-owned executor within the shutdown budget and create a fresh executor on restart; verify named worker termination after every stop, including pending work.",
+    "potential_consequence": "`shutdown()` closes only the listener and Vert.x instance. The fixed pool remains alive, with no idle timeout, until destruction. AC6/T11 claim owned-resource cleanup and bounded termination without testing or implementing it at the start/stop-generation boundary.",
+    "lens": "adversarial",
+    "id": "A02",
+    "audit_observation": "probe.log: auditStoppedWorkers-exchange-1 remained alive in WAITING after stop()."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:299–304",
+    "trigger_condition": "Requests remain queued behind a blocked worker while the server stops and restarts.",
+    "guard_snippet": "Bind each exchange to its original adapter, executor and generation; reject obsolete queued exchanges before adapter invocation, and terminate/cancel the old generation on stop. Test that no old request satisfies a new-generation Citrus receive.",
+    "potential_consequence": "`handleExchange()` looks up the current adapter when the queued task eventually runs. The executor survives stop, startup replaces the default adapter, and the stored generation is never checked. A request from the old listener can therefore enter the new generation’s queue, contradicting generation isolation.",
+    "lens": "adversarial",
+    "id": "A03",
+    "audit_observation": "generation-probe.log: current generation 2 fresh default queue received second-old from generation 1."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:330–337",
+    "trigger_condition": "Outbound conversion throws after an adapter successfully supplies a reply, for example through the publicly configurable message converter.",
+    "guard_snippet": "Catch conversion failures, record the exchange failure for the harness, and complete the transport with the defined error response while releasing the permit exactly once.",
+    "potential_consequence": "The outer block has only a `finally`; the worker fails and releases admission without completing or closing the HTTP response. The client waits for its own timeout, although the evaluation claims failure isolation and terminal outcomes.",
+    "lens": "adversarial",
+    "id": "A04",
+    "audit_observation": "probe.log: HTTP status header bad threw NumberFormatException on the worker and the client timed out."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpMessageMapper.java:283–292",
+    "trigger_condition": "A reply cookie includes `Max-Age`, `Secure`, `HttpOnly`, or other attributes beyond Path and Domain.",
+    "guard_snippet": "Preserve supported Servlet cookie attributes in `Set-Cookie` and verify them on the wire against Jetty, or explicitly classify the narrower subset in the compatibility matrix.",
+    "potential_consequence": "The renderer silently discards those attributes. A deletion cookie with `Max-Age=0`, for example, becomes an ordinary cookie. The report’s unconditional cookie-support classification is inaccurate.",
+    "lens": "adversarial",
+    "id": "A05",
+    "audit_observation": "probe.log: a cookie configured with Max-Age=0, Secure, HttpOnly and SameSite=Strict rendered only token=value."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:276–283",
+    "trigger_condition": "A caller configures charset, content type, binary media types, or semicolon-path policy through `getHttpEndpointConfiguration()` before starting.",
+    "guard_snippet": "Expose those options through the actual server configuration path, or snapshot the supplied HTTP configuration without overwriting it. Add a non-default configuration integration test.",
+    "potential_consequence": "Startup overwrites the settings from the private `draft`, for which the server exposes no corresponding setters or options-injection method. Custom binary types can consequently decode as text, despite the report marking these options supported.",
+    "lens": "adversarial",
+    "id": "A06",
+    "audit_observation": "probe.log: configured ISO-8859-1 was reset to UTF-8 at startup."
+  },
+  {
+    "location": "docs/http-server-vertx-evaluation/decision-report.md:18–20",
+    "trigger_condition": "AC7 and AC9 are declared passed using coexistence tests and two HTTP regression classes.",
+    "guard_snippet": "Account for the required WebSocket, SOAP, OpenAPI, HTTP Cucumber, TLS/authentication and configuration regressions with current run counts and dependency-convergence evidence; leave unmet criteria incomplete or report their actual blocked/failed status.",
+    "potential_consequence": "The report closes the regression gate without the evidence explicitly required by AC7/AC9 and T2/T12. Test-scope isolation alone does not establish that the added dependency causes no test-classpath linkage or mediation regressions in affected consumers.",
+    "lens": "adversarial",
+    "id": "A07"
+  },
+  {
+    "location": "docs/http-server-vertx-evaluation/decision-report.md:14–15",
+    "trigger_condition": "AC3/AC4 are reported passed from Vert.x-only fixtures without the specified shared Jetty comparison and deliberate Citrus mismatch case.",
+    "guard_snippet": "Run identical request/reply fixtures against both engines, retain engine-specific outcomes, and add an asserted Citrus expectation failure. Include the required context/protocol and encoded, duplicate and valueless query checks.",
+    "potential_consequence": "The current tests establish that selected prototype happy paths work, rather than the claimed compatibility with current HTTP behavior. No `JettyHttpServerContractIT` or shared fixture matrix was delivered, although T3/T8 are represented as complete.",
+    "lens": "adversarial",
+    "id": "A08"
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerConcurrencyIT.java:57–80",
+    "trigger_condition": "The reverse-order test is used as evidence that Citrus’s request/reply correlation is preserved.",
+    "guard_snippet": "Exercise two concurrent requests through the default `DirectEndpointAdapter` and existing Citrus receive/send actions, using explicit correlation or separate contexts; add late-reply and cross-server isolation cases.",
+    "potential_consequence": "The custom gated adapter returns each response directly to its invoking worker and bypasses Citrus temporary reply queues entirely. Thus it cannot expose the correlation hazards called out in T9, yet AC5 is marked passed.",
+    "lens": "adversarial",
+    "id": "A09"
+  },
+  {
+    "location": "docs/http-server-vertx-evaluation/decision-report.md:23–37",
+    "trigger_condition": "The five-run sequential GET campaign is treated as completion of the planned footprint work and its partial JAR accounting is described as the production dependency delta.",
+    "guard_snippet": "Reconcile the campaign with T13/T14: preserve resolved artifact names/versions/sizes, machine and JVM provenance, request samples and median/range; run the specified text/binary workload and concurrency or explicitly leave that work incomplete. Label any future packaging calculation as a model using a complete dependency graph.",
+    "potential_consequence": "The saved evidence contains aggregate metrics from five runs, combined test-classpath totals and minimal environment data, but lacks the runtime dependency inventory, raw request samples, hardware metadata and planned workload. The approximately 6 MB versus 2.5 MB estimate cannot establish the stated production delta from `jars.txt`, which records only the shared classpath’s total count and bytes. The measured sequential results are usable as preliminary observations, but do not support closing T13/T14 as written.",
+    "lens": "adversarial",
+    "id": "A10"
+  },
+  {
+    "lens": "adversarial",
+    "location": "docs/http-server-vertx-evaluation/decision-report.md:70–75",
+    "trigger_condition": "The section addressing #1807 substitutes SOAP/WS-Security/MTOM scope for the linked WebSocket modernization issue.",
+    "guard_snippet": "Describe WebSocketServer coupling, Vert.x HTTP/WebSocket reuse and transition options for #1807; discuss citrus-ws SOAP independently and label any untested behavior.",
+    "potential_consequence": "The recommendation fails to evaluate a stated motivation of #1808, and the assertion that #1807 is unaffected is not supported by the SOAP exclusions.",
+    "evidence": "Checked the issue bodies on 2026-10-14. https://github.com/citrusframework/citrus/issues/1807 concerns Jetty-coupled WebSockets; https://github.com/citrusframework/citrus/issues/1808 explicitly links HTTP migration to that work. Stage 03 T15 also separates #1807 reuse from SOAP's independent transport.",
+    "id": "A11"
+  },
+  {
+    "lens": "adversarial",
+    "location": "docs/http-server-vertx-evaluation/sdd/04-implementation.md:20",
+    "trigger_condition": "T15 is checked complete while its required 05-documentation.md, migration examples and reconciled command/evidence record are absent.",
+    "guard_snippet": "Complete the named documentation deliverables and reconcile task/AC status with observed evidence, or explicitly revise the plan and leave undelivered work incomplete.",
+    "potential_consequence": "The recorded completion cannot be traced to the agreed deliverables; future reviewers cannot distinguish accepted scope changes from omitted work.",
+    "evidence": "Stage 03 T15:382–401 requires 05-documentation.md, ordinary HTTP/TLS/custom-Servlet examples and consistent commands. Only stages 01–04 and decision-report.md exist. The capability validator succeeds but checks zero capability files and zero pending deltas; it is not a check of those documentation deliverables.",
+    "id": "A12"
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:433-447",
+    "trigger_condition": "Large or concurrent request bodies arrive before admission is checked.",
+    "guard_snippet": "Acquire admission before reading; enforce maxBodySizeBytes incrementally before appending each chunk.",
+    "potential_consequence": "Entire oversized bodies accumulate in memory, bypassing both advertised resource limits.",
+    "lens": "edge-case-hunter",
+    "id": "E01",
+    "audit_observation": "See runtime observation A01."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:427-430",
+    "trigger_condition": "A client continues an incomplete upload after receiving the body-read timeout response.",
+    "guard_snippet": "After the 408 write completes, close/reset the request and stop accumulating its body.",
+    "potential_consequence": "The body accumulator and connection remain active beyond the configured deadline.",
+    "lens": "edge-case-hunter",
+    "id": "E02"
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:175-198",
+    "trigger_condition": "start() is called twice while the server already runs on an ephemeral port.",
+    "guard_snippet": "Serialize lifecycle entry points and return from start() when isRunning().",
+    "potential_consequence": "The first listener and Vert.x instance become unreachable and survive subsequent stop/destroy.",
+    "lens": "edge-case-hunter",
+    "id": "E03",
+    "audit_observation": "probe.log: first listener still accepted a TCP connection after two starts followed by stop and destroy; the diagnostic explicitly closed the leaked instance afterward."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:299-304",
+    "trigger_condition": "Old requests remain queued in the shared executor across stop/start.",
+    "guard_snippet": "Capture adapter/configuration/context per generation; close admission and terminate queued work during stop.",
+    "potential_consequence": "Old requests can enter the new default adapter queue and satisfy new-generation receives.",
+    "lens": "edge-case-hunter",
+    "id": "E04",
+    "audit_observation": "See runtime observation A03."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:334-336",
+    "trigger_condition": "An interruption-ignoring worker finishes after destroy() and a subsequent start().",
+    "guard_snippet": "Release the captured executor that acquired this exchange's permit, never this.exchangeExecutor.",
+    "potential_consequence": "The old worker increments the new executor's semaphore, exceeding its configured concurrency bound.",
+    "lens": "edge-case-hunter",
+    "id": "E05"
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:254-255",
+    "trigger_condition": "destroy() is called directly on a running server.",
+    "guard_snippet": "Call stop() before destroying remaining resources so the running flag is cleared.",
+    "potential_consequence": "isRunning() remains true after closure; initialize() with autoStart refuses to restart.",
+    "lens": "edge-case-hunter",
+    "id": "E06",
+    "audit_observation": "generation-probe.log: after direct destroy and autoStart initialize, running=true while actualPort=-1."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:190-193",
+    "trigger_condition": "Worker or concurrency limits change after initialize() or between stop/start generations.",
+    "guard_snippet": "Construct each generation's executor from that generation's validated options.",
+    "potential_consequence": "The active options report new limits while the reused executor continues enforcing old limits.",
+    "lens": "edge-case-hunter",
+    "id": "E07",
+    "audit_observation": "generation-probe.log: active maximum was 1 while the executor still had 32 available permits."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:330-332",
+    "trigger_condition": "An adapter returns an invalid status header or the outbound converter throws.",
+    "guard_snippet": "Catch response-plan conversion exceptions and terminally complete with the controlled 500 response.",
+    "potential_consequence": "The worker exits without responding or closing the request, leaving the client waiting.",
+    "lens": "edge-case-hunter",
+    "id": "E08",
+    "audit_observation": "See runtime observation A04."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpMessageMapper.java:101-108",
+    "trigger_condition": "The request path contains percent escapes or comma-containing semicolon parameters.",
+    "guard_snippet": "Apply UrlPathHelper-compatible semicolon removal, URI decoding, and path normalization before assigning path/uri.",
+    "potential_consequence": "Citrus receives different path headers than Jetty, breaking existing receive-path expectations.",
+    "lens": "edge-case-hunter",
+    "id": "E09"
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpMessageMapper.java:145-159",
+    "trigger_condition": "A reply carries Transfer-Encoding, including an echo of a chunked request.",
+    "guard_snippet": "Filter transport-managed framing headers before setting the computed Content-Length.",
+    "potential_consequence": "HTTP/1.1 responses advertise both Transfer-Encoding and Content-Length, creating conflicting framing.",
+    "lens": "edge-case-hunter",
+    "id": "E10",
+    "audit_observation": "probe.log: raw HTTP/1.1 response contained Transfer-Encoding: chunked and Content-Length: 4 together."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpMessageMapper.java:283-292",
+    "trigger_condition": "A reply cookie specifies Secure, HttpOnly, Max-Age, or SameSite attributes.",
+    "guard_snippet": "Serialize all supported Cookie attributes with a standards-compliant cookie encoder.",
+    "potential_consequence": "Cookie security and expiration attributes disappear, contradicting the reported cookie compatibility.",
+    "lens": "edge-case-hunter",
+    "id": "E11",
+    "audit_observation": "See runtime observation A05."
+  },
+  {
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/FootprintProbe.java:128-134",
+    "trigger_condition": "The default JDK client negotiates HTTP/2 with Vert.x but HTTP/1.1 with Jetty.",
+    "guard_snippet": "Set HttpClient.Version.HTTP_1_1 for both campaigns and assert/report every response protocol.",
+    "potential_consequence": "Latency, thread, and memory comparisons conflate engine changes with different HTTP protocols.",
+    "lens": "edge-case-hunter",
+    "id": "E12",
+    "audit_observation": "probe.log: the benchmark-style default JDK client negotiated HTTP_1_1 with Jetty and HTTP_2 with Vert.x."
+  },
+  {
+    "lens": "verification-gap",
+    "location": "docs/http-server-vertx-evaluation/sdd/04-implementation.md:16",
+    "trigger_condition": "T11 is marked complete although no test stops the server with pending work or observes owned-thread termination.",
+    "guard_snippet": "Hold a request or adapter pending, invoke stop, assert termination within the agreed budget and absence of owned worker/event-loop threads, then restart and verify old requests/replies cannot enter the new generation.",
+    "potential_consequence": "The evaluation reports lifecycle compatibility while leaking workers or allowing old-generation work to survive restart. Port and adapter-identity assertions cannot detect this.",
+    "gap_shape": "broken-verification-gap",
+    "consumer": "Prototype shutdown/restart at endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:224.",
+    "evidence": "Repository-wide symbol/import searches and every prototype test were inspected. LifecycleIT:111–153 checks adapter identity and three completed-request generations without pending work, elapsed shutdown assertions or thread inspection. ConcurrencyIT:74–80 completes both requests before teardown. ExchangeExecutorTest:105–110 waits for the task to finish before shutdown. The claimed 'pending-stop via gated adapter' test is absent.",
+    "id": "V01"
+  },
+  {
+    "lens": "verification-gap",
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerConcurrencyIT.java:58",
+    "trigger_condition": "The reverse-order test replaces the default Citrus adapter with a custom echo adapter, bypassing Citrus reply queues and send/receive correlation.",
+    "guard_snippet": "Run two concurrent requests through the default DirectEndpointAdapter; receive both with Citrus actions using separate contexts or explicit correlation; send the second response first and assert each client receives its own distinguishable response.",
+    "potential_consequence": "Default-adapter wiring or reply-correlation failures can pass the claimed concurrency proof because each gated worker directly returns its own reply.",
+    "gap_shape": "broken-verification-gap",
+    "consumer": "Default adapter at VertxHttpServer.java:180; server actions in VertxHttpServerRoundtripIT.java:107.",
+    "evidence": "ConcurrencyIT:58–80 installs VertxPrototypeAdapters.Gated via startWith:189. Gated:143 returns replies.apply(message), bypassing temporary reply queues. RoundtripIT:68–77 completes one exchange before beginning the next. Repository-wide searches found no concurrent Citrus-action prototype test. T9 explicitly requires preserving temporary reply queues and correlation.",
+    "id": "V02"
+  },
+  {
+    "lens": "verification-gap",
+    "location": "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java:460",
+    "trigger_condition": "No wire test supplies query parameters or checks inbound protocol/context metadata, despite AC3 being reported as passed.",
+    "guard_snippet": "Send encoded, duplicate and valueless query parameters over HTTP; assert them, protocol and root context through Citrus receive actions. Include the specified deliberate expectation mismatch.",
+    "potential_consequence": "Replacing request.query() with null would discard all incoming queries while the inspected tests still pass; direct mapper tests inject prepared snapshots.",
+    "gap_shape": "regression-gap",
+    "consumer": "Citrus receive actions at endpoints/citrus-http/src/test/java/org/citrusframework/http/integration/VertxHttpServerRoundtripIT.java:104.",
+    "evidence": "All prototype tests were read following repository-wide symbol/import searches. RoundtripIT:39 uses '/vertx-echo'; clientSend:81–101 adds no query; serverReceive:104–125 checks method/path/body/custom header without context/protocol/query. MapperTest:48–60 only injects 'a=1&b=2'. No encoded/duplicate/valueless wire queries or expected failing Citrus mismatch were found.",
+    "id": "V03"
+  },
+  {
+    "lens": "verification-gap",
+    "location": "docs/http-server-vertx-evaluation/decision-report.md:15",
+    "trigger_condition": "AC4 is called passed using candidate-only payload tests although it requires identical fixtures against both engines.",
+    "guard_snippet": "Run UTF-8, explicit non-UTF-8, empty, binary, status/null/timeout and HEAD fixtures against Jetty and Vert.x; record engine-specific outcomes and differences.",
+    "potential_consequence": "Candidate behavior can differ from Jetty while the report presents parity as established. The candidate's expectations currently serve as their own baseline.",
+    "gap_shape": "broken-verification-gap",
+    "consumer": "Migration/parity conclusion at docs/http-server-vertx-evaluation/decision-report.md:80.",
+    "evidence": "LimitsIT:55–188 runs payload/reply cases through startWith, which constructs VertxHttpServer:192. Jetty appears alongside the prototype only in CoexistenceIT and FootprintProbe; those check 200 or fixed pong. Additional saved regressions are HttpServerJavaIT and HttpServerStandaloneJavaIT, not shared fixtures. T8 requires both engines' contract outcomes.",
+    "id": "V04"
+  },
+  {
+    "lens": "verification-gap",
+    "location": "docs/http-server-vertx-evaluation/decision-report.md:20",
+    "trigger_condition": "AC7/AC9 and T12 are marked passed/completed with two existing HTTP regressions and no accounting for required affected suites or convergence.",
+    "guard_snippet": "Record passed, failed, skipped and unrun counts for HTTP, WebSocket, SOAP, OpenAPI and Cucumber selections; retain convergence/linkage results and label incomplete criteria accurately.",
+    "potential_consequence": "Maintainers can mistake limited evidence for affected-consumer and dependency compatibility. The 40-unit-test figure covers the new prototype tests, not existing HTTP regression coverage.",
+    "gap_shape": "other",
+    "consumer": "decision-report.md:18 and sdd/04-implementation.md:17.",
+    "evidence": "Saved Surefire XML has 40 cases, all options/mapper/executor tests; saved Failsafe XML has 24 cases in five prototype IT classes, all JDK 21.0.12.1. Two separate HTTP regression class reports exist; no WebSocket/SOAP Failsafe reports were found. The saved classpath mixes Netty 4.2.16.Final with 4.1.136.Final codec-http2/resolver-dns/codec-dns, with no convergence outcome. This does not demonstrate an actual linkage failure.",
+    "id": "V05"
+  },
+  {
+    "lens": "structure",
+    "Pass": "structure",
+    "Original Text": "decision-report.md §Recommendation, 77 words, follows acceptance criteria, measurements, compatibility, alternatives and #1807 notes.",
+    "Revised Text": "MOVE the recommendation immediately after the opening scope/runtime paragraph; retain the supporting sections below it.",
+    "Changes": "Use a conclusion-first decision memo so maintainers can identify the requested decision before evaluating evidence. Move 77 words; remove 0 words (0% of the 1,131-word document).",
+    "id": "S01"
+  }
+]

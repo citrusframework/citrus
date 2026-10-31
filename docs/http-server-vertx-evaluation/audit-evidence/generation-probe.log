@@ -1,0 +1,11 @@
+AUDIT java=21.0.12.1
+[2m2026-10-14 09:39:35.075[m [33m WARN[m [35m67919[m [2m---[m [2m[           main][m [36mdns.DnsServerAddressStreamProviders[m [2m:[m Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+[2m2026-10-14 09:39:35.141[m [32m INFO[m [35m67919[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditGenerations
+[2m2026-10-14 09:39:35.773[m [32m INFO[m [35m67919[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Stopped server: auditGenerations
+[2m2026-10-14 09:39:35.776[m [32m INFO[m [35m67919[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditGenerations
+AUDIT generation current=2 fresh queue received=second-old from generation=1
+[2m2026-10-14 09:39:36.294[m [32m INFO[m [35m67919[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Stopped server: auditGenerations
+[2m2026-10-14 09:39:36.346[m [32m INFO[m [35m67919[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditOptions
+AUDIT limit active options=1 executor permits=32
+AUDIT after direct destroy+autoStart initialize running=true actualPort=-1
+[2m2026-10-14 09:39:36.351[m [32m INFO[m [35m67919[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Stopped server: auditOptions
