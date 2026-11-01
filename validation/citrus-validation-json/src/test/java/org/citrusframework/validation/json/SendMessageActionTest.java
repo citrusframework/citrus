@@ -31,15 +31,15 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -51,7 +51,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-public class SendMessageActionTest extends AbstractTestNGUnitTest {
+public class SendMessageActionTest extends AbstractUnitTest {
 
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private Producer producer = Mockito.mock(Producer.class);
@@ -108,8 +108,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(schemaValidator.supportsMessageType(eq("JSON"), any())).thenReturn(true);
         doAnswer(invocation -> {
 
-            Assert.assertEquals(invocation.getArgument(3, String.class), "fooSchema");
-            Assert.assertEquals(invocation.getArgument(2, String.class), "fooRepository");
+            Assertions.assertEquals("fooSchema", invocation.getArgument(3, String.class));
+            Assertions.assertEquals("fooRepository", invocation.getArgument(2, String.class));
 
             validated.set(true);
 
@@ -145,12 +145,12 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             .build();
         sendAction.execute(context);
 
-        Assert.assertTrue(validated.get());
+        Assertions.assertTrue(validated.get());
     }
 
     private void validateMessageToSend(Message toSend, Message controlMessage) {
-        Assert.assertEquals(toSend.getPayload(String.class).trim(),
-            controlMessage.getPayload(String.class).trim());
+        Assertions.assertEquals(controlMessage.getPayload(String.class).trim(),
+            toSend.getPayload(String.class).trim());
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
         validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext.Builder().build());
     }

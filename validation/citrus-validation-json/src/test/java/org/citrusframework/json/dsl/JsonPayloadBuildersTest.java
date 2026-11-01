@@ -21,8 +21,8 @@ import org.citrusframework.json.actions.dsl.TestRequest;
 import org.citrusframework.message.DefaultPayloadBuilders;
 import org.citrusframework.message.MessagePayloadBuilder;
 import org.citrusframework.message.PayloadBuilders;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;
 
 public class JsonPayloadBuildersTest extends UnitTestSupport {
@@ -36,8 +36,8 @@ public class JsonPayloadBuildersTest extends UnitTestSupport {
 
         MessagePayloadBuilder payloadBuilder = builders.json().marshal(request, mapper);
 
-        Assert.assertNotNull(payloadBuilder);
-        Assert.assertEquals(payloadBuilder.buildPayload(context), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertNotNull(payloadBuilder);
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", payloadBuilder.buildPayload(context));
     }
 
     @Test
@@ -46,6 +46,6 @@ public class JsonPayloadBuildersTest extends UnitTestSupport {
 
         MessagePayloadBuilder payloadBuilder = builders.json().marshal(request);
 
-        Assert.assertNotNull(payloadBuilder);
+        Assertions.assertNotNull(payloadBuilder);
     }
 }

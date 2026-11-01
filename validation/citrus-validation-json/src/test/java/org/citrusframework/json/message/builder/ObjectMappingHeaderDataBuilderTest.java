@@ -20,8 +20,8 @@ import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.json.actions.dsl.TestRequest;
 import org.citrusframework.spi.ReferenceResolver;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -45,14 +45,14 @@ public class ObjectMappingHeaderDataBuilderTest extends UnitTestSupport {
 
         ObjectMappingHeaderDataBuilder builder = new ObjectMappingHeaderDataBuilder(request);
 
-        Assert.assertEquals(builder.buildHeaderData(context), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", builder.buildHeaderData(context));
     }
 
     @Test
     public void shouldBuildHeaderDataWithMapper() {
         ObjectMappingHeaderDataBuilder builder = new ObjectMappingHeaderDataBuilder(request, mapper);
 
-        Assert.assertEquals(builder.buildHeaderData(context), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", builder.buildHeaderData(context));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ObjectMappingHeaderDataBuilderTest extends UnitTestSupport {
 
         ObjectMappingHeaderDataBuilder builder = new ObjectMappingHeaderDataBuilder(request, "mapper");
 
-        Assert.assertEquals(builder.buildHeaderData(context), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", builder.buildHeaderData(context));
     }
 
     @Test
@@ -72,6 +72,6 @@ public class ObjectMappingHeaderDataBuilderTest extends UnitTestSupport {
         context.setVariable("message", "Hello Citrus!");
         ObjectMappingHeaderDataBuilder builder = new ObjectMappingHeaderDataBuilder(new TestRequest("${message}"), mapper);
 
-        Assert.assertEquals(builder.buildHeaderData(context), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", builder.buildHeaderData(context));
     }
 }

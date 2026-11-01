@@ -26,13 +26,23 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 3.3.1
  */
-public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class JsonPathExpressionValidationIT implements TestActionSupport {
 
     @BindToRegistry
     public MessageQueue test = new DefaultMessageQueue("test");
@@ -47,14 +57,14 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
 
     @Test
     @CitrusTest
-    public void shouldPerformJsonPathValidation() {
-        $(send(direct)
+    public void shouldPerformJsonPathValidation(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(JSON_BODY)
         );
 
-        $(receive(direct)
+        runner.$(receive(direct)
                 .message()
                 .body("{\"user\":\"@ignore@\", \"age\": \"@ignore@\"}")
                 .validate(validation().jsonPath()
@@ -65,8 +75,8 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
 
     @Test
     @CitrusTest
-    public void shouldPerformJsonPathValidationWithMessageProcessing() {
-        $(send(direct)
+    public void shouldPerformJsonPathValidationWithMessageProcessing(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body("{\"user\":\"?\", \"age\": 0}")
@@ -74,7 +84,7 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
                 .process(processor().jsonPath().expression("$.age", 32))
         );
 
-        $(receive(direct)
+        runner.$(receive(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body("{\"user\":\"x\", \"age\": \"99\"}")
@@ -86,32 +96,32 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
         );
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test
     @CitrusTest
-    public void shouldFailOnJsonPathValidation() {
-        $(send(direct)
+    public void shouldFailOnJsonPathValidation(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(JSON_BODY)
         );
 
-        $(receive(direct)
+        assertThrows(TestCaseFailedException.class, () -> runner.$(receive(direct)
                 .message()
                 .body("{\"user\":\"@ignore@\", \"age\": \"@ignore@\"}")
                 .validate(validation().jsonPath().expression("$.user", "wrong"))
-        );
+        ));
     }
 
     @Test
     @CitrusTest
-    public void shouldPerformJsonPathValidationWithMultipleExpressions() {
-        $(send(direct)
+    public void shouldPerformJsonPathValidationWithMultipleExpressions(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(JSON_BODY)
         );
 
-        $(receive(direct)
+        runner.$(receive(direct)
                 .message()
                 .body("{\"user\":\"@ignore@\", \"age\": \"@ignore@\"}")
                 .validate(validation().jsonPath().expression("$.user", "christoph"))
@@ -119,20 +129,20 @@ public class JsonPathExpressionValidationIT extends TestNGCitrusSpringSupport im
         );
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test
     @CitrusTest
-    public void shouldFailOnJsonPathValidationWithMultipleExpressions() {
-        $(send(direct)
+    public void shouldFailOnJsonPathValidationWithMultipleExpressions(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(JSON_BODY)
         );
 
-        $(receive(direct)
+        assertThrows(TestCaseFailedException.class, () -> runner.$(receive(direct)
                 .message()
                 .body("{\"user\":\"@ignore@\", \"age\": \"@ignore@\"}")
                 .validate(validation().jsonPath().expression("$.user", "christoph"))
                 .validate(validation().jsonPath().expression("$.age", 0))
-        );
+        ));
     }
 }

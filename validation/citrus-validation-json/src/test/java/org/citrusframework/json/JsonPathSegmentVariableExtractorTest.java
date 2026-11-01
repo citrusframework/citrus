@@ -16,9 +16,10 @@
 
 package org.citrusframework.json;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.variable.VariableExpressionSegmentMatcher;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JsonPathSegmentVariableExtractorTest extends UnitTestSupport {
 
@@ -32,8 +33,8 @@ public class JsonPathSegmentVariableExtractorTest extends UnitTestSupport {
         String jsonPath = "$.name";
         VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(jsonPath);
 
-        Assert.assertTrue(unitUnderTest.canExtract(context, JSON_FIXTURE, matcher));
-        Assert.assertEquals(unitUnderTest.extractValue(context, JSON_FIXTURE, matcher), "Peter");
+        Assertions.assertTrue(unitUnderTest.canExtract(context, JSON_FIXTURE, matcher));
+        Assertions.assertEquals("Peter", unitUnderTest.extractValue(context, JSON_FIXTURE, matcher));
     }
 
     @Test
@@ -43,7 +44,7 @@ public class JsonPathSegmentVariableExtractorTest extends UnitTestSupport {
         String nonJsonPath = "name";
         VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(nonJsonPath);
 
-        Assert.assertFalse(unitUnderTest.canExtract(context, json, matcher));
+        Assertions.assertFalse(unitUnderTest.canExtract(context, json, matcher));
     }
 
     @Test
@@ -53,8 +54,8 @@ public class JsonPathSegmentVariableExtractorTest extends UnitTestSupport {
         String invalidJsonPath = "$.$$$name";
         VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(invalidJsonPath);
 
-        Assert.assertTrue(unitUnderTest.canExtract(context, json, matcher));
-        Assert.assertThrows(() -> unitUnderTest.extractValue(context, json, matcher));
+        Assertions.assertTrue(unitUnderTest.canExtract(context, json, matcher));
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> unitUnderTest.extractValue(context, json, matcher));
     }
 
     /**
@@ -65,7 +66,7 @@ public class JsonPathSegmentVariableExtractorTest extends UnitTestSupport {
     private VariableExpressionSegmentMatcher matchSegmentExpressionMatcher(String jsonPath) {
         String variableExpression = String.format("jsonPath(%s)", jsonPath);
         VariableExpressionSegmentMatcher matcher = new VariableExpressionSegmentMatcher(variableExpression);
-        Assert.assertTrue(matcher.nextMatch());
+        Assertions.assertTrue(matcher.nextMatch());
         return matcher;
     }
 }

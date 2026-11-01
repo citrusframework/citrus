@@ -20,14 +20,14 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;
 
 import static org.citrusframework.validation.json.JsonMappingValidationProcessor.Builder.validate;
 
-public class JsonMappingValidationProcessorTest extends AbstractTestNGUnitTest {
+public class JsonMappingValidationProcessorTest extends AbstractUnitTest {
 
     private final JsonMapper mapper = JsonMapper.shared();
     private final Message message = new DefaultMessage("{\"name\": \"John\", \"age\": 23}");
@@ -36,8 +36,8 @@ public class JsonMappingValidationProcessorTest extends AbstractTestNGUnitTest {
     public void shouldValidate() {
         JsonMappingValidationProcessor<Person> processor = validate(Person.class)
         .validator((person, headers, context) -> {
-            Assert.assertEquals(person.getName(), "John");
-            Assert.assertEquals(person.getAge(), 23);
+            Assertions.assertEquals("John", person.getName());
+            Assertions.assertEquals(23, person.getAge());
         })
         .mapper(mapper)
         .build();
@@ -52,8 +52,8 @@ public class JsonMappingValidationProcessorTest extends AbstractTestNGUnitTest {
 
         JsonMappingValidationProcessor<Person> processor = validate(Person.class)
         .validator((person, headers, context) -> {
-            Assert.assertEquals(person.getName(), "John");
-            Assert.assertEquals(person.getAge(), 23);
+            Assertions.assertEquals("John", person.getName());
+            Assertions.assertEquals(23, person.getAge());
         })
         .withReferenceResolver(referenceResolver)
         .build();
@@ -61,14 +61,14 @@ public class JsonMappingValidationProcessorTest extends AbstractTestNGUnitTest {
         processor.validate(message, context);
     }
 
-    @Test(expectedExceptions = AssertionError.class)
+    @Test
     public void shouldFailValidation() {
         JsonMappingValidationProcessor<Person> processor = validate(Person.class)
-        .validator((person, headers, context) -> Assert.assertEquals(person.getAge(), -1))
+        .validator((person, headers, context) -> Assertions.assertEquals(-1, person.getAge()))
         .mapper(mapper)
         .build();
 
-        processor.validate(message, context);
+        Assertions.assertThrows(AssertionError.class, () -> processor.validate(message, context));
     }
 
     private final static class Person {

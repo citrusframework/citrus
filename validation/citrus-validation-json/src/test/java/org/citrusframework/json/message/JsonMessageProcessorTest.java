@@ -20,18 +20,18 @@ import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.json.JsonMappingValidationProcessor;
 import org.citrusframework.validation.json.JsonPathMessageProcessor;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JsonMessageProcessorTest {
 
     @Test
     public void testLookup() {
-        Assert.assertTrue(MessageProcessor.lookup("jsonExtract").isPresent());
-        Assert.assertEquals(MessageProcessor.lookup("jsonExtract").get().getClass(), JsonPathVariableExtractor.Builder.class);
-        Assert.assertTrue(MessageProcessor.lookup("jsonValidate", JsonMessageProcessorTest.class).isPresent());
-        Assert.assertEquals(MessageProcessor.lookup("jsonValidate", JsonMessageProcessorTest.class).get().getClass(), JsonMappingValidationProcessor.Builder.class);
-        Assert.assertTrue(MessageProcessor.lookup("jsonPath").isPresent());
-        Assert.assertEquals(MessageProcessor.lookup("jsonPath").get().getClass(), JsonPathMessageProcessor.Builder.class);
+        Assertions.assertTrue(MessageProcessor.lookup("jsonExtract").isPresent());
+        Assertions.assertEquals(JsonPathVariableExtractor.Builder.class, MessageProcessor.lookup("jsonExtract").get().getClass());
+        Assertions.assertTrue(MessageProcessor.lookup("jsonValidate", JsonMessageProcessorTest.class).isPresent());
+        Assertions.assertEquals(JsonMappingValidationProcessor.Builder.class, MessageProcessor.lookup("jsonValidate", JsonMessageProcessorTest.class).get().getClass());
+        Assertions.assertTrue(MessageProcessor.lookup("jsonPath").isPresent());
+        Assertions.assertEquals(JsonPathMessageProcessor.Builder.class, MessageProcessor.lookup("jsonPath").get().getClass());
     }
 }

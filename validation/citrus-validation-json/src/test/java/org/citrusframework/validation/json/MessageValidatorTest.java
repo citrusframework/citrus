@@ -21,27 +21,27 @@ import java.util.Map;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MessageValidatorTest {
 
     @Test
     public void testLookup() {
         Map<String, MessageValidator<? extends ValidationContext>> validators = MessageValidator.lookup();
-        Assert.assertEquals(validators.size(), 3L);
-        Assert.assertNotNull(validators.get("defaultMessageHeaderValidator"));
-        Assert.assertEquals(validators.get("defaultMessageHeaderValidator").getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertNotNull(validators.get("defaultJsonMessageValidator"));
-        Assert.assertEquals(validators.get("defaultJsonMessageValidator").getClass(), JsonTextMessageValidator.class);
-        Assert.assertNotNull(validators.get("defaultJsonPathMessageValidator"));
-        Assert.assertEquals(validators.get("defaultJsonPathMessageValidator").getClass(), JsonPathMessageValidator.class);
+        Assertions.assertEquals(3L, validators.size());
+        Assertions.assertNotNull(validators.get("defaultMessageHeaderValidator"));
+        Assertions.assertEquals(DefaultMessageHeaderValidator.class, validators.get("defaultMessageHeaderValidator").getClass());
+        Assertions.assertNotNull(validators.get("defaultJsonMessageValidator"));
+        Assertions.assertEquals(JsonTextMessageValidator.class, validators.get("defaultJsonMessageValidator").getClass());
+        Assertions.assertNotNull(validators.get("defaultJsonPathMessageValidator"));
+        Assertions.assertEquals(JsonPathMessageValidator.class, validators.get("defaultJsonPathMessageValidator").getClass());
     }
 
     @Test
     public void testTestLookup() {
-        Assert.assertTrue(MessageValidator.lookup("header").isPresent());
-        Assert.assertTrue(MessageValidator.lookup("json").isPresent());
-        Assert.assertTrue(MessageValidator.lookup("json-path").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("header").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("json").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("json-path").isPresent());
     }
 }

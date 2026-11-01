@@ -19,11 +19,11 @@ package org.citrusframework.json.config.xml;
 import java.util.Map;
 
 import org.citrusframework.message.MessageDirection;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.json.variable.dictionary.JsonPathMappingDataDictionary;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.7
@@ -34,38 +34,38 @@ public class JsonPathDataDictionaryParserTest extends AbstractBeanDefinitionPars
     public void testDataDictionaryParser() {
         Map<String, JsonPathMappingDataDictionary> dictionaries = beanDefinitionContext.getBeansOfType(JsonPathMappingDataDictionary.class);
 
-        Assert.assertEquals(dictionaries.size(), 3L);
+        Assertions.assertEquals(3L, dictionaries.size());
 
         JsonPathMappingDataDictionary dictionary = dictionaries.get("dataDictionary1");
-        Assert.assertEquals(dictionary.getName(), "dataDictionary1");
-        Assert.assertTrue(dictionary.isGlobalScope());
-        Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT);
-        Assert.assertEquals(dictionary.getDirection(), MessageDirection.UNBOUND);
-        Assert.assertNull(dictionary.getMappingFile());
-        Assert.assertEquals(dictionary.getMappings().size(), 3L);
+        Assertions.assertEquals("dataDictionary1", dictionary.getName());
+        Assertions.assertTrue(dictionary.isGlobalScope());
+        Assertions.assertEquals(DataDictionary.PathMappingStrategy.EXACT, dictionary.getPathMappingStrategy());
+        Assertions.assertEquals(MessageDirection.UNBOUND, dictionary.getDirection());
+        Assertions.assertNull(dictionary.getMappingFile());
+        Assertions.assertEquals(3L, dictionary.getMappings().size());
 
-        Assert.assertEquals(dictionary.getMappings().get("$.node.name.1"), "value1");
-        Assert.assertEquals(dictionary.getMappings().get("$.node.name.2"), "value2");
-        Assert.assertEquals(dictionary.getMappings().get("$.node.name.3"), "value3");
+        Assertions.assertEquals("value1", dictionary.getMappings().get("$.node.name.1"));
+        Assertions.assertEquals("value2", dictionary.getMappings().get("$.node.name.2"));
+        Assertions.assertEquals("value3", dictionary.getMappings().get("$.node.name.3"));
 
         dictionary = dictionaries.get("dataDictionary2");
-        Assert.assertEquals(dictionary.getName(), "dataDictionary2");
-        Assert.assertFalse(dictionary.isGlobalScope());
-        Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT);
-        Assert.assertEquals(dictionary.getDirection(), MessageDirection.OUTBOUND);
-        Assert.assertNull(dictionary.getMappingFile());
-        Assert.assertEquals(dictionary.getMappings().size(), 1L);
+        Assertions.assertEquals("dataDictionary2", dictionary.getName());
+        Assertions.assertFalse(dictionary.isGlobalScope());
+        Assertions.assertEquals(DataDictionary.PathMappingStrategy.EXACT, dictionary.getPathMappingStrategy());
+        Assertions.assertEquals(MessageDirection.OUTBOUND, dictionary.getDirection());
+        Assertions.assertNull(dictionary.getMappingFile());
+        Assertions.assertEquals(1L, dictionary.getMappings().size());
 
-        Assert.assertEquals(dictionary.getMappings().get("$.node.name.1"), "value1");
+        Assertions.assertEquals("value1", dictionary.getMappings().get("$.node.name.1"));
 
         dictionary = dictionaries.get("dataDictionary3");
-        Assert.assertEquals(dictionary.getName(), "dataDictionary3");
-        Assert.assertTrue(dictionary.isGlobalScope());
-        Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT);
-        Assert.assertNotNull(dictionary.getMappingFile());
-        Assert.assertEquals(dictionary.getMappings().size(), 2L);
+        Assertions.assertEquals("dataDictionary3", dictionary.getName());
+        Assertions.assertTrue(dictionary.isGlobalScope());
+        Assertions.assertEquals(DataDictionary.PathMappingStrategy.EXACT, dictionary.getPathMappingStrategy());
+        Assertions.assertNotNull(dictionary.getMappingFile());
+        Assertions.assertEquals(2L, dictionary.getMappings().size());
 
-        Assert.assertEquals(dictionary.getMappings().get("$.node.name.1"), "value1");
-        Assert.assertEquals(dictionary.getMappings().get("$.node.name.2"), "value2");
+        Assertions.assertEquals("value1", dictionary.getMappings().get("$.node.name.1"));
+        Assertions.assertEquals("value2", dictionary.getMappings().get("$.node.name.2"));
     }
 }

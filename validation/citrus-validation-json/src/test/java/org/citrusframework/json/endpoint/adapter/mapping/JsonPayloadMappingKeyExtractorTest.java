@@ -18,8 +18,8 @@ package org.citrusframework.json.endpoint.adapter.mapping;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.6
@@ -31,22 +31,22 @@ public class JsonPayloadMappingKeyExtractorTest {
         JsonPayloadMappingKeyExtractor extractor = new JsonPayloadMappingKeyExtractor();
         extractor.setJsonPathExpression("$.person.name");
 
-        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage(
-                "{ \"person\": {\"name\": \"Penny\"} }")), "Penny");
+        Assertions.assertEquals("Penny", extractor.extractMappingKey(new DefaultMessage(
+                "{ \"person\": {\"name\": \"Penny\"} }")));
 
-        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage(
-                "{ \"person\": {\"name\": \"Leonard\"} }")), "Leonard");
+        Assertions.assertEquals("Leonard", extractor.extractMappingKey(new DefaultMessage(
+                "{ \"person\": {\"name\": \"Leonard\"} }")));
     }
 
     @Test
     public void testExtractMappingKeyWithoutJsonPathExpressionSet() {
         JsonPayloadMappingKeyExtractor extractor = new JsonPayloadMappingKeyExtractor();
 
-        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage(
-                "{ \"person\": {\"name\": \"Penny\"} }")), "[person]");
+        Assertions.assertEquals("[person]", extractor.extractMappingKey(new DefaultMessage(
+                "{ \"person\": {\"name\": \"Penny\"} }")));
 
-        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage(
-                "{ \"animal\": {\"name\": \"Sheldon\"} }")), "[animal]");
+        Assertions.assertEquals("[animal]", extractor.extractMappingKey(new DefaultMessage(
+                "{ \"animal\": {\"name\": \"Sheldon\"} }")));
     }
 
     @Test
@@ -57,9 +57,9 @@ public class JsonPayloadMappingKeyExtractorTest {
         try {
             extractor.extractMappingKey(new DefaultMessage(
                     "{ \"person\": {\"name\": \"Penny\"} }"));
-            Assert.fail("Missing exception due to bad Json expression");
+            Assertions.fail("Missing exception due to bad Json expression");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to evaluate JSON path expression: $.I_DO_NOT_EXIST");
+            Assertions.assertEquals("Failed to evaluate JSON path expression: $.I_DO_NOT_EXIST", e.getMessage());
         }
     }
 }

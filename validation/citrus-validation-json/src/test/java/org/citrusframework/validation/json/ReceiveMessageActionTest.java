@@ -34,20 +34,22 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.messaging.SelectiveConsumer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class ReceiveMessageActionTest extends AbstractUnitTest {
 
     @Mock
     private Endpoint endpoint;
@@ -61,7 +63,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.openMocks(this);
         TestContextFactory factory = super.createTestContextFactory();
         factory.getMessageValidatorRegistry().addMessageValidator("header", new DefaultMessageHeaderValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("json", new JsonTextMessageValidator());
@@ -137,11 +138,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        Assertions.assertNotNull(context.getVariable("messageVar"));
+        Assertions.assertEquals("Hello World!", context.getVariable("messageVar"));
 
-        Assert.assertNotNull(context.getVariable("person"));
-        Assert.assertTrue(context.getVariable("person").contains("\"John\""));
+        Assertions.assertNotNull(context.getVariable("person"));
+        Assertions.assertTrue(context.getVariable("person").contains("\"John\""));
 
     }
 
@@ -179,7 +180,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testReceiveMessageWithJsonPathValidationFailure() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
@@ -205,10 +206,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .type(MessageType.JSON)
                 .validate(validationContext)
                 .build();
-        receiveAction.execute(context);
+        Assertions.assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testReceiveMessageWithJsonPathValidationNoPathResult() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
@@ -234,7 +235,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .type(MessageType.JSON)
                 .validate(validationContext)
                 .build();
-        receiveAction.execute(context);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
     }
 
     @Test
@@ -283,10 +284,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Validation failed - expected message contents, but received empty message!");
+            Assertions.assertEquals("Validation failed - expected message contents, but received empty message!", e.getMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
     }
 }

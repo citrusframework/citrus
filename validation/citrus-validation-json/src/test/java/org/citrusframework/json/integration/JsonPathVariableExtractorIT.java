@@ -16,6 +16,7 @@
 
 package org.citrusframework.json.integration;
 
+import org.citrusframework.TestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusResource;
@@ -28,14 +29,22 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 3.3.1
  */
-public class JsonPathVariableExtractorIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class JsonPathVariableExtractorIT implements TestActionSupport {
 
     @BindToRegistry
     public MessageQueue test = new DefaultMessageQueue("test");
@@ -53,14 +62,14 @@ public class JsonPathVariableExtractorIT extends TestNGCitrusSpringSupport imple
 
     @Test
     @CitrusTest
-    public void shouldPerformJsonPathVariableExtract() {
-        $(send(direct)
+    public void shouldPerformJsonPathVariableExtract(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(JSON_BODY)
         );
 
-        $(receive(direct)
+        runner.$(receive(direct)
                 .message()
                 .body(JSON_BODY)
                 .extract(extractor().jsonPath()
@@ -68,43 +77,43 @@ public class JsonPathVariableExtractorIT extends TestNGCitrusSpringSupport imple
                             .expression("$.age", "age"))
         );
 
-        Assert.assertEquals(context.getVariable("user"), "christoph");
-        Assert.assertEquals(context.getVariable("age", Long.class), 32L);
-    }
-
-    @Test(expectedExceptions = TestCaseFailedException.class)
-    @CitrusTest
-    public void shouldFailOnJsonPathVariableExtract() {
-        $(send(direct)
-                .message()
-                .type(MessageType.JSON)
-                .body(JSON_BODY)
-        );
-
-        $(receive(direct)
-                .message()
-                .body(JSON_BODY)
-                .extract(extractor().jsonPath().expression("$.wrong", "user"))
-        );
+        Assertions.assertEquals("christoph", context.getVariable("user"));
+        Assertions.assertEquals(32L, context.getVariable("age", Long.class));
     }
 
     @Test
     @CitrusTest
-    public void shouldPerformJsonPathValidationWithMultipleExpressions() {
-        $(send(direct)
+    public void shouldFailOnJsonPathVariableExtract(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(JSON_BODY)
         );
 
-        $(receive(direct)
+        assertThrows(TestCaseFailedException.class, () -> runner.$(receive(direct)
+                .message()
+                .body(JSON_BODY)
+                .extract(extractor().jsonPath().expression("$.wrong", "user"))
+        ));
+    }
+
+    @Test
+    @CitrusTest
+    public void shouldPerformJsonPathValidationWithMultipleExpressions(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
+                .message()
+                .type(MessageType.JSON)
+                .body(JSON_BODY)
+        );
+
+        runner.$(receive(direct)
                 .message()
                 .body(JSON_BODY)
                 .extract(extractor().jsonPath().expression("$.user", "user"))
                 .extract(extractor().jsonPath().expression("$.age", "age"))
         );
 
-        Assert.assertEquals(context.getVariable("user"), "christoph");
-        Assert.assertEquals(context.getVariable("age", Long.class), 32L);
+        Assertions.assertEquals("christoph", context.getVariable("user"));
+        Assertions.assertEquals(32L, context.getVariable("age", Long.class));
     }
 }

@@ -1,9 +1,9 @@
 package org.citrusframework.json.schema;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
@@ -16,7 +16,7 @@ import org.citrusframework.spi.Resources.ByteArrayResource;
 import org.citrusframework.spi.Resources.ClasspathResource;
 import org.citrusframework.spi.Resources.FileSystemResource;
 import org.citrusframework.spi.Resources.UrlResource;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class SimpleJsonSchemaTest {
 
@@ -38,7 +38,7 @@ public class SimpleJsonSchemaTest {
 
         SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(resource);
 
-        assertEquals(simpleJsonSchema.getJson(), resource);
+        assertEquals(resource, simpleJsonSchema.getJson());
         assertNull(simpleJsonSchema.getSchema());
     }
 
@@ -136,7 +136,7 @@ public class SimpleJsonSchemaTest {
 
         simpleJsonSchema.setJson(resource);
 
-        assertEquals(simpleJsonSchema.getJson(), resource);
+        assertEquals(resource, simpleJsonSchema.getJson());
     }
 
     @Test

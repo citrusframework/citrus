@@ -21,8 +21,8 @@ import java.util.Set;
 
 import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static net.minidev.json.parser.JSONParser.DEFAULT_PERMISSIVE_MODE;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -35,21 +35,22 @@ public class JsonElementValidatorTest extends UnitTestSupport {
 
     JsonElementValidator fixture;
 
-    @Test(dataProvider = "validJsonPairs")
+    @ParameterizedTest
+    @MethodSource("validJsonPairs")
     public void shouldBeValidIfNotStrict(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(NOT_STRICT, context, Set.of());
         assertThatNoException().isThrownBy(() -> fixture.validate(validationItem));
     }
 
-    @Test(dataProvider = "validJsonPairs")
+    @ParameterizedTest
+    @MethodSource("validJsonPairs")
     public void shouldBeInvalidIfStrict(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(STRICT, context, Set.of());
         assertThatThrownBy(() -> fixture.validate(validationItem)).isInstanceOf(ValidationException.class);
     }
 
-    @DataProvider
     public static JsonAssertion[] validJsonPairs() {
         return List.of(
                 new JsonAssertion(
@@ -87,14 +88,14 @@ public class JsonElementValidatorTest extends UnitTestSupport {
         ).toArray(new JsonAssertion[0]);
     }
 
-    @Test(dataProvider = "validIfStrict")
+    @ParameterizedTest
+    @MethodSource("validIfStrict")
     public void shouldBeValidIfStrict(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(STRICT, context, Set.of());
         assertThatNoException().isThrownBy(() -> fixture.validate(validationItem));
     }
 
-    @DataProvider
     public static JsonAssertion[] validIfStrict() {
         return List.of(
                 new JsonAssertion(
@@ -160,21 +161,22 @@ public class JsonElementValidatorTest extends UnitTestSupport {
         ).toArray(new JsonAssertion[0]);
     }
 
-    @Test(dataProvider = "invalidJsonPairs")
+    @ParameterizedTest
+    @MethodSource("invalidJsonPairs")
     public void shouldBeInvalid(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(STRICT, context, Set.of());
         assertThatThrownBy(() -> fixture.validate(validationItem)).isInstanceOf(ValidationException.class);
     }
 
-    @Test(dataProvider = "invalidJsonPairs")
+    @ParameterizedTest
+    @MethodSource("invalidJsonPairs")
     public void shouldBeInvalidIfNotStrict(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(NOT_STRICT, context, Set.of());
         assertThatThrownBy(() -> fixture.validate(validationItem)).isInstanceOf(ValidationException.class);
     }
 
-    @DataProvider
     public static JsonAssertion[] invalidJsonPairs() {
         return List.of(
                 new JsonAssertion(
@@ -255,21 +257,22 @@ public class JsonElementValidatorTest extends UnitTestSupport {
         ).toArray(new JsonAssertion[0]);
     }
 
-    @Test(dataProvider = "validOnlyWithIgnoreExpressions")
+    @ParameterizedTest
+    @MethodSource("validOnlyWithIgnoreExpressions")
     public void shouldBeValidOnlyWithIgnoreExpressions(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(NOT_STRICT, context, jsonAssertion.ignoreExpressions);
         assertThatNoException().isThrownBy(() -> fixture.validate(validationItem));
     }
 
-    @Test(dataProvider = "validOnlyWithIgnoreExpressions")
+    @ParameterizedTest
+    @MethodSource("validOnlyWithIgnoreExpressions")
     public void shouldBeInvalidWithoutIgnoreExpressions(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(NOT_STRICT, context, Set.of());
         assertThatThrownBy(() -> fixture.validate(validationItem)).isInstanceOf(ValidationException.class);
     }
 
-    @DataProvider
     public static JsonAssertion[] validOnlyWithIgnoreExpressions() {
         return List.of(
                 new JsonAssertion(

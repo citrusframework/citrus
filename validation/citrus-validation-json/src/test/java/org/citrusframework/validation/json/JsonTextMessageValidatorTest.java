@@ -36,8 +36,8 @@ import org.citrusframework.validation.json.report.GraciousProcessingReport;
 import org.citrusframework.validation.json.schema.JsonSchemaValidation;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static net.minidev.json.parser.JSONParser.MODE_JSON_SIMPLE;
 import static net.minidev.json.parser.JSONParser.MODE_RFC4627;
@@ -51,7 +51,7 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
     private JsonTextMessageValidator fixture;
     private JsonMessageValidationContext validationContext;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         fixture = new JsonTextMessageValidator();
         validationContext = new JsonMessageValidationContext();

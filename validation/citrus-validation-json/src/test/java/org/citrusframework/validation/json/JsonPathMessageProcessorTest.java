@@ -22,11 +22,11 @@ import java.util.Map;
 import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
+public class JsonPathMessageProcessorTest extends AbstractUnitTest {
 
     @Test
     public void testConstructWithJsonPath() {
@@ -39,7 +39,7 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .expressions(jsonPathExpressions)
                 .build();
         processor.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\"}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":\"Hello!\"}}", message.getPayload(String.class));
     }
 
     @Test
@@ -54,7 +54,7 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .expressions(jsonPathExpressions)
                 .build();
         processor.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"Id\":9999999}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":\"Hello!\",\"Id\":9999999}}", message.getPayload(String.class));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .expressions(jsonPathExpressions)
                 .build();
         processor.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":[{\"Text\":\"Hello!\"},{\"Text\":\"Hello!\"}]}");
+        Assertions.assertEquals("{\"TestMessage\":[{\"Text\":\"Hello!\"},{\"Text\":\"Hello!\"}]}", message.getPayload(String.class));
     }
 
     @Test
@@ -83,10 +83,10 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .ignoreNotFound(true)
                 .build();
         processor.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello World!\"}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":\"Hello World!\"}}", message.getPayload(String.class));
     }
 
-    @Test(expectedExceptions = UnknownElementException.class)
+    @Test
     public void testConstructFailOnUnknownJsonPath() {
         Message message = new DefaultMessage("{ \"TestMessage\": { \"Text\": \"Hello World!\" }}");
 
@@ -96,6 +96,6 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
         JsonPathMessageProcessor processor = new JsonPathMessageProcessor.Builder()
                 .expressions(jsonPathExpressions)
                 .build();
-        processor.processMessage(message, context);
+        Assertions.assertThrows(UnknownElementException.class, () -> processor.processMessage(message, context));
     }
 }
