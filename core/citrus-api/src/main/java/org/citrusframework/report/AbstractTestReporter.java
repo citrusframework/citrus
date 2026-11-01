@@ -30,8 +30,8 @@ public abstract class AbstractTestReporter implements TestReporter {
     /** Should ignore errors when creating test report */
     private boolean ignoreErrors = TestReporterSettings.isIgnoreErrors();
 
-    /** Report output directory */
-    private String reportDirectory = TestReporterSettings.getReportDirectory();
+    /** Report output directory, resolved from the global settings unless set explicitly */
+    private String reportDirectory;
 
     @Override
     public final void generateReport(TestResults testResults) {
@@ -54,9 +54,15 @@ public abstract class AbstractTestReporter implements TestReporter {
 
     /**
      * Gets the reportDirectory.
+     * Falls back to the global settings so reporters shared across test runs
+     * pick up directory changes (e.g. per-run report directories).
      * @return
      */
     public String getReportDirectory() {
+        if (reportDirectory == null) {
+            return TestReporterSettings.getReportDirectory();
+        }
+
         return reportDirectory;
     }
 
