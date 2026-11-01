@@ -19,14 +19,14 @@ package org.citrusframework.validation.text;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.apache.commons.codec.binary.Base64;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class BinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
+public class BinaryBase64MessageValidatorTest extends AbstractUnitTest {
 
     private BinaryBase64MessageValidator validator = new BinaryBase64MessageValidator();
     private ValidationContext validationContext = new DefaultValidationContext();
@@ -55,12 +55,12 @@ public class BinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
         try {
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
         } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("expected 'SGVsbG8gQ2l0cnVzIQ=='"));
-            Assert.assertTrue(e.getMessage().contains("but was 'SGVsbG8gV29ybGQh'"));
+            Assertions.assertTrue(e.getMessage().contains("expected 'SGVsbG8gQ2l0cnVzIQ=='"));
+            Assertions.assertTrue(e.getMessage().contains("but was 'SGVsbG8gV29ybGQh'"));
 
             return;
         }
 
-        Assert.fail("Missing validation exception due to wrong number of JSON entries");
+        Assertions.fail("Missing validation exception due to wrong number of JSON entries");
     }
 }

@@ -27,14 +27,14 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
+public class GzipBinaryBase64MessageValidatorTest extends AbstractUnitTest {
 
     private final GzipBinaryBase64MessageValidator validator = new GzipBinaryBase64MessageValidator();
     private final ValidationContext validationContext = new DefaultValidationContext();
@@ -63,13 +63,13 @@ public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest
         try {
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
         } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("expected 'SGVsbG8gQ2l0cnVzIQ=='"));
-            Assert.assertTrue(e.getMessage().contains("but was 'SGVsbG8gV29ybGQh'"));
+            Assertions.assertTrue(e.getMessage().contains("expected 'SGVsbG8gQ2l0cnVzIQ=='"));
+            Assertions.assertTrue(e.getMessage().contains("but was 'SGVsbG8gV29ybGQh'"));
 
             return;
         }
 
-        Assert.fail("Missing validation exception due to wrong number of JSON entries");
+        Assertions.fail("Missing validation exception due to wrong number of JSON entries");
     }
 
     /**
@@ -91,15 +91,15 @@ public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest
     @Test
     public void shouldFindProperValidationContext() {
         List<ValidationContext> validationContexts = new ArrayList<>();
-        Assert.assertNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNull(validator.findValidationContext(validationContexts));
 
         validationContexts.add(new DefaultValidationContext());
 
-        Assert.assertNotNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNotNull(validator.findValidationContext(validationContexts));
 
         validationContexts.clear();
         validationContexts.add(new DefaultScriptValidationContext(MessageType.PLAINTEXT.name()));
 
-        Assert.assertNotNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNotNull(validator.findValidationContext(validationContexts));
     }
 }

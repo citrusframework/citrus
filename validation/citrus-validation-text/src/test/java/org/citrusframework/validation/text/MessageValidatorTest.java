@@ -21,30 +21,30 @@ import java.util.Map;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MessageValidatorTest {
 
     @Test
     public void testLookup() {
         Map<String, MessageValidator<? extends ValidationContext>> validators = MessageValidator.lookup();
-        Assert.assertEquals(validators.size(), 4L);
-        Assert.assertNotNull(validators.get("defaultMessageHeaderValidator"));
-        Assert.assertEquals(validators.get("defaultMessageHeaderValidator").getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertNotNull(validators.get("defaultBinaryBase64MessageValidator"));
-        Assert.assertEquals(validators.get("defaultBinaryBase64MessageValidator").getClass(), BinaryBase64MessageValidator.class);
-        Assert.assertNotNull(validators.get("defaultGzipBinaryBase64MessageValidator"));
-        Assert.assertEquals(validators.get("defaultGzipBinaryBase64MessageValidator").getClass(), GzipBinaryBase64MessageValidator.class);
-        Assert.assertNotNull(validators.get("defaultPlaintextMessageValidator"));
-        Assert.assertEquals(validators.get("defaultPlaintextMessageValidator").getClass(), PlainTextMessageValidator.class);
+        Assertions.assertEquals(4L, validators.size());
+        Assertions.assertNotNull(validators.get("defaultMessageHeaderValidator"));
+        Assertions.assertEquals(DefaultMessageHeaderValidator.class, validators.get("defaultMessageHeaderValidator").getClass());
+        Assertions.assertNotNull(validators.get("defaultBinaryBase64MessageValidator"));
+        Assertions.assertEquals(BinaryBase64MessageValidator.class, validators.get("defaultBinaryBase64MessageValidator").getClass());
+        Assertions.assertNotNull(validators.get("defaultGzipBinaryBase64MessageValidator"));
+        Assertions.assertEquals(GzipBinaryBase64MessageValidator.class, validators.get("defaultGzipBinaryBase64MessageValidator").getClass());
+        Assertions.assertNotNull(validators.get("defaultPlaintextMessageValidator"));
+        Assertions.assertEquals(PlainTextMessageValidator.class, validators.get("defaultPlaintextMessageValidator").getClass());
     }
 
     @Test
     public void testTestLookup() {
-        Assert.assertTrue(MessageValidator.lookup("header").isPresent());
-        Assert.assertTrue(MessageValidator.lookup("binary_base64").isPresent());
-        Assert.assertTrue(MessageValidator.lookup("gzip_base64").isPresent());
-        Assert.assertTrue(MessageValidator.lookup("plaintext").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("header").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("binary_base64").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("gzip_base64").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("plaintext").isPresent());
     }
 }
