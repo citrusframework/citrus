@@ -17,7 +17,9 @@
 package org.citrusframework.validation.assertj.integration;
 
 import org.assertj.core.api.Condition;
+import org.citrusframework.TestActionRunner;
 import org.citrusframework.annotations.CitrusEndpoint;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
@@ -27,9 +29,12 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.validation.assertj.AssertJ.satisfies;
@@ -40,7 +45,9 @@ import static org.hamcrest.Matchers.startsWith;
  * Hamcrest and AssertJ validation on the same classpath, in the same receive action.
  * JSONPath reads numbers as {@link Long}, hence the long and {@link Number} typed checks.
  */
-public class HamcrestCoexistenceIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class HamcrestCoexistenceIT implements TestActionSupport {
 
     private static final String BODY = "{ \"a\": 7, \"b\": 7, \"c\": \"OK-1\", \"d\": \"OK-1\" }";
 
@@ -51,12 +58,15 @@ public class HamcrestCoexistenceIT extends TestNGCitrusSpringSupport implements 
     @DirectEndpointConfig(queue = "coexistenceQueue")
     public DirectEndpoint direct;
 
+    @CitrusResource
+    private TestActionRunner runner;
+
     @Test
     @CitrusTest
     public void shouldUseBothLibrariesInOneReceive() {
         sendOrder();
 
-        $(receive(direct)
+        runner.run(receive(direct)
                 .message()
                 .type(MessageType.JSON)
                 .header("hamcrestHeader", startsWith("OK"))
@@ -70,12 +80,13 @@ public class HamcrestCoexistenceIT extends TestNGCitrusSpringSupport implements 
                         .expression("$.d", "@assertj(startsWith('OK'))@")));
     }
 
-    @Test(dataProvider = "failingChecks")
+    @ParameterizedTest
+    @MethodSource("failingChecks")
     @CitrusTest
     public void shouldConsultEachLibrary(String path, Object expected) {
         sendOrder();
 
-        $(assertException()
+        runner.run(assertException()
                 .exception(ValidationException.class)
                 .when(receive(direct)
                         .message()
@@ -83,8 +94,7 @@ public class HamcrestCoexistenceIT extends TestNGCitrusSpringSupport implements 
                         .validate(validation().jsonPath().expression(path, expected))));
     }
 
-    @DataProvider
-    public Object[][] failingChecks() {
+    static Object[][] failingChecks() {
         return new Object[][] {
             { "$.a", greaterThan(10L) },
             { "$.b", new Condition<Number>(b -> b.longValue() > 10, "greater than 10") },
@@ -94,7 +104,7 @@ public class HamcrestCoexistenceIT extends TestNGCitrusSpringSupport implements 
     }
 
     private void sendOrder() {
-        $(send(direct)
+        runner.run(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(BODY)

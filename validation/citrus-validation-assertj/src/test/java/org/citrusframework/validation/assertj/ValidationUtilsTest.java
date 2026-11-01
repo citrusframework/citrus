@@ -19,24 +19,28 @@ package org.citrusframework.validation.assertj;
 import org.assertj.core.api.Condition;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.ValidationUtils;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.validation.assertj.AssertJ.satisfies;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ValidationUtilsTest extends UnitTestSupport {
 
-    @Test(dataProvider = "testData")
+    @ParameterizedTest
+    @MethodSource("testData")
     public void shouldValidateValues(Object actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
-    @Test(dataProvider = "testDataFailed", expectedExceptions = ValidationException.class)
+    @ParameterizedTest
+    @MethodSource("testDataFailed")
     public void shouldFailValidation(Object actualValue, Object expectedValue, String path) {
-        ValidationUtils.validateValues(actualValue, expectedValue, path, context);
+        assertThrows(ValidationException.class, () -> ValidationUtils.validateValues(actualValue, expectedValue, path, context));
     }
 
     @Test
@@ -47,8 +51,7 @@ public class ValidationUtilsTest extends UnitTestSupport {
                 .hasMessageContaining("to be greater than:");
     }
 
-    @DataProvider
-    public Object[][] testData() {
+    static Object[][] testData() {
         return new Object[][] {
             new Object[] {7, new Condition<Integer>(q -> q > 5, "greater than 5"), "$.qty"},
             new Object[] {"OK-123", satisfies(v -> assertThat(v).asString().startsWith("OK")), "/Order/Status"},
@@ -59,8 +62,7 @@ public class ValidationUtilsTest extends UnitTestSupport {
         };
     }
 
-    @DataProvider
-    public Object[][] testDataFailed() {
+    static Object[][] testDataFailed() {
         return new Object[][] {
             new Object[] {3, new Condition<Integer>(q -> q > 5, "greater than 5"), "$.qty"},
             new Object[] {"FAILED", satisfies(v -> assertThat(v).asString().startsWith("OK")), "/Order/Status"},

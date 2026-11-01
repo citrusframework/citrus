@@ -19,7 +19,7 @@ package org.citrusframework.validation.assertj.matcher;
 import java.util.List;
 import java.util.Map;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

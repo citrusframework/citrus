@@ -17,21 +17,22 @@
 package org.citrusframework.validation.assertj.matcher;
 
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class AssertionChainInvokerTest {
 
-    @Test(dataProvider = "passing")
+    @ParameterizedTest
+    @MethodSource("passing")
     public void shouldPass(String value, String expression) {
         assertThatCode(() -> invoke(value, expression)).doesNotThrowAnyException();
     }
 
-    @DataProvider
-    public Object[][] passing() {
+    static Object[][] passing() {
         return new Object[][] {
             // strings
             { "OK-123", "isNotBlank().startsWith('OK').endsWith('123')" },
@@ -64,13 +65,13 @@ public class AssertionChainInvokerTest {
         };
     }
 
-    @Test(dataProvider = "failing")
+    @ParameterizedTest
+    @MethodSource("failing")
     public void shouldFailAssertion(String value, String expression) {
         assertThatThrownBy(() -> invoke(value, expression)).isInstanceOf(AssertionError.class);
     }
 
-    @DataProvider
-    public Object[][] failing() {
+    static Object[][] failing() {
         return new Object[][] {
             { "FAILED", "startsWith('OK')" },
             { "OK-1", "startsWith('OK').endsWith('2')" },

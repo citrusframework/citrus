@@ -16,25 +16,13 @@
 
 package org.citrusframework.validation.assertj;
 
-import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
-import org.testng.annotations.BeforeMethod;
 
-public abstract class UnitTestSupport {
+public abstract class UnitTestSupport extends AbstractUnitTest {
 
-    protected TestContextFactory testContextFactory;
-    protected TestContext context;
-
-    /**
-     * Setup test execution.
-     */
-    @BeforeMethod
-    public void prepareTest() {
-        testContextFactory = createTestContextFactory();
-        context = testContextFactory.getObject();
-    }
-
+    @Override
     protected TestContextFactory createTestContextFactory() {
         TestContextFactory factory = TestContextFactory.newInstance();
         factory.getMessageValidatorRegistry().addMessageValidator("all", new DefaultTextEqualsMessageValidator());

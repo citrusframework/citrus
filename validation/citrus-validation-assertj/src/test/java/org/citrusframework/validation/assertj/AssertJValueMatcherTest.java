@@ -20,7 +20,7 @@ import org.assertj.core.api.Condition;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.ValueMatcher;
 import org.hamcrest.Matchers;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

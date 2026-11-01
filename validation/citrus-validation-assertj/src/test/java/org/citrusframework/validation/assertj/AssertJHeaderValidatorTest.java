@@ -22,7 +22,7 @@ import org.citrusframework.validation.HeaderValidator;
 import org.citrusframework.validation.context.ValidationStatus;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.hamcrest.Matchers;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
