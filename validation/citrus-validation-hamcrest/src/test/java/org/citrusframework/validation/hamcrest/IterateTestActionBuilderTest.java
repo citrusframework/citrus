@@ -20,12 +20,12 @@ import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.container.Iterate;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.validation.hamcrest.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.lessThan;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IterateTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
     @Test
@@ -36,18 +36,18 @@ public class IterateTestActionBuilderTest extends UnitTestSupport implements Tes
                     .condition(assertThat(lessThan(5)))
             .actions(createVariable("index", "${i}")));
 
-        Assert.assertNotNull(context.getVariable("i"));
-        Assert.assertEquals(context.getVariable("i"), "4");
+        Assertions.assertNotNull(context.getVariable("i"));
+        Assertions.assertEquals("4", context.getVariable("i"));
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), Iterate.class);
-        assertEquals(test.getActions().get(0).getName(), "iterate");
+        assertEquals(1, test.getActionCount());
+        assertEquals(Iterate.class, test.getActions().get(0).getClass());
+        assertEquals("iterate", test.getActions().get(0).getName());
 
         Iterate container = (Iterate)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 1);
-        assertEquals(container.getIndexName(), "i");
-        assertEquals(container.getStep(), 1);
-        assertEquals(container.getStart(), 0);
+        assertEquals(1, container.getActionCount());
+        assertEquals("i", container.getIndexName());
+        assertEquals(1, container.getStep());
+        assertEquals(0, container.getStart());
     }
 }

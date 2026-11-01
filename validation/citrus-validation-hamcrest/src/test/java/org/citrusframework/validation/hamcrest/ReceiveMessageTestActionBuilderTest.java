@@ -37,8 +37,8 @@ import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -89,30 +89,30 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport impleme
                                     .expression("$.index", 5)));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonPathMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(MessageType.JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(3, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(JsonPathMessageValidationContext.class::isInstance));
 
         JsonPathMessageValidationContext validationContext = action.getValidationContexts().stream()
                 .filter(JsonPathMessageValidationContext.class::isInstance).findFirst()
                 .map(JsonPathMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 5L);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.name"), "John");
-        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.active"), true);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.text"), "Hello World!");
-        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.index"), 5);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.id").getClass(), AnyOf.class);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals(5L, validationContext.getJsonPathExpressions().size());
+        Assertions.assertEquals("John", validationContext.getJsonPathExpressions().get("$.person.name"));
+        Assertions.assertEquals(true, validationContext.getJsonPathExpressions().get("$.person.active"));
+        Assertions.assertEquals("Hello World!", validationContext.getJsonPathExpressions().get("$.text"));
+        Assertions.assertEquals(5, validationContext.getJsonPathExpressions().get("$.index"));
+        Assertions.assertEquals(AnyOf.class, validationContext.getJsonPathExpressions().get("$.id").getClass());
     }
 }

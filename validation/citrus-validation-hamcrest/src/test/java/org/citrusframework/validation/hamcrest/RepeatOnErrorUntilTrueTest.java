@@ -20,22 +20,23 @@ import org.citrusframework.TestAction;
 import org.citrusframework.actions.FailAction;
 import org.citrusframework.container.RepeatOnErrorUntilTrue;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.validation.hamcrest.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
+public class RepeatOnErrorUntilTrueTest extends AbstractUnitTest {
 
     private TestAction action = Mockito.mock(TestAction.class);
 
     @SuppressWarnings("deprecation")
-    @Test(expectedExceptions=CitrusRuntimeException.class)
+    @Test
     public void testRepeatOnErrorNoSuccessHamcrestConditionExpression() {
         reset(action);
 
@@ -45,7 +46,7 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
                 .autoSleep(0L)
                 .actions(() -> action, new FailAction.Builder())
                 .build();
-        repeat.execute(context);
+        assertThrows(CitrusRuntimeException.class, () -> repeat.execute(context));
         verify(action, times(4)).execute(context);
     }
 }

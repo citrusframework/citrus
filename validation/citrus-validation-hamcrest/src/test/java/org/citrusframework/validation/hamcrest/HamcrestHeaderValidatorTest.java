@@ -17,39 +17,41 @@
 package org.citrusframework.validation.hamcrest;
 
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.7.6
  */
-public class HamcrestHeaderValidatorTest extends AbstractTestNGUnitTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class HamcrestHeaderValidatorTest extends AbstractUnitTest {
 
     private final HamcrestHeaderValidator validator = new HamcrestHeaderValidator();
     private final HeaderValidationContext validationContext = new HeaderValidationContext.Builder().build();
 
-    @Test(dataProvider = "successData")
+    @ParameterizedTest
+    @MethodSource("successData")
     public void testValidateHeader(Object receivedValue, Object controlValue) {
         validator.validateHeader("foo", receivedValue, controlValue, context, validationContext);
     }
-
-    @DataProvider
     public Object[][] successData() {
         return new Object[][] {
             new Object[] { "foo", is("foo") }
         };
     }
 
-    @Test(dataProvider = "errorData", expectedExceptions = ValidationException.class)
+    @ParameterizedTest
+    @MethodSource("errorData")
     public void testValidateHeaderError(Object receivedValue, Object controlValue) {
-        validator.validateHeader("foo", receivedValue, controlValue, context, validationContext);
+        assertThrows(ValidationException.class, () ->
+            validator.validateHeader("foo", receivedValue, controlValue, context, validationContext));
     }
-
-    @DataProvider
     public Object[][] errorData() {
         return new Object[][] {
             new Object[] { "foo", is("wrong") }

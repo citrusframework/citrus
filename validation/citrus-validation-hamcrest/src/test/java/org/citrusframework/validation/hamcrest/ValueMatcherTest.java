@@ -19,21 +19,21 @@ package org.citrusframework.validation.hamcrest;
 import java.util.Map;
 
 import org.citrusframework.validation.ValueMatcher;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ValueMatcherTest {
 
     @Test
     public void testLookup() {
         Map<String, ValueMatcher> validators = ValueMatcher.lookup();
-        Assert.assertEquals(validators.size(), 1L);
-        Assert.assertNotNull(validators.get("hamcrest"));
-        Assert.assertEquals(validators.get("hamcrest").getClass(), HamcrestValueMatcher.class);
+        Assertions.assertEquals(1L, validators.size());
+        Assertions.assertNotNull(validators.get("hamcrest"));
+        Assertions.assertEquals(HamcrestValueMatcher.class, validators.get("hamcrest").getClass());
     }
 
     @Test
     public void testTestLookup() {
-        Assert.assertTrue(ValueMatcher.lookup("hamcrest").isPresent());
+        Assertions.assertTrue(ValueMatcher.lookup("hamcrest").isPresent());
     }
 }

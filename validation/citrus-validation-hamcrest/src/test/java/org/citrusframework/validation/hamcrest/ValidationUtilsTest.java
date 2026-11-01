@@ -18,34 +18,40 @@ package org.citrusframework.validation.hamcrest;
 
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.ValidationUtils;
 import org.hamcrest.Matchers;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.5
  */
-public class ValidationUtilsTest extends AbstractTestNGUnitTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class ValidationUtilsTest extends AbstractUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
         return TestContextFactory.newInstance();
     }
 
-    @Test(dataProvider = "testData")
+    @ParameterizedTest
+    @MethodSource("testData")
     public void testValidateValues(String actualValue, Object expectedValue, String path) {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
-    @Test(dataProvider = "testDataFailed", expectedExceptions = ValidationException.class)
+    @ParameterizedTest
+    @MethodSource("testDataFailed")
     public void testValidateValuesFailure(String actualValue, Object expectedValue, String path) {
-        ValidationUtils.validateValues(actualValue, expectedValue, path, context);
+        assertThrows(ValidationException.class, () ->
+            ValidationUtils.validateValues(actualValue, expectedValue, path, context));
     }
 
     @SuppressWarnings("deprecation")
-    @DataProvider
     public Object[][] testData() {
         return new Object[][] {
             new Object[] {null, "@assertThat(nullValue())@", "nullValidationMatcherCompare"},
@@ -55,7 +61,6 @@ public class ValidationUtilsTest extends AbstractTestNGUnitTest {
     }
 
     @SuppressWarnings("deprecation")
-    @DataProvider
     public Object[][] testDataFailed() {
         return new Object[][] {
                 new Object[] {null, "@assertThat(notNullValue())@", "nullValidationMatcherCompare"},

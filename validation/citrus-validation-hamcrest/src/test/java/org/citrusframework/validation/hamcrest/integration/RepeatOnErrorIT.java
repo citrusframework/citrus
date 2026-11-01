@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
+
 package org.citrusframework.validation.hamcrest.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2008
  */
-public class RepeatOnErrorIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class RepeatOnErrorIT {
+
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
-    public void RepeatOnErrorIT() {}
+    public void RepeatOnErrorIT() {
+    }
 }

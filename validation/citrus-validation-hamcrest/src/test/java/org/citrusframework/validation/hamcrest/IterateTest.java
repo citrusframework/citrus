@@ -18,10 +18,10 @@ package org.citrusframework.validation.hamcrest;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.container.Iterate;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.validation.hamcrest.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class IterateTest extends AbstractTestNGUnitTest {
+public class IterateTest extends AbstractUnitTest {
 
     private TestAction action = Mockito.mock(TestAction.class);
 
@@ -44,8 +44,8 @@ public class IterateTest extends AbstractTestNGUnitTest {
                 .build();
         iterate.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "5");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("5", context.getVariable("${i}"));
 
         verify(action, times(5)).execute(context);
     }

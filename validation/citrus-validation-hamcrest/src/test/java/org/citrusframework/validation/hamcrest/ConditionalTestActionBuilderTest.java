@@ -20,8 +20,8 @@ import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.container.Conditional;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.validation.hamcrest.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -40,20 +40,20 @@ public class ConditionalTestActionBuilderTest extends UnitTestSupport implements
         builder.$(conditional().when(assertThat("${var}", lessThan("5")))
                 .actions(echo("${var}"), createVariable("noExecution", "false")));
 
-        Assert.assertNotNull(context.getVariable("noExecution"));
-        Assert.assertEquals(context.getVariable("noExecution"), "true");
-        Assert.assertNotNull(context.getVariable("execution"));
-        Assert.assertEquals(context.getVariable("execution"), "true");
+        Assertions.assertNotNull(context.getVariable("noExecution"));
+        Assertions.assertEquals("true", context.getVariable("noExecution"));
+        Assertions.assertNotNull(context.getVariable("execution"));
+        Assertions.assertEquals("true", context.getVariable("execution"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), Conditional.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "conditional");
-        Assert.assertEquals(test.getActions().get(1).getClass(), Conditional.class);
-        Assert.assertEquals(test.getActions().get(1).getName(), "conditional");
+        Assertions.assertEquals(2, test.getActionCount());
+        Assertions.assertEquals(Conditional.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("conditional", test.getActions().get(0).getName());
+        Assertions.assertEquals(Conditional.class, test.getActions().get(1).getClass());
+        Assertions.assertEquals("conditional", test.getActions().get(1).getName());
 
         Conditional container = (Conditional)test.getActions().get(0);
-        Assert.assertEquals(container.getActionCount(), 2);
-        Assert.assertNotNull(container.getConditionExpression());
+        Assertions.assertEquals(2, container.getActionCount());
+        Assertions.assertNotNull(container.getConditionExpression());
     }
 }

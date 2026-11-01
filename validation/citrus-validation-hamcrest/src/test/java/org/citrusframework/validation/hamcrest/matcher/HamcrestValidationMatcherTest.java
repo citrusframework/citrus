@@ -22,17 +22,21 @@ import java.util.List;
 
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Matcher;
 import org.springframework.util.AntPathMatcher;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.5
  */
-public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class HamcrestValidationMatcherTest extends AbstractUnitTest {
 
     private final HamcrestValidationMatcher validationMatcher = new HamcrestValidationMatcher();
 
@@ -61,12 +65,11 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
         return factory;
     }
 
-    @Test(dataProvider = "testData")
+    @ParameterizedTest
+    @MethodSource("testData")
     public void testValidate(String path, String value, List<String> params)  {
         validationMatcher.validate( path, value, params, context);
     }
-
-    @DataProvider
     public Object[][] testData() {
         return new Object[][] {
             new Object[]{ "foo", "value", Collections.singletonList("equalTo(value)") },
@@ -168,12 +171,12 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
         };
     }
 
-    @Test(dataProvider = "testDataFailed", expectedExceptions = ValidationException.class)
+    @ParameterizedTest
+    @MethodSource("testDataFailed")
     public void testValidateFailed(String path, String value, List<String> params) {
-        validationMatcher.validate( path, value, params, context);
+        assertThrows(ValidationException.class, () ->
+            validationMatcher.validate( path, value, params, context));
     }
-
-    @DataProvider
     public Object[][] testDataFailed() {
         return new Object[][] {
             new Object[]{ "foo", "value", Collections.singletonList("equalTo(wrong)") },

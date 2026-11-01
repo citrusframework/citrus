@@ -21,12 +21,12 @@ import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.RepeatOnErrorUntilTrue;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.validation.hamcrest.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RepeatOnErrorTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
     @SuppressWarnings({"deprecation", "removal"})
@@ -45,29 +45,29 @@ public class RepeatOnErrorTestActionBuilderTest extends UnitTestSupport implemen
                         .until(assertThat(is(5)))
                 .actions(echo("${var}")));
 
-        Assert.assertNotNull(context.getVariable("i"));
-        Assert.assertEquals(context.getVariable("i"), "1");
-        Assert.assertNotNull(context.getVariable("k"));
-        Assert.assertEquals(context.getVariable("k"), "2");
+        Assertions.assertNotNull(context.getVariable("i"));
+        Assertions.assertEquals("1", context.getVariable("i"));
+        Assertions.assertNotNull(context.getVariable("k"));
+        Assertions.assertEquals("2", context.getVariable("k"));
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 2);
-        assertEquals(test.getActions().get(0).getClass(), RepeatOnErrorUntilTrue.class);
-        assertEquals(test.getActions().get(0).getName(), "repeat-on-error");
+        assertEquals(2, test.getActionCount());
+        assertEquals(RepeatOnErrorUntilTrue.class, test.getActions().get(0).getClass());
+        assertEquals("repeat-on-error", test.getActions().get(0).getName());
 
         RepeatOnErrorUntilTrue container = (RepeatOnErrorUntilTrue)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 3);
-        assertEquals(container.getAutoSleep(), Long.valueOf(250L));
-        assertEquals(container.getCondition(), "i gt 5");
-        assertEquals(container.getStart(), 1);
-        assertEquals(container.getIndexName(), "i");
-        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
+        assertEquals(3, container.getActionCount());
+        assertEquals(Long.valueOf(250L), container.getAutoSleep());
+        assertEquals("i gt 5", container.getCondition());
+        assertEquals(1, container.getStart());
+        assertEquals("i", container.getIndexName());
+        assertEquals(EchoAction.class, container.getTestAction(0).getClass());
 
         container = (RepeatOnErrorUntilTrue)test.getActions().get(1);
-        assertEquals(container.getActionCount(), 1);
-        assertEquals(container.getAutoSleep(), Long.valueOf(200L));
-        assertEquals(container.getStart(), 2);
-        assertEquals(container.getIndexName(), "k");
-        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
+        assertEquals(1, container.getActionCount());
+        assertEquals(Long.valueOf(200L), container.getAutoSleep());
+        assertEquals(2, container.getStart());
+        assertEquals("k", container.getIndexName());
+        assertEquals(EchoAction.class, container.getTestAction(0).getClass());
     }
 }
