@@ -23,7 +23,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.script.ScriptTypes;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
@@ -31,10 +31,10 @@ import org.citrusframework.validation.context.script.DefaultScriptValidationCont
 import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
+public class GroovyJsonMessageValidatorTest extends AbstractUnitTest {
 
     private final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
@@ -67,10 +67,10 @@ public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
 
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assert.fail("Missing validation exception for groovy JSON slurper.");
+            Assertions.fail("Missing validation exception for groovy JSON slurper.");
         } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("assert json.person.age == 32"));
-            Assert.assertTrue(e.getMessage().contains("31  false"));
+            Assertions.assertTrue(e.getMessage().contains("assert json.person.age == 32"));
+            Assertions.assertTrue(e.getMessage().contains("31  false"));
         }
     }
 
@@ -83,10 +83,10 @@ public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContexts.add(new JsonMessageValidationContext());
         validationContexts.add(new DefaultScriptValidationContext("scala"));
 
-        Assert.assertNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNull(validator.findValidationContext(validationContexts));
 
         validationContexts.add(new DefaultScriptValidationContext(ScriptTypes.GROOVY));
 
-        Assert.assertNotNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNotNull(validator.findValidationContext(validationContexts));
     }
 }
