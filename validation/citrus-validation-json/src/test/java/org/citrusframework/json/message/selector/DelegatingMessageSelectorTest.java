@@ -19,8 +19,8 @@ import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.selector.DelegatingMessageSelector;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DelegatingMessageSelectorTest extends UnitTestSupport {
 
@@ -36,12 +36,12 @@ public class DelegatingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("foo", "bar")
                 .setHeader("operation", "foo");
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
         messageSelector = new DelegatingMessageSelector("jsonPath:$.foo.text = 'foobar'", context);
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 }

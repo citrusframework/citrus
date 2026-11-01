@@ -23,17 +23,17 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
-public class JsonUnmarshallingMessageProcessorTest extends AbstractTestNGUnitTest {
+public class JsonUnmarshallingMessageProcessorTest extends AbstractUnitTest {
 
     private final JsonMapper mapper = JsonMapper.shared();
 
@@ -46,9 +46,9 @@ public class JsonUnmarshallingMessageProcessorTest extends AbstractTestNGUnitTes
         Message message = new DefaultMessage("{\"message\":\"Hello Citrus!\"}");
         new JsonUnmarshallingMessageProcessor(Map.class).process(message, context);
 
-        Assert.assertTrue(message.getPayload() instanceof Map);
+        Assertions.assertTrue(message.getPayload() instanceof Map);
         Map<String, Object> result = (Map<String, Object>) message.getPayload();
-        Assert.assertEquals(result.get("message"), "Hello Citrus!");
+        Assertions.assertEquals("Hello Citrus!", result.get("message"));
     }
 
     @Test
@@ -56,9 +56,9 @@ public class JsonUnmarshallingMessageProcessorTest extends AbstractTestNGUnitTes
         Message message = new DefaultMessage("{\"message\":\"Hello Citrus!\"}");
         new JsonUnmarshallingMessageProcessor(Map.class, mapper).process(message, context);
 
-        Assert.assertTrue(message.getPayload() instanceof Map);
+        Assertions.assertTrue(message.getPayload() instanceof Map);
         Map<String, Object> result = (Map<String, Object>) message.getPayload();
-        Assert.assertEquals(result.get("message"), "Hello Citrus!");
+        Assertions.assertEquals("Hello Citrus!", result.get("message"));
     }
 
     @Test
@@ -67,8 +67,8 @@ public class JsonUnmarshallingMessageProcessorTest extends AbstractTestNGUnitTes
         message.setType(MessageType.PLAINTEXT.name());
         new JsonUnmarshallingMessageProcessor(Map.class, mapper).process(message, context);
 
-        Assert.assertTrue(message.getPayload() instanceof Map);
+        Assertions.assertTrue(message.getPayload() instanceof Map);
         Map<String, Object> result = (Map<String, Object>) message.getPayload();
-        Assert.assertEquals(result.get("message"), "Hello Citrus!");
+        Assertions.assertEquals("Hello Citrus!", result.get("message"));
     }
 }

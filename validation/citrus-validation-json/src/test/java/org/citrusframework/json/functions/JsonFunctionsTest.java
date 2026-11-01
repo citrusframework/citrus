@@ -18,29 +18,29 @@ package org.citrusframework.json.functions;
 
 import static org.citrusframework.json.functions.JsonFunctions.jsonPatch;
 import static org.citrusframework.json.functions.JsonFunctions.jsonPath;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 
 import org.citrusframework.base.functions.DefaultFunctionRegistry;
 import org.citrusframework.functions.FunctionUtils;
 import org.citrusframework.json.functions.core.JsonPatchFunction.PatchOperation;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class JsonFunctionsTest extends AbstractTestNGUnitTest {
+public class JsonFunctionsTest extends AbstractUnitTest {
 
     @Test
     public void testJsonPath() {
-        assertEquals(jsonPath("{\"text\": \"Some Text\"}", "$.text", context), "Some Text");
+        assertEquals("Some Text", jsonPath("{\"text\": \"Some Text\"}", "$.text", context));
     }
 
     @Test
     public void testFunctionUtils() {
         context.setFunctionRegistry(new DefaultFunctionRegistry());
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:jsonPath('{\"message\": \"Hello Citrus!\"}', '$.message')", context), "Hello Citrus!");
+        Assertions.assertEquals("Hello Citrus!", FunctionUtils.resolveFunction("citrus:jsonPath('{\"message\": \"Hello Citrus!\"}', '$.message')", context));
     }
 
     @Test

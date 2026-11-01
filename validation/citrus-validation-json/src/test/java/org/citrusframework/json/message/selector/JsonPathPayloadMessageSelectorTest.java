@@ -18,8 +18,8 @@ package org.citrusframework.json.message.selector;
 
 import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JsonPathPayloadMessageSelectorTest extends UnitTestSupport {
 
@@ -27,29 +27,29 @@ public class JsonPathPayloadMessageSelectorTest extends UnitTestSupport {
     public void testJsonPathEvaluation() {
         JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "foobar", context);
 
-        Assert.assertTrue(messageSelector.accept(new DefaultMessage("{ \"foo\": { \"text\": \"foobar\" } }")));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\" } }")));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage("{ \"bar\": { \"text\": \"foobar\" } }")));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage("This is plain text!")));
+        Assertions.assertTrue(messageSelector.accept(new DefaultMessage("{ \"foo\": { \"text\": \"foobar\" } }")));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\" } }")));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage("{ \"bar\": { \"text\": \"foobar\" } }")));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage("This is plain text!")));
     }
 
     @Test
     public void testJsonPathEvaluationValidationMatcher() {
         JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "@startsWith(foo)@", context);
 
-        Assert.assertTrue(messageSelector.accept(new DefaultMessage("{ \"foo\": { \"text\": \"foobar\" } }")));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\" } }")));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage("{ \"bar\": { \"text\": \"foobar\" } }")));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage("This is plain text!")));
+        Assertions.assertTrue(messageSelector.accept(new DefaultMessage("{ \"foo\": { \"text\": \"foobar\" } }")));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\" } }")));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage("{ \"bar\": { \"text\": \"foobar\" } }")));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage("This is plain text!")));
     }
 
     @Test
     public void testJsonPathEvaluationWithMessageObjectPayload() {
         JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "foobar", context);
 
-        Assert.assertTrue(messageSelector.accept(new DefaultMessage(new DefaultMessage("{ \"foo\": { \"text\": \"foobar\" } }"))));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage(new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\" } }"))));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage(new DefaultMessage("{ \"bar\": { \"text\": \"foobar\" } }"))));
-        Assert.assertFalse(messageSelector.accept(new DefaultMessage(new DefaultMessage("This is plain text!"))));
+        Assertions.assertTrue(messageSelector.accept(new DefaultMessage(new DefaultMessage("{ \"foo\": { \"text\": \"foobar\" } }"))));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage(new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\" } }"))));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage(new DefaultMessage("{ \"bar\": { \"text\": \"foobar\" } }"))));
+        Assertions.assertFalse(messageSelector.accept(new DefaultMessage(new DefaultMessage("This is plain text!"))));
     }
 }

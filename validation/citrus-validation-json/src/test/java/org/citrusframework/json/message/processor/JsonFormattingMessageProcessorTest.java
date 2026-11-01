@@ -20,11 +20,11 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class JsonFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
+public class JsonFormattingMessageProcessorTest extends AbstractUnitTest {
 
     private final JsonFormattingMessageProcessor messageProcessor = new JsonFormattingMessageProcessor();
 
@@ -33,7 +33,7 @@ public class JsonFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage("{\"name\":\"Citrus\",\"version\":\"4.6\"}");
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+        Assertions.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class JsonFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.JSON.name());
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+        Assertions.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class JsonFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage("This is plaintext");
         message.setType(MessageType.PLAINTEXT.name());
         messageProcessor.process(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "This is plaintext");
+        Assertions.assertEquals("This is plaintext", message.getPayload(String.class));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class JsonFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage("{\"name\":\"Citrus\",\"version\":\"4.6\"}");
         processor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+        Assertions.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class JsonFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         MessageProcessor.Builder<?, ?> builder = MessageProcessor.lookup("jsonPrettyPrint")
                 .orElse(null);
 
-        Assert.assertNotNull(builder);
-        Assert.assertEquals(builder.getClass(), JsonFormattingMessageProcessor.Builder.class);
+        Assertions.assertNotNull(builder);
+        Assertions.assertEquals(JsonFormattingMessageProcessor.Builder.class, builder.getClass());
     }
 }

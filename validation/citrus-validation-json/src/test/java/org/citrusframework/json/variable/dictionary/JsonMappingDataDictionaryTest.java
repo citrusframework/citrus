@@ -25,8 +25,8 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4
@@ -45,7 +45,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\",\"OtherNumber\":10}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\",\"OtherNumber\":10}}", message.getPayload(String.class));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.STARTS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"Bye!\"}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"Bye!\"}}", message.getPayload(String.class));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"Hello!\"}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"Hello!\"}}", message.getPayload(String.class));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         context.setVariable("helloText", "Hello!");
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\"}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\"}}", message.getPayload(String.class));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":[\"Hello!\",\"Hello Universe!\"],\"OtherText\":\"No changes\"}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":[\"Hello!\",\"Hello Universe!\"],\"OtherText\":\"No changes\"}}", message.getPayload(String.class));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Greetings\":[{\"Text\":\"Hello!\"},{\"Text\":\"Hello Universe!\"}],\"OtherText\":\"No changes\"}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Greetings\":[{\"Text\":\"Hello!\"},{\"Text\":\"Hello Universe!\"}],\"OtherText\":\"No changes\"}}", message.getPayload(String.class));
     }
 
     @Test
@@ -135,7 +135,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.initialize();
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\"}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\"}}", message.getPayload(String.class));
     }
 
     @Test
@@ -149,7 +149,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":null}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":null}}", message.getPayload(String.class));
     }
 
     @Test
@@ -163,7 +163,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Number\":99,\"OtherNumber\":100}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Number\":99,\"OtherNumber\":100}}", message.getPayload(String.class));
     }
 
     @Test
@@ -177,6 +177,6 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
+        Assertions.assertEquals("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}", message.getPayload(String.class));
     }
 }

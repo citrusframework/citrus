@@ -27,15 +27,25 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @since 3.3.1
  */
-public class JsonMappingValidationProcessorIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class JsonMappingValidationProcessorIT implements TestActionSupport {
 
     @BindToRegistry
     public MessageQueue test = new DefaultMessageQueue("test");
@@ -52,79 +62,79 @@ public class JsonMappingValidationProcessorIT extends TestNGCitrusSpringSupport 
 
     @Test
     @CitrusTest
-    public void shouldPerformJsonMappingValidationProcessor() {
-        $(send(direct)
+    public void shouldPerformJsonMappingValidationProcessor(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(JSON_BODY)
         );
 
-        $(receive(direct)
+        runner.$(receive(direct)
                 .message()
                 .validate(JsonSupport.validate(Person.class)
                     .mapper(mapper)
                     .validator((person, headers, context) -> {
-                        Assert.assertEquals(person.name, "christoph");
-                        Assert.assertTrue(person.age > 30);
+                        Assertions.assertEquals("christoph", person.name);
+                        Assertions.assertTrue(person.age > 30);
                     }).build())
         );
     }
 
     @Test
     @CitrusTest
-    public void shouldPerformMultipleJsonMappingValidationProcessor() {
-        $(send(direct)
+    public void shouldPerformMultipleJsonMappingValidationProcessor(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(JSON_BODY)
         );
 
-        $(receive(direct)
+        runner.$(receive(direct)
                 .message()
                 .validate(JsonSupport.validate(Person.class)
                     .mapper(mapper)
-                    .validator((person, headers, context) -> Assert.assertEquals(person.name, "christoph")).build())
+                    .validator((person, headers, context) -> Assertions.assertEquals("christoph", person.name)).build())
                 .validate(JsonSupport.validate(Person.class)
                     .mapper(mapper)
-                    .validator((person, headers, context) -> Assert.assertTrue(person.age > 30)).build())
+                    .validator((person, headers, context) -> Assertions.assertTrue(person.age > 30)).build())
         );
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test
     @CitrusTest
-    public void shouldFailOnJsonMultipleMappingValidationProcessor() {
-        $(send(direct)
+    public void shouldFailOnJsonMultipleMappingValidationProcessor(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(JSON_BODY)
         );
 
-        $(receive(direct)
+        assertThrows(TestCaseFailedException.class, () -> runner.$(receive(direct)
                 .message()
                 .validate(JsonSupport.validate(Person.class)
                         .mapper(mapper)
-                        .validator((person, headers, context) -> Assert.assertTrue(person.age > 30)).build())
+                        .validator((person, headers, context) -> Assertions.assertTrue(person.age > 30)).build())
                 .validate(JsonSupport.validate(Person.class)
                         .mapper(mapper)
-                        .validator((person, headers, context) -> Assert.assertEquals(person.name, "should fail")).build())
-        );
+                        .validator((person, headers, context) -> Assertions.assertEquals("should fail", person.name)).build())
+        ));
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test
     @CitrusTest
-    public void shouldFailOnJsonMappingValidationProcessor() {
-        $(send(direct)
+    public void shouldFailOnJsonMappingValidationProcessor(@CitrusResource TestActionRunner runner) {
+        runner.$(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body(JSON_BODY)
         );
 
-        $(receive(direct)
+        assertThrows(TestCaseFailedException.class, () -> runner.$(receive(direct)
                 .message()
                 .validate(JsonSupport.validate(Person.class)
                         .mapper(mapper)
-                        .validator((person, headers, context) -> Assert.assertEquals(person.name, "should fail")).build())
-        );
+                        .validator((person, headers, context) -> Assertions.assertEquals("should fail", person.name)).build())
+        ));
     }
 
     private static class Person {

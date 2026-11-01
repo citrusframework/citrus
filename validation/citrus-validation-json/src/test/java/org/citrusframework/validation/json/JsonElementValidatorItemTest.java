@@ -16,51 +16,54 @@
 
 package org.citrusframework.validation.json;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class JsonElementValidatorItemTest {
 
-    @DataProvider
-    public static Object[][] getPathPairs() {
-        return new Object[][]{
-                {"$['propertyA']", new JsonElementValidatorItem<>("propertyA", "", "")},
-                {"$['propertyA']", new JsonElementValidatorItem<>("propertyA", "", "").parent(
+    static Stream<Arguments> getPathPairs() {
+        return Stream.of(
+                Arguments.of("$['propertyA']", new JsonElementValidatorItem<>("propertyA", "", "")),
+                Arguments.of("$['propertyA']", new JsonElementValidatorItem<>("propertyA", "", "").parent(
                         new JsonElementValidatorItem<>(null, "", "")
-                )},
-                {"$['propertyA']['propertyB']", new JsonElementValidatorItem<>("propertyB", "", "").parent(
+                )),
+                Arguments.of("$['propertyA']['propertyB']", new JsonElementValidatorItem<>("propertyB", "", "").parent(
                         new JsonElementValidatorItem<>("propertyA", "", "").parent(
                                 new JsonElementValidatorItem<>(null, "", "")
                         )
-                )},
-                {"$['propertyA'][1]", new JsonElementValidatorItem<>(1, "", "").parent(
+                )),
+                Arguments.of("$['propertyA'][1]", new JsonElementValidatorItem<>(1, "", "").parent(
                         new JsonElementValidatorItem<>("propertyA", "", "").parent(
                                 new JsonElementValidatorItem<>(null, "", "")
                         )
-                )},
-                {"$[1]", new JsonElementValidatorItem<>(1, "", "").parent(
+                )),
+                Arguments.of("$[1]", new JsonElementValidatorItem<>(1, "", "").parent(
                         new JsonElementValidatorItem<>(null, "", "")
-                )}
-        };
+                ))
+        );
     }
 
-    @Test(dataProvider = "getPathPairs")
+    @ParameterizedTest
+    @MethodSource("getPathPairs")
     void shouldGetJsonPath(String expectedPath, JsonElementValidatorItem<?> fixture) {
         assertThat(fixture.getJsonPath()).isEqualTo(expectedPath);
     }
 
-    @DataProvider
-    public static Object[][] getNamePairs() {
-        return new Object[][]{
-                {"$", new JsonElementValidatorItem<>(null, "", "")},
-                {"propertyA", new JsonElementValidatorItem<>("propertyA", "", "")},
-                {"[2]", new JsonElementValidatorItem<>(2, "", "")}
-        };
+    static Stream<Arguments> getNamePairs() {
+        return Stream.of(
+                Arguments.of("$", new JsonElementValidatorItem<>(null, "", "")),
+                Arguments.of("propertyA", new JsonElementValidatorItem<>("propertyA", "", "")),
+                Arguments.of("[2]", new JsonElementValidatorItem<>(2, "", ""))
+        );
     }
 
-    @Test(dataProvider = "getNamePairs")
+    @ParameterizedTest
+    @MethodSource("getNamePairs")
     void shouldGetName(String expectedPath, JsonElementValidatorItem<?> fixture) {
         assertThat(fixture.getName()).isEqualTo(expectedPath);
     }

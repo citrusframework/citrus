@@ -25,10 +25,11 @@ import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.functions.Function;
 import org.citrusframework.json.functions.core.JsonPatchFunction.PatchOperation;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -39,6 +40,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class JsonPatchFunctionTest {
 
     private JsonPatchFunction function;
@@ -46,9 +48,8 @@ public class JsonPatchFunctionTest {
     @Mock
     private TestContext testContext;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
         function = new JsonPatchFunction();
     }
 
@@ -702,9 +703,9 @@ public class JsonPatchFunctionTest {
 
     @Test
     public void shouldLookupFunction() {
-        Assert.assertTrue(Function.lookup().containsKey("jsonPatch"));
-        Assert.assertEquals(Function.lookup().get("jsonPatch").getClass(), JsonPatchFunction.class);
+        Assertions.assertTrue(Function.lookup().containsKey("jsonPatch"));
+        Assertions.assertEquals(JsonPatchFunction.class, Function.lookup().get("jsonPatch").getClass());
 
-        Assert.assertEquals(new DefaultFunctionLibrary().getFunction("jsonPatch").getClass(), JsonPatchFunction.class);
+        Assertions.assertEquals(JsonPatchFunction.class, new DefaultFunctionLibrary().getFunction("jsonPatch").getClass());
     }
 }

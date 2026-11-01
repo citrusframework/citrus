@@ -20,8 +20,8 @@ import org.citrusframework.json.UnitTestSupport;
 import org.citrusframework.json.actions.dsl.TestRequest;
 import org.citrusframework.spi.ReferenceResolver;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -45,14 +45,14 @@ public class ObjectMappingPayloadBuilderTest extends UnitTestSupport {
 
         ObjectMappingPayloadBuilder builder = new ObjectMappingPayloadBuilder(request);
 
-        Assert.assertEquals(builder.buildPayload(context), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", builder.buildPayload(context));
     }
 
     @Test
     public void shouldBuildPayloadWithMapper() {
         ObjectMappingPayloadBuilder builder = new ObjectMappingPayloadBuilder(request, mapper);
 
-        Assert.assertEquals(builder.buildPayload(context), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", builder.buildPayload(context));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ObjectMappingPayloadBuilderTest extends UnitTestSupport {
 
         ObjectMappingPayloadBuilder builder = new ObjectMappingPayloadBuilder(request, "mapper");
 
-        Assert.assertEquals(builder.buildPayload(context), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", builder.buildPayload(context));
     }
 
     @Test
@@ -72,6 +72,6 @@ public class ObjectMappingPayloadBuilderTest extends UnitTestSupport {
         context.setVariable("message", "Hello Citrus!");
         ObjectMappingPayloadBuilder builder = new ObjectMappingPayloadBuilder(new TestRequest("${message}"), mapper);
 
-        Assert.assertEquals(builder.buildPayload(context), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", builder.buildPayload(context));
     }
 }

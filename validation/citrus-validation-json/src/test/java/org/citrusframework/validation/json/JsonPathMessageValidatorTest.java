@@ -37,8 +37,8 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.Matchers.*;
 
@@ -198,7 +198,7 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
                 .build();
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assert.fail("Missing validation exception");
+            Assertions.fail("Missing validation exception");
         } catch (ValidationException e) {}
 
         validationContext = new JsonPathMessageValidationContext.Builder()
@@ -206,7 +206,7 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
                 .build();
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assert.fail("Missing validation exception");
+            Assertions.fail("Missing validation exception");
         } catch (ValidationException e) {}
 
         validationContext = new JsonPathMessageValidationContext.Builder()
@@ -214,7 +214,7 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
                 .build();
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assert.fail("Missing validation exception");
+            Assertions.fail("Missing validation exception");
         } catch (ValidationException e) {}
 
         validationContext = new JsonPathMessageValidationContext.Builder()
@@ -222,7 +222,7 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
                 .build();
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assert.fail("Missing validation exception");
+            Assertions.fail("Missing validation exception");
         } catch (ValidationException e) {}
 
         validationContext = new JsonPathMessageValidationContext.Builder()
@@ -230,11 +230,11 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
                 .build();
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assert.fail("Missing validation exception");
+            Assertions.fail("Missing validation exception");
         } catch (ValidationException e) {}
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test
     public void testValidateMessageElementsWithValidationMatcherNotSuccessful() {
         Map<String, Object> validationExpressions = new HashMap<>();
         validationExpressions.put("$..element.attributeA", "@startsWith('attribute-')@");
@@ -246,16 +246,16 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
                 .expressions(validationExpressions)
                 .build();
 
-        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        Assertions.assertThrows(ValidationException.class, () -> validator.validateMessage(message, new DefaultMessage(), context, validationContext));
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test
     public void testValidateMessageElementsWithJsonPathNotSuccessful() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext.Builder()
                 .expression("$..element.sub-element", "false-value")
                 .build();
 
-        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        Assertions.assertThrows(ValidationException.class, () -> validator.validateMessage(message, new DefaultMessage(), context, validationContext));
     }
 
     @Test
@@ -267,22 +267,22 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test
     public void testValidateMessageElementsWithFullPathNotSuccessful() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext.Builder()
                 .expression("$.root.element.sub-element", "false-value")
                 .build();
 
-        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        Assertions.assertThrows(ValidationException.class, () -> validator.validateMessage(message, new DefaultMessage(), context, validationContext));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testValidateMessageElementsPathNotFound() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext.Builder()
                 .expression("$.root.foo", "foo-value")
                 .build();
 
-        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> validator.validateMessage(message, new DefaultMessage(), context, validationContext));
     }
 
     @Test
@@ -309,20 +309,20 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
         validationContexts.add(new DefaultScriptValidationContext(MessageType.XML.name()));
         validationContexts.add(new DefaultScriptValidationContext(MessageType.PLAINTEXT.name()));
 
-        Assert.assertNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNull(validator.findValidationContext(validationContexts));
 
         validationContexts.add(new JsonPathMessageValidationContext());
 
-        Assert.assertNotNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNotNull(validator.findValidationContext(validationContexts));
     }
 
     private static class NullValueMatcher implements ValidationMatcher {
         @Override
         public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
             if (controlParameters.get(0).equals("nullValue()")) {
-                Assert.assertNull(value);
+                Assertions.assertNull(value);
             } else if (controlParameters.get(0).equals("notNullValue()")) {
-                Assert.assertNotNull(value);
+                Assertions.assertNotNull(value);
             }
         }
     }

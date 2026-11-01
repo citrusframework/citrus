@@ -22,14 +22,14 @@ import java.util.List;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.functions.Function;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.6
  */
-public class JsonPathFunctionTest extends AbstractTestNGUnitTest {
+public class JsonPathFunctionTest extends AbstractUnitTest {
 
     private final JsonPathFunction function = new JsonPathFunction();
 
@@ -40,7 +40,7 @@ public class JsonPathFunctionTest extends AbstractTestNGUnitTest {
         List<String> parameters = new ArrayList<>();
         parameters.add(jsonSource);
         parameters.add("$.person.name");
-        Assert.assertEquals(function.execute(parameters, context), "Sheldon");
+        Assertions.assertEquals("Sheldon", function.execute(parameters, context));
     }
 
     @Test
@@ -48,22 +48,22 @@ public class JsonPathFunctionTest extends AbstractTestNGUnitTest {
         List<String> parameters = new ArrayList<>();
         parameters.add(jsonSource);
         parameters.add("$.person.keySet()");
-        Assert.assertEquals(function.execute(parameters, context), "[name, age]");
+        Assertions.assertEquals("[name, age]", function.execute(parameters, context));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testExecuteJsonPathUnknown() {
         List<String> parameters = new ArrayList<>();
         parameters.add(jsonSource);
         parameters.add("$.person.unknown");
-        function.execute(parameters, context);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> function.execute(parameters, context));
     }
 
     @Test
     public void shouldLookupFunction() {
-        Assert.assertTrue(Function.lookup().containsKey("jsonPath"));
-        Assert.assertEquals(Function.lookup().get("jsonPath").getClass(), JsonPathFunction.class);
+        Assertions.assertTrue(Function.lookup().containsKey("jsonPath"));
+        Assertions.assertEquals(JsonPathFunction.class, Function.lookup().get("jsonPath").getClass());
 
-        Assert.assertEquals(new DefaultFunctionLibrary().getFunction("jsonPath").getClass(), JsonPathFunction.class);
+        Assertions.assertEquals(JsonPathFunction.class, new DefaultFunctionLibrary().getFunction("jsonPath").getClass());
     }
 }

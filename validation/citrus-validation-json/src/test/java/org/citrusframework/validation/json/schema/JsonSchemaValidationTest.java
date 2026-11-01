@@ -33,10 +33,10 @@ import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -46,6 +46,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class JsonSchemaValidationTest {
 
     @Mock
@@ -59,19 +60,9 @@ public class JsonSchemaValidationTest {
 
     private JsonSchemaValidation fixture;
 
-    private AutoCloseable mocks;
-
-    @BeforeMethod
+    @BeforeEach
     void beforeMethodSetup() {
-        mocks = MockitoAnnotations.openMocks(this);
         fixture = new JsonSchemaValidation(jsonSchemaFilterMock);
-    }
-
-    @AfterMethod
-    void afterMethod() throws Exception {
-        if (mocks != null) {
-            mocks.close();
-        }
     }
 
     @Test

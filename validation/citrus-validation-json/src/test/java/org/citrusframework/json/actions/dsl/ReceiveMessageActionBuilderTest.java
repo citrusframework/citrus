@@ -51,8 +51,8 @@ import org.citrusframework.validation.context.json.JsonPathMessageValidationCont
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -100,21 +100,21 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .body(buildPayload().json().marshal(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()),
-                "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}",
+                ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
     }
 
     @Test
@@ -133,20 +133,20 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .body(buildPayload().json().marshal(new TestRequest("Hello Citrus!"), mapper)));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
 
     }
 
@@ -175,20 +175,20 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .body(buildPayload().json().marshal(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
 
     }
 
@@ -218,21 +218,21 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), PLAINTEXT.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertEquals(PLAINTEXT.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(1, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0),
-                "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals(1L, ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size());
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}",
+                ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0));
 
     }
 
@@ -253,20 +253,20 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"), mapper)));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), PLAINTEXT.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertEquals(PLAINTEXT.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(1, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals(1L, ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size());
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0));
 
     }
 
@@ -296,20 +296,20 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), PLAINTEXT.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertEquals(PLAINTEXT.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(1, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals(1L, ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size());
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0));
 
     }
 
@@ -343,31 +343,31 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .header(resource));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(2, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(1).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), XML.name());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(XML.name(), action.getMessageType());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(1L, ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo</Value></Header>", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0));
 
         action = ((ReceiveMessageAction) test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), XML.name());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(XML.name(), action.getMessageType());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
-        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>bar</Value></Header>");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", ((StaticMessageBuilder) action.getMessageBuilder()).getMessage().getPayload());
+        Assertions.assertEquals(1L, ((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>bar</Value></Header>", ((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0));
 
     }
 
@@ -405,35 +405,35 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 .header(resource));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(2, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(1).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), XML.name());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(XML.name(), action.getMessageType());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 3L);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>sayHello</Value></Header>");
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(2), "<Header><Name>operation</Name><Value>bar</Value></Header>");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(3L, ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>sayHello</Value></Header>", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0));
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo</Value></Header>", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(1));
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>bar</Value></Header>", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(2));
 
         action = ((ReceiveMessageAction) test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), XML.name());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(XML.name(), action.getMessageType());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
-        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size(), 3L);
-        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>sayHello</Value></Header>");
-        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertEquals(((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(2), "<Header><Name>operation</Name><Value>bar</Value></Header>");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", ((StaticMessageBuilder) action.getMessageBuilder()).getMessage().getPayload());
+        Assertions.assertEquals(3L, ((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>sayHello</Value></Header>", ((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(0));
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>foo</Value></Header>", ((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(1));
+        Assertions.assertEquals("<Header><Name>operation</Name><Value>bar</Value></Header>", ((StaticMessageBuilder) action.getMessageBuilder()).buildMessageHeaderData(context).get(2));
 
     }
 
@@ -464,27 +464,27 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .expression("$.toString()", "payload")
                         .expression("$.person", "person")));
 
-        Assert.assertNotNull(context.getVariable("text"));
-        Assert.assertNotNull(context.getVariable("person"));
-        Assert.assertNotNull(context.getVariable("payload"));
-        Assert.assertEquals(context.getVariable("text"), "Hello World!");
-        Assert.assertEquals(context.getVariable("payload"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
-        Assert.assertTrue(context.getVariable("person").contains("\"John\""));
+        Assertions.assertNotNull(context.getVariable("text"));
+        Assertions.assertNotNull(context.getVariable("person"));
+        Assertions.assertNotNull(context.getVariable("payload"));
+        Assertions.assertEquals("Hello World!", context.getVariable("text"));
+        Assertions.assertEquals("{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}", context.getVariable("payload"));
+        Assertions.assertTrue(context.getVariable("person").contains("\"John\""));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assertions.assertEquals(JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 1);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof DelegatingPayloadVariableExtractor);
-        Assert.assertTrue(((DelegatingPayloadVariableExtractor) action.getVariableExtractors().get(0)).getPathExpressions().containsKey("$.text"));
-        Assert.assertTrue(((DelegatingPayloadVariableExtractor) action.getVariableExtractors().get(0)).getPathExpressions().containsKey("$.person"));
+        Assertions.assertEquals(1, action.getVariableExtractors().size());
+        Assertions.assertTrue(action.getVariableExtractors().get(0) instanceof DelegatingPayloadVariableExtractor);
+        Assertions.assertTrue(((DelegatingPayloadVariableExtractor) action.getVariableExtractors().get(0)).getPathExpressions().containsKey("$.text"));
+        Assertions.assertTrue(((DelegatingPayloadVariableExtractor) action.getVariableExtractors().get(0)).getPathExpressions().containsKey("$.person"));
     }
 
     @Test
@@ -514,27 +514,27 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .expression("$.toString()", "payload")
                         .expression("$.person", "person")));
 
-        Assert.assertNotNull(context.getVariable("text"));
-        Assert.assertNotNull(context.getVariable("person"));
-        Assert.assertNotNull(context.getVariable("payload"));
-        Assert.assertEquals(context.getVariable("text"), "Hello World!");
-        Assert.assertEquals(context.getVariable("payload"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
-        Assert.assertTrue(context.getVariable("person").contains("\"John\""));
+        Assertions.assertNotNull(context.getVariable("text"));
+        Assertions.assertNotNull(context.getVariable("person"));
+        Assertions.assertNotNull(context.getVariable("payload"));
+        Assertions.assertEquals("Hello World!", context.getVariable("text"));
+        Assertions.assertEquals("{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}", context.getVariable("payload"));
+        Assertions.assertTrue(context.getVariable("person").contains("\"John\""));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assertions.assertEquals(JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 1);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof DelegatingPayloadVariableExtractor);
-        Assert.assertTrue(((DelegatingPayloadVariableExtractor) action.getVariableExtractors().get(0)).getPathExpressions().containsKey("$.text"));
-        Assert.assertTrue(((DelegatingPayloadVariableExtractor) action.getVariableExtractors().get(0)).getPathExpressions().containsKey("$.person"));
+        Assertions.assertEquals(1, action.getVariableExtractors().size());
+        Assertions.assertTrue(action.getVariableExtractors().get(0) instanceof DelegatingPayloadVariableExtractor);
+        Assertions.assertTrue(((DelegatingPayloadVariableExtractor) action.getVariableExtractors().get(0)).getPathExpressions().containsKey("$.text"));
+        Assertions.assertTrue(((DelegatingPayloadVariableExtractor) action.getVariableExtractors().get(0)).getPathExpressions().containsKey("$.person"));
     }
 
     @Test
@@ -564,27 +564,27 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .expression("$.toString()", "payload")
                         .expression("$.person", "person")));
 
-        Assert.assertNotNull(context.getVariable("text"));
-        Assert.assertNotNull(context.getVariable("person"));
-        Assert.assertNotNull(context.getVariable("payload"));
-        Assert.assertEquals(context.getVariable("text"), "Hello World!");
-        Assert.assertEquals(context.getVariable("payload"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
-        Assert.assertTrue(context.getVariable("person").contains("\"John\""));
+        Assertions.assertNotNull(context.getVariable("text"));
+        Assertions.assertNotNull(context.getVariable("person"));
+        Assertions.assertNotNull(context.getVariable("payload"));
+        Assertions.assertEquals("Hello World!", context.getVariable("text"));
+        Assertions.assertEquals("{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}", context.getVariable("payload"));
+        Assertions.assertTrue(context.getVariable("person").contains("\"John\""));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assertions.assertEquals(JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 1);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
-        Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
-        Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
+        Assertions.assertEquals(1, action.getVariableExtractors().size());
+        Assertions.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
+        Assertions.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
+        Assertions.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
 
     }
 
@@ -612,31 +612,31 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .expression("$.index", 5)));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonPathMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(3, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(JsonPathMessageValidationContext.class::isInstance));
 
         JsonPathMessageValidationContext validationContext = action.getValidationContexts().stream()
                 .filter(JsonPathMessageValidationContext.class::isInstance).findFirst()
                 .map(JsonPathMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 5L);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.name"), "John");
-        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.active"), true);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.text"), "Hello World!");
-        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.index"), 5);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.id").getClass(), AnyOf.class);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals(5L, validationContext.getJsonPathExpressions().size());
+        Assertions.assertEquals("John", validationContext.getJsonPathExpressions().get("$.person.name"));
+        Assertions.assertEquals(true, validationContext.getJsonPathExpressions().get("$.person.active"));
+        Assertions.assertEquals("Hello World!", validationContext.getJsonPathExpressions().get("$.text"));
+        Assertions.assertEquals(5, validationContext.getJsonPathExpressions().get("$.index"));
+        Assertions.assertEquals(AnyOf.class, validationContext.getJsonPathExpressions().get("$.id").getClass());
     }
 
     @Test
@@ -661,18 +661,18 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .expression("$.text", "Citrus rocks!")));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 4);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
-        Assert.assertEquals(action.getValidationContexts().stream().filter(JsonPathMessageValidationContext.class::isInstance).count(), 2L);
+        Assertions.assertEquals(JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(4, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(2L, action.getValidationContexts().stream().filter(JsonPathMessageValidationContext.class::isInstance).count());
 
         Map<String, Object> jsonPathExpressions = action.getValidationContexts().stream()
                 .filter(JsonPathMessageValidationContext.class::isInstance)
@@ -684,10 +684,10 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                 })
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(jsonPathExpressions.size(), 2L);
-        Assert.assertEquals(jsonPathExpressions.get("$.user"), "christoph");
-        Assert.assertEquals(jsonPathExpressions.get("$.text"), "Citrus rocks!");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals(2L, jsonPathExpressions.size());
+        Assertions.assertEquals("christoph", jsonPathExpressions.get("$.user"));
+        Assertions.assertEquals("Citrus rocks!", jsonPathExpressions.get("$.text"));
     }
 
     @Test
@@ -716,32 +716,32 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .expression("$.toString()", "payload")
                         .expression("$.person", "person")));
 
-        Assert.assertNotNull(context.getVariable("text"));
-        Assert.assertNotNull(context.getVariable("person"));
-        Assert.assertNotNull(context.getVariable("payload"));
-        Assert.assertEquals(context.getVariable("text"), "Hello World!");
-        Assert.assertEquals(context.getVariable("payload"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
-        Assert.assertTrue(context.getVariable("person").contains("\"John\""));
+        Assertions.assertNotNull(context.getVariable("text"));
+        Assertions.assertNotNull(context.getVariable("person"));
+        Assertions.assertNotNull(context.getVariable("payload"));
+        Assertions.assertEquals("Hello World!", context.getVariable("text"));
+        Assertions.assertEquals("{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}", context.getVariable("payload"));
+        Assertions.assertTrue(context.getVariable("person").contains("\"John\""));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assertions.assertEquals(JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 1);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
-        Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
-        Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.toString()"));
-        Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
+        Assertions.assertEquals(1, action.getVariableExtractors().size());
+        Assertions.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
+        Assertions.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
+        Assertions.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.toString()"));
+        Assertions.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
 
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test
     public void testReceiveBuilderWithJsonPathExpressionsFailure() {
         reset(messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
@@ -753,16 +753,16 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .setHeader("operation", "sayHello"));
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(receive(messageEndpoint)
+        Assertions.assertThrows(TestCaseFailedException.class, () -> runner.run(receive(messageEndpoint)
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                 .validate(validation().jsonPath()
                         .expression("$.person.name", "John")
-                        .expression("$.text", "Hello Citrus!")));
+                        .expression("$.text", "Hello Citrus!"))));
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test
     public void testReceiveBuilderWithJsonValidationFailure() {
         reset(messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
@@ -774,13 +774,13 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .setHeader("operation", "sayHello"));
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(receive(messageEndpoint)
+        Assertions.assertThrows(TestCaseFailedException.class, () -> runner.run(receive(messageEndpoint)
                 .message()
                 .type(JSON)
                 .body("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                 .validate(validation().json()
                         .expression("$.person.name", "John")
-                        .expression("$.text", "Hello World!")));
+                        .expression("$.text", "Hello World!"))));
     }
 
     @Test
@@ -805,29 +805,29 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .ignore("$.index")));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), JSON.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(JSON.name(), action.getMessageType());
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         JsonMessageValidationContext validationContext = action.getValidationContexts().stream()
                 .filter(JsonMessageValidationContext.class::isInstance).findFirst()
                 .map(JsonMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}");
-        Assert.assertEquals(validationContext.getIgnoreExpressions().size(), 3L);
-        Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$..text"));
-        Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$.person.surname"));
-        Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$.index"));
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals("{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(3L, validationContext.getIgnoreExpressions().size());
+        Assertions.assertTrue(validationContext.getIgnoreExpressions().contains("$..text"));
+        Assertions.assertTrue(validationContext.getIgnoreExpressions().contains("$.person.surname"));
+        Assertions.assertTrue(validationContext.getIgnoreExpressions().contains("$.index"));
 
     }
 
@@ -858,25 +858,25 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .schemaRepository("customJsonSchemaRepository")));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         JsonMessageValidationContext validationContext = action.getValidationContexts().stream()
                 .filter(JsonMessageValidationContext.class::isInstance).findFirst()
                 .map(JsonMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{}");
-        Assert.assertEquals(validationContext.getSchemaRepository(), "customJsonSchemaRepository");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals("{}", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals("customJsonSchemaRepository", validationContext.getSchemaRepository());
 
     }
 
@@ -907,25 +907,25 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .schema("jsonTestSchema")));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         JsonMessageValidationContext validationContext = action.getValidationContexts().stream()
                 .filter(JsonMessageValidationContext.class::isInstance).findFirst()
                 .map(JsonMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{}");
-        Assert.assertEquals(validationContext.getSchema(), "jsonTestSchema");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals("{}", ((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals("jsonTestSchema", validationContext.getSchema());
 
     }
 
@@ -954,22 +954,22 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .schemaValidation(true)));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         JsonMessageValidationContext jsonMessageValidationContext = action.getValidationContexts().stream()
                 .filter(JsonMessageValidationContext.class::isInstance).findFirst()
                 .map(JsonMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
-        Assert.assertTrue(jsonMessageValidationContext.isSchemaValidationEnabled());
+        Assertions.assertTrue(jsonMessageValidationContext.isSchemaValidationEnabled());
 
     }
 
@@ -992,21 +992,21 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport implements 
                         .schemaValidation(false)));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction) test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         JsonMessageValidationContext jsonMessageValidationContext = action.getValidationContexts().stream()
                 .filter(JsonMessageValidationContext.class::isInstance).findFirst()
                 .map(JsonMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
-        Assert.assertFalse(jsonMessageValidationContext.isSchemaValidationEnabled());
+        Assertions.assertFalse(jsonMessageValidationContext.isSchemaValidationEnabled());
     }
 }

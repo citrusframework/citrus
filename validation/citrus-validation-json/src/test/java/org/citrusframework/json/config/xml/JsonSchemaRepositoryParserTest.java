@@ -20,9 +20,9 @@ import java.util.Map;
 
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.json.schema.SimpleJsonSchema;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JsonSchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -34,26 +34,26 @@ public class JsonSchemaRepositoryParserTest extends AbstractBeanDefinitionParser
         Map<String, JsonSchemaRepository> schemaRepositories = beanDefinitionContext.getBeansOfType(JsonSchemaRepository.class);
 
         //THEN
-        Assert.assertEquals(schemaRepositories.size(), 2);
+        Assertions.assertEquals(2, schemaRepositories.size());
 
         // 1st schema repository
         JsonSchemaRepository schemaRepository = schemaRepositories.get("jsonSchemaRepository1");
-        Assert.assertNotNull(schemaRepository.getSchemas());
-        Assert.assertEquals(schemaRepository.getSchemas().size(), 2);
-        Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleJsonSchema.class);
-        Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), SimpleJsonSchema.class);
-        Assert.assertNotNull(schemaRepository.getLocations());
-        Assert.assertEquals(schemaRepository.getLocations().size(), 0);
+        Assertions.assertNotNull(schemaRepository.getSchemas());
+        Assertions.assertEquals(2, schemaRepository.getSchemas().size());
+        Assertions.assertEquals(SimpleJsonSchema.class, schemaRepository.getSchemas().get(0).getClass());
+        Assertions.assertEquals(SimpleJsonSchema.class, schemaRepository.getSchemas().get(1).getClass());
+        Assertions.assertNotNull(schemaRepository.getLocations());
+        Assertions.assertEquals(0, schemaRepository.getLocations().size());
 
         // 2nd schema repository
         schemaRepository = schemaRepositories.get("jsonSchemaRepository2");
-        Assert.assertNotNull(schemaRepository.getSchemas());
-        Assert.assertEquals(schemaRepository.getSchemas().size(), 2);
-        Assert.assertNotNull(schemaRepository.getLocations());
-        Assert.assertEquals(schemaRepository.getLocations().size(), 1);
-        Assert.assertEquals(schemaRepository.getLocations().get(0), "classpath:org/citrusframework/validation/*");
+        Assertions.assertNotNull(schemaRepository.getSchemas());
+        Assertions.assertEquals(2, schemaRepository.getSchemas().size());
+        Assertions.assertNotNull(schemaRepository.getLocations());
+        Assertions.assertEquals(1, schemaRepository.getLocations().size());
+        Assertions.assertEquals("classpath:org/citrusframework/validation/*", schemaRepository.getLocations().get(0));
 
-        Assert.assertTrue(beanDefinitionContext.containsBean("jsonSchema1"));
-        Assert.assertTrue(beanDefinitionContext.containsBean("jsonSchema2"));
+        Assertions.assertTrue(beanDefinitionContext.containsBean("jsonSchema1"));
+        Assertions.assertTrue(beanDefinitionContext.containsBean("jsonSchema2"));
     }
 }

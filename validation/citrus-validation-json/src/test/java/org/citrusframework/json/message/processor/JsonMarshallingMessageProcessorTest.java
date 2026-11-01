@@ -23,16 +23,16 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
 import static org.mockito.Mockito.when;
 
-public class JsonMarshallingMessageProcessorTest extends AbstractTestNGUnitTest {
+public class JsonMarshallingMessageProcessorTest extends AbstractUnitTest {
 
     private final JsonMapper mapper = JsonMapper.shared();
 
@@ -45,7 +45,7 @@ public class JsonMarshallingMessageProcessorTest extends AbstractTestNGUnitTest 
         Message message = new DefaultMessage(new TestRequest("Hello Citrus!"));
         new JsonMarshallingMessageProcessor().process(message, context);
 
-        Assert.assertEquals(message.getPayload(String.class), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", message.getPayload(String.class));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class JsonMarshallingMessageProcessorTest extends AbstractTestNGUnitTest 
         Message message = new DefaultMessage(new TestRequest("Hello Citrus!"));
         new JsonMarshallingMessageProcessor(mapper).process(message, context);
 
-        Assert.assertEquals(message.getPayload(String.class), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", message.getPayload(String.class));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class JsonMarshallingMessageProcessorTest extends AbstractTestNGUnitTest 
         Message message = new DefaultMessage("{\"message\":\"already JSON\"}");
         new JsonMarshallingMessageProcessor(mapper).process(message, context);
 
-        Assert.assertEquals(message.getPayload(String.class), "{\"message\":\"already JSON\"}");
+        Assertions.assertEquals("{\"message\":\"already JSON\"}", message.getPayload(String.class));
     }
 
     @Test
@@ -70,6 +70,6 @@ public class JsonMarshallingMessageProcessorTest extends AbstractTestNGUnitTest 
         message.setType(MessageType.PLAINTEXT.name());
         new JsonMarshallingMessageProcessor(mapper).process(message, context);
 
-        Assert.assertEquals(message.getPayload(String.class), "{\"message\":\"Hello Citrus!\"}");
+        Assertions.assertEquals("{\"message\":\"Hello Citrus!\"}", message.getPayload(String.class));
     }
 }

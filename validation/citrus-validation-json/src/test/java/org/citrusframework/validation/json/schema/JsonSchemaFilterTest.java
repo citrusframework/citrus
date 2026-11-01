@@ -26,26 +26,22 @@ import org.citrusframework.json.schema.SimpleJsonSchema;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class JsonSchemaFilterTest {
 
     private JsonSchemaFilter jsonSchemaFilter = new JsonSchemaFilter();
 
     @Mock
     private ReferenceResolver referenceResolverMock;
-
-    @BeforeMethod
-    public void setupMocks() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testFilterOnSchemaRepositoryName() {
@@ -78,9 +74,9 @@ public class JsonSchemaFilterTest {
                 jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
 
         //THEN
-        Assert.assertEquals(simpleJsonSchemas.size(), 2);
-        Assert.assertTrue(simpleJsonSchemas.contains(secondSimpleJsonSchema));
-        Assert.assertTrue(simpleJsonSchemas.contains(thirdSimpleJsonSchema));
+        Assertions.assertEquals(2, simpleJsonSchemas.size());
+        Assertions.assertTrue(simpleJsonSchemas.contains(secondSimpleJsonSchema));
+        Assertions.assertTrue(simpleJsonSchemas.contains(thirdSimpleJsonSchema));
     }
 
     @Test
@@ -142,11 +138,11 @@ public class JsonSchemaFilterTest {
                 jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
 
         //THEN
-        Assert.assertEquals(simpleJsonSchemas.size(),1);
-        Assert.assertEquals(expectedSimpleJsonSchema, simpleJsonSchemas.get(0));
+        Assertions.assertEquals(1,simpleJsonSchemas.size());
+        Assertions.assertEquals(simpleJsonSchemas.get(0), expectedSimpleJsonSchema);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testNoSchemaRepositoryFoundThrowsException() {
 
         //GIVEN
@@ -165,13 +161,13 @@ public class JsonSchemaFilterTest {
                 .build();
 
         //WHEN
-        jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock));
 
         //THEN
         //Exception has been thrown
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testNoSchemaFoundThrowsException() {
 
         //GIVEN
@@ -194,7 +190,7 @@ public class JsonSchemaFilterTest {
                 .thenThrow(CitrusRuntimeException.class);
 
         //WHEN
-        jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock));
 
         //THEN
         //Exception has been thrown
@@ -230,9 +226,9 @@ public class JsonSchemaFilterTest {
                 jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
 
         //THEN
-        Assert.assertEquals(simpleJsonSchemas.size(), 3);
-        Assert.assertTrue(simpleJsonSchemas.contains(firstSimpleJsonSchema));
-        Assert.assertTrue(simpleJsonSchemas.contains(secondSimpleJsonSchema));
-        Assert.assertTrue(simpleJsonSchemas.contains(thirdSimpleJsonSchema));
+        Assertions.assertEquals(3, simpleJsonSchemas.size());
+        Assertions.assertTrue(simpleJsonSchemas.contains(firstSimpleJsonSchema));
+        Assertions.assertTrue(simpleJsonSchemas.contains(secondSimpleJsonSchema));
+        Assertions.assertTrue(simpleJsonSchemas.contains(thirdSimpleJsonSchema));
     }
 }
