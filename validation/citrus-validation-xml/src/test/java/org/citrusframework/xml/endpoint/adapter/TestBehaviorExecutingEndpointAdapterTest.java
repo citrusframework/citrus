@@ -34,8 +34,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.3.1
@@ -58,14 +58,14 @@ public class TestBehaviorExecutingEndpointAdapterTest extends UnitTestSupport {
         Message response = endpointAdapter.handleMessage(
                 new DefaultMessage("<TestBehavior name=\"FooTestBehavior\"></TestBehavior>"));
 
-        Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload(), "<TestBehavior name=\"FooTestBehavior\">OK</TestBehavior>");
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals("<TestBehavior name=\"FooTestBehavior\">OK</TestBehavior>", response.getPayload());
 
         response = endpointAdapter.handleMessage(
                 new DefaultMessage("<TestBehavior name=\"BarTestBehavior\"></TestBehavior>"));
 
-        Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload(), "<TestBehavior name=\"BarTestBehavior\">OK</TestBehavior>");
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals("<TestBehavior name=\"BarTestBehavior\">OK</TestBehavior>", response.getPayload());
     }
 
     /**
@@ -80,8 +80,8 @@ public class TestBehaviorExecutingEndpointAdapterTest extends UnitTestSupport {
                 new DefaultMessage(
                         "<FooBarTestBehavior></FooBarTestBehavior>"));
 
-        Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload(), "<FooBarTestBehavior>OK</FooBarTestBehavior>");
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals("<FooBarTestBehavior>OK</FooBarTestBehavior>", response.getPayload());
     }
 
     /**
@@ -96,9 +96,9 @@ public class TestBehaviorExecutingEndpointAdapterTest extends UnitTestSupport {
         try {
             endpointAdapter.handleMessage(new DefaultMessage(
                     "<FooTestDesigner>foo test please</FooTestDesigner>"));
-            Assert.fail("Missing exception due to bad XPath expression");
+            Assertions.fail("Missing exception due to bad XPath expression");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "No result for XPath expression: '//I_DO_NOT_EXIST'");
+            Assertions.assertEquals("No result for XPath expression: '//I_DO_NOT_EXIST'", e.getMessage());
         }
     }
 
@@ -114,9 +114,9 @@ public class TestBehaviorExecutingEndpointAdapterTest extends UnitTestSupport {
         try {
             endpointAdapter.handleMessage(new DefaultMessage(
                     "<TestBehavior name=\"UNKNOWN_TEST\"></TestBehavior>"));
-            Assert.fail("Missing exception due to unknown endpoint adapter");
+            Assertions.fail("Missing exception due to unknown endpoint adapter");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
+            Assertions.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
         }
     }
 

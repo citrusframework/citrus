@@ -23,15 +23,15 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4
  */
-public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
+public class XpathMappingDataDictionaryTest extends AbstractUnitTest {
 
     private final String payload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text><OtherText name=\"foo\">No changes</OtherText></TestMessage>";
     private final String htmlPayload = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">"
@@ -61,12 +61,13 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text>Hello!</Text>
                     <OtherText name="bar">No changes</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -81,12 +82,13 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text>Hello!</Text>
                     <OtherText name="bar">Hello!</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -101,12 +103,13 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <ns1:TestMessage xmlns:ns1="http://www.foo.bar">
                     <ns1:Text>Hello!</ns1:Text>
                     <ns1:OtherText name="bar">No changes</ns1:OtherText>
-                </ns1:TestMessage>""");
+                </ns1:TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -127,12 +130,13 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setNamespaceContextBuilder(namespaceContextBuilder);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <ns1:TestMessage xmlns:ns1="http://www.foo.bar">
                     <ns1:Text>Hello!</ns1:Text>
                     <ns1:OtherText name="bar">No changes</ns1:OtherText>
-                </ns1:TestMessage>""");
+                </ns1:TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -149,12 +153,13 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text>Hello!</Text>
                     <OtherText name="bar">No changes</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -166,12 +171,13 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.initialize();
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text>Hello!</Text>
                     <OtherText name="bar">GoodBye!</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -186,12 +192,13 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text>Hello World!</Text>
                     <OtherText name="bar">No changes</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -211,8 +218,8 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setNamespaceContextBuilder(namespaceContextBuilder);
 
         dictionary.processMessage(message, context);
-        Assert.assertTrue(message.getPayload(String.class).trim().contains("<title>Hello</title>"));
-        Assert.assertTrue(message.getPayload(String.class).trim().contains("<h1>Hello Citrus!</h1>"));
-        Assert.assertTrue(message.getPayload(String.class).trim().contains("<hr/>"));
+        Assertions.assertTrue(message.getPayload(String.class).trim().contains("<title>Hello</title>"));
+        Assertions.assertTrue(message.getPayload(String.class).trim().contains("<h1>Hello Citrus!</h1>"));
+        Assertions.assertTrue(message.getPayload(String.class).trim().contains("<hr/>"));
     }
 }

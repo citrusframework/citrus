@@ -19,8 +19,8 @@ package org.citrusframework.xml.schema;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,9 +35,9 @@ public class WsdlXsdSchemaTest {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleService.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
-        Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
+        Assertions.assertEquals(2, wsdl.getSchemaResources().size());
 
-        Assert.assertNotNull(wsdl.getSource());
+        Assertions.assertNotNull(wsdl.getSource());
     }
 
     @Test
@@ -45,11 +45,11 @@ public class WsdlXsdSchemaTest {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithImports.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
-        Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
+        Assertions.assertEquals(2, wsdl.getSchemaResources().size());
 
-        Assert.assertEquals(wsdl.getTargetNamespace(), "http://citrusframework.org/SampleService/");
+        Assertions.assertEquals("http://citrusframework.org/SampleService/", wsdl.getTargetNamespace());
 
-        Assert.assertNotNull(wsdl.getSource());
+        Assertions.assertNotNull(wsdl.getSource());
     }
 
     @Test
@@ -57,11 +57,11 @@ public class WsdlXsdSchemaTest {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithImportsNamespaceDiff.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
-        Assert.assertEquals(wsdl.getSchemaResources().size(), 4);
+        Assertions.assertEquals(4, wsdl.getSchemaResources().size());
 
-        Assert.assertEquals(wsdl.getTargetNamespace(), "http://citrusframework.org/SampleService/Commands/");
+        Assertions.assertEquals("http://citrusframework.org/SampleService/Commands/", wsdl.getTargetNamespace());
 
-        Assert.assertNotNull(wsdl.getSource());
+        Assertions.assertNotNull(wsdl.getSource());
     }
 
     @Test
@@ -69,11 +69,11 @@ public class WsdlXsdSchemaTest {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithWsdlImports.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
-        Assert.assertEquals(wsdl.getSchemaResources().size(), 3);
+        Assertions.assertEquals(3, wsdl.getSchemaResources().size());
 
-        Assert.assertEquals(wsdl.getTargetNamespace(), "http://citrusframework.org/SampleService/");
+        Assertions.assertEquals("http://citrusframework.org/SampleService/", wsdl.getTargetNamespace());
 
-        Assert.assertNotNull(wsdl.getSource());
+        Assertions.assertNotNull(wsdl.getSource());
     }
 
     @Test
@@ -85,11 +85,11 @@ public class WsdlXsdSchemaTest {
             WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.create(url));
             wsdl.initialize();
 
-            Assert.assertEquals(wsdl.getSchemaResources().size(), 3);
+            Assertions.assertEquals(3, wsdl.getSchemaResources().size());
 
-            Assert.assertEquals(wsdl.getTargetNamespace(), "http://www.citrusframework.org/SampleService/");
+            Assertions.assertEquals("http://www.citrusframework.org/SampleService/", wsdl.getTargetNamespace());
 
-            Assert.assertNotNull(wsdl.getSource());
+            Assertions.assertNotNull(wsdl.getSource());
         }
     }
 
@@ -98,11 +98,11 @@ public class WsdlXsdSchemaTest {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithWsdlImportsOnly.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
-        Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
+        Assertions.assertEquals(2, wsdl.getSchemaResources().size());
 
-        Assert.assertEquals(wsdl.getTargetNamespace(), "http://citrusframework.org/TestService/");
+        Assertions.assertEquals("http://citrusframework.org/TestService/", wsdl.getTargetNamespace());
 
-        Assert.assertNotNull(wsdl.getSource());
+        Assertions.assertNotNull(wsdl.getSource());
     }
 
     @Test
@@ -110,9 +110,9 @@ public class WsdlXsdSchemaTest {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithDuplicateImports.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
-        Assert.assertEquals(wsdl.getSchemaResources().size(), 3);
+        Assertions.assertEquals(3, wsdl.getSchemaResources().size());
 
-        Assert.assertNotNull(wsdl.getSource());
+        Assertions.assertNotNull(wsdl.getSource());
     }
 
     @Test
@@ -120,9 +120,9 @@ public class WsdlXsdSchemaTest {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceNoMatchingTargetNamespace.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
-        Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
+        Assertions.assertEquals(2, wsdl.getSchemaResources().size());
 
-        Assert.assertNotNull(wsdl.getSource());
+        Assertions.assertNotNull(wsdl.getSource());
     }
 
     @Test
@@ -130,9 +130,9 @@ public class WsdlXsdSchemaTest {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithIncludes.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
-        Assert.assertEquals(wsdl.getSchemaResources().size(), 3);
+        Assertions.assertEquals(3, wsdl.getSchemaResources().size());
 
-        Assert.assertNotNull(wsdl.getSource());
+        Assertions.assertNotNull(wsdl.getSource());
     }
 
     @Test
@@ -141,20 +141,20 @@ public class WsdlXsdSchemaTest {
         wsdl.initialize();
         wsdl.afterPropertiesSet();
 
-        Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
+        Assertions.assertEquals(2, wsdl.getSchemaResources().size());
 
         String xsd = FileUtils.readToString(wsdl.getSchemaResources().get(0).getInputStream());
-        Assert.assertTrue(xsd.contains("xmlns:tns=\"http://citrusframework.org/bookstore/\""));
-        Assert.assertTrue(xsd.contains("xmlns:audio=\"http://citrusframework.org/bookstore/audio\""));
-        Assert.assertTrue(xsd.contains("xmlns:book=\"http://citrusframework.org/book\""));
-        Assert.assertTrue(xsd.contains("xmlns:author=\"http://citrusframework.org/author\""));
-        Assert.assertTrue(xsd.contains("xmlns=\"http://citrusframework.org/bookstore/\""));
+        Assertions.assertTrue(xsd.contains("xmlns:tns=\"http://citrusframework.org/bookstore/\""));
+        Assertions.assertTrue(xsd.contains("xmlns:audio=\"http://citrusframework.org/bookstore/audio\""));
+        Assertions.assertTrue(xsd.contains("xmlns:book=\"http://citrusframework.org/book\""));
+        Assertions.assertTrue(xsd.contains("xmlns:author=\"http://citrusframework.org/author\""));
+        Assertions.assertTrue(xsd.contains("xmlns=\"http://citrusframework.org/bookstore/\""));
 
         xsd = FileUtils.readToString(wsdl.getSchemaResources().get(1).getInputStream());
-        Assert.assertTrue(xsd.contains("xmlns:tns=\"http://citrusframework.org/bookstore/\""));
-        Assert.assertTrue(xsd.contains("xmlns:audio=\"http://citrusframework.org/bookstore/audio\""));
-        Assert.assertTrue(xsd.contains("xmlns:book=\"http://citrusframework.org/book/wsdl\""));
-        Assert.assertFalse(xsd.contains("xmlns:author=\"http://citrusframework.org/author\""));
-        Assert.assertTrue(xsd.contains("xmlns=\"http://schemas.xmlsoap.org/wsdl/soap/\""));
+        Assertions.assertTrue(xsd.contains("xmlns:tns=\"http://citrusframework.org/bookstore/\""));
+        Assertions.assertTrue(xsd.contains("xmlns:audio=\"http://citrusframework.org/bookstore/audio\""));
+        Assertions.assertTrue(xsd.contains("xmlns:book=\"http://citrusframework.org/book/wsdl\""));
+        Assertions.assertFalse(xsd.contains("xmlns:author=\"http://citrusframework.org/author\""));
+        Assertions.assertTrue(xsd.contains("xmlns=\"http://schemas.xmlsoap.org/wsdl/soap/\""));
     }
 }

@@ -35,7 +35,7 @@ import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.message.builder.FileResourcePayloadBuilder;
 import org.citrusframework.messaging.SelectiveConsumer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
@@ -44,16 +44,21 @@ import org.citrusframework.validation.xhtml.XhtmlMessageValidator;
 import org.citrusframework.validation.xhtml.XhtmlXpathMessageValidator;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mock;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 
-public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+public class ReceiveMessageActionTest extends AbstractUnitTest {
 
     @Mock
     private Endpoint endpoint;
@@ -67,7 +72,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        openMocks(this);
         TestContextFactory factory = super.createTestContextFactory();
         factory.getMessageValidatorRegistry().addMessageValidator("header", new DefaultMessageHeaderValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("xml", new DomXmlMessageValidator());
@@ -494,7 +498,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myOperation'");
+            Assertions.assertEquals("Unknown variable 'myOperation'", e.getMessage());
         }
     }
 
@@ -520,7 +524,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myText'");
+            Assertions.assertEquals("Unknown variable 'myText'", e.getMessage());
         }
     }
 
@@ -555,8 +559,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("myOperation"));
-        Assert.assertEquals(context.getVariable("myOperation"), "sayHello");
+        Assertions.assertNotNull(context.getVariable("myOperation"));
+        Assertions.assertEquals("sayHello", context.getVariable("myOperation"));
     }
 
     @Test
@@ -740,8 +744,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        Assertions.assertNotNull(context.getVariable("messageVar"));
+        Assertions.assertEquals("Hello World!", context.getVariable("messageVar"));
     }
 
     @Test
@@ -779,8 +783,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello,ByeBye");
+        Assertions.assertNotNull(context.getVariable("messageVar"));
+        Assertions.assertEquals("Hello,ByeBye", context.getVariable("messageVar"));
     }
 
     @Test
@@ -819,8 +823,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        Assertions.assertNotNull(context.getVariable("messageVar"));
+        Assertions.assertEquals("Hello World!", context.getVariable("messageVar"));
     }
 
     @Test
@@ -859,8 +863,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        Assertions.assertNotNull(context.getVariable("messageVar"));
+        Assertions.assertEquals("Hello World!", context.getVariable("messageVar"));
     }
 
     @Test
@@ -899,8 +903,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        Assertions.assertNotNull(context.getVariable("messageVar"));
+        Assertions.assertEquals("Hello World!", context.getVariable("messageVar"));
     }
 
     @Test
@@ -943,8 +947,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        Assertions.assertNotNull(context.getVariable("messageVar"));
+        Assertions.assertEquals("Hello World!", context.getVariable("messageVar"));
     }
 
     @Test
@@ -1102,11 +1106,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to receive message - message is not available");
+            Assertions.assertEquals("Failed to receive message - message is not available", e.getMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving no message");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " for receiving no message");
     }
 
     @Test
@@ -1152,11 +1156,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unable to validate message payload - received message payload was empty, control message payload is not");
+            Assertions.assertEquals("Unable to validate message payload - received message payload was empty, control message payload is not", e.getMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
     }
 
     @Test

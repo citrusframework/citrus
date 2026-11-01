@@ -20,7 +20,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultMessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
@@ -28,9 +28,9 @@ import org.citrusframework.validation.xhtml.XhtmlMessageValidator;
 import org.citrusframework.validation.xhtml.XhtmlXpathMessageValidator;
 import org.citrusframework.validation.xml.DomXmlMessageValidator;
 import org.citrusframework.validation.xml.XpathMessageValidator;
-import org.testng.Assert;
+import org.junit.jupiter.api.Assertions;
 
-public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
+public abstract class UnitTestSupport extends AbstractUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
@@ -43,7 +43,7 @@ public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
         factory.getMessageValidatorRegistry().addMessageValidator("plaintext", new DefaultMessageValidator() {
             @Override
             public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, ValidationContext validationContexts) {
-                Assert.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload());
+                Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload(String.class));
             }
 
             @Override

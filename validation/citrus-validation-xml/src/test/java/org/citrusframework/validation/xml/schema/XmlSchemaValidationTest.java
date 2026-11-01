@@ -25,17 +25,23 @@ import org.citrusframework.util.SystemProvider;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.xml.schema.XsdSchemaRepository;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.xsd.SimpleXsdSchema;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
@@ -43,32 +49,27 @@ import static org.citrusframework.validation.xml.schema.ValidationStrategy.IGNOR
 import static org.citrusframework.validation.xml.schema.XmlSchemaValidation.NO_SCHEMA_FOUND_STRATEGY_ENV_VAR_NAME;
 import static org.citrusframework.validation.xml.schema.XmlSchemaValidation.NO_SCHEMA_FOUND_STRATEGY_PROPERTY_NAME;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class XmlSchemaValidationTest {
 
     @Mock
     private SystemProvider systemProviderMock;
 
-    @BeforeMethod
-    public void beforeMethodSetup() {
-        openMocks(this);
-    }
-
-    @DataProvider(name = "validParameters")
-    public Object[][] dataProvider() {
-        return new Object[][] {
-                {"Ignore", IGNORE},
-                {"Fail", FAIL},
-                {"IGNORE", IGNORE},
-                {"FAIL", FAIL},
-                {"ignore", IGNORE},
-                {"fail", FAIL},
-                {null, FAIL},
-        };
+    static Stream<Arguments> validParameters() {
+        return Stream.of(
+                Arguments.of("Ignore", IGNORE),
+                Arguments.of("Fail", FAIL),
+                Arguments.of("IGNORE", IGNORE),
+                Arguments.of("FAIL", FAIL),
+                Arguments.of("ignore", IGNORE),
+                Arguments.of("fail", FAIL),
+                Arguments.of(null, FAIL)
+        );
     }
 
     @Test
@@ -78,7 +79,7 @@ public class XmlSchemaValidationTest {
 
         XmlSchemaValidation fixture = new XmlSchemaValidation(systemProviderMock);
 
-        assertEquals(getField(fixture, "noSchemaFoundStrategy"), IGNORE);
+        assertEquals(IGNORE, getField(fixture, "noSchemaFoundStrategy"));
     }
 
     @Test
@@ -87,7 +88,7 @@ public class XmlSchemaValidationTest {
 
         XmlSchemaValidation fixture = new XmlSchemaValidation(systemProviderMock);
 
-        assertEquals(getField(fixture, "noSchemaFoundStrategy"), IGNORE);
+        assertEquals(IGNORE, getField(fixture, "noSchemaFoundStrategy"));
     }
 
     @Test
@@ -96,16 +97,17 @@ public class XmlSchemaValidationTest {
 
         XmlSchemaValidation fixture = new XmlSchemaValidation(systemProviderMock);
 
-        assertEquals(getField(fixture, "noSchemaFoundStrategy"), IGNORE);
+        assertEquals(IGNORE, getField(fixture, "noSchemaFoundStrategy"));
     }
 
     @Test
     public void configurationDefaultValues() {
         XmlSchemaValidation fixture = new XmlSchemaValidation();
-        assertEquals(getField(fixture, "noSchemaFoundStrategy"), FAIL);
+        assertEquals(FAIL, getField(fixture, "noSchemaFoundStrategy"));
     }
 
-    @Test(dataProvider = "validParameters")
+    @ParameterizedTest
+    @MethodSource("validParameters")
     public void testValidPropertyValues(String value, ValidationStrategy expectedValidationStrategy) throws ParserConfigurationException, IOException, SAXException {
         doReturn(Optional.ofNullable(value)).when(systemProviderMock).getProperty(NO_SCHEMA_FOUND_STRATEGY_PROPERTY_NAME);
         XmlSchemaValidation fixture = new XmlSchemaValidation(systemProviderMock);
@@ -127,7 +129,7 @@ public class XmlSchemaValidationTest {
         context.getReferenceResolver().bind("schemaRepository", schemaRepository);
 
         switch (expectedValidationStrategy) {
-            case FAIL -> assertThrows("Unable to find proper XML schema definition for element 'message(http://citrusframework.org/otherXsd)' in schema repository 'schemaRepository'", CitrusRuntimeException.class, () -> fixture.validate(message, context, new XmlMessageValidationContext()));
+            case FAIL -> assertThrows(CitrusRuntimeException.class, () -> fixture.validate(message, context, new XmlMessageValidationContext()), "Unable to find proper XML schema definition for element 'message(http://citrusframework.org/otherXsd)' in schema repository 'schemaRepository'");
             case IGNORE -> fixture.validate(message, context, new XmlMessageValidationContext());
             default -> throw new IllegalArgumentException("Unexpected ValidationStrategy: " + expectedValidationStrategy + "!");
         }
@@ -139,6 +141,6 @@ public class XmlSchemaValidationTest {
 
         doReturn(Optional.of(invalidValue)).when(systemProviderMock).getProperty(NO_SCHEMA_FOUND_STRATEGY_PROPERTY_NAME);
 
-        assertThrows(format("Invalid property value '%s' for no schema found strategy", invalidValue), CitrusRuntimeException.class,() -> new XmlSchemaValidation(systemProviderMock));
+        assertThrows(CitrusRuntimeException.class, () -> new XmlSchemaValidation(systemProviderMock), format("Invalid property value '%s' for no schema found strategy", invalidValue));
     }
 }

@@ -22,14 +22,16 @@ import java.util.List;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.functions.Function;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.6
  */
-public class XpathFunctionTest extends AbstractTestNGUnitTest {
+public class XpathFunctionTest extends AbstractUnitTest {
 
     private final XpathFunction function = new XpathFunction();
 
@@ -40,7 +42,7 @@ public class XpathFunctionTest extends AbstractTestNGUnitTest {
         List<String> parameters = new ArrayList<>();
         parameters.add(xmlSource);
         parameters.add("/person/name");
-        Assert.assertEquals(function.execute(parameters, context), "Sheldon");
+        Assertions.assertEquals("Sheldon", function.execute(parameters, context));
     }
 
     @Test
@@ -52,22 +54,22 @@ public class XpathFunctionTest extends AbstractTestNGUnitTest {
 
         context.getNamespaceContextBuilder().getNamespaceMappings().put("p", "http://citrus.sample.org/person");
 
-        Assert.assertEquals(function.execute(parameters, context), "Sheldon");
+        Assertions.assertEquals("Sheldon", function.execute(parameters, context));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testExecuteXpathUnknown() {
         List<String> parameters = new ArrayList<>();
         parameters.add(xmlSource);
         parameters.add("/person/unknown");
-        function.execute(parameters, context);
+        assertThrows(CitrusRuntimeException.class, () -> function.execute(parameters, context));
     }
 
     @Test
     public void shouldLookupFunction() {
-        Assert.assertTrue(Function.lookup().containsKey("xpath"));
-        Assert.assertEquals(Function.lookup().get("xpath").getClass(), XpathFunction.class);
+        Assertions.assertTrue(Function.lookup().containsKey("xpath"));
+        Assertions.assertEquals(XpathFunction.class, Function.lookup().get("xpath").getClass());
 
-        Assert.assertEquals(new DefaultFunctionLibrary().getFunction("xpath").getClass(), XpathFunction.class);
+        Assertions.assertEquals(XpathFunction.class, new DefaultFunctionLibrary().getFunction("xpath").getClass());
     }
 }

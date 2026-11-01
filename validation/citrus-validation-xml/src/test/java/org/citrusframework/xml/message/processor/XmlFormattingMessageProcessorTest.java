@@ -22,9 +22,9 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -33,7 +33,7 @@ import java.io.StringReader;
 /**
  * @since 2.6.2
  */
-public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
+public class XmlFormattingMessageProcessorTest extends AbstractUnitTest {
 
     private XmlFormattingMessageProcessor messageProcessor = new XmlFormattingMessageProcessor();
 
@@ -46,7 +46,7 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
                 + "</root>");
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+        Assertions.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.XML.name());
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+        Assertions.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
@@ -74,11 +74,11 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.XML.name());
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload() instanceof String);
+        Assertions.assertTrue(message.getPayload() instanceof String);
         String result = message.getPayload(String.class);
-        Assert.assertTrue(result.contains("root"), "Expected 'root' in: " + result);
-        Assert.assertTrue(result.contains("sub-element"), "Expected 'sub-element' in: " + result);
-        Assert.assertTrue(result.contains("text-value"), "Expected 'text-value' in: " + result);
+        Assertions.assertTrue(result.contains("root"), "Expected 'root' in: " + result);
+        Assertions.assertTrue(result.contains("sub-element"), "Expected 'sub-element' in: " + result);
+        Assertions.assertTrue(result.contains("text-value"), "Expected 'text-value' in: " + result);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage("This is plaintext");
         message.setType(MessageType.PLAINTEXT.name());
         messageProcessor.process(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "This is plaintext");
+        Assertions.assertEquals("This is plaintext", message.getPayload(String.class));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
                 + "</root>");
         processor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+        Assertions.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         MessageProcessor.Builder<?, ?> builder = MessageProcessor.lookup("xmlPrettyPrint")
                 .orElse(null);
 
-        Assert.assertNotNull(builder);
-        Assert.assertEquals(builder.getClass(), XmlFormattingMessageProcessor.Builder.class);
+        Assertions.assertNotNull(builder);
+        Assertions.assertEquals(XmlFormattingMessageProcessor.Builder.class, builder.getClass());
     }
 }

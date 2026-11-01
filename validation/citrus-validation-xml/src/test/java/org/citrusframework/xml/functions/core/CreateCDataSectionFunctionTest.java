@@ -21,30 +21,32 @@ import java.util.Collections;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.functions.Function;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class CreateCDataSectionFunctionTest extends AbstractTestNGUnitTest {
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public class CreateCDataSectionFunctionTest extends AbstractUnitTest {
     CreateCDataSectionFunction function = new CreateCDataSectionFunction();
 
     @Test
     public void testFunction() {
         String xmlFragment = "<foo><bar>I like Citrus!</bar></foo>";
         String resultXml = "<![CDATA[<foo><bar>I like Citrus!</bar></foo>]]>";
-        Assert.assertEquals(function.execute(Collections.singletonList(xmlFragment), context), resultXml);
+        Assertions.assertEquals(resultXml, function.execute(Collections.singletonList(xmlFragment), context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(Collections.<String>emptyList(), context));
     }
 
     @Test
     public void shouldLookupFunction() {
-        Assert.assertTrue(Function.lookup().containsKey("cdataSection"));
-        Assert.assertEquals(Function.lookup().get("cdataSection").getClass(), CreateCDataSectionFunction.class);
+        Assertions.assertTrue(Function.lookup().containsKey("cdataSection"));
+        Assertions.assertEquals(CreateCDataSectionFunction.class, Function.lookup().get("cdataSection").getClass());
 
-        Assert.assertEquals(new DefaultFunctionLibrary().getFunction("cdataSection").getClass(), CreateCDataSectionFunction.class);
+        Assertions.assertEquals(CreateCDataSectionFunction.class, new DefaultFunctionLibrary().getFunction("cdataSection").getClass());
     }
 }

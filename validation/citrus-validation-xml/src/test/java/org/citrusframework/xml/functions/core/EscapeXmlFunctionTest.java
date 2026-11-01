@@ -21,30 +21,32 @@ import java.util.Collections;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.functions.Function;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class EscapeXmlFunctionTest extends AbstractTestNGUnitTest {
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public class EscapeXmlFunctionTest extends AbstractUnitTest {
     EscapeXmlFunction function = new EscapeXmlFunction();
 
     @Test
     public void testFunction() {
         String xmlFragment = "<foo><bar>Yes, I like Citrus!</bar></foo>";
         String escapedXml = "&lt;foo&gt;&lt;bar&gt;Yes, I like Citrus!&lt;/bar&gt;&lt;/foo&gt;";
-        Assert.assertEquals(function.execute(Collections.singletonList(xmlFragment), context), escapedXml);
+        Assertions.assertEquals(escapedXml, function.execute(Collections.singletonList(xmlFragment), context));
     }
 
-    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    @Test
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        assertThrows(InvalidFunctionUsageException.class, () -> function.execute(Collections.<String>emptyList(), context));
     }
 
     @Test
     public void shouldLookupFunction() {
-        Assert.assertTrue(Function.lookup().containsKey("escapeXml"));
-        Assert.assertEquals(Function.lookup().get("escapeXml").getClass(), EscapeXmlFunction.class);
+        Assertions.assertTrue(Function.lookup().containsKey("escapeXml"));
+        Assertions.assertEquals(EscapeXmlFunction.class, Function.lookup().get("escapeXml").getClass());
 
-        Assert.assertEquals(new DefaultFunctionLibrary().getFunction("escapeXml").getClass(), EscapeXmlFunction.class);
+        Assertions.assertEquals(EscapeXmlFunction.class, new DefaultFunctionLibrary().getFunction("escapeXml").getClass());
     }
 }

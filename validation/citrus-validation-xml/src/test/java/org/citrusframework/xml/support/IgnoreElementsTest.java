@@ -35,7 +35,10 @@ import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.xml.UnitTestSupport;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -424,29 +427,32 @@ public class IgnoreElementsTest extends UnitTestSupport {
         receiveAction.execute(context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "No result for XPath expression: '//something-else'")
+    @Test
     public void testIgnoreElementsNoMatch() {
-        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                + "</element>"
-                + "</root>"));
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> {
+            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+            + "</element>"
+            + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<>();
-        ignoreMessageElements.add("//something-else");
+            Set<String> ignoreMessageElements = new HashSet<>();
+            ignoreMessageElements.add("//something-else");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
-                .ignore(ignoreMessageElements)
-                .build();
+            XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+            .ignore(ignoreMessageElements)
+            .build();
 
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(controlMessageBuilder)
-                .validate(validationContext)
-                .build();
-        receiveAction.execute(context);
+            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+            .endpoint(endpoint)
+            .message(controlMessageBuilder)
+            .validate(validationContext)
+            .build();
+            receiveAction.execute(context);
+        });
+        assertThat(thrown).hasMessageMatching("No result for XPath expression: '//something-else'");
     }
 }

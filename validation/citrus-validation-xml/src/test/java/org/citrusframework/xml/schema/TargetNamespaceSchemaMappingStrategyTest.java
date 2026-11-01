@@ -17,8 +17,8 @@ package org.citrusframework.xml.schema;
 
 import org.mockito.Mockito;
 import org.springframework.xml.xsd.XsdSchema;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class TargetNamespaceSchemaMappingStrategyTest {
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
 
         
-        Assert.assertEquals(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"), schemaMock);
+        Assertions.assertEquals(schemaMock, strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"));
 
     }
     
@@ -57,7 +57,7 @@ public class TargetNamespaceSchemaMappingStrategyTest {
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema/foos");
 
         
-        Assert.assertNull(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"));
+        Assertions.assertNull(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"));
 
     }
     

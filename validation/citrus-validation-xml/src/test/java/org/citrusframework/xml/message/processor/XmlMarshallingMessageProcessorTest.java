@@ -24,20 +24,20 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.base.xml.Jaxb2Marshaller;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.xml.actons.dsl.TestRequest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.when;
 
-public class XmlMarshallingMessageProcessorTest extends AbstractTestNGUnitTest {
+public class XmlMarshallingMessageProcessorTest extends AbstractUnitTest {
 
     private final Jaxb2Marshaller marshaller = new Jaxb2Marshaller(TestRequest.class);
 
-    @BeforeClass
+    @BeforeEach
     public void prepareMarshaller() {
         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
     }
@@ -52,8 +52,8 @@ public class XmlMarshallingMessageProcessorTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage(new TestRequest("Hello Citrus!"));
         new XmlMarshallingMessageProcessor().process(message, context);
 
-        Assert.assertEquals(message.getPayload(String.class),
-                "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assertions.assertEquals("<TestRequest><Message>Hello Citrus!</Message></TestRequest>",
+                message.getPayload(String.class));
     }
 
     @Test
@@ -61,8 +61,8 @@ public class XmlMarshallingMessageProcessorTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage(new TestRequest("Hello Citrus!"));
         new XmlMarshallingMessageProcessor(marshaller).process(message, context);
 
-        Assert.assertEquals(message.getPayload(String.class),
-                "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assertions.assertEquals("<TestRequest><Message>Hello Citrus!</Message></TestRequest>",
+                message.getPayload(String.class));
     }
 
     @Test
@@ -70,8 +70,8 @@ public class XmlMarshallingMessageProcessorTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage("<TestRequest><Message>already XML</Message></TestRequest>");
         new XmlMarshallingMessageProcessor(marshaller).process(message, context);
 
-        Assert.assertEquals(message.getPayload(String.class),
-                "<TestRequest><Message>already XML</Message></TestRequest>");
+        Assertions.assertEquals("<TestRequest><Message>already XML</Message></TestRequest>",
+                message.getPayload(String.class));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class XmlMarshallingMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.PLAINTEXT.name());
         new XmlMarshallingMessageProcessor(marshaller).process(message, context);
 
-        Assert.assertEquals(message.getPayload(String.class),
-                "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assertions.assertEquals("<TestRequest><Message>Hello Citrus!</Message></TestRequest>",
+                message.getPayload(String.class));
     }
 }

@@ -24,15 +24,15 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.xml.actons.dsl.TestRequest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.when;
 
-public class XmlUnmarshallingMessageProcessorTest extends AbstractTestNGUnitTest {
+public class XmlUnmarshallingMessageProcessorTest extends AbstractUnitTest {
 
     private final Jaxb2Marshaller unmarshaller = new Jaxb2Marshaller(TestRequest.class);
 
@@ -46,8 +46,8 @@ public class XmlUnmarshallingMessageProcessorTest extends AbstractTestNGUnitTest
         Message message = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
         new XmlUnmarshallingMessageProcessor().process(message, context);
 
-        Assert.assertTrue(message.getPayload() instanceof TestRequest);
-        Assert.assertEquals(((TestRequest) message.getPayload()).getMessage(), "Hello Citrus!");
+        Assertions.assertTrue(message.getPayload() instanceof TestRequest);
+        Assertions.assertEquals("Hello Citrus!", ((TestRequest) message.getPayload()).getMessage());
     }
 
     @Test
@@ -55,8 +55,8 @@ public class XmlUnmarshallingMessageProcessorTest extends AbstractTestNGUnitTest
         Message message = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
         new XmlUnmarshallingMessageProcessor(unmarshaller).process(message, context);
 
-        Assert.assertTrue(message.getPayload() instanceof TestRequest);
-        Assert.assertEquals(((TestRequest) message.getPayload()).getMessage(), "Hello Citrus!");
+        Assertions.assertTrue(message.getPayload() instanceof TestRequest);
+        Assertions.assertEquals("Hello Citrus!", ((TestRequest) message.getPayload()).getMessage());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class XmlUnmarshallingMessageProcessorTest extends AbstractTestNGUnitTest
         message.setType(MessageType.PLAINTEXT.name());
         new XmlUnmarshallingMessageProcessor(unmarshaller).process(message, context);
 
-        Assert.assertTrue(message.getPayload() instanceof TestRequest);
-        Assert.assertEquals(((TestRequest) message.getPayload()).getMessage(), "Hello Citrus!");
+        Assertions.assertTrue(message.getPayload() instanceof TestRequest);
+        Assertions.assertEquals("Hello Citrus!", ((TestRequest) message.getPayload()).getMessage());
     }
 }

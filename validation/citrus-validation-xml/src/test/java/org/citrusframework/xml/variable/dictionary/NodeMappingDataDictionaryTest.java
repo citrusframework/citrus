@@ -24,8 +24,8 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4
@@ -44,12 +44,13 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text>Hello!</Text>
                     <OtherText>No changes</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -65,12 +66,13 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.STARTS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text>Hello!</Text>
                     <OtherText>Bye!</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -85,12 +87,13 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text>Hello!</Text>
                     <OtherText>Hello!</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -105,12 +108,13 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text name="newName">Hello!</Text>
                     <OtherText name="goodbyeText">No changes</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -125,12 +129,13 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text name="newName">Hello World!</Text>
                     <OtherText name="newName">No changes</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -147,12 +152,13 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text name="TEXT">Hello!</Text>
                     <OtherText>No changes</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -166,12 +172,13 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.initialize();
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text name="newName">Hello!</Text>
                     <OtherText>No changes</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -185,14 +192,15 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text>
                         <value>Hello!</value>
                     </Text>
                     <OtherText/>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 
     @Test
@@ -206,11 +214,12 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <TestMessage>
                     <Text>Hello World!</Text>
                     <OtherText>No changes</OtherText>
-                </TestMessage>""");
+                </TestMessage>""",
+                        message.getPayload(String.class).trim());
     }
 }

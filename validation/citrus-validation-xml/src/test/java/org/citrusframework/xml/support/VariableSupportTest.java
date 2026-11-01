@@ -34,8 +34,8 @@ import org.citrusframework.validation.xml.XpathPayloadVariableExtractor;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.xml.UnitTestSupport;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -435,10 +435,10 @@ public class VariableSupportTest extends UnitTestSupport {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertTrue(context.getVariables().containsKey("variableA"));
-        Assert.assertEquals(context.getVariables().get("variableA"), "text-value");
-        Assert.assertTrue(context.getVariables().containsKey("variableB"));
-        Assert.assertEquals(context.getVariables().get("variableB"), "text-value");
+        Assertions.assertTrue(context.getVariables().containsKey("variableA"));
+        Assertions.assertEquals("text-value", context.getVariables().get("variableA"));
+        Assertions.assertTrue(context.getVariables().containsKey("variableB"));
+        Assertions.assertEquals("text-value", context.getVariables().get("variableB"));
     }
 
     @Test
@@ -490,9 +490,9 @@ public class VariableSupportTest extends UnitTestSupport {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertTrue(context.getVariables().containsKey("variableA"));
-        Assert.assertEquals(context.getVariables().get("variableA"), "A");
-        Assert.assertTrue(context.getVariables().containsKey("variableB"));
-        Assert.assertEquals(context.getVariables().get("variableB"), "B");
+        Assertions.assertTrue(context.getVariables().containsKey("variableA"));
+        Assertions.assertEquals("A", context.getVariables().get("variableA"));
+        Assertions.assertTrue(context.getVariables().containsKey("variableB"));
+        Assertions.assertEquals("B", context.getVariables().get("variableB"));
     }
 }

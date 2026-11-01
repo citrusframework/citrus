@@ -34,7 +34,7 @@ import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.xml.UnitTestSupport;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;

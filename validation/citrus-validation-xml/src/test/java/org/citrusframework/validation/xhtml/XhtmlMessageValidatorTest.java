@@ -29,14 +29,16 @@ import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class XhtmlMessageValidatorTest extends UnitTestSupport {
     @Mock
     private Endpoint endpoint;
@@ -47,7 +49,6 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.openMocks(this);
         return super.createTestContextFactory();
     }
 
