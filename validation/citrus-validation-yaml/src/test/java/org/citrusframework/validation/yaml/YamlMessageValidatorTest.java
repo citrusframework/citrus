@@ -31,9 +31,9 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.yaml.YamlMessageValidationContext;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,7 +45,7 @@ public class YamlMessageValidatorTest extends UnitTestSupport {
     private YamlMessageValidator fixture;
     private YamlMessageValidationContext validationContext;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         fixture = new YamlMessageValidator();
         validationContext = new YamlMessageValidationContext();
@@ -355,16 +355,16 @@ public class YamlMessageValidatorTest extends UnitTestSupport {
     @Test
     public void testLookup() {
         Map<String, MessageValidator<? extends ValidationContext>> validators = MessageValidator.lookup();
-        Assert.assertEquals(validators.size(), 2L);
-        Assert.assertNotNull(validators.get("defaultMessageHeaderValidator"));
-        Assert.assertEquals(validators.get("defaultMessageHeaderValidator").getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertNotNull(validators.get("defaultYamlMessageValidator"));
-        Assert.assertEquals(validators.get("defaultYamlMessageValidator").getClass(), YamlMessageValidator.class);
+        Assertions.assertEquals(2, validators.size());
+        Assertions.assertNotNull(validators.get("defaultMessageHeaderValidator"));
+        Assertions.assertEquals(validators.get("defaultMessageHeaderValidator").getClass(), DefaultMessageHeaderValidator.class);
+        Assertions.assertNotNull(validators.get("defaultYamlMessageValidator"));
+        Assertions.assertEquals(validators.get("defaultYamlMessageValidator").getClass(), YamlMessageValidator.class);
     }
 
     @Test
     public void testTestLookup() {
-        Assert.assertTrue(MessageValidator.lookup("header").isPresent());
-        Assert.assertTrue(MessageValidator.lookup("yaml").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("header").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("yaml").isPresent());
     }
 }

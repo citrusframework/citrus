@@ -16,51 +16,54 @@
 
 package org.citrusframework.validation.yaml;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class YamlNodeValidatorItemTest {
 
-    @DataProvider
-    public static Object[][] getPathPairs() {
-        return new Object[][]{
-                {"propertyA", new YamlNodeValidatorItem<>("propertyA", "", "")},
-                {"$.propertyA", new YamlNodeValidatorItem<>("propertyA", "", "").parent(
+    static Stream<Arguments> getPathPairs() {
+        return Stream.of(
+                Arguments.of("propertyA", new YamlNodeValidatorItem<>("propertyA", "", "")),
+                Arguments.of("$.propertyA", new YamlNodeValidatorItem<>("propertyA", "", "").parent(
                         new YamlNodeValidatorItem<>("$", "", "")
-                )},
-                {"$.propertyA.propertyB", new YamlNodeValidatorItem<>("propertyB", "", "").parent(
+                )),
+                Arguments.of("$.propertyA.propertyB", new YamlNodeValidatorItem<>("propertyB", "", "").parent(
                         new YamlNodeValidatorItem<>("propertyA", "", "").parent(
                                 new YamlNodeValidatorItem<>("$", "", "")
                         )
-                )},
-                {"$.propertyA[1]", new YamlNodeValidatorItem<>(1, "", "").parent(
+                )),
+                Arguments.of("$.propertyA[1]", new YamlNodeValidatorItem<>(1, "", "").parent(
                         new YamlNodeValidatorItem<>("propertyA", "", "").parent(
                                 new YamlNodeValidatorItem<>("$", "", "")
                         )
-                )},
-                {"$[1]", new YamlNodeValidatorItem<>(1, "", "").parent(
+                )),
+                Arguments.of("$[1]", new YamlNodeValidatorItem<>(1, "", "").parent(
                         new YamlNodeValidatorItem<>("$", "", "")
-                )}
-        };
+                ))
+        );
     }
 
-    @Test(dataProvider = "getPathPairs")
+    @ParameterizedTest
+    @MethodSource("getPathPairs")
     void shouldGetNodePath(String expectedPath, YamlNodeValidatorItem<?> fixture) {
         assertThat(fixture.getNodePath()).isEqualTo(expectedPath);
     }
 
-    @DataProvider
-    public static Object[][] getNamePairs() {
-        return new Object[][]{
-                {"$", new YamlNodeValidatorItem<>(null, "", "")},
-                {"propertyA", new YamlNodeValidatorItem<>("propertyA", "", "")},
-                {"[2]", new YamlNodeValidatorItem<>(2, "", "")}
-        };
+    static Stream<Arguments> getNamePairs() {
+        return Stream.of(
+                Arguments.of("$", new YamlNodeValidatorItem<>(null, "", "")),
+                Arguments.of("propertyA", new YamlNodeValidatorItem<>("propertyA", "", "")),
+                Arguments.of("[2]", new YamlNodeValidatorItem<>(2, "", ""))
+        );
     }
 
-    @Test(dataProvider = "getNamePairs")
+    @ParameterizedTest
+    @MethodSource("getNamePairs")
     void shouldGetName(String expectedPath, YamlNodeValidatorItem<?> fixture) {
         assertThat(fixture.getName()).isEqualTo(expectedPath);
     }

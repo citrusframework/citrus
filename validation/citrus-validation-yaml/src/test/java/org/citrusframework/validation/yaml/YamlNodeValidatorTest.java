@@ -21,8 +21,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -34,22 +36,23 @@ public class YamlNodeValidatorTest extends UnitTestSupport {
 
     YamlNodeValidator fixture;
 
-    @Test(dataProvider = "validYamlPairs")
+    @ParameterizedTest
+    @MethodSource("validYamlPairs")
     public void shouldBeValidIfNotStrict(YamlAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new YamlNodeValidator(NOT_STRICT, context, Set.of());
         assertThatNoException().isThrownBy(() -> fixture.validate(validationItem));
     }
 
-    @Test(dataProvider = "validYamlPairs")
+    @ParameterizedTest
+    @MethodSource("validYamlPairs")
     public void shouldBeInvalidIfStrict(YamlAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new YamlNodeValidator(STRICT, context, Set.of());
         assertThatThrownBy(() -> fixture.validate(validationItem)).isInstanceOf(ValidationException.class);
     }
 
-    @DataProvider
-    public static YamlAssertion[] validYamlPairs() {
+    static Stream<YamlAssertion> validYamlPairs() {
         return List.of(
                 new YamlAssertion(
                         """
@@ -147,18 +150,18 @@ public class YamlNodeValidatorTest extends UnitTestSupport {
                           - book-b
                         """
                 )
-        ).toArray(new YamlAssertion[0]);
+        ).stream();
     }
 
-    @Test(dataProvider = "validIfStrict")
+    @ParameterizedTest
+    @MethodSource("validIfStrict")
     public void shouldBeValidIfStrict(YamlAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new YamlNodeValidator(STRICT, context, Set.of());
         assertThatNoException().isThrownBy(() -> fixture.validate(validationItem));
     }
 
-    @DataProvider
-    public static YamlAssertion[] validIfStrict() {
+    static Stream<YamlAssertion> validIfStrict() {
         return List.of(
                 new YamlAssertion(
                         """
@@ -336,25 +339,26 @@ public class YamlNodeValidatorTest extends UnitTestSupport {
                         books: ["book-b", "book-a", "book-c"]
                         """
                 )
-        ).toArray(new YamlAssertion[0]);
+        ).stream();
     }
 
-    @Test(dataProvider = "invalidYamlPairs")
+    @ParameterizedTest
+    @MethodSource("invalidYamlPairs")
     public void shouldBeInvalid(YamlAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new YamlNodeValidator(STRICT, context, Set.of());
         assertThatThrownBy(() -> fixture.validate(validationItem)).isInstanceOf(ValidationException.class);
     }
 
-    @Test(dataProvider = "invalidYamlPairs")
+    @ParameterizedTest
+    @MethodSource("invalidYamlPairs")
     public void shouldBeInvalidIfNotStrict(YamlAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new YamlNodeValidator(NOT_STRICT, context, Set.of());
         assertThatThrownBy(() -> fixture.validate(validationItem)).isInstanceOf(ValidationException.class);
     }
 
-    @DataProvider
-    public static YamlAssertion[] invalidYamlPairs() {
+    static Stream<YamlAssertion> invalidYamlPairs() {
         return List.of(
                 new YamlAssertion(
                         """
@@ -553,25 +557,26 @@ public class YamlNodeValidatorTest extends UnitTestSupport {
                         - 1
                         """
                 )
-        ).toArray(new YamlAssertion[0]);
+        ).stream();
     }
 
-    @Test(dataProvider = "validOnlyWithIgnoreExpressions")
+    @ParameterizedTest
+    @MethodSource("validOnlyWithIgnoreExpressions")
     public void shouldBeValidOnlyWithIgnoreExpressions(YamlAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new YamlNodeValidator(NOT_STRICT, context, jsonAssertion.ignoreExpressions);
         assertThatNoException().isThrownBy(() -> fixture.validate(validationItem));
     }
 
-    @Test(dataProvider = "validOnlyWithIgnoreExpressions")
+    @ParameterizedTest
+    @MethodSource("validOnlyWithIgnoreExpressions")
     public void shouldBeInvalidWithoutIgnoreExpressions(YamlAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new YamlNodeValidator(NOT_STRICT, context, Set.of());
         assertThatThrownBy(() -> fixture.validate(validationItem)).isInstanceOf(ValidationException.class);
     }
 
-    @DataProvider
-    public static YamlAssertion[] validOnlyWithIgnoreExpressions() {
+    static Stream<YamlAssertion> validOnlyWithIgnoreExpressions() {
         return List.of(
                 new YamlAssertion(
                         """
@@ -620,7 +625,7 @@ public class YamlNodeValidatorTest extends UnitTestSupport {
                         """,
                         Set.of("$.index.anything")
                 )
-        ).toArray(new YamlAssertion[0]);
+        ).stream();
     }
 
     private static YamlNodeValidatorItem<Object> toValidationItem(YamlAssertion jsonAssertion) {
