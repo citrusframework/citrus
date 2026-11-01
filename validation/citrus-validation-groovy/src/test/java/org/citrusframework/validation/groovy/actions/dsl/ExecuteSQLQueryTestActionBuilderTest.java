@@ -35,8 +35,8 @@ import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
@@ -68,21 +68,21 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport implem
                     "assert rows[1].NAME == 'Sheldon'", ScriptTypes.GROOVY));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ExecuteSQLQueryAction.class, test.getActions().get(0).getClass());
 
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
 
-        Assert.assertEquals(action.getName(), "sql-query");
-        Assert.assertEquals(action.getControlResultSet().size(), 0);
-        Assert.assertEquals(action.getExtractVariables().size(), 0);
-        Assert.assertNotNull(action.getScriptValidationContext());
+        Assertions.assertEquals("sql-query", action.getName());
+        Assertions.assertEquals(0, action.getControlResultSet().size());
+        Assertions.assertEquals(0, action.getExtractVariables().size());
+        Assertions.assertNotNull(action.getScriptValidationContext());
         DefaultScriptValidationContext scriptValidationContext = (DefaultScriptValidationContext)action.getScriptValidationContext();
-        Assert.assertTrue(scriptValidationContext.getValidationScript().startsWith("assert rows[0].NAME == 'Penny'"));
-        Assert.assertNull(scriptValidationContext.getValidationScriptResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 1);
-        Assert.assertEquals(action.getStatements().toString(), "[SELECT NAME FROM ACTORS]");
-        Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
+        Assertions.assertTrue(scriptValidationContext.getValidationScript().startsWith("assert rows[0].NAME == 'Penny'"));
+        Assertions.assertNull(scriptValidationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals(1, action.getStatements().size());
+        Assertions.assertEquals("[SELECT NAME FROM ACTORS]", action.getStatements().toString());
+        Assertions.assertEquals(jdbcTemplate, action.getJdbcTemplate());
 
     }
 
@@ -101,21 +101,21 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport implem
             .validateScript(resource, ScriptTypes.GROOVY));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ExecuteSQLQueryAction.class, test.getActions().get(0).getClass());
 
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
 
-        Assert.assertEquals(action.getName(), "sql-query");
-        Assert.assertEquals(action.getControlResultSet().size(), 0);
-        Assert.assertEquals(action.getExtractVariables().size(), 0);
-        Assert.assertNotNull(action.getScriptValidationContext());
+        Assertions.assertEquals("sql-query", action.getName());
+        Assertions.assertEquals(0, action.getControlResultSet().size());
+        Assertions.assertEquals(0, action.getExtractVariables().size());
+        Assertions.assertNotNull(action.getScriptValidationContext());
         DefaultScriptValidationContext scriptValidationContext = (DefaultScriptValidationContext)action.getScriptValidationContext();
-        Assert.assertEquals(scriptValidationContext.getValidationScript(), "assert rows[0].NAME == 'Radj'");
-        Assert.assertNull(scriptValidationContext.getValidationScriptResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 1);
-        Assert.assertEquals(action.getStatements().toString(), "[SELECT NAME FROM ACTORS]");
-        Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
+        Assertions.assertEquals("assert rows[0].NAME == 'Radj'", scriptValidationContext.getValidationScript());
+        Assertions.assertNull(scriptValidationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals(1, action.getStatements().size());
+        Assertions.assertEquals("[SELECT NAME FROM ACTORS]", action.getStatements().toString());
+        Assertions.assertEquals(jdbcTemplate, action.getJdbcTemplate());
 
     }
 
@@ -133,21 +133,21 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport implem
             .groovy("assert rows[0].NAME == 'Howard'"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ExecuteSQLQueryAction.class, test.getActions().get(0).getClass());
 
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
 
-        Assert.assertEquals(action.getName(), "sql-query");
-        Assert.assertEquals(action.getControlResultSet().size(), 0);
-        Assert.assertEquals(action.getExtractVariables().size(), 0);
-        Assert.assertNotNull(action.getScriptValidationContext());
+        Assertions.assertEquals("sql-query", action.getName());
+        Assertions.assertEquals(0, action.getControlResultSet().size());
+        Assertions.assertEquals(0, action.getExtractVariables().size());
+        Assertions.assertNotNull(action.getScriptValidationContext());
         DefaultScriptValidationContext scriptValidationContext = (DefaultScriptValidationContext)action.getScriptValidationContext();
-        Assert.assertEquals(scriptValidationContext.getValidationScript(), "assert rows[0].NAME == 'Howard'");
-        Assert.assertNull(scriptValidationContext.getValidationScriptResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 1);
-        Assert.assertEquals(action.getStatements().toString(), "[SELECT NAME FROM ACTORS]");
-        Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
+        Assertions.assertEquals("assert rows[0].NAME == 'Howard'", scriptValidationContext.getValidationScript());
+        Assertions.assertNull(scriptValidationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals(1, action.getStatements().size());
+        Assertions.assertEquals("[SELECT NAME FROM ACTORS]", action.getStatements().toString());
+        Assertions.assertEquals(jdbcTemplate, action.getJdbcTemplate());
     }
 
     @Test
@@ -167,21 +167,21 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport implem
             .groovy(resource));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ExecuteSQLQueryAction.class, test.getActions().get(0).getClass());
 
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
 
-        Assert.assertEquals(action.getName(), "sql-query");
-        Assert.assertEquals(action.getControlResultSet().size(), 0);
-        Assert.assertEquals(action.getExtractVariables().size(), 0);
-        Assert.assertNotNull(action.getScriptValidationContext());
+        Assertions.assertEquals("sql-query", action.getName());
+        Assertions.assertEquals(0, action.getControlResultSet().size());
+        Assertions.assertEquals(0, action.getExtractVariables().size());
+        Assertions.assertNotNull(action.getScriptValidationContext());
         DefaultScriptValidationContext scriptValidationContext = (DefaultScriptValidationContext)action.getScriptValidationContext();
-        Assert.assertEquals(scriptValidationContext.getValidationScript(), "assert rows[1].NAME == 'Howard'");
-        Assert.assertNull(scriptValidationContext.getValidationScriptResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 1);
-        Assert.assertEquals(action.getStatements().toString(), "[SELECT NAME FROM ACTORS]");
-        Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
+        Assertions.assertEquals("assert rows[1].NAME == 'Howard'", scriptValidationContext.getValidationScript());
+        Assertions.assertNull(scriptValidationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals(1, action.getStatements().size());
+        Assertions.assertEquals("[SELECT NAME FROM ACTORS]", action.getStatements().toString());
+        Assertions.assertEquals(jdbcTemplate, action.getJdbcTemplate());
 
     }
 
@@ -202,22 +202,22 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport implem
             .validator(validator));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ExecuteSQLQueryAction.class, test.getActions().get(0).getClass());
 
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
 
-        Assert.assertEquals(action.getName(), "sql-query");
-        Assert.assertEquals(action.getControlResultSet().size(), 0);
-        Assert.assertEquals(action.getExtractVariables().size(), 0);
-        Assert.assertNotNull(action.getScriptValidationContext());
+        Assertions.assertEquals("sql-query", action.getName());
+        Assertions.assertEquals(0, action.getControlResultSet().size());
+        Assertions.assertEquals(0, action.getExtractVariables().size());
+        Assertions.assertNotNull(action.getScriptValidationContext());
         DefaultScriptValidationContext scriptValidationContext = (DefaultScriptValidationContext)action.getScriptValidationContext();
-        Assert.assertEquals(scriptValidationContext.getValidationScript(), "assert rows[0].NAME == 'Howard'");
-        Assert.assertNull(scriptValidationContext.getValidationScriptResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 1);
-        Assert.assertEquals(action.getStatements().toString(), "[SELECT NAME FROM ACTORS]");
-        Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
-        Assert.assertEquals(action.getValidator(), validator);
+        Assertions.assertEquals("assert rows[0].NAME == 'Howard'", scriptValidationContext.getValidationScript());
+        Assertions.assertNull(scriptValidationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals(1, action.getStatements().size());
+        Assertions.assertEquals("[SELECT NAME FROM ACTORS]", action.getStatements().toString());
+        Assertions.assertEquals(jdbcTemplate, action.getJdbcTemplate());
+        Assertions.assertEquals(validator, action.getValidator());
 
         verify(validator).validateSqlResultSet(any(List.class), any(ScriptValidationContext.class), any(TestContext.class));
     }

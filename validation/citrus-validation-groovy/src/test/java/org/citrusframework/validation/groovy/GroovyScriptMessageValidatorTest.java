@@ -23,7 +23,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.script.ScriptTypes;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
@@ -31,17 +31,17 @@ import org.citrusframework.validation.context.script.DefaultScriptValidationCont
 import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.groovy.GroovyScriptMessageValidator;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
+public class GroovyScriptMessageValidatorTest extends AbstractUnitTest {
 
     GroovyScriptMessageValidator validator = new GroovyScriptMessageValidator();
 
     private Message message;
 
-    @BeforeMethod
+    @BeforeEach
     public void prepareTestData() {
         message = new DefaultMessage("This is plain text!").setHeader("operation", "unitTesting");
     }
@@ -93,11 +93,11 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         } catch (ValidationException e) {
-            Assert.assertTrue(e.getCause() instanceof AssertionError);
+            Assertions.assertTrue(e.getCause() instanceof AssertionError);
             return;
         }
 
-        Assert.fail("Missing validation exception due to wrong value");
+        Assertions.fail("Missing validation exception due to wrong value");
     }
 
     @Test
@@ -110,15 +110,15 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
                 .script(validationScript)
                 .build();
 
-        Assert.assertNull(context.getVariables().get("operation"));
-        Assert.assertNull(context.getVariables().get("text"));
+        Assertions.assertNull(context.getVariables().get("operation"));
+        Assertions.assertNull(context.getVariables().get("text"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
 
-        Assert.assertNotNull(context.getVariables().get("operation"));
-        Assert.assertNotNull(context.getVariables().get("text"));
-        Assert.assertEquals(context.getVariable("operation"), "unitTesting");
-        Assert.assertEquals(context.getVariable("text"), "This is plain text!");
+        Assertions.assertNotNull(context.getVariables().get("operation"));
+        Assertions.assertNotNull(context.getVariables().get("text"));
+        Assertions.assertEquals("unitTesting", context.getVariable("operation"));
+        Assertions.assertEquals("This is plain text!", context.getVariable("text"));
     }
 
     @Test
@@ -129,10 +129,10 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContexts.add(new JsonMessageValidationContext());
         validationContexts.add(new DefaultScriptValidationContext("scala"));
 
-        Assert.assertNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNull(validator.findValidationContext(validationContexts));
 
         validationContexts.add(new DefaultScriptValidationContext(ScriptTypes.GROOVY));
 
-        Assert.assertNotNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNotNull(validator.findValidationContext(validationContexts));
     }
 }

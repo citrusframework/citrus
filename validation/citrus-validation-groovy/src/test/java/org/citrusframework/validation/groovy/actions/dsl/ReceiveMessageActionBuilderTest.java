@@ -34,21 +34,21 @@ import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.citrusframework.validation.groovy.GroovyJsonMessageValidator;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest implements TestActionSupport {
+public class ReceiveMessageActionBuilderTest extends AbstractUnitTest implements TestActionSupport {
 
     private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private final Consumer messageConsumer = Mockito.mock(Consumer.class);
@@ -81,29 +81,29 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest impl
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
-        Assert.assertEquals(action.getValidators().size(), 1L);
-        Assert.assertEquals(action.getValidators().get(0), validator);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(MessageType.JSON.name(), action.getMessageType());
+        Assertions.assertEquals(1L, action.getValidators().size());
+        Assertions.assertEquals(validator, action.getValidators().get(0));
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
+        Assertions.assertEquals(2L, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
 
         DefaultScriptValidationContext validationContext = action.getValidationContexts().stream()
                 .filter(DefaultScriptValidationContext.class::isInstance).findFirst()
                 .map(DefaultScriptValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
-        Assert.assertEquals(validationContext.getValidationScript().trim(), "assert json.message == 'Hello Citrus!'");
-        Assert.assertNull(validationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals(ScriptTypes.GROOVY, validationContext.getScriptType());
+        Assertions.assertEquals("assert json.message == 'Hello Citrus!'", validationContext.getValidationScript().trim());
+        Assertions.assertNull(validationContext.getValidationScriptResourcePath());
 
     }
 
@@ -133,29 +133,29 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest impl
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
-        Assert.assertEquals(action.getValidators().size(), 1L);
-        Assert.assertEquals(action.getValidators().get(0), validator);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(MessageType.JSON.name(), action.getMessageType());
+        Assertions.assertEquals(1L, action.getValidators().size());
+        Assertions.assertEquals(validator, action.getValidators().get(0));
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
+        Assertions.assertEquals(2L, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
 
         DefaultScriptValidationContext validationContext = action.getValidationContexts().stream()
                 .filter(DefaultScriptValidationContext.class::isInstance).findFirst()
                 .map(DefaultScriptValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
-        Assert.assertEquals(validationContext.getValidationScript(), "");
-        Assert.assertEquals(validationContext.getValidationScriptResourcePath(), "classpath:org/citrusframework/validation/groovy/actions/dsl/validation.groovy");
+        Assertions.assertEquals(ScriptTypes.GROOVY, validationContext.getScriptType());
+        Assertions.assertEquals("", validationContext.getValidationScript());
+        Assertions.assertEquals("classpath:org/citrusframework/validation/groovy/actions/dsl/validation.groovy", validationContext.getValidationScriptResourcePath());
     }
 
     @Test
@@ -184,29 +184,29 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest impl
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
-        Assert.assertEquals(action.getValidators().size(), 1L);
-        Assert.assertEquals(action.getValidators().get(0), validator);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(MessageType.JSON.name(), action.getMessageType());
+        Assertions.assertEquals(1L, action.getValidators().size());
+        Assertions.assertEquals(validator, action.getValidators().get(0));
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
+        Assertions.assertEquals(2L, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
 
         DefaultScriptValidationContext validationContext = action.getValidationContexts().stream()
                 .filter(DefaultScriptValidationContext.class::isInstance).findFirst()
                 .map(DefaultScriptValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
-        Assert.assertEquals(validationContext.getValidationScript().trim(), "assert json.message == 'Hello Citrus!'");
-        Assert.assertNull(validationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals(ScriptTypes.GROOVY, validationContext.getScriptType());
+        Assertions.assertEquals("assert json.message == 'Hello Citrus!'", validationContext.getValidationScript().trim());
+        Assertions.assertNull(validationContext.getValidationScriptResourcePath());
     }
 
     @Test
@@ -236,33 +236,33 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest impl
                                 .header("operation", "sayHello"));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assertions.assertEquals("receive", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
-        Assert.assertEquals(action.getValidators().size(), 1L);
-        Assert.assertEquals(action.getValidators().get(0), validator);
+        Assertions.assertEquals(messageEndpoint, action.getEndpoint());
+        Assertions.assertEquals(MessageType.JSON.name(), action.getMessageType());
+        Assertions.assertEquals(1L, action.getValidators().size());
+        Assertions.assertEquals(validator, action.getValidators().get(0));
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
+        Assertions.assertEquals(2L, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assertions.assertTrue(action.getValidationContexts().stream().anyMatch(DefaultScriptValidationContext.class::isInstance));
 
         DefaultScriptValidationContext validationContext = action.getValidationContexts().stream()
                 .filter(DefaultScriptValidationContext.class::isInstance).findFirst()
                 .map(DefaultScriptValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
-        Assert.assertEquals(validationContext.getValidationScript().trim(), "assert json.message == 'Hello Citrus!'");
-        Assert.assertNull(validationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals(ScriptTypes.GROOVY, validationContext.getScriptType());
+        Assertions.assertEquals("assert json.message == 'Hello Citrus!'", validationContext.getValidationScript().trim());
+        Assertions.assertNull(validationContext.getValidationScriptResourcePath());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
-        Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "");
-        Assert.assertTrue(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertEquals("", ((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertTrue(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
 
     }
 }

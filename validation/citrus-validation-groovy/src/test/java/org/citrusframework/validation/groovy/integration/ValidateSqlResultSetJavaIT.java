@@ -18,35 +18,43 @@ package org.citrusframework.validation.groovy.integration;
 
 import javax.sql.DataSource;
 
+import org.citrusframework.TestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.script.ScriptTypes;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class ValidateSqlResultSetJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@Isolated
+@CitrusSpringSupport
+@ContextConfiguration(classes = {CitrusSpringConfig.class})
+public class ValidateSqlResultSetJavaIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("testDataSource")
     private DataSource dataSource;
 
+    @Test
     @CitrusTest
-    public void executeSQLAction() {
-        variable("rowsCount", "2");
-        variable("rtag", "requestTag");
-        variable("desc", "Migrate");
+    public void executeSQLAction(@CitrusResource TestActionRunner runner) {
+        runner.run(createVariable("rowsCount", "2"));
+        runner.run(createVariable("rtag", "requestTag"));
+        runner.run(createVariable("desc", "Migrate"));
 
-        run(doFinally()
+        runner.run(doFinally()
                 .actions(sql().dataSource(dataSource).statement("DELETE FROM ORDERS")));
 
-        run(sql().dataSource(dataSource)
+        runner.run(sql().dataSource(dataSource)
             .statement("INSERT INTO ORDERS VALUES(1, 'requestTag', 'conversationId', 'creation_date', 'Migrate')")
             .statement("INSERT INTO ORDERS VALUES(2, 'requestTag', 'conversationId', 'creation_date', NULL)"));
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("SELECT REQUEST_TAG AS RTAG, DESCRIPTION AS DESC FROM ORDERS")
             .validateScript("""
                     assert rows.size() == ${rowsCount}

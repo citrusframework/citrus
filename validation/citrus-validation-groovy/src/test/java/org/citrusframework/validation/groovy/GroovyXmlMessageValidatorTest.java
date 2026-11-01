@@ -24,7 +24,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.script.ScriptTypes;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
@@ -32,17 +32,17 @@ import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.validation.groovy.GroovyXmlMessageValidator;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
+public class GroovyXmlMessageValidatorTest extends AbstractUnitTest {
 
     private final GroovyXmlMessageValidator validator = new GroovyXmlMessageValidator();
 
     private Message message;
 
-    @BeforeMethod
+    @BeforeEach
     public void prepareTestData() {
         message = new DefaultMessage("<RequestMessage Id=\"123456789\" xmlns=\"http://citrus/test\">"
                 + "<CorrelationId>Kx1R123456789</CorrelationId>"
@@ -102,13 +102,13 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Groovy script validation failed"));
-            Assert.assertTrue(e.getMessage().contains("Hello Citrus"));
-            Assert.assertTrue(e.getMessage().contains("Hello TestFramework"));
+            Assertions.assertTrue(e.getMessage().startsWith("Groovy script validation failed"));
+            Assertions.assertTrue(e.getMessage().contains("Hello Citrus"));
+            Assertions.assertTrue(e.getMessage().contains("Hello TestFramework"));
             return;
         }
 
-        Assert.fail("Missing script validation exception caused by wrong control value");
+        Assertions.fail("Missing script validation exception caused by wrong control value");
     }
 
     @Test
@@ -130,11 +130,11 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContexts.add(new XpathMessageValidationContext());
         validationContexts.add(new DefaultScriptValidationContext("scala"));
 
-        Assert.assertNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNull(validator.findValidationContext(validationContexts));
 
         validationContexts.add(new DefaultScriptValidationContext(ScriptTypes.GROOVY));
 
-        Assert.assertNotNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNotNull(validator.findValidationContext(validationContexts));
     }
 
     @Test

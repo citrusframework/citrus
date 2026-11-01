@@ -33,7 +33,7 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.script.ScriptTypes;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.util.MessageUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
@@ -46,12 +46,14 @@ import org.citrusframework.validation.context.script.DefaultScriptValidationCont
 import org.citrusframework.validation.context.script.ScriptValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.Mockito.*;
 
-public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class ReceiveMessageActionTest extends AbstractUnitTest {
 
     @Mock
     private Endpoint endpoint;
@@ -67,8 +69,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.openMocks(this);
-
         TestContextFactory factory = super.createTestContextFactory();
         factory.getMessageValidatorRegistry().addMessageValidator("header", new DefaultMessageHeaderValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("message", new DefaultTextEqualsMessageValidator());
