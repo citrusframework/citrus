@@ -18,13 +18,19 @@ package org.citrusframework.validation.text.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2011
  */
-public class PlainTextValidationIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("Shares the Spring-cached application context and its in-memory helloQueue with other ITs")
+public class PlainTextValidationIT {
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
     public void PlainTextValidationIT() {}
