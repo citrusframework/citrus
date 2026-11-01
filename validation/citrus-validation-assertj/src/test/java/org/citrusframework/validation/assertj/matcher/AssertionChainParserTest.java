@@ -20,21 +20,22 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class AssertionChainParserTest {
 
-    @Test(dataProvider = "chains")
+    @ParameterizedTest
+    @MethodSource("chains")
     public void shouldParse(String expression, List<AssertionCall> expected) {
         assertThat(AssertionChainParser.parse(expression)).isEqualTo(expected);
     }
 
-    @DataProvider
-    public Object[][] chains() {
+    static Object[][] chains() {
         return new Object[][] {
             { "isNotBlank()", List.of(call("isNotBlank")) },
             { "startsWith('OK').endsWith('1')", List.of(call("startsWith", "OK"), call("endsWith", "1")) },
@@ -51,7 +52,8 @@ public class AssertionChainParserTest {
         };
     }
 
-    @Test(dataProvider = "invalidChains")
+    @ParameterizedTest
+    @MethodSource("invalidChains")
     public void shouldRejectInvalidSyntax(String expression, String reason) {
         assertThatThrownBy(() -> AssertionChainParser.parse(expression))
                 .isInstanceOf(ValidationException.class)
@@ -60,8 +62,7 @@ public class AssertionChainParserTest {
                 .hasMessageContaining("at position");
     }
 
-    @DataProvider
-    public Object[][] invalidChains() {
+    static Object[][] invalidChains() {
         return new Object[][] {
             { "", "expected assertion method name" },
             { "isNotBlank(", "expected argument or ')'" },

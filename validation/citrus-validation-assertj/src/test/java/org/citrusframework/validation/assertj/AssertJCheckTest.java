@@ -17,7 +17,7 @@
 package org.citrusframework.validation.assertj;
 
 import org.assertj.core.api.Condition;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;

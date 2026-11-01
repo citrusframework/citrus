@@ -19,7 +19,9 @@ package org.citrusframework.validation.assertj.integration;
 import java.util.List;
 
 import org.assertj.core.api.Condition;
+import org.citrusframework.TestActionRunner;
 import org.citrusframework.annotations.CitrusEndpoint;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
@@ -29,15 +31,20 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Timeout;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.validation.assertj.AssertJ.conditionOf;
 import static org.citrusframework.validation.assertj.AssertJ.satisfies;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AssertJJavaDslIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class AssertJJavaDslIT implements TestActionSupport {
 
     @BindToRegistry
     public MessageQueue assertjQueue = new DefaultMessageQueue("assertjQueue");
@@ -46,17 +53,20 @@ public class AssertJJavaDslIT extends TestNGCitrusSpringSupport implements TestA
     @DirectEndpointConfig(queue = "assertjQueue")
     public DirectEndpoint direct;
 
+    @CitrusResource
+    private TestActionRunner runner;
+
     @Test
     @CitrusTest
     public void shouldValidateJsonPathValuesAndHeaders() {
-        $(send(direct)
+        runner.run(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body("{ \"qty\": 7, \"status\": \"OK-1\", \"note\": null }")
                 .header("count", "42")
                 .header("region", "eu"));
 
-        $(receive(direct)
+        runner.run(receive(direct)
                 .message()
                 .type(MessageType.JSON)
                 .header("count", satisfies(Integer.class, c -> assertThat(c).isBetween(40, 50)))
@@ -70,11 +80,11 @@ public class AssertJJavaDslIT extends TestNGCitrusSpringSupport implements TestA
     @Test
     @CitrusTest
     public void shouldValidateXpathValues() {
-        $(send(direct)
+        runner.run(send(direct)
                 .message()
                 .body("<Order><Status>OK-123</Status><Qty>7</Qty></Order>"));
 
-        $(receive(direct)
+        runner.run(receive(direct)
                 .message()
                 .validate(validation().xpath()
                         .expression("/Order/Status", satisfies(s -> assertThat(s).asString().startsWith("OK").endsWith("123")))
@@ -84,11 +94,11 @@ public class AssertJJavaDslIT extends TestNGCitrusSpringSupport implements TestA
     @Test
     @CitrusTest
     public void shouldRunManualMigrationExamples() {
-        $(send(direct)
+        runner.run(send(direct)
                 .message()
                 .body("<TestRequest><Error/><Status>success</Status><OrderType>a</OrderType><OrderType>b</OrderType><OrderType>c</OrderType></TestRequest>"));
 
-        $(receive(direct)
+        runner.run(receive(direct)
                 .message()
                 .validate(validation().xpath()
                         .expression("/TestRequest/Error", satisfies(e -> assertThat(e).satisfiesAnyOf(v -> assertThat(v).isNull(), v -> assertThat(v).asString().isEmpty())))
@@ -99,12 +109,12 @@ public class AssertJJavaDslIT extends TestNGCitrusSpringSupport implements TestA
     @Test
     @CitrusTest
     public void shouldReportAssertJDescriptionOnFailure() {
-        $(send(direct)
+        runner.run(send(direct)
                 .message()
                 .type(MessageType.JSON)
                 .body("{ \"qty\": 3 }"));
 
-        $(assertException()
+        runner.run(assertException()
                 .exception(ValidationException.class)
                 .message("@assertj(contains('AssertJ validation failed').contains('to be greater than'))@")
                 .when(receive(direct)
@@ -114,26 +124,27 @@ public class AssertJJavaDslIT extends TestNGCitrusSpringSupport implements TestA
                                 .expression("$.qty", satisfies(Integer.class, q -> assertThat(q).isGreaterThan(5))))));
     }
 
-    @Test(timeOut = 30000L)
+    @Test
+    @Timeout(30)
     @CitrusTest
     public void shouldUseAssertJConditionsInContainers() {
-        variable("count", "0");
+        runner.run(createVariable("count", "0"));
 
-        $(iterate()
+        runner.run(iterate()
                 .condition(conditionOf(i -> assertThat(i).isLessThan(3)))
                 .index("i")
                 .actions(echo("iteration ${i}")));
 
-        $(repeat()
+        runner.run(repeat()
                 .until(conditionOf(Integer.class, "${count}", c -> assertThat(c).isEqualTo(3)))
                 .index("r")
                 .actions(context -> context.setVariable("count", String.valueOf(Integer.parseInt(context.getVariable("count")) + 1))));
 
-        $(waitFor()
+        runner.run(waitFor()
                 .condition(conditionOf(Integer.class, "${count}", c -> assertThat(c).isEqualTo(3)))
                 .milliseconds(1000L)
                 .interval(50L));
 
-        $(echo("count is ${count}"));
+        runner.run(echo("count is ${count}"));
     }
 }

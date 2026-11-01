@@ -19,8 +19,9 @@ package org.citrusframework.validation.assertj.matcher;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.assertj.UnitTestSupport;
 import org.citrusframework.validation.matcher.ValidationMatcher;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -35,7 +36,8 @@ public class AssertJValidationMatcherTest extends UnitTestSupport {
         assertThat(ValidationMatcher.lookup().get("assertThat")).isNotInstanceOf(AssertJValidationMatcher.class);
     }
 
-    @Test(dataProvider = "passing")
+    @ParameterizedTest
+    @MethodSource("passing")
     public void shouldPass(String value, String expression) {
         context.setVariable("prefix", "OK");
         context.setVariable("i", "2");
@@ -43,8 +45,7 @@ public class AssertJValidationMatcherTest extends UnitTestSupport {
         assertThatCode(() -> resolveValidationMatcher("field", value, expression, context)).doesNotThrowAnyException();
     }
 
-    @DataProvider
-    public Object[][] passing() {
+    static Object[][] passing() {
         return new Object[][] {
             { "OK-123", "@assertj(isNotBlank().startsWith('OK'))@" },
             { "7", "@assertj(asInt().isBetween(1, 10))@" },
