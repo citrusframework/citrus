@@ -18,10 +18,10 @@ package org.citrusframework.validation.hamcrest;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.container.RepeatUntilTrue;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.validation.hamcrest.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
+public class RepeatUntilTrueTest extends AbstractUnitTest {
 
     private TestAction action = Mockito.mock(TestAction.class);
 
@@ -44,8 +44,8 @@ public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
                 .build();
         repeatUntilTrue.execute(context);
 
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "4");
+        Assertions.assertNotNull(context.getVariable("${i}"));
+        Assertions.assertEquals("4", context.getVariable("${i}"));
 
         verify(action, times(4)).execute(context);
     }

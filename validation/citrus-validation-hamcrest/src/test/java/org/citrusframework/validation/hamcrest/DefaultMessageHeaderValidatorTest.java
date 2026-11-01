@@ -19,18 +19,19 @@ package org.citrusframework.validation.hamcrest;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 2.7
  */
-public class DefaultMessageHeaderValidatorTest extends AbstractTestNGUnitTest {
+public class DefaultMessageHeaderValidatorTest extends AbstractUnitTest {
 
     private final DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
     private final HeaderValidationContext validationContext = new HeaderValidationContext.Builder().build();
@@ -48,7 +49,7 @@ public class DefaultMessageHeaderValidatorTest extends AbstractTestNGUnitTest {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidateHamcrestMatcherError() {
         Message receivedMessage = new DefaultMessage("Hello World!")
                 .setHeader("foo", "foo_test")
@@ -57,6 +58,7 @@ public class DefaultMessageHeaderValidatorTest extends AbstractTestNGUnitTest {
                 .setHeader("foo", startsWith("bar"))
                 .setHeader("bar", endsWith("_test"));
 
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        assertThrows(ValidationException.class, () ->
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext));
     }
 }

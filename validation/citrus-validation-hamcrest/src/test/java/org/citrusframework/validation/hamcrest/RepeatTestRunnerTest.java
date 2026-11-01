@@ -21,12 +21,12 @@ import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.RepeatUntilTrue;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.validation.hamcrest.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RepeatTestRunnerTest extends UnitTestSupport implements TestActionSupport {
     @Test
@@ -39,18 +39,18 @@ public class RepeatTestRunnerTest extends UnitTestSupport implements TestActionS
                     .until(assertThat(greaterThan(5)))
                 .actions(echo("${var}"), sleep().milliseconds(100), echo("${var}")));
 
-        Assert.assertNotNull(context.getVariable("i"));
-        Assert.assertEquals(context.getVariable("i"), "5");
+        Assertions.assertNotNull(context.getVariable("i"));
+        Assertions.assertEquals("5", context.getVariable("i"));
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), RepeatUntilTrue.class);
-        assertEquals(test.getActions().get(0).getName(), "repeat");
+        assertEquals(1, test.getActionCount());
+        assertEquals(RepeatUntilTrue.class, test.getActions().get(0).getClass());
+        assertEquals("repeat", test.getActions().get(0).getName());
 
         RepeatUntilTrue container = (RepeatUntilTrue)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 3);
-        assertEquals(container.getStart(), 2);
-        assertEquals(container.getIndexName(), "i");
-        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
+        assertEquals(3, container.getActionCount());
+        assertEquals(2, container.getStart());
+        assertEquals("i", container.getIndexName());
+        assertEquals(EchoAction.class, container.getTestAction(0).getClass());
     }
 }
