@@ -23,8 +23,8 @@ import java.util.Map;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.mockito.Mockito;
 import org.springframework.xml.xsd.XsdSchema;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -50,7 +50,7 @@ public class RootQNameSchemaMappingStrategyTest {
 
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
 
-        Assert.assertEquals(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"), schemaMock);
+        Assertions.assertEquals(schemaMock, strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"));
 
     }
 
@@ -72,7 +72,7 @@ public class RootQNameSchemaMappingStrategyTest {
 
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
 
-        Assert.assertEquals(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"), schemaMock);
+        Assertions.assertEquals(schemaMock, strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"));
 
     }
 
@@ -93,7 +93,7 @@ public class RootQNameSchemaMappingStrategyTest {
 
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
 
-        Assert.assertNull(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"));
+        Assertions.assertNull(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"));
 
     }
 
@@ -117,9 +117,9 @@ public class RootQNameSchemaMappingStrategyTest {
 
         try {
             strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo");
-            Assert.fail("Missing exception due to schema target namespace inconsistency");
+            Assertions.fail("Missing exception due to schema target namespace inconsistency");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Schema target namespace inconsitency"));
+            Assertions.assertTrue(e.getMessage().startsWith("Schema target namespace inconsitency"));
         }
 
     }

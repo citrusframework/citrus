@@ -18,10 +18,14 @@ package org.citrusframework.xml.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-public class XmlFunctionsIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = {CitrusSpringConfig.class})
+public class XmlFunctionsIT {
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
     public void XmlFunctionsIT() {}

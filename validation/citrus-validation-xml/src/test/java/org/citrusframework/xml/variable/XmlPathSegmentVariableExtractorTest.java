@@ -16,13 +16,16 @@
 
 package org.citrusframework.xml.variable;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.variable.VariableExpressionSegmentMatcher;
 import org.citrusframework.xml.UnitTestSupport;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class XmlPathSegmentVariableExtractorTest extends UnitTestSupport {
 
@@ -36,22 +39,22 @@ public class XmlPathSegmentVariableExtractorTest extends UnitTestSupport {
         String xpath = "//person/name";
         VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(xpath);
 
-        Assert.assertTrue(unitUnderTest.canExtract(context, XML_FIXTURE, matcher));
-        Assert.assertEquals(unitUnderTest.extractValue(context, XML_FIXTURE, matcher), "Peter");
+        Assertions.assertTrue(unitUnderTest.canExtract(context, XML_FIXTURE, matcher));
+        Assertions.assertEquals("Peter", unitUnderTest.extractValue(context, XML_FIXTURE, matcher));
 
         // Assert that xml document was cached
         Object cachedXmlDocument = context.getVariableObject(UUID.nameUUIDFromBytes(XML_FIXTURE.getBytes()).toString());
-        Assert.assertTrue(cachedXmlDocument instanceof Document);
+        Assertions.assertTrue(cachedXmlDocument instanceof Document);
 
         // Assert that another match can be matched
         matcher = matchSegmentExpressionMatcher(xpath);
-        Assert.assertTrue(unitUnderTest.canExtract(context, XML_FIXTURE, matcher));
-        Assert.assertEquals(unitUnderTest.extractValue(context, XML_FIXTURE, matcher), "Peter");
+        Assertions.assertTrue(unitUnderTest.canExtract(context, XML_FIXTURE, matcher));
+        Assertions.assertEquals("Peter", unitUnderTest.extractValue(context, XML_FIXTURE, matcher));
 
         // Assert that a XML document can be matched
         matcher = matchSegmentExpressionMatcher(xpath);
-        Assert.assertTrue(unitUnderTest.canExtract(context, cachedXmlDocument, matcher));
-        Assert.assertEquals(unitUnderTest.extractValue(context, cachedXmlDocument, matcher), "Peter");
+        Assertions.assertTrue(unitUnderTest.canExtract(context, cachedXmlDocument, matcher));
+        Assertions.assertEquals("Peter", unitUnderTest.extractValue(context, cachedXmlDocument, matcher));
 
     }
 
@@ -61,7 +64,7 @@ public class XmlPathSegmentVariableExtractorTest extends UnitTestSupport {
         String invalidXpathPath = "name";
         VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(invalidXpathPath);
 
-        Assert.assertFalse(unitUnderTest.canExtract(context, XML_FIXTURE, matcher));
+        Assertions.assertFalse(unitUnderTest.canExtract(context, XML_FIXTURE, matcher));
     }
 
     @Test
@@ -70,8 +73,8 @@ public class XmlPathSegmentVariableExtractorTest extends UnitTestSupport {
         String invalidXpath = "//$$$";
         VariableExpressionSegmentMatcher matcher = matchSegmentExpressionMatcher(invalidXpath);
 
-        Assert.assertTrue(unitUnderTest.canExtract(context, XML_FIXTURE, matcher));
-        Assert.assertThrows(() -> unitUnderTest.extractValue(context, XML_FIXTURE, matcher));
+        Assertions.assertTrue(unitUnderTest.canExtract(context, XML_FIXTURE, matcher));
+        assertThrows(CitrusRuntimeException.class, () -> unitUnderTest.extractValue(context, XML_FIXTURE, matcher));
     }
 
     /**
@@ -82,7 +85,7 @@ public class XmlPathSegmentVariableExtractorTest extends UnitTestSupport {
     private VariableExpressionSegmentMatcher matchSegmentExpressionMatcher(String xpath) {
         String variableExpression = String.format("xpath(%s)", xpath);
         VariableExpressionSegmentMatcher matcher = new VariableExpressionSegmentMatcher(variableExpression);
-        Assert.assertTrue(matcher.nextMatch());
+        Assertions.assertTrue(matcher.nextMatch());
         return matcher;
     }
 }

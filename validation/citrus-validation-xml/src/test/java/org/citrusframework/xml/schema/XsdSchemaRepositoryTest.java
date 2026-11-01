@@ -19,11 +19,11 @@ package org.citrusframework.xml.schema;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.xml.xsd.SimpleXsdSchema;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class XsdSchemaRepositoryTest {
 
@@ -35,8 +35,8 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.initialize();
 
-        assertEquals(schemaRepository.getSchemas().size(), 1);
-        assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
+        assertEquals(1, schemaRepository.getSchemas().size());
+        assertEquals(SimpleXsdSchema.class, schemaRepository.getSchemas().get(0).getClass());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class XsdSchemaRepositoryTest {
         schemaRepository.getLocations().add("classpath:org/citrusframework/unknown/unknown.xsd");
 
         schemaRepository.initialize();
-        assertEquals(schemaRepository.getSchemas().size(), 0);
+        assertEquals(0, schemaRepository.getSchemas().size());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class XsdSchemaRepositoryTest {
         schemaRepository.initialize();
 
         assertTrue(schemaRepository.getSchemas().size() == 4 || schemaRepository.getSchemas().size() == 6, "Expecting schema repository size to be either 4 or 6");
-        schemaRepository.getSchemas().forEach(xsdSchema -> assertEquals(xsdSchema.getClass(), SimpleXsdSchema.class));
+        schemaRepository.getSchemas().forEach(xsdSchema -> assertEquals(SimpleXsdSchema.class, xsdSchema.getClass()));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.initialize();
 
-        assertEquals(schemaRepository.getSchemas().size(), 0);
+        assertEquals(0, schemaRepository.getSchemas().size());
     }
 
     @Test
@@ -79,34 +79,34 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.initialize();
 
-        assertEquals(schemaRepository.getSchemas().size(), 17);
+        assertEquals(17, schemaRepository.getSchemas().size());
 
         schemaRepository = new XsdSchemaRepository();
         schemaRepository.getLocations().add("classpath:org/citrusframework/validation/*.xsd");
 
         schemaRepository.initialize();
 
-        assertEquals(schemaRepository.getSchemas().size(), 7);
-        assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(1).getClass(), SimpleXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(2).getClass(), SimpleXsdSchema.class);
+        assertEquals(7, schemaRepository.getSchemas().size());
+        assertEquals(SimpleXsdSchema.class, schemaRepository.getSchemas().get(0).getClass());
+        assertEquals(SimpleXsdSchema.class, schemaRepository.getSchemas().get(1).getClass());
+        assertEquals(SimpleXsdSchema.class, schemaRepository.getSchemas().get(2).getClass());
 
         schemaRepository = new XsdSchemaRepository();
         schemaRepository.getLocations().add("classpath:org/citrusframework/validation/*.wsdl");
 
         schemaRepository.initialize();
 
-        assertEquals(schemaRepository.getSchemas().size(), 10);
-        assertEquals(schemaRepository.getSchemas().get(0).getClass(), WsdlXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(1).getClass(), WsdlXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(2).getClass(), WsdlXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(3).getClass(), WsdlXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(4).getClass(), WsdlXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(5).getClass(), WsdlXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(6).getClass(), WsdlXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(7).getClass(), WsdlXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(8).getClass(), WsdlXsdSchema.class);
-        assertEquals(schemaRepository.getSchemas().get(9).getClass(), WsdlXsdSchema.class);
+        assertEquals(10, schemaRepository.getSchemas().size());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(0).getClass());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(1).getClass());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(2).getClass());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(3).getClass());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(4).getClass());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(5).getClass());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(6).getClass());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(7).getClass());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(8).getClass());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(9).getClass());
     }
 
     @Test
@@ -117,8 +117,8 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.initialize();
 
-        assertEquals(schemaRepository.getSchemas().size(), 1);
-        assertEquals(schemaRepository.getSchemas().get(0).getClass(), WsdlXsdSchema.class);
+        assertEquals(1, schemaRepository.getSchemas().size());
+        assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(0).getClass());
     }
 
     @Test
@@ -127,11 +127,11 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.addCitrusSchema("citrus-unknown-config");
 
-        assertEquals(schemaRepository.getSchemas().size(), 0);
+        assertEquals(0, schemaRepository.getSchemas().size());
 
         schemaRepository.addCitrusSchema("citrus-config");
 
-        assertEquals(schemaRepository.getSchemas().size(), 1);
-        assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
+        assertEquals(1, schemaRepository.getSchemas().size());
+        assertEquals(SimpleXsdSchema.class, schemaRepository.getSchemas().get(0).getClass());
     }
 }

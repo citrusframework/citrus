@@ -21,16 +21,16 @@ import org.citrusframework.xml.actons.dsl.TestRequest;
 import org.citrusframework.xml.message.builder.MarshallingPayloadBuilder;
 import org.citrusframework.api.xml.Marshaller;
 import org.citrusframework.base.xml.Jaxb2Marshaller;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class XmlSupportTest extends UnitTestSupport {
 
     private final Marshaller marshaller = new Jaxb2Marshaller(TestRequest.class);
     private final TestRequest request = new TestRequest("Hello Citrus!");
 
-    @BeforeClass
+    @BeforeEach
     public void prepareMarshaller() {
         ((Jaxb2Marshaller) marshaller).setProperty(jakarta.xml.bind.Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
     }
@@ -39,14 +39,14 @@ public class XmlSupportTest extends UnitTestSupport {
     public void shouldMarshal() {
         MarshallingPayloadBuilder builder = XmlSupport.marshal(request, marshaller);
 
-        Assert.assertNotNull(builder);
-        Assert.assertEquals(builder.buildPayload(context), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assertions.assertNotNull(builder);
+        Assertions.assertEquals("<TestRequest><Message>Hello Citrus!</Message></TestRequest>", builder.buildPayload(context));
     }
 
     @Test
     public void shouldMarshalWithAutoDetect() {
         MarshallingPayloadBuilder builder = XmlSupport.marshal(request);
 
-        Assert.assertNotNull(builder);
+        Assertions.assertNotNull(builder);
     }
 }

@@ -24,8 +24,8 @@ import javax.xml.xpath.XPathFactory;
 
 import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.api.xml.namespace.DefaultNamespaceContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
 public class XPathUtilsTest {
@@ -35,21 +35,21 @@ public class XPathUtilsTest {
         Map<String, String> namespaces;
         namespaces = XPathUtils.getDynamicNamespaces("//{http://citrusframework.org/foo}Foo/{http://citrusframework.org/foo}bar");
 
-        Assert.assertEquals(namespaces.size(), 1);
-        Assert.assertEquals(namespaces.get("dns1"), "http://citrusframework.org/foo");
+        Assertions.assertEquals(1, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/foo", namespaces.get("dns1"));
 
         namespaces = XPathUtils.getDynamicNamespaces("//{http://citrusframework.org/foo}Foo/{http://citrusframework.org/bar}bar/{http://citrusframework.org/foo}value");
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("dns1"), "http://citrusframework.org/foo");
-        Assert.assertEquals(namespaces.get("dns2"), "http://citrusframework.org/bar");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/foo", namespaces.get("dns1"));
+        Assertions.assertEquals("http://citrusframework.org/bar", namespaces.get("dns2"));
 
         namespaces = XPathUtils.getDynamicNamespaces("//{http://citrusframework.org/foo}Foo/{http://citrusframework.org/bar}bar/{urn:citrus}value");
 
-        Assert.assertEquals(namespaces.size(), 3);
-        Assert.assertEquals(namespaces.get("dns1"), "http://citrusframework.org/foo");
-        Assert.assertEquals(namespaces.get("dns2"), "http://citrusframework.org/bar");
-        Assert.assertEquals(namespaces.get("dns3"), "urn:citrus");
+        Assertions.assertEquals(3, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/foo", namespaces.get("dns1"));
+        Assertions.assertEquals("http://citrusframework.org/bar", namespaces.get("dns2"));
+        Assertions.assertEquals("urn:citrus", namespaces.get("dns3"));
     }
 
     @Test
@@ -59,17 +59,17 @@ public class XPathUtilsTest {
         namespaces.put("ns2", "http://citrusframework.org/bar");
         namespaces.put("ns3", "http://citrusframework.org/foo-bar");
 
-        Assert.assertEquals(XPathUtils.replaceDynamicNamespaces("//{http://citrusframework.org/foo}Foo/{http://citrusframework.org/foo}bar", namespaces),
-                "//ns1:Foo/ns1:bar");
+        Assertions.assertEquals("//ns1:Foo/ns1:bar",
+                XPathUtils.replaceDynamicNamespaces("//{http://citrusframework.org/foo}Foo/{http://citrusframework.org/foo}bar", namespaces));
 
-        Assert.assertEquals(XPathUtils.replaceDynamicNamespaces("//{http://citrusframework.org/foo}Foo/{http://citrusframework.org/bar}bar", namespaces),
-                "//ns1:Foo/ns2:bar");
+        Assertions.assertEquals("//ns1:Foo/ns2:bar",
+                XPathUtils.replaceDynamicNamespaces("//{http://citrusframework.org/foo}Foo/{http://citrusframework.org/bar}bar", namespaces));
 
-        Assert.assertEquals(XPathUtils.replaceDynamicNamespaces("//{http://citrusframework.org/foo-bar}Foo/bar", namespaces),
-                "//ns3:Foo/bar");
+        Assertions.assertEquals("//ns3:Foo/bar",
+                XPathUtils.replaceDynamicNamespaces("//{http://citrusframework.org/foo-bar}Foo/bar", namespaces));
 
-        Assert.assertEquals(XPathUtils.replaceDynamicNamespaces("//{http://citrusframework.org/unkown}Foo/{http://citrusframework.org/unknown}bar", namespaces),
-                "//{http://citrusframework.org/unkown}Foo/{http://citrusframework.org/unknown}bar");
+        Assertions.assertEquals("//{http://citrusframework.org/unkown}Foo/{http://citrusframework.org/unknown}bar",
+                XPathUtils.replaceDynamicNamespaces("//{http://citrusframework.org/unkown}Foo/{http://citrusframework.org/unknown}bar", namespaces));
     }
 
     @Test
@@ -81,21 +81,21 @@ public class XPathUtilsTest {
 
         NamespaceContext namespaceContext = new DefaultNamespaceContext();
 
-        Assert.assertEquals(XPathUtils.evaluate(personNode, "/person/name", namespaceContext, XPathExpressionResult.STRING), "foo");
-        Assert.assertEquals(XPathUtils.evaluate(personNode, "/person/age", namespaceContext, XPathExpressionResult.NUMBER), 23.0D);
-        Assert.assertEquals(XPathUtils.evaluate(personNode, "/person/age", namespaceContext, XPathExpressionResult.INTEGER), 23);
-        Assert.assertEquals(XPathUtils.evaluateAsNode(personNode, "/person/name", namespaceContext).getFirstChild().getNodeValue(), "foo");
-        Assert.assertEquals(XPathUtils.evaluateAsNodeList(personNode, "/person/name", namespaceContext).item(0).getFirstChild().getNodeValue(), "foo");
-        Assert.assertEquals(XPathUtils.evaluateAsNodeList(personNode, "/person/unknown", namespaceContext).getLength(), 0L);
-        Assert.assertTrue(XPathUtils.evaluateAsBoolean(personNode, "/person/name", namespaceContext));
-        Assert.assertFalse(XPathUtils.evaluateAsBoolean(personNode, "/person/unknown", namespaceContext));
-        Assert.assertEquals(XPathUtils.evaluateAsString(personNode, "/person/name", namespaceContext), "foo");
-        Assert.assertEquals(XPathUtils.evaluateAsObject(personNode, "/person/name", namespaceContext, new QName("http://www.w3.org/1999/XSL/Transform", "STRING")), "foo");
-        Assert.assertEquals(XPathUtils.evaluateAsNumber(personNode, "/person/age", namespaceContext), Double.valueOf(23.0D));
-        Assert.assertEquals(XPathUtils.evaluateAsString(personNode, "/person/@status", namespaceContext), "single");
+        Assertions.assertEquals("foo", XPathUtils.evaluate(personNode, "/person/name", namespaceContext, XPathExpressionResult.STRING));
+        Assertions.assertEquals(23.0D, XPathUtils.evaluate(personNode, "/person/age", namespaceContext, XPathExpressionResult.NUMBER));
+        Assertions.assertEquals(23, XPathUtils.evaluate(personNode, "/person/age", namespaceContext, XPathExpressionResult.INTEGER));
+        Assertions.assertEquals("foo", XPathUtils.evaluateAsNode(personNode, "/person/name", namespaceContext).getFirstChild().getNodeValue());
+        Assertions.assertEquals("foo", XPathUtils.evaluateAsNodeList(personNode, "/person/name", namespaceContext).item(0).getFirstChild().getNodeValue());
+        Assertions.assertEquals(0L, XPathUtils.evaluateAsNodeList(personNode, "/person/unknown", namespaceContext).getLength());
+        Assertions.assertTrue(XPathUtils.evaluateAsBoolean(personNode, "/person/name", namespaceContext));
+        Assertions.assertFalse(XPathUtils.evaluateAsBoolean(personNode, "/person/unknown", namespaceContext));
+        Assertions.assertEquals("foo", XPathUtils.evaluateAsString(personNode, "/person/name", namespaceContext));
+        Assertions.assertEquals("foo", XPathUtils.evaluateAsObject(personNode, "/person/name", namespaceContext, new QName("http://www.w3.org/1999/XSL/Transform", "STRING")));
+        Assertions.assertEquals(Double.valueOf(23.0D), XPathUtils.evaluateAsNumber(personNode, "/person/age", namespaceContext));
+        Assertions.assertEquals("single", XPathUtils.evaluateAsString(personNode, "/person/@status", namespaceContext));
     }
 
-    @Test(priority = 1)
+    @Test
     public void testCustomXPathFactory() {
         System.setProperty(XPathFactory.DEFAULT_PROPERTY_NAME + ":" + XPathFactory.DEFAULT_OBJECT_MODEL_URI, "");
         testEvaluate();

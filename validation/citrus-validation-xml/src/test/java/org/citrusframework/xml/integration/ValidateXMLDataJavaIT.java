@@ -17,20 +17,26 @@
 package org.citrusframework.xml.integration;
 
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = {CitrusSpringConfig.class})
+public class ValidateXMLDataJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void validateXMLData() {
-        variable("correlationId", "citrus:randomNumber(10)");
-        variable("messageId", "citrus:randomNumber(10)");
-        variable("user", "Christoph");
+    public void validateXMLData(@CitrusResource TestCaseRunner runner) {
+        runner.variable("correlationId", "citrus:randomNumber(10)");
+        runner.variable("messageId", "citrus:randomNumber(10)");
+        runner.variable("user", "Christoph");
 
-        $(send("direct:hello")
+        runner.run(send("direct:hello")
             .message()
             .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
@@ -41,7 +47,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
-        $(receive("direct:hello")
+        runner.run(receive("direct:hello")
             .message()
             .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
@@ -54,7 +60,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
-        $(send("direct:hello")
+        runner.run(send("direct:hello")
             .message()
             .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
@@ -65,7 +71,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
-        $(receive("direct:hello")
+        runner.run(receive("direct:hello")
             .message()
             .body("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<ns0:MessageId>${messageId}</ns0:MessageId>" +
@@ -79,7 +85,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
-        $(send("direct:hello")
+        runner.run(send("direct:hello")
             .message()
             .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
@@ -90,7 +96,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
-        $(receive("direct:hello")
+        runner.run(receive("direct:hello")
             .message()
             .body("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<ns0:MessageId>${messageId}</ns0:MessageId>" +
@@ -103,7 +109,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
-        $(send("direct:hello")
+        runner.run(send("direct:hello")
             .message()
             .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
@@ -114,7 +120,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusSpringSupport implements 
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
-        $(receive("direct:hello")
+        runner.run(receive("direct:hello")
             .message()
             .body("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<ns0:MessageId>${messageId}</ns0:MessageId>" +

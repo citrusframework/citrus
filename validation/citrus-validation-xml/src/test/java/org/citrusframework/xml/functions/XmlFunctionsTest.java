@@ -18,40 +18,40 @@ package org.citrusframework.xml.functions;
 
 import org.citrusframework.base.functions.DefaultFunctionRegistry;
 import org.citrusframework.functions.FunctionUtils;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.xml.functions.XmlFunctions.createCDataSection;
 import static org.citrusframework.xml.functions.XmlFunctions.escapeXml;
 import static org.citrusframework.xml.functions.XmlFunctions.xPath;
 
-public class XmlFunctionsTest extends AbstractTestNGUnitTest {
+public class XmlFunctionsTest extends AbstractUnitTest {
 
     @Test
     public void testCreateCDataSection() {
-        Assert.assertEquals(createCDataSection("<Test><Message>Some Text</Message></Test>", context), "<![CDATA[<Test><Message>Some Text</Message></Test>]]>");
+        Assertions.assertEquals("<![CDATA[<Test><Message>Some Text</Message></Test>]]>", createCDataSection("<Test><Message>Some Text</Message></Test>", context));
     }
 
     @Test
     public void testEscapeXml() {
-        Assert.assertEquals(escapeXml("<Test><Message>Some Text</Message></Test>", context), "&lt;Test&gt;&lt;Message&gt;Some Text&lt;/Message&gt;&lt;/Test&gt;");
+        Assertions.assertEquals("&lt;Test&gt;&lt;Message&gt;Some Text&lt;/Message&gt;&lt;/Test&gt;", escapeXml("<Test><Message>Some Text</Message></Test>", context));
     }
 
     @Test
     public void testXpath() {
-        Assert.assertEquals(xPath("<Test><Message>Some Text</Message></Test>", "/Test/Message", context), "Some Text");
+        Assertions.assertEquals("Some Text", xPath("<Test><Message>Some Text</Message></Test>", "/Test/Message", context));
     }
 
     @Test
     public void testFunctionUtils() {
         context.setFunctionRegistry(new DefaultFunctionRegistry());
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes, I like Citrus!</Message>')", context), "&lt;Message&gt;Hello Yes, I like Citrus!&lt;/Message&gt;");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes , I like Citrus!</Message>')", context), "&lt;Message&gt;Hello Yes , I like Citrus!&lt;/Message&gt;");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes,I like Citrus, and this is great!</Message>')", context), "&lt;Message&gt;Hello Yes,I like Citrus, and this is great!&lt;/Message&gt;");
+        Assertions.assertEquals("&lt;Message&gt;Hello Yes, I like Citrus!&lt;/Message&gt;", FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes, I like Citrus!</Message>')", context));
+        Assertions.assertEquals("&lt;Message&gt;Hello Yes , I like Citrus!&lt;/Message&gt;", FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes , I like Citrus!</Message>')", context));
+        Assertions.assertEquals("&lt;Message&gt;Hello Yes,I like Citrus, and this is great!&lt;/Message&gt;", FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes,I like Citrus, and this is great!</Message>')", context));
 
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:cdataSection('<Message>Hello Citrus!</Message>')", context), "<![CDATA[<Message>Hello Citrus!</Message>]]>");
+        Assertions.assertEquals("<![CDATA[<Message>Hello Citrus!</Message>]]>", FunctionUtils.resolveFunction("citrus:cdataSection('<Message>Hello Citrus!</Message>')", context));
 
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:xpath('<Message>Hello Citrus!</Message>', '/Message')", context), "Hello Citrus!");
+        Assertions.assertEquals("Hello Citrus!", FunctionUtils.resolveFunction("citrus:xpath('<Message>Hello Citrus!</Message>', '/Message')", context));
     }
 }

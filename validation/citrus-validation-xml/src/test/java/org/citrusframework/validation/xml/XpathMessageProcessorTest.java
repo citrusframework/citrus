@@ -23,11 +23,14 @@ import java.util.Map;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public class XpathMessageProcessorTest extends AbstractUnitTest {
 
     private final Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text></TestMessage>");
 
@@ -45,7 +48,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
+        Assertions.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
                 .endsWith("<TestMessage><Text>Hello!</Text></TestMessage>"));
     }
 
@@ -63,7 +66,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
+        Assertions.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<Text>Hello!</Text>"));
     }
 
@@ -77,7 +80,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(messageNamespace, context);
 
-        Assert.assertTrue(messageNamespace.getPayload(String.class).replaceAll("\\s", "")
+        Assertions.assertTrue(messageNamespace.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
 
@@ -93,7 +96,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(messageNamespace, context);
 
-        Assert.assertTrue(messageNamespace.getPayload(String.class).replaceAll("\\s", "")
+        Assertions.assertTrue(messageNamespace.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
 
@@ -111,12 +114,11 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
+        Assertions.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<ns1:Textxmlns:ns1=\"http://citrusframework.org/test/text\">Hello!</ns1:Text>"));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Can not evaluate xpath expression.*")
+    @Test
     public void testConstructWithInvalidXPath() {
         final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put(".Invalid/Unknown", "Hello!");
@@ -124,11 +126,11 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
                 .expressions(xPathExpressions)
                 .build();
-        processor.processMessage(message, context);
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> processor.processMessage(message, context));
+        assertThat(thrown).hasMessageMatching("Can not evaluate xpath expression.*");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "No result for XPath expression.*")
+    @Test
     public void testConstructWithXPathNoResult() {
         final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/TestMessage/Unknown", "Hello!");
@@ -136,11 +138,11 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
                 .expressions(xPathExpressions)
                 .build();
-        processor.processMessage(message, context);
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> processor.processMessage(message, context));
+        assertThat(thrown).hasMessageMatching("No result for XPath expression.*");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Can not evaluate xpath expression.*")
+    @Test
     public void testConstructWithXPathAndInvalidGlobalNamespace() {
         final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/global:TestMessage/global:Text", "Hello!");
@@ -148,10 +150,8 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
                 .expressions(xPathExpressions)
                 .build();
-        processor.processMessage(messageNamespace, context);
-
-        Assert.assertTrue(messageNamespace.getPayload(String.class).replaceAll("\\s", "")
-                .contains("<ns0:Text>Hello!</ns0:Text>"));
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> processor.processMessage(messageNamespace, context));
+        assertThat(thrown).hasMessageMatching("Can not evaluate xpath expression.*");
     }
 
     @Test
@@ -172,7 +172,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         processor.processMessage(message, context);
 
         //THEN
-        Assert.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
+        Assertions.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<Text>foobar</Text>"));
     }
 }

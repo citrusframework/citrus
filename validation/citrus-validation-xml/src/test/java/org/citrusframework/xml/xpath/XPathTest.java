@@ -32,8 +32,8 @@ import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.validation.xml.XpathPayloadVariableExtractor;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -318,25 +318,25 @@ public class XPathTest extends UnitTestSupport {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("elementA"));
-        Assert.assertEquals(context.getVariable("elementA"), "text-value");
-        Assert.assertNotNull(context.getVariable("elementAttribute"));
-        Assert.assertEquals(context.getVariable("elementAttribute"), "A");
-        Assert.assertNotNull(context.getVariable("search"));
-        Assert.assertEquals(context.getVariable("search"), "search-for");
-        Assert.assertNotNull(context.getVariable("count"));
-        Assert.assertEquals(context.getVariable("count"), "3.0");
-        Assert.assertNotNull(context.getVariable("concat"));
-        Assert.assertEquals(context.getVariable("concat"), "namespace is the value");
-        Assert.assertNotNull(context.getVariable("localName"));
-        Assert.assertEquals(context.getVariable("localName"), "root");
-        Assert.assertNotNull(context.getVariable("namespaceUri"));
-        Assert.assertEquals(context.getVariable("namespaceUri"), "http://citrus");
-        Assert.assertNotNull(context.getVariable("contains"));
-        Assert.assertEquals(context.getVariable("contains"), "true");
-        Assert.assertNotNull(context.getVariable("exists"));
-        Assert.assertEquals(context.getVariable("exists"), "true");
-        Assert.assertNotNull(context.getVariable("existsNot"));
-        Assert.assertEquals(context.getVariable("existsNot"), "false");
+        Assertions.assertNotNull(context.getVariable("elementA"));
+        Assertions.assertEquals("text-value", context.getVariable("elementA"));
+        Assertions.assertNotNull(context.getVariable("elementAttribute"));
+        Assertions.assertEquals("A", context.getVariable("elementAttribute"));
+        Assertions.assertNotNull(context.getVariable("search"));
+        Assertions.assertEquals("search-for", context.getVariable("search"));
+        Assertions.assertNotNull(context.getVariable("count"));
+        Assertions.assertEquals("3.0", context.getVariable("count"));
+        Assertions.assertNotNull(context.getVariable("concat"));
+        Assertions.assertEquals("namespace is the value", context.getVariable("concat"));
+        Assertions.assertNotNull(context.getVariable("localName"));
+        Assertions.assertEquals("root", context.getVariable("localName"));
+        Assertions.assertNotNull(context.getVariable("namespaceUri"));
+        Assertions.assertEquals("http://citrus", context.getVariable("namespaceUri"));
+        Assertions.assertNotNull(context.getVariable("contains"));
+        Assertions.assertEquals("true", context.getVariable("contains"));
+        Assertions.assertNotNull(context.getVariable("exists"));
+        Assertions.assertEquals("true", context.getVariable("exists"));
+        Assertions.assertNotNull(context.getVariable("existsNot"));
+        Assertions.assertEquals("false", context.getVariable("existsNot"));
     }
 }

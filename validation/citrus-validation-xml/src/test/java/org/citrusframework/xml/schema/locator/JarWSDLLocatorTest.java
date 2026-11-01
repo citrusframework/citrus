@@ -19,8 +19,11 @@ package org.citrusframework.xml.schema.locator;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class JarWSDLLocatorTest {
 
@@ -29,12 +32,12 @@ public class JarWSDLLocatorTest {
     @Test
     public void testGetImportInputSource() {
         JarWSDLLocator locator = new JarWSDLLocator(wsdl);
-        Assert.assertNotNull(locator.getBaseInputSource());
-        Assert.assertNotNull(locator.getBaseURI());
-        Assert.assertTrue(locator.getBaseURI().endsWith("org/citrusframework/validation/SampleService.wsdl"));
-        Assert.assertNull(locator.getLatestImportURI());
-        Assert.assertNotNull(locator.getImportInputSource(locator.getBaseURI(), "types.xsd"));
-        Assert.assertTrue(locator.getLatestImportURI().endsWith("org/citrusframework/validation/types.xsd"));
+        Assertions.assertNotNull(locator.getBaseInputSource());
+        Assertions.assertNotNull(locator.getBaseURI());
+        Assertions.assertTrue(locator.getBaseURI().endsWith("org/citrusframework/validation/SampleService.wsdl"));
+        Assertions.assertNull(locator.getLatestImportURI());
+        Assertions.assertNotNull(locator.getImportInputSource(locator.getBaseURI(), "types.xsd"));
+        Assertions.assertTrue(locator.getLatestImportURI().endsWith("org/citrusframework/validation/types.xsd"));
     }
 
     @Test
@@ -43,19 +46,20 @@ public class JarWSDLLocatorTest {
         Resource wsdlFromSpecialCharDir = Resources.fromClasspath(
             "org/citrusframework/validation/dirWithSpecialChar@/SampleService2.wsdl");
         JarWSDLLocator locator = new JarWSDLLocator(wsdlFromSpecialCharDir);
-        Assert.assertNotNull(locator.getBaseInputSource());
-        Assert.assertNotNull(locator.getBaseURI());
-        Assert.assertTrue(locator.getBaseURI().endsWith(
+        Assertions.assertNotNull(locator.getBaseInputSource());
+        Assertions.assertNotNull(locator.getBaseURI());
+        Assertions.assertTrue(locator.getBaseURI().endsWith(
             "org/citrusframework/validation/dirWithSpecialChar@/SampleService2.wsdl"));
-        Assert.assertNull(locator.getLatestImportURI());
-        Assert.assertNotNull(locator.getImportInputSource(locator.getBaseURI(), "types2.xsd"));
-        Assert.assertTrue(locator.getLatestImportURI().endsWith(
+        Assertions.assertNull(locator.getLatestImportURI());
+        Assertions.assertNotNull(locator.getImportInputSource(locator.getBaseURI(), "types2.xsd"));
+        Assertions.assertTrue(locator.getLatestImportURI().endsWith(
             "org/citrusframework/validation/dirWithSpecialChar@/types2.xsd"));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = ".* does not exists")
+    @Test
     public void testGetInvalidImportInputSource() {
         JarWSDLLocator locator = new JarWSDLLocator(wsdl);
-        locator.getImportInputSource(locator.getBaseURI(), "invalid.xsd");
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> locator.getImportInputSource(locator.getBaseURI(), "invalid.xsd"));
+        assertThat(thrown).hasMessageMatching(".* does not exists");
     }
 }

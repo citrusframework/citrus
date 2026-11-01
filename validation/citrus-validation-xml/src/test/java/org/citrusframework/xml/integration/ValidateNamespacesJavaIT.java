@@ -17,25 +17,31 @@
 package org.citrusframework.xml.integration;
 
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = {CitrusSpringConfig.class})
+public class ValidateNamespacesJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void validateNamespaces() {
-        $(echo("Test: Success with single namespace validation"));
+    public void validateNamespaces(@CitrusResource TestCaseRunner runner) {
+        runner.run(echo("Test: Success with single namespace validation"));
 
-        $(send("direct:test")
+        runner.run(send("direct:test")
             .message()
             .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                             "<Message>Hello</Message>" +
                         "</trq:TestRequest>"));
 
-        $(receive("direct:test")
+        runner.run(receive("direct:test")
             .message()
             .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                     "<Message>Hello</Message>" +
@@ -45,15 +51,15 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implemen
                     .namespace("trq", "http://citrusframework.org/schemas/test"))
             .timeout(5000));
 
-        $(echo("Test: Success with multiple namespace validations"));
+        runner.run(echo("Test: Success with multiple namespace validations"));
 
-        $(send("direct:test")
+        runner.run(send("direct:test")
             .message()
             .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\" xmlns:msg=\"http://citrusframework.org/schemas/message\">" +
                             "<msg:Message>Hello</msg:Message>" +
                         "</trq:TestRequest>"));
 
-        $(receive("direct:test")
+        runner.run(receive("direct:test")
             .message()
             .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\" xmlns:msg=\"http://citrusframework.org/schemas/message\">" +
                     "<msg:Message>Hello</msg:Message>" +
@@ -64,15 +70,15 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implemen
                     .namespace("msg", "http://citrusframework.org/schemas/message"))
             .timeout(5000));
 
-        $(echo("Test: Success with multiple nested namespace validations"));
+        runner.run(echo("Test: Success with multiple nested namespace validations"));
 
-        $(send("direct:test")
+        runner.run(send("direct:test")
             .message()
             .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                             "<msg:Message xmlns:msg=\"http://citrusframework.org/schemas/message\">Hello</msg:Message>" +
                         "</trq:TestRequest>"));
 
-        $(receive("direct:test")
+        runner.run(receive("direct:test")
             .message()
             .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                     "<msg:Message xmlns:msg=\"http://citrusframework.org/schemas/message\">Hello</msg:Message>" +
@@ -83,15 +89,15 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport implemen
                         .namespace("msg", "http://citrusframework.org/schemas/message"))
             .timeout(5000));
 
-        $(echo("Test: Failure because of missing namespace"));
+        runner.run(echo("Test: Failure because of missing namespace"));
 
-        $(send("direct:test")
+        runner.run(send("direct:test")
             .message()
             .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                             "<Message>Hello</Message>" +
                         "</trq:TestRequest>"));
 
-        $(assertException()
+        runner.run(assertException()
             .exception(ValidationException.class)
             .when(receive("direct:test")
                 .message()

@@ -21,18 +21,18 @@ import org.citrusframework.validation.GenericValidationProcessor;
 import org.citrusframework.validation.xml.XmlMarshallingValidationProcessor;
 import org.citrusframework.validation.xml.XpathMessageProcessor;
 import org.citrusframework.validation.xml.XpathPayloadVariableExtractor;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class XmlMessageProcessorTest {
 
     @Test
     public void testLookup() {
-        Assert.assertTrue(MessageProcessor.lookup("xpathExtract").isPresent());
-        Assert.assertEquals(MessageProcessor.lookup("xpathExtract").get().getClass(), XpathPayloadVariableExtractor.Builder.class);
-        Assert.assertTrue(MessageProcessor.lookup("xmlValidate", (GenericValidationProcessor<Object>) (payload, headers, context) -> {}).isPresent());
-        Assert.assertEquals(MessageProcessor.lookup("xmlValidate", (GenericValidationProcessor<Object>) (payload, headers, context) -> {}).get().getClass(), XmlMarshallingValidationProcessor.Builder.class);
-        Assert.assertTrue(MessageProcessor.lookup("xpath").isPresent());
-        Assert.assertEquals(MessageProcessor.lookup("xpath").get().getClass(), XpathMessageProcessor.Builder.class);
+        Assertions.assertTrue(MessageProcessor.lookup("xpathExtract").isPresent());
+        Assertions.assertEquals(XpathPayloadVariableExtractor.Builder.class, MessageProcessor.lookup("xpathExtract").get().getClass());
+        Assertions.assertTrue(MessageProcessor.lookup("xmlValidate", (GenericValidationProcessor<Object>) (payload, headers, context) -> {}).isPresent());
+        Assertions.assertEquals(XmlMarshallingValidationProcessor.Builder.class, MessageProcessor.lookup("xmlValidate", (GenericValidationProcessor<Object>) (payload, headers, context) -> {}).get().getClass());
+        Assertions.assertTrue(MessageProcessor.lookup("xpath").isPresent());
+        Assertions.assertEquals(XpathMessageProcessor.Builder.class, MessageProcessor.lookup("xpath").get().getClass());
     }
 }

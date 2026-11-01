@@ -23,33 +23,33 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.xhtml.XhtmlMessageValidator;
 import org.citrusframework.validation.xhtml.XhtmlXpathMessageValidator;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MessageValidatorTest {
 
     @Test
     public void testLookup() {
         Map<String, MessageValidator<? extends ValidationContext>> validators = MessageValidator.lookup();
-        Assert.assertEquals(validators.size(), 11L);
-        Assert.assertNotNull(validators.get("defaultMessageHeaderValidator"));
-        Assert.assertEquals(validators.get("defaultMessageHeaderValidator").getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertNotNull(validators.get("defaultXmlMessageValidator"));
-        Assert.assertEquals(validators.get("defaultXmlMessageValidator").getClass(), DomXmlMessageValidator.class);
-        Assert.assertNotNull(validators.get("defaultXpathMessageValidator"));
-        Assert.assertEquals(validators.get("defaultXpathMessageValidator").getClass(), XpathMessageValidator.class);
-        Assert.assertNotNull(validators.get("defaultXhtmlMessageValidator"));
-        Assert.assertEquals(validators.get("defaultXhtmlMessageValidator").getClass(), XhtmlMessageValidator.class);
-        Assert.assertNotNull(validators.get("defaultXhtmlXpathMessageValidator"));
-        Assert.assertEquals(validators.get("defaultXhtmlXpathMessageValidator").getClass(), XhtmlXpathMessageValidator.class);
+        Assertions.assertEquals(11L, validators.size());
+        Assertions.assertNotNull(validators.get("defaultMessageHeaderValidator"));
+        Assertions.assertEquals(DefaultMessageHeaderValidator.class, validators.get("defaultMessageHeaderValidator").getClass());
+        Assertions.assertNotNull(validators.get("defaultXmlMessageValidator"));
+        Assertions.assertEquals(DomXmlMessageValidator.class, validators.get("defaultXmlMessageValidator").getClass());
+        Assertions.assertNotNull(validators.get("defaultXpathMessageValidator"));
+        Assertions.assertEquals(XpathMessageValidator.class, validators.get("defaultXpathMessageValidator").getClass());
+        Assertions.assertNotNull(validators.get("defaultXhtmlMessageValidator"));
+        Assertions.assertEquals(XhtmlMessageValidator.class, validators.get("defaultXhtmlMessageValidator").getClass());
+        Assertions.assertNotNull(validators.get("defaultXhtmlXpathMessageValidator"));
+        Assertions.assertEquals(XhtmlXpathMessageValidator.class, validators.get("defaultXhtmlXpathMessageValidator").getClass());
     }
 
     @Test
     public void testTestLookup() {
-        Assert.assertTrue(MessageValidator.lookup("header").isPresent());
-        Assert.assertTrue(MessageValidator.lookup("xml").isPresent());
-        Assert.assertTrue(MessageValidator.lookup("xpath").isPresent());
-        Assert.assertTrue(MessageValidator.lookup("xhtml").isPresent());
-        Assert.assertTrue(MessageValidator.lookup("xhtml-xpath").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("header").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("xml").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("xpath").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("xhtml").isPresent());
+        Assertions.assertTrue(MessageValidator.lookup("xhtml-xpath").isPresent());
     }
 }

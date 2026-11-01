@@ -24,9 +24,9 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.base.xml.Jaxb2Marshaller;
 import org.citrusframework.api.xml.Marshaller;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.when;
 
@@ -37,7 +37,7 @@ public class MarshallingHeaderDataBuilderTest extends UnitTestSupport {
 
     private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
-    @BeforeClass
+    @BeforeEach
     public void prepareMarshaller() {
         ((Jaxb2Marshaller) marshaller).setProperty(jakarta.xml.bind.Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
     }
@@ -51,14 +51,14 @@ public class MarshallingHeaderDataBuilderTest extends UnitTestSupport {
 
         MarshallingHeaderDataBuilder builder = new MarshallingHeaderDataBuilder(request);
 
-        Assert.assertEquals(builder.buildHeaderData(context), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assertions.assertEquals("<TestRequest><Message>Hello Citrus!</Message></TestRequest>", builder.buildHeaderData(context));
     }
 
     @Test
     public void shouldBuildHeaderDataWithMapper() {
         MarshallingHeaderDataBuilder builder = new MarshallingHeaderDataBuilder(request, marshaller);
 
-        Assert.assertEquals(builder.buildHeaderData(context), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assertions.assertEquals("<TestRequest><Message>Hello Citrus!</Message></TestRequest>", builder.buildHeaderData(context));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class MarshallingHeaderDataBuilderTest extends UnitTestSupport {
 
         MarshallingHeaderDataBuilder builder = new MarshallingHeaderDataBuilder(request, "marshaller");
 
-        Assert.assertEquals(builder.buildHeaderData(context), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assertions.assertEquals("<TestRequest><Message>Hello Citrus!</Message></TestRequest>", builder.buildHeaderData(context));
     }
 
     @Test
@@ -78,6 +78,6 @@ public class MarshallingHeaderDataBuilderTest extends UnitTestSupport {
         context.setVariable("message", "Hello Citrus!");
         MarshallingHeaderDataBuilder builder = new MarshallingHeaderDataBuilder(new TestRequest("${message}"), marshaller);
 
-        Assert.assertEquals(builder.buildHeaderData(context), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assertions.assertEquals("<TestRequest><Message>Hello Citrus!</Message></TestRequest>", builder.buildHeaderData(context));
     }
 }

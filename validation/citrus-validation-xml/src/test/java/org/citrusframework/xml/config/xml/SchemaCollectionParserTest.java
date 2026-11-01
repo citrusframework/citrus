@@ -18,10 +18,10 @@ package org.citrusframework.xml.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.xml.schema.XsdSchemaCollection;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SchemaCollectionParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -29,13 +29,13 @@ public class SchemaCollectionParserTest extends AbstractBeanDefinitionParserTest
     public void testSchemaRepositoryParser() {
         Map<String, XsdSchemaCollection> schemaCollections = beanDefinitionContext.getBeansOfType(XsdSchemaCollection.class);
 
-        Assert.assertEquals(schemaCollections.size(), 1);
+        Assertions.assertEquals(1, schemaCollections.size());
 
         // 1st schema repository
         XsdSchemaCollection schema = schemaCollections.get("schemaCollection1");
-        Assert.assertNotNull(schema.getSchemas());
-        Assert.assertEquals(schema.getSchemas().size(), 2);
-        Assert.assertEquals(schema.getSchemas().get(0), "classpath:org/citrusframework/validation/test.xsd");
-        Assert.assertEquals(schema.getSchemas().get(1), "classpath:org/citrusframework/validation/sample.xsd");
+        Assertions.assertNotNull(schema.getSchemas());
+        Assertions.assertEquals(2, schema.getSchemas().size());
+        Assertions.assertEquals("classpath:org/citrusframework/validation/test.xsd", schema.getSchemas().get(0));
+        Assertions.assertEquals("classpath:org/citrusframework/validation/sample.xsd", schema.getSchemas().get(1));
     }
 }

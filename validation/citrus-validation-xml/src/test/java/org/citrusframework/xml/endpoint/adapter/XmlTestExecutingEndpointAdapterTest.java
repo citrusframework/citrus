@@ -33,14 +33,16 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.spring.endpoint.adapter.XmlTestExecutingEndpointAdapter;
 import org.citrusframework.validation.MessageValidator;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -49,6 +51,7 @@ import static org.mockito.Mockito.when;
  * @since 1.4
  */
 @ContextConfiguration(classes = { CitrusSpringConfig.class, XmlTestExecutingEndpointAdapterTest.EndpointConfig.class })
+@ExtendWith(MockitoExtension.class)
 public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
 
     @Autowired
@@ -60,11 +63,10 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
     @Mock
     private MessageValidator<?> plaintextMessageValidator;
 
-    @BeforeClass
+    @BeforeEach
     public void setupMocks() {
-        MockitoAnnotations.openMocks(this);
-        when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()));
-        when(plaintextMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.PLAINTEXT.name()));
+        Mockito.lenient().when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()));
+        Mockito.lenient().when(plaintextMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.PLAINTEXT.name()));
     }
 
     @Override
@@ -87,12 +89,12 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
         Message response = endpointAdapter.handleMessage(
                 new DefaultMessage("<Test name=\"FooTest\"></Test>"));
 
-        Assert.assertEquals(response.getPayload(String.class).trim(), "<Test name=\"FooTest\">OK</Test>");
+        Assertions.assertEquals("<Test name=\"FooTest\">OK</Test>", response.getPayload(String.class).trim());
 
         response = endpointAdapter.handleMessage(
                 new DefaultMessage("<Test name=\"BarTest\"></Test>"));
 
-        Assert.assertEquals(response.getPayload(String.class).trim(), "<Test name=\"BarTest\">OK</Test>");
+        Assertions.assertEquals("<Test name=\"BarTest\">OK</Test>", response.getPayload(String.class).trim());
     }
 
     /**
@@ -107,7 +109,7 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
                 new DefaultMessage(
                         "<FooBarTest></FooBarTest>"));
 
-        Assert.assertEquals(response.getPayload(String.class).trim(), "<FooBarTest>OK</FooBarTest>");
+        Assertions.assertEquals("<FooBarTest>OK</FooBarTest>", response.getPayload(String.class).trim());
     }
 
     /**
@@ -122,9 +124,9 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
         try {
             endpointAdapter.handleMessage(new DefaultMessage(
                     "<FooTest>foo test please</FooTest>"));
-            Assert.fail("Missing exception due to bad XPath expression");
+            Assertions.fail("Missing exception due to bad XPath expression");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "No result for XPath expression: '//I_DO_NOT_EXIST'");
+            Assertions.assertEquals("No result for XPath expression: '//I_DO_NOT_EXIST'", e.getMessage());
         }
     }
 
@@ -140,9 +142,9 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
         try {
             endpointAdapter.handleMessage(new DefaultMessage(
                     "<Test name=\"UNKNOWN_TEST\"></Test>"));
-            Assert.fail("Missing exception due to unknown endpoint adapter");
+            Assertions.fail("Missing exception due to unknown endpoint adapter");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to load test case");
+            Assertions.assertEquals("Failed to load test case", e.getMessage());
         }
     }
 

@@ -28,8 +28,8 @@ import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -180,9 +180,9 @@ public class DTDValidationTest extends UnitTestSupport {
                     .message(controlMessageBuilder)
                     .build();
             receiveAction.execute(context);
-            Assert.fail("Missing validation exception due to mismatch in public id");
+            Assertions.fail("Missing validation exception due to mismatch in public id");
         } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("expected 'foo' but was 'example'"));
+            Assertions.assertTrue(e.getMessage().contains("expected 'foo' but was 'example'"));
         }
     }
 
@@ -218,9 +218,9 @@ public class DTDValidationTest extends UnitTestSupport {
                     .message(controlMessageBuilder)
                     .build();
             receiveAction.execute(context);
-            Assert.fail("Missing validation exception due to mismatch in public id");
+            Assertions.fail("Missing validation exception due to mismatch in public id");
         } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("expected 'org/w3/xhtml/xhtml1-transitional.dtd' but was 'org/citrusframework/validation/example.dtd'"));
+            Assertions.assertTrue(e.getMessage().contains("expected 'org/w3/xhtml/xhtml1-transitional.dtd' but was 'org/citrusframework/validation/example.dtd'"));
         }
     }
 }

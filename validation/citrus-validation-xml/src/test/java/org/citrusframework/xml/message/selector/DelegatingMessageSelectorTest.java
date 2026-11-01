@@ -22,8 +22,8 @@ import org.citrusframework.message.selector.DelegatingMessageSelector;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -44,8 +44,8 @@ public class DelegatingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("foo", "bar")
                 .setHeader("operation", "foo");
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
         messageSelector = new DelegatingMessageSelector("root-qname = 'FooTest'", context);
 
@@ -56,8 +56,8 @@ public class DelegatingMessageSelectorTest extends UnitTestSupport {
         declineMessage = new DefaultMessage("<BarTest><text>foobar</text></BarTest>")
                 .setHeader("operation", "foo");
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -70,8 +70,8 @@ public class DelegatingMessageSelectorTest extends UnitTestSupport {
         Message declineMessage = new DefaultMessage("<FooTest xmlns=\"http://citrusframework.org/barschema\"><text>bar</text></FooTest>")
                 .setHeader("operation", "foo");
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -86,13 +86,13 @@ public class DelegatingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("foo", "bar")
                 .setHeader("operation", "foo");
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
         messageSelector = new DelegatingMessageSelector("xpath://FooTest/text = 'foobar'", context);
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -116,13 +116,13 @@ public class DelegatingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("foo", "bar")
                 .setHeader("operation", "foo");
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
         messageSelector = new DelegatingMessageSelector("xpath://foo:FooTest/foo:text = 'foobar'", context);
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
     }
 }

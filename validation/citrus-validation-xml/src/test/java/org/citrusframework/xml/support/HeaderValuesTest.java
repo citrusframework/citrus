@@ -33,8 +33,10 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.xml.UnitTestSupport;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -135,90 +137,94 @@ public class HeaderValuesTest extends UnitTestSupport {
         receiveAction.execute(context);
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesWrongExpectedValue() {
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        assertThrows(ValidationException.class, () -> {
+            reset(endpoint, consumer, endpointConfiguration);
+            when(endpoint.createConsumer()).thenReturn(consumer);
+            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        Message message = new DefaultMessage("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>"
-                        + "</root>")
-                        .setHeader("header-valueA", "A")
-                        .setHeader("header-valueB", "B")
-                        .setHeader("header-valueC", "C");
+            Message message = new DefaultMessage("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+            + "</element>"
+            + "</root>")
+            .setHeader("header-valueA", "A")
+            .setHeader("header-valueB", "B")
+            .setHeader("header-valueC", "C");
 
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-        when(endpoint.getActor()).thenReturn(null);
+            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+            when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-                                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                            + "</element>"
-                            + "</root>"));
+            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+            + "</element>"
+            + "</root>"));
 
-        HashMap<String, Object> validateHeaderValues = new HashMap<>();
-        validateHeaderValues.put("header-valueA", "wrong");
+            HashMap<String, Object> validateHeaderValues = new HashMap<>();
+            validateHeaderValues.put("header-valueA", "wrong");
 
-        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(validateHeaderValues));
+            controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(validateHeaderValues));
 
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(controlMessageBuilder)
-                .build();
-        receiveAction.execute(context);
+            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+            .endpoint(endpoint)
+            .message(controlMessageBuilder)
+            .build();
+            receiveAction.execute(context);
+        });
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesForWrongElement() {
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        assertThrows(ValidationException.class, () -> {
+            reset(endpoint, consumer, endpointConfiguration);
+            when(endpoint.createConsumer()).thenReturn(consumer);
+            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        Message message = new DefaultMessage("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>"
-                        + "</root>")
-                        .setHeader("header-valueA", "A")
-                        .setHeader("header-valueB", "B")
-                        .setHeader("header-valueC", "C");
+            Message message = new DefaultMessage("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+            + "</element>"
+            + "</root>")
+            .setHeader("header-valueA", "A")
+            .setHeader("header-valueB", "B")
+            .setHeader("header-valueC", "C");
 
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-        when(endpoint.getActor()).thenReturn(null);
+            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+            when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-                                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                            + "</element>"
-                            + "</root>"));
+            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+            + "</element>"
+            + "</root>"));
 
-        HashMap<String, Object> validateHeaderValues = new HashMap<>();
-        validateHeaderValues.put("header-wrong", "A");
+            HashMap<String, Object> validateHeaderValues = new HashMap<>();
+            validateHeaderValues.put("header-wrong", "A");
 
-        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(validateHeaderValues));
+            controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(validateHeaderValues));
 
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(controlMessageBuilder)
-                .build();
-        receiveAction.execute(context);
+            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+            .endpoint(endpoint)
+            .message(controlMessageBuilder)
+            .build();
+            receiveAction.execute(context);
+        });
     }
 
     @Test
@@ -266,49 +272,51 @@ public class HeaderValuesTest extends UnitTestSupport {
         receiveAction.execute(context);
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesNullComparison() {
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        assertThrows(ValidationException.class, () -> {
+            reset(endpoint, consumer, endpointConfiguration);
+            when(endpoint.createConsumer()).thenReturn(consumer);
+            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        Message message = new DefaultMessage("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>"
-                        + "</root>")
-                        .setHeader("header-valueA", "")
-                        .setHeader("header-valueB", "")
-                        .setHeader("header-valueC", "");
+            Message message = new DefaultMessage("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+            + "</element>"
+            + "</root>")
+            .setHeader("header-valueA", "")
+            .setHeader("header-valueB", "")
+            .setHeader("header-valueC", "");
 
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-        when(endpoint.getActor()).thenReturn(null);
+            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+            when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-                                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                            + "</element>"
-                            + "</root>"));
+            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+            + "</element>"
+            + "</root>"));
 
-        HashMap<String, Object> validateHeaderValues = new HashMap<>();
-        validateHeaderValues.put("header-valueA", "null");
-        validateHeaderValues.put("header-valueB", "null");
-        validateHeaderValues.put("header-valueC", "null");
+            HashMap<String, Object> validateHeaderValues = new HashMap<>();
+            validateHeaderValues.put("header-valueA", "null");
+            validateHeaderValues.put("header-valueB", "null");
+            validateHeaderValues.put("header-valueC", "null");
 
-        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(validateHeaderValues));
+            controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(validateHeaderValues));
 
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(controlMessageBuilder)
-                .build();
-        receiveAction.execute(context);
+            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+            .endpoint(endpoint)
+            .message(controlMessageBuilder)
+            .build();
+            receiveAction.execute(context);
+        });
     }
 
     @Test
@@ -357,9 +365,9 @@ public class HeaderValuesTest extends UnitTestSupport {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertTrue(context.getVariables().containsKey("valueA"));
-        Assert.assertEquals(context.getVariables().get("valueA"), "A");
-        Assert.assertTrue(context.getVariables().containsKey("valueB"));
-        Assert.assertEquals(context.getVariables().get("valueB"), "B");
+        Assertions.assertTrue(context.getVariables().containsKey("valueA"));
+        Assertions.assertEquals("A", context.getVariables().get("valueA"));
+        Assertions.assertTrue(context.getVariables().containsKey("valueB"));
+        Assertions.assertEquals("B", context.getVariables().get("valueB"));
     }
 }

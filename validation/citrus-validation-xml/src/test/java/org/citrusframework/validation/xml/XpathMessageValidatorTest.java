@@ -31,8 +31,10 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.hamcrest.Matchers.*;
 
@@ -78,39 +80,43 @@ public class XpathMessageValidatorTest extends UnitTestSupport {
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test
     public void testValidateMessageElementsWithValidationMatcherNotSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                + "<sub-element attribute='A'>text-value</sub-element>"
-                + "</element>"
-                + "</root>");
+        assertThrows(ValidationException.class, () -> {
+            Message message = new DefaultMessage("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+            + "<sub-element attribute='A'>text-value</sub-element>"
+            + "</element>"
+            + "</root>");
 
-        Map<String, Object> validationExpressions = new HashMap<>();
-        validationExpressions.put("//element/@attributeA", "@startsWith('attribute-')@");
-        validationExpressions.put("//element/@attributeB", "@endsWith('-value')@");
-        validationExpressions.put("//element/sub-element", "@contains('FAIL')@");
+            Map<String, Object> validationExpressions = new HashMap<>();
+            validationExpressions.put("//element/@attributeA", "@startsWith('attribute-')@");
+            validationExpressions.put("//element/@attributeB", "@endsWith('-value')@");
+            validationExpressions.put("//element/sub-element", "@contains('FAIL')@");
 
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
-                .expressions(validationExpressions)
-                .build();
+            XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+            .expressions(validationExpressions)
+            .build();
 
-        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        });
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test
     public void testValidateMessageElementsWithXPathNotSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                + "<sub-element attribute='A'>text-value</sub-element>"
-                + "</element>"
-                + "</root>");
+        assertThrows(ValidationException.class, () -> {
+            Message message = new DefaultMessage("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+            + "<sub-element attribute='A'>text-value</sub-element>"
+            + "</element>"
+            + "</root>");
 
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
-                .expression("//element/sub-element", "false-value")
-                .build();
+            XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+            .expression("//element/sub-element", "false-value")
+            .build();
 
-        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        });
     }
 
     @Test
@@ -143,34 +149,38 @@ public class XpathMessageValidatorTest extends UnitTestSupport {
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test
     public void testValidateMessageElementsWithDotNotationValidationMatcherNotSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                + "<sub-element attribute='A'>text-value</sub-element>"
-                + "</element>"
-                + "</root>");
+        assertThrows(ValidationException.class, () -> {
+            Message message = new DefaultMessage("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+            + "<sub-element attribute='A'>text-value</sub-element>"
+            + "</element>"
+            + "</root>");
 
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
-                .expression("root.element.sub-element", "@contains(false-value)@")
-                .build();
+            XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+            .expression("root.element.sub-element", "@contains(false-value)@")
+            .build();
 
-        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        });
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test
     public void testValidateMessageElementsWithDotNotationNotSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                + "<sub-element attribute='A'>text-value</sub-element>"
-                + "</element>"
-                + "</root>");
+        assertThrows(ValidationException.class, () -> {
+            Message message = new DefaultMessage("<root>"
+            + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+            + "<sub-element attribute='A'>text-value</sub-element>"
+            + "</element>"
+            + "</root>");
 
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
-                .expression("root.element.sub-element", "false-value")
-                .build();
+            XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+            .expression("root.element.sub-element", "false-value")
+            .build();
 
-        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        });
     }
 
     @Test
@@ -282,10 +292,10 @@ public class XpathMessageValidatorTest extends UnitTestSupport {
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new DefaultScriptValidationContext(MessageType.PLAINTEXT.name()));
 
-        Assert.assertNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNull(validator.findValidationContext(validationContexts));
 
         validationContexts.add(new XpathMessageValidationContext());
 
-        Assert.assertNotNull(validator.findValidationContext(validationContexts));
+        Assertions.assertNotNull(validator.findValidationContext(validationContexts));
     }
 }

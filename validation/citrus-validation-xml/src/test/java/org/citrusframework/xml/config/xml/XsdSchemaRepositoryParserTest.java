@@ -18,15 +18,15 @@ package org.citrusframework.xml.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.xml.schema.XsdSchemaRepository;
 import org.citrusframework.xml.schema.RootQNameSchemaMappingStrategy;
 import org.citrusframework.xml.schema.TargetNamespaceSchemaMappingStrategy;
 import org.citrusframework.xml.schema.WsdlXsdSchema;
 import org.citrusframework.xml.schema.XsdSchemaCollection;
 import org.springframework.xml.xsd.SimpleXsdSchema;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class XsdSchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -34,49 +34,49 @@ public class XsdSchemaRepositoryParserTest extends AbstractBeanDefinitionParserT
     public void testSchemaRepositoryParser() {
         Map<String, XsdSchemaRepository> schemaRepositories = beanDefinitionContext.getBeansOfType(XsdSchemaRepository.class);
 
-        Assert.assertEquals(schemaRepositories.size(), 5);
+        Assertions.assertEquals(5, schemaRepositories.size());
 
         // 1st schema repository
         XsdSchemaRepository schemaRepository = schemaRepositories.get("schemaRepository1");
-        Assert.assertEquals(schemaRepository.getSchemaMappingStrategy().getClass(), TargetNamespaceSchemaMappingStrategy.class);
-        Assert.assertNotNull(schemaRepository.getSchemas());
-        Assert.assertEquals(schemaRepository.getSchemas().size(), 5);
-        Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
-        Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), WsdlXsdSchema.class);
-        Assert.assertEquals(schemaRepository.getSchemas().get(2).getClass(), SimpleXsdSchema.class);
-        Assert.assertEquals(schemaRepository.getSchemas().get(3).getClass(), WsdlXsdSchema.class);
-        Assert.assertEquals(schemaRepository.getSchemas().get(4).getClass(), XsdSchemaCollection.class);
-        Assert.assertNotNull(schemaRepository.getLocations());
-        Assert.assertEquals(schemaRepository.getLocations().size(), 0);
+        Assertions.assertEquals(TargetNamespaceSchemaMappingStrategy.class, schemaRepository.getSchemaMappingStrategy().getClass());
+        Assertions.assertNotNull(schemaRepository.getSchemas());
+        Assertions.assertEquals(5, schemaRepository.getSchemas().size());
+        Assertions.assertEquals(SimpleXsdSchema.class, schemaRepository.getSchemas().get(0).getClass());
+        Assertions.assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(1).getClass());
+        Assertions.assertEquals(SimpleXsdSchema.class, schemaRepository.getSchemas().get(2).getClass());
+        Assertions.assertEquals(WsdlXsdSchema.class, schemaRepository.getSchemas().get(3).getClass());
+        Assertions.assertEquals(XsdSchemaCollection.class, schemaRepository.getSchemas().get(4).getClass());
+        Assertions.assertNotNull(schemaRepository.getLocations());
+        Assertions.assertEquals(0, schemaRepository.getLocations().size());
 
         // 2nd schema repository
         schemaRepository = schemaRepositories.get("schemaRepository2");
-        Assert.assertNotNull(schemaRepository.getSchemas());
-        Assert.assertEquals(schemaRepository.getSchemas().size(), 17);
-        Assert.assertNotNull(schemaRepository.getLocations());
-        Assert.assertEquals(schemaRepository.getLocations().size(), 1);
-        Assert.assertEquals(schemaRepository.getLocations().get(0), "classpath:org/citrusframework/validation/*");
+        Assertions.assertNotNull(schemaRepository.getSchemas());
+        Assertions.assertEquals(17, schemaRepository.getSchemas().size());
+        Assertions.assertNotNull(schemaRepository.getLocations());
+        Assertions.assertEquals(1, schemaRepository.getLocations().size());
+        Assertions.assertEquals("classpath:org/citrusframework/validation/*", schemaRepository.getLocations().get(0));
 
         // 3rd schema repository
         schemaRepository = schemaRepositories.get("schemaRepository3");
-        Assert.assertEquals(schemaRepository.getSchemaMappingStrategy().getClass(), RootQNameSchemaMappingStrategy.class);
+        Assertions.assertEquals(RootQNameSchemaMappingStrategy.class, schemaRepository.getSchemaMappingStrategy().getClass());
 
         // 4th schema repository
         schemaRepository = schemaRepositories.get("xmlSchemaRepository");
-        Assert.assertEquals(schemaRepository.getSchemaMappingStrategy().getClass(), TargetNamespaceSchemaMappingStrategy.class);
-        Assert.assertNotNull(schemaRepository.getSchemas());
-        Assert.assertEquals(schemaRepository.getSchemas().size(), 1);
+        Assertions.assertEquals(TargetNamespaceSchemaMappingStrategy.class, schemaRepository.getSchemaMappingStrategy().getClass());
+        Assertions.assertNotNull(schemaRepository.getSchemas());
+        Assertions.assertEquals(1, schemaRepository.getSchemas().size());
 
         // 5th schema repository
         schemaRepository = schemaRepositories.get("testSchemaRepositoryBean");
-        Assert.assertEquals(schemaRepository.getSchemaMappingStrategy().getClass(), TargetNamespaceSchemaMappingStrategy.class);
-        Assert.assertNotNull(schemaRepository.getSchemas());
-        Assert.assertEquals(schemaRepository.getSchemas().size(), 1);
+        Assertions.assertEquals(TargetNamespaceSchemaMappingStrategy.class, schemaRepository.getSchemaMappingStrategy().getClass());
+        Assertions.assertNotNull(schemaRepository.getSchemas());
+        Assertions.assertEquals(1, schemaRepository.getSchemas().size());
 
-        Assert.assertTrue(beanDefinitionContext.containsBean("schema1"));
-        Assert.assertTrue(beanDefinitionContext.containsBean("schema2"));
-        Assert.assertTrue(beanDefinitionContext.containsBean("wsdl1"));
-        Assert.assertTrue(beanDefinitionContext.containsBean("wsdl2"));
-        Assert.assertTrue(beanDefinitionContext.containsBean("schemaCollection1"));
+        Assertions.assertTrue(beanDefinitionContext.containsBean("schema1"));
+        Assertions.assertTrue(beanDefinitionContext.containsBean("schema2"));
+        Assertions.assertTrue(beanDefinitionContext.containsBean("wsdl1"));
+        Assertions.assertTrue(beanDefinitionContext.containsBean("wsdl2"));
+        Assertions.assertTrue(beanDefinitionContext.containsBean("schemaCollection1"));
     }
 }

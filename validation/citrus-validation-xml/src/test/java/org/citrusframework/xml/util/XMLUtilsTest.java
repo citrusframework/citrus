@@ -25,8 +25,8 @@ import javax.xml.XMLConstants;
 import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.citrusframework.xml.support.XMLUtils;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -45,22 +45,22 @@ public class XMLUtilsTest {
         Node result;
 
         result = XMLUtils.findNodeByName(doc, "testRequest");
-        Assert.assertNotNull(result);
-        Assert.assertEquals(result.getLocalName(), "testRequest");
-        Assert.assertEquals(result.getNodeType(), Document.ELEMENT_NODE);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("testRequest", result.getLocalName());
+        Assertions.assertEquals(Document.ELEMENT_NODE, result.getNodeType());
 
         result = XMLUtils.findNodeByName(doc, "testRequest.message");
-        Assert.assertNotNull(result);
-        Assert.assertEquals(result.getLocalName(), "message");
-        Assert.assertEquals(result.getNodeType(), Document.ELEMENT_NODE);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("message", result.getLocalName());
+        Assertions.assertEquals(Document.ELEMENT_NODE, result.getNodeType());
 
         result = XMLUtils.findNodeByName(doc, "testRequest.message.id");
-        Assert.assertNotNull(result);
-        Assert.assertEquals(result.getLocalName(), "id");
-        Assert.assertEquals(result.getNodeType(), Document.ATTRIBUTE_NODE);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("id", result.getLocalName());
+        Assertions.assertEquals(Document.ATTRIBUTE_NODE, result.getNodeType());
 
         result = XMLUtils.findNodeByName(doc, "testRequest.wrongElement");
-        Assert.assertNull(result);
+        Assertions.assertNull(result);
     }
 
     @Test
@@ -119,9 +119,9 @@ public class XMLUtilsTest {
         when(childNode2.getNodeType()).thenReturn(Node.ELEMENT_NODE);
         when(childNode3.getNodeType()).thenReturn(Node.ELEMENT_NODE);
 
-        Assert.assertEquals(XMLUtils.getNodesPathName(testNode), "testNode");
-        Assert.assertEquals(XMLUtils.getNodesPathName(childNode1), "testNode.childNode1");
-        Assert.assertEquals(XMLUtils.getNodesPathName(childNode3), "testNode.childNode2.childNode3");
+        Assertions.assertEquals("testNode", XMLUtils.getNodesPathName(testNode));
+        Assertions.assertEquals("testNode.childNode1", XMLUtils.getNodesPathName(childNode1));
+        Assertions.assertEquals("testNode.childNode2.childNode3", XMLUtils.getNodesPathName(childNode3));
 
     }
 
@@ -154,9 +154,9 @@ public class XMLUtilsTest {
         when(attribute1.getNodeType()).thenReturn(Node.ATTRIBUTE_NODE);
         when(attribute2.getNodeType()).thenReturn(Node.ATTRIBUTE_NODE);
 
-        Assert.assertEquals(XMLUtils.getNodesPathName(testNode), "testNode");
-        Assert.assertEquals(XMLUtils.getNodesPathName(attribute1), "testNode.attribute1");
-        Assert.assertEquals(XMLUtils.getNodesPathName(attribute2), "testNode.childNode1.attribute2");
+        Assertions.assertEquals("testNode", XMLUtils.getNodesPathName(testNode));
+        Assertions.assertEquals("testNode.attribute1", XMLUtils.getNodesPathName(attribute1));
+        Assertions.assertEquals("testNode.childNode1.attribute2", XMLUtils.getNodesPathName(attribute2));
 
     }
 
@@ -179,8 +179,8 @@ public class XMLUtilsTest {
             }
         }
 
-        Assert.assertTrue(prettyprint.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        Assert.assertTrue(lines > 0);
+        Assertions.assertTrue(prettyprint.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        Assertions.assertTrue(lines > 0);
     }
 
     @Test
@@ -189,29 +189,29 @@ public class XMLUtilsTest {
 
         namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://citrusframework.org/test\" xmlns:ns2=\"http://citrusframework.org/test2\"></ns1:testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/test2", namespaces.get("ns2"));
 
         namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://citrusframework.org/xmlns/test\" xmlns:ns2=\"http://citrusframework.org/xmlns/test2\"></ns1:testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/xmlns/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/xmlns/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test2", namespaces.get("ns2"));
 
         namespaces = XMLUtils.lookupNamespaces(
                 XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1=\"http://citrusframework.org/test\" xmlns:ns2=\"http://citrusframework.org/test2\"></ns1:testRequest>"));
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/test2", namespaces.get("ns2"));
 
         namespaces = XMLUtils.lookupNamespaces(
                 XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1=\"http://citrusframework.org/xmlns/test\" xmlns:ns2=\"http://citrusframework.org/xmlns/test2\"></ns1:testRequest>"));
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/xmlns/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/xmlns/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test2", namespaces.get("ns2"));
     }
 
     @Test
@@ -220,42 +220,42 @@ public class XMLUtilsTest {
 
         namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1='http://citrusframework.org/test' xmlns:ns2='http://citrusframework.org/test2'></ns1:testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/test2", namespaces.get("ns2"));
 
         namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://citrusframework.org/test\" xmlns:ns2='http://citrusframework.org/test2'></ns1:testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/test2", namespaces.get("ns2"));
 
         namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1='http://citrusframework.org/xmlns/test' xmlns:ns2='http://citrusframework.org/xmlns/test2'></ns1:testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/xmlns/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/xmlns/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test2", namespaces.get("ns2"));
 
         namespaces = XMLUtils.lookupNamespaces(
                 XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1='http://citrusframework.org/test' xmlns:ns2='http://citrusframework.org/test2'></ns1:testRequest>"));
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/test2", namespaces.get("ns2"));
 
         namespaces = XMLUtils.lookupNamespaces(
                 XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1=\"http://citrusframework.org/test\" xmlns:ns2='http://citrusframework.org/test2'></ns1:testRequest>"));
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/test2", namespaces.get("ns2"));
 
         namespaces = XMLUtils.lookupNamespaces(
                 XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1='http://citrusframework.org/xmlns/test' xmlns:ns2='http://citrusframework.org/xmlns/test2'></ns1:testRequest>"));
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/xmlns/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/xmlns/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test2", namespaces.get("ns2"));
     }
 
     @Test
@@ -264,16 +264,16 @@ public class XMLUtilsTest {
 
         namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://citrusframework.org/test\" id=\"123456789\" xmlns:ns2=\"http://citrusframework.org/test2\"></ns1:testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/test2", namespaces.get("ns2"));
 
         namespaces = XMLUtils.lookupNamespaces(
                 XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1=\"http://citrusframework.org/test\" id=\"123456789\" xmlns:ns2=\"http://citrusframework.org/test2\"></ns1:testRequest>"));
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/test");
-        Assert.assertEquals(namespaces.get("ns2"), "http://citrusframework.org/test2");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test", namespaces.get("ns1"));
+        Assertions.assertEquals("http://citrusframework.org/test2", namespaces.get("ns2"));
     }
 
     @Test
@@ -282,89 +282,89 @@ public class XMLUtilsTest {
 
         namespaces = NamespaceContextBuilder.lookupNamespaces("<testRequest xmlns=\"http://citrusframework.org/test-default\"></testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 1);
-        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://citrusframework.org/test-default");
+        Assertions.assertEquals(1, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test-default", namespaces.get(XMLConstants.DEFAULT_NS_PREFIX));
 
         namespaces = NamespaceContextBuilder.lookupNamespaces("<testRequest xmlns='http://citrusframework.org/test-default'></testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 1);
-        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://citrusframework.org/test-default");
+        Assertions.assertEquals(1, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test-default", namespaces.get(XMLConstants.DEFAULT_NS_PREFIX));
 
         namespaces = NamespaceContextBuilder.lookupNamespaces("<testRequest xmlns=\"http://citrusframework.org/test-default\" xmlns:ns1=\"http://citrusframework.org/test\"></testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://citrusframework.org/test-default");
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/test");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test-default", namespaces.get(XMLConstants.DEFAULT_NS_PREFIX));
+        Assertions.assertEquals("http://citrusframework.org/test", namespaces.get("ns1"));
 
         namespaces = NamespaceContextBuilder.lookupNamespaces("<testRequest xmlns=\"http://citrusframework.org/xmlns/test-default\" xmlns:ns1=\"http://citrusframework.org/xmlns/test\"></testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://citrusframework.org/xmlns/test-default");
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/xmlns/test");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test-default", namespaces.get(XMLConstants.DEFAULT_NS_PREFIX));
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test", namespaces.get("ns1"));
 
         namespaces = XMLUtils.lookupNamespaces(
                 XMLUtils.parseMessagePayload("<testRequest xmlns=\"http://citrusframework.org/test-default\"></testRequest>"));
 
-        Assert.assertEquals(namespaces.size(), 1);
-        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://citrusframework.org/test-default");
+        Assertions.assertEquals(1, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test-default", namespaces.get(XMLConstants.DEFAULT_NS_PREFIX));
 
         namespaces = XMLUtils.lookupNamespaces(
                 XMLUtils.parseMessagePayload("<testRequest xmlns='http://citrusframework.org/test-default'></testRequest>"));
 
-        Assert.assertEquals(namespaces.size(), 1);
-        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://citrusframework.org/test-default");
+        Assertions.assertEquals(1, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test-default", namespaces.get(XMLConstants.DEFAULT_NS_PREFIX));
 
         namespaces = XMLUtils.lookupNamespaces(
                 XMLUtils.parseMessagePayload("<testRequest xmlns=\"http://citrusframework.org/test-default\" xmlns:ns1=\"http://citrusframework.org/test\"></testRequest>"));
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://citrusframework.org/test-default");
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/test");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/test-default", namespaces.get(XMLConstants.DEFAULT_NS_PREFIX));
+        Assertions.assertEquals("http://citrusframework.org/test", namespaces.get("ns1"));
 
         namespaces = XMLUtils.lookupNamespaces(
                 XMLUtils.parseMessagePayload("<testRequest xmlns=\"http://citrusframework.org/xmlns/test-default\" xmlns:ns1=\"http://citrusframework.org/xmlns/test\"></testRequest>"));
 
-        Assert.assertEquals(namespaces.size(), 2);
-        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://citrusframework.org/xmlns/test-default");
-        Assert.assertEquals(namespaces.get("ns1"), "http://citrusframework.org/xmlns/test");
+        Assertions.assertEquals(2, namespaces.size());
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test-default", namespaces.get(XMLConstants.DEFAULT_NS_PREFIX));
+        Assertions.assertEquals("http://citrusframework.org/xmlns/test", namespaces.get("ns1"));
     }
 
     @Test
     public void testLookupNamespacesInXMLFragmentNoNamespacesFound() {
         Map<String, String> namespaces = NamespaceContextBuilder.lookupNamespaces("<testRequest id=\"123456789\"></testRequest>");
 
-        Assert.assertEquals(namespaces.size(), 0);
+        Assertions.assertEquals(0, namespaces.size());
     }
 
     @Test
     public void testParseEncodingCharset() {
         Document doc = XMLUtils.parseMessagePayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
         		"<testRequest xmlns=\"http://citrusframework.org/test-default\"></testRequest>");
-        Assert.assertNotNull(doc);
+        Assertions.assertNotNull(doc);
 
         doc = XMLUtils.parseMessagePayload("<?xml version='1.0' encoding='UTF-8'?>" +
         		"<testRequest xmlns='http://citrusframework.org/test-default'></testRequest>");
-        Assert.assertNotNull(doc);
+        Assertions.assertNotNull(doc);
 
         doc = XMLUtils.parseMessagePayload("<?xml version='1.0' encoding = 'ISO-8859-1' standalone=\"yes\"?>" +
         		"<testRequest xmlns='http://citrusframework.org/test-default'></testRequest>");
-        Assert.assertNotNull(doc);
+        Assertions.assertNotNull(doc);
 
         doc = XMLUtils.parseMessagePayload("<?xml version='1.0'?>" +
         		"<testRequest xmlns='http://citrusframework.org/test-default'></testRequest>");
-        Assert.assertNotNull(doc);
+        Assertions.assertNotNull(doc);
 
         doc = XMLUtils.parseMessagePayload("<?xml version='1.0'?>" +
                 "<testRequest xmlns='http://citrusframework.org/test-default'>encoding</testRequest>");
-        Assert.assertNotNull(doc);
+        Assertions.assertNotNull(doc);
 
         doc = XMLUtils.parseMessagePayload("<?xml version='1.0' encoding='UTF-8'?>" +
                 "<testRequest xmlns='http://citrusframework.org/test-default'><![CDATA[<?xml version='1.0' encoding='some unknown encoding'?><message>Nested</message>]]></testRequest>");
-        Assert.assertNotNull(doc);
+        Assertions.assertNotNull(doc);
 
         doc = XMLUtils.parseMessagePayload("<?xml version='1.0'?>" +
                 "<testRequest xmlns='http://citrusframework.org/test-default'><![CDATA[<?xml version='1.0' encoding='some unknown encoding'?><message>Nested</message>]]></testRequest>");
-        Assert.assertNotNull(doc);
+        Assertions.assertNotNull(doc);
     }
 
     @Test
@@ -374,10 +374,11 @@ public class XMLUtilsTest {
 
         Document doc = XMLUtils.parseMessagePayload(payload);
 
-        Assert.assertEquals(XMLUtils.serialize(doc), """
+        Assertions.assertEquals("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <testRequest xmlns="http://citrusframework.org/test-default">ÄäÖöÜü</testRequest>
-                """);
+                """,
+                        XMLUtils.serialize(doc));
     }
 
     @Test
@@ -385,9 +386,9 @@ public class XMLUtilsTest {
         String payload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 " <testRequest xmlns=\"http://citrusframework.org/test-default\">Test</testRequest>";
 
-        Assert.assertEquals(XMLUtils.omitXmlDeclaration(payload), "<testRequest xmlns=\"http://citrusframework.org/test-default\">Test</testRequest>");
-        Assert.assertEquals(XMLUtils.omitXmlDeclaration("<testRequest xmlns=\"http://citrusframework.org/test-default\">Test</testRequest>"), "<testRequest xmlns=\"http://citrusframework.org/test-default\">Test</testRequest>");
-        Assert.assertEquals(XMLUtils.omitXmlDeclaration(""), "");
-        Assert.assertEquals(XMLUtils.omitXmlDeclaration("Test"), "Test");
+        Assertions.assertEquals("<testRequest xmlns=\"http://citrusframework.org/test-default\">Test</testRequest>", XMLUtils.omitXmlDeclaration(payload));
+        Assertions.assertEquals("<testRequest xmlns=\"http://citrusframework.org/test-default\">Test</testRequest>", XMLUtils.omitXmlDeclaration("<testRequest xmlns=\"http://citrusframework.org/test-default\">Test</testRequest>"));
+        Assertions.assertEquals("", XMLUtils.omitXmlDeclaration(""));
+        Assertions.assertEquals("Test", XMLUtils.omitXmlDeclaration("Test"));
     }
 }
