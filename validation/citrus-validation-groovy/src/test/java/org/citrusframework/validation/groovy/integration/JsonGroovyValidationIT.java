@@ -21,9 +21,11 @@ import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.context.ContextConfiguration;
 
 @CitrusSpringSupport
+@Isolated("Shares the Spring-cached application context and its in-memory helloQueue with other ITs")
 @ContextConfiguration(classes = {CitrusSpringConfig.class})
 public class JsonGroovyValidationIT {
     @Test
