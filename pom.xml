@@ -2288,9 +2288,14 @@
         <gib.compareToMergeBase>true</gib.compareToMergeBase>
         <!-- Downstream is what keeps this correct: a changed module always drags its dependents in. -->
         <gib.buildDownstream>true</gib.buildDownstream>
-        <!-- Upstream modules are rebuilt (not taken from a possibly stale cached SNAPSHOT) but not re-tested. -->
+        <!--
+          Upstream modules are rebuilt (not taken from a possibly stale cached SNAPSHOT) but not re-tested.
+          `impacted` also covers the upstream of downstream modules: a test in a dependent module
+          (e.g. tools/schema-generator) must run against source-built dependencies, not against
+          whatever SNAPSHOT the local repository holds from an older main.
+        -->
         <gib.buildUpstream>true</gib.buildUpstream>
-        <gib.buildUpstreamMode>changed</gib.buildUpstreamMode>
+        <gib.buildUpstreamMode>impacted</gib.buildUpstreamMode>
         <gib.skipTestsForUpstreamModules>true</gib.skipTestsForUpstreamModules>
         <!--
           Documentation lives at the repository root, so without this every doc
