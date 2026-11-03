@@ -108,46 +108,44 @@ public class XhtmlXpathMessageValidatorTest extends UnitTestSupport {
 
     @Test
     public void testXhtmlXpathValidationFailed() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
-            + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
-            + "<head>"
-            + "<title>Sample XHTML content</title>"
-            + "</head>"
-            + "<body>"
-            + "<h1>Hello TestFramework!</h1>"
-            + "</body>"
-            + "</html>");
+        Message message = new DefaultMessage("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
+        + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
+        + "<head>"
+        + "<title>Sample XHTML content</title>"
+        + "</head>"
+        + "<body>"
+        + "<h1>Hello TestFramework!</h1>"
+        + "</body>"
+        + "</html>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-            validationContext.getXpathExpressions().put("//xh:h1", "Failed!");
-            validationContext.getNamespaces().put("xh", "http://www.w3.org/1999/xhtml");
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
-            + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
-            + "<head>"
-            + "<title>Sample XHTML content</title>"
-            + "</head>"
-            + "<body>"
-            + "<h1>Hello TestFramework!</h1>"
-            + "</body>"
-            + "</html>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
+        validationContext.getXpathExpressions().put("//xh:h1", "Failed!");
+        validationContext.getNamespaces().put("xh", "http://www.w3.org/1999/xhtml");
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
+        + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
+        + "<head>"
+        + "<title>Sample XHTML content</title>"
+        + "</head>"
+        + "<body>"
+        + "<h1>Hello TestFramework!</h1>"
+        + "</body>"
+        + "</html>"));
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .type(MessageType.XHTML)
-            .validate(validationContext)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .type(MessageType.XHTML)
+        .validate(validationContext)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 }

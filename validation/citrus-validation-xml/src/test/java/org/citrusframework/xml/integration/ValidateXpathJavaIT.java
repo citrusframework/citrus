@@ -224,29 +224,26 @@ public class ValidateXpathJavaIT implements TestActionSupport {
     @Test
     @CitrusTest
     public void shouldFailOnMultipleXpathExpressionValidation(@CitrusResource TestCaseRunner runner) {
-        assertThrows(TestCaseFailedException.class, () -> {
-            runner.variable("correlationId", "citrus:randomNumber(10)");
-            runner.variable("messageId", "citrus:randomNumber(10)");
-            runner.variable("user", "Christoph");
+        runner.variable("correlationId", "citrus:randomNumber(10)");
+        runner.variable("messageId", "citrus:randomNumber(10)");
+        runner.variable("user", "Christoph");
 
-            runner.run(send("direct:hello")
-                    .message()
-                    .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
-                            "<MessageId>${messageId}</MessageId>" +
-                            "<CorrelationId>${correlationId}</CorrelationId>" +
-                            "<User>${user}</User>" +
-                            "<Text>Hello ${user}</Text>" +
-                            "</HelloRequest>")
-                    .header("Operation", "sayHello")
-                    .header("CorrelationId", "${correlationId}"));
-
-            runner.run(receive("direct:hello")
-                    .message()
-                    .validate(validation().xpath().expression("//:HelloRequest/:MessageId", "${messageId}"))
-                    .validate(validation().xpath().expression("//:HelloRequest/:CorrelationId", "${correlationId}"))
-                    .validate(validation().xpath().expression("//:HelloRequest/:Text", "should fail"))
-                    .header("Operation", "sayHello")
-                    .header("CorrelationId", "${correlationId}"));
-        });
+        runner.run(send("direct:hello")
+                .message()
+                .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                        "<MessageId>${messageId}</MessageId>" +
+                        "<CorrelationId>${correlationId}</CorrelationId>" +
+                        "<User>${user}</User>" +
+                        "<Text>Hello ${user}</Text>" +
+                        "</HelloRequest>")
+                .header("Operation", "sayHello")
+                .header("CorrelationId", "${correlationId}"));
+        assertThrows(TestCaseFailedException.class, () -> runner.run(receive("direct:hello")
+                .message()
+                .validate(validation().xpath().expression("//:HelloRequest/:MessageId", "${messageId}"))
+                .validate(validation().xpath().expression("//:HelloRequest/:CorrelationId", "${correlationId}"))
+                .validate(validation().xpath().expression("//:HelloRequest/:Text", "should fail"))
+                .header("Operation", "sayHello")
+                .header("CorrelationId", "${correlationId}")));
     }
 }
