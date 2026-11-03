@@ -168,150 +168,142 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
     @Test
     public void testValidateMessageElementsWrongExpectedElement() {
-        assertThrows(CitrusRuntimeException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            HashMap<String, Object> validateMessageElements = new HashMap<>();
-            validateMessageElements.put("root.element.sub-element-wrong", "text-value");
-            validateMessageElements.put("sub-element-wrong", "text-value");
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
+        validateMessageElements.put("root.element.sub-element-wrong", "text-value");
+        validateMessageElements.put("sub-element-wrong", "text-value");
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
-            .expressions(validateMessageElements)
-            .build();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+        .expressions(validateMessageElements)
+        .build();
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .validate(validationContext)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .validate(validationContext)
+        .build();
+        assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     public void testValidateMessageElementsWrongExpectedValue() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            HashMap<String, Object> validateMessageElements = new HashMap<>();
-            validateMessageElements.put("root.element.sub-elementA", "text-value-wrong");
-            validateMessageElements.put("sub-elementB", "text-value-wrong");
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
+        validateMessageElements.put("root.element.sub-elementA", "text-value-wrong");
+        validateMessageElements.put("sub-elementB", "text-value-wrong");
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
-            .expressions(validateMessageElements)
-            .build();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+        .expressions(validateMessageElements)
+        .build();
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .validate(validationContext)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .validate(validationContext)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     public void testValidateMessageElementAttributesWrongExpectedValue() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            HashMap<String, Object> validateMessageElements = new HashMap<>();
-            validateMessageElements.put("root.element.sub-elementA.attribute", "wrong-value");
-            validateMessageElements.put("sub-elementB.attribute", "wrong-value");
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
+        validateMessageElements.put("root.element.sub-elementA.attribute", "wrong-value");
+        validateMessageElements.put("sub-elementB.attribute", "wrong-value");
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
-            .expressions(validateMessageElements)
-            .build();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+        .expressions(validateMessageElements)
+        .build();
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .validate(validationContext)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .validate(validationContext)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     public void testValidateMessageElementAttributesWrongExpectedAttribute() {
-        assertThrows(CitrusRuntimeException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            HashMap<String, Object> validateMessageElements = new HashMap<>();
-            validateMessageElements.put("root.element.sub-elementA.attribute-wrong", "A");
-            validateMessageElements.put("sub-elementB.attribute-wrong", "B");
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
+        validateMessageElements.put("root.element.sub-elementA.attribute-wrong", "A");
+        validateMessageElements.put("sub-elementB.attribute-wrong", "B");
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
-            .expressions(validateMessageElements)
-            .build();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+        .expressions(validateMessageElements)
+        .build();
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .validate(validationContext)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .validate(validationContext)
+        .build();
+        assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
     }
 
     @Test
@@ -497,137 +489,131 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
     @Test
     public void testSetMessageElementsError() {
-        assertThrows(CitrusRuntimeException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
-            + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
+        + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            HashMap<String, Object> messageElements = new HashMap<>();
-            messageElements.put("root.element.sub-element-wrong", "text-value");
-            messageElements.put("sub-element-wrong", "text-value");
+        HashMap<String, Object> messageElements = new HashMap<>();
+        messageElements.put("root.element.sub-element-wrong", "text-value");
+        messageElements.put("sub-element-wrong", "text-value");
 
-            XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
-            .expressions(messageElements)
-            .build();
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+        .expressions(messageElements)
+        .build();
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .process(processor)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .process(processor)
+        .build();
+        assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     public void testSetMessageElementAttributesError() {
-        assertThrows(CitrusRuntimeException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            HashMap<String, Object> messageElements = new HashMap<>();
-            messageElements.put("root.element.sub-elementA.attribute-wrong", "A");
-            messageElements.put("sub-elementB.attribute-wrong", "B");
+        HashMap<String, Object> messageElements = new HashMap<>();
+        messageElements.put("root.element.sub-elementA.attribute-wrong", "A");
+        messageElements.put("sub-elementB.attribute-wrong", "B");
 
-            XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
-            .expressions(messageElements)
-            .build();
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+        .expressions(messageElements)
+        .build();
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .process(processor)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .process(processor)
+        .build();
+        assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     public void testSetMessageElementAttributesErrorWrongElement() {
-        assertThrows(CitrusRuntimeException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            HashMap<String, Object> messageElements = new HashMap<>();
-            messageElements.put("root.element.sub-elementA-wrong.attribute", "A");
-            messageElements.put("sub-elementB-wrong.attribute", "B");
+        HashMap<String, Object> messageElements = new HashMap<>();
+        messageElements.put("root.element.sub-elementA-wrong.attribute", "A");
+        messageElements.put("sub-elementB-wrong.attribute", "B");
 
-            XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
-            .expressions(messageElements)
-            .build();
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+        .expressions(messageElements)
+        .build();
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .process(processor)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .process(processor)
+        .build();
+        assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
     }
 
     @Test
@@ -728,95 +714,86 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
     @Test
     public void testExtractMessageElementsForWrongElement() {
-        assertThrows(CitrusRuntimeException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            HashMap<String, Object> extractMessageElements = new HashMap<>();
-            extractMessageElements.put("root.element.sub-element-wrong", "${valueA}");
-            extractMessageElements.put("element.sub-element-wrong", "${valueB}");
+        HashMap<String, Object> extractMessageElements = new HashMap<>();
+        extractMessageElements.put("root.element.sub-element-wrong", "${valueA}");
+        extractMessageElements.put("element.sub-element-wrong", "${valueB}");
 
-            XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
-            .expressions(extractMessageElements)
-            .build();
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
+        .expressions(extractMessageElements)
+        .build();
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .process(variableExtractor)
-            .build();
-            receiveAction.execute(context);
-
-            Assertions.assertFalse(context.getVariables().containsKey("valueA"));
-            Assertions.assertFalse(context.getVariables().containsKey("valueB"));
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .process(variableExtractor)
+        .build();
+        assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     public void testExtractMessageElementsForWrongAtribute() {
-        assertThrows(CitrusRuntimeException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            HashMap<String, Object> extractMessageElements = new HashMap<>();
-            extractMessageElements.put("root.element.sub-elementA.attribute-wrong", "${attributeA}");
+        HashMap<String, Object> extractMessageElements = new HashMap<>();
+        extractMessageElements.put("root.element.sub-elementA.attribute-wrong", "${attributeA}");
 
-            XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
-            .expressions(extractMessageElements)
-            .build();
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
+        .expressions(extractMessageElements)
+        .build();
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .process(variableExtractor)
-            .build();
-            receiveAction.execute(context);
-
-            Assertions.assertFalse(context.getVariables().containsKey("attributeA"));
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .process(variableExtractor)
+        .build();
+        assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
     }
 }

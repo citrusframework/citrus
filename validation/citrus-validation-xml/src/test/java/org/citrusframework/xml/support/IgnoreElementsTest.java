@@ -429,30 +429,28 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreElementsNoMatch() {
-        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> {
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            Set<String> ignoreMessageElements = new HashSet<>();
-            ignoreMessageElements.add("//something-else");
+        Set<String> ignoreMessageElements = new HashSet<>();
+        ignoreMessageElements.add("//something-else");
 
-            XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
-            .ignore(ignoreMessageElements)
-            .build();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+        .ignore(ignoreMessageElements)
+        .build();
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .validate(validationContext)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .validate(validationContext)
+        .build();
+        CitrusRuntimeException thrown = assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
         assertThat(thrown).hasMessageMatching("No result for XPath expression: '//something-else'");
     }
 }

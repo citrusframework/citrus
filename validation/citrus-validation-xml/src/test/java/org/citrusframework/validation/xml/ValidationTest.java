@@ -115,296 +115,280 @@ public class ValidationTest extends UnitTestSupport {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeMissingElement() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "</element>"
+        + "</root>"));
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeAdditionalElement() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "<sub-elementD attribute='D'>text-value</sub-elementD>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "<sub-elementD attribute='D'>text-value</sub-elementD>"
+        + "</element>"
+        + "</root>"));
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeMissingAttribute() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeAdditionalAttribute() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A' attribute-additional='additional'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A' attribute-additional='additional'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeWrongAttribute() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute-wrong='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute-wrong='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeWrongElement() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-element-wrong attribute='A'>text-value</sub-element-wrong>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-element-wrong attribute='A'>text-value</sub-element-wrong>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeWrongNodeValue() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>wrong-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>wrong-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeWrongAttributeValue() {
-        assertThrows(ValidationException.class, () -> {
-            reset(endpoint, consumer, endpointConfiguration);
-            when(endpoint.createConsumer()).thenReturn(consumer);
-            when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-            when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-            Message message = new DefaultMessage("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>");
+        Message message = new DefaultMessage("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>");
 
-            when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
-            when(endpoint.getActor()).thenReturn(null);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
 
-            DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-            controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
-            + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-            + "<sub-elementA attribute='wrong-value'>text-value</sub-elementA>"
-            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>"
-            + "</root>"));
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
+        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+        + "<sub-elementA attribute='wrong-value'>text-value</sub-elementA>"
+        + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+        + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+        + "</element>"
+        + "</root>"));
 
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-            .endpoint(endpoint)
-            .message(controlMessageBuilder)
-            .build();
-            receiveAction.execute(context);
-        });
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        .endpoint(endpoint)
+        .message(controlMessageBuilder)
+        .build();
+        assertThrows(ValidationException.class, () -> receiveAction.execute(context));
     }
 }
