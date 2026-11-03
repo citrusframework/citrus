@@ -65,6 +65,9 @@ public class NavigateAction extends AbstractSeleniumAction {
                 } catch (IllegalArgumentException | MalformedURLException ex) {
                     String baseUrl = browser.getWebDriver().getCurrentUrl();
                     try {
+                        if (!StringUtils.hasText(baseUrl)) {
+                            throw new MalformedURLException("No current URL available in browser");
+                        }
                         URI.create(baseUrl).toURL();
                     } catch (IllegalArgumentException | MalformedURLException e) {
                         if (StringUtils.hasText(browser.getEndpointConfiguration().getStartPageUrl())) {
