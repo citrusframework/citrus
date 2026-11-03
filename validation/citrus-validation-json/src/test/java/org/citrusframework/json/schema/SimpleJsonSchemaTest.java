@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -97,7 +98,7 @@ public class SimpleJsonSchemaTest {
         ClasspathResource resource = new ClasspathResource("classpath:org/citrusframework/json/schema/test-schema.jar");
 
         URL url = resource.file().toURI().toURL();
-        URL jarUrl = new URL("jar:"+url+"!/jsonschema.json");
+        URL jarUrl = URI.create("jar:"+url+"!/jsonschema.json").toURL();
         SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(new UrlResource(jarUrl));
 
         simpleJsonSchema.initialize();
@@ -107,7 +108,7 @@ public class SimpleJsonSchemaTest {
 
     @Test
     public void initialize_withUrlResourceFallback_usesInputStream() throws Exception {
-        UrlResource urlResource = new UrlResource(new URL("http://"+ UUID.randomUUID().toString())) {
+        UrlResource urlResource = new UrlResource(URI.create("http://"+ UUID.randomUUID().toString()).toURL()) {
             @Override
             public InputStream getInputStream() {
                 return new ByteArrayInputStream(VALID_JSON_SCHEMA.getBytes(StandardCharsets.UTF_8));

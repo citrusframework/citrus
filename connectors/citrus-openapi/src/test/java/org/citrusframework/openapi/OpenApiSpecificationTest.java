@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -115,7 +116,7 @@ public class OpenApiSpecificationTest {
                     invocation -> new ByteArrayInputStream(PING_API_STRING.getBytes(
                             StandardCharsets.UTF_8)));
 
-            URL urlSpy = spy(new URL(urlString));
+            URL urlSpy = spy(URI.create(urlString).toURL());
             when(urlSpy.openConnection()).thenReturn(httpsURLConnectionMock);
             return urlSpy;
         } catch (Exception e) {
