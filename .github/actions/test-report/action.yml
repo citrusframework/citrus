@@ -32,7 +32,7 @@ runs:
   steps:
     - name: Upload test reports
       if: ${{ !cancelled() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ inputs.artifact-name }}
         path: |
@@ -44,7 +44,7 @@ runs:
 
     - name: Test Report
       if: ${{ !cancelled() }}
-      uses: dorny/test-reporter@v2
+      uses: dorny/test-reporter@v3
       with:
         name: ${{ inputs.report-name }}
         # Only surefire's own TEST-*.xml schema (emitted for JUnit and
