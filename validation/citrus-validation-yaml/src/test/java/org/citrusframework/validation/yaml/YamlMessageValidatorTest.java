@@ -357,9 +357,9 @@ public class YamlMessageValidatorTest extends UnitTestSupport {
         Map<String, MessageValidator<? extends ValidationContext>> validators = MessageValidator.lookup();
         Assertions.assertEquals(2, validators.size());
         Assertions.assertNotNull(validators.get("defaultMessageHeaderValidator"));
-        Assertions.assertEquals(validators.get("defaultMessageHeaderValidator").getClass(), DefaultMessageHeaderValidator.class);
+        Assertions.assertEquals(DefaultMessageHeaderValidator.class, validators.get("defaultMessageHeaderValidator").getClass());
         Assertions.assertNotNull(validators.get("defaultYamlMessageValidator"));
-        Assertions.assertEquals(validators.get("defaultYamlMessageValidator").getClass(), YamlMessageValidator.class);
+        Assertions.assertEquals(YamlMessageValidator.class, validators.get("defaultYamlMessageValidator").getClass());
     }
 
     @Test
