@@ -29,8 +29,8 @@ import org.citrusframework.spi.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AgentRunActionTest extends UnitTestSupport {
 
@@ -142,15 +142,15 @@ public class AgentRunActionTest extends UnitTestSupport {
             protected Message handleMessageInternal(Message message) {
                 if (message instanceof HttpMessage httpRequest) {
                     if (httpRequest.getPath().equals("/health")) {
-                        Assert.assertEquals(httpRequest.getRequestMethod(), RequestMethod.GET);
+                        Assertions.assertEquals(RequestMethod.GET, httpRequest.getRequestMethod());
                         return new HttpMessage("""
                         { "status": "UP" }
                         """).status(HttpStatus.OK);
                     } else {
-                        Assert.assertTrue(httpRequest.getPath().startsWith("/execute/%s".formatted(testName)));
-                        Assert.assertEquals(httpRequest.getRequestMethod(), RequestMethod.POST);
-                        Assert.assertEquals(httpRequest.getContentType(), contentType);
-                        Assert.assertTrue(httpRequest.getPayload(String.class).contains("Citrus rocks!"));
+                        Assertions.assertTrue(httpRequest.getPath().startsWith("/execute/%s".formatted(testName)));
+                        Assertions.assertEquals(RequestMethod.POST, httpRequest.getRequestMethod());
+                        Assertions.assertEquals(contentType, httpRequest.getContentType());
+                        Assertions.assertTrue(httpRequest.getPayload(String.class).contains("Citrus rocks!"));
 
                         return new HttpMessage("""
                         [

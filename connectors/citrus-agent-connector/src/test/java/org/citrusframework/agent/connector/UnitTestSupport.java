@@ -16,24 +16,12 @@
 
 package org.citrusframework.agent.connector;
 
-import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
-import org.testng.annotations.BeforeMethod;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 
-public abstract class UnitTestSupport {
+public abstract class UnitTestSupport extends AbstractUnitTest {
 
-    protected TestContextFactory testContextFactory;
-    protected TestContext context;
-
-    /**
-     * Setup test execution.
-     */
-    @BeforeMethod
-    public void prepareTest() {
-        testContextFactory = createTestContextFactory();
-        context = testContextFactory.getObject();
-    }
-
+    @Override
     protected TestContextFactory createTestContextFactory() {
         return TestContextFactory.newInstance();
     }
