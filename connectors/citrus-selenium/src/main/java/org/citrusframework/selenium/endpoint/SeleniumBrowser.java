@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -397,11 +397,11 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
             } else if (Browser.IE.is(browserType)) {
                 options = new InternetExplorerOptions();
                 options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
-                return new RemoteWebDriver(new URL(serverAddress), options);
+                return new RemoteWebDriver(URI.create(serverAddress).toURL(), options);
             } else if (Browser.EDGE.is(browserType)) {
                 options = edgeOptions();
                 options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
-                return new RemoteWebDriver(new URL(serverAddress), options);
+                return new RemoteWebDriver(URI.create(serverAddress).toURL(), options);
             } else if (Browser.CHROME.is(browserType)) {
                 options = chromeOptions();
                 options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
@@ -409,8 +409,8 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer, Shutd
                 throw new CitrusRuntimeException("Unsupported remote browser type: " + browserType);
             }
 
-            return new RemoteWebDriver(new URL(serverAddress), options);
-        } catch (MalformedURLException e) {
+            return new RemoteWebDriver(URI.create(serverAddress).toURL(), options);
+        } catch (IllegalArgumentException | MalformedURLException e) {
             throw new CitrusRuntimeException("Failed to access remote server", e);
         }
     }

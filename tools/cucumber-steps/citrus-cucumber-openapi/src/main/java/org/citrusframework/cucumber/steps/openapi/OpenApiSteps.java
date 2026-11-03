@@ -18,6 +18,7 @@ package org.citrusframework.cucumber.steps.openapi;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
@@ -91,14 +92,14 @@ public class OpenApiSteps {
 
         if (location.startsWith("http")) {
             try {
-                URL url = new URL(location);
+                URL url = URI.create(location).toURL();
                 if (location.startsWith("https")) {
                     openApiDoc = OpenApiResourceLoader.fromSecuredWebResource(url);
                 } else {
                     openApiDoc = OpenApiResourceLoader.fromWebResource(url);
                 }
                 openApiUrl = String.format("%s://%s%s%s", url.getProtocol(), url.getHost(), url.getPort() > 0 ? ":" + url.getPort() : "", OasModelHelper.getBasePath(openApiDoc));
-            } catch (MalformedURLException e) {
+            } catch (IllegalArgumentException | MalformedURLException e) {
                 throw new IllegalStateException("Failed to retrieve Open API specification as web resource: " + location, e);
             }
         } else {

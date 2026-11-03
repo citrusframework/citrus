@@ -17,7 +17,7 @@
 package org.citrusframework.cucumber.steps.http;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -544,16 +544,16 @@ public class HttpClientSteps implements HttpSteps {
         try {
             BasicAuthClientHttpRequestFactory requestFactory = new BasicAuthClientHttpRequestFactory();
 
-            URL url;
+            URI uri;
             if (StringUtils.hasText(requestUrl)) {
-                url = new URL(requestUrl);
+                uri = URI.create(requestUrl);
             } else if (StringUtils.hasText(httpClient.getEndpointConfiguration().getRequestUrl())) {
-                url = new URL(httpClient.getEndpointConfiguration().getRequestUrl());
+                uri = URI.create(httpClient.getEndpointConfiguration().getRequestUrl());
             } else {
                 throw new CitrusRuntimeException("Must provide a base request URL when configuring basic auth on Http client");
             }
 
-            AuthScope authScope = new AuthScope(url.getProtocol(), url.getHost(), url.getPort(), "", "basic");
+            AuthScope authScope = new AuthScope(uri.getScheme(), uri.getHost(), uri.getPort(), "", "basic");
             requestFactory.setAuthScope(authScope);
 
             UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(authUser, authPassword.toCharArray());
