@@ -1869,6 +1869,8 @@
           "description": "The endpoint name. When set this endpoint is retrievable via this name in the bean registry.",
           "$comment": "group:generic"
         },
+        "playwright": {
+        },
         "properties": {
           "type": "object",
           "title": "Properties",
@@ -5442,174 +5444,168 @@
                 "vertx": {
                   "type": "object",
                   "properties": {
-                    "address": {
-                      "type": "string",
-                      "title": "Address",
-                      "description": "The event bus address."
-                    },
                     "asynchronous": {
-                      "type": "object",
-                      "properties": {
-                        "address": {
-                          "type": "string",
-                          "title": "Address",
-                          "description": "The event bus address."
-                        },
-                        "host": {
-                          "type": "string",
-                          "title": "Host",
-                          "description": "The Vert.x event bus host."
-                        },
-                        "messageConverter": {
-                          "type": "string",
-                          "title": "MessageConverter",
-                          "description": "Sets the message converter as a bean reference.",
-                          "$comment": "group:advanced"
-                        },
-                        "name": {
-                          "type": "string",
-                          "title": "Name",
-                          "description": "The name of the endpoint"
-                        },
-                        "pollingInterval": {
-                          "type": "integer",
-                          "title": "PollingInterval",
-                          "description": "Sets the polling interval when consuming messages."
-                        },
-                        "port": {
-                          "type": "integer",
-                          "title": "Port",
-                          "description": "The Vert.x event bus port."
-                        },
-                        "pubSubDomain": {
-                          "type": "boolean",
-                          "title": "PubSubDomain",
-                          "description": "When enabled the endpoint uses publish/subscribe mode.",
-                          "$comment": "group:advanced"
-                        },
-                        "timeout": {
-                          "type": "integer",
-                          "title": "Timeout",
-                          "description": "The endpoint timeout when waiting for messages."
-                        },
-                        "vertxFactory": {
-                          "type": "string",
-                          "title": "VertxFactory",
-                          "description": "Sets a custom Vert.x factory.",
-                          "$comment": "group:advanced"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "title": "Asynchronous",
-                      "description": "Sets the Vert.x endpoint."
-                    },
-                    "host": {
-                      "type": "string",
-                      "title": "Host",
-                      "description": "The Vert.x event bus host."
-                    },
-                    "messageConverter": {
-                      "type": "string",
-                      "title": "MessageConverter",
-                      "description": "Sets the message converter as a bean reference.",
-                      "$comment": "group:advanced"
-                    },
-                    "name": {
-                      "type": "string",
-                      "title": "Name",
-                      "description": "The name of the endpoint."
-                    },
-                    "pollingInterval": {
-                      "type": "integer",
-                      "title": "PollingInterval",
-                      "description": "Sets the polling interval when consuming messages."
-                    },
-                    "port": {
-                      "type": "integer",
-                      "title": "Port",
-                      "description": "The Vert.x event bus port."
-                    },
-                    "pubSubDomain": {
-                      "type": "boolean",
-                      "title": "PubSubDomain",
-                      "description": "When enabled the endpoint uses publish/subscribe mode.",
-                      "$comment": "group:advanced"
                     },
                     "synchronous": {
-                      "type": "object",
-                      "properties": {
-                        "address": {
-                          "type": "string",
-                          "title": "Address",
-                          "description": "The event bus address."
-                        },
-                        "correlator": {
-                          "type": "string",
-                          "title": "Correlator",
-                          "description": "Sets the message correlator.",
-                          "$comment": "group:advanced"
-                        },
-                        "host": {
-                          "type": "string",
-                          "title": "Host",
-                          "description": "The Vert.x event bus host."
-                        },
-                        "messageConverter": {
-                          "type": "string",
-                          "title": "MessageConverter",
-                          "description": "Sets the message converter as a bean reference.",
-                          "$comment": "group:advanced"
-                        },
-                        "name": {
-                          "type": "string",
-                          "title": "Name",
-                          "description": "The name of the endpoint"
-                        },
-                        "pollingInterval": {
-                          "type": "integer",
-                          "title": "PollingInterval",
-                          "description": "Sets the polling interval when consuming messages."
-                        },
-                        "port": {
-                          "type": "integer",
-                          "title": "Port",
-                          "description": "The Vert.x event bus port."
-                        },
-                        "pubSubDomain": {
-                          "type": "boolean",
-                          "title": "PubSubDomain",
-                          "description": "When enabled the endpoint uses publish/subscribe mode.",
-                          "$comment": "group:advanced"
-                        },
-                        "timeout": {
-                          "type": "integer",
-                          "title": "Timeout",
-                          "description": "The endpoint timeout when waiting for messages."
-                        },
-                        "vertxFactory": {
-                          "type": "string",
-                          "title": "VertxFactory",
-                          "description": "Sets a custom Vert.x factory.",
-                          "$comment": "group:advanced"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "title": "Synchronous",
-                      "description": "Sets the synchronous Vert.x endpoint."
-                    },
-                    "timeout": {
-                      "type": "integer",
-                      "title": "Timeout",
-                      "description": "The endpoint timeout when waiting for messages."
-                    },
-                    "vertxFactory": {
-                      "type": "string",
-                      "title": "VertxFactory",
-                      "description": "Sets a custom Vert.x factory.",
-                      "$comment": "group:advanced"
                     }
                   },
                   "additionalProperties": false,
+                  "anyOf": [
+                    {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "asynchronous": {
+                              "type": "object",
+                              "properties": {
+                                "address": {
+                                  "type": "string",
+                                  "title": "Address",
+                                  "description": "The event bus address."
+                                },
+                                "host": {
+                                  "type": "string",
+                                  "title": "Host",
+                                  "description": "The Vert.x event bus host."
+                                },
+                                "messageConverter": {
+                                  "type": "string",
+                                  "title": "MessageConverter",
+                                  "description": "Sets the message converter as a bean reference.",
+                                  "$comment": "group:advanced"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "Name",
+                                  "description": "The name of the endpoint"
+                                },
+                                "pollingInterval": {
+                                  "type": "integer",
+                                  "title": "PollingInterval",
+                                  "description": "Sets the polling interval when consuming messages."
+                                },
+                                "port": {
+                                  "type": "integer",
+                                  "title": "Port",
+                                  "description": "The Vert.x event bus port."
+                                },
+                                "pubSubDomain": {
+                                  "type": "boolean",
+                                  "title": "PubSubDomain",
+                                  "description": "When enabled the endpoint uses publish/subscribe mode.",
+                                  "$comment": "group:advanced"
+                                },
+                                "timeout": {
+                                  "type": "integer",
+                                  "title": "Timeout",
+                                  "description": "The endpoint timeout when waiting for messages."
+                                },
+                                "vertxFactory": {
+                                  "type": "string",
+                                  "title": "VertxFactory",
+                                  "description": "Sets a custom Vert.x factory.",
+                                  "$comment": "group:advanced"
+                                }
+                              },
+                              "additionalProperties": false,
+                              "title": "Asynchronous",
+                              "description": "Sets the Vert.x endpoint."
+                            }
+                          },
+                          "required": [
+                            "asynchronous"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "synchronous": {
+                              "type": "object",
+                              "properties": {
+                                "address": {
+                                  "type": "string",
+                                  "title": "Address",
+                                  "description": "The event bus address."
+                                },
+                                "correlator": {
+                                  "type": "string",
+                                  "title": "Correlator",
+                                  "description": "Sets the message correlator.",
+                                  "$comment": "group:advanced"
+                                },
+                                "host": {
+                                  "type": "string",
+                                  "title": "Host",
+                                  "description": "The Vert.x event bus host."
+                                },
+                                "messageConverter": {
+                                  "type": "string",
+                                  "title": "MessageConverter",
+                                  "description": "Sets the message converter as a bean reference.",
+                                  "$comment": "group:advanced"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "Name",
+                                  "description": "The name of the endpoint"
+                                },
+                                "pollingInterval": {
+                                  "type": "integer",
+                                  "title": "PollingInterval",
+                                  "description": "Sets the polling interval when consuming messages."
+                                },
+                                "port": {
+                                  "type": "integer",
+                                  "title": "Port",
+                                  "description": "The Vert.x event bus port."
+                                },
+                                "pubSubDomain": {
+                                  "type": "boolean",
+                                  "title": "PubSubDomain",
+                                  "description": "When enabled the endpoint uses publish/subscribe mode.",
+                                  "$comment": "group:advanced"
+                                },
+                                "timeout": {
+                                  "type": "integer",
+                                  "title": "Timeout",
+                                  "description": "The endpoint timeout when waiting for messages."
+                                },
+                                "vertxFactory": {
+                                  "type": "string",
+                                  "title": "VertxFactory",
+                                  "description": "Sets a custom Vert.x factory.",
+                                  "$comment": "group:advanced"
+                                }
+                              },
+                              "additionalProperties": false,
+                              "title": "Synchronous",
+                              "description": "Sets the synchronous Vert.x endpoint."
+                            }
+                          },
+                          "required": [
+                            "synchronous"
+                          ]
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "asynchronous"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "synchronous"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ],
                   "title": "Vert.x",
                   "description": "Vert.x endpoint."
                 }
@@ -5728,356 +5724,295 @@
                   "type": "object",
                   "properties": {
                     "asynchronous": {
-                      "type": "object",
-                      "properties": {
-                        "autoCommit": {
-                          "type": "boolean",
-                          "title": "AutoCommit",
-                          "description": "Sets auto commit handling for this endpoint.",
-                          "$comment": "group:consume"
-                        },
-                        "autoCommitInterval": {
-                          "type": "integer",
-                          "title": "AutoCommitInterval",
-                          "description": "Sets the auto commit interval.",
-                          "$comment": "group:consume"
-                        },
-                        "bootstrapServers": {
-                          "type": "string",
-                          "title": "BootstrapServers",
-                          "description": "Sets the Kafka bootstrap servers."
-                        },
-                        "clientId": {
-                          "type": "string",
-                          "title": "ClientId",
-                          "description": "Sets the client id used to connect to the Kafka server.",
-                          "$comment": "group:advanced"
-                        },
-                        "consumerGroup": {
-                          "type": "string",
-                          "title": "ConsumerGroup",
-                          "description": "Sets the consumer group used by the endpoint.",
-                          "$comment": "group:consume"
-                        },
-                        "consumerProperties": {
-                          "type": "object",
-                          "title": "ConsumerProperties",
-                          "description": "Sets the Kafka consumer properties.",
-                          "$comment": "group:consume"
-                        },
-                        "headerMapper": {
-                          "type": "string",
-                          "title": "HeaderMapper",
-                          "description": "Sets the Kafka header mapper.",
-                          "$comment": "group:advanced"
-                        },
-                        "keyDeserializer": {
-                          "type": "string",
-                          "title": "KeyDeserializer",
-                          "description": "Sets the fully qualified key deserializer type class name.",
-                          "$comment": "group:deserialize"
-                        },
-                        "keySerializer": {
-                          "type": "string",
-                          "title": "KeySerializer",
-                          "description": "Sets the fully qualified key serializer type class name.",
-                          "$comment": "group:serialize"
-                        },
-                        "messageConverter": {
-                          "type": "string",
-                          "title": "MessageConverter",
-                          "description": "Sets the message converter as a bean reference.",
-                          "$comment": "group:advanced"
-                        },
-                        "name": {
-                          "type": "string",
-                          "title": "Name",
-                          "description": "The name of the endpoint"
-                        },
-                        "offsetReset": {
-                          "type": "string",
-                          "title": "OffsetReset",
-                          "description": "Sets the offset reset.",
-                          "$comment": "group:consume"
-                        },
-                        "partition": {
-                          "type": "integer",
-                          "title": "Partition",
-                          "description": "Sets the Kafka topic partition."
-                        },
-                        "producerProperties": {
-                          "type": "object",
-                          "title": "ProducerProperties",
-                          "description": "Sets the Kafka producer properties.",
-                          "$comment": "group:produce"
-                        },
-                        "server": {
-                          "type": "string",
-                          "title": "Server",
-                          "description": "Sets the Kafka bootstrap server."
-                        },
-                        "timeout": {
-                          "type": "integer",
-                          "title": "Timeout",
-                          "description": "Sets the Kafka consumer timeout.",
-                          "$comment": "group:consume"
-                        },
-                        "topic": {
-                          "type": "string",
-                          "title": "Topic",
-                          "description": "Sets the Kafka topic."
-                        },
-                        "useThreadSafeConsumer": {
-                          "type": "boolean",
-                          "title": "UseThreadSafeConsumer",
-                          "description": "Sets thread safe consumer option for this endpoint.",
-                          "$comment": "group:consume"
-                        },
-                        "valueDeserializer": {
-                          "type": "string",
-                          "title": "ValueDeserializer",
-                          "description": "Sets the fully qualified value deserializer type class name.",
-                          "$comment": "group:deserialize"
-                        },
-                        "valueSerializer": {
-                          "type": "string",
-                          "title": "ValueSerializer",
-                          "description": "Sets the fully qualified value serializer type class name.",
-                          "$comment": "group:serialize"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "title": "Asynchronous",
-                      "description": "Sets the Kafka endpoint."
-                    },
-                    "autoCommit": {
-                      "type": "boolean",
-                      "title": "AutoCommit",
-                      "description": "Sets auto commit handling for this endpoint.",
-                      "$comment": "group:consume"
-                    },
-                    "autoCommitInterval": {
-                      "type": "integer",
-                      "title": "AutoCommitInterval",
-                      "description": "Sets the auto commit interval.",
-                      "$comment": "group:consume"
-                    },
-                    "bootstrapServers": {
-                      "type": "string",
-                      "title": "BootstrapServers",
-                      "description": "Sets the Kafka bootstrap servers."
-                    },
-                    "clientId": {
-                      "type": "string",
-                      "title": "ClientId",
-                      "description": "Sets the client id used to connect to the Kafka server.",
-                      "$comment": "group:advanced"
-                    },
-                    "consumerGroup": {
-                      "type": "string",
-                      "title": "ConsumerGroup",
-                      "description": "Sets the consumer group used by the endpoint.",
-                      "$comment": "group:consume"
-                    },
-                    "headerMapper": {
-                      "type": "string",
-                      "title": "HeaderMapper",
-                      "description": "Sets the Kafka header mapper.",
-                      "$comment": "group:advanced"
-                    },
-                    "keyDeserializer": {
-                      "type": "string",
-                      "title": "KeyDeserializer",
-                      "description": "Sets the fully qualified key deserializer type class name.",
-                      "$comment": "group:deserialize"
-                    },
-                    "keySerializer": {
-                      "type": "string",
-                      "title": "KeySerializer",
-                      "description": "Sets the fully qualified key serializer type class name.",
-                      "$comment": "group:serialize"
-                    },
-                    "messageConverter": {
-                      "type": "string",
-                      "title": "MessageConverter",
-                      "description": "Sets the message converter as a bean reference.",
-                      "$comment": "group:advanced"
-                    },
-                    "name": {
-                      "type": "string",
-                      "title": "Name",
-                      "description": "The name of the endpoint."
-                    },
-                    "offsetReset": {
-                      "type": "string",
-                      "title": "OffsetReset",
-                      "description": "Sets the offset reset.",
-                      "$comment": "group:consume"
-                    },
-                    "partition": {
-                      "type": "integer",
-                      "title": "Partition",
-                      "description": "Sets the Kafka topic partition."
-                    },
-                    "server": {
-                      "type": "string",
-                      "title": "Server",
-                      "description": "Sets the Kafka bootstrap server."
                     },
                     "synchronous": {
-                      "type": "object",
-                      "properties": {
-                        "autoCommit": {
-                          "type": "boolean",
-                          "title": "AutoCommit",
-                          "description": "Sets auto commit handling for this endpoint.",
-                          "$comment": "group:consume"
-                        },
-                        "autoCommitInterval": {
-                          "type": "integer",
-                          "title": "AutoCommitInterval",
-                          "description": "Sets the auto commit interval.",
-                          "$comment": "group:consume"
-                        },
-                        "bootstrapServers": {
-                          "type": "string",
-                          "title": "BootstrapServers",
-                          "description": "Sets the Kafka bootstrap servers."
-                        },
-                        "clientId": {
-                          "type": "string",
-                          "title": "ClientId",
-                          "description": "Sets the client id used to connect to the Kafka server.",
-                          "$comment": "group:advanced"
-                        },
-                        "consumerGroup": {
-                          "type": "string",
-                          "title": "ConsumerGroup",
-                          "description": "Sets the consumer group used by the endpoint.",
-                          "$comment": "group:consume"
-                        },
-                        "consumerProperties": {
-                          "type": "object",
-                          "title": "ConsumerProperties",
-                          "description": "Sets the Kafka consumer properties.",
-                          "$comment": "group:consume"
-                        },
-                        "headerMapper": {
-                          "type": "string",
-                          "title": "HeaderMapper",
-                          "description": "Sets the Kafka header mapper.",
-                          "$comment": "group:advanced"
-                        },
-                        "keyDeserializer": {
-                          "type": "string",
-                          "title": "KeyDeserializer",
-                          "description": "Sets the fully qualified key deserializer type class name.",
-                          "$comment": "group:deserialize"
-                        },
-                        "keySerializer": {
-                          "type": "string",
-                          "title": "KeySerializer",
-                          "description": "Sets the fully qualified key serializer type class name.",
-                          "$comment": "group:serialize"
-                        },
-                        "messageConverter": {
-                          "type": "string",
-                          "title": "MessageConverter",
-                          "description": "Sets the message converter as a bean reference.",
-                          "$comment": "group:advanced"
-                        },
-                        "name": {
-                          "type": "string",
-                          "title": "Name",
-                          "description": "The name of the endpoint"
-                        },
-                        "offsetReset": {
-                          "type": "string",
-                          "title": "OffsetReset",
-                          "description": "Sets the offset reset.",
-                          "$comment": "group:consume"
-                        },
-                        "partition": {
-                          "type": "integer",
-                          "title": "Partition",
-                          "description": "Sets the Kafka topic partition."
-                        },
-                        "producerProperties": {
-                          "type": "object",
-                          "title": "ProducerProperties",
-                          "description": "Sets the Kafka producer properties.",
-                          "$comment": "group:produce"
-                        },
-                        "server": {
-                          "type": "string",
-                          "title": "Server",
-                          "description": "Sets the Kafka bootstrap server."
-                        },
-                        "timeout": {
-                          "type": "integer",
-                          "title": "Timeout",
-                          "description": "Sets the Kafka consumer timeout.",
-                          "$comment": "group:consume"
-                        },
-                        "topic": {
-                          "type": "string",
-                          "title": "Topic",
-                          "description": "Sets the Kafka topic."
-                        },
-                        "useThreadSafeConsumer": {
-                          "type": "boolean",
-                          "title": "UseThreadSafeConsumer",
-                          "description": "Sets thread safe consumer option for this endpoint.",
-                          "$comment": "group:consume"
-                        },
-                        "valueDeserializer": {
-                          "type": "string",
-                          "title": "ValueDeserializer",
-                          "description": "Sets the fully qualified value deserializer type class name.",
-                          "$comment": "group:deserialize"
-                        },
-                        "valueSerializer": {
-                          "type": "string",
-                          "title": "ValueSerializer",
-                          "description": "Sets the fully qualified value serializer type class name.",
-                          "$comment": "group:serialize"
-                        }
-                      },
-                      "additionalProperties": false,
-                      "title": "Synchronous",
-                      "description": "Sets the synchronous Kafka endpoint."
-                    },
-                    "timeout": {
-                      "type": "integer",
-                      "title": "Timeout",
-                      "description": "Sets the Kafka consumer timeout.",
-                      "$comment": "group:consume"
-                    },
-                    "topic": {
-                      "type": "string",
-                      "title": "Topic",
-                      "description": "Sets the Kafka topic."
-                    },
-                    "useThreadSafeConsumer": {
-                      "type": "boolean",
-                      "title": "UseThreadSafeConsumer",
-                      "description": "Sets thread safe consumer option for this endpoint.",
-                      "$comment": "group:consume"
-                    },
-                    "valueDeserializer": {
-                      "type": "string",
-                      "title": "ValueDeserializer",
-                      "description": "Sets the fully qualified value deserializer type class name.",
-                      "$comment": "group:deserialize"
-                    },
-                    "valueSerializer": {
-                      "type": "string",
-                      "title": "ValueSerializer",
-                      "description": "Sets the fully qualified value serializer type class name.",
-                      "$comment": "group:serialize"
                     }
                   },
                   "additionalProperties": false,
+                  "anyOf": [
+                    {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "asynchronous": {
+                              "type": "object",
+                              "properties": {
+                                "autoCommit": {
+                                  "type": "boolean",
+                                  "title": "AutoCommit",
+                                  "description": "Sets auto commit handling for this endpoint.",
+                                  "$comment": "group:consume"
+                                },
+                                "autoCommitInterval": {
+                                  "type": "integer",
+                                  "title": "AutoCommitInterval",
+                                  "description": "Sets the auto commit interval.",
+                                  "$comment": "group:consume"
+                                },
+                                "bootstrapServers": {
+                                  "type": "string",
+                                  "title": "BootstrapServers",
+                                  "description": "Sets the Kafka bootstrap servers."
+                                },
+                                "clientId": {
+                                  "type": "string",
+                                  "title": "ClientId",
+                                  "description": "Sets the client id used to connect to the Kafka server.",
+                                  "$comment": "group:advanced"
+                                },
+                                "consumerGroup": {
+                                  "type": "string",
+                                  "title": "ConsumerGroup",
+                                  "description": "Sets the consumer group used by the endpoint.",
+                                  "$comment": "group:consume"
+                                },
+                                "consumerProperties": {
+                                  "type": "object",
+                                  "title": "ConsumerProperties",
+                                  "description": "Sets the Kafka consumer properties.",
+                                  "$comment": "group:consume"
+                                },
+                                "headerMapper": {
+                                  "type": "string",
+                                  "title": "HeaderMapper",
+                                  "description": "Sets the Kafka header mapper.",
+                                  "$comment": "group:advanced"
+                                },
+                                "keyDeserializer": {
+                                  "type": "string",
+                                  "title": "KeyDeserializer",
+                                  "description": "Sets the fully qualified key deserializer type class name.",
+                                  "$comment": "group:deserialize"
+                                },
+                                "keySerializer": {
+                                  "type": "string",
+                                  "title": "KeySerializer",
+                                  "description": "Sets the fully qualified key serializer type class name.",
+                                  "$comment": "group:serialize"
+                                },
+                                "messageConverter": {
+                                  "type": "string",
+                                  "title": "MessageConverter",
+                                  "description": "Sets the message converter as a bean reference.",
+                                  "$comment": "group:advanced"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "Name",
+                                  "description": "The name of the endpoint"
+                                },
+                                "offsetReset": {
+                                  "type": "string",
+                                  "title": "OffsetReset",
+                                  "description": "Sets the offset reset.",
+                                  "$comment": "group:consume"
+                                },
+                                "partition": {
+                                  "type": "integer",
+                                  "title": "Partition",
+                                  "description": "Sets the Kafka topic partition."
+                                },
+                                "producerProperties": {
+                                  "type": "object",
+                                  "title": "ProducerProperties",
+                                  "description": "Sets the Kafka producer properties.",
+                                  "$comment": "group:produce"
+                                },
+                                "server": {
+                                  "type": "string",
+                                  "title": "Server",
+                                  "description": "Sets the Kafka bootstrap server."
+                                },
+                                "timeout": {
+                                  "type": "integer",
+                                  "title": "Timeout",
+                                  "description": "Sets the Kafka consumer timeout.",
+                                  "$comment": "group:consume"
+                                },
+                                "topic": {
+                                  "type": "string",
+                                  "title": "Topic",
+                                  "description": "Sets the Kafka topic."
+                                },
+                                "useThreadSafeConsumer": {
+                                  "type": "boolean",
+                                  "title": "UseThreadSafeConsumer",
+                                  "description": "Sets thread safe consumer option for this endpoint.",
+                                  "$comment": "group:consume"
+                                },
+                                "valueDeserializer": {
+                                  "type": "string",
+                                  "title": "ValueDeserializer",
+                                  "description": "Sets the fully qualified value deserializer type class name.",
+                                  "$comment": "group:deserialize"
+                                },
+                                "valueSerializer": {
+                                  "type": "string",
+                                  "title": "ValueSerializer",
+                                  "description": "Sets the fully qualified value serializer type class name.",
+                                  "$comment": "group:serialize"
+                                }
+                              },
+                              "additionalProperties": false,
+                              "title": "Asynchronous",
+                              "description": "Sets the Kafka endpoint."
+                            }
+                          },
+                          "required": [
+                            "asynchronous"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "synchronous": {
+                              "type": "object",
+                              "properties": {
+                                "autoCommit": {
+                                  "type": "boolean",
+                                  "title": "AutoCommit",
+                                  "description": "Sets auto commit handling for this endpoint.",
+                                  "$comment": "group:consume"
+                                },
+                                "autoCommitInterval": {
+                                  "type": "integer",
+                                  "title": "AutoCommitInterval",
+                                  "description": "Sets the auto commit interval.",
+                                  "$comment": "group:consume"
+                                },
+                                "bootstrapServers": {
+                                  "type": "string",
+                                  "title": "BootstrapServers",
+                                  "description": "Sets the Kafka bootstrap servers."
+                                },
+                                "clientId": {
+                                  "type": "string",
+                                  "title": "ClientId",
+                                  "description": "Sets the client id used to connect to the Kafka server.",
+                                  "$comment": "group:advanced"
+                                },
+                                "consumerGroup": {
+                                  "type": "string",
+                                  "title": "ConsumerGroup",
+                                  "description": "Sets the consumer group used by the endpoint.",
+                                  "$comment": "group:consume"
+                                },
+                                "consumerProperties": {
+                                  "type": "object",
+                                  "title": "ConsumerProperties",
+                                  "description": "Sets the Kafka consumer properties.",
+                                  "$comment": "group:consume"
+                                },
+                                "headerMapper": {
+                                  "type": "string",
+                                  "title": "HeaderMapper",
+                                  "description": "Sets the Kafka header mapper.",
+                                  "$comment": "group:advanced"
+                                },
+                                "keyDeserializer": {
+                                  "type": "string",
+                                  "title": "KeyDeserializer",
+                                  "description": "Sets the fully qualified key deserializer type class name.",
+                                  "$comment": "group:deserialize"
+                                },
+                                "keySerializer": {
+                                  "type": "string",
+                                  "title": "KeySerializer",
+                                  "description": "Sets the fully qualified key serializer type class name.",
+                                  "$comment": "group:serialize"
+                                },
+                                "messageConverter": {
+                                  "type": "string",
+                                  "title": "MessageConverter",
+                                  "description": "Sets the message converter as a bean reference.",
+                                  "$comment": "group:advanced"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "title": "Name",
+                                  "description": "The name of the endpoint"
+                                },
+                                "offsetReset": {
+                                  "type": "string",
+                                  "title": "OffsetReset",
+                                  "description": "Sets the offset reset.",
+                                  "$comment": "group:consume"
+                                },
+                                "partition": {
+                                  "type": "integer",
+                                  "title": "Partition",
+                                  "description": "Sets the Kafka topic partition."
+                                },
+                                "producerProperties": {
+                                  "type": "object",
+                                  "title": "ProducerProperties",
+                                  "description": "Sets the Kafka producer properties.",
+                                  "$comment": "group:produce"
+                                },
+                                "server": {
+                                  "type": "string",
+                                  "title": "Server",
+                                  "description": "Sets the Kafka bootstrap server."
+                                },
+                                "timeout": {
+                                  "type": "integer",
+                                  "title": "Timeout",
+                                  "description": "Sets the Kafka consumer timeout.",
+                                  "$comment": "group:consume"
+                                },
+                                "topic": {
+                                  "type": "string",
+                                  "title": "Topic",
+                                  "description": "Sets the Kafka topic."
+                                },
+                                "useThreadSafeConsumer": {
+                                  "type": "boolean",
+                                  "title": "UseThreadSafeConsumer",
+                                  "description": "Sets thread safe consumer option for this endpoint.",
+                                  "$comment": "group:consume"
+                                },
+                                "valueDeserializer": {
+                                  "type": "string",
+                                  "title": "ValueDeserializer",
+                                  "description": "Sets the fully qualified value deserializer type class name.",
+                                  "$comment": "group:deserialize"
+                                },
+                                "valueSerializer": {
+                                  "type": "string",
+                                  "title": "ValueSerializer",
+                                  "description": "Sets the fully qualified value serializer type class name.",
+                                  "$comment": "group:serialize"
+                                }
+                              },
+                              "additionalProperties": false,
+                              "title": "Synchronous",
+                              "description": "Sets the synchronous Kafka endpoint."
+                            }
+                          },
+                          "required": [
+                            "synchronous"
+                          ]
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "asynchronous"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "synchronous"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ],
                   "title": "Kafka",
                   "description": "Kafka endpoint."
                 }
@@ -6505,6 +6440,27 @@
               ]
             },
             {
+              "type": "object",
+              "properties": {
+                "playwright": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "title": "Name",
+                      "description": "The name of the endpoint"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "title": "Playwright",
+                  "description": "Playwright endpoint."
+                }
+              },
+              "required": [
+                "playwright"
+              ]
+            },
+            {
               "not": {
                 "anyOf": [
                   {
@@ -6600,6 +6556,11 @@
                   {
                     "required": [
                       "selenium"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "playwright"
                     ]
                   }
                 ]
@@ -19651,6 +19612,2400 @@
       "required": [
         "operation"
       ],
+      "additionalProperties": false    }
+  },
+  "playwright": {
+    "kind": "testActionGroup",
+    "version": "${citrus.version}",
+    "name": "playwright",
+    "module": "citrus-playwright",
+    "title": "Playwright",
+    "description": "Playwright test actions.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actor": {
+          "type": "string",
+          "title": "Actor",
+          "$comment": "group:advanced"
+        },
+        "browser": {
+          "type": "string",
+          "title": "Browser",
+          "description": "Sets the Playwright browser. Uses an endpoint URI or references an endpoint name."
+        },
+        "credentials": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "string",
+              "title": "Command"
+            },
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "origin": {
+              "type": "string",
+              "title": "Origin"
+            },
+            "privateKey": {
+              "type": "string",
+              "title": "PrivateKey"
+            },
+            "publicKey": {
+              "type": "string",
+              "title": "PublicKey"
+            },
+            "userHandle": {
+              "type": "string",
+              "title": "UserHandle"
+            },
+            "variable": {
+              "type": "string",
+              "title": "Variable"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Credentials"
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "drop": {
+          "type": "object",
+          "properties": {
+            "contentType": {
+              "type": "string",
+              "title": "ContentType"
+            },
+            "element": {
+              "type": "object",
+              "properties": {
+                "css": {
+                  "type": "string",
+                  "title": "Css"
+                },
+                "first": {
+                  "type": "boolean",
+                  "title": "First"
+                },
+                "last": {
+                  "type": "boolean",
+                  "title": "Last"
+                },
+                "name": {
+                  "type": "string",
+                  "title": "Name",
+                  "description": "Accessible name filter for role based locators."
+                },
+                "nth": {
+                  "type": "integer",
+                  "title": "Nth"
+                },
+                "role": {
+                  "type": "string",
+                  "title": "Role"
+                },
+                "testId": {
+                  "type": "string",
+                  "title": "TestId"
+                },
+                "text": {
+                  "type": "string",
+                  "title": "Text"
+                },
+                "visible": {
+                  "type": "boolean",
+                  "title": "Visible"
+                },
+                "xpath": {
+                  "type": "string",
+                  "title": "Xpath"
+                }
+              },
+              "additionalProperties": false,
+              "title": "Element"
+            },
+            "file": {
+              "type": "string",
+              "title": "File"
+            },
+            "positionX": {
+              "type": "number",
+              "title": "PositionX"
+            },
+            "positionY": {
+              "type": "number",
+              "title": "PositionY"
+            },
+            "timeout": {
+              "type": "number",
+              "title": "Timeout"
+            },
+            "value": {
+              "type": "string",
+              "title": "Value"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Drop"
+        },
+        "screencast": {
+          "type": "object",
+          "properties": {
+            "chapterDescription": {
+              "type": "string",
+              "title": "ChapterDescription"
+            },
+            "command": {
+              "type": "string",
+              "title": "Command"
+            },
+            "duration": {
+              "type": "number",
+              "title": "Duration"
+            },
+            "fontSize": {
+              "type": "integer",
+              "title": "FontSize"
+            },
+            "html": {
+              "type": "string",
+              "title": "Html"
+            },
+            "path": {
+              "type": "string",
+              "title": "Path"
+            },
+            "position": {
+              "type": "string",
+              "title": "Position"
+            },
+            "quality": {
+              "type": "integer",
+              "title": "Quality"
+            },
+            "sizeHeight": {
+              "type": "integer",
+              "title": "SizeHeight"
+            },
+            "sizeWidth": {
+              "type": "integer",
+              "title": "SizeWidth"
+            },
+            "title": {
+              "type": "string",
+              "title": "Title"
+            },
+            "variable": {
+              "type": "string",
+              "title": "Variable"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Screencast"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:check": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:check",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Check",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "values": {
+          "title": "Values",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values"
+          }
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:clear": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:clear",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Clear",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "values": {
+          "title": "Values",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values"
+          }
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:click": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:click",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Click",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:console": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:console",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Console",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "filter": {
+          "type": "string",
+          "title": "Filter"
+        },
+        "text": {
+          "type": "string",
+          "title": "Text"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:context": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:context",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Context",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string",
+          "title": "Alias"
+        },
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "storageState": {
+          "type": "string",
+          "title": "StorageState"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:cookies": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:cookies",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Cookies",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "domain": {
+          "type": "string",
+          "title": "Domain"
+        },
+        "expires": {
+          "type": "number",
+          "title": "Expires"
+        },
+        "httpOnly": {
+          "type": "boolean",
+          "title": "HttpOnly"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "path": {
+          "type": "string",
+          "title": "Path"
+        },
+        "sameSite": {
+          "type": "string",
+          "title": "SameSite"
+        },
+        "secure": {
+          "type": "boolean",
+          "title": "Secure"
+        },
+        "url": {
+          "type": "string",
+          "title": "Url"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:dialog": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:dialog",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Dialog",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "message": {
+          "type": "string",
+          "title": "Message"
+        },
+        "promptText": {
+          "type": "string",
+          "title": "PromptText"
+        },
+        "triggerScript": {
+          "type": "string",
+          "title": "TriggerScript"
+        },
+        "type": {
+          "type": "string",
+          "title": "Type"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:doubleClick": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:doubleClick",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "DoubleClick",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:download": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:download",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Download",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "filenameVariable": {
+          "type": "string",
+          "title": "FilenameVariable"
+        },
+        "pathVariable": {
+          "type": "string",
+          "title": "PathVariable"
+        },
+        "saveAs": {
+          "type": "string",
+          "title": "SaveAs"
+        },
+        "triggerScript": {
+          "type": "string",
+          "title": "TriggerScript"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:emulate": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:emulate",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Emulate",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "accuracy": {
+          "type": "number",
+          "title": "Accuracy"
+        },
+        "colorScheme": {
+          "type": "string",
+          "title": "ColorScheme"
+        },
+        "context": {
+          "type": "string",
+          "title": "Context"
+        },
+        "height": {
+          "type": "integer",
+          "title": "Height"
+        },
+        "latitude": {
+          "type": "number",
+          "title": "Latitude"
+        },
+        "locale": {
+          "type": "string",
+          "title": "Locale"
+        },
+        "longitude": {
+          "type": "number",
+          "title": "Longitude"
+        },
+        "timezone": {
+          "type": "string",
+          "title": "Timezone"
+        },
+        "userAgent": {
+          "type": "string",
+          "title": "UserAgent"
+        },
+        "width": {
+          "type": "integer",
+          "title": "Width"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:enter": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:enter",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Enter",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "values": {
+          "title": "Values",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values"
+          }
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:extract": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:extract",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Extract",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "attribute": {
+          "type": "string",
+          "title": "Attribute",
+          "description": "Attribute name for the attribute extraction."
+        },
+        "cssProperty": {
+          "type": "string",
+          "title": "CssProperty",
+          "description": "CSS property name for the css-value extraction."
+        },
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "frameSelector": {
+          "type": "string",
+          "title": "FrameSelector",
+          "description": "Frame selector for the frame-content extraction."
+        },
+        "key": {
+          "type": "string",
+          "title": "Key",
+          "description": "Storage or cookie key for the storage and cookie extractions."
+        },
+        "value": {
+          "type": "string",
+          "title": "Value",
+          "description": "Extraction value such as text (default), value, count, url, title, or storage-local."
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:fill": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:fill",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Fill",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "values": {
+          "title": "Values",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values"
+          }
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:focus": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:focus",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Focus",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:frame": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:frame",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Frame",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "selector": {
+          "type": "string",
+          "title": "Selector"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:hover": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:hover",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Hover",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:javaScript": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:javaScript",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "JavaScript",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "script": {
+          "type": "string",
+          "title": "Script"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:navigate": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:navigate",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Navigate",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "direction": {
+          "type": "string",
+          "title": "Direction",
+          "description": "Navigation direction: back, forward, or reload (default)."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:network": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:network",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Network",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "body": {
+          "type": "string",
+          "title": "Body"
+        },
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "contentType": {
+          "type": "string",
+          "title": "ContentType"
+        },
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "headerName": {
+          "type": "string",
+          "title": "HeaderName"
+        },
+        "headerValue": {
+          "type": "string",
+          "title": "HeaderValue"
+        },
+        "headers": {
+          "title": "Headers",
+          "description": "Headers added to a fulfilled route response.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "title": "Name"
+              },
+              "value": {
+                "type": "string",
+                "title": "Value"
+              }
+            },
+            "required": [
+              "name",
+              "value"
+            ],
+            "additionalProperties": false,
+            "title": "Headers",
+            "description": "Headers added to a fulfilled route response."
+          }
+        },
+        "includeBody": {
+          "type": "boolean",
+          "title": "IncludeBody"
+        },
+        "pattern": {
+          "type": "string",
+          "title": "Pattern"
+        },
+        "securityProtocol": {
+          "type": "string",
+          "title": "SecurityProtocol"
+        },
+        "serverIp": {
+          "type": "string",
+          "title": "ServerIp"
+        },
+        "serverPort": {
+          "type": "integer",
+          "title": "ServerPort"
+        },
+        "status": {
+          "type": "integer",
+          "title": "Status"
+        },
+        "text": {
+          "type": "string",
+          "title": "Text"
+        },
+        "timeout": {
+          "type": "number",
+          "title": "Timeout"
+        },
+        "triggerScript": {
+          "type": "string",
+          "title": "TriggerScript"
+        },
+        "url": {
+          "type": "string",
+          "title": "Url"
+        },
+        "urlContains": {
+          "type": "string",
+          "title": "UrlContains"
+        },
+        "urlMatches": {
+          "type": "string",
+          "title": "UrlMatches"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:open": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:open",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Open",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "Url"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:page": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:page",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Page",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string",
+          "title": "Alias"
+        },
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "context": {
+          "type": "string",
+          "title": "Context"
+        },
+        "index": {
+          "type": "integer",
+          "title": "Index"
+        },
+        "title": {
+          "type": "string",
+          "title": "Title"
+        },
+        "urlContains": {
+          "type": "string",
+          "title": "UrlContains"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:pageObject": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:pageObject",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "PageObject",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "arguments": {
+          "title": "Arguments",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Arguments"
+          }
+        },
+        "method": {
+          "type": "string",
+          "title": "Method"
+        },
+        "type": {
+          "type": "string",
+          "title": "Type"
+        },
+        "validator": {
+          "type": "string",
+          "title": "Validator"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:pdf": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:pdf",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Pdf",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "title": "Path"
+        },
+        "printBackground": {
+          "type": "boolean",
+          "title": "PrintBackground"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:permissions": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:permissions",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Permissions",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "permissions": {
+          "title": "Permissions",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Permissions"
+          }
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:press": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:press",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Press",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "values": {
+          "title": "Values",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values"
+          }
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:rightClick": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:rightClick",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "RightClick",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:screenshot": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:screenshot",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Screenshot",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "fullPage": {
+          "type": "boolean",
+          "title": "FullPage"
+        },
+        "path": {
+          "type": "string",
+          "title": "Path"
+        },
+        "quality": {
+          "type": "integer",
+          "title": "Quality"
+        },
+        "type": {
+          "type": "string",
+          "title": "Type"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:select": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:select",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Select",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "values": {
+          "title": "Values",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values"
+          }
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:start": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:start",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Start",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "allowAlreadyStarted": {
+          "type": "boolean",
+          "title": "AllowAlreadyStarted"
+        },
+        "baseUrl": {
+          "type": "string",
+          "title": "BaseUrl"
+        },
+        "browserType": {
+          "type": "string",
+          "title": "BrowserType"
+        },
+        "defaultNavigationTimeout": {
+          "type": "integer",
+          "title": "DefaultNavigationTimeout"
+        },
+        "defaultTimeout": {
+          "type": "integer",
+          "title": "DefaultTimeout"
+        },
+        "headless": {
+          "type": "boolean",
+          "title": "Headless"
+        },
+        "startPageUrl": {
+          "type": "string",
+          "title": "StartPageUrl"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:stop": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:stop",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Stop",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false    }
+  },
+  "playwright:storage": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:storage",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Storage",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "credentials": {
+          "type": "boolean",
+          "title": "Credentials"
+        },
+        "indexedDB": {
+          "type": "boolean",
+          "title": "IndexedDB"
+        },
+        "key": {
+          "type": "string",
+          "title": "Key"
+        },
+        "opfs": {
+          "type": "boolean",
+          "title": "Opfs"
+        },
+        "path": {
+          "type": "string",
+          "title": "Path"
+        },
+        "scope": {
+          "type": "string",
+          "title": "Scope"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:tap": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:tap",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Tap",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:tracing": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:tracing",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Tracing",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "ariaSnapshots": {
+          "type": "boolean",
+          "title": "AriaSnapshots"
+        },
+        "command": {
+          "type": "string",
+          "title": "Command"
+        },
+        "harContent": {
+          "type": "string",
+          "title": "HarContent"
+        },
+        "harMode": {
+          "type": "string",
+          "title": "HarMode"
+        },
+        "harUrlFilter": {
+          "type": "string",
+          "title": "HarUrlFilter"
+        },
+        "path": {
+          "type": "string",
+          "title": "Path"
+        },
+        "screenSnapshots": {
+          "type": "boolean",
+          "title": "ScreenSnapshots"
+        },
+        "screenshots": {
+          "type": "boolean",
+          "title": "Screenshots"
+        },
+        "snapshots": {
+          "type": "boolean",
+          "title": "Snapshots"
+        },
+        "sources": {
+          "type": "boolean",
+          "title": "Sources"
+        },
+        "variable": {
+          "type": "string",
+          "title": "Variable"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:uncheck": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:uncheck",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Uncheck",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "values": {
+          "title": "Values",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values"
+          }
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:upload": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:upload",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Upload",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "scroll": {
+          "type": "string",
+          "title": "Scroll"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
+        },
+        "values": {
+          "title": "Values",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Values"
+          }
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:verify": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:verify",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Verify",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "attribute": {
+          "type": "string",
+          "title": "Attribute",
+          "description": "Attribute name for the attribute check."
+        },
+        "check": {
+          "type": "string",
+          "title": "Check",
+          "description": "Verification check name such as visible, text, url, value, attribute, count, or storage-local."
+        },
+        "count": {
+          "type": "integer",
+          "title": "Count",
+          "description": "Expected count for the count and page-count checks."
+        },
+        "cssProperty": {
+          "type": "string",
+          "title": "CssProperty",
+          "description": "CSS property name for the css-value check."
+        },
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "expected": {
+          "type": "string",
+          "title": "Expected"
+        },
+        "frameSelector": {
+          "type": "string",
+          "title": "FrameSelector",
+          "description": "Frame selector for the frame-content-contains check."
+        },
+        "height": {
+          "type": "number",
+          "title": "Height",
+          "description": "Expected height for bounds checks."
+        },
+        "key": {
+          "type": "string",
+          "title": "Key",
+          "description": "Storage or cookie key for the storage and cookie checks."
+        },
+        "timeout": {
+          "type": "number",
+          "title": "Timeout",
+          "description": "Assertion timeout in milliseconds for the aria-snapshot-matches check."
+        },
+        "width": {
+          "type": "number",
+          "title": "Width",
+          "description": "Expected width for bounds checks."
+        },
+        "x": {
+          "type": "number",
+          "title": "X",
+          "description": "Expected left coordinate for bounding-box checks."
+        },
+        "y": {
+          "type": "number",
+          "title": "Y",
+          "description": "Expected top coordinate for bounding-box checks."
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright:wait": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "playwright:wait",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "Wait",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "condition": {
+          "type": "string",
+          "title": "Condition",
+          "description": "Wait condition: visible (default), hidden, attached, detached, load, dom-content-loaded, or network-idle."
+        },
+        "element": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "type": "string",
+              "title": "Css"
+            },
+            "first": {
+              "type": "boolean",
+              "title": "First"
+            },
+            "last": {
+              "type": "boolean",
+              "title": "Last"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Accessible name filter for role based locators."
+            },
+            "nth": {
+              "type": "integer",
+              "title": "Nth"
+            },
+            "role": {
+              "type": "string",
+              "title": "Role"
+            },
+            "testId": {
+              "type": "string",
+              "title": "TestId"
+            },
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "visible": {
+              "type": "boolean",
+              "title": "Visible"
+            },
+            "xpath": {
+              "type": "string",
+              "title": "Xpath"
+            }
+          },
+          "additionalProperties": false,
+          "title": "Element"
+        },
+        "function": {
+          "type": "string",
+          "title": "Function"
+        }
+      },
       "additionalProperties": false    }
   },
   "plsql": {

@@ -27,6 +27,7 @@ import org.citrusframework.kubernetes.yaml.Kubernetes;
 import org.citrusframework.graphql.yaml.GraphQl;
 import org.citrusframework.grpc.yaml.Grpc;
 import org.citrusframework.openapi.yaml.OpenApi;
+import org.citrusframework.playwright.yaml.Playwright;
 import org.citrusframework.selenium.yaml.Selenium;
 import org.citrusframework.sql.yaml.Plsql;
 import org.citrusframework.sql.yaml.Sql;
@@ -227,6 +228,10 @@ public class TestActions {
 
     @SchemaProperty(kind = GROUP, description = "Selenium test actions.", module = "citrus-selenium")
     public void setSelenium(Selenium builder) {
+    }
+
+    @SchemaProperty(kind = GROUP, description = "Playwright test actions.", module = "citrus-playwright")
+    public void setPlaywright(Playwright builder) {
     }
 
     @SchemaProperty(kind = GROUP, description = "Testcontainers test actions.", module = "citrus-testcontainers")
