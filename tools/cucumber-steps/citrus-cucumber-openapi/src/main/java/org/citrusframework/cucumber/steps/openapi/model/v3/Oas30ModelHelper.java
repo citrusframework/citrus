@@ -29,8 +29,7 @@ import org.citrusframework.cucumber.steps.openapi.model.OasModelHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,8 +56,8 @@ public final class Oas30ModelHelper {
         String serverUrl = resolveUrl(openApiDoc.servers.get(0));
         if (serverUrl.startsWith("http")) {
             try {
-                return new URL(serverUrl).getHost();
-            } catch (MalformedURLException e) {
+                return URI.create(serverUrl).getHost();
+            } catch (IllegalArgumentException e) {
                 throw new IllegalStateException(String.format("Unable to determine base path from server URL: %s", serverUrl));
             }
         }
@@ -75,8 +74,8 @@ public final class Oas30ModelHelper {
                 .map(Oas30ModelHelper::resolveUrl)
                 .map(serverUrl -> {
                     try {
-                        return new URL(serverUrl).getProtocol();
-                    } catch (MalformedURLException e) {
+                        return URI.create(serverUrl).getScheme();
+                    } catch (IllegalArgumentException e) {
                         LOG.warn("Unable to determine base path from server URL: {}", serverUrl);
                         return null;
                     }
@@ -96,8 +95,8 @@ public final class Oas30ModelHelper {
         String serverUrl = resolveUrl(server);
         if (serverUrl.startsWith("http")) {
             try {
-                basePath = new URL(serverUrl).getPath();
-            } catch (MalformedURLException e) {
+                basePath = URI.create(serverUrl).getPath();
+            } catch (IllegalArgumentException e) {
                 throw new IllegalStateException(String.format("Unable to determine base path from server URL: %s", serverUrl));
             }
         } else {

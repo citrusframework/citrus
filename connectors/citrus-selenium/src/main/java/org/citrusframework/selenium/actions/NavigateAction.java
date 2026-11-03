@@ -17,7 +17,7 @@
 package org.citrusframework.selenium.actions;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Date;
 
 import org.citrusframework.api.actions.selenium.SeleniumNavigateActionBuilder;
@@ -58,15 +58,15 @@ public class NavigateAction extends AbstractSeleniumAction {
                 try {
                     if (Browser.IE.is(browser.getEndpointConfiguration().getBrowserType())) {
                         String cachingSafeUrl = BrowserUtils.makeIECachingSafeUrl(context.replaceDynamicContentInString(page), new Date().getTime());
-                        browser.getWebDriver().navigate().to(new URL(cachingSafeUrl));
+                        browser.getWebDriver().navigate().to(URI.create(cachingSafeUrl).toURL());
                     } else {
-                        browser.getWebDriver().navigate().to(new URL(context.replaceDynamicContentInString(page)));
+                        browser.getWebDriver().navigate().to(URI.create(context.replaceDynamicContentInString(page)).toURL());
                     }
-                } catch (MalformedURLException ex) {
+                } catch (IllegalArgumentException | MalformedURLException ex) {
                     String baseUrl = browser.getWebDriver().getCurrentUrl();
                     try {
-                        new URL(baseUrl);
-                    } catch (MalformedURLException e) {
+                        URI.create(baseUrl).toURL();
+                    } catch (IllegalArgumentException | MalformedURLException e) {
                         if (StringUtils.hasText(browser.getEndpointConfiguration().getStartPageUrl())) {
                             baseUrl = browser.getEndpointConfiguration().getStartPageUrl();
                         } else {
