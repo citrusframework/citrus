@@ -26,7 +26,9 @@ import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.spi.Resources;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("JBang execution shares ~/.jbang cache and process output")
 public class JBangTestEngineTest {
 
     @Test

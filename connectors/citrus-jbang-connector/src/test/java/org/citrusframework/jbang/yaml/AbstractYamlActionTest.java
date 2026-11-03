@@ -31,6 +31,7 @@ import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -40,6 +41,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
+@Isolated("JBang execution shares ~/.jbang cache and process output")
 public class AbstractYamlActionTest extends AbstractUnitTest {
 
     protected Citrus citrus;

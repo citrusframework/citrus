@@ -26,7 +26,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("JBang execution shares ~/.jbang cache and process output")
 public class JBangActionTest extends AbstractUnitTest {
 
     private final Resource helloScript = Resources.fromClasspath("org/citrusframework/jbang/hello.java");
