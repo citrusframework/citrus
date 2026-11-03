@@ -155,18 +155,12 @@ public class PlainTextMessageValidatorTest extends AbstractUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello @ignore@");
 
-        try {
-            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-        } catch (ValidationException e) {
-            Assertions.assertFalse(e.getMessage().contains("only whitespaces!"));
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext));
+        Assertions.assertFalse(e.getMessage().contains("only whitespaces!"));
 
-            Assertions.assertTrue(e.getMessage().contains("expected 'Hello World'"));
-            Assertions.assertTrue(e.getMessage().contains("but was 'Hello World!'"));
-
-            return;
-        }
-
-        Assertions.fail("Missing validation exception due to wrong number of JSON entries");
+        Assertions.assertTrue(e.getMessage().contains("expected 'Hello World'"));
+        Assertions.assertTrue(e.getMessage().contains("but was 'Hello World!'"));
     }
 
     @Test
@@ -201,18 +195,12 @@ public class PlainTextMessageValidatorTest extends AbstractUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello Citrus!");
 
-        try {
-            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-        } catch (ValidationException e) {
-            Assertions.assertFalse(e.getMessage().contains("only whitespaces!"));
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext));
+        Assertions.assertFalse(e.getMessage().contains("only whitespaces!"));
 
-            Assertions.assertTrue(e.getMessage().contains("expected 'Hello Citrus!'"));
-            Assertions.assertTrue(e.getMessage().contains("but was 'Hello World!'"));
-
-            return;
-        }
-
-        Assertions.fail("Missing validation exception due to wrong number of JSON entries");
+        Assertions.assertTrue(e.getMessage().contains("expected 'Hello Citrus!'"));
+        Assertions.assertTrue(e.getMessage().contains("but was 'Hello World!'"));
     }
 
     @Test
@@ -236,15 +224,12 @@ public class PlainTextMessageValidatorTest extends AbstractUnitTest {
         Message receivedMessage = new DefaultMessage(" Hello\r\n\n  \t World!\t\t\n\n    ");
         Message controlMessage = new DefaultMessage("Hello\n World!\n");
 
-        try {
-            validator.setIgnoreNewLineType(true);
-            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-            Assertions.fail("Missing exception due to non matching new line whitespaces");
-        } catch (ValidationException e) {
-            Assertions.assertTrue(e.getMessage().contains("only whitespaces!"));
-            validator.setIgnoreWhitespace(true);
-            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-        }
+        validator.setIgnoreNewLineType(true);
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext));
+        Assertions.assertTrue(e.getMessage().contains("only whitespaces!"));
+        validator.setIgnoreWhitespace(true);
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
     @Test
@@ -252,14 +237,11 @@ public class PlainTextMessageValidatorTest extends AbstractUnitTest {
         Message receivedMessage = new DefaultMessage("Hello\nWorld!\n");
         Message controlMessage = new DefaultMessage("Hello\r\nWorld!\r\n");
 
-        try {
-            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-            Assertions.fail("Missing exception due to non matching new line whitespaces");
-        } catch (ValidationException e) {
-            Assertions.assertTrue(e.getMessage().contains("only whitespaces!"));
-            validator.setIgnoreNewLineType(true);
-            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-        }
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext));
+        Assertions.assertTrue(e.getMessage().contains("only whitespaces!"));
+        validator.setIgnoreNewLineType(true);
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
     @Test
@@ -267,14 +249,11 @@ public class PlainTextMessageValidatorTest extends AbstractUnitTest {
         Message receivedMessage = new DefaultMessage("Hello\nWorld!\n");
         Message controlMessage = new DefaultMessage("Hello\rWorld!\r");
 
-        try {
-            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-            Assertions.fail("Missing exception due to non matching new line whitespaces");
-        } catch (ValidationException e) {
-            Assertions.assertTrue(e.getMessage().contains("only whitespaces!"));
-            validator.setIgnoreNewLineType(true);
-            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-        }
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext));
+        Assertions.assertTrue(e.getMessage().contains("only whitespaces!"));
+        validator.setIgnoreNewLineType(true);
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
     @Test

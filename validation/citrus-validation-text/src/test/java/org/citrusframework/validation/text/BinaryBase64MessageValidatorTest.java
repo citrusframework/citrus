@@ -52,15 +52,9 @@ public class BinaryBase64MessageValidatorTest extends AbstractUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!".getBytes());
         Message controlMessage = new DefaultMessage(Base64.encodeBase64String("Hello Citrus!".getBytes()));
 
-        try {
-            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-        } catch (ValidationException e) {
-            Assertions.assertTrue(e.getMessage().contains("expected 'SGVsbG8gQ2l0cnVzIQ=='"));
-            Assertions.assertTrue(e.getMessage().contains("but was 'SGVsbG8gV29ybGQh'"));
-
-            return;
-        }
-
-        Assertions.fail("Missing validation exception due to wrong number of JSON entries");
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext));
+        Assertions.assertTrue(e.getMessage().contains("expected 'SGVsbG8gQ2l0cnVzIQ=='"));
+        Assertions.assertTrue(e.getMessage().contains("but was 'SGVsbG8gV29ybGQh'"));
     }
 }
