@@ -17,7 +17,7 @@
 package org.citrusframework.testcontainers.xml;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,8 +65,8 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
                     waitStrategy = WaitStrategyHelper.waitFor(exposedService.getWaitFor().getLogMessage());
                 } else if (StringUtils.hasText(exposedService.getWaitFor().getUrl())) {
                     try {
-                        waitStrategy = WaitStrategyHelper.waitFor(new URL(exposedService.getWaitFor().getUrl()));
-                    } catch (MalformedURLException e) {
+                        waitStrategy = WaitStrategyHelper.waitFor(URI.create(exposedService.getWaitFor().getUrl()).toURL());
+                    } catch (IllegalArgumentException | MalformedURLException e) {
                         throw new CitrusRuntimeException("Invalid Http(s) URL to wait for: %s".formatted(exposedService.getWaitFor().getUrl()), e);
                     }
                 } else {
