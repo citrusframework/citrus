@@ -16,7 +16,7 @@
 
 package org.citrusframework.kubernetes.actions.dsl;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.UUID;
 
 import com.github.dockerjava.api.command.CreateContainerResponse;
@@ -95,7 +95,7 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport implements 
         reset(k8sClient, podsOperation, namespacesOperation, nodesOperation, servicesOperation);
 
         when(k8sClient.getApiVersion()).thenReturn("v1");
-        when(k8sClient.getMasterUrl()).thenReturn(new URL("https://localhost:8443"));
+        when(k8sClient.getMasterUrl()).thenReturn(URI.create("https://localhost:8443").toURL());
         when(k8sClient.getNamespace()).thenReturn("test");
 
         when(k8sClient.pods()).thenReturn(podsOperation);
