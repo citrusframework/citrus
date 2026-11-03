@@ -31,6 +31,7 @@ import org.mockito.Mockito;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
@@ -174,16 +175,12 @@ public class DTDValidationTest extends UnitTestSupport {
                             + "</message>"
                         + "</root>"));
 
-        try {
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                     .endpoint(endpoint)
                     .message(controlMessageBuilder)
                     .build();
-            receiveAction.execute(context);
-            Assertions.fail("Missing validation exception due to mismatch in public id");
-        } catch (ValidationException e) {
-            Assertions.assertTrue(e.getMessage().contains("expected 'foo' but was 'example'"));
-        }
+        ValidationException e = assertThrows(ValidationException.class, () -> receiveAction.execute(context));
+        Assertions.assertTrue(e.getMessage().contains("expected 'foo' but was 'example'"));
     }
 
     @Test
@@ -212,15 +209,11 @@ public class DTDValidationTest extends UnitTestSupport {
                             + "</message>"
                         + "</root>"));
 
-        try {
-            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                     .endpoint(endpoint)
                     .message(controlMessageBuilder)
                     .build();
-            receiveAction.execute(context);
-            Assertions.fail("Missing validation exception due to mismatch in public id");
-        } catch (ValidationException e) {
-            Assertions.assertTrue(e.getMessage().contains("expected 'org/w3/xhtml/xhtml1-transitional.dtd' but was 'org/citrusframework/validation/example.dtd'"));
-        }
+        ValidationException e = assertThrows(ValidationException.class, () -> receiveAction.execute(context));
+        Assertions.assertTrue(e.getMessage().contains("expected 'org/w3/xhtml/xhtml1-transitional.dtd' but was 'org/citrusframework/validation/example.dtd'"));
     }
 }

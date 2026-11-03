@@ -51,6 +51,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
@@ -495,11 +496,8 @@ public class ReceiveMessageActionTest extends AbstractUnitTest {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .build();
-        try {
-            receiveAction.execute(context);
-        } catch(CitrusRuntimeException e) {
-            Assertions.assertEquals("Unknown variable 'myOperation'", e.getMessage());
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
+        Assertions.assertEquals("Unknown variable 'myOperation'", e.getMessage());
     }
 
     @Test
@@ -521,11 +519,8 @@ public class ReceiveMessageActionTest extends AbstractUnitTest {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .build();
-        try {
-            receiveAction.execute(context);
-        } catch(CitrusRuntimeException e) {
-            Assertions.assertEquals("Unknown variable 'myText'", e.getMessage());
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
+        Assertions.assertEquals("Unknown variable 'myText'", e.getMessage());
     }
 
     @Test
@@ -1103,14 +1098,8 @@ public class ReceiveMessageActionTest extends AbstractUnitTest {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .build();
-        try {
-            receiveAction.execute(context);
-        } catch(CitrusRuntimeException e) {
-            Assertions.assertEquals("Failed to receive message - message is not available", e.getMessage());
-            return;
-        }
-
-        Assertions.fail("Missing " + CitrusRuntimeException.class + " for receiving no message");
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
+        Assertions.assertEquals("Failed to receive message - message is not available", e.getMessage());
     }
 
     @Test
@@ -1153,14 +1142,8 @@ public class ReceiveMessageActionTest extends AbstractUnitTest {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .build();
-        try {
-            receiveAction.execute(context);
-        } catch(CitrusRuntimeException e) {
-            Assertions.assertEquals("Unable to validate message payload - received message payload was empty, control message payload is not", e.getMessage());
-            return;
-        }
-
-        Assertions.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
+        Assertions.assertEquals("Unable to validate message payload - received message payload was empty, control message payload is not", e.getMessage());
     }
 
     @Test

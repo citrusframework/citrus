@@ -26,6 +26,7 @@ import org.springframework.xml.xsd.XsdSchema;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
@@ -115,12 +116,8 @@ public class RootQNameSchemaMappingStrategyTest {
 
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema/unknown");
 
-        try {
-            strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo");
-            Assertions.fail("Missing exception due to schema target namespace inconsistency");
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertTrue(e.getMessage().startsWith("Schema target namespace inconsitency"));
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"));
+        Assertions.assertTrue(e.getMessage().startsWith("Schema target namespace inconsitency"));
 
     }
 }

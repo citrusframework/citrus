@@ -21,6 +21,8 @@ import org.citrusframework.message.DefaultMessage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class XPathPayloadMappingKeyExtractorTest {
 
     @Test
@@ -51,12 +53,8 @@ public class XPathPayloadMappingKeyExtractorTest {
         XPathPayloadMappingKeyExtractor extractor = new XPathPayloadMappingKeyExtractor();
         extractor.setXpathExpression("//I_DO_NOT_EXIST");
 
-        try {
-            extractor.extractMappingKey(new DefaultMessage(
-                    "<MessageBody><Foo>foo</Foo></MessageBody>"));
-            Assertions.fail("Missing exception due to bad XPath expression");
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertEquals("No result for XPath expression: '//I_DO_NOT_EXIST'", e.getMessage());
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> extractor.extractMappingKey(new DefaultMessage(
+                "<MessageBody><Foo>foo</Foo></MessageBody>")));
+        Assertions.assertEquals("No result for XPath expression: '//I_DO_NOT_EXIST'", e.getMessage());
     }
 }
