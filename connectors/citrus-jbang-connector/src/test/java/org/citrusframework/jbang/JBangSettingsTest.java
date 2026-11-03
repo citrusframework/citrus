@@ -18,77 +18,77 @@ package org.citrusframework.jbang;
 
 import java.util.List;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JBangSettingsTest {
 
     @Test
     public void shouldReturnEmptyListForNullInput() {
-        Assert.assertTrue(JBangSettings.parseArgs(null).isEmpty());
+        Assertions.assertTrue(JBangSettings.parseArgs(null).isEmpty());
     }
 
     @Test
     public void shouldReturnEmptyListForEmptyInput() {
-        Assert.assertTrue(JBangSettings.parseArgs("").isEmpty());
+        Assertions.assertTrue(JBangSettings.parseArgs("").isEmpty());
     }
 
     @Test
     public void shouldReturnEmptyListForBlankInput() {
-        Assert.assertTrue(JBangSettings.parseArgs("   ").isEmpty());
+        Assertions.assertTrue(JBangSettings.parseArgs("   ").isEmpty());
     }
 
     @Test
     public void shouldParseSingleArgWithValue() {
         List<String> result = JBangSettings.parseArgs("deps=org.foo:bar:1.0");
-        Assert.assertEquals(result, List.of("--deps=org.foo:bar:1.0"));
+        Assertions.assertEquals(List.of("--deps=org.foo:bar:1.0"), result);
     }
 
     @Test
     public void shouldParseMultipleArgs() {
         List<String> result = JBangSettings.parseArgs("deps=org.foo:bar:1.0,fresh=");
-        Assert.assertEquals(result, List.of("--deps=org.foo:bar:1.0", "--fresh"));
+        Assertions.assertEquals(List.of("--deps=org.foo:bar:1.0", "--fresh"), result);
     }
 
     @Test
     public void shouldMergeRepeatedArgNames() {
         List<String> result = JBangSettings.parseArgs("deps=org.foo:bar:1.0,deps=org.baz:qux:2.0");
-        Assert.assertEquals(result, List.of("--deps=org.foo:bar:1.0,org.baz:qux:2.0"));
+        Assertions.assertEquals(List.of("--deps=org.foo:bar:1.0,org.baz:qux:2.0"), result);
     }
 
     @Test
     public void shouldHandleEmptyValueAsFlag() {
         List<String> result = JBangSettings.parseArgs("fresh=");
-        Assert.assertEquals(result, List.of("--fresh"));
+        Assertions.assertEquals(List.of("--fresh"), result);
     }
 
     @Test
     public void shouldHandleArgWithoutEqualsAsFlag() {
         List<String> result = JBangSettings.parseArgs("fresh");
-        Assert.assertEquals(result, List.of("--fresh"));
+        Assertions.assertEquals(List.of("--fresh"), result);
     }
 
     @Test
     public void shouldNotAddDoubleDashPrefix() {
         List<String> result = JBangSettings.parseArgs("--deps=org.foo:bar:1.0");
-        Assert.assertEquals(result, List.of("--deps=org.foo:bar:1.0"));
+        Assertions.assertEquals(List.of("--deps=org.foo:bar:1.0"), result);
     }
 
     @Test
     public void shouldHandleFullExampleFromIssue() {
         List<String> result = JBangSettings.parseArgs("deps=org.foo:bar:1.0,deps=org.baz:qux:2.0,fresh=");
-        Assert.assertEquals(result, List.of("--deps=org.foo:bar:1.0,org.baz:qux:2.0", "--fresh"));
+        Assertions.assertEquals(List.of("--deps=org.foo:bar:1.0,org.baz:qux:2.0", "--fresh"), result);
     }
 
     @Test
     public void shouldPreserveArgOrder() {
         List<String> result = JBangSettings.parseArgs("fresh=,deps=org.foo:bar:1.0,verbose=");
-        Assert.assertEquals(result, List.of("--fresh", "--deps=org.foo:bar:1.0", "--verbose"));
+        Assertions.assertEquals(List.of("--fresh", "--deps=org.foo:bar:1.0", "--verbose"), result);
     }
 
     @Test
     public void shouldTrimWhitespace() {
         List<String> result = JBangSettings.parseArgs(" deps = org.foo:bar:1.0 , fresh = ");
-        Assert.assertEquals(result, List.of("--deps=org.foo:bar:1.0", "--fresh"));
+        Assertions.assertEquals(List.of("--deps=org.foo:bar:1.0", "--fresh"), result);
     }
 }

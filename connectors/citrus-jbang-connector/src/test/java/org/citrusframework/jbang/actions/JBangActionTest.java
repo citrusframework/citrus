@@ -18,23 +18,25 @@ package org.citrusframework.jbang.actions;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.jbang.UnitTestSupport;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.TestUtils;
-import org.testng.Assert;
-import org.testng.SkipException;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-public class JBangActionTest extends UnitTestSupport {
+@Isolated("JBang execution shares ~/.jbang cache and process output")
+public class JBangActionTest extends AbstractUnitTest {
 
     private final Resource helloScript = Resources.fromClasspath("org/citrusframework/jbang/hello.java");
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         if (!TestUtils.isNetworkReachable()) {
-            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
+            Assumptions.abort("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
         }
     }
 
@@ -62,10 +64,10 @@ public class JBangActionTest extends UnitTestSupport {
                 .file(helloScript)
                 .arg("Citrus")
                 .verifyOutput((message, context) -> {
-                    Assert.assertEquals(message.getPayload(String.class), "Hello Citrus");
-                    Assert.assertEquals(message.getHeader("exitCode"), 0);
-                    Assert.assertTrue(message.getHeaders().containsKey("pid"));
-                    Assert.assertFalse(message.getHeader("pid").toString().isEmpty());
+                    Assertions.assertEquals("Hello Citrus", message.getPayload(String.class));
+                    Assertions.assertEquals(0, message.getHeader("exitCode"));
+                    Assertions.assertTrue(message.getHeaders().containsKey("pid"));
+                    Assertions.assertFalse(message.getHeader("pid").toString().isEmpty());
                 })
                 .build();
         jbang.execute(context);
@@ -84,7 +86,7 @@ public class JBangActionTest extends UnitTestSupport {
                 .build();
         jbang.execute(context);
 
-        Assert.assertTrue(context.getVariables().containsKey("versionPid"));
+        Assertions.assertTrue(context.getVariables().containsKey("versionPid"));
     }
 
     @Test
@@ -94,7 +96,7 @@ public class JBangActionTest extends UnitTestSupport {
                 .build();
         jbang.execute(context);
 
-        Assert.assertTrue(context.getVariables().containsKey("out"));
+        Assertions.assertTrue(context.getVariables().containsKey("out"));
     }
 
     @Test
@@ -105,23 +107,23 @@ public class JBangActionTest extends UnitTestSupport {
         jbang.execute(context);
     }
 
-    @Test(expectedExceptions = {ValidationException.class},
-            expectedExceptionsMessageRegExp = "Error while running JBang script or file. Expected exit code -1, but was 0")
+    @Test
     public void testJBangCommandValidateExitCode() {
         JBangAction jbang = new JBangAction.Builder().command("version").exitCodes(-1).build();
-        jbang.execute(context);
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () -> jbang.execute(context));
+        Assertions.assertTrue(e.getMessage().contains("Expected exit code"));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testUnknownApp() {
         JBangAction jbang = new JBangAction.Builder().app("unknown").command("version").build();
-        jbang.execute(context);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> jbang.execute(context));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testUnknownCommand() {
         JBangAction jbang = new JBangAction.Builder().command("unknown").build();
-        jbang.execute(context);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> jbang.execute(context));
     }
 
 }

@@ -22,17 +22,17 @@ import org.citrusframework.jbang.actions.JBangAction;
 import org.citrusframework.util.TestUtils;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
-import org.testng.Assert;
-import org.testng.SkipException;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class JBangTest extends AbstractYamlActionTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         if (!TestUtils.isNetworkReachable()) {
-            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
+            Assumptions.abort("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
         }
     }
 
@@ -42,44 +42,44 @@ public class JBangTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "JBangTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), JBangAction.class);
+        Assertions.assertEquals("JBangTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(3L, result.getActionCount());
+        Assertions.assertEquals(JBangAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         JBangAction action = (JBangAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getScriptOrFile(), "version");
-        Assert.assertEquals(action.getArgs().size(), 1L);
-        Assert.assertEquals(action.getArgs().get(0), "--verbose");
-        Assert.assertTrue(action.isPrintOutput());
+        Assertions.assertEquals("version", action.getScriptOrFile());
+        Assertions.assertEquals(1L, action.getArgs().size());
+        Assertions.assertEquals("--verbose", action.getArgs().get(0));
+        Assertions.assertTrue(action.isPrintOutput());
 
         action = (JBangAction) result.getTestAction(actionIndex++);
-        Assert.assertTrue(action.getScriptOrFile().endsWith("hello.java"));
-        Assert.assertEquals(action.getArgs().size(), 1L);
-        Assert.assertEquals(action.getArgs().get(0), "Citrus");
-        Assert.assertEquals(action.getOutputVar(), "out");
-        Assert.assertEquals(action.getPidVar(), "pid");
-        Assert.assertTrue(action.isPrintOutput());
+        Assertions.assertTrue(action.getScriptOrFile().endsWith("hello.java"));
+        Assertions.assertEquals(1L, action.getArgs().size());
+        Assertions.assertEquals("Citrus", action.getArgs().get(0));
+        Assertions.assertEquals("out", action.getOutputVar());
+        Assertions.assertEquals("pid", action.getPidVar());
+        Assertions.assertTrue(action.isPrintOutput());
 
         action = (JBangAction) result.getTestAction(actionIndex);
-        Assert.assertTrue(action.getScriptOrFile().endsWith("hello.java"));
-        Assert.assertEquals(action.getArgs().size(), 1L);
-        Assert.assertEquals(action.getArgs().get(0), "Citrus");
-        Assert.assertTrue(action.getVerifyOutput().endsWith("Hello Citrus"));
-        Assert.assertEquals(action.getExitCodes(), new int[]{0});
-        Assert.assertFalse(action.isPrintOutput());
+        Assertions.assertTrue(action.getScriptOrFile().endsWith("hello.java"));
+        Assertions.assertEquals(1L, action.getArgs().size());
+        Assertions.assertEquals("Citrus", action.getArgs().get(0));
+        Assertions.assertTrue(action.getVerifyOutput().endsWith("Hello Citrus"));
+        Assertions.assertArrayEquals(new int[]{0}, action.getExitCodes());
+        Assertions.assertFalse(action.isPrintOutput());
 
-        Assert.assertTrue(context.getVariables().containsKey("pid"));
-        Assert.assertNotNull(context.getVariable("out"));
-        Assert.assertTrue(context.getVariable("out").endsWith("Hello Citrus"));
+        Assertions.assertTrue(context.getVariables().containsKey("pid"));
+        Assertions.assertNotNull(context.getVariable("out"));
+        Assertions.assertTrue(context.getVariable("out").endsWith("Hello Citrus"));
     }
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(YamlTestActionBuilder.lookup("jbang").isPresent());
-        Assert.assertEquals(YamlTestActionBuilder.lookup("jbang").get().getClass(), JBang.class);
+        Assertions.assertTrue(YamlTestActionBuilder.lookup("jbang").isPresent());
+        Assertions.assertEquals(JBang.class, YamlTestActionBuilder.lookup("jbang").get().getClass());
     }
 }

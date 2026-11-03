@@ -19,17 +19,17 @@ package org.citrusframework.jbang.actions;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JBangActionBuilderTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("jbang"));
+        Assertions.assertTrue(endpointBuilders.containsKey("jbang"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("jbang").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("jbang").get().getClass(), JBangAction.Builder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("jbang").isPresent());
+        Assertions.assertEquals(JBangAction.Builder.class, TestActionBuilder.lookup("jbang").get().getClass());
     }
 }
