@@ -281,13 +281,7 @@ public class ReceiveMessageActionTest extends AbstractUnitTest {
                 .message(controlMessageBuilder)
                 .type(MessageType.JSON)
                 .build();
-        try {
-            receiveAction.execute(context);
-        } catch(CitrusRuntimeException e) {
-            Assertions.assertEquals("Validation failed - expected message contents, but received empty message!", e.getMessage());
-            return;
-        }
-
-        Assertions.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
+        CitrusRuntimeException e = Assertions.assertThrows(CitrusRuntimeException.class, () -> receiveAction.execute(context));
+        Assertions.assertEquals("Validation failed - expected message contents, but received empty message!", e.getMessage());
     }
 }
