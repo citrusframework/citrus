@@ -28,8 +28,8 @@ import org.citrusframework.message.Message;
 import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AgentConnectActionTest extends UnitTestSupport {
 
@@ -105,8 +105,8 @@ public class AgentConnectActionTest extends UnitTestSupport {
             @Override
             protected Message handleMessageInternal(Message message) {
                 if (message instanceof HttpMessage httpRequest) {
-                    Assert.assertEquals(httpRequest.getPath(), "/health");
-                    Assert.assertEquals(httpRequest.getRequestMethod(), RequestMethod.GET);
+                    Assertions.assertEquals("/health", httpRequest.getPath());
+                    Assertions.assertEquals(RequestMethod.GET, httpRequest.getRequestMethod());
                     return new HttpMessage("""
                             { "status": "UP" }
                             """).status(HttpStatus.OK);

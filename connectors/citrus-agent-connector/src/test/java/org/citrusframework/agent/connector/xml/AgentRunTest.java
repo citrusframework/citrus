@@ -25,29 +25,25 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class AgentRunTest extends AbstractXmlActionTest {
 
     @Mock
     private HttpClient httpClient;
-
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void shouldLoadAgentRunActions() {
@@ -72,15 +68,15 @@ public class AgentRunTest extends AbstractXmlActionTest {
             Message request = invocationOnMock.getArgument(0, Message.class);
              if (request instanceof HttpMessage httpRequest) {
                  if (httpRequest.getPath().equals("/health")) {
-                     Assert.assertEquals(httpRequest.getRequestMethod(), RequestMethod.GET);
+                     Assertions.assertEquals(RequestMethod.GET, httpRequest.getRequestMethod());
                  } else {
-                     Assert.assertEquals(httpRequest.getPath(), "/execute/AgentRunTest");
-                     Assert.assertEquals(httpRequest.getRequestMethod(), RequestMethod.POST);
-                     Assert.assertEquals(httpRequest.getContentType(), MediaType.APPLICATION_XML_VALUE);
-                     Assert.assertTrue(httpRequest.getPayload(String.class).startsWith("<test name=\"AgentRunTest\" xmlns=\"http://citrusframework.org/schema/xml/testcase\">"));
+                     Assertions.assertEquals("/execute/AgentRunTest", httpRequest.getPath());
+                     Assertions.assertEquals(RequestMethod.POST, httpRequest.getRequestMethod());
+                     Assertions.assertEquals(MediaType.APPLICATION_XML_VALUE, httpRequest.getContentType());
+                     Assertions.assertTrue(httpRequest.getPayload(String.class).startsWith("<test name=\"AgentRunTest\" xmlns=\"http://citrusframework.org/schema/xml/testcase\">"));
                  }
              } else {
-                 Assert.fail("Not a Http message");
+                 Assertions.fail("Not a Http message");
              }
             return null;
         }).when(httpClient).send(any(Message.class), eq(context));
@@ -89,17 +85,17 @@ public class AgentRunTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "AgentRunTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), AgentConnectAction.class);
-        Assert.assertEquals(result.getTestAction(1).getClass(), AgentRunAction.class);
+        Assertions.assertEquals("AgentRunTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(3L, result.getActionCount());
+        Assertions.assertEquals(AgentConnectAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals(AgentRunAction.class, result.getTestAction(1).getClass());
     }
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(XmlTestActionBuilder.lookup("agent").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("agent").get().getClass(), Agent.class);
+        Assertions.assertTrue(XmlTestActionBuilder.lookup("agent").isPresent());
+        Assertions.assertEquals(Agent.class, XmlTestActionBuilder.lookup("agent").get().getClass());
     }
 }
