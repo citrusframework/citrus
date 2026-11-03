@@ -34,8 +34,8 @@ import org.citrusframework.docker.UnitTestSupport;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
@@ -89,7 +89,7 @@ public class DockerTestActionBuilderTest extends UnitTestSupport implements Test
 
         builder.$(docker().client(client)
                     .version()
-                    .validateCommandResult((result, context) -> Assert.assertNotNull(result)));
+                    .validateCommandResult((result, context) -> Assertions.assertNotNull(result)));
 
         builder.$(docker().client(client)
                     .create("new_image")
@@ -99,30 +99,30 @@ public class DockerTestActionBuilderTest extends UnitTestSupport implements Test
                     .inspect("my_container"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 5);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DockerExecuteAction.class);
-        Assert.assertEquals(test.getActiveAction().getClass(), DockerExecuteAction.class);
+        Assertions.assertEquals(5, test.getActionCount());
+        Assertions.assertEquals(DockerExecuteAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(DockerExecuteAction.class, test.getActiveAction().getClass());
 
         DockerExecuteAction action = (DockerExecuteAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "docker-execute");
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.docker.command.Info.class);
+        Assertions.assertEquals("docker-execute", action.getName());
+        Assertions.assertEquals(org.citrusframework.docker.command.Info.class, action.getCommand().getClass());
 
         action = (DockerExecuteAction)test.getActions().get(1);
-        Assert.assertEquals(action.getName(), "docker-execute");
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.docker.command.Ping.class);
+        Assertions.assertEquals("docker-execute", action.getName());
+        Assertions.assertEquals(org.citrusframework.docker.command.Ping.class, action.getCommand().getClass());
 
         action = (DockerExecuteAction)test.getActions().get(2);
-        Assert.assertEquals(action.getName(), "docker-execute");
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.docker.command.Version.class);
-        Assert.assertNotNull(action.getCommand().getResultCallback());
+        Assertions.assertEquals("docker-execute", action.getName());
+        Assertions.assertEquals(org.citrusframework.docker.command.Version.class, action.getCommand().getClass());
+        Assertions.assertNotNull(action.getCommand().getResultCallback());
 
         action = (DockerExecuteAction)test.getActions().get(3);
-        Assert.assertEquals(action.getName(), "docker-execute");
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.docker.command.ContainerCreate.class);
+        Assertions.assertEquals("docker-execute", action.getName());
+        Assertions.assertEquals(org.citrusframework.docker.command.ContainerCreate.class, action.getCommand().getClass());
 
         action = (DockerExecuteAction)test.getActions().get(4);
-        Assert.assertEquals(action.getName(), "docker-execute");
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.docker.command.ContainerInspect.class);
+        Assertions.assertEquals("docker-execute", action.getName());
+        Assertions.assertEquals(org.citrusframework.docker.command.ContainerInspect.class, action.getCommand().getClass());
 
     }
 }

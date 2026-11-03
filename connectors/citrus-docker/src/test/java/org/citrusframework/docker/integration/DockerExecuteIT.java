@@ -18,16 +18,16 @@ package org.citrusframework.docker.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Only execute integration tests if Docker is available on host system.
  *
  * @since 2.4
  */
-@Test
 public class DockerExecuteIT extends AbstractDockerIT {
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "DockerExecuteIT")
     public void dockerInfoTest() {}
 }

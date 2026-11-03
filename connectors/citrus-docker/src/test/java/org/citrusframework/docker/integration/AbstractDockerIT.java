@@ -16,25 +16,29 @@
 
 package org.citrusframework.docker.integration;
 
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.jaxrs.JerseyDockerCmdExecFactory;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.IHookCallBack;
-import org.testng.ITestResult;
-import org.testng.annotations.BeforeSuite;
-
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import org.springframework.test.context.ContextConfiguration;
 
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 /**
  * @since 2.4
  */
-public class AbstractDockerIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public abstract class AbstractDockerIT {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(AbstractDockerIT.class);
@@ -42,9 +46,9 @@ public class AbstractDockerIT extends TestNGCitrusSpringSupport {
     /** Docker connection state, checks connectivity only once per test run */
     private static boolean connected = false;
 
-    @BeforeSuite(alwaysRun = true)
+    @BeforeAll
     @SuppressWarnings("deprecation")
-    public void checkDockerEnvironment() {
+    static void checkDockerEnvironment() {
         boolean enabled = Boolean.parseBoolean(System.getProperty("citrus.docker.it.enabled", Boolean.FALSE.toString()));
         if (enabled) {
             var executor = newSingleThreadExecutor();
@@ -66,12 +70,8 @@ public class AbstractDockerIT extends TestNGCitrusSpringSupport {
         }
     }
 
-    @Override
-    public void run(IHookCallBack callBack, ITestResult testResult) {
-        if (connected) {
-            super.run(callBack, testResult);
-        } else {
-            testResult.setStatus(ITestResult.SKIP);
-        }
+    @BeforeEach
+    void assumeDockerAvailable() {
+        Assumptions.assumeTrue(connected, "Skipping Docker test execution as no proper Docker environment is available on host system!");
     }
 }

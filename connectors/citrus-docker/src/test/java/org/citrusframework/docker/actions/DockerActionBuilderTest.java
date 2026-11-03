@@ -19,17 +19,17 @@ package org.citrusframework.docker.actions;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DockerActionBuilderTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("docker"));
+        Assertions.assertTrue(endpointBuilders.containsKey("docker"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("docker").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("docker").get().getClass(), DockerExecuteAction.Builder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("docker").isPresent());
+        Assertions.assertEquals(DockerExecuteAction.Builder.class, TestActionBuilder.lookup("docker").get().getClass());
     }
 }

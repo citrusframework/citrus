@@ -31,18 +31,18 @@ import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.command.Info;
 import org.citrusframework.docker.message.DockerMessageHeaders;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements TestActionSupport {
+public class DockerExecuteActionTest extends AbstractUnitTest implements TestActionSupport {
 
     private final com.github.dockerjava.api.DockerClient dockerClient = Mockito.mock(com.github.dockerjava.api.DockerClient.class);
 
@@ -50,7 +50,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
 
     private final DockerExecuteAction.Builder docker = new DockerExecuteAction.Builder();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         client.getEndpointConfiguration().setDockerClient(dockerClient);
     }
@@ -71,7 +71,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), result);
+        Assertions.assertEquals(result, action.getCommand().getCommandResult());
 
     }
 
@@ -91,7 +91,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), result);
+        Assertions.assertEquals(result, action.getCommand().getCommandResult());
 
     }
 
@@ -109,7 +109,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(((ResponseItem)action.getCommand().getCommandResult()).getStatus(), "success");
+        Assertions.assertEquals("success", ((ResponseItem)action.getCommand().getCommandResult()).getStatus());
 
     }
 
@@ -129,7 +129,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), result);
+        Assertions.assertEquals(result, action.getCommand().getCommandResult());
 
     }
 
@@ -153,8 +153,8 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), response);
-        Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
+        Assertions.assertEquals(response, action.getCommand().getCommandResult());
+        Assertions.assertEquals(response.getId(), context.getVariable(DockerMessageHeaders.CONTAINER_ID));
 
     }
 
@@ -182,9 +182,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), response);
-        Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
-        Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_NAME), "my_container");
+        Assertions.assertEquals(response, action.getCommand().getCommandResult());
+        Assertions.assertEquals(response.getId(), context.getVariable(DockerMessageHeaders.CONTAINER_ID));
+        Assertions.assertEquals("my_container", context.getVariable(DockerMessageHeaders.CONTAINER_NAME));
 
     }
 
@@ -215,9 +215,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     	verify(command).withEnv(argumentCaptor.capture());
     	String[] capturedArguments = (String[]) argumentCaptor.getValue();
 
-    	Assert.assertEquals(containerEnvVars.length, capturedArguments.length);
+        Assertions.assertEquals(containerEnvVars.length, capturedArguments.length);
     	for(int i=0; i<containerEnvVars.length; i++) {
-    		Assert.assertEquals(containerEnvVars[i], capturedArguments[i]);
+        Assertions.assertEquals(containerEnvVars[i], capturedArguments[i]);
     	}
     }
 
@@ -256,9 +256,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
     	verify(command).withVolumes(argumentCaptor.capture());
     	Volume[] capturedArguments = (Volume[]) argumentCaptor.getValue();
 
-    	Assert.assertEquals(containerVolumes.length, capturedArguments.length);
+        Assertions.assertEquals(containerVolumes.length, capturedArguments.length);
     	for(int i=0; i<containerVolumes.length; i++) {
-    		Assert.assertEquals(containerVolumes[i], capturedArguments[i]);
+        Assertions.assertEquals(containerVolumes[i], capturedArguments[i]);
     	}
 
     }
@@ -280,7 +280,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), response);
+        Assertions.assertEquals(response, action.getCommand().getCommandResult());
 
     }
 
@@ -301,7 +301,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), response);
+        Assertions.assertEquals(response, action.getCommand().getCommandResult());
 
     }
 
@@ -320,7 +320,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(((ResponseItem)action.getCommand().getCommandResult()).getStatus(), "success");
+        Assertions.assertEquals("success", ((ResponseItem)action.getCommand().getCommandResult()).getStatus());
 
     }
 
@@ -339,7 +339,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(((ResponseItem)action.getCommand().getCommandResult()).getStatus(), "success");
+        Assertions.assertEquals("success", ((ResponseItem)action.getCommand().getCommandResult()).getStatus());
 
     }
 
@@ -358,7 +358,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(((ResponseItem)action.getCommand().getCommandResult()).getStatus(), "success");
+        Assertions.assertEquals("success", ((ResponseItem)action.getCommand().getCommandResult()).getStatus());
 
     }
 
@@ -377,7 +377,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(((ResponseItem)action.getCommand().getCommandResult()).getStatus(), "success");
+        Assertions.assertEquals("success", ((ResponseItem)action.getCommand().getCommandResult()).getStatus());
 
     }
 
@@ -405,7 +405,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(((WaitResponse)action.getCommand().getCommandResult()).getStatusCode(), 0);
+        Assertions.assertEquals(0, ((WaitResponse)action.getCommand().getCommandResult()).getStatusCode());
 
     }
 
@@ -436,7 +436,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), responseItem);
+        Assertions.assertEquals(responseItem, action.getCommand().getCommandResult());
 
     }
 
@@ -469,8 +469,8 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest implements T
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), responseItem);
-        Assert.assertEquals(context.getVariable(DockerMessageHeaders.IMAGE_ID), "new_image");
+        Assertions.assertEquals(responseItem, action.getCommand().getCommandResult());
+        Assertions.assertEquals("new_image", context.getVariable(DockerMessageHeaders.IMAGE_ID));
 
     }
 }

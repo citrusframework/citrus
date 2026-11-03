@@ -24,14 +24,12 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class DockerClientConfigParserTest extends AbstractTestNGUnitTest {
+public class DockerClientConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "dockerClient1")
     @DockerClientConfig()
@@ -48,43 +46,38 @@ public class DockerClientConfigParserTest extends AbstractTestNGUnitTest {
             configPath="/path/to/some/config/directory")
     private DockerClient dockerClient2;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     public void testDockerClientParser() {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st client
-        Assert.assertNotNull(dockerClient1.getEndpointConfiguration().getDockerClient());
+        Assertions.assertNotNull(dockerClient1.getEndpointConfiguration().getDockerClient());
 
         // 2nd client
-        Assert.assertNotNull(dockerClient2.getEndpointConfiguration().getDockerClient());
-        Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getDockerHost().toString(), "tcp://localhost:2376");
-        Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getApiVersion().asWebPathPart(), "v1.19");
-        Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryUsername(), "user");
-        Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryPassword(), "s!cr!t");
-        Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryEmail(), "user@foo.bar");
-        Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryUrl(), "https://index.docker.io/v1/");
-        Assert.assertEquals(((DefaultDockerClientConfig)dockerClient2.getEndpointConfiguration().getDockerClientConfig()).getDockerConfigPath(), "/path/to/some/config/directory");
+        Assertions.assertNotNull(dockerClient2.getEndpointConfiguration().getDockerClient());
+        Assertions.assertEquals("tcp://localhost:2376", dockerClient2.getEndpointConfiguration().getDockerClientConfig().getDockerHost().toString());
+        Assertions.assertEquals("v1.19", dockerClient2.getEndpointConfiguration().getDockerClientConfig().getApiVersion().asWebPathPart());
+        Assertions.assertEquals("user", dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryUsername());
+        Assertions.assertEquals("s!cr!t", dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryPassword());
+        Assertions.assertEquals("user@foo.bar", dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryEmail());
+        Assertions.assertEquals("https://index.docker.io/v1/", dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryUrl());
+        Assertions.assertEquals("/path/to/some/config/directory", ((DefaultDockerClientConfig)dockerClient2.getEndpointConfiguration().getDockerClientConfig()).getDockerConfigPath());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 3L);
-        Assert.assertNotNull(validators.get("direct.async"));
-        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("direct.sync"));
-        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("docker.client"));
-        Assert.assertEquals(validators.get("docker.client").getClass(), DockerClientConfigParser.class);
+        Assertions.assertEquals(3L, validators.size());
+        Assertions.assertNotNull(validators.get("direct.async"));
+        Assertions.assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
+        Assertions.assertNotNull(validators.get("direct.sync"));
+        Assertions.assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
+        Assertions.assertNotNull(validators.get("docker.client"));
+        Assertions.assertEquals(DockerClientConfigParser.class, validators.get("docker.client").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("docker.client").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("docker.client").isPresent());
     }
 }
