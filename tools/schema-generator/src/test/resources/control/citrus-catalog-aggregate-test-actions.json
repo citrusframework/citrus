@@ -5444,168 +5444,174 @@
                 "vertx": {
                   "type": "object",
                   "properties": {
+                    "address": {
+                      "type": "string",
+                      "title": "Address",
+                      "description": "The event bus address."
+                    },
                     "asynchronous": {
+                      "type": "object",
+                      "properties": {
+                        "address": {
+                          "type": "string",
+                          "title": "Address",
+                          "description": "The event bus address."
+                        },
+                        "host": {
+                          "type": "string",
+                          "title": "Host",
+                          "description": "The Vert.x event bus host."
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "pollingInterval": {
+                          "type": "integer",
+                          "title": "PollingInterval",
+                          "description": "Sets the polling interval when consuming messages."
+                        },
+                        "port": {
+                          "type": "integer",
+                          "title": "Port",
+                          "description": "The Vert.x event bus port."
+                        },
+                        "pubSubDomain": {
+                          "type": "boolean",
+                          "title": "PubSubDomain",
+                          "description": "When enabled the endpoint uses publish/subscribe mode.",
+                          "$comment": "group:advanced"
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "The endpoint timeout when waiting for messages."
+                        },
+                        "vertxFactory": {
+                          "type": "string",
+                          "title": "VertxFactory",
+                          "description": "Sets a custom Vert.x factory.",
+                          "$comment": "group:advanced"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Asynchronous",
+                      "description": "Sets the Vert.x endpoint."
+                    },
+                    "host": {
+                      "type": "string",
+                      "title": "Host",
+                      "description": "The Vert.x event bus host."
+                    },
+                    "messageConverter": {
+                      "type": "string",
+                      "title": "MessageConverter",
+                      "description": "Sets the message converter as a bean reference.",
+                      "$comment": "group:advanced"
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "Name",
+                      "description": "The name of the endpoint."
+                    },
+                    "pollingInterval": {
+                      "type": "integer",
+                      "title": "PollingInterval",
+                      "description": "Sets the polling interval when consuming messages."
+                    },
+                    "port": {
+                      "type": "integer",
+                      "title": "Port",
+                      "description": "The Vert.x event bus port."
+                    },
+                    "pubSubDomain": {
+                      "type": "boolean",
+                      "title": "PubSubDomain",
+                      "description": "When enabled the endpoint uses publish/subscribe mode.",
+                      "$comment": "group:advanced"
                     },
                     "synchronous": {
+                      "type": "object",
+                      "properties": {
+                        "address": {
+                          "type": "string",
+                          "title": "Address",
+                          "description": "The event bus address."
+                        },
+                        "correlator": {
+                          "type": "string",
+                          "title": "Correlator",
+                          "description": "Sets the message correlator.",
+                          "$comment": "group:advanced"
+                        },
+                        "host": {
+                          "type": "string",
+                          "title": "Host",
+                          "description": "The Vert.x event bus host."
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "pollingInterval": {
+                          "type": "integer",
+                          "title": "PollingInterval",
+                          "description": "Sets the polling interval when consuming messages."
+                        },
+                        "port": {
+                          "type": "integer",
+                          "title": "Port",
+                          "description": "The Vert.x event bus port."
+                        },
+                        "pubSubDomain": {
+                          "type": "boolean",
+                          "title": "PubSubDomain",
+                          "description": "When enabled the endpoint uses publish/subscribe mode.",
+                          "$comment": "group:advanced"
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "The endpoint timeout when waiting for messages."
+                        },
+                        "vertxFactory": {
+                          "type": "string",
+                          "title": "VertxFactory",
+                          "description": "Sets a custom Vert.x factory.",
+                          "$comment": "group:advanced"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Synchronous",
+                      "description": "Sets the synchronous Vert.x endpoint."
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "title": "Timeout",
+                      "description": "The endpoint timeout when waiting for messages."
+                    },
+                    "vertxFactory": {
+                      "type": "string",
+                      "title": "VertxFactory",
+                      "description": "Sets a custom Vert.x factory.",
+                      "$comment": "group:advanced"
                     }
                   },
                   "additionalProperties": false,
-                  "anyOf": [
-                    {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "asynchronous": {
-                              "type": "object",
-                              "properties": {
-                                "address": {
-                                  "type": "string",
-                                  "title": "Address",
-                                  "description": "The event bus address."
-                                },
-                                "host": {
-                                  "type": "string",
-                                  "title": "Host",
-                                  "description": "The Vert.x event bus host."
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "pollingInterval": {
-                                  "type": "integer",
-                                  "title": "PollingInterval",
-                                  "description": "Sets the polling interval when consuming messages."
-                                },
-                                "port": {
-                                  "type": "integer",
-                                  "title": "Port",
-                                  "description": "The Vert.x event bus port."
-                                },
-                                "pubSubDomain": {
-                                  "type": "boolean",
-                                  "title": "PubSubDomain",
-                                  "description": "When enabled the endpoint uses publish/subscribe mode.",
-                                  "$comment": "group:advanced"
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "The endpoint timeout when waiting for messages."
-                                },
-                                "vertxFactory": {
-                                  "type": "string",
-                                  "title": "VertxFactory",
-                                  "description": "Sets a custom Vert.x factory.",
-                                  "$comment": "group:advanced"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Asynchronous",
-                              "description": "Sets the Vert.x endpoint."
-                            }
-                          },
-                          "required": [
-                            "asynchronous"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "synchronous": {
-                              "type": "object",
-                              "properties": {
-                                "address": {
-                                  "type": "string",
-                                  "title": "Address",
-                                  "description": "The event bus address."
-                                },
-                                "correlator": {
-                                  "type": "string",
-                                  "title": "Correlator",
-                                  "description": "Sets the message correlator.",
-                                  "$comment": "group:advanced"
-                                },
-                                "host": {
-                                  "type": "string",
-                                  "title": "Host",
-                                  "description": "The Vert.x event bus host."
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "pollingInterval": {
-                                  "type": "integer",
-                                  "title": "PollingInterval",
-                                  "description": "Sets the polling interval when consuming messages."
-                                },
-                                "port": {
-                                  "type": "integer",
-                                  "title": "Port",
-                                  "description": "The Vert.x event bus port."
-                                },
-                                "pubSubDomain": {
-                                  "type": "boolean",
-                                  "title": "PubSubDomain",
-                                  "description": "When enabled the endpoint uses publish/subscribe mode.",
-                                  "$comment": "group:advanced"
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "The endpoint timeout when waiting for messages."
-                                },
-                                "vertxFactory": {
-                                  "type": "string",
-                                  "title": "VertxFactory",
-                                  "description": "Sets a custom Vert.x factory.",
-                                  "$comment": "group:advanced"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Synchronous",
-                              "description": "Sets the synchronous Vert.x endpoint."
-                            }
-                          },
-                          "required": [
-                            "synchronous"
-                          ]
-                        },
-                        {
-                          "not": {
-                            "anyOf": [
-                              {
-                                "required": [
-                                  "asynchronous"
-                                ]
-                              },
-                              {
-                                "required": [
-                                  "synchronous"
-                                ]
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ],
                   "title": "Vert.x",
                   "description": "Vert.x endpoint."
                 }
@@ -5724,295 +5730,356 @@
                   "type": "object",
                   "properties": {
                     "asynchronous": {
+                      "type": "object",
+                      "properties": {
+                        "autoCommit": {
+                          "type": "boolean",
+                          "title": "AutoCommit",
+                          "description": "Sets auto commit handling for this endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "autoCommitInterval": {
+                          "type": "integer",
+                          "title": "AutoCommitInterval",
+                          "description": "Sets the auto commit interval.",
+                          "$comment": "group:consume"
+                        },
+                        "bootstrapServers": {
+                          "type": "string",
+                          "title": "BootstrapServers",
+                          "description": "Sets the Kafka bootstrap servers."
+                        },
+                        "clientId": {
+                          "type": "string",
+                          "title": "ClientId",
+                          "description": "Sets the client id used to connect to the Kafka server.",
+                          "$comment": "group:advanced"
+                        },
+                        "consumerGroup": {
+                          "type": "string",
+                          "title": "ConsumerGroup",
+                          "description": "Sets the consumer group used by the endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "consumerProperties": {
+                          "type": "object",
+                          "title": "ConsumerProperties",
+                          "description": "Sets the Kafka consumer properties.",
+                          "$comment": "group:consume"
+                        },
+                        "headerMapper": {
+                          "type": "string",
+                          "title": "HeaderMapper",
+                          "description": "Sets the Kafka header mapper.",
+                          "$comment": "group:advanced"
+                        },
+                        "keyDeserializer": {
+                          "type": "string",
+                          "title": "KeyDeserializer",
+                          "description": "Sets the fully qualified key deserializer type class name.",
+                          "$comment": "group:deserialize"
+                        },
+                        "keySerializer": {
+                          "type": "string",
+                          "title": "KeySerializer",
+                          "description": "Sets the fully qualified key serializer type class name.",
+                          "$comment": "group:serialize"
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "offsetReset": {
+                          "type": "string",
+                          "title": "OffsetReset",
+                          "description": "Sets the offset reset.",
+                          "$comment": "group:consume"
+                        },
+                        "partition": {
+                          "type": "integer",
+                          "title": "Partition",
+                          "description": "Sets the Kafka topic partition."
+                        },
+                        "producerProperties": {
+                          "type": "object",
+                          "title": "ProducerProperties",
+                          "description": "Sets the Kafka producer properties.",
+                          "$comment": "group:produce"
+                        },
+                        "server": {
+                          "type": "string",
+                          "title": "Server",
+                          "description": "Sets the Kafka bootstrap server."
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "Sets the Kafka consumer timeout.",
+                          "$comment": "group:consume"
+                        },
+                        "topic": {
+                          "type": "string",
+                          "title": "Topic",
+                          "description": "Sets the Kafka topic."
+                        },
+                        "useThreadSafeConsumer": {
+                          "type": "boolean",
+                          "title": "UseThreadSafeConsumer",
+                          "description": "Sets thread safe consumer option for this endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "valueDeserializer": {
+                          "type": "string",
+                          "title": "ValueDeserializer",
+                          "description": "Sets the fully qualified value deserializer type class name.",
+                          "$comment": "group:deserialize"
+                        },
+                        "valueSerializer": {
+                          "type": "string",
+                          "title": "ValueSerializer",
+                          "description": "Sets the fully qualified value serializer type class name.",
+                          "$comment": "group:serialize"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Asynchronous",
+                      "description": "Sets the Kafka endpoint."
+                    },
+                    "autoCommit": {
+                      "type": "boolean",
+                      "title": "AutoCommit",
+                      "description": "Sets auto commit handling for this endpoint.",
+                      "$comment": "group:consume"
+                    },
+                    "autoCommitInterval": {
+                      "type": "integer",
+                      "title": "AutoCommitInterval",
+                      "description": "Sets the auto commit interval.",
+                      "$comment": "group:consume"
+                    },
+                    "bootstrapServers": {
+                      "type": "string",
+                      "title": "BootstrapServers",
+                      "description": "Sets the Kafka bootstrap servers."
+                    },
+                    "clientId": {
+                      "type": "string",
+                      "title": "ClientId",
+                      "description": "Sets the client id used to connect to the Kafka server.",
+                      "$comment": "group:advanced"
+                    },
+                    "consumerGroup": {
+                      "type": "string",
+                      "title": "ConsumerGroup",
+                      "description": "Sets the consumer group used by the endpoint.",
+                      "$comment": "group:consume"
+                    },
+                    "headerMapper": {
+                      "type": "string",
+                      "title": "HeaderMapper",
+                      "description": "Sets the Kafka header mapper.",
+                      "$comment": "group:advanced"
+                    },
+                    "keyDeserializer": {
+                      "type": "string",
+                      "title": "KeyDeserializer",
+                      "description": "Sets the fully qualified key deserializer type class name.",
+                      "$comment": "group:deserialize"
+                    },
+                    "keySerializer": {
+                      "type": "string",
+                      "title": "KeySerializer",
+                      "description": "Sets the fully qualified key serializer type class name.",
+                      "$comment": "group:serialize"
+                    },
+                    "messageConverter": {
+                      "type": "string",
+                      "title": "MessageConverter",
+                      "description": "Sets the message converter as a bean reference.",
+                      "$comment": "group:advanced"
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "Name",
+                      "description": "The name of the endpoint."
+                    },
+                    "offsetReset": {
+                      "type": "string",
+                      "title": "OffsetReset",
+                      "description": "Sets the offset reset.",
+                      "$comment": "group:consume"
+                    },
+                    "partition": {
+                      "type": "integer",
+                      "title": "Partition",
+                      "description": "Sets the Kafka topic partition."
+                    },
+                    "server": {
+                      "type": "string",
+                      "title": "Server",
+                      "description": "Sets the Kafka bootstrap server."
                     },
                     "synchronous": {
+                      "type": "object",
+                      "properties": {
+                        "autoCommit": {
+                          "type": "boolean",
+                          "title": "AutoCommit",
+                          "description": "Sets auto commit handling for this endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "autoCommitInterval": {
+                          "type": "integer",
+                          "title": "AutoCommitInterval",
+                          "description": "Sets the auto commit interval.",
+                          "$comment": "group:consume"
+                        },
+                        "bootstrapServers": {
+                          "type": "string",
+                          "title": "BootstrapServers",
+                          "description": "Sets the Kafka bootstrap servers."
+                        },
+                        "clientId": {
+                          "type": "string",
+                          "title": "ClientId",
+                          "description": "Sets the client id used to connect to the Kafka server.",
+                          "$comment": "group:advanced"
+                        },
+                        "consumerGroup": {
+                          "type": "string",
+                          "title": "ConsumerGroup",
+                          "description": "Sets the consumer group used by the endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "consumerProperties": {
+                          "type": "object",
+                          "title": "ConsumerProperties",
+                          "description": "Sets the Kafka consumer properties.",
+                          "$comment": "group:consume"
+                        },
+                        "headerMapper": {
+                          "type": "string",
+                          "title": "HeaderMapper",
+                          "description": "Sets the Kafka header mapper.",
+                          "$comment": "group:advanced"
+                        },
+                        "keyDeserializer": {
+                          "type": "string",
+                          "title": "KeyDeserializer",
+                          "description": "Sets the fully qualified key deserializer type class name.",
+                          "$comment": "group:deserialize"
+                        },
+                        "keySerializer": {
+                          "type": "string",
+                          "title": "KeySerializer",
+                          "description": "Sets the fully qualified key serializer type class name.",
+                          "$comment": "group:serialize"
+                        },
+                        "messageConverter": {
+                          "type": "string",
+                          "title": "MessageConverter",
+                          "description": "Sets the message converter as a bean reference.",
+                          "$comment": "group:advanced"
+                        },
+                        "name": {
+                          "type": "string",
+                          "title": "Name",
+                          "description": "The name of the endpoint"
+                        },
+                        "offsetReset": {
+                          "type": "string",
+                          "title": "OffsetReset",
+                          "description": "Sets the offset reset.",
+                          "$comment": "group:consume"
+                        },
+                        "partition": {
+                          "type": "integer",
+                          "title": "Partition",
+                          "description": "Sets the Kafka topic partition."
+                        },
+                        "producerProperties": {
+                          "type": "object",
+                          "title": "ProducerProperties",
+                          "description": "Sets the Kafka producer properties.",
+                          "$comment": "group:produce"
+                        },
+                        "server": {
+                          "type": "string",
+                          "title": "Server",
+                          "description": "Sets the Kafka bootstrap server."
+                        },
+                        "timeout": {
+                          "type": "integer",
+                          "title": "Timeout",
+                          "description": "Sets the Kafka consumer timeout.",
+                          "$comment": "group:consume"
+                        },
+                        "topic": {
+                          "type": "string",
+                          "title": "Topic",
+                          "description": "Sets the Kafka topic."
+                        },
+                        "useThreadSafeConsumer": {
+                          "type": "boolean",
+                          "title": "UseThreadSafeConsumer",
+                          "description": "Sets thread safe consumer option for this endpoint.",
+                          "$comment": "group:consume"
+                        },
+                        "valueDeserializer": {
+                          "type": "string",
+                          "title": "ValueDeserializer",
+                          "description": "Sets the fully qualified value deserializer type class name.",
+                          "$comment": "group:deserialize"
+                        },
+                        "valueSerializer": {
+                          "type": "string",
+                          "title": "ValueSerializer",
+                          "description": "Sets the fully qualified value serializer type class name.",
+                          "$comment": "group:serialize"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "title": "Synchronous",
+                      "description": "Sets the synchronous Kafka endpoint."
+                    },
+                    "timeout": {
+                      "type": "integer",
+                      "title": "Timeout",
+                      "description": "Sets the Kafka consumer timeout.",
+                      "$comment": "group:consume"
+                    },
+                    "topic": {
+                      "type": "string",
+                      "title": "Topic",
+                      "description": "Sets the Kafka topic."
+                    },
+                    "useThreadSafeConsumer": {
+                      "type": "boolean",
+                      "title": "UseThreadSafeConsumer",
+                      "description": "Sets thread safe consumer option for this endpoint.",
+                      "$comment": "group:consume"
+                    },
+                    "valueDeserializer": {
+                      "type": "string",
+                      "title": "ValueDeserializer",
+                      "description": "Sets the fully qualified value deserializer type class name.",
+                      "$comment": "group:deserialize"
+                    },
+                    "valueSerializer": {
+                      "type": "string",
+                      "title": "ValueSerializer",
+                      "description": "Sets the fully qualified value serializer type class name.",
+                      "$comment": "group:serialize"
                     }
                   },
                   "additionalProperties": false,
-                  "anyOf": [
-                    {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "asynchronous": {
-                              "type": "object",
-                              "properties": {
-                                "autoCommit": {
-                                  "type": "boolean",
-                                  "title": "AutoCommit",
-                                  "description": "Sets auto commit handling for this endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "autoCommitInterval": {
-                                  "type": "integer",
-                                  "title": "AutoCommitInterval",
-                                  "description": "Sets the auto commit interval.",
-                                  "$comment": "group:consume"
-                                },
-                                "bootstrapServers": {
-                                  "type": "string",
-                                  "title": "BootstrapServers",
-                                  "description": "Sets the Kafka bootstrap servers."
-                                },
-                                "clientId": {
-                                  "type": "string",
-                                  "title": "ClientId",
-                                  "description": "Sets the client id used to connect to the Kafka server.",
-                                  "$comment": "group:advanced"
-                                },
-                                "consumerGroup": {
-                                  "type": "string",
-                                  "title": "ConsumerGroup",
-                                  "description": "Sets the consumer group used by the endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "consumerProperties": {
-                                  "type": "object",
-                                  "title": "ConsumerProperties",
-                                  "description": "Sets the Kafka consumer properties.",
-                                  "$comment": "group:consume"
-                                },
-                                "headerMapper": {
-                                  "type": "string",
-                                  "title": "HeaderMapper",
-                                  "description": "Sets the Kafka header mapper.",
-                                  "$comment": "group:advanced"
-                                },
-                                "keyDeserializer": {
-                                  "type": "string",
-                                  "title": "KeyDeserializer",
-                                  "description": "Sets the fully qualified key deserializer type class name.",
-                                  "$comment": "group:deserialize"
-                                },
-                                "keySerializer": {
-                                  "type": "string",
-                                  "title": "KeySerializer",
-                                  "description": "Sets the fully qualified key serializer type class name.",
-                                  "$comment": "group:serialize"
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "offsetReset": {
-                                  "type": "string",
-                                  "title": "OffsetReset",
-                                  "description": "Sets the offset reset.",
-                                  "$comment": "group:consume"
-                                },
-                                "partition": {
-                                  "type": "integer",
-                                  "title": "Partition",
-                                  "description": "Sets the Kafka topic partition."
-                                },
-                                "producerProperties": {
-                                  "type": "object",
-                                  "title": "ProducerProperties",
-                                  "description": "Sets the Kafka producer properties.",
-                                  "$comment": "group:produce"
-                                },
-                                "server": {
-                                  "type": "string",
-                                  "title": "Server",
-                                  "description": "Sets the Kafka bootstrap server."
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "Sets the Kafka consumer timeout.",
-                                  "$comment": "group:consume"
-                                },
-                                "topic": {
-                                  "type": "string",
-                                  "title": "Topic",
-                                  "description": "Sets the Kafka topic."
-                                },
-                                "useThreadSafeConsumer": {
-                                  "type": "boolean",
-                                  "title": "UseThreadSafeConsumer",
-                                  "description": "Sets thread safe consumer option for this endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "valueDeserializer": {
-                                  "type": "string",
-                                  "title": "ValueDeserializer",
-                                  "description": "Sets the fully qualified value deserializer type class name.",
-                                  "$comment": "group:deserialize"
-                                },
-                                "valueSerializer": {
-                                  "type": "string",
-                                  "title": "ValueSerializer",
-                                  "description": "Sets the fully qualified value serializer type class name.",
-                                  "$comment": "group:serialize"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Asynchronous",
-                              "description": "Sets the Kafka endpoint."
-                            }
-                          },
-                          "required": [
-                            "asynchronous"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "synchronous": {
-                              "type": "object",
-                              "properties": {
-                                "autoCommit": {
-                                  "type": "boolean",
-                                  "title": "AutoCommit",
-                                  "description": "Sets auto commit handling for this endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "autoCommitInterval": {
-                                  "type": "integer",
-                                  "title": "AutoCommitInterval",
-                                  "description": "Sets the auto commit interval.",
-                                  "$comment": "group:consume"
-                                },
-                                "bootstrapServers": {
-                                  "type": "string",
-                                  "title": "BootstrapServers",
-                                  "description": "Sets the Kafka bootstrap servers."
-                                },
-                                "clientId": {
-                                  "type": "string",
-                                  "title": "ClientId",
-                                  "description": "Sets the client id used to connect to the Kafka server.",
-                                  "$comment": "group:advanced"
-                                },
-                                "consumerGroup": {
-                                  "type": "string",
-                                  "title": "ConsumerGroup",
-                                  "description": "Sets the consumer group used by the endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "consumerProperties": {
-                                  "type": "object",
-                                  "title": "ConsumerProperties",
-                                  "description": "Sets the Kafka consumer properties.",
-                                  "$comment": "group:consume"
-                                },
-                                "headerMapper": {
-                                  "type": "string",
-                                  "title": "HeaderMapper",
-                                  "description": "Sets the Kafka header mapper.",
-                                  "$comment": "group:advanced"
-                                },
-                                "keyDeserializer": {
-                                  "type": "string",
-                                  "title": "KeyDeserializer",
-                                  "description": "Sets the fully qualified key deserializer type class name.",
-                                  "$comment": "group:deserialize"
-                                },
-                                "keySerializer": {
-                                  "type": "string",
-                                  "title": "KeySerializer",
-                                  "description": "Sets the fully qualified key serializer type class name.",
-                                  "$comment": "group:serialize"
-                                },
-                                "messageConverter": {
-                                  "type": "string",
-                                  "title": "MessageConverter",
-                                  "description": "Sets the message converter as a bean reference.",
-                                  "$comment": "group:advanced"
-                                },
-                                "name": {
-                                  "type": "string",
-                                  "title": "Name",
-                                  "description": "The name of the endpoint"
-                                },
-                                "offsetReset": {
-                                  "type": "string",
-                                  "title": "OffsetReset",
-                                  "description": "Sets the offset reset.",
-                                  "$comment": "group:consume"
-                                },
-                                "partition": {
-                                  "type": "integer",
-                                  "title": "Partition",
-                                  "description": "Sets the Kafka topic partition."
-                                },
-                                "producerProperties": {
-                                  "type": "object",
-                                  "title": "ProducerProperties",
-                                  "description": "Sets the Kafka producer properties.",
-                                  "$comment": "group:produce"
-                                },
-                                "server": {
-                                  "type": "string",
-                                  "title": "Server",
-                                  "description": "Sets the Kafka bootstrap server."
-                                },
-                                "timeout": {
-                                  "type": "integer",
-                                  "title": "Timeout",
-                                  "description": "Sets the Kafka consumer timeout.",
-                                  "$comment": "group:consume"
-                                },
-                                "topic": {
-                                  "type": "string",
-                                  "title": "Topic",
-                                  "description": "Sets the Kafka topic."
-                                },
-                                "useThreadSafeConsumer": {
-                                  "type": "boolean",
-                                  "title": "UseThreadSafeConsumer",
-                                  "description": "Sets thread safe consumer option for this endpoint.",
-                                  "$comment": "group:consume"
-                                },
-                                "valueDeserializer": {
-                                  "type": "string",
-                                  "title": "ValueDeserializer",
-                                  "description": "Sets the fully qualified value deserializer type class name.",
-                                  "$comment": "group:deserialize"
-                                },
-                                "valueSerializer": {
-                                  "type": "string",
-                                  "title": "ValueSerializer",
-                                  "description": "Sets the fully qualified value serializer type class name.",
-                                  "$comment": "group:serialize"
-                                }
-                              },
-                              "additionalProperties": false,
-                              "title": "Synchronous",
-                              "description": "Sets the synchronous Kafka endpoint."
-                            }
-                          },
-                          "required": [
-                            "synchronous"
-                          ]
-                        },
-                        {
-                          "not": {
-                            "anyOf": [
-                              {
-                                "required": [
-                                  "asynchronous"
-                                ]
-                              },
-                              {
-                                "required": [
-                                  "synchronous"
-                                ]
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ],
                   "title": "Kafka",
                   "description": "Kafka endpoint."
                 }
