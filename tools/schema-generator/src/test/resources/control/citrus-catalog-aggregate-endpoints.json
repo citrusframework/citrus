@@ -2064,6 +2064,44 @@
       },
       "additionalProperties": false    }
   },
+  "playwright-api-client": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "playwright-api-client",
+    "group": "playwright",
+    "module": "citrus-base",
+    "title": "PlaywrightApi-client",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        }
+      },
+      "additionalProperties": false    }
+  },
+  "playwright-browser": {
+    "kind": "testEndpoint",
+    "version": "${citrus.version}",
+    "name": "playwright-browser",
+    "group": "playwright",
+    "module": "citrus-playwright",
+    "title": "PlaywrightBrowser",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The name of the endpoint"
+        }
+      },
+      "additionalProperties": false    }
+  },
   "ftp-server": {
     "kind": "testEndpoint",
     "version": "${citrus.version}",

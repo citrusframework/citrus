@@ -31,6 +31,7 @@ import org.citrusframework.graphql.endpoint.builder.GraphQlEndpointBuilder;
 import org.citrusframework.grpc.endpoint.builder.GrpcEndpointBuilder;
 import org.citrusframework.kubernetes.endpoint.builder.KubernetesEndpointBuilder;
 import org.citrusframework.mail.endpoint.builder.MailEndpointBuilder;
+import org.citrusframework.playwright.endpoint.PlaywrightEndpointBuilder;
 import org.citrusframework.selenium.endpoint.SeleniumEndpointBuilder;
 import org.citrusframework.vertx.endpoint.builder.VertxEndpointsBuilder;
 import org.citrusframework.websocket.endpoint.builder.WebSocketEndpointBuilder;
@@ -58,6 +59,7 @@ import org.citrusframework.api.yaml.SchemaType;
     "camel",
     "channel",
     "selenium",
+    "playwright",
 })
 public interface Endpoints {
 
@@ -135,6 +137,10 @@ public interface Endpoints {
 
     @SchemaProperty(description = "Selenium endpoint.", module = "citrus-selenium")
     default void setSelenium(SeleniumEndpointBuilder builder) {
+    }
+
+    @SchemaProperty(description = "Playwright endpoint.", module = "citrus-playwright")
+    default void setPlaywright(PlaywrightEndpointBuilder builder) {
     }
 
 }
