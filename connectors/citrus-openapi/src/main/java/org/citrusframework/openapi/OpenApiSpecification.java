@@ -216,8 +216,8 @@ public class OpenApiSpecification implements Specification {
         specification.setSpecUrl(specUrl);
 
         try {
-            determineUrlAlias(new URL(specUrl)).ifPresent(specification::addAlias);
-        } catch (MalformedURLException e) {
+            determineUrlAlias(URI.create(specUrl).toURL()).ifPresent(specification::addAlias);
+        } catch (IllegalArgumentException | MalformedURLException e) {
             // Ignore;
         }
 

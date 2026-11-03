@@ -25,7 +25,7 @@ import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.springframework.http.client.ClientHttpRequestFactory;
 
-import java.net.URL;
+import java.net.URI;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
@@ -75,15 +75,15 @@ public class BasicAuthentication implements HttpAuthentication {
                 requestFactory.setHttpClient(httpClient.getEndpointConfiguration().getHttpClient());
             }
 
-            URL url = null;
+            URI uri = null;
             if (hasText(requestUrl)) {
-                url = new URL(requestUrl);
+                uri = URI.create(requestUrl);
             } else if (httpClient != null && hasText(httpClient.getEndpointConfiguration().getRequestUrl())) {
-                url = new URL(httpClient.getEndpointConfiguration().getRequestUrl());
+                uri = URI.create(httpClient.getEndpointConfiguration().getRequestUrl());
             }
 
-            if (url != null) {
-                AuthScope authScope = new AuthScope(url.getProtocol(), url.getHost(), url.getPort(), realm, "basic");
+            if (uri != null) {
+                AuthScope authScope = new AuthScope(uri.getScheme(), uri.getHost(), uri.getPort(), realm, "basic");
                 requestFactory.setAuthScope(authScope);
             }
 

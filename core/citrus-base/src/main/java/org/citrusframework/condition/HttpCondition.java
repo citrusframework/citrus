@@ -19,6 +19,7 @@ package org.citrusframework.condition;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 import org.citrusframework.context.TestContext;
@@ -115,8 +116,8 @@ public class HttpCondition extends AbstractCondition {
      */
     private URL getUrl(TestContext context) {
         try {
-            return new URL(context.replaceDynamicContentInString(this.url));
-        } catch (MalformedURLException e) {
+            return URI.create(context.replaceDynamicContentInString(this.url)).toURL();
+        } catch (IllegalArgumentException | MalformedURLException e) {
             throw new CitrusRuntimeException("Invalid request url", e);
         }
     }
