@@ -16,13 +16,7 @@
 
 package org.citrusframework.docker;
 
-import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.junit.jupiter.AbstractUnitTest;
 
 public abstract class UnitTestSupport extends AbstractUnitTest {
-
-    @Override
-    protected TestContextFactory createTestContextFactory() {
-        return TestContextFactory.newInstance();
-    }
 }
