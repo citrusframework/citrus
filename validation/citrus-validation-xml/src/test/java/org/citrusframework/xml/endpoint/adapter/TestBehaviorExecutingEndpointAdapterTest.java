@@ -37,6 +37,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * @since 1.3.1
  */
@@ -93,13 +95,9 @@ public class TestBehaviorExecutingEndpointAdapterTest extends UnitTestSupport {
         mappingNameExtractor.setXpathExpression("//I_DO_NOT_EXIST");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
-        try {
-            endpointAdapter.handleMessage(new DefaultMessage(
-                    "<FooTestDesigner>foo test please</FooTestDesigner>"));
-            Assertions.fail("Missing exception due to bad XPath expression");
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertEquals("No result for XPath expression: '//I_DO_NOT_EXIST'", e.getMessage());
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> endpointAdapter.handleMessage(new DefaultMessage(
+                "<FooTestDesigner>foo test please</FooTestDesigner>")));
+        Assertions.assertEquals("No result for XPath expression: '//I_DO_NOT_EXIST'", e.getMessage());
     }
 
     /**
@@ -111,13 +109,9 @@ public class TestBehaviorExecutingEndpointAdapterTest extends UnitTestSupport {
         mappingNameExtractor.setXpathExpression("//TestBehavior/@name");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
-        try {
-            endpointAdapter.handleMessage(new DefaultMessage(
-                    "<TestBehavior name=\"UNKNOWN_TEST\"></TestBehavior>"));
-            Assertions.fail("Missing exception due to unknown endpoint adapter");
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> endpointAdapter.handleMessage(new DefaultMessage(
+                "<TestBehavior name=\"UNKNOWN_TEST\"></TestBehavior>")));
+        Assertions.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
     }
 
     @Configuration

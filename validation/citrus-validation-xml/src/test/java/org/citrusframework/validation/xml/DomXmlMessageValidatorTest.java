@@ -392,12 +392,8 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         context.getReferenceResolver().bind("schemaRepository2", schemaRepository2);
 
-        try {
-            validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
-            Assertions.fail("Missing exception due to no matching schema repository error");
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertTrue(e.getMessage().startsWith("Failed to find proper schema repository"), e.getMessage());
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> validator.validateXMLSchema(message, context, new XmlMessageValidationContext()));
+        Assertions.assertTrue(e.getMessage().startsWith("Failed to find proper schema repository"), e.getMessage());
     }
 
     @Test
@@ -428,12 +424,8 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                 .schemaRepository("schemaRepository")
                 .build();
 
-        try {
-            validator.validateXMLSchema(message, context, validationContext);
-            Assertions.fail("Missing exception due to no matching schema repository error");
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertTrue(e.getMessage().startsWith("Unable to find proper XML schema definition"), e.getMessage());
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> validator.validateXMLSchema(message, context, validationContext));
+        Assertions.assertTrue(e.getMessage().startsWith("Unable to find proper XML schema definition"), e.getMessage());
     }
 
     @Test

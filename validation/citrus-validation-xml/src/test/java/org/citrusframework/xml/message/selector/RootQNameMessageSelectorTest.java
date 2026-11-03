@@ -21,6 +21,8 @@ import org.citrusframework.message.DefaultMessage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class RootQNameMessageSelectorTest extends UnitTestSupport {
 
     @Test
@@ -66,11 +68,7 @@ public class RootQNameMessageSelectorTest extends UnitTestSupport {
 
     @Test
     public void testInvalidQName() {
-        try {
-            new RootQNameMessageSelector(RootQNameMessageSelector.SELECTOR_ID,"{http://citrusframework.org/schemaFoo", context);
-            Assertions.fail("Missing exception due to invalid QName");
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertTrue(e.getMessage().startsWith("Invalid root QName"));
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> new RootQNameMessageSelector(RootQNameMessageSelector.SELECTOR_ID,"{http://citrusframework.org/schemaFoo", context));
+        Assertions.assertTrue(e.getMessage().startsWith("Invalid root QName"));
     }
 }

@@ -44,6 +44,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -121,13 +122,9 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
         mappingNameExtractor.setXpathExpression("//I_DO_NOT_EXIST");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
-        try {
-            endpointAdapter.handleMessage(new DefaultMessage(
-                    "<FooTest>foo test please</FooTest>"));
-            Assertions.fail("Missing exception due to bad XPath expression");
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertEquals("No result for XPath expression: '//I_DO_NOT_EXIST'", e.getMessage());
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> endpointAdapter.handleMessage(new DefaultMessage(
+                "<FooTest>foo test please</FooTest>")));
+        Assertions.assertEquals("No result for XPath expression: '//I_DO_NOT_EXIST'", e.getMessage());
     }
 
     /**
@@ -139,13 +136,9 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
         mappingNameExtractor.setXpathExpression("//Test/@name");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
-        try {
-            endpointAdapter.handleMessage(new DefaultMessage(
-                    "<Test name=\"UNKNOWN_TEST\"></Test>"));
-            Assertions.fail("Missing exception due to unknown endpoint adapter");
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertEquals("Failed to load test case", e.getMessage());
-        }
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () -> endpointAdapter.handleMessage(new DefaultMessage(
+                "<Test name=\"UNKNOWN_TEST\"></Test>")));
+        Assertions.assertEquals("Failed to load test case", e.getMessage());
     }
 
     @Configuration
