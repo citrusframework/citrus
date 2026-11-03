@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.citrusframework.validation.hamcrest.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
