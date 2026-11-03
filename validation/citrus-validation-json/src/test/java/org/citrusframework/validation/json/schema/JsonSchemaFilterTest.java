@@ -138,8 +138,8 @@ public class JsonSchemaFilterTest {
                 jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
 
         //THEN
-        Assertions.assertEquals(1,simpleJsonSchemas.size());
-        Assertions.assertEquals(simpleJsonSchemas.get(0), expectedSimpleJsonSchema);
+        Assertions.assertEquals(1, simpleJsonSchemas.size());
+        Assertions.assertEquals(expectedSimpleJsonSchema, simpleJsonSchemas.get(0));
     }
 
     @Test
