@@ -21,8 +21,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.knative.actions.eventing.CreateBrokerAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateBrokerTest extends AbstractYamlActionTest {
 
@@ -32,17 +32,17 @@ public class CreateBrokerTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateBrokerTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateBrokerAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("CreateBrokerTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(CreateBrokerAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         String namespace = "test";
         Broker broker = knativeClient.brokers().inNamespace(namespace).withName("my-broker").get();
-        Assert.assertNotNull(broker);
-        Assert.assertEquals(broker.getMetadata().getLabels().size(), 1);
-        Assert.assertEquals(broker.getMetadata().getLabels().get("app"), "citrus");
+        Assertions.assertNotNull(broker);
+        Assertions.assertEquals(1, broker.getMetadata().getLabels().size());
+        Assertions.assertEquals("citrus", broker.getMetadata().getLabels().get("app"));
     }
 }

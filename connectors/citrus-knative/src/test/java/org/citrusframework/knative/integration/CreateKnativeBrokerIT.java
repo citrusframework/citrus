@@ -18,11 +18,13 @@ package org.citrusframework.knative.integration;
 
 import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.knative.eventing.v1.Broker;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateKnativeBrokerIT extends AbstractKnativeIT implements TestActionSupport {
 
@@ -33,25 +35,25 @@ public class CreateKnativeBrokerIT extends AbstractKnativeIT implements TestActi
 
     @Test
     @CitrusTest
-    public void shouldCreateBroker() {
-        given(doFinally().actions(context -> knativeClient.brokers()
+    public void shouldCreateBroker(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(doFinally().actions(context -> knativeClient.brokers()
                 .inNamespace(namespace)
                 .withName("my-broker")
                 .delete()));
 
-        when(knative()
+        runner.when(knative()
                 .client(knativeClient)
                 .brokers()
                 .create("my-broker")
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Broker broker = knativeClient.brokers()
                     .inNamespace(namespace)
                     .withName("my-broker")
                     .get();
 
-            Assert.assertNotNull(broker);
+            Assertions.assertNotNull(broker);
         });
     }
 

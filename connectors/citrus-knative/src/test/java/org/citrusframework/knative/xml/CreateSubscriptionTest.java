@@ -21,8 +21,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.knative.actions.messaging.CreateSubscriptionAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateSubscriptionTest extends AbstractXmlActionTest {
 
@@ -32,20 +32,20 @@ public class CreateSubscriptionTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateSubscriptionTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateSubscriptionAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("CreateSubscriptionTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(CreateSubscriptionAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         String namespace = "test";
         Subscription subscription = knativeClient.subscriptions().inNamespace(namespace).withName("my-subscription").get();
-        Assert.assertNotNull(subscription);
-        Assert.assertEquals(subscription.getMetadata().getLabels().size(), 1);
-        Assert.assertEquals(subscription.getMetadata().getLabels().get("app"), "citrus");
-        Assert.assertEquals(subscription.getSpec().getChannel().getName(), "my-channel");
-        Assert.assertEquals(subscription.getSpec().getChannel().getKind(), "InMemoryChannel");
-        Assert.assertEquals(subscription.getSpec().getSubscriber().getRef().getName(), "my-service");
+        Assertions.assertNotNull(subscription);
+        Assertions.assertEquals(1, subscription.getMetadata().getLabels().size());
+        Assertions.assertEquals("citrus", subscription.getMetadata().getLabels().get("app"));
+        Assertions.assertEquals("my-channel", subscription.getSpec().getChannel().getName());
+        Assertions.assertEquals("InMemoryChannel", subscription.getSpec().getChannel().getKind());
+        Assertions.assertEquals("my-service", subscription.getSpec().getSubscriber().getRef().getName());
     }
 }

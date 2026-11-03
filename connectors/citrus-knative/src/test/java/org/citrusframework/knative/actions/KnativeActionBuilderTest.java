@@ -19,17 +19,17 @@ package org.citrusframework.knative.actions;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KnativeActionBuilderTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("knative"));
+        Assertions.assertTrue(endpointBuilders.containsKey("knative"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("knative").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("knative").get().getClass(), KnativeActionBuilder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("knative").isPresent());
+        Assertions.assertEquals(KnativeActionBuilder.class, TestActionBuilder.lookup("knative").get().getClass());
     }
 }

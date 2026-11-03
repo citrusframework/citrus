@@ -16,9 +16,13 @@
 
 package org.citrusframework.knative.integration;
 
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(classes = KnativeServiceConfiguration.class)
-public class AbstractKnativeIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = {CitrusSpringConfig.class, KnativeServiceConfiguration.class})
+@Isolated("Knative ITs share the mock Kubernetes server and broker names")
+public class AbstractKnativeIT {
 }
