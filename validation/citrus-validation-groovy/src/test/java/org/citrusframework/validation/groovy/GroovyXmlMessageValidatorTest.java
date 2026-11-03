@@ -99,16 +99,11 @@ public class GroovyXmlMessageValidatorTest extends AbstractUnitTest {
                 .script(validationScript)
                 .build();
 
-        try {
-            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertTrue(e.getMessage().startsWith("Groovy script validation failed"));
-            Assertions.assertTrue(e.getMessage().contains("Hello Citrus"));
-            Assertions.assertTrue(e.getMessage().contains("Hello TestFramework"));
-            return;
-        }
-
-        Assertions.fail("Missing script validation exception caused by wrong control value");
+        CitrusRuntimeException e = Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> validator.validateMessage(message, new DefaultMessage(), context, validationContext));
+        Assertions.assertTrue(e.getMessage().startsWith("Groovy script validation failed"));
+        Assertions.assertTrue(e.getMessage().contains("Hello Citrus"));
+        Assertions.assertTrue(e.getMessage().contains("Hello TestFramework"));
     }
 
     @Test

@@ -79,7 +79,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testGroovyScriptValidationWrongValue() throws ValidationException {
+    public void testGroovyScriptValidationWrongValue() {
         String validationScript = """
                 assert headers.operation == 'somethingElse'
                 assert payload == 'This is plain text!'
@@ -90,14 +90,9 @@ public class GroovyScriptMessageValidatorTest extends AbstractUnitTest {
                 .script(validationScript)
                 .build();
 
-        try {
-            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-        } catch (ValidationException e) {
-            Assertions.assertTrue(e.getCause() instanceof AssertionError);
-            return;
-        }
-
-        Assertions.fail("Missing validation exception due to wrong value");
+        ValidationException e = Assertions.assertThrows(ValidationException.class,
+                () -> validator.validateMessage(message, new DefaultMessage(), context, validationContext));
+        Assertions.assertTrue(e.getCause() instanceof AssertionError);
     }
 
     @Test
