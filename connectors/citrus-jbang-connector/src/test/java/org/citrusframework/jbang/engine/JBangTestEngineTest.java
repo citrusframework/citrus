@@ -24,8 +24,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.api.main.TestEngine;
 import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.spi.Resources;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JBangTestEngineTest {
 
@@ -51,11 +51,11 @@ public class JBangTestEngineTest {
         runTestEngine(configuration);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testRunNoMatch() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setPackages(Collections.singletonList("some.foo.directory"));
-        runTestEngine(configuration);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> runTestEngine(configuration));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class JBangTestEngineTest {
         configuration.setEngine("jbang");
         TestEngine engine = TestEngine.lookup(configuration);
 
-        Assert.assertEquals(engine.getClass(), JBangTestEngine.class);
+        Assertions.assertEquals(JBangTestEngine.class, engine.getClass());
     }
 
     private void runTestEngine(TestRunConfiguration configuration, Path workDir) {
