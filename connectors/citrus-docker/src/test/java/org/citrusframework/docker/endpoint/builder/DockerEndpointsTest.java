@@ -20,23 +20,23 @@ import java.util.Map;
 
 import org.citrusframework.docker.client.DockerClientBuilder;
 import org.citrusframework.endpoint.EndpointBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DockerEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("docker"));
-        Assert.assertTrue(endpointBuilders.containsKey("docker.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("docker"));
+        Assertions.assertTrue(endpointBuilders.containsKey("docker.client"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("docker").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("docker").get().getClass(), DockerEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("docker.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("docker.client").get().getClass(), DockerClientBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("docker").isPresent());
+        Assertions.assertEquals(DockerEndpointBuilder.class, EndpointBuilder.lookup("docker").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("docker.client").isPresent());
+        Assertions.assertEquals(DockerClientBuilder.class, EndpointBuilder.lookup("docker.client").get().getClass());
     }
 }
