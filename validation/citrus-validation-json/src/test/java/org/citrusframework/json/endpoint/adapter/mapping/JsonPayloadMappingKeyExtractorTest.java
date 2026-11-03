@@ -54,12 +54,8 @@ public class JsonPayloadMappingKeyExtractorTest {
         JsonPayloadMappingKeyExtractor extractor = new JsonPayloadMappingKeyExtractor();
         extractor.setJsonPathExpression("$.I_DO_NOT_EXIST");
 
-        try {
-            extractor.extractMappingKey(new DefaultMessage(
-                    "{ \"person\": {\"name\": \"Penny\"} }"));
-            Assertions.fail("Missing exception due to bad Json expression");
-        } catch (CitrusRuntimeException e) {
-            Assertions.assertEquals("Failed to evaluate JSON path expression: $.I_DO_NOT_EXIST", e.getMessage());
-        }
+        CitrusRuntimeException e = Assertions.assertThrows(CitrusRuntimeException.class, () -> extractor.extractMappingKey(new DefaultMessage(
+                "{ \"person\": {\"name\": \"Penny\"} }")));
+        Assertions.assertEquals("Failed to evaluate JSON path expression: $.I_DO_NOT_EXIST", e.getMessage());
     }
 }

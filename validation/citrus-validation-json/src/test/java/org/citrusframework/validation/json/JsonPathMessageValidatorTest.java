@@ -193,45 +193,30 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
 
     @Test
     public void testValidateMessageElementsWithJsonPathFunctionsNotSuccessful() {
-        JsonPathMessageValidationContext validationContext = validationContext = new JsonPathMessageValidationContext.Builder()
-                .expression("$.element.keySet()", "[attributeA, attributeB, attributeC]")
-                .build();
-        try {
-            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assertions.fail("Missing validation exception");
-        } catch (ValidationException e) {}
+        Assertions.assertThrows(ValidationException.class, () -> validator.validateMessage(message, new DefaultMessage(), context,
+                new JsonPathMessageValidationContext.Builder()
+                        .expression("$.element.keySet()", "[attributeA, attributeB, attributeC]")
+                        .build()));
 
-        validationContext = new JsonPathMessageValidationContext.Builder()
-                .expression("$.element.keySet()", Arrays.asList("attributeA", "attributeB"))
-                .build();
-        try {
-            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assertions.fail("Missing validation exception");
-        } catch (ValidationException e) {}
+        Assertions.assertThrows(ValidationException.class, () -> validator.validateMessage(message, new DefaultMessage(), context,
+                new JsonPathMessageValidationContext.Builder()
+                        .expression("$.element.keySet()", Arrays.asList("attributeA", "attributeB"))
+                        .build()));
 
-        validationContext = new JsonPathMessageValidationContext.Builder()
-                .expression("$.root.numbers.size()", 5)
-                .build();
-        try {
-            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assertions.fail("Missing validation exception");
-        } catch (ValidationException e) {}
+        Assertions.assertThrows(ValidationException.class, () -> validator.validateMessage(message, new DefaultMessage(), context,
+                new JsonPathMessageValidationContext.Builder()
+                        .expression("$.root.numbers.size()", 5)
+                        .build()));
 
-        validationContext = new JsonPathMessageValidationContext.Builder()
-                .expression("$.root.person.size()", 0)
-                .build();
-        try {
-            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assertions.fail("Missing validation exception");
-        } catch (ValidationException e) {}
+        Assertions.assertThrows(ValidationException.class, () -> validator.validateMessage(message, new DefaultMessage(), context,
+                new JsonPathMessageValidationContext.Builder()
+                        .expression("$.root.person.size()", 0)
+                        .build()));
 
-        validationContext = new JsonPathMessageValidationContext.Builder()
-                .expression("$.root.nullValue", "10")
-                .build();
-        try {
-            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
-            Assertions.fail("Missing validation exception");
-        } catch (ValidationException e) {}
+        Assertions.assertThrows(ValidationException.class, () -> validator.validateMessage(message, new DefaultMessage(), context,
+                new JsonPathMessageValidationContext.Builder()
+                        .expression("$.root.nullValue", "10")
+                        .build()));
     }
 
     @Test
