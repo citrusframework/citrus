@@ -19,7 +19,6 @@ package org.citrusframework.http.config.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.servlet.http.Cookie;
 import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.citrusframework.spring.config.xml.SendMessageActionParser;
@@ -78,6 +77,10 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             httpMessage.path(requestElement.getAttribute("path"));
         }
 
+        if (requestElement.hasAttribute("context-path")) {
+            httpMessage.contextPath(requestElement.getAttribute("context-path"));
+        }
+
         List<?> params = DomUtils.getChildElementsByTagName(requestElement, "param");
         for (Object aParam : params) {
             Element param = (Element) aParam;
@@ -108,10 +111,7 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             }
 
             List<?> cookieElements = DomUtils.getChildElementsByTagName(headers, "cookie");
-            for (Object cookieElement : cookieElements) {
-                Element cookie = (Element) cookieElement;
-                httpMessage.cookie(new Cookie(cookie.getAttribute("name"), cookie.getAttribute("value")));
-            }
+            CookieUtils.setCookieElement(httpMessage, cookieElements);
         }
 
         Element body = DomUtils.getChildElementByTagName(requestElement, "body");

@@ -31,6 +31,7 @@ import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.endpoint.direct.DirectSyncEndpointConfiguration;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.http.client.HttpClient;
+import org.citrusframework.http.message.Cookie;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
@@ -96,6 +97,7 @@ public class HttpClientTest extends AbstractYamlActionTest {
                 .port(port)
                 .timeout(500L)
                 .endpointAdapter(endpointAdapter)
+                .handleCookies(true)
                 .autoStart(true)
                 .name("httpServer")
                 .build();
@@ -103,6 +105,7 @@ public class HttpClientTest extends AbstractYamlActionTest {
 
         httpClient = http().client()
                 .requestUrl(uri)
+                .handleCookies(true)
                 .name("httpClient")
                 .build();
     }
@@ -125,7 +128,7 @@ public class HttpClientTest extends AbstractYamlActionTest {
 
         responses.add(new HttpMessage().status(HttpStatus.OK));
         responses.add(new HttpMessage("<order><id>12345</id><item>foo</item></order>").status(HttpStatus.OK).contentType("application/xml"));
-        responses.add(new HttpMessage().status(HttpStatus.NOT_FOUND).header("userId", "1001"));
+        responses.add(new HttpMessage().status(HttpStatus.NOT_FOUND).header("userId", "1001").cookie(createCookie()));
 
         testLoader.load();
 
@@ -235,8 +238,10 @@ public class HttpClientTest extends AbstractYamlActionTest {
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "<user><id>1001</id><name>new_user</name></user>");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user");
+        Assert.assertEquals(httpMessageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_CONTEXT_PATH), "/test");
         Assert.assertEquals(httpMessageBuilder.buildMessageHeaders(context).get("userId"), "1001");
         Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        assertCookie(httpMessageBuilder);
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
@@ -251,10 +256,11 @@ public class HttpClientTest extends AbstractYamlActionTest {
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         responseHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        Assert.assertEquals(responseHeaders.size(), 3L);
+        Assert.assertEquals(responseHeaders.size(), 4L);
         Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE), "404");
         Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "NOT_FOUND");
         Assert.assertEquals(responseHeaders.get("userId"), "1001");
+        assertCookie(httpMessageBuilder);
         Assert.assertNull(receiveMessageAction.getEndpoint());
         Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
 
@@ -287,6 +293,30 @@ public class HttpClientTest extends AbstractYamlActionTest {
         Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "http://localhost:${port}/test");
         Assert.assertEquals(sendMessageAction.getActor(), testActor);
+    }
+
+    private jakarta.servlet.http.Cookie createCookie() {
+        Cookie cookie = new Cookie();
+        cookie.setName("session");
+        cookie.setValue("abc123");
+        cookie.setPath("/user");
+        cookie.setDomain("example.com");
+        cookie.setMaxAge(3600);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        return cookie.toCookie();
+    }
+
+    private void assertCookie(HttpMessageBuilder messageBuilder) {
+        Assert.assertEquals(messageBuilder.getMessage().getCookies().size(), 1);
+        jakarta.servlet.http.Cookie cookie = messageBuilder.getMessage().getCookies().get(0);
+        Assert.assertEquals(cookie.getName(), "session");
+        Assert.assertEquals(cookie.getValue(), "abc123");
+        Assert.assertEquals(cookie.getPath(), "/user");
+        Assert.assertEquals(cookie.getDomain(), "example.com");
+        Assert.assertEquals(cookie.getMaxAge(), 3600);
+        Assert.assertTrue(cookie.getSecure());
+        Assert.assertTrue(cookie.isHttpOnly());
     }
 
     @Test

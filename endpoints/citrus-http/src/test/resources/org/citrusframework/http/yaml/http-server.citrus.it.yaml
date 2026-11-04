@@ -44,9 +44,18 @@ actions:
       receiveRequest:
         POST:
           path: "/user"
+          contextPath: "/test"
           headers:
             - name: "userId"
               value: "1001"
+          cookies:
+            - name: "session"
+              value: "abc123"
+              path: "/user"
+              domain: "example.com"
+              maxAge: 3600
+              secure: true
+              httpOnly: true
           body:
             data: |
               <user><id>1001</id><name>new_user</name></user>
@@ -67,6 +76,14 @@ actions:
           headers:
             - name: "userId"
               value: "1001"
+          cookies:
+            - name: "session"
+              value: "abc123"
+              path: "/user"
+              domain: "example.com"
+              maxAge: 3600
+              secure: true
+              httpOnly: true
 
   - http:
       server: "httpServer"

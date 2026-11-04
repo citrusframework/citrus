@@ -75,8 +75,18 @@ public class HttpSendRequestActionParserTest extends AbstractActionParserTest<Se
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "<user><id>1001</id><name>new_user</name></user>");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTEXT_PATH), "/test");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get("userId"), "1001");
         Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assert.assertEquals(httpMessageBuilder.getMessage().getCookies().size(), 1);
+        jakarta.servlet.http.Cookie cookie = httpMessageBuilder.getMessage().getCookies().get(0);
+        Assert.assertEquals(cookie.getName(), "session");
+        Assert.assertEquals(cookie.getValue(), "abc123");
+        Assert.assertEquals(cookie.getPath(), "/user");
+        Assert.assertEquals(cookie.getDomain(), "example.com");
+        Assert.assertEquals(cookie.getMaxAge(), 3600);
+        Assert.assertTrue(cookie.getSecure());
+        Assert.assertTrue(cookie.isHttpOnly());
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
         Assert.assertNull(action.getEndpointUri());
 

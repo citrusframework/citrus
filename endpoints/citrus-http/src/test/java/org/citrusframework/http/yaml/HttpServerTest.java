@@ -27,6 +27,7 @@ import org.citrusframework.base.endpoint.AbstractEndpointAdapter;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
+import org.citrusframework.http.message.Cookie;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
@@ -101,7 +102,9 @@ public class HttpServerTest extends AbstractYamlActionTest {
         endpointAdapter.handleMessage(new HttpMessage("<user><id>1001</id><name>new_user</name></user>")
                         .method(HttpMethod.POST)
                         .path("/user")
+                        .contextPath("/test")
                         .header("userId", "1001")
+                        .cookie(createCookie())
                         .contentType("application/xml"));
         endpointAdapter.handleMessage(new HttpMessage()
                         .method(HttpMethod.DELETE)
@@ -209,8 +212,10 @@ public class HttpServerTest extends AbstractYamlActionTest {
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "<user><id>1001</id><name>new_user</name></user>");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user");
+        Assert.assertEquals(httpMessageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_CONTEXT_PATH), "/test");
         Assert.assertEquals(httpMessageBuilder.buildMessageHeaders(context).get("userId"), "1001");
         Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        assertCookie(httpMessageBuilder);
         Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpServer");
 
         Assert.assertEquals(receiveMessageAction.getVariableExtractors().size(), 1L);
@@ -226,10 +231,11 @@ public class HttpServerTest extends AbstractYamlActionTest {
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         responseHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        Assert.assertEquals(responseHeaders.size(), 3L);
+        Assert.assertEquals(responseHeaders.size(), 4L);
         Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE), "404");
         Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "NOT_FOUND");
         Assert.assertEquals(responseHeaders.get("userId"), "1001");
+        assertCookie(httpMessageBuilder);
         Assert.assertNull(sendMessageAction.getEndpoint());
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
 
@@ -261,5 +267,29 @@ public class HttpServerTest extends AbstractYamlActionTest {
         Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpServer");
         Assert.assertEquals(receiveMessageAction.getActor(), testActor);
+    }
+
+    private jakarta.servlet.http.Cookie createCookie() {
+        Cookie cookie = new Cookie();
+        cookie.setName("session");
+        cookie.setValue("abc123");
+        cookie.setPath("/user");
+        cookie.setDomain("example.com");
+        cookie.setMaxAge(3600);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        return cookie.toCookie();
+    }
+
+    private void assertCookie(HttpMessageBuilder messageBuilder) {
+        Assert.assertEquals(messageBuilder.getMessage().getCookies().size(), 1);
+        jakarta.servlet.http.Cookie cookie = messageBuilder.getMessage().getCookies().get(0);
+        Assert.assertEquals(cookie.getName(), "session");
+        Assert.assertEquals(cookie.getValue(), "abc123");
+        Assert.assertEquals(cookie.getPath(), "/user");
+        Assert.assertEquals(cookie.getDomain(), "example.com");
+        Assert.assertEquals(cookie.getMaxAge(), 3600);
+        Assert.assertTrue(cookie.getSecure());
+        Assert.assertTrue(cookie.isHttpOnly());
     }
 }

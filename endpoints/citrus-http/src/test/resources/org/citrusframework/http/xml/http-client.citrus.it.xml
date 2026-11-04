@@ -63,10 +63,11 @@
 
     <http client="httpClient">
       <send-request>
-        <POST path="/user">
+        <POST path="/user" context-path="/test">
           <headers>
             <header name="userId" value="1001"/>
           </headers>
+          <cookie name="session" value="abc123" path="/user" domain="example.com" max-age="3600" secure="true" http-only="true"/>
           <body>
             <data>
               <![CDATA[
@@ -84,6 +85,7 @@
           <headers>
             <header name="userId" value="1001"/>
           </headers>
+          <cookie name="session" value="abc123" path="/user" domain="example.com" max-age="3600" secure="true" http-only="true"/>
         </response>
       </receive-response>
     </http>
