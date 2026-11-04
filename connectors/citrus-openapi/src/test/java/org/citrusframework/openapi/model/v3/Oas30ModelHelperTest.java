@@ -16,6 +16,10 @@
 
 package org.citrusframework.openapi.model.v3;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Components;
@@ -30,18 +34,14 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30SchemaDefinition;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.model.OasModelHelper;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.testng.annotations.Test;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
 
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Oas30ModelHelperTest {
 

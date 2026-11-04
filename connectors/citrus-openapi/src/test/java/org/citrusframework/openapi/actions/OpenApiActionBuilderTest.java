@@ -16,21 +16,20 @@
 
 package org.citrusframework.openapi.actions;
 
-import org.citrusframework.TestActionBuilder;
-import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import java.util.Map;
 
-import static org.testng.Assert.assertTrue;
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 
 public class OpenApiActionBuilderTest {
 
     private OpenApiActionBuilder fixture;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethod() {
         fixture = new OpenApiActionBuilder();
     }
@@ -38,14 +37,14 @@ public class OpenApiActionBuilderTest {
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("openapi"));
+        Assertions.assertTrue(endpointBuilders.containsKey("openapi"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("openapi").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("openapi").get().getClass(), OpenApiActionBuilder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("openapi").isPresent());
+        Assertions.assertEquals(TestActionBuilder.lookup("openapi").get().getClass(), OpenApiActionBuilder.class);
     }
 
     @Test
     public void isReferenceResolverAwareTestActionBuilder() {
-        assertTrue(fixture instanceof AbstractReferenceResolverAwareTestActionBuilder<?>, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
+        Assertions.assertTrue(fixture instanceof AbstractReferenceResolverAwareTestActionBuilder<?>, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
     }
 }

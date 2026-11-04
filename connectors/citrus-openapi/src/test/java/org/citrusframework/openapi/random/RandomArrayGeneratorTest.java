@@ -19,9 +19,10 @@ package org.citrusframework.openapi.random;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import org.citrusframework.openapi.OpenApiConstants;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
@@ -37,7 +38,7 @@ public class RandomArrayGeneratorTest {
     private RandomContext mockContext;
     private RandomModelBuilder builderSpy;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         generator = new RandomArrayGenerator();
         mockContext = mock();
@@ -112,11 +113,12 @@ public class RandomArrayGeneratorTest {
         verify(mockContext, atMost(5)).generate(any(OasSchema.class));
     }
 
-    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Test
     public void testGenerateArrayWithUnsupportedItems() {
         Oas30Schema schema = new Oas30Schema();
         schema.items = new Object(); // Unsupported items type
 
-        generator.generateIntoContext(mockContext, schema);
+        assertThrows(UnsupportedOperationException.class,
+                () -> generator.generateIntoContext(mockContext, schema));
     }
 }

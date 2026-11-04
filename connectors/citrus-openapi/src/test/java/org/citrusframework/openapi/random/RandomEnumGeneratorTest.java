@@ -19,8 +19,8 @@ package org.citrusframework.openapi.random;
 import java.util.List;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.emptyList;
 import static org.mockito.Mockito.anyString;
@@ -28,8 +28,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RandomEnumGeneratorTest {
 
@@ -38,7 +38,7 @@ public class RandomEnumGeneratorTest {
     private RandomModelBuilder mockBuilder;
     private OasSchema mockSchema;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         generator = new RandomEnumGenerator();
         mockContext = mock(RandomContext.class);

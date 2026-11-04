@@ -16,8 +16,15 @@
 
 package org.citrusframework.openapi;
 
-import com.atlassian.oai.validator.report.ValidationReport;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.atlassian.oai.validator.report.ValidationReport.Message;
+import com.atlassian.oai.validator.report.ValidationReport;
 import com.atlassian.oai.validator.schema.SchemaValidator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -25,19 +32,15 @@ import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import io.swagger.v3.oas.models.media.Schema;
 import org.apache.commons.lang3.StringUtils;
-import org.citrusframework.context.TestContext;
 import org.citrusframework.base.functions.DefaultFunctionRegistry;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.spi.Resources;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.citrusframework.openapi.OpenApiConstants.FORMAT_DOUBLE;
 import static org.citrusframework.openapi.OpenApiConstants.FORMAT_FLOAT;
@@ -49,10 +52,10 @@ import static org.citrusframework.openapi.OpenApiConstants.TYPE_INTEGER;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_NUMBER;
 import static org.citrusframework.openapi.OpenApiConstants.TYPE_STRING;
 import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenApiTestDataGeneratorTest {
 
@@ -62,7 +65,7 @@ public class OpenApiTestDataGeneratorTest {
 
     private static SchemaValidator schemaValidator;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         testContext.setFunctionRegistry(new DefaultFunctionRegistry());
 
@@ -72,9 +75,8 @@ public class OpenApiTestDataGeneratorTest {
                 .getSchemaValidator();
     }
 
-    @DataProvider(name = "testRandomNumber")
-    public static Object[][] testRandomNumber() {
-        return new Object[][]{
+    static Stream<Arguments> testRandomNumber() {
+        return Stream.of(new Object[][]{
                 {TYPE_INTEGER, FORMAT_INT32, null, 0, 2, true, true},
                 {TYPE_INTEGER, FORMAT_INT32, null, null, null, false, false},
                 {TYPE_INTEGER, FORMAT_INT32, null, 0, 100, false, false},
@@ -166,12 +168,11 @@ public class OpenApiTestDataGeneratorTest {
                 {TYPE_NUMBER, FORMAT_DOUBLE, 19.123d, -21, 0, true, true},
                 {TYPE_NUMBER, FORMAT_DOUBLE, 20.123d, 0, null, false, false},
                 {TYPE_NUMBER, FORMAT_DOUBLE, 21.123d, 21.122d, 21.124d, false, false},
-        };
+        }).map(Arguments::of);
     }
 
-    @DataProvider(name = "testPingApiSchemas")
-    public static Object[][] testPingApiSchemas() {
-        return new Object[][]{
+    static Stream<Arguments> testPingApiSchemas() {
+        return Stream.of(new Object[][]{
                 // Composites currently do not work properly - validation fails
                 //{"AnyOfType"},
                 //{"AllOfType"},
@@ -192,7 +193,7 @@ public class OpenApiTestDataGeneratorTest {
                 {"ArrayOfArraysType"},
                 {"NullableType"},
                 {"DefaultValueType"},
-        };
+        }).map(Arguments::of);
     }
 
     @Test
@@ -209,7 +210,8 @@ public class OpenApiTestDataGeneratorTest {
         assertTrue(uuidPattern.matcher(finalUuidRandomValue).matches());
     }
 
-    @Test(dataProvider = "testRandomNumber")
+    @ParameterizedTest(name = "type={0}, format={1}, multipleOf={2}")
+    @MethodSource("testRandomNumber")
     public void testRandomNumber(String type,
                           String format,
                           Number multipleOf,
@@ -281,7 +283,8 @@ public class OpenApiTestDataGeneratorTest {
         assertTrue(finalRandomValue.matches(exp), "Value '%s' does not match expression '%s'".formatted(finalRandomValue, exp));
     }
 
-    @Test(dataProvider = "testPingApiSchemas")
+    @ParameterizedTest(name = "schemaType={0}")
+    @MethodSource("testPingApiSchemas")
     public void testPingApiSchemas(String schemaType) throws IOException {
         OasSchema schema = OasModelHelper.getSchemaDefinitions(
                 openApiSpecification.getOpenApiDoc(null)).get(schemaType);

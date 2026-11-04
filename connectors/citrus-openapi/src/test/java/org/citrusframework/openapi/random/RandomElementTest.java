@@ -17,10 +17,11 @@
 package org.citrusframework.openapi.random;
 
 import org.citrusframework.openapi.random.RandomElement.RandomValue;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RandomElementTest {
 
@@ -28,7 +29,7 @@ public class RandomElementTest {
     private RandomElement.RandomObject randomObject;
     private RandomElement.RandomValue randomValue;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         randomList = new RandomElement.RandomList();
         randomObject = new RandomElement.RandomObject();
@@ -68,9 +69,10 @@ public class RandomElementTest {
         assertEquals(randomObject.get("nestedKey"), value);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void testRandomObjectPushValueThrowsException() {
-        randomObject.push(new RandomValue("value"));
+        assertThrows(IllegalArgumentException.class,
+                () -> randomObject.push(new RandomValue("value")));
     }
 
     @Test
@@ -89,8 +91,9 @@ public class RandomElementTest {
         assertEquals(((RandomElement.RandomObject) randomValue.getValue()).get("key"), value);
     }
 
-    @Test(expectedExceptions = IllegalStateException.class)
+    @Test
     public void testRandomValuePushKeyValueThrowsException() {
-        randomValue.push("key", new RandomValue("value"));
+        assertThrows(IllegalStateException.class,
+                () -> randomValue.push("key", new RandomValue("value")));
     }
 }

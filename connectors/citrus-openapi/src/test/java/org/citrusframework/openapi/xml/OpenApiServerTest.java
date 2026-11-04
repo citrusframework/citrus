@@ -37,15 +37,15 @@ import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.xml.XmlTestLoader;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OpenApiServerTest extends AbstractXmlActionTest {
 
@@ -59,7 +59,7 @@ public class OpenApiServerTest extends AbstractXmlActionTest {
             .build());
     private HttpServer httpServer;
 
-    @BeforeClass
+    @BeforeEach
     public void setupEndpoints() {
         ((AbstractEndpointAdapter) endpointAdapter).setTestContextFactory(testContextFactory);
 
@@ -122,10 +122,10 @@ public class OpenApiServerTest extends AbstractXmlActionTest {
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
         assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            HeaderValidationContext.class::isInstance, "List must contain HeaderValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(HeaderValidationContext.class::isInstance), "List must contain HeaderValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(OpenApiMessageValidationContext.class::isInstance), "List must contain OpenApiMessageValidationContext");
 
         assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
@@ -157,10 +157,10 @@ public class OpenApiServerTest extends AbstractXmlActionTest {
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
         assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            HeaderValidationContext.class::isInstance, "List must contain HeaderValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(HeaderValidationContext.class::isInstance), "List must contain HeaderValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(OpenApiMessageValidationContext.class::isInstance), "List must contain OpenApiMessageValidationContext");
         assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());

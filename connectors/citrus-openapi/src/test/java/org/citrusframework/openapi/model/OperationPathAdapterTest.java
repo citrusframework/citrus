@@ -18,10 +18,10 @@ package org.citrusframework.openapi.model;
 
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import org.citrusframework.openapi.util.OpenApiUtils;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.String.format;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OperationPathAdapterTest {
 

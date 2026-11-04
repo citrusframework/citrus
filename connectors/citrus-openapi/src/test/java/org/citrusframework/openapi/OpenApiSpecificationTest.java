@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.stream.Stream;
 import javax.net.ssl.HttpsURLConnection;
 
 import io.apicurio.datamodels.openapi.models.OasDocument;
@@ -34,14 +35,16 @@ import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources.ClasspathResource;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.citrusframework.openapi.OpenApiSpecification.determineResourceAlias;
 import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.IGNORE;
@@ -52,16 +55,18 @@ import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(MockitoExtension.class)
 public class OpenApiSpecificationTest {
 
     private static final String PING_API_HTTP_URL_STRING = "http://org.citrus.example.com/ping-api.yaml";
@@ -86,25 +91,22 @@ public class OpenApiSpecificationTest {
     @Mock
     private HttpEndpointConfiguration endpointConfigurationMock;
 
-    private AutoCloseable mockCloseable;
-
     @InjectMocks
     private OpenApiSpecification openApiSpecification;
 
-    @DataProvider(name = "protocollDataProvider")
-    public static Object[][] protocolls() {
-        return new Object[][]{{PING_API_HTTP_URL_STRING}, {PING_API_HTTPS_URL_STRING}};
+    static Stream<Arguments> protocollDataProvider() {
+        return Stream.of(
+                Arguments.of(PING_API_HTTP_URL_STRING),
+                Arguments.of(PING_API_HTTPS_URL_STRING));
     }
 
-    @DataProvider(name = "lazyInitializationDataprovider")
-    public static Object[][] specSources() {
-        return new Object[][]{
-                {null, "classpath:org/citrusframework/openapi/ping/ping-api.yaml"},
-                {null, PING_API_HTTP_URL_STRING},
-                {null, PING_API_HTTPS_URL_STRING},
-                {null, "/ping-api.yaml"},
-                {"http://org.citrus.sample", "/ping-api.yaml"}
-        };
+    static Stream<Arguments> lazyInitializationDataprovider() {
+        return Stream.of(
+                Arguments.of(null, "classpath:org/citrusframework/openapi/ping/ping-api.yaml"),
+                Arguments.of(null, PING_API_HTTP_URL_STRING),
+                Arguments.of(null, PING_API_HTTPS_URL_STRING),
+                Arguments.of(null, "/ping-api.yaml"),
+                Arguments.of("http://org.citrus.sample", "/ping-api.yaml"));
     }
 
     private static URL mockUrlConnection(String urlString) {
@@ -123,26 +125,20 @@ public class OpenApiSpecificationTest {
         }
     }
 
-    @BeforeClass
-    public void beforeClass() throws IOException {
+    @BeforeAll
+    public static void beforeClass() throws IOException {
         PING_API_STRING = readToString(
                 new ClasspathResource(
                         "classpath:org/citrusframework/openapi/ping/ping-api.yaml"));
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
-        mockCloseable = MockitoAnnotations.openMocks(this);
-
         testContextMock.setReferenceResolver(referenceResolverMock);
     }
 
-    @AfterMethod
-    public void tearDown() throws Exception {
-        mockCloseable.close();
-    }
-
-    @Test(dataProvider = "protocollDataProvider")
+    @ParameterizedTest(name = "protocol={0}")
+    @MethodSource("protocollDataProvider")
     public void shouldInitializeFromUrl(String urlString) {
         // Given
         URL urlMock = mockUrlConnection(urlString);
@@ -210,7 +206,7 @@ public class OpenApiSpecificationTest {
         Resource resource = new ClasspathResource("classpath:org/citrusframework/openapi/faulty/faulty-ping-api.yaml");
 
         // When
-        assertThrows( () -> OpenApiSpecification.from(resource, STRICT));
+        assertThrows(CitrusRuntimeException.class, () -> OpenApiSpecification.from(resource, STRICT));
     }
 
     @Test
@@ -290,7 +286,8 @@ public class OpenApiSpecificationTest {
         assertEquals(pingOperationPathAdapter.get().fullPath(), "/services/rest/ping/v1/ping/{id}");
     }
 
-    @Test(dataProvider = "lazyInitializationDataprovider")
+    @ParameterizedTest(name = "requestUrl={0}, specSource={1}")
+    @MethodSource("lazyInitializationDataprovider")
     public void shouldDisableEnableRequestValidationWhenSet(String requestUrl, String specSource) {
 
         // Given
@@ -305,13 +302,13 @@ public class OpenApiSpecificationTest {
         specification.setRequestUrl(requestUrl);
         specification.setHttpClient("sampleHttpClient");
         specification.setSpecUrl(specSource);
-        when(testContextMock.replaceDynamicContentInString(isA(String.class))).thenAnswer(returnsFirstArg());
+        lenient().when(testContextMock.replaceDynamicContentInString(isA(String.class))).thenAnswer(returnsFirstArg());
 
-        when(testContextMock.getReferenceResolver()).thenReturn(referenceResolverMock);
-        when(referenceResolverMock.isResolvable("sampleHttpClient", HttpClient.class)).thenReturn(true);
-        when(referenceResolverMock.resolve("sampleHttpClient", HttpClient.class)).thenReturn(httpClient);
-        when(httpClient.getEndpointConfiguration()).thenReturn(endpointConfigurationMock);
-        when(endpointConfigurationMock.getRequestUrl()).thenReturn("http://org.citrus.sample");
+        lenient().when(testContextMock.getReferenceResolver()).thenReturn(referenceResolverMock);
+        lenient().when(referenceResolverMock.isResolvable("sampleHttpClient", HttpClient.class)).thenReturn(true);
+        lenient().when(referenceResolverMock.resolve("sampleHttpClient", HttpClient.class)).thenReturn(httpClient);
+        lenient().when(httpClient.getEndpointConfiguration()).thenReturn(endpointConfigurationMock);
+        lenient().when(endpointConfigurationMock.getRequestUrl()).thenReturn("http://org.citrus.sample");
 
         // When
         specification.setApiRequestValidationEnabled(false);

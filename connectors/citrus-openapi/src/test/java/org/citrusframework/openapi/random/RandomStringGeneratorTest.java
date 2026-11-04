@@ -18,8 +18,8 @@ package org.citrusframework.openapi.random;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -32,7 +32,7 @@ public class RandomStringGeneratorTest {
     private RandomModelBuilder mockBuilder;
     private OasSchema schema;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         generator = new RandomStringGenerator();
         mockContext = mock(RandomContext.class);

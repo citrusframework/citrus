@@ -17,19 +17,19 @@
 package org.citrusframework.openapi.actions;
 
 import org.citrusframework.context.TestContext;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenApiPayloadBuilderTest {
 
     private TestContext context;
 
-    @BeforeClass
+    @BeforeEach
     public void setUp() {
         context = new TestContext();
     }

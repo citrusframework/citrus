@@ -16,26 +16,35 @@
 
 package org.citrusframework.openapi.integration;
 
-import org.citrusframework.dsl.TestActionSupport;
+import java.util.stream.Stream;
+
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.api.openapi.AutoFillType;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
-import org.citrusframework.api.openapi.AutoFillType;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.integration.OpenApiClientIT.Config;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.SocketUtils;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -53,10 +62,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * @see OpenApiSpecification
  * @see CitrusTest
  */
-@Test
-@ContextConfiguration(classes = {Config.class})
+@CitrusSpringSupport
+@ContextConfiguration(classes = {CitrusSpringConfig.class, Config.class})
 @DirtiesContext
-public class OpenApiClientApiContextPathIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@TestMethodOrder(MethodOrderer.MethodName.class)
+@Isolated("ITs bind ephemeral TCP ports that may collide with other parallel test classes")
+public class OpenApiClientApiContextPathIT implements TestActionSupport {
 
     public static final String VALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet.json";
 
@@ -86,43 +97,43 @@ public class OpenApiClientApiContextPathIT extends TestNGCitrusSpringSupport imp
         .neglectBasePath(true)
         .rootContextPath("/api");
 
-    @DataProvider
-    public static Object[][] openApiSpecifications() {
-        return new Object[][]{
-            {petstoreSpec, "/petstore/v3/pet"},
-            {petstoreSpecNeglectingBasePath, "/pet"},
-            {petstoreSpecWithContextPath, "/api/petstore/v3/pet"},
-            {petstoreSpecWithContextPathNeglectingBasePath, "/api/pet"},
-        };
+    static Stream<Arguments> openApiSpecifications() {
+        return Stream.of(
+            Arguments.of(petstoreSpec, "/petstore/v3/pet"),
+            Arguments.of(petstoreSpecNeglectingBasePath, "/pet"),
+            Arguments.of(petstoreSpecWithContextPath, "/api/petstore/v3/pet"),
+            Arguments.of(petstoreSpecWithContextPathNeglectingBasePath, "/api/pet"));
     }
 
     @CitrusTest
-    @Test(dataProvider = "openApiSpecifications")
-    public void shouldExecuteGetPetById(OpenApiSpecification spec, String contextPath) {
+    @ParameterizedTest(name = "contextPath={1}")
+    @MethodSource("openApiSpecifications")
+    public void shouldExecuteGetPetById(OpenApiSpecification spec, String contextPath,
+            @CitrusResource TestCaseRunner runner) {
 
-        variable("petId", "1001");
+        runner.variable("petId", "1001");
 
-        when(openapi(spec)
+        runner.when(openapi(spec)
             .client(httpClient)
             .send("getPetById")
             .autoFill(AutoFillType.ALL)
             .message()
             .fork(true));
 
-        then(http().server(httpServer)
+        runner.then(http().server(httpServer)
             .receive()
             .get(contextPath+"/1001")
             .message()
             .accept("@contains('application/json')@"));
 
-        then(http().server(httpServer)
+        runner.then(http().server(httpServer)
             .send()
             .response(OK.value())
             .message()
             .body(Resources.create(VALID_PET_PATH))
             .contentType(APPLICATION_JSON_VALUE));
 
-        then(openapi(spec)
+        runner.then(openapi(spec)
             .client(httpClient).receive("getPetById", OK.name())
             .schemaValidation(true));
 

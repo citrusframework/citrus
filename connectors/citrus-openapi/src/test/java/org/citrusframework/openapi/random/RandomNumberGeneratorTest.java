@@ -17,20 +17,23 @@
 package org.citrusframework.openapi.random;
 
 import java.math.BigDecimal;
+import java.util.stream.Stream;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import org.citrusframework.openapi.OpenApiConstants;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RandomNumberGeneratorTest {
 
@@ -39,19 +42,17 @@ public class RandomNumberGeneratorTest {
     private RandomModelBuilder mockBuilder;
     private OasSchema schema;
 
-    @DataProvider(name = "findLeastSignificantDecimalPlace")
-    public static Object[][] findLeastSignificantDecimalPlace() {
-        return new Object[][]{
-                {new BigDecimal("1234.5678"), 4},
-                {new BigDecimal("123.567"), 3},
-                {new BigDecimal("123.56"), 2},
-                {new BigDecimal("123.5"), 1},
-                {new BigDecimal("123.0"), 0},
-                {new BigDecimal("123"), 0}
-        };
+    static Stream<Arguments> findLeastSignificantDecimalPlaceArguments() {
+        return Stream.of(
+                Arguments.of(new BigDecimal("1234.5678"), 4),
+                Arguments.of(new BigDecimal("123.567"), 3),
+                Arguments.of(new BigDecimal("123.56"), 2),
+                Arguments.of(new BigDecimal("123.5"), 1),
+                Arguments.of(new BigDecimal("123.0"), 0),
+                Arguments.of(new BigDecimal("123"), 0));
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         generator = new RandomNumberGenerator();
         mockContext = mock(RandomContext.class);
@@ -225,7 +226,8 @@ public class RandomNumberGeneratorTest {
         assertFalse(generator.handles(null));
     }
 
-    @Test(dataProvider = "findLeastSignificantDecimalPlace")
+    @ParameterizedTest(name = "number={0}, expectedSignificance={1}")
+    @MethodSource("findLeastSignificantDecimalPlaceArguments")
     public void findLeastSignificantDecimalPlace(BigDecimal number, int expectedSignificance) {
         assertEquals(generator.findLeastSignificantDecimalPlace(number), expectedSignificance);
     }
