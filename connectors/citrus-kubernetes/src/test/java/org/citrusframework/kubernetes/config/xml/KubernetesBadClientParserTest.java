@@ -21,7 +21,7 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class KubernetesBadClientParserTest extends AbstractBeanDefinitionParserTest {
@@ -36,7 +36,7 @@ public class KubernetesBadClientParserTest extends AbstractBeanDefinitionParserT
         BeanDefinitionStoreException exception = assertThrows(BeanDefinitionStoreException.class, () -> createApplicationContext("context"));
 
         Throwable illegalArg = exception.getRootCause();
-        assertTrue(illegalArg instanceof IllegalArgumentException);
+        assertInstanceOf(IllegalArgumentException.class, illegalArg);
         assertEquals("Parameters not set correctly - check if either an oauthToke or password and username is set", illegalArg.getMessage());
     }
 }
