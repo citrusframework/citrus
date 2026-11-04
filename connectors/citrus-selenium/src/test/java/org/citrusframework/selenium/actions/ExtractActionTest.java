@@ -20,28 +20,29 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ExtractActionTest extends AbstractTestNGUnitTest {
+
+public class ExtractActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final WebDriver webDriver = Mockito.mock(WebDriver.class);
     private final WebElement element = Mockito.mock(WebElement.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, element);
 
@@ -61,7 +62,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("url"), "https://citrusframework.org/orders/42");
+        Assertions.assertEquals(context.getVariable("url"), "https://citrusframework.org/orders/42");
         verify(webDriver).getCurrentUrl();
     }
 
@@ -76,7 +77,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("title"), "Citrus orders");
+        Assertions.assertEquals(context.getVariable("title"), "Citrus orders");
         verify(webDriver).getTitle();
     }
 
@@ -91,7 +92,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("pageSource"), "<html><body>Citrus</body></html>");
+        Assertions.assertEquals(context.getVariable("pageSource"), "<html><body>Citrus</body></html>");
         verify(webDriver).getPageSource();
     }
 
@@ -107,7 +108,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("orderId"), "A-17");
+        Assertions.assertEquals(context.getVariable("orderId"), "A-17");
         verify(webDriver).findElements(By.id("order-id"));
         verify(element).getText();
     }
@@ -125,7 +126,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("orderId"), "A-17");
+        Assertions.assertEquals(context.getVariable("orderId"), "A-17");
         verify(webDriver).findElements(By.id("order-id"));
     }
 
@@ -141,7 +142,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("usernameValue"), "new-value");
+        Assertions.assertEquals(context.getVariable("usernameValue"), "new-value");
         verify(element).getDomProperty("value");
     }
 
@@ -157,7 +158,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("href"), "https://citrusframework.org");
+        Assertions.assertEquals(context.getVariable("href"), "https://citrusframework.org");
         verify(element).getDomAttribute("href");
     }
 
@@ -174,7 +175,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("href"), "https://citrusframework.org");
+        Assertions.assertEquals(context.getVariable("href"), "https://citrusframework.org");
         verify(element).getAttribute("href");
     }
 
@@ -190,7 +191,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("color"), "#000000");
+        Assertions.assertEquals(context.getVariable("color"), "#000000");
         verify(element).getCssValue("color");
     }
 
@@ -206,7 +207,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("orderCount"), "3");
+        Assertions.assertEquals(context.getVariable("orderCount"), "3");
         verify(webDriver).findElements(By.className("order"));
     }
 
@@ -222,7 +223,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("orderCount"), "0");
+        Assertions.assertEquals(context.getVariable("orderCount"), "0");
     }
 
     @Test
@@ -236,12 +237,12 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .variable("orderId")
                 .build();
 
-        Assert.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Failed to find element 'By\\.id: order-id' on page")
+    @Test
     public void shouldFailOnMissingElementWithMessage() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(webDriver.findElements(By.id("order-id"))).thenReturn(Collections.emptyList());
 
         ExtractAction action = new ExtractAction.Builder()
@@ -251,53 +252,63 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .variable("orderId")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to find element 'By\\.id: order-id' on page"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing variable name for extract action")
+    @Test
     public void shouldFailOnMissingVariable() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         ExtractAction action = new ExtractAction.Builder()
                 .browser(seleniumBrowser)
                 .url()
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing variable name for extract action"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing extract value - use one of url, title, page-source, text, value, attribute, css-value, count")
+    @Test
     public void shouldFailOnMissingValue() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         ExtractAction action = new ExtractAction.Builder()
                 .browser(seleniumBrowser)
                 .variable("value")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing extract value - use one of url, title, page-source, text, value, attribute, css-value, count"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Unsupported extract value 'unknown' - use one of url, title, page-source, text, value, attribute, css-value, count")
+    @Test
     public void shouldFailOnUnsupportedValue() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         ExtractAction action = new ExtractAction.Builder()
                 .browser(seleniumBrowser)
                 .value("unknown")
                 .variable("value")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Unsupported extract value 'unknown' - use one of url, title, page-source, text, value, attribute, css-value, count"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing element selector for extract value 'text'")
+    @Test
     public void shouldFailOnElementValueWithoutElementSelector() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         ExtractAction action = new ExtractAction.Builder()
                 .browser(seleniumBrowser)
                 .text()
                 .variable("orderId")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing element selector for extract value 'text'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Failed to extract attribute 'href' from element 'By\\.id: docs'")
+    @Test
     public void shouldFailOnMissingAttribute() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(element.getDomAttribute("href")).thenReturn(null);
         when(element.getAttribute("href")).thenReturn(null);
 
@@ -308,11 +319,13 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .variable("href")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to extract attribute 'href' from element 'By\\.id: docs'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Failed to extract value from element 'By\\.id: username'")
+    @Test
     public void shouldFailOnMissingExtractedValue() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(element.getDomProperty("value")).thenReturn(null);
 
         new ExtractAction.Builder()
@@ -322,11 +335,13 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .variable("usernameValue")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to extract value from element 'By\\.id: username'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing attribute name for extract value 'attribute'")
+    @Test
     public void shouldFailOnAttributeWithoutName() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new ExtractAction.Builder()
                 .browser(seleniumBrowser)
                 .element("id", "docs")
@@ -334,11 +349,13 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .variable("href")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing attribute name for extract value 'attribute'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing attribute name for extract value 'css-value'")
+    @Test
     public void shouldFailOnCssValueWithoutName() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new ExtractAction.Builder()
                 .browser(seleniumBrowser)
                 .element("id", "docs")
@@ -346,5 +363,7 @@ public class ExtractActionTest extends AbstractTestNGUnitTest {
                 .variable("color")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing attribute name for extract value 'css-value'"), e.getMessage());
     }
 }

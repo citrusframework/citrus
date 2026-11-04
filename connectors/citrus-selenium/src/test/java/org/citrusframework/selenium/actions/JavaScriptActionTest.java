@@ -20,16 +20,16 @@ import java.util.Collections;
 import java.util.List;
 
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
@@ -37,15 +37,16 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 /**
  * @since 2.7
  */
-public class JavaScriptActionTest extends AbstractTestNGUnitTest {
+public class JavaScriptActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver);
 
@@ -62,8 +63,8 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
-        Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 0L);
+        Assertions.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
+        Assertions.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 0L);
 
         verify(webDriver).executeScript(eq("alert('Hello')"));
     }
@@ -96,8 +97,8 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
-        Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 0L);
+        Assertions.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
+        Assertions.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 0L);
 
         verify(webDriver).executeScript(eq("alert('Hello')"));
     }
@@ -114,7 +115,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("pageTitle"), "Frames Test");
+        Assertions.assertEquals(context.getVariable("pageTitle"), "Frames Test");
     }
 
     @Test
@@ -129,7 +130,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("imageCount"), "42");
+        Assertions.assertEquals(context.getVariable("imageCount"), "42");
     }
 
     @Test
@@ -144,7 +145,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("nothing"), "");
+        Assertions.assertEquals(context.getVariable("nothing"), "");
     }
 
     @Test
@@ -157,7 +158,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertFalse(context.getVariables().containsKey("pageTitle"));
+        Assertions.assertFalse(context.getVariables().containsKey("pageTitle"));
     }
 
     @Test
@@ -171,8 +172,8 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
-        Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 1L);
+        Assertions.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
+        Assertions.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 1L);
 
         verify(webDriver).executeScript(eq("alert('Hello')"));
     }
@@ -193,7 +194,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
                     .build();
             action.execute(context);
 
-            Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 1L);
+            Assertions.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 1L);
         } finally {
             htmlUnitDriver.quit();
         }
@@ -213,14 +214,15 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
             action.execute(context);
             action.execute(context);
 
-            Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 2L);
+            Assertions.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 2L);
         } finally {
             htmlUnitDriver.quit();
         }
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testExecuteMissingPageErrorValidationFailed() {
+        Assertions.assertThrows(ValidationException.class, () -> {
         HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(true);
         try {
             htmlUnitDriver.get("about:blank");
@@ -235,10 +237,12 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
         } finally {
             htmlUnitDriver.quit();
         }
+    });
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testExecuteWithErrorValidationFailed() {
+        Assertions.assertThrows(ValidationException.class, () -> {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
 
         JavaScriptAction action =  new JavaScriptAction.Builder()
@@ -247,5 +251,6 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
                 .errors("This went totally wrong!")
                 .build();
         action.execute(context);
+    });
     }
 }

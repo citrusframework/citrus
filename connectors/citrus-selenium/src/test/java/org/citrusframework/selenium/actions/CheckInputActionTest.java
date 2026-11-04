@@ -16,19 +16,20 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.*;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
+
 
 /**
  * @since 2.7
  */
-public class CheckInputActionTest extends AbstractTestNGUnitTest {
+public class CheckInputActionTest extends AbstractUnitTest {
 
     private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
@@ -36,7 +37,7 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
 
     private CheckInputAction action;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, element);
 

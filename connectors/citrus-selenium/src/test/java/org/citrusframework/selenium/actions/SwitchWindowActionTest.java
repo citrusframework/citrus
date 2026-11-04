@@ -20,15 +20,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.reset;
@@ -36,16 +36,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 /**
  * @since 2.7
  */
-public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
+public class SwitchWindowActionTest extends AbstractUnitTest {
 
     private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
     private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, locator);
 
@@ -72,8 +73,8 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "last_window");
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "active_window");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "last_window");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "active_window");
 
         verify(locator, times(0)).window(anyString());
     }
@@ -96,14 +97,15 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "active_window");
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "other_window");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "active_window");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "other_window");
 
         verify(locator).window("other_window");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find window.*")
+    @Test
     public void testSwitchWindowNotFound() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         Set<String> windows = new HashSet<>();
         windows.add("active_window");
 
@@ -118,5 +120,7 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
                 .window("myWindow")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to find window.*"), e.getMessage());
     }
 }

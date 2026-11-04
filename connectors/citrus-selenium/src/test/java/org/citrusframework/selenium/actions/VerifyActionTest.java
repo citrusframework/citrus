@@ -21,26 +21,28 @@ import java.util.List;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class VerifyActionTest extends AbstractTestNGUnitTest {
+
+public class VerifyActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final WebDriver webDriver = Mockito.mock(WebDriver.class);
     private final WebElement element = Mockito.mock(WebElement.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         Mockito.reset(webDriver, element);
 
@@ -73,8 +75,9 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
         verify(webDriver).getCurrentUrl();
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, url expected 'https://citrusframework.org/orders/41', but was 'https://citrusframework.org/orders/42'")
+    @Test
     public void shouldFailOnUrlMismatch() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         when(webDriver.getCurrentUrl()).thenReturn("https://citrusframework.org/orders/42");
 
         new VerifyAction.Builder()
@@ -82,6 +85,8 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
                 .url("https://citrusframework.org/orders/41")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, url expected 'https://citrusframework.org/orders/41', but was 'https://citrusframework.org/orders/42'"), e.getMessage());
     }
 
     @Test
@@ -97,8 +102,9 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
         verify(webDriver).getTitle();
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, title expected 'Other page', but was 'Citrus page'")
+    @Test
     public void shouldFailOnTitleMismatch() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         when(webDriver.getTitle()).thenReturn("Citrus page");
 
         new VerifyAction.Builder()
@@ -106,6 +112,8 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
                 .title("Other page")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, title expected 'Other page', but was 'Citrus page'"), e.getMessage());
     }
 
     @Test
@@ -122,14 +130,17 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
         verify(webDriver).findElements(By.id("greeting"));
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, element 'By\\.id: error' expected 'present', but was 'absent'")
+    @Test
     public void shouldFailOnElementPresentWhenMissing() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         new VerifyAction.Builder()
                 .browser(seleniumBrowser)
                 .present()
                 .element("id", "error")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, element 'By\\.id: error' expected 'present', but was 'absent'"), e.getMessage());
     }
 
     @Test
@@ -159,8 +170,9 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
         verify(element).isDisplayed();
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, element 'By\\.id: greeting' expected 'displayed', but was 'hidden'")
+    @Test
     public void shouldFailOnElementDisplayedWhenHidden() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         when(webDriver.findElements(any(By.class))).thenReturn(Collections.singletonList(element));
         when(element.isDisplayed()).thenReturn(false);
 
@@ -170,6 +182,8 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
                 .element("id", "greeting")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, element 'By\\.id: greeting' expected 'displayed', but was 'hidden'"), e.getMessage());
     }
 
     @Test
@@ -229,8 +243,9 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
         verify(element).isEnabled();
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, element 'By\\.id: submit' expected 'disabled', but was 'enabled'")
+    @Test
     public void shouldFailOnElementDisabledWhenEnabled() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         when(webDriver.findElements(any(By.class))).thenReturn(Collections.singletonList(element));
         when(element.isEnabled()).thenReturn(true);
 
@@ -240,6 +255,8 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
                 .element("id", "submit")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, element 'By\\.id: submit' expected 'disabled', but was 'enabled'"), e.getMessage());
     }
 
     @Test
@@ -287,8 +304,9 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
         verify(element).getText();
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, text expected 'Hello World', but was 'Hello Citrus'")
+    @Test
     public void shouldFailOnTextMismatch() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         when(webDriver.findElements(any(By.class))).thenReturn(Collections.singletonList(element));
         when(element.getText()).thenReturn("Hello Citrus");
 
@@ -298,6 +316,8 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
                 .element("id", "greeting")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, text expected 'Hello World', but was 'Hello Citrus'"), e.getMessage());
     }
 
     @Test
@@ -387,8 +407,9 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
         verify(webDriver).findElements(By.cssSelector("li.item"));
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, count expected '2', but was '3'")
+    @Test
     public void shouldFailOnCountMismatch() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         when(webDriver.findElements(any(By.class))).thenReturn(List.of(element, element, element));
 
         new VerifyAction.Builder()
@@ -397,61 +418,81 @@ public class VerifyActionTest extends AbstractTestNGUnitTest {
                 .element("css-selector", "tr.order")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, count expected '2', but was '3'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing verify check - use one of url, title, present, absent, displayed, hidden, enabled, disabled, selected, not-selected, text, value, attribute, css-value, count")
+    @Test
     public void shouldFailOnMissingCheck() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new VerifyAction.Builder()
                 .browser(seleniumBrowser)
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing verify check - use one of url, title, present, absent, displayed, hidden, enabled, disabled, selected, not-selected, text, value, attribute, css-value, count"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unsupported verify check 'unknown' - use one of url, title, present, absent, displayed, hidden, enabled, disabled, selected, not-selected, text, value, attribute, css-value, count")
+    @Test
     public void shouldFailOnUnsupportedCheck() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new VerifyAction.Builder()
                 .browser(seleniumBrowser)
                 .check("unknown")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Unsupported verify check 'unknown' - use one of url, title, present, absent, displayed, hidden, enabled, disabled, selected, not-selected, text, value, attribute, css-value, count"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing element selector for verify check 'present'")
+    @Test
     public void shouldFailOnElementCheckWithoutElementSelector() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new VerifyAction.Builder()
                 .browser(seleniumBrowser)
                 .present()
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing element selector for verify check 'present'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find element 'By\\.id: missing' on page")
+    @Test
     public void shouldFailOnMissingElementForText() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new VerifyAction.Builder()
                 .browser(seleniumBrowser)
                 .text("Hello")
                 .element("id", "missing")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to find element 'By\\.id: missing' on page"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing attribute name for verify check 'attribute'")
+    @Test
     public void shouldFailOnAttributeWithoutName() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new VerifyAction.Builder()
                 .browser(seleniumBrowser)
                 .check("attribute")
                 .element("id", "docs")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing attribute name for verify check 'attribute'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing attribute name for verify check 'css-value'")
+    @Test
     public void shouldFailOnCssValueWithoutName() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new VerifyAction.Builder()
                 .browser(seleniumBrowser)
                 .check("css-value")
                 .element("id", "docs")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing attribute name for verify check 'css-value'"), e.getMessage());
     }
 }

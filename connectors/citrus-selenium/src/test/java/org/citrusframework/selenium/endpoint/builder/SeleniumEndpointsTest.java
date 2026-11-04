@@ -20,20 +20,21 @@ import java.util.Map;
 
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.selenium.endpoint.SeleniumBrowserBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 
 public class SeleniumEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("selenium.browser"));
+        Assertions.assertTrue(endpointBuilders.containsKey("selenium.browser"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("selenium.browser").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("selenium.browser").get().getClass(), SeleniumBrowserBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("selenium.browser").isPresent());
+        Assertions.assertEquals(EndpointBuilder.lookup("selenium.browser").get().getClass(), SeleniumBrowserBuilder.class);
     }
 }

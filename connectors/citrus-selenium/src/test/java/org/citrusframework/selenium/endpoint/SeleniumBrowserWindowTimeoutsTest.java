@@ -22,14 +22,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.logging.Logs;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+
 
 public class SeleniumBrowserWindowTimeoutsTest {
 
@@ -43,7 +44,7 @@ public class SeleniumBrowserWindowTimeoutsTest {
         browser.setWebDriver(webDriver);
         browser.applyWindowSize();
 
-        Assert.assertEquals(webDriver.windowSize, new Dimension(1280, 800));
+        Assertions.assertEquals(webDriver.windowSize, new Dimension(1280, 800));
     }
 
     @Test
@@ -57,8 +58,8 @@ public class SeleniumBrowserWindowTimeoutsTest {
         browser.setWebDriver(webDriver);
         browser.applyTimeouts();
 
-        Assert.assertEquals(webDriver.pageLoadTimeout, Duration.ofMillis(10000L));
-        Assert.assertEquals(webDriver.scriptTimeout, Duration.ofMillis(5000L));
+        Assertions.assertEquals(webDriver.pageLoadTimeout, Duration.ofMillis(10000L));
+        Assertions.assertEquals(webDriver.scriptTimeout, Duration.ofMillis(5000L));
     }
 
     @Test
@@ -70,28 +71,32 @@ public class SeleniumBrowserWindowTimeoutsTest {
         browser.applyWindowSize();
         browser.applyTimeouts();
 
-        Assert.assertFalse(webDriver.manageCalled);
+        Assertions.assertFalse(webDriver.manageCalled);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Invalid browser window size 'invalid'.*")
+    @Test
     public void shouldFailOnInvalidWindowSize() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         SeleniumBrowser browser = new SeleniumBrowserBuilder()
                 .windowSize("invalid")
                 .build();
 
         browser.setWebDriver(new RecordingWebDriver());
         browser.applyWindowSize();
+    });
+        Assertions.assertTrue(e.getMessage().matches("Invalid browser window size 'invalid'.*"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void shouldFailOnNonNumericWindowSize() {
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         SeleniumBrowser browser = new SeleniumBrowserBuilder()
                 .windowSize("widextall")
                 .build();
 
         browser.setWebDriver(new RecordingWebDriver());
         browser.applyWindowSize();
+    });
     }
 
     private static final class RecordingWebDriver implements WebDriver {

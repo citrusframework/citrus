@@ -17,30 +17,32 @@
 package org.citrusframework.selenium.actions;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class FrameActionTest extends AbstractTestNGUnitTest {
+
+public class FrameActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final WebDriver webDriver = Mockito.mock(WebDriver.class);
     private final WebDriver.TargetLocator targetLocator = Mockito.mock(WebDriver.TargetLocator.class);
     private final WebElement frameElement = Mockito.mock(WebElement.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         Mockito.reset(webDriver, targetLocator, frameElement);
 
@@ -119,16 +121,20 @@ public class FrameActionTest extends AbstractTestNGUnitTest {
         verify(targetLocator).defaultContent();
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing frame target - use element, index, name, parent or default")
+    @Test
     public void shouldFailOnMissingTarget() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new FrameAction.Builder()
                 .browser(seleniumBrowser)
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing frame target - use element, index, name, parent or default"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find frame element 'By\\.id: missing'")
+    @Test
     public void shouldFailOnMissingFrameElement() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(webDriver.findElement(any(By.class))).thenThrow(new NoSuchElementException("no such element"));
 
         new FrameAction.Builder()
@@ -136,10 +142,13 @@ public class FrameActionTest extends AbstractTestNGUnitTest {
                 .element("id", "missing")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to find frame element 'By\\.id: missing'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to switch to frame")
+    @Test
     public void shouldFailOnMissingFrameIndex() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         Mockito.doThrow(new NoSuchFrameException("no such frame")).when(targetLocator).frame(eq(5));
 
         new FrameAction.Builder()
@@ -147,5 +156,7 @@ public class FrameActionTest extends AbstractTestNGUnitTest {
                 .index(5)
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to switch to frame"), e.getMessage());
     }
 }

@@ -18,6 +18,7 @@ package org.citrusframework.selenium.endpoint;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LogEvent;
@@ -27,31 +28,36 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.config.Property;
 import org.htmlunit.BrowserVersion;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
+
+@Isolated("Mutates the shared Log4j LoggerContext configuration")
 public class SeleniumBrowserTest {
 
-    @DataProvider
-    public Object[][] htmlUnitVersions() {
-        return new Object[][] {
-                { "FIREFOX", BrowserVersion.FIREFOX },
-                { "FIREFOX_ESR", BrowserVersion.FIREFOX_ESR },
-                { "FIREFOX_78", BrowserVersion.FIREFOX_ESR },
-                { "CHROME", BrowserVersion.CHROME },
-                { "EDGE", BrowserVersion.EDGE },
-                { "INTERNET_EXPLORER", null },
-                { "FIREFOX_38", null },
-                { "", null },
-                { null, null }
-        };
+    static Stream<Arguments> htmlUnitVersions() {
+        return Stream.of(
+                Arguments.of("FIREFOX", BrowserVersion.FIREFOX),
+                Arguments.of("FIREFOX_ESR", BrowserVersion.FIREFOX_ESR),
+                Arguments.of("FIREFOX_78", BrowserVersion.FIREFOX_ESR),
+                Arguments.of("CHROME", BrowserVersion.CHROME),
+                Arguments.of("EDGE", BrowserVersion.EDGE),
+                Arguments.of("INTERNET_EXPLORER", null),
+                Arguments.of("FIREFOX_38", null),
+                Arguments.of("", null),
+                Arguments.of(null, null)
+        );
     }
 
-    @Test(dataProvider = "htmlUnitVersions")
+    @ParameterizedTest(name = "htmlUnitVersions={0}")
+    @MethodSource("htmlUnitVersions")
     public void shouldResolveHtmlUnitBrowserVersion(String version, BrowserVersion expected) {
-        Assert.assertEquals(SeleniumBrowser.htmlUnitBrowserVersion(version), expected);
+        Assertions.assertEquals(SeleniumBrowser.htmlUnitBrowserVersion(version), expected);
     }
 
     @Test
@@ -62,9 +68,9 @@ public class SeleniumBrowserTest {
             browser.start();
 
             HtmlUnitDriver driver = (HtmlUnitDriver) browser.getWebDriver();
-            Assert.assertTrue(driver.getBrowserVersion().isFirefox());
-            Assert.assertFalse(driver.getBrowserVersion().isFirefoxESR());
-            Assert.assertTrue(driver.isJavascriptEnabled());
+            Assertions.assertTrue(driver.getBrowserVersion().isFirefox());
+            Assertions.assertFalse(driver.getBrowserVersion().isFirefoxESR());
+            Assertions.assertTrue(driver.isJavascriptEnabled());
         } finally {
             browser.stop();
         }
@@ -82,8 +88,8 @@ public class SeleniumBrowserTest {
             browser.start();
 
             HtmlUnitDriver driver = (HtmlUnitDriver) browser.getWebDriver();
-            Assert.assertTrue(driver.getBrowserVersion().isEdge());
-            Assert.assertFalse(driver.isJavascriptEnabled());
+            Assertions.assertTrue(driver.getBrowserVersion().isEdge());
+            Assertions.assertFalse(driver.isJavascriptEnabled());
         } finally {
             browser.stop();
         }
@@ -109,14 +115,14 @@ public class SeleniumBrowserTest {
             browser.start();
 
             HtmlUnitDriver driver = (HtmlUnitDriver) browser.getWebDriver();
-            Assert.assertEquals(driver.getBrowserVersion(), BrowserVersion.getDefault());
+            Assertions.assertEquals(driver.getBrowserVersion(), BrowserVersion.getDefault());
 
             List<String> warnings = appender.events.stream()
                     .filter(event -> event.getLevel() == Level.WARN)
                     .map(event -> event.getMessage().getFormattedMessage())
                     .filter(message -> message.contains("INTERNET_EXPLORER"))
                     .toList();
-            Assert.assertEquals(warnings.size(), 1);
+            Assertions.assertEquals(warnings.size(), 1);
         } finally {
             browser.stop();
             configuration.removeLogger(SeleniumBrowser.class.getName());

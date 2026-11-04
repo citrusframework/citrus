@@ -18,13 +18,20 @@ package org.citrusframework.selenium.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
+
 
 /**
  * @since 2.7
  */
-public class SeleniumIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = {CitrusSpringConfig.class})
+@Isolated("ITs share one HTTP server instance on port 19090")
+public class SeleniumIT {
 
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)

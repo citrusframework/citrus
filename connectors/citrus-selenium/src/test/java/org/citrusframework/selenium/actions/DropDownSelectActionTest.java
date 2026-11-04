@@ -19,30 +19,31 @@ package org.citrusframework.selenium.actions;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.Browser;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
+
 
 /**
  * @since 2.7
  */
-public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
+public class DropDownSelectActionTest extends AbstractUnitTest {
 
     private SeleniumBrowser seleniumBrowser;
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, element);
 
@@ -157,9 +158,9 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
 
         try {
             action.execute(context);
-            Assert.fail("Expected action to fail with invalid option index");
+            Assertions.fail("Expected action to fail with invalid option index");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("Invalid option index 'noIndex'"),
+            Assertions.assertTrue(e.getMessage().contains("Invalid option index 'noIndex'"),
                     "Unexpected error message: " + e.getMessage());
         }
     }
@@ -260,9 +261,9 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
 
         try {
             action.execute(context);
-            Assert.fail("Expected action to fail when deselecting options on single-select dropdown");
+            Assertions.fail("Expected action to fail when deselecting options on single-select dropdown");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("deselect is only supported for multi-select"),
+            Assertions.assertTrue(e.getMessage().contains("deselect is only supported for multi-select"),
                     "Unexpected error message: " + e.getMessage());
         }
     }
@@ -279,9 +280,9 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
 
         try {
             action.execute(context);
-            Assert.fail("Expected action to fail when deselecting options on single-select dropdown");
+            Assertions.fail("Expected action to fail when deselecting options on single-select dropdown");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("deselect is only supported for multi-select"),
+            Assertions.assertTrue(e.getMessage().contains("deselect is only supported for multi-select"),
                     "Unexpected error message: " + e.getMessage());
         }
     }
@@ -299,20 +300,20 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
 
         try {
             action.execute(context);
-            Assert.fail("Expected action to fail with unknown selection mode");
+            Assertions.fail("Expected action to fail with unknown selection mode");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("Unknown selection mode 'unknown'"),
+            Assertions.assertTrue(e.getMessage().contains("Unknown selection mode 'unknown'"),
                     "Unexpected error message: " + e.getMessage());
         }
     }
 
     @Test
     public void testMultiSelectKeyPerOperatingSystem() {
-        Assert.assertEquals(DropDownSelectAction.multiSelectKey("Mac OS X"), Keys.COMMAND);
-        Assert.assertEquals(DropDownSelectAction.multiSelectKey("Mac"), Keys.COMMAND);
-        Assert.assertEquals(DropDownSelectAction.multiSelectKey("Windows 11"), Keys.CONTROL);
-        Assert.assertEquals(DropDownSelectAction.multiSelectKey("Linux"), Keys.CONTROL);
-        Assert.assertEquals(DropDownSelectAction.multiSelectKey(null), Keys.CONTROL);
+        Assertions.assertEquals(DropDownSelectAction.multiSelectKey("Mac OS X"), Keys.COMMAND);
+        Assertions.assertEquals(DropDownSelectAction.multiSelectKey("Mac"), Keys.COMMAND);
+        Assertions.assertEquals(DropDownSelectAction.multiSelectKey("Windows 11"), Keys.CONTROL);
+        Assertions.assertEquals(DropDownSelectAction.multiSelectKey("Linux"), Keys.CONTROL);
+        Assertions.assertEquals(DropDownSelectAction.multiSelectKey(null), Keys.CONTROL);
     }
 
     @Test

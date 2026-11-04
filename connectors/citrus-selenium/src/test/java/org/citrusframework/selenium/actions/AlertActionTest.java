@@ -19,22 +19,24 @@ package org.citrusframework.selenium.actions;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 /**
  * @since 2.7
  */
-public class AlertActionTest extends AbstractTestNGUnitTest {
+public class AlertActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final WebDriver webDriver = Mockito.mock(WebDriver.class);
@@ -47,7 +49,7 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
         return TestContextFactory.newInstance();
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, alert, locator);
 
@@ -124,8 +126,9 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
         verify(alert).accept();
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Failed to validate alert dialog text.*")
+    @Test
     public void testExecuteTextValidationError() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         when(locator.alert()).thenReturn(alert);
 
         AlertAction action = new AlertAction.Builder()
@@ -135,10 +138,13 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         verify(alert).accept();
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to validate alert dialog text.*"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to access alert dialog - not found")
+    @Test
     public void testAlertNotFound() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
         when(webDriver.switchTo()).thenReturn(locator);
         when(locator.alert()).thenReturn(null);
@@ -147,5 +153,7 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
                 .browser(seleniumBrowser)
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to access alert dialog - not found"), e.getMessage());
     }
 }
