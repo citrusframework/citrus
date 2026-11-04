@@ -49,7 +49,7 @@ public class OasModelHelperTest {
 
         // Then
         Assertions.assertNotNull(result, "Result should not be null");
-        Assertions.assertEquals(result, OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES, "Should return the default media types");
+        Assertions.assertEquals(OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES, result, "Should return the default media types");
     }
 
     @Test
@@ -62,7 +62,7 @@ public class OasModelHelperTest {
 
         // Then
         Assertions.assertNotNull(result, "Result should not be null");
-        Assertions.assertEquals(result, OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES, "Should return the default media types");
+        Assertions.assertEquals(OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES, result, "Should return the default media types");
     }
 
     @Test

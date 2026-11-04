@@ -161,10 +161,10 @@ public class OpenApiClientRequestMessageBuilderTest extends AbstractUnitTest imp
 
             // test payload
             Object payload = httpMessage.getPayload();
-            Assertions.assertEquals(payload, body);
+            Assertions.assertEquals(body, payload);
             // test header
             Object header = httpMessage.getHeader("X-SAMPLE-HEADER");
-            Assertions.assertEquals(header, sampleHeader);
+            Assertions.assertEquals(sampleHeader, header);
 
             return null;
         }).when(mockProducer).send(any(Message.class), eq(context));

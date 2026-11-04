@@ -33,8 +33,6 @@ import org.citrusframework.openapi.integration.OpenApiClientIT.Config;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.SocketUtils;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -65,7 +63,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, Config.class})
 @DirtiesContext
-@TestMethodOrder(MethodOrderer.MethodName.class)
 @Isolated("ITs bind ephemeral TCP ports that may collide with other parallel test classes")
 public class OpenApiClientApiContextPathIT implements TestActionSupport {
 

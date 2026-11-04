@@ -40,9 +40,7 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.SocketUtils;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -63,8 +61,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, Config.class})
 @DirtiesContext
-@TestMethodOrder(MethodOrderer.MethodName.class)
-@Isolated("ITs share one HTTP server instance; unconsumed requests from one test leak into the next")
+@Isolated("ITs share one HTTP server instance and bind an ephemeral TCP port that may collide with other parallel test classes")
 public class OpenApiClientIT implements TestActionSupport {
 
     public static final String VALID_PET_PATH = "classpath:org/citrusframework/openapi/petstore/pet.json";
@@ -607,6 +604,10 @@ public class OpenApiClientIT implements TestActionSupport {
             .schemaValidation(false)
             .message()
             .body(Resources.create(VALID_PET_PATH)));
+
+        runner.then(http().server(httpServer)
+            .receive()
+            .post("/pet"));
     }
 
     @CitrusTest
@@ -618,6 +619,10 @@ public class OpenApiClientIT implements TestActionSupport {
             .send("addPet")
             .message()
             .body(Resources.create(VALID_PET_PATH)));
+
+        runner.then(http().server(httpServer)
+            .receive()
+            .post("/petstore/v3/pet"));
     }
 
     @CitrusTest

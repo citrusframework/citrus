@@ -238,7 +238,7 @@ public class OpenApiTestDataGeneratorTest {
                 BigDecimal remainder = value.remainder(new BigDecimal(multipleOf.toString()));
 
                 assertEquals(
-                        remainder.compareTo(BigDecimal.ZERO), 0,
+                        0, remainder.compareTo(BigDecimal.ZERO),
                         "Expected %s to be a multiple of %s! Remainder is %s".formatted(
                                 finalRandomValue, multipleOf,
                                 remainder));

@@ -148,7 +148,7 @@ public class OpenApiSpecificationTest {
         OpenApiSpecification specification = OpenApiSpecification.from(urlMock);
 
         // Then
-        assertEquals(specification.getSpecUrl(), urlString);
+        assertEquals(urlString, specification.getSpecUrl());
         assertPingApi(specification);
     }
 
@@ -159,17 +159,17 @@ public class OpenApiSpecificationTest {
                 PING_OPERATION_ID,
                 testContextMock);
         assertTrue(pingOperationPathAdapter.isPresent());
-        assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
-        assertEquals(pingOperationPathAdapter.get().contextPath(), "/services/rest/ping/v1");
-        assertEquals(pingOperationPathAdapter.get().fullPath(), "/services/rest/ping/v1/ping/{id}");
+        assertEquals("/ping/{id}", pingOperationPathAdapter.get().apiPath());
+        assertEquals("/services/rest/ping/v1", pingOperationPathAdapter.get().contextPath());
+        assertEquals("/services/rest/ping/v1/ping/{id}", pingOperationPathAdapter.get().fullPath());
 
         Optional<OperationPathAdapter> pongOperationPathAdapter = specification.getOperation(
                 PONG_OPERATION_ID,
                 testContextMock);
         assertTrue(pongOperationPathAdapter.isPresent());
-        assertEquals(pongOperationPathAdapter.get().apiPath(), "/pong/{id}");
-        assertEquals(pongOperationPathAdapter.get().contextPath(), "/services/rest/ping/v1");
-        assertEquals(pongOperationPathAdapter.get().fullPath(), "/services/rest/ping/v1/pong/{id}");
+        assertEquals("/pong/{id}", pongOperationPathAdapter.get().apiPath());
+        assertEquals("/services/rest/ping/v1", pongOperationPathAdapter.get().contextPath());
+        assertEquals("/services/rest/ping/v1/pong/{id}", pongOperationPathAdapter.get().fullPath());
     }
 
     @Test
@@ -182,7 +182,7 @@ public class OpenApiSpecificationTest {
 
         // Then
         assertNotNull(specification);
-        assertEquals(specification.getSpecUrl(), resource.location());
+        assertEquals(resource.location(), specification.getSpecUrl());
         assertPingApi(specification);
     }
 
@@ -196,7 +196,7 @@ public class OpenApiSpecificationTest {
 
         // Then
         assertNotNull(specification);
-        assertEquals(specification.getSpecUrl(), resource.location());
+        assertEquals(resource.location(), specification.getSpecUrl());
 
         assertNotNull(specification.getOpenApiDoc(null));
     }
@@ -247,7 +247,7 @@ public class OpenApiSpecificationTest {
 
         // Then
         assertNotNull(doc);
-        assertEquals(doc, openApiDoc);
+        assertEquals(openApiDoc, doc);
     }
 
     @Test
@@ -282,9 +282,9 @@ public class OpenApiSpecificationTest {
                 PING_OPERATION_ID,
                 testContextMock);
         assertTrue(pingOperationPathAdapter.isPresent());
-        assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
-        assertEquals(pingOperationPathAdapter.get().contextPath(), "/services/rest/ping/v1");
-        assertEquals(pingOperationPathAdapter.get().fullPath(), "/services/rest/ping/v1/ping/{id}");
+        assertEquals("/ping/{id}", pingOperationPathAdapter.get().apiPath());
+        assertEquals("/services/rest/ping/v1", pingOperationPathAdapter.get().contextPath());
+        assertEquals("/services/rest/ping/v1/ping/{id}", pingOperationPathAdapter.get().fullPath());
     }
 
     @ParameterizedTest(name = "requestUrl={0}, specSource={1}")
@@ -370,7 +370,7 @@ public class OpenApiSpecificationTest {
 
         assertNotNull(url);
 
-        assertEquals(url.toString(), PING_API_HTTP_URL_STRING);
+        assertEquals(PING_API_HTTP_URL_STRING, url.toString());
     }
 
     @Test
@@ -390,17 +390,17 @@ public class OpenApiSpecificationTest {
                 PING_OPERATION_ID,
                 testContextMock);
         assertTrue(pingOperationPathAdapter.isPresent());
-        assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
-        assertEquals(pingOperationPathAdapter.get().contextPath(), "/root/services/rest/ping/v1");
-        assertEquals(pingOperationPathAdapter.get().fullPath(), "/root/services/rest/ping/v1/ping/{id}");
+        assertEquals("/ping/{id}", pingOperationPathAdapter.get().apiPath());
+        assertEquals("/root/services/rest/ping/v1", pingOperationPathAdapter.get().contextPath());
+        assertEquals("/root/services/rest/ping/v1/ping/{id}", pingOperationPathAdapter.get().fullPath());
 
         Optional<OperationPathAdapter> pongOperationPathAdapter = specification.getOperation(
                 PONG_OPERATION_ID,
                 testContextMock);
         assertTrue(pongOperationPathAdapter.isPresent());
-        assertEquals(pongOperationPathAdapter.get().apiPath(), "/pong/{id}");
-        assertEquals(pongOperationPathAdapter.get().contextPath(), "/root/services/rest/ping/v1");
-        assertEquals(pongOperationPathAdapter.get().fullPath(), "/root/services/rest/ping/v1/pong/{id}");
+        assertEquals("/pong/{id}", pongOperationPathAdapter.get().apiPath());
+        assertEquals("/root/services/rest/ping/v1", pongOperationPathAdapter.get().contextPath());
+        assertEquals("/root/services/rest/ping/v1/pong/{id}", pongOperationPathAdapter.get().fullPath());
     }
 
     @Test
@@ -419,17 +419,17 @@ public class OpenApiSpecificationTest {
             PING_OPERATION_ID,
             testContextMock);
         assertTrue(pingOperationPathAdapter.isPresent());
-        assertEquals(pingOperationPathAdapter.get().apiPath(), "/ping/{id}");
-        assertEquals(pingOperationPathAdapter.get().contextPath(), "/root");
-        assertEquals(pingOperationPathAdapter.get().fullPath(), "/root/ping/{id}");
+        assertEquals("/ping/{id}", pingOperationPathAdapter.get().apiPath());
+        assertEquals("/root", pingOperationPathAdapter.get().contextPath());
+        assertEquals("/root/ping/{id}", pingOperationPathAdapter.get().fullPath());
 
         Optional<OperationPathAdapter> pongOperationPathAdapter = specification.getOperation(
             PONG_OPERATION_ID,
             testContextMock);
         assertTrue(pongOperationPathAdapter.isPresent());
-        assertEquals(pongOperationPathAdapter.get().apiPath(), "/pong/{id}");
-        assertEquals(pongOperationPathAdapter.get().contextPath(), "/root");
-        assertEquals(pongOperationPathAdapter.get().fullPath(), "/root/pong/{id}");
+        assertEquals("/pong/{id}", pongOperationPathAdapter.get().apiPath());
+        assertEquals("/root", pongOperationPathAdapter.get().contextPath());
+        assertEquals("/root/pong/{id}", pongOperationPathAdapter.get().fullPath());
     }
 
     @Test
@@ -437,14 +437,14 @@ public class OpenApiSpecificationTest {
 
         openApiSpecification.setSpecUrl(PING_API_HTTP_URL_STRING);
 
-        assertEquals(openApiSpecification.getSpecUrl(), PING_API_HTTP_URL_STRING);
-        assertEquals(openApiSpecification.getRequestUrl(), PING_API_HTTP_URL_STRING);
+        assertEquals(PING_API_HTTP_URL_STRING, openApiSpecification.getSpecUrl());
+        assertEquals(PING_API_HTTP_URL_STRING, openApiSpecification.getRequestUrl());
 
         openApiSpecification.setSpecUrl("/ping-api.yaml");
         openApiSpecification.setRequestUrl("http://or.citrus.sample");
 
-        assertEquals(openApiSpecification.getSpecUrl(), "/ping-api.yaml");
-        assertEquals(openApiSpecification.getRequestUrl(), "http://or.citrus.sample");
+        assertEquals("/ping-api.yaml", openApiSpecification.getSpecUrl());
+        assertEquals("http://or.citrus.sample", openApiSpecification.getRequestUrl());
     }
 
     @Test
@@ -456,7 +456,7 @@ public class OpenApiSpecificationTest {
 
         Optional<String> alias = determineResourceAlias(resourceMock);
         assertTrue(alias.isPresent());
-        assertEquals(alias.get(), "MyApi");
+        assertEquals("MyApi", alias.get());
     }
 
     @Test
@@ -469,6 +469,6 @@ public class OpenApiSpecificationTest {
 
         Optional<String> alias = determineResourceAlias(resourceMock);
         assertTrue(alias.isPresent());
-        assertEquals(alias.get(), "MyApi");
+        assertEquals("MyApi", alias.get());
     }
 }

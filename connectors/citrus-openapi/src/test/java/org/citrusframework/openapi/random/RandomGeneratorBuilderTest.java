@@ -51,8 +51,8 @@ public class RandomGeneratorBuilderTest {
                 .build(consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
-        assertEquals(schema.type, type);
-        assertEquals(schema.format, format);
+        assertEquals(type, schema.type);
+        assertEquals(format, schema.format);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class RandomGeneratorBuilderTest {
                 .build(consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
-        assertEquals(schema.type, type);
+        assertEquals(type, schema.type);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class RandomGeneratorBuilderTest {
                 .build(consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
-        assertEquals(schema.format, format);
+        assertEquals(format, schema.format);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class RandomGeneratorBuilderTest {
                 .build(consumerMock);
         OasSchema schema = (OasSchema) ReflectionTestUtils.getField(generator, "schema");
         assertNotNull(schema);
-        assertEquals(schema.pattern, pattern);
+        assertEquals(pattern, schema.pattern);
     }
 
     @Test

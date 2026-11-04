@@ -56,7 +56,7 @@ public class Oas20ModelHelperTest {
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
                 document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
-        assertEquals(okResponse, responseForRandomGeneration.get());
+        assertEquals(responseForRandomGeneration.get(), okResponse);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class Oas20ModelHelperTest {
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
                 document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
-        assertEquals(responseForRandomGeneration.get().getStatusCode(), "403");
+        assertEquals("403", responseForRandomGeneration.get().getStatusCode());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class Oas20ModelHelperTest {
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
                 document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
-        assertEquals(responseForRandomGeneration.get().getStatusCode(), "407");
+        assertEquals("407", responseForRandomGeneration.get().getStatusCode());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class Oas20ModelHelperTest {
 
         Optional<OasSchema> parameterSchema = Oas20ModelHelper.getParameterSchema(parameter);
         assertTrue(parameterSchema.isPresent());
-        assertEquals(parameter.schema, parameterSchema.get());
+        assertEquals(parameterSchema.get(), parameter.schema);
     }
 
     @Test
@@ -139,23 +139,23 @@ public class Oas20ModelHelperTest {
         assertTrue(schemaOptional.isPresent());
 
         OasSchema parameterSchema = schemaOptional.get();
-        assertEquals(parameterSchema.title, "testParameter");
-        assertEquals(parameterSchema.type, "string");
-        assertEquals(parameterSchema.format, "date-time");
-        assertEquals(parameter.items, parameterSchema.items);
-        assertEquals(parameter.multipleOf, parameterSchema.multipleOf);
-        assertEquals(parameter.default_, parameterSchema.default_);
-        assertEquals(parameter.enum_, parameterSchema.enum_);
-        assertEquals(parameter.pattern, parameterSchema.pattern);
-        assertEquals(parameter.description, parameterSchema.description);
-        assertEquals(parameter.uniqueItems, parameterSchema.uniqueItems);
-        assertEquals(parameter.maximum, parameterSchema.maximum);
-        assertEquals(parameter.maxItems, parameterSchema.maxItems);
-        assertEquals(parameter.maxLength, parameterSchema.maxLength);
-        assertEquals(parameter.exclusiveMaximum, parameterSchema.exclusiveMaximum);
-        assertEquals(parameter.minimum, parameterSchema.minimum);
-        assertEquals(parameter.minItems, parameterSchema.minItems);
-        assertEquals(parameter.minLength, parameterSchema.minLength);
-        assertEquals(parameter.exclusiveMinimum, parameterSchema.exclusiveMinimum);
+        assertEquals("testParameter", parameterSchema.title);
+        assertEquals("string", parameterSchema.type);
+        assertEquals("date-time", parameterSchema.format);
+        assertEquals(parameterSchema.items, parameter.items);
+        assertEquals(parameterSchema.multipleOf, parameter.multipleOf);
+        assertEquals(parameterSchema.default_, parameter.default_);
+        assertEquals(parameterSchema.enum_, parameter.enum_);
+        assertEquals(parameterSchema.pattern, parameter.pattern);
+        assertEquals(parameterSchema.description, parameter.description);
+        assertEquals(parameterSchema.uniqueItems, parameter.uniqueItems);
+        assertEquals(parameterSchema.maximum, parameter.maximum);
+        assertEquals(parameterSchema.maxItems, parameter.maxItems);
+        assertEquals(parameterSchema.maxLength, parameter.maxLength);
+        assertEquals(parameterSchema.exclusiveMaximum, parameter.exclusiveMaximum);
+        assertEquals(parameterSchema.minimum, parameter.minimum);
+        assertEquals(parameterSchema.minItems, parameter.minItems);
+        assertEquals(parameterSchema.minLength, parameter.minLength);
+        assertEquals(parameterSchema.exclusiveMinimum, parameter.exclusiveMinimum);
     }
 }

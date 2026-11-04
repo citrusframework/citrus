@@ -140,16 +140,16 @@ public class OpenApiRequestValidatorTest {
 
         // Then
         assertNotNull(request);
-        assertEquals(request.getPath(), "/test");
-        assertEquals(request.getMethod(), Method.GET);
-        assertEquals(request.getHeaders().get("array"), List.of("e1", "e2"));
-        assertEquals(request.getHeaders().get("simple"), singletonList("s1"));
+        assertEquals("/test", request.getPath());
+        assertEquals(Method.GET, request.getMethod());
+        assertEquals(List.of("e1", "e2"), request.getHeaders().get("array"));
+        assertEquals(singletonList("s1"), request.getHeaders().get("simple"));
         List<String> nullList = new ArrayList<>();
         nullList.add(null);
-        assertEquals(request.getHeaders().get("nullarray"), nullList);
+        assertEquals(nullList, request.getHeaders().get("nullarray"));
         assertTrue(request.getRequestBody().isPresent());
 
-        assertEquals(request.getRequestBody().get().toString(StandardCharsets.UTF_8), "payload");
+        assertEquals("payload", request.getRequestBody().get().toString(StandardCharsets.UTF_8));
     }
 
     @Test
@@ -169,6 +169,6 @@ public class OpenApiRequestValidatorTest {
         Request request = openApiRequestValidator.createRequestFromMessage(operationPathAdapterMock, httpMessageMock);
 
         // Then
-        assertEquals(request.getRequestBody().orElseThrow(IllegalArgumentException::new).toString(StandardCharsets.UTF_8), "name=John+Doe&age=30&city=New+York");
+        assertEquals("name=John+Doe&age=30&city=New+York", request.getRequestBody().orElseThrow(IllegalArgumentException::new).toString(StandardCharsets.UTF_8));
     }
 }

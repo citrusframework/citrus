@@ -61,12 +61,12 @@ public class OpenApiRepositoryTest {
 
         List<OpenApiSpecification> openApiSpecifications = fixture.getOpenApiSpecifications();
 
-        assertEquals(fixture.getRootContextPath(), ROOT);
+        assertEquals(ROOT, fixture.getRootContextPath());
         assertNotNull(openApiSpecifications);
-        assertEquals(openApiSpecifications.size(), 3);
+        assertEquals(3, openApiSpecifications.size());
 
-        assertEquals(openApiSpecifications.get(0).getRootContextPath(), ROOT);
-        assertEquals(openApiSpecifications.get(1).getRootContextPath(), ROOT);
+        assertEquals(ROOT, openApiSpecifications.get(0).getRootContextPath());
+        assertEquals(ROOT, openApiSpecifications.get(1).getRootContextPath());
 
         assertTrue(
                 SampleOpenApiProcessor.processedSpecifications.contains(openApiSpecifications.get(0)));
@@ -85,7 +85,7 @@ public class OpenApiRepositoryTest {
         List<OpenApiSpecification> openApiSpecifications = fixture.getOpenApiSpecifications();
 
         assertNotNull(openApiSpecifications);
-        assertEquals(openApiSpecifications.size(), 1);
+        assertEquals(1, openApiSpecifications.size());
 
         assertNotNull(openApiSpecifications.get(0).getOpenApiDoc(null));
     }
@@ -110,8 +110,8 @@ public class OpenApiRepositoryTest {
         // Then
         assertTrue(fixture.isResponseValidationEnabled());
         assertTrue(fixture.isRequestValidationEnabled());
-        assertEquals(fixture.getRootContextPath(), "/root");
-        assertEquals(fixture.getLocations(), List.of("l1", "l2"));
+        assertEquals("/root", fixture.getRootContextPath());
+        assertEquals(List.of("l1", "l2"), fixture.getLocations());
 
         // When
         fixture.setResponseValidationEnabled(false);
@@ -122,8 +122,8 @@ public class OpenApiRepositoryTest {
         // Then
         assertFalse(fixture.isResponseValidationEnabled());
         assertFalse(fixture.isRequestValidationEnabled());
-        assertEquals(fixture.getRootContextPath(), "/otherRoot");
-        assertEquals(fixture.getLocations(), List.of("l3", "l4"));
+        assertEquals("/otherRoot", fixture.getRootContextPath());
+        assertEquals(List.of("l3", "l4"), fixture.getLocations());
     }
 
     @Test

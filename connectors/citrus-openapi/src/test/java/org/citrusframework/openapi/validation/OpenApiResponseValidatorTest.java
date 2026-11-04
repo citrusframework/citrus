@@ -138,9 +138,9 @@ public class OpenApiResponseValidatorTest {
         // Then
         assertNotNull(response);
         assertTrue(response.getResponseBody().isPresent());
-        assertEquals(response.getResponseBody().get().toString(StandardCharsets.UTF_8), "payload");
+        assertEquals("payload", response.getResponseBody().get().toString(StandardCharsets.UTF_8));
         assertTrue(response.getHeaderValue("Content-Type").isPresent());
-        assertEquals(response.getHeaderValue("Content-Type").get(), APPLICATION_JSON_VALUE);
-        assertEquals(response.getStatus(), Integer.valueOf(200));
+        assertEquals(APPLICATION_JSON_VALUE, response.getHeaderValue("Content-Type").get());
+        assertEquals(Integer.valueOf(200), response.getStatus());
     }
 }
