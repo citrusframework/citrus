@@ -43,4 +43,5 @@ public class CredentialValidatorTest {
     @MethodSource(IS_VALID_DATA_PROVIDER)
     public void isValid(String username, String password, String oauthToken, boolean expectedResult) {
         Assertions.assertEquals(expectedResult, CredentialValidator.isValid(username, password, oauthToken));
-    }}
+    }
+}

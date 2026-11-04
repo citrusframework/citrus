@@ -49,7 +49,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-@Isolated("XmlTestLoader uses a static non-thread-safe JAXB Unmarshaller cache")
+@Isolated("YamlTestLoader uses a static non-thread-safe Unmarshaller cache")
 public class AbstractYamlActionTest extends AbstractUnitTest {
 
     protected Citrus citrus;
