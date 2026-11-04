@@ -169,7 +169,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         }
 
         if (container.getTopics() != null) {
-            container.getTopics().getTopics().forEach(topic -> builder.topics(topic));
+            container.getTopics().getTopics().forEach(builder::topics);
         }
 
         if (container.getTopicList() != null) {
