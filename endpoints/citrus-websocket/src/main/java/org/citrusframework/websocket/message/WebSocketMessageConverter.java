@@ -45,17 +45,16 @@ public class WebSocketMessageConverter implements MessageConverter<org.springfra
 
         org.springframework.web.socket.WebSocketMessage webSocketMessage;
         Object payload = internalMessage.getPayload();
-        if (payload instanceof String) {
-            webSocketMessage = new TextMessage(payload.toString(), internalMessage.isLast());
-        } else if (payload instanceof ByteBuffer) {
-            webSocketMessage = new BinaryMessage((ByteBuffer) payload, internalMessage.isLast());
-        } else if (payload instanceof byte[]) {
-            webSocketMessage = new BinaryMessage((byte[]) payload, internalMessage.isLast());
-        } else {
-            try {
-                webSocketMessage = new TextMessage(internalMessage.getPayload(String.class), internalMessage.isLast());
-            } catch (ConversionNotSupportedException e) {
-                throw new CitrusRuntimeException(String.format("Found unsupported payload type: '%s'", payload.getClass().getCanonicalName()), e);
+        switch (payload) {
+            case String s -> webSocketMessage = new TextMessage(payload.toString(), internalMessage.isLast());
+            case ByteBuffer byteBuffer -> webSocketMessage = new BinaryMessage(byteBuffer, internalMessage.isLast());
+            case byte[] bytes -> webSocketMessage = new BinaryMessage(bytes, internalMessage.isLast());
+            case null, default -> {
+                try {
+                    webSocketMessage = new TextMessage(internalMessage.getPayload(String.class), internalMessage.isLast());
+                } catch (ConversionNotSupportedException e) {
+                    throw new CitrusRuntimeException(String.format("Found unsupported payload type: '%s'", payload.getClass().getCanonicalName()), e);
+                }
             }
         }
 

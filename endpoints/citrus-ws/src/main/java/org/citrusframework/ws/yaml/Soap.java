@@ -77,25 +77,24 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @SchemaProperty(description = "Sets the SOAP Http client. " +
             "Uses an endpoint URI or references an endpoint name.")
     public void setClient(String soapClient) {
-        if (builder == null) {
-            builder = new SoapActionBuilder().client(soapClient);
-        } else if (builder instanceof SendActionBuilder<?,?,?> messageActionBuilder) {
-            messageActionBuilder.endpoint(soapClient);
-        } else if (builder instanceof ReceiveActionBuilder<?,?,?> messageActionBuilder) {
-            messageActionBuilder.endpoint(soapClient);
-        } else if (builder instanceof AssertSoapFault.Builder assertSoapFaultBuilder) {
-            assertSoapFaultBuilder.endpoint(soapClient);
+        switch (builder) {
+            case null -> builder = new SoapActionBuilder().client(soapClient);
+            case SendActionBuilder<?, ?, ?> messageActionBuilder -> messageActionBuilder.endpoint(soapClient);
+            case ReceiveActionBuilder<?, ?, ?> messageActionBuilder -> messageActionBuilder.endpoint(soapClient);
+            case AssertSoapFault.Builder assertSoapFaultBuilder -> assertSoapFaultBuilder.endpoint(soapClient);
+            default -> {
+            }
         }
     }
 
     @SchemaProperty(description = "Sets the SOAP Http server.")
     public void setServer(String soapServer) {
-        if (builder == null) {
-            builder = new SoapActionBuilder().server(soapServer);
-        } else if (builder instanceof SendActionBuilder<?,?,?> messageActionBuilder) {
-            messageActionBuilder.endpoint(soapServer);
-        } else if (builder instanceof ReceiveActionBuilder<?,?,?> messageActionBuilder) {
-            messageActionBuilder.endpoint(soapServer);
+        switch (builder) {
+            case null -> builder = new SoapActionBuilder().server(soapServer);
+            case SendActionBuilder<?, ?, ?> messageActionBuilder -> messageActionBuilder.endpoint(soapServer);
+            case ReceiveActionBuilder<?, ?, ?> messageActionBuilder -> messageActionBuilder.endpoint(soapServer);
+            default -> {
+            }
         }
     }
 

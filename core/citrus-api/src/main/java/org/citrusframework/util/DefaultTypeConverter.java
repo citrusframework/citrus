@@ -93,46 +93,56 @@ public class DefaultTypeConverter implements TypeConverter {
         }
 
         if (byte[].class.isAssignableFrom(type)) {
-            if (target instanceof String) {
-                try {
-                    return (T) String.valueOf(target).getBytes(CitrusSettings.getFileEncoding());
-                } catch (UnsupportedEncodingException e) {
-                    return (T) String.valueOf(target).getBytes();
-                }
-            } else if (target instanceof ByteBuffer) {
-                return (T) ((ByteBuffer) target).array();
-            } else if (target instanceof InputStream is) {
-                try {
-                    ByteBuffer byteBuffer = ByteBuffer.allocate(is.available());
-                    while (is.available() > 0) {
-                        byteBuffer.put((byte) is.read());
+            switch (target) {
+                case String s -> {
+                    try {
+                        return (T) String.valueOf(target).getBytes(CitrusSettings.getFileEncoding());
+                    } catch (UnsupportedEncodingException e) {
+                        return (T) String.valueOf(target).getBytes();
                     }
-                    return (T) byteBuffer.array();
-                } catch (IOException e) {
-                    throw new CitrusRuntimeException("Failed to convert input stream to byte[]");
                 }
-            } else {
-                String targetAsString = convertIfNecessary(target, String.class);
-                return (T) convertIfNecessary(targetAsString, byte[].class);
+                case ByteBuffer buffer -> {
+                    return (T) buffer.array();
+                }
+                case InputStream is -> {
+                    try {
+                        ByteBuffer byteBuffer = ByteBuffer.allocate(is.available());
+                        while (is.available() > 0) {
+                            byteBuffer.put((byte) is.read());
+                        }
+                        return (T) byteBuffer.array();
+                    } catch (IOException e) {
+                        throw new CitrusRuntimeException("Failed to convert input stream to byte[]");
+                    }
+                }
+                case null, default -> {
+                    String targetAsString = convertIfNecessary(target, String.class);
+                    return (T) convertIfNecessary(targetAsString, byte[].class);
+                }
             }
         }
 
         if (InputStream.class.isAssignableFrom(type)) {
-            if (target instanceof InputStream) {
-                return (T) target;
-            } else if (target instanceof byte[]) {
-                return (T) new ByteArrayInputStream((byte[]) target);
-            } else if (target instanceof String) {
-                try {
-                    return (T) new ByteArrayInputStream(String.valueOf(target).getBytes(CitrusSettings.getFileEncoding()));
-                } catch (UnsupportedEncodingException e) {
-                    return (T) new ByteArrayInputStream(String.valueOf(target).getBytes());
+            switch (target) {
+                case InputStream inputStream -> {
+                    return (T) target;
                 }
-            } else {
-                try {
-                    return (T) new ByteArrayInputStream(target.toString().getBytes(CitrusSettings.getFileEncoding()));
-                } catch (UnsupportedEncodingException e) {
-                    return (T) new ByteArrayInputStream(target.toString().getBytes());
+                case byte[] bytes -> {
+                    return (T) new ByteArrayInputStream(bytes);
+                }
+                case String s -> {
+                    try {
+                        return (T) new ByteArrayInputStream(String.valueOf(target).getBytes(CitrusSettings.getFileEncoding()));
+                    } catch (UnsupportedEncodingException e) {
+                        return (T) new ByteArrayInputStream(String.valueOf(target).getBytes());
+                    }
+                }
+                case null, default -> {
+                    try {
+                        return (T) new ByteArrayInputStream(target.toString().getBytes(CitrusSettings.getFileEncoding()));
+                    } catch (UnsupportedEncodingException e) {
+                        return (T) new ByteArrayInputStream(target.toString().getBytes());
+                    }
                 }
             }
         }

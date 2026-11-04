@@ -130,19 +130,13 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             connectAndLogin();
 
             CommandType ftpCommand = ftpMessage.getPayload(CommandType.class);
-            FtpMessage response;
-
-            if (ftpCommand instanceof GetCommand) {
-                response = retrieveFile((GetCommand) ftpCommand, context);
-            } else if (ftpCommand instanceof PutCommand) {
-                response = storeFile((PutCommand) ftpCommand, context);
-            } else if (ftpCommand instanceof ListCommand) {
-                response = listFiles((ListCommand) ftpCommand, context);
-            } else if (ftpCommand instanceof DeleteCommand) {
-                response = deleteFile((DeleteCommand) ftpCommand, context);
-            } else {
-                response = executeCommand(ftpCommand, context);
-            }
+            FtpMessage response = switch (ftpCommand) {
+                case GetCommand getCommand -> retrieveFile(getCommand, context);
+                case PutCommand putCommand -> storeFile(putCommand, context);
+                case ListCommand listCommand -> listFiles(listCommand, context);
+                case DeleteCommand deleteCommand -> deleteFile(deleteCommand, context);
+                case null, default -> executeCommand(ftpCommand, context);
+            };
 
             if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
                 if (!isPositive(response.getReplyCode())) {
