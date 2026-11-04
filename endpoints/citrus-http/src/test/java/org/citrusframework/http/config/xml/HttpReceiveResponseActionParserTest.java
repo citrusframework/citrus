@@ -83,6 +83,15 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "<user><id>1001</id><name>new_user</name></user>");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get("userId"), "1001");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getCookies().size(), 1);
+        jakarta.servlet.http.Cookie cookie = httpMessageBuilder.getMessage().getCookies().get(0);
+        Assert.assertEquals(cookie.getName(), "session");
+        Assert.assertEquals(cookie.getValue(), "abc123");
+        Assert.assertEquals(cookie.getPath(), "/user");
+        Assert.assertEquals(cookie.getDomain(), "example.com");
+        Assert.assertEquals(cookie.getMaxAge(), 3600);
+        Assert.assertTrue(cookie.getSecure());
+        Assert.assertTrue(cookie.isHttpOnly());
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
         Assert.assertNull(action.getEndpointUri());
 

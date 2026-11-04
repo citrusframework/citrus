@@ -36,6 +36,10 @@ final class CookieUtils {
                 cookie.setSecure(parseBoolean(cookieElement.getAttribute("secure")));
             }
 
+            if (cookieElement.hasAttribute("http-only")) {
+                cookie.setHttpOnly(parseBoolean(cookieElement.getAttribute("http-only")));
+            }
+
             httpMessage.cookie(cookie);
         }
     }

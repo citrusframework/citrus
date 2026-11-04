@@ -380,6 +380,7 @@
       </xs:element>
     </xs:sequence>
     <xs:attribute name="path" type="xs:string"/>
+    <xs:attribute name="context-path" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="ServerRequestType">
@@ -504,6 +505,16 @@
     <xs:attribute name="value" type="xs:string"/>
   </xs:complexType>
 
+  <xs:complexType name="CookieType">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:string" use="required"/>
+    <xs:attribute name="max-age" type="xs:int"/>
+    <xs:attribute name="path" type="xs:string"/>
+    <xs:attribute name="domain" type="xs:string"/>
+    <xs:attribute name="secure" type="xs:boolean"/>
+    <xs:attribute name="http-only" type="xs:boolean"/>
+  </xs:complexType>
+
   <xs:complexType name="RequestHeadersType">
     <xs:sequence>
       <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
@@ -512,12 +523,7 @@
           <xs:attribute name="value" type="xs:string"/>
         </xs:complexType>
       </xs:element>
-      <xs:element name="cookie" minOccurs="0" maxOccurs="unbounded">
-        <xs:complexType>
-          <xs:attribute name="name" type="xs:string" use="required"/>
-          <xs:attribute name="value" type="xs:string" use="required"/>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="cookie" minOccurs="0" maxOccurs="unbounded" type="CookieType"/>
     </xs:sequence>
     <xs:attribute name="content-type" type="xs:string"/>
     <xs:attribute name="accept" type="xs:string"/>
@@ -532,16 +538,7 @@
           <xs:attribute name="value" type="xs:string"/>
         </xs:complexType>
       </xs:element>
-      <xs:element name="cookie" minOccurs="0" maxOccurs="unbounded">
-        <xs:complexType>
-          <xs:attribute name="name" type="xs:string" use="required"/>
-          <xs:attribute name="value" type="xs:string" use="required"/>
-          <xs:attribute name="max-age" type="xs:int"/>
-          <xs:attribute name="path" type="xs:string"/>
-          <xs:attribute name="domain" type="xs:string"/>
-          <xs:attribute name="secure" type="xs:boolean"/>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="cookie" minOccurs="0" maxOccurs="unbounded" type="CookieType"/>
     </xs:sequence>
     <xs:attribute name="status" type="xs:string"/>
     <xs:attribute name="reason-phrase" type="xs:string"/>

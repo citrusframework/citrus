@@ -18,7 +18,6 @@ package org.citrusframework.http.config.xml;
 
 import java.util.List;
 
-import jakarta.servlet.http.Cookie;
 import org.citrusframework.spring.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.spring.config.xml.DescriptionElementParser;
 import org.citrusframework.spring.config.xml.MessageSelectorParser;
@@ -105,10 +104,7 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
             }
 
             List<?> cookieElements = DomUtils.getChildElementsByTagName(headers, "cookie");
-            for (Object cookieElement : cookieElements) {
-                Element cookie = (Element) cookieElement;
-                httpMessage.cookie(new Cookie(cookie.getAttribute("name"), cookie.getAttribute("value")));
-            }
+            CookieUtils.setCookieElement(httpMessage, cookieElements);
 
             boolean ignoreCase = !headers.hasAttribute("ignore-case") || parseBoolean(headers.getAttribute("ignore-case"));
             getHeaderValidationContext(validationContexts).ignoreCase(ignoreCase);

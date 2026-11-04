@@ -39,6 +39,7 @@ import org.citrusframework.http.actions.HttpClientResponseActionBuilder;
 import org.citrusframework.http.actions.HttpServerActionBuilder;
 import org.citrusframework.http.actions.HttpServerRequestActionBuilder;
 import org.citrusframework.http.actions.HttpServerResponseActionBuilder;
+import org.citrusframework.http.message.Cookie;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
@@ -156,6 +157,14 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             }
         }
 
+        if (requestMessage.contextPath != null) {
+            requestBuilder.message().header(HttpMessageHeaders.HTTP_CONTEXT_PATH, requestMessage.contextPath);
+        }
+
+        for (Cookie cookie : requestMessage.getCookies()) {
+            requestBuilder.message().cookie(cookie.toCookie());
+        }
+
         builder = requestBuilder;
     }
 
@@ -186,6 +195,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
             if (response.getResponse().version != null) {
                 responseBuilder.message().version(response.getResponse().version);
+            }
+
+            for (Cookie cookie : response.getResponse().getCookies()) {
+                responseBuilder.message().cookie(cookie.toCookie());
             }
 
             receive.setMessage(response.getResponse());
@@ -263,6 +276,14 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             requestBuilder.message().version(requestMessage.version);
         }
 
+        if (requestMessage.contextPath != null) {
+            requestBuilder.message().header(HttpMessageHeaders.HTTP_CONTEXT_PATH, requestMessage.contextPath);
+        }
+
+        for (Cookie cookie : requestMessage.getCookies()) {
+            requestBuilder.message().cookie(cookie.toCookie());
+        }
+
         receive = new Receive(requestBuilder) {
             @Override
             protected ReceiveMessageAction doBuild() {
@@ -337,6 +358,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
             if (response.getResponse().version != null) {
                 responseBuilder.message().version(response.getResponse().version);
+            }
+
+            for (Cookie cookie : response.getResponse().getCookies()) {
+                responseBuilder.message().cookie(cookie.toCookie());
             }
         }
 
@@ -882,6 +907,20 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         @XmlAttribute(name = "content-type")
         protected String contentType;
 
+        @XmlElement(name = "cookie")
+        protected List<Cookie> cookies;
+
+        public List<Cookie> getCookies() {
+            if (cookies == null) {
+                cookies = new ArrayList<>();
+            }
+            return cookies;
+        }
+
+        public void setCookies(List<Cookie> cookies) {
+            this.cookies = cookies;
+        }
+
         public String getStatus() {
             return status;
         }
@@ -917,7 +956,8 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-            "parameters"
+            "parameters",
+            "cookies"
     })
     public static class HttpRequest extends Message {
         @XmlAttribute
@@ -928,9 +968,33 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected String accept;
         @XmlAttribute
         protected String version;
+        @XmlAttribute(name = "context-path")
+        protected String contextPath;
 
         @XmlElement(name = "param")
         protected List<QueryParameter> parameters;
+
+        @XmlElement(name = "cookie")
+        protected List<Cookie> cookies;
+
+        public List<Cookie> getCookies() {
+            if (cookies == null) {
+                cookies = new ArrayList<>();
+            }
+            return cookies;
+        }
+
+        public void setCookies(List<Cookie> cookies) {
+            this.cookies = cookies;
+        }
+
+        public String getContextPath() {
+            return contextPath;
+        }
+
+        public void setContextPath(String contextPath) {
+            this.contextPath = contextPath;
+        }
 
         public String getPath() {
             return path;
@@ -969,6 +1033,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                 parameters = new ArrayList<>();
             }
             return this.parameters;
+        }
+
+        public void setParameters(List<QueryParameter> parameters) {
+            this.parameters = parameters;
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)

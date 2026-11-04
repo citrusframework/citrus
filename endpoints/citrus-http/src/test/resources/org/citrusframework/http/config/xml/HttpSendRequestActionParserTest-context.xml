@@ -22,9 +22,10 @@
         </http:send-request>
 
         <http:send-request client="httpClient">
-          <http:POST path="/user">
+          <http:POST path="/user" context-path="/test">
             <http:headers>
               <http:header name="userId" value="1001"/>
+              <http:cookie name="session" value="abc123" path="/user" domain="example.com" max-age="3600" secure="true" http-only="true"/>
             </http:headers>
             <http:body>
               <http:data>

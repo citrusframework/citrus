@@ -35,6 +35,7 @@ import org.citrusframework.http.actions.HttpClientResponseActionBuilder;
 import org.citrusframework.http.actions.HttpServerActionBuilder;
 import org.citrusframework.http.actions.HttpServerRequestActionBuilder;
 import org.citrusframework.http.actions.HttpServerResponseActionBuilder;
+import org.citrusframework.http.message.Cookie;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
@@ -173,6 +174,14 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             }
         }
 
+        if (requestMessage.contextPath != null) {
+            requestBuilder.message().header(HttpMessageHeaders.HTTP_CONTEXT_PATH, requestMessage.contextPath);
+        }
+
+        for (Cookie cookie : requestMessage.getCookies()) {
+            requestBuilder.message().cookie(cookie.toCookie());
+        }
+
         builder = requestBuilder;
     }
 
@@ -204,6 +213,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
             if (response.getResponse().version != null) {
                 responseBuilder.message().version(response.getResponse().version);
+            }
+
+            for (Cookie cookie : response.getResponse().getCookies()) {
+                responseBuilder.message().cookie(cookie.toCookie());
             }
 
             receive.setMessage(response.getResponse());
@@ -282,6 +295,14 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             requestBuilder.message().version(requestMessage.version);
         }
 
+        if (requestMessage.contextPath != null) {
+            requestBuilder.message().header(HttpMessageHeaders.HTTP_CONTEXT_PATH, requestMessage.contextPath);
+        }
+
+        for (Cookie cookie : requestMessage.getCookies()) {
+            requestBuilder.message().cookie(cookie.toCookie());
+        }
+
         receive = new Receive(requestBuilder) {
             @Override
             protected ReceiveMessageAction doBuild() {
@@ -357,6 +378,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
             if (response.getResponse().version != null) {
                 responseBuilder.message().version(response.getResponse().version);
+            }
+
+            for (Cookie cookie : response.getResponse().getCookies()) {
+                responseBuilder.message().cookie(cookie.toCookie());
             }
         }
 
@@ -877,6 +902,19 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected String reasonPhrase;
         protected String version;
         protected String contentType;
+        protected List<Cookie> cookies;
+
+        public List<Cookie> getCookies() {
+            if (cookies == null) {
+                cookies = new ArrayList<>();
+            }
+            return cookies;
+        }
+
+        @SchemaProperty(advanced = true, description = "List of Http cookies.")
+        public void setCookies(List<Cookie> cookies) {
+            this.cookies = cookies;
+        }
 
         public String getStatus() {
             return status;
@@ -920,8 +958,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected String contentType;
         protected String accept;
         protected String version;
+        protected String contextPath;
 
         protected List<QueryParameter> parameters;
+        protected List<Cookie> cookies;
 
         public String getPath() {
             return path;
@@ -959,6 +999,15 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             this.version = version;
         }
 
+        public String getContextPath() {
+            return contextPath;
+        }
+
+        @SchemaProperty(advanced = true, description = "Http context path.")
+        public void setContextPath(String contextPath) {
+            this.contextPath = contextPath;
+        }
+
         public List<QueryParameter> getParameters() {
             if (parameters == null) {
                 parameters = new ArrayList<>();
@@ -969,6 +1018,18 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         @SchemaProperty(advanced = true, description = "List of Http query parameters.")
         public void setParameters(List<QueryParameter> parameters) {
             this.parameters = parameters;
+        }
+
+        public List<Cookie> getCookies() {
+            if (cookies == null) {
+                cookies = new ArrayList<>();
+            }
+            return cookies;
+        }
+
+        @SchemaProperty(advanced = true, description = "List of Http cookies.")
+        public void setCookies(List<Cookie> cookies) {
+            this.cookies = cookies;
         }
 
         public static class QueryParameter {
