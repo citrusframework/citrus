@@ -16,29 +16,32 @@
 
 package org.citrusframework.openapi.actions;
 
+import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.http.message.HttpMessage;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
-import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class OpenApiClientRequestMessageBuilderTest extends AbstractTestNGUnitTest implements TestActionSupport {
+@ExtendWith(MockitoExtension.class)
+public class OpenApiClientRequestMessageBuilderTest extends AbstractUnitTest implements TestActionSupport {
 
     private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
             Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-derivation-for-message-builder-test.json"));
@@ -52,27 +55,26 @@ public class OpenApiClientRequestMessageBuilderTest extends AbstractTestNGUnitTe
     @Mock
     private Producer mockProducer;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-        when(mockEndpoint.createProducer()).thenReturn(mockProducer);
-        when(mockEndpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        lenient().when(mockEndpoint.createProducer()).thenReturn(mockProducer);
+        lenient().when(mockEndpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
     }
 
     @Test
     public void shouldAddRandomDataForOperationWhenAutoFillAll() {
         doAnswer(invocationOnMock -> {
-            Assert.assertTrue(invocationOnMock.getArgument(0) instanceof HttpMessage);
+            Assertions.assertTrue(invocationOnMock.getArgument(0) instanceof HttpMessage);
             HttpMessage httpMessage = invocationOnMock.getArgument(0, HttpMessage.class);
 
             // test payload
             Object payload = httpMessage.getPayload();
-            Assert.assertNotNull(payload);
-            Assert.assertTrue(payload instanceof String);
+            Assertions.assertNotNull(payload);
+            Assertions.assertTrue(payload instanceof String);
             // test header
-            Assert.assertNotNull(httpMessage.getHeader("X-SAMPLE-HEADER"));
-            Assert.assertNotNull(httpMessage.getQueryParams().get("sample-param"));
-            Assert.assertNotNull(httpMessage.getQueryParams().get("non-required-sample-param"));
+            Assertions.assertNotNull(httpMessage.getHeader("X-SAMPLE-HEADER"));
+            Assertions.assertNotNull(httpMessage.getQueryParams().get("sample-param"));
+            Assertions.assertNotNull(httpMessage.getQueryParams().get("non-required-sample-param"));
 
             return null;
         }).when(mockProducer).send(any(Message.class), eq(context));
@@ -92,17 +94,17 @@ public class OpenApiClientRequestMessageBuilderTest extends AbstractTestNGUnitTe
     @Test
     public void shouldAddRandomDataForOperationWhenAutoFillRequired() {
         doAnswer(invocationOnMock -> {
-            Assert.assertTrue(invocationOnMock.getArgument(0) instanceof HttpMessage);
+            Assertions.assertTrue(invocationOnMock.getArgument(0) instanceof HttpMessage);
             HttpMessage httpMessage = invocationOnMock.getArgument(0, HttpMessage.class);
 
             // test payload
             Object payload = httpMessage.getPayload();
-            Assert.assertNotNull(payload);
-            Assert.assertTrue(payload instanceof String);
+            Assertions.assertNotNull(payload);
+            Assertions.assertTrue(payload instanceof String);
             // test header
-            Assert.assertNotNull(httpMessage.getHeader("X-SAMPLE-HEADER"));
-            Assert.assertNotNull(httpMessage.getQueryParams().get("sample-param"));
-            Assert.assertNull(httpMessage.getQueryParams().get("non-required-sample-param"));
+            Assertions.assertNotNull(httpMessage.getHeader("X-SAMPLE-HEADER"));
+            Assertions.assertNotNull(httpMessage.getQueryParams().get("sample-param"));
+            Assertions.assertNull(httpMessage.getQueryParams().get("non-required-sample-param"));
 
             return null;
         }).when(mockProducer).send(any(Message.class), eq(context));
@@ -121,17 +123,17 @@ public class OpenApiClientRequestMessageBuilderTest extends AbstractTestNGUnitTe
     @Test
     public void shouldNotAddRandomDataForOperationWhenAutoFillNone() {
         doAnswer(invocationOnMock -> {
-            Assert.assertTrue(invocationOnMock.getArgument(0) instanceof HttpMessage);
+            Assertions.assertTrue(invocationOnMock.getArgument(0) instanceof HttpMessage);
             HttpMessage httpMessage = invocationOnMock.getArgument(0, HttpMessage.class);
 
             // test payload
             Object payload = httpMessage.getPayload();
-            Assert.assertNotNull(payload);
-            Assert.assertTrue(payload instanceof String);
+            Assertions.assertNotNull(payload);
+            Assertions.assertTrue(payload instanceof String);
             // test header
-            Assert.assertNull(httpMessage.getHeader("X-SAMPLE-HEADER"));
-            Assert.assertNull(httpMessage.getQueryParams().get("sample-param"));
-            Assert.assertNull(httpMessage.getQueryParams().get("non-required-sample-param"));
+            Assertions.assertNull(httpMessage.getHeader("X-SAMPLE-HEADER"));
+            Assertions.assertNull(httpMessage.getQueryParams().get("sample-param"));
+            Assertions.assertNull(httpMessage.getQueryParams().get("non-required-sample-param"));
 
             return null;
         }).when(mockProducer).send(any(Message.class), eq(context));
@@ -154,15 +156,15 @@ public class OpenApiClientRequestMessageBuilderTest extends AbstractTestNGUnitTe
         String sampleHeader = "X-SAMPLE-HEADER-VALUE";
 
         doAnswer(invocationOnMock -> {
-            Assert.assertTrue(invocationOnMock.getArgument(0) instanceof HttpMessage);
+            Assertions.assertTrue(invocationOnMock.getArgument(0) instanceof HttpMessage);
             HttpMessage httpMessage = invocationOnMock.getArgument(0, HttpMessage.class);
 
             // test payload
             Object payload = httpMessage.getPayload();
-            Assert.assertEquals(payload, body);
+            Assertions.assertEquals(payload, body);
             // test header
             Object header = httpMessage.getHeader("X-SAMPLE-HEADER");
-            Assert.assertEquals(header, sampleHeader);
+            Assertions.assertEquals(header, sampleHeader);
 
             return null;
         }).when(mockProducer).send(any(Message.class), eq(context));

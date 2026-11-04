@@ -19,15 +19,15 @@ package org.citrusframework.openapi.random;
 import java.util.function.BiConsumer;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RandomGeneratorBuilderTest {
 
@@ -35,7 +35,7 @@ public class RandomGeneratorBuilderTest {
     private RandomContext contextMock;
     private OasSchema schemaMock;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         consumerMock = mock();
         contextMock = mock();

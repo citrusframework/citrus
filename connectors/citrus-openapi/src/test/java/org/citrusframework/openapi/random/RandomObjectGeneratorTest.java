@@ -24,8 +24,8 @@ import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import org.citrusframework.openapi.OpenApiConstants;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -36,8 +36,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RandomObjectGeneratorTest {
 
@@ -46,7 +46,7 @@ public class RandomObjectGeneratorTest {
     private RandomModelBuilder randomModelBuilderSpy;
     private OpenApiSpecification specificationMock;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         generator = new RandomObjectGenerator();
         contextMock = mock();

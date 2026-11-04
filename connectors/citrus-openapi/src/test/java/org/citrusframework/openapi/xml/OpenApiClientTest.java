@@ -51,17 +51,16 @@ import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OpenApiClientTest extends AbstractXmlActionTest {
 
@@ -83,7 +82,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
     private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
     private final Queue<HttpMessage> responses = new ArrayBlockingQueue<>(6);
 
-    @BeforeClass
+    @BeforeEach
     public void setupEndpoints() {
         EndpointAdapter endpointAdapter = new DirectEndpointAdapter(new DirectSyncEndpointConfiguration()) {
             @Override
@@ -108,7 +107,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
             .build();
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterEach
     public void cleanupEndpoints() {
         if (httpServer != null) {
             httpServer.stop();
@@ -161,7 +160,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         int actionIndex = 0;
 
         SendMessageAction sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertFalse(sendMessageAction.isForkMode());
+        assertFalse(sendMessageAction.isForkMode());
         assertTrue(sendMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
         HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
@@ -184,10 +183,10 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
         assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
         assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            HeaderValidationContext.class::isInstance, "List must contain HeaderValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(HeaderValidationContext.class::isInstance), "List must contain HeaderValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(OpenApiMessageValidationContext.class::isInstance), "List must contain OpenApiMessageValidationContext");
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
@@ -203,7 +202,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertFalse(sendMessageAction.isForkMode());
+        assertFalse(sendMessageAction.isForkMode());
         httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
         assertTrue(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()).toString().startsWith("{\"id\": "));
@@ -221,10 +220,10 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex);
         assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            HeaderValidationContext.class::isInstance, "List must contain HeaderValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(HeaderValidationContext.class::isInstance), "List must contain HeaderValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(OpenApiMessageValidationContext.class::isInstance), "List must contain OpenApiMessageValidationContext");
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);

@@ -20,21 +20,21 @@ import java.util.List;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RandomGeneratorTest {
 
     private RandomGenerator generator;
     private OasSchema mockSchema;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         mockSchema = mock(OasSchema.class);
         generator = new RandomGenerator(mockSchema) {

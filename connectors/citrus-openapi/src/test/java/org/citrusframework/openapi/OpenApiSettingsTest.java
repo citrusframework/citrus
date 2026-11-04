@@ -19,8 +19,8 @@ package org.citrusframework.openapi;
 import java.util.Optional;
 
 import org.citrusframework.util.SystemProvider;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.api.openapi.AutoFillType.ALL;
 import static org.citrusframework.api.openapi.AutoFillType.NONE;
@@ -44,15 +44,15 @@ import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.REP
 import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.STRICT;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenApiSettingsTest {
 
     private SystemProvider systemProvider;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethod() {
         systemProvider = mock();
     }

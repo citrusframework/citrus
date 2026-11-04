@@ -35,10 +35,10 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.yaml.YamlTestLoader;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
@@ -54,7 +54,7 @@ public class OpenApiServerTest extends AbstractYamlActionTest {
             .build());
     private HttpServer httpServer;
 
-    @BeforeClass
+    @BeforeEach
     public void setupEndpoints() {
         ((AbstractEndpointAdapter) endpointAdapter).setTestContextFactory(testContextFactory);
 
@@ -103,77 +103,77 @@ public class OpenApiServerTest extends AbstractYamlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "OpenApiServerTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "openapi:receive-request");
+        Assertions.assertEquals(result.getName(), "OpenApiServerTest");
+        Assertions.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
+        Assertions.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
+        Assertions.assertEquals(result.getActionCount(), 4L);
+        Assertions.assertEquals(result.getTestAction(0).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals(result.getTestAction(0).getName(), "openapi:receive-request");
 
-        Assert.assertEquals(result.getTestAction(1).getClass(), SendMessageAction.class);
-        Assert.assertEquals(result.getTestAction(1).getName(), "openapi:send-response");
+        Assertions.assertEquals(result.getTestAction(1).getClass(), SendMessageAction.class);
+        Assertions.assertEquals(result.getTestAction(1).getName(), "openapi:send-response");
 
         int actionIndex = 0;
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof OpenApiMessageValidationContext);
-        Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
+        Assertions.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
+        Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
+        Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof OpenApiMessageValidationContext);
+        Assertions.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
-        Assert.assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
+        Assertions.assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
         HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 2L);
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpServer");
-        Assert.assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
+        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 2L);
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertEquals(receiveMessageAction.getEndpointUri(), "httpServer");
+        Assertions.assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
 
         SendMessageAction sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
+        Assertions.assertNotNull(httpMessageBuilder);
 
-        Assert.assertTrue(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()).toString().startsWith("{\"id\": "));
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
+        Assertions.assertTrue(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()).toString().startsWith("{\"id\": "));
+        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
+        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
 
-        Assert.assertNull(sendMessageAction.getEndpoint());
-        Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
-        Assert.assertEquals(sendMessageAction.getMessageProcessors().size(), 1);
+        Assertions.assertNull(sendMessageAction.getEndpoint());
+        Assertions.assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
+        Assertions.assertEquals(sendMessageAction.getMessageProcessors().size(), 1);
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof OpenApiMessageValidationContext);
-        Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
+        Assertions.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
+        Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
+        Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof OpenApiMessageValidationContext);
+        Assertions.assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
 
         Map<String, Object> requestHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        Assert.assertEquals(requestHeaders.size(), 0L);
-        Assert.assertNull(receiveMessageAction.getEndpoint());
-        Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpServer");
+        Assertions.assertEquals(requestHeaders.size(), 0L);
+        Assertions.assertNull(receiveMessageAction.getEndpoint());
+        Assertions.assertEquals(receiveMessageAction.getEndpointUri(), "httpServer");
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex);
         httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Map<String, Object> responseHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        Assert.assertEquals(responseHeaders.size(), 2L);
-        Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE), 201);
-        Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "CREATED");
-        Assert.assertNull(sendMessageAction.getEndpoint());
-        Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
+        Assertions.assertEquals(responseHeaders.size(), 2L);
+        Assertions.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE), 201);
+        Assertions.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "CREATED");
+        Assertions.assertNull(sendMessageAction.getEndpoint());
+        Assertions.assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
     }
 }

@@ -38,19 +38,18 @@ import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertListContains;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenApiServerTest extends AbstractGroovyActionDslTest {
 
@@ -65,7 +64,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         .build());
     private HttpServer httpServer;
 
-    @BeforeClass
+    @BeforeEach
     public void setupEndpoints() {
         ((AbstractEndpointAdapter) endpointAdapter).setTestContextFactory(testContextFactory);
 
@@ -128,12 +127,12 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
         assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            HeaderValidationContext.class::isInstance, "List must contain HeaderValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(HeaderValidationContext.class::isInstance), "List must contain HeaderValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(OpenApiMessageValidationContext.class::isInstance), "List must contain OpenApiMessageValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(DefaultMessageValidationContext.class::isInstance), "List must contain DefaultMessageValidationContext");
         assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
         assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
@@ -156,20 +155,20 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
         assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
+        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
 
-        Assert.assertNull(sendMessageAction.getEndpoint());
+        assertNull(sendMessageAction.getEndpoint());
         assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
         assertEquals(sendMessageAction.getMessageProcessors().size(), 1);
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
         assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            HeaderValidationContext.class::isInstance, "List must contain HeaderValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(HeaderValidationContext.class::isInstance), "List must contain HeaderValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(OpenApiMessageValidationContext.class::isInstance), "List must contain OpenApiMessageValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(DefaultMessageValidationContext.class::isInstance), "List must contain DefaultMessageValidationContext");
         assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
@@ -179,7 +178,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
 
         Map<String, Object> requestHeaders = httpMessageBuilder.buildMessageHeaders(context);
         assertEquals(requestHeaders.size(), 0L);
-        Assert.assertNull(receiveMessageAction.getEndpointUri());
+        assertNull(receiveMessageAction.getEndpointUri());
         assertEquals(receiveMessageAction.getEndpoint(), httpServer);
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex);
@@ -192,7 +191,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertEquals(responseHeaders.size(), 2L);
         assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE), 201);
         assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "CREATED");
-        Assert.assertNull(sendMessageAction.getEndpoint());
+        assertNull(sendMessageAction.getEndpoint());
         assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
     }
 }

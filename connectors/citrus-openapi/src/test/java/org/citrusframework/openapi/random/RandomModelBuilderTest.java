@@ -18,18 +18,18 @@ package org.citrusframework.openapi.random;
 
 import java.util.ArrayDeque;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RandomModelBuilderTest {
 
     private RandomModelBuilder builder;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         builder = new RandomModelBuilder(true);
     }
@@ -135,18 +135,18 @@ public class RandomModelBuilderTest {
     public void testIllegalStateOnEmptyDeque() {
         builder.deque.clear();
 
-        Exception exception = expectThrows(IllegalStateException.class, () ->
+        Exception exception = assertThrows(IllegalStateException.class, () ->
                 builder.property("key", () -> builder.appendSimple("value"))
         );
         assertEquals(exception.getMessage(), "Encountered empty stack!");
 
-        exception = expectThrows(IllegalStateException.class, () ->
+        exception = assertThrows(IllegalStateException.class, () ->
                 builder.object(() -> {
                 })
         );
         assertEquals(exception.getMessage(), "Encountered empty stack!");
 
-        exception = expectThrows(IllegalStateException.class, () ->
+        exception = assertThrows(IllegalStateException.class, () ->
                 builder.array(() -> {
                 })
         );

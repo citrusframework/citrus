@@ -29,10 +29,10 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Responses;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import org.citrusframework.openapi.model.OasModelHelper;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Oas20ModelHelperTest {
 

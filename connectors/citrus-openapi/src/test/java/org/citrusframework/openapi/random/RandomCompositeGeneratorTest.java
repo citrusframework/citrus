@@ -21,8 +21,8 @@ import java.util.List;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.any;
@@ -42,7 +42,7 @@ public class RandomCompositeGeneratorTest {
     private RandomContext mockContext;
     private RandomModelBuilder builderSpy;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         generator = new RandomCompositeGenerator();
         mockContext = mock(RandomContext.class);

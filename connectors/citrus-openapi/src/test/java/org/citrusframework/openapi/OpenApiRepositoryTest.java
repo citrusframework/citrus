@@ -23,10 +23,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.validation.OpenApiValidationPolicy;
 import org.citrusframework.spi.Resources;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.Thread.sleep;
 import static java.util.Collections.singletonList;
@@ -34,11 +35,11 @@ import static java.util.concurrent.CompletableFuture.runAsync;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenApiRepositoryTest {
 
@@ -46,7 +47,7 @@ public class OpenApiRepositoryTest {
 
     private OpenApiRepository fixture;
 
-    @BeforeMethod
+    @BeforeEach
     void beforeMethodSetup() {
         fixture = new OpenApiRepository();
     }
@@ -95,7 +96,7 @@ public class OpenApiRepositoryTest {
         fixture.setLocations(
                 singletonList("org/citrusframework/openapi/faulty/faulty-ping-api.yaml"));
 
-        assertThrows(fixture::initialize);
+        assertThrows(CitrusRuntimeException.class, fixture::initialize);
     }
 
     @Test
