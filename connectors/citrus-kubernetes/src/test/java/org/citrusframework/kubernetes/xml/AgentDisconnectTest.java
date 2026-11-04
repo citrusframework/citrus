@@ -31,14 +31,17 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.kubernetes.CitrusAgentSettings;
 import org.citrusframework.kubernetes.actions.AgentDisconnectAction;
 import org.citrusframework.xml.XmlTestLoader;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class AgentDisconnectTest extends AbstractXmlActionTest {
 
     @Mock
@@ -47,10 +50,6 @@ public class AgentDisconnectTest extends AbstractXmlActionTest {
     @Mock
     private HttpClient serviceClient;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void shouldLoadKubernetesActions() {
@@ -58,7 +57,7 @@ public class AgentDisconnectTest extends AbstractXmlActionTest {
         context.getReferenceResolver().bind("citrus-agent:port-forward", portForward);
         context.getReferenceResolver().bind("citrus-agent.client", serviceClient);
 
-        when(portForward.isAlive()).thenReturn(true);
+        lenient().when(portForward.isAlive()).thenReturn(true);
 
         Deployment deployment = new DeploymentBuilder()
                 .withNewMetadata()
@@ -88,19 +87,19 @@ public class AgentDisconnectTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "AgentDisconnectTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), AgentDisconnectAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("AgentDisconnectTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(AgentDisconnectAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         DeploymentList deployments = k8sClient.apps().deployments().inNamespace(namespace).list();
-        Assert.assertNotNull(deployments);
-        Assert.assertEquals(deployments.getItems().size(), 0L);
+        Assertions.assertNotNull(deployments);
+        Assertions.assertEquals(0L, deployments.getItems().size());
 
         ServiceList services = k8sClient.services().inNamespace(namespace).list();
-        Assert.assertNotNull(services);
-        Assert.assertEquals(services.getItems().size(), 0L);
+        Assertions.assertNotNull(services);
+        Assertions.assertEquals(0L, services.getItems().size());
     }
 }

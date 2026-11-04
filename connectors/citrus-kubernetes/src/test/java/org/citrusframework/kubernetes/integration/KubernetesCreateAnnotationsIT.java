@@ -18,12 +18,14 @@ package org.citrusframework.kubernetes.integration;
 
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesCreateAnnotationsIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -34,8 +36,8 @@ public class KubernetesCreateAnnotationsIT extends AbstractKubernetesIT implemen
 
     @Test
     @CitrusTest
-    public void shouldCreateAnnotations() {
-        given(context -> {
+    public void shouldCreateAnnotations(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             Pod pod = new PodBuilder()
                     .withNewMetadata()
                         .withName("my-pod")
@@ -52,22 +54,22 @@ public class KubernetesCreateAnnotationsIT extends AbstractKubernetesIT implemen
                     .create();
         });
 
-        when(kubernetes()
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .pods()
                 .addAnnotation("my-pod")
                 .annotation("test", "citrus")
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Pod pod = k8sClient.getClient().pods()
                     .inNamespace(namespace)
                     .withName("my-pod")
                     .get();
 
-            Assert.assertNotNull(pod);
-            Assert.assertEquals(pod.getMetadata().getAnnotations().size(), 1);
-            Assert.assertEquals(pod.getMetadata().getAnnotations().get("test"), "citrus");
+            Assertions.assertNotNull(pod);
+            Assertions.assertEquals(1, pod.getMetadata().getAnnotations().size());
+            Assertions.assertEquals("citrus", pod.getMetadata().getAnnotations().get("test"));
         });
     }
 

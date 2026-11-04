@@ -29,16 +29,18 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.kubernetes.UnitTestSupport;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class ServiceClusterIpFunctionTest extends UnitTestSupport {
 
     @Mock
@@ -48,10 +50,6 @@ public class ServiceClusterIpFunctionTest extends UnitTestSupport {
     @Mock
     private MixedOperation<Service, ServiceList, ServiceResource<Service>> clientOperation;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void shouldResolveServiceClusterIp() {
@@ -70,7 +68,7 @@ public class ServiceClusterIpFunctionTest extends UnitTestSupport {
         when(clientOperation.withName("myService")).thenReturn(serviceResource);
         when(serviceResource.get()).thenReturn(service);
 
-        Assert.assertEquals(new ServiceClusterIpFunction().execute(List.of("myService"), context), "127.0.0.1");
+        Assertions.assertEquals("127.0.0.1", new ServiceClusterIpFunction().execute(List.of("myService"), context));
     }
 
     @Test
@@ -90,7 +88,7 @@ public class ServiceClusterIpFunctionTest extends UnitTestSupport {
         when(clientOperation.withName("myExternalService")).thenReturn(serviceResource);
         when(serviceResource.get()).thenReturn(service);
 
-        Assert.assertEquals(new ServiceClusterIpFunction().execute(List.of("myExternalService"), context), "127.0.0.1");
+        Assertions.assertEquals("127.0.0.1", new ServiceClusterIpFunction().execute(List.of("myExternalService"), context));
     }
 
     @Test
@@ -102,7 +100,7 @@ public class ServiceClusterIpFunctionTest extends UnitTestSupport {
         when(clientOperation.inNamespace(anyString())).thenReturn(clientOperation);
         when(clientOperation.withName(anyString())).thenReturn(serviceResource);
 
-        Assert.assertThrows(CitrusRuntimeException.class,
+        Assertions.assertThrows(CitrusRuntimeException.class,
                 () -> new ServiceClusterIpFunction().execute(List.of("unknown"), context));
     }
 
@@ -122,12 +120,12 @@ public class ServiceClusterIpFunctionTest extends UnitTestSupport {
         when(clientOperation.withName("no-cluster-ip-service")).thenReturn(serviceResource);
         when(serviceResource.get()).thenReturn(service);
 
-        Assert.assertThrows(CitrusRuntimeException.class,
+        Assertions.assertThrows(CitrusRuntimeException.class,
                 () -> new ServiceClusterIpFunction().execute(List.of("no-cluster-ip-service"), context));
     }
 
     @Test
     public void shouldResolve() {
-        Assert.assertNotNull(new DefaultFunctionLibrary().getFunction("serviceClusterIp"));
+        Assertions.assertNotNull(new DefaultFunctionLibrary().getFunction("serviceClusterIp"));
     }
 }

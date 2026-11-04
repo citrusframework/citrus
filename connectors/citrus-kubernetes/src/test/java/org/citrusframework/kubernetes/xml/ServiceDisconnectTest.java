@@ -24,15 +24,18 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.kubernetes.actions.ServiceDisconnectAction;
 import org.citrusframework.xml.XmlTestLoader;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class ServiceDisconnectTest extends AbstractXmlActionTest {
 
     @Mock
@@ -41,28 +44,24 @@ public class ServiceDisconnectTest extends AbstractXmlActionTest {
     @Mock
     private HttpClient serviceClient;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void shouldLoadKubernetesActions() throws IOException {
         context.getReferenceResolver().bind("my-service:port-forward", portForward);
         context.getReferenceResolver().bind("my-service.client", serviceClient);
 
-        when(portForward.isAlive()).thenReturn(true);
+        lenient().when(portForward.isAlive()).thenReturn(true);
 
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/service-disconnect.citrus.it.xml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "ServiceDisconnectTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), ServiceDisconnectAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("ServiceDisconnectTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(ServiceDisconnectAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         verify(portForward).isAlive();
         verify(portForward).close();

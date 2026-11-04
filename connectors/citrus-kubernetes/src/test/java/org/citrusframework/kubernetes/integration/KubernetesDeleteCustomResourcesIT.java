@@ -16,12 +16,14 @@
 
 package org.citrusframework.kubernetes.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesDeleteCustomResourcesIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -32,8 +34,8 @@ public class KubernetesDeleteCustomResourcesIT extends AbstractKubernetesIT impl
 
     @Test
     @CitrusTest
-    public void shouldDeleteCustomResource() {
-        given(context -> {
+    public void shouldDeleteCustomResource(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             Foo foo = new Foo();
             foo.setSpec(new Foo.FooSpec());
             foo.getSpec().setMessage("Hello");
@@ -46,20 +48,20 @@ public class KubernetesDeleteCustomResourcesIT extends AbstractKubernetesIT impl
                     .create();
         });
 
-        when(kubernetes()
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .customResources()
                 .delete("my-foo")
                 .type(Foo.class)
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Foo foo = k8sClient.getClient().resources(Foo.class)
                     .inNamespace(namespace)
                     .withName("my-foo")
                     .get();
 
-            Assert.assertNull(foo);
+            Assertions.assertNull(foo);
         });
     }
 

@@ -27,22 +27,24 @@ import org.citrusframework.http.config.annotation.HttpServerConfigParser;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;
 
 import static org.citrusframework.base.annotations.CitrusAnnotations.injectEndpoints;
 import static org.citrusframework.config.annotation.AnnotationConfigParser.lookup;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class KubernetesClientConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "k8sClient1")
     @KubernetesClientConfig()
@@ -74,15 +76,14 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private JsonMapper jsonMapper;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        openMocks(this);
-
-        when(referenceResolver.resolve("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("jsonMapper", JsonMapper.class)).thenReturn(jsonMapper);
+        
+        lenient().when(referenceResolver.resolve("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("jsonMapper", JsonMapper.class)).thenReturn(jsonMapper);
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -96,38 +97,38 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
 
         // 2nd client
         assertNotNull(client2.getClient());
-        assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "http://localhost:8443/");
-        assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
-        assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");
-        assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
-        assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
-        assertEquals(client2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        assertEquals(client2.getEndpointConfiguration().getJsonMapper(), jsonMapper);
+        assertEquals("http://localhost:8443/", client2.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
+        assertEquals("v1", client2.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion());
+        assertEquals("user", client2.getEndpointConfiguration().getKubernetesClientConfig().getUsername());
+        assertEquals("s!cr!t", client2.getEndpointConfiguration().getKubernetesClientConfig().getPassword());
+        assertEquals("user_namespace", client2.getEndpointConfiguration().getKubernetesClientConfig().getNamespace());
+        assertEquals(messageConverter, client2.getEndpointConfiguration().getMessageConverter());
+        assertEquals(jsonMapper, client2.getEndpointConfiguration().getJsonMapper());
 
         // 3rd client
         assertNotNull(client3.getClient());
-        assertEquals(client3.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "http://localhost:8443/");
-        assertEquals(client3.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
-        assertEquals(client3.getEndpointConfiguration().getKubernetesClientConfig().getOauthToken(), "xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51");
-        assertEquals(client3.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
-        assertEquals(client3.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        assertEquals(client3.getEndpointConfiguration().getJsonMapper(), jsonMapper);
+        assertEquals("http://localhost:8443/", client3.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
+        assertEquals("v1", client3.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion());
+        assertEquals("xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51", client3.getEndpointConfiguration().getKubernetesClientConfig().getOauthToken());
+        assertEquals("user_namespace", client3.getEndpointConfiguration().getKubernetesClientConfig().getNamespace());
+        assertEquals(messageConverter, client3.getEndpointConfiguration().getMessageConverter());
+        assertEquals(jsonMapper, client3.getEndpointConfiguration().getJsonMapper());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = lookup();
-        assertEquals(validators.size(), 5L);
+        assertEquals(5L, validators.size());
         assertNotNull(validators.get("direct.async"));
-        assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
         assertNotNull(validators.get("direct.sync"));
-        assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
         assertNotNull(validators.get("http.client"));
-        assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
+        assertEquals(HttpClientConfigParser.class, validators.get("http.client").getClass());
         assertNotNull(validators.get("http.server"));
-        assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+        assertEquals(HttpServerConfigParser.class, validators.get("http.server").getClass());
         assertNotNull(validators.get("k8s.client"));
-        assertEquals(validators.get("k8s.client").getClass(), KubernetesClientConfigParser.class);
+        assertEquals(KubernetesClientConfigParser.class, validators.get("k8s.client").getClass());
     }
 
     @Test

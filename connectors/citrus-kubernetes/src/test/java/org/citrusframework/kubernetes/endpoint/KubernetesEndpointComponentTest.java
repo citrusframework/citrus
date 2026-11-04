@@ -26,8 +26,8 @@ import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.http.client.HttpEndpointComponent;
 import org.citrusframework.http.client.HttpsEndpointComponent;
 import org.citrusframework.kubernetes.client.KubernetesClient;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.7
@@ -42,16 +42,16 @@ public class KubernetesEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("k8s:localhost:8443/", context);
 
-        Assert.assertEquals(endpoint.getClass(), KubernetesClient.class);
+        Assertions.assertEquals(KubernetesClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "https://localhost:8443/");
+        Assertions.assertEquals("https://localhost:8443/", ((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
 
         endpoint = component.createEndpoint("k8s:http://localhost:8443/", context);
 
-        Assert.assertEquals(endpoint.getClass(), KubernetesClient.class);
+        Assertions.assertEquals(KubernetesClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "http://localhost:8443/");
-        Assert.assertEquals(((KubernetesClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("http://localhost:8443/", ((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
+        Assertions.assertEquals(5000L, ((KubernetesClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -60,31 +60,31 @@ public class KubernetesEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("k8s:localhost:8443?namespace=myNamespace&timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), KubernetesClient.class);
+        Assertions.assertEquals(KubernetesClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "https://localhost:8443/");
-        Assert.assertEquals(((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "myNamespace");
-        Assert.assertEquals(((KubernetesClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("https://localhost:8443/", ((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
+        Assertions.assertEquals("myNamespace", ((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getNamespace());
+        Assertions.assertEquals(10000L, ((KubernetesClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 5L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("http"));
-        Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
-        Assert.assertNotNull(validators.get("https"));
-        Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
-        Assert.assertNotNull(validators.get("k8s"));
-        Assert.assertEquals(validators.get("k8s").getClass(), KubernetesEndpointComponent.class);
+        Assertions.assertEquals(5L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("http"));
+        Assertions.assertEquals(HttpEndpointComponent.class, validators.get("http").getClass());
+        Assertions.assertNotNull(validators.get("https"));
+        Assertions.assertEquals(HttpsEndpointComponent.class, validators.get("https").getClass());
+        Assertions.assertNotNull(validators.get("k8s"));
+        Assertions.assertEquals(KubernetesEndpointComponent.class, validators.get("k8s").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("k8s").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("k8s").isPresent());
     }
 }

@@ -20,9 +20,9 @@ import org.citrusframework.kubernetes.actions.KubernetesExecuteAction;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.command.CreatePod;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreatePodActionParserTest extends AbstractActionParserTest<KubernetesExecuteAction> {
 
@@ -32,27 +32,27 @@ public class CreatePodActionParserTest extends AbstractActionParserTest<Kubernet
         assertActionClassAndName(KubernetesExecuteAction.class, "kubernetes-execute");
 
         KubernetesExecuteAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), CreatePod.class);
-        Assert.assertEquals(action.getKubernetesClient().getClass(), KubernetesClient.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
-        Assert.assertEquals(((CreatePod) action.getCommand()).getTemplate(), "classpath:templates/hello-netty.yml");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(CreatePod.class, action.getCommand().getClass());
+        Assertions.assertEquals(KubernetesClient.class, action.getKubernetesClient().getClass());
+        Assertions.assertEquals(0, action.getCommand().getParameters().size());
+        Assertions.assertEquals("classpath:templates/hello-netty.yml", ((CreatePod) action.getCommand()).getTemplate());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), CreatePod.class);
-        Assert.assertEquals(action.getKubernetesClient(), beanDefinitionContext.getBean("myK8sClient", KubernetesClient.class));
-        Assert.assertEquals(action.getCommand().getParameters().size(), 3);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myPod");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE), "default");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "pod=new");
-        Assert.assertNull(((CreatePod) action.getCommand()).getTemplate());
-        Assert.assertEquals(((CreatePod) action.getCommand()).getImage(), "busybox:latest");
-        Assert.assertEquals(((CreatePod) action.getCommand()).getContainerName(), "myContainer");
-        Assert.assertEquals(((CreatePod) action.getCommand()).getContainerPort(), "8080");
-        Assert.assertEquals(((CreatePod) action.getCommand()).getProtocol(), "TCP");
-        Assert.assertEquals(((CreatePod) action.getCommand()).getPullPolicy(), "Always");
-        Assert.assertEquals(((CreatePod) action.getCommand()).getRestartPolicy(), "Always");
-        Assert.assertEquals(((CreatePod) action.getCommand()).getContainerCommand(), "exec");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(CreatePod.class, action.getCommand().getClass());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myK8sClient", KubernetesClient.class), action.getKubernetesClient());
+        Assertions.assertEquals(3, action.getCommand().getParameters().size());
+        Assertions.assertEquals("myPod", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME));
+        Assertions.assertEquals("default", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE));
+        Assertions.assertEquals("pod=new", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL));
+        Assertions.assertNull(((CreatePod) action.getCommand()).getTemplate());
+        Assertions.assertEquals("busybox:latest", ((CreatePod) action.getCommand()).getImage());
+        Assertions.assertEquals("myContainer", ((CreatePod) action.getCommand()).getContainerName());
+        Assertions.assertEquals("8080", ((CreatePod) action.getCommand()).getContainerPort());
+        Assertions.assertEquals("TCP", ((CreatePod) action.getCommand()).getProtocol());
+        Assertions.assertEquals("Always", ((CreatePod) action.getCommand()).getPullPolicy());
+        Assertions.assertEquals("Always", ((CreatePod) action.getCommand()).getRestartPolicy());
+        Assertions.assertEquals("exec", ((CreatePod) action.getCommand()).getContainerCommand());
     }
 }

@@ -18,12 +18,14 @@ package org.citrusframework.kubernetes.integration;
 
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesDeleteServicesIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -34,8 +36,8 @@ public class KubernetesDeleteServicesIT extends AbstractKubernetesIT implements 
 
     @Test
     @CitrusTest
-    public void shouldDeleteService() {
-        given(context -> {
+    public void shouldDeleteService(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             Service service = new ServiceBuilder()
                     .withNewMetadata()
                     .withName("my-service")
@@ -49,19 +51,19 @@ public class KubernetesDeleteServicesIT extends AbstractKubernetesIT implements 
                     .create();
         });
 
-        when(kubernetes()
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .services()
                 .delete("my-service")
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Service service = k8sClient.getClient().services()
                     .inNamespace(namespace)
                     .withName("my-service")
                     .get();
 
-            Assert.assertNull(service);
+            Assertions.assertNull(service);
         });
     }
 

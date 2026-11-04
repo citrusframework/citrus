@@ -28,8 +28,8 @@ import org.citrusframework.kubernetes.integration.KubernetesCreateSecretsIT;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateSecretTest extends AbstractYamlActionTest {
 
@@ -39,25 +39,25 @@ public class CreateSecretTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateSecretTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateSecretAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("CreateSecretTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CreateSecretAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         String namespace = "test";
         Secret secret = k8sClient.secrets().inNamespace(namespace).withName("my-secret-1").get();
-        Assert.assertNotNull(secret);
-        Assert.assertEquals(secret.getData().size(), 1);
-        Assert.assertEquals(secret.getData().get("foo"), Base64.encodeBase64String("bar".getBytes(StandardCharsets.UTF_8)));
+        Assertions.assertNotNull(secret);
+        Assertions.assertEquals(1, secret.getData().size());
+        Assertions.assertEquals(Base64.encodeBase64String("bar".getBytes(StandardCharsets.UTF_8)), secret.getData().get("foo"));
 
         String secretContent = FileUtils.readToString(Resources.fromClasspath("secret.properties", KubernetesCreateSecretsIT.class));
 
         secret = k8sClient.secrets().inNamespace(namespace).withName("my-secret-2").get();
-        Assert.assertNotNull(secret);
-        Assert.assertEquals(secret.getData().size(), 1);
-        Assert.assertEquals(secret.getData().get("secret.properties"),
-                Base64.encodeBase64String(secretContent.getBytes(StandardCharsets.UTF_8)));
+        Assertions.assertNotNull(secret);
+        Assertions.assertEquals(1, secret.getData().size());
+        Assertions.assertEquals(
+                Base64.encodeBase64String(secretContent.getBytes(StandardCharsets.UTF_8)), secret.getData().get("secret.properties"));
     }
 }

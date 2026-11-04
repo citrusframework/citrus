@@ -47,22 +47,25 @@ import org.citrusframework.kubernetes.command.ListPods;
 import org.citrusframework.kubernetes.command.WatchNodes;
 import org.citrusframework.kubernetes.command.WatchServices;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 /**
  * @since 2.7
  */
+@ExtendWith(MockitoExtension.class)
 public class KubernetesTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     @Mock
@@ -78,11 +81,6 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport implements 
 
     @Mock
     private io.fabric8.kubernetes.client.KubernetesClient k8sClient;
-
-    @BeforeClass
-    private void setupMocks() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @SuppressWarnings("unchecked")
     @Test
@@ -117,7 +115,7 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport implements 
             ((Watcher) invocationOnMock.getArguments()[0]).eventReceived(Watcher.Action.MODIFIED, new Service());
             return watch;
         });
-        when(servicesOperation.withName("myService")).thenReturn(serviceResource);
+        lenient().when(servicesOperation.withName("myService")).thenReturn(serviceResource);
         when(servicesOperation.inNamespace("myNamespace")).thenReturn(servicesOperation);
 
         final KubernetesClient client = new KubernetesClient();
@@ -128,9 +126,9 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport implements 
             .execute()
             .info()
             .validate((commandResult, context) -> {
-                Assert.assertEquals(commandResult.getResult().getApiVersion(), "v1");
-                Assert.assertEquals(commandResult.getResult().getMasterUrl(), "https://localhost:8443");
-                Assert.assertEquals(commandResult.getResult().getNamespace(), "test");
+                Assertions.assertEquals("v1", commandResult.getResult().getApiVersion());
+                Assertions.assertEquals("https://localhost:8443", commandResult.getResult().getMasterUrl());
+                Assertions.assertEquals("test", commandResult.getResult().getNamespace());
             }));
 
         builder.$(kubernetes().client(client)
@@ -144,13 +142,13 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport implements 
             .execute()
             .nodes()
             .list()
-            .validate((nodes, context) -> Assert.assertNotNull(nodes.getResult())));
+            .validate((nodes, context) -> Assertions.assertNotNull(nodes.getResult())));
 
         builder.$(kubernetes().client(client)
             .execute()
             .namespaces()
             .list()
-            .validate((namespaces, context) -> Assert.assertNotNull(namespaces.getResult())));
+            .validate((namespaces, context) -> Assertions.assertNotNull(namespaces.getResult())));
 
         builder.$(kubernetes().client(client)
             .execute()
@@ -165,45 +163,45 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport implements 
             .name("myService")
             .namespace("myNamespace")
             .validate((services, context) -> {
-                Assert.assertNotNull(services);
-                Assert.assertNotNull(services.getResult());
-                Assert.assertEquals(services.getResult().getAction(), Watcher.Action.MODIFIED);
+                Assertions.assertNotNull(services);
+                Assertions.assertNotNull(services.getResult());
+                Assertions.assertEquals(Watcher.Action.MODIFIED, services.getResult().getAction());
             }));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 6);
-        Assert.assertEquals(test.getActions().get(0).getClass(), KubernetesExecuteAction.class);
-        Assert.assertEquals(test.getActiveAction().getClass(), KubernetesExecuteAction.class);
+        Assertions.assertEquals(6, test.getActionCount());
+        Assertions.assertEquals(KubernetesExecuteAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(KubernetesExecuteAction.class, test.getActiveAction().getClass());
 
         KubernetesExecuteAction action = (KubernetesExecuteAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "kubernetes-execute");
-        Assert.assertEquals(action.getCommand().getClass(), Info.class);
+        Assertions.assertEquals("kubernetes-execute", action.getName());
+        Assertions.assertEquals(Info.class, action.getCommand().getClass());
 
         action = (KubernetesExecuteAction)test.getActions().get(1);
-        Assert.assertEquals(action.getName(), "kubernetes-execute");
-        Assert.assertEquals(action.getCommand().getClass(), ListPods.class);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE), "myNamespace");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "active");
+        Assertions.assertEquals("kubernetes-execute", action.getName());
+        Assertions.assertEquals(ListPods.class, action.getCommand().getClass());
+        Assertions.assertEquals("myNamespace", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE));
+        Assertions.assertEquals("active", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL));
 
         action = (KubernetesExecuteAction)test.getActions().get(2);
-        Assert.assertEquals(action.getName(), "kubernetes-execute");
-        Assert.assertEquals(action.getCommand().getClass(), ListNodes.class);
-        Assert.assertNotNull(action.getCommand().getResultCallback());
+        Assertions.assertEquals("kubernetes-execute", action.getName());
+        Assertions.assertEquals(ListNodes.class, action.getCommand().getClass());
+        Assertions.assertNotNull(action.getCommand().getResultCallback());
 
         action = (KubernetesExecuteAction)test.getActions().get(3);
-        Assert.assertEquals(action.getName(), "kubernetes-execute");
-        Assert.assertEquals(action.getCommand().getClass(), ListNamespaces.class);
+        Assertions.assertEquals("kubernetes-execute", action.getName());
+        Assertions.assertEquals(ListNamespaces.class, action.getCommand().getClass());
 
         action = (KubernetesExecuteAction)test.getActions().get(4);
-        Assert.assertEquals(action.getName(), "kubernetes-execute");
-        Assert.assertEquals(action.getCommand().getClass(), WatchNodes.class);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "new");
+        Assertions.assertEquals("kubernetes-execute", action.getName());
+        Assertions.assertEquals(WatchNodes.class, action.getCommand().getClass());
+        Assertions.assertEquals("new", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL));
 
         action = (KubernetesExecuteAction)test.getActions().get(5);
-        Assert.assertEquals(action.getName(), "kubernetes-execute");
-        Assert.assertEquals(action.getCommand().getClass(), WatchServices.class);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myService");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE), "myNamespace");
+        Assertions.assertEquals("kubernetes-execute", action.getName());
+        Assertions.assertEquals(WatchServices.class, action.getCommand().getClass());
+        Assertions.assertEquals("myService", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME));
+        Assertions.assertEquals("myNamespace", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE));
 
         verify(watch, atLeastOnce()).close();
     }

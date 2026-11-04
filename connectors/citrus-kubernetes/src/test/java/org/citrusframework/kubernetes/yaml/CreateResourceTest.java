@@ -21,8 +21,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.kubernetes.actions.CreateResourceAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateResourceTest extends AbstractYamlActionTest {
 
@@ -32,22 +32,22 @@ public class CreateResourceTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateResourceTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateResourceAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("CreateResourceTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CreateResourceAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         String namespace = "test";
         Pod pod = k8sClient.pods().inNamespace(namespace).withName("my-pod-1").get();
-        Assert.assertNotNull(pod);
-        Assert.assertEquals(pod.getMetadata().getLabels().size(), 1);
-        Assert.assertEquals(pod.getMetadata().getLabels().get("test"), "citrus");
+        Assertions.assertNotNull(pod);
+        Assertions.assertEquals(1, pod.getMetadata().getLabels().size());
+        Assertions.assertEquals("citrus", pod.getMetadata().getLabels().get("test"));
 
         pod = k8sClient.pods().inNamespace(namespace).withName("my-pod").get();
-        Assert.assertNotNull(pod);
-        Assert.assertEquals(pod.getMetadata().getLabels().size(), 1);
-        Assert.assertEquals(pod.getMetadata().getLabels().get("name"), "my-pod");
+        Assertions.assertNotNull(pod);
+        Assertions.assertEquals(1, pod.getMetadata().getLabels().size());
+        Assertions.assertEquals("my-pod", pod.getMetadata().getLabels().get("name"));
     }
 }

@@ -30,8 +30,8 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.kubernetes.CitrusAgentSettings;
 import org.citrusframework.kubernetes.actions.AgentConnectAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AgentConnectTest extends AbstractYamlActionTest {
 
@@ -58,48 +58,48 @@ public class AgentConnectTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "AgentConnectTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), AgentConnectAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("AgentConnectTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(AgentConnectAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("citrus-agent:port-forward"));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("citrus-agent:port-forward"));
         LocalPortForward portForward = context.getReferenceResolver().resolve("citrus-agent:port-forward", LocalPortForward.class);
         portForward.close();
 
         DeploymentList deployments = k8sClient.apps().deployments().inNamespace(namespace).list();
-        Assert.assertNotNull(deployments);
-        Assert.assertEquals(deployments.getItems().size(), 1L);
+        Assertions.assertNotNull(deployments);
+        Assertions.assertEquals(1L, deployments.getItems().size());
         Deployment deployment = deployments.getItems().get(0);
-        Assert.assertNotNull(deployment);
-        Assert.assertEquals(deployment.getMetadata().getLabels().size(), 5);
-        Assert.assertEquals(deployment.getMetadata().getLabels().get("app"), "citrus");
-        Assert.assertEquals(deployment.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_RUNTIME), "yaks");
-        Assert.assertEquals(deployment.getMetadata().getLabels().get(AgentConnectAction.OPENSHIFT_LABEL_RUNTIME), "yaks");
-        Assert.assertEquals(deployment.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_NAME), CitrusAgentSettings.getAgentName());
-        Assert.assertEquals(deployment.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_MANAGED_BY), "citrus");
-        Assert.assertNotNull(deployment.getSpec().getTemplate());
-        Assert.assertEquals(deployment.getSpec().getTemplate().getSpec().getContainers().size(), 1L);
-        Assert.assertEquals(deployment.getSpec().getTemplate().getSpec().getContainers().get(0).getImage(), "quay.io/citrusframework/citrus-agent:latest");
+        Assertions.assertNotNull(deployment);
+        Assertions.assertEquals(5, deployment.getMetadata().getLabels().size());
+        Assertions.assertEquals("citrus", deployment.getMetadata().getLabels().get("app"));
+        Assertions.assertEquals("yaks", deployment.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_RUNTIME));
+        Assertions.assertEquals("yaks", deployment.getMetadata().getLabels().get(AgentConnectAction.OPENSHIFT_LABEL_RUNTIME));
+        Assertions.assertEquals(CitrusAgentSettings.getAgentName(), deployment.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_NAME));
+        Assertions.assertEquals("citrus", deployment.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_MANAGED_BY));
+        Assertions.assertNotNull(deployment.getSpec().getTemplate());
+        Assertions.assertEquals(1L, deployment.getSpec().getTemplate().getSpec().getContainers().size());
+        Assertions.assertEquals("quay.io/citrusframework/citrus-agent:latest", deployment.getSpec().getTemplate().getSpec().getContainers().get(0).getImage());
 
         Service service = k8sClient.services().inNamespace(namespace).withName(CitrusAgentSettings.getAgentName()).get();
-        Assert.assertNotNull(service);
-        Assert.assertEquals(service.getMetadata().getLabels().size(), 5);
-        Assert.assertEquals(service.getMetadata().getLabels().get("app"), "citrus");
-        Assert.assertEquals(service.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_RUNTIME), "yaks");
-        Assert.assertEquals(service.getMetadata().getLabels().get(AgentConnectAction.OPENSHIFT_LABEL_RUNTIME), "yaks");
-        Assert.assertEquals(service.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_NAME), CitrusAgentSettings.getAgentName());
-        Assert.assertEquals(service.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_MANAGED_BY), "citrus");
-        Assert.assertEquals(service.getSpec().getPorts().size(), 1);
-        Assert.assertEquals(service.getSpec().getPorts().get(0).getPort(), 80);
-        Assert.assertEquals(service.getSpec().getPorts().get(0).getTargetPort().getIntVal(), 8080);
-        Assert.assertEquals(service.getSpec().getSelector().size(), 1);
-        Assert.assertEquals(service.getSpec().getSelector().get(AgentConnectAction.KUBERNETES_LABEL_NAME), CitrusAgentSettings.getAgentName());
+        Assertions.assertNotNull(service);
+        Assertions.assertEquals(5, service.getMetadata().getLabels().size());
+        Assertions.assertEquals("citrus", service.getMetadata().getLabels().get("app"));
+        Assertions.assertEquals("yaks", service.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_RUNTIME));
+        Assertions.assertEquals("yaks", service.getMetadata().getLabels().get(AgentConnectAction.OPENSHIFT_LABEL_RUNTIME));
+        Assertions.assertEquals(CitrusAgentSettings.getAgentName(), service.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_NAME));
+        Assertions.assertEquals("citrus", service.getMetadata().getLabels().get(AgentConnectAction.KUBERNETES_LABEL_MANAGED_BY));
+        Assertions.assertEquals(1, service.getSpec().getPorts().size());
+        Assertions.assertEquals(80, service.getSpec().getPorts().get(0).getPort());
+        Assertions.assertEquals(8080, service.getSpec().getPorts().get(0).getTargetPort().getIntVal());
+        Assertions.assertEquals(1, service.getSpec().getSelector().size());
+        Assertions.assertEquals(CitrusAgentSettings.getAgentName(), service.getSpec().getSelector().get(AgentConnectAction.KUBERNETES_LABEL_NAME));
 
         HttpClient serviceClient = context.getReferenceResolver().resolve("citrus-agent.client", HttpClient.class);
-        Assert.assertNotNull(serviceClient);
-        Assert.assertEquals(serviceClient.getEndpointConfiguration().getRequestUrl(), "http://localhost:31234");
+        Assertions.assertNotNull(serviceClient);
+        Assertions.assertEquals("http://localhost:31234", serviceClient.getEndpointConfiguration().getRequestUrl());
     }
 }

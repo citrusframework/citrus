@@ -27,8 +27,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.kubernetes.actions.ServiceConnectAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ServiceConnectTest extends AbstractYamlActionTest {
 
@@ -66,15 +66,15 @@ public class ServiceConnectTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "ServiceConnectTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), ServiceConnectAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("ServiceConnectTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(ServiceConnectAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         HttpClient serviceClient = context.getReferenceResolver().resolve("my-service.client", HttpClient.class);
-        Assert.assertNotNull(serviceClient);
-        Assert.assertEquals(serviceClient.getEndpointConfiguration().getRequestUrl(), "http://localhost:31234");
+        Assertions.assertNotNull(serviceClient);
+        Assertions.assertEquals("http://localhost:31234", serviceClient.getEndpointConfiguration().getRequestUrl());
     }
 }

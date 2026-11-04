@@ -28,8 +28,8 @@ import org.citrusframework.kubernetes.integration.KubernetesCreateConfigMapsIT;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateConfigMapTest extends AbstractXmlActionTest {
 
@@ -39,25 +39,25 @@ public class CreateConfigMapTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateConfigMapTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateConfigMapAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("CreateConfigMapTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CreateConfigMapAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         String namespace = "test";
         ConfigMap configMap = k8sClient.configMaps().inNamespace(namespace).withName("my-config-map-1").get();
-        Assert.assertNotNull(configMap);
-        Assert.assertEquals(configMap.getData().size(), 1);
-        Assert.assertEquals(configMap.getData().get("foo"), Base64.encodeBase64String("bar".getBytes(StandardCharsets.UTF_8)));
+        Assertions.assertNotNull(configMap);
+        Assertions.assertEquals(1, configMap.getData().size());
+        Assertions.assertEquals(Base64.encodeBase64String("bar".getBytes(StandardCharsets.UTF_8)), configMap.getData().get("foo"));
 
         String configMapContent = FileUtils.readToString(Resources.fromClasspath("configMap.properties", KubernetesCreateConfigMapsIT.class));
 
         configMap = k8sClient.configMaps().inNamespace(namespace).withName("my-config-map-2").get();
-        Assert.assertNotNull(configMap);
-        Assert.assertEquals(configMap.getData().size(), 1);
-        Assert.assertEquals(configMap.getData().get("configMap.properties"),
-                Base64.encodeBase64String(configMapContent.getBytes(StandardCharsets.UTF_8)));
+        Assertions.assertNotNull(configMap);
+        Assertions.assertEquals(1, configMap.getData().size());
+        Assertions.assertEquals(
+                Base64.encodeBase64String(configMapContent.getBytes(StandardCharsets.UTF_8)), configMap.getData().get("configMap.properties"));
     }
 }

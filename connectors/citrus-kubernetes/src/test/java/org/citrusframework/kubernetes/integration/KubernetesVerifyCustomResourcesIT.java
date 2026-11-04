@@ -19,12 +19,14 @@ package org.citrusframework.kubernetes.integration;
 import java.util.Collections;
 
 import io.fabric8.kubernetes.api.model.ConditionBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -35,13 +37,13 @@ public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT impl
 
     @Test
     @CitrusTest
-    public void shouldVerifyCustomResources() {
-        given(doFinally().actions(context -> k8sClient.getClient().resources(Foo.class)
+    public void shouldVerifyCustomResources(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(doFinally().actions(context -> k8sClient.getClient().resources(Foo.class)
                 .inNamespace(namespace)
                 .withName("my-foo")
                 .delete()));
 
-        given(context -> {
+        runner.given(context -> {
             Foo foo = new Foo();
             foo.setSpec(new Foo.FooSpec());
             foo.getSpec().setMessage("Hello");
@@ -60,7 +62,7 @@ public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT impl
                     .create();
         });
 
-        then(kubernetes()
+        runner.then(kubernetes()
                 .client(k8sClient.getClient())
                 .customResources()
                 .verify("my-foo")
@@ -72,13 +74,13 @@ public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT impl
 
     @Test
     @CitrusTest
-    public void shouldVerifyCustomResourcesByLabel() {
-        given(doFinally().actions(context -> k8sClient.getClient().resources(Foo.class)
+    public void shouldVerifyCustomResourcesByLabel(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(doFinally().actions(context -> k8sClient.getClient().resources(Foo.class)
                 .inNamespace(namespace)
                 .withName("my-foo")
                 .delete()));
 
-        given(context -> {
+        runner.given(context -> {
             Foo foo = new Foo();
             foo.setSpec(new Foo.FooSpec());
             foo.getSpec().setMessage("Hello");
@@ -98,7 +100,7 @@ public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT impl
                     .create();
         });
 
-        then(kubernetes()
+        runner.then(kubernetes()
                 .client(k8sClient.getClient())
                 .customResources()
                 .verify("test", "citrus")
@@ -110,13 +112,13 @@ public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT impl
 
     @Test
     @CitrusTest
-    public void shouldFailValidationForCustomResourceStatus() {
-        given(doFinally().actions(context -> k8sClient.getClient().resources(Foo.class)
+    public void shouldFailValidationForCustomResourceStatus(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(doFinally().actions(context -> k8sClient.getClient().resources(Foo.class)
                 .inNamespace(namespace)
                 .withName("my-foo")
                 .delete()));
 
-        given(context -> {
+        runner.given(context -> {
             Foo foo = new Foo();
             foo.setSpec(new Foo.FooSpec());
             foo.getSpec().setMessage("Hello");
@@ -135,7 +137,7 @@ public class KubernetesVerifyCustomResourcesIT extends AbstractKubernetesIT impl
                     .create();
         });
 
-        then(assertException()
+        runner.then(assertException()
                 .exception(ActionTimeoutException.class)
                 .when(kubernetes()
                     .client(k8sClient.getClient())

@@ -16,30 +16,28 @@
 
 package org.citrusframework.kubernetes.config.xml;
 
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class KubernetesBadClientParserTest extends AbstractBeanDefinitionParserTest {
 
     @Override
-    @BeforeClass(alwaysRun = true, dependsOnMethods = "springTestContextPrepareTestInstance")
     protected void parseBeanDefinitions() {
         // This method must be overridden, else the test would fail when loading, before it actually starts
     }
 
     @Test
     public void testBadConfiguredKubernetesClient() {
-        BeanDefinitionStoreException exception = expectThrows(BeanDefinitionStoreException.class, () -> createApplicationContext("context"));
+        BeanDefinitionStoreException exception = assertThrows(BeanDefinitionStoreException.class, () -> createApplicationContext("context"));
 
         Throwable illegalArg = exception.getRootCause();
         assertTrue(illegalArg instanceof IllegalArgumentException);
-        assertEquals(illegalArg.getMessage(), "Parameters not set correctly - check if either an oauthToke or password and username is set");
+        assertEquals("Parameters not set correctly - check if either an oauthToke or password and username is set", illegalArg.getMessage());
     }
 }
 

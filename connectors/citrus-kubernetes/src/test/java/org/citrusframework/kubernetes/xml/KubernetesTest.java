@@ -17,14 +17,14 @@
 package org.citrusframework.kubernetes.xml;
 
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(XmlTestActionBuilder.lookup("kubernetes").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("kubernetes").get().getClass(), Kubernetes.class);
+        Assertions.assertTrue(XmlTestActionBuilder.lookup("kubernetes").isPresent());
+        Assertions.assertEquals(Kubernetes.class, XmlTestActionBuilder.lookup("kubernetes").get().getClass());
     }
 }

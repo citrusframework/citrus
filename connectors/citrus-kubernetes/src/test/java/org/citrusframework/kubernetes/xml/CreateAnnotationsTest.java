@@ -22,8 +22,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.kubernetes.actions.CreateAnnotationsAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateAnnotationsTest extends AbstractXmlActionTest {
 
@@ -49,16 +49,16 @@ public class CreateAnnotationsTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateAnnotationsTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateAnnotationsAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("CreateAnnotationsTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(CreateAnnotationsAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         pod = k8sClient.pods().inNamespace(namespace).withName("my-pod").get();
-        Assert.assertNotNull(pod);
-        Assert.assertEquals(pod.getMetadata().getAnnotations().size(), 1);
-        Assert.assertEquals(pod.getMetadata().getAnnotations().get("test"), "citrus");
+        Assertions.assertNotNull(pod);
+        Assertions.assertEquals(1, pod.getMetadata().getAnnotations().size());
+        Assertions.assertEquals("citrus", pod.getMetadata().getAnnotations().get("test"));
     }
 }
