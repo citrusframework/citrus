@@ -16,7 +16,9 @@
 
 package org.citrusframework.knative.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.endpoint.builder.HttpEndpoints;
 import org.citrusframework.http.server.HttpServer;
@@ -24,8 +26,8 @@ import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 public class ReceiveEventIT extends AbstractKnativeIT implements TestActionSupport {
 
@@ -39,22 +41,22 @@ public class ReceiveEventIT extends AbstractKnativeIT implements TestActionSuppo
             .autoStart(true)
             .build();
 
-    @AfterClass(alwaysRun = true)
+    @AfterEach
     public void shutdown() {
         knativeBroker.stop();
     }
 
     @Test
     @CitrusTest
-    public void shouldReceiveEvents() {
-        given(knative()
+    public void shouldReceiveEvents(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(knative()
                 .event()
                 .send()
                 .fork(true)
                 .brokerUrl("http://localhost:%d".formatted(port))
                 .eventData("Hello Knative broker"));
 
-        then(
+        runner.then(
             knative()
                     .event()
                     .receive()

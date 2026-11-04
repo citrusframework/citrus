@@ -29,10 +29,10 @@ import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.util.SocketUtils;
 import org.citrusframework.xml.XmlTestLoader;
 import org.springframework.http.HttpStatus;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SendReceiveEventTest extends AbstractXmlActionTest {
 
@@ -52,14 +52,14 @@ public class SendReceiveEventTest extends AbstractXmlActionTest {
             .autoStart(true)
             .build();
 
-    @BeforeClass
+    @BeforeEach
     @Override
-    public void setupMocks() {
-        super.setupMocks();
+    public void prepareTest() {
+        super.prepareTest();
         CitrusAnnotations.injectAll(this);
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterEach
     public void shutdown() {
         knativeBroker.stop();
     }
@@ -73,12 +73,12 @@ public class SendReceiveEventTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "SendReceiveEventTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), SendEventAction.class);
-        Assert.assertEquals(result.getTestAction(1).getClass(), ReceiveEventAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("SendReceiveEventTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(SendEventAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals(ReceiveEventAction.class, result.getTestAction(1).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
     }
 }

@@ -19,11 +19,13 @@ package org.citrusframework.knative.integration;
 import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.knative.eventing.v1.Trigger;
 import io.fabric8.knative.eventing.v1.TriggerBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DeleteKnativeTriggerIT extends AbstractKnativeIT implements TestActionSupport {
 
@@ -34,8 +36,8 @@ public class DeleteKnativeTriggerIT extends AbstractKnativeIT implements TestAct
 
     @Test
     @CitrusTest
-    public void shouldDeleteTrigger() {
-        given(context -> {
+    public void shouldDeleteTrigger(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             Trigger trigger = new TriggerBuilder()
                     .withNewMetadata()
                     .withName("my-trigger")
@@ -49,19 +51,19 @@ public class DeleteKnativeTriggerIT extends AbstractKnativeIT implements TestAct
                 .create();
         });
 
-        when(knative()
+        runner.when(knative()
                 .client(knativeClient)
                 .trigger()
                 .delete("my-trigger")
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Trigger trigger = knativeClient.triggers()
                     .inNamespace(namespace)
                     .withName("my-trigger")
                     .get();
 
-            Assert.assertNull(trigger);
+            Assertions.assertNull(trigger);
         });
     }
 

@@ -20,11 +20,13 @@ import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.knative.eventing.v1.Broker;
 import io.fabric8.knative.eventing.v1.BrokerBuilder;
 import io.fabric8.knative.pkg.apis.ConditionBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class VerifyKnativeBrokerIT extends AbstractKnativeIT implements TestActionSupport {
 
@@ -35,13 +37,13 @@ public class VerifyKnativeBrokerIT extends AbstractKnativeIT implements TestActi
 
     @Test
     @CitrusTest
-    public void shouldVerifyBroker() {
-        given(doFinally().actions(context -> knativeClient.brokers()
+    public void shouldVerifyBroker(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(doFinally().actions(context -> knativeClient.brokers()
                 .inNamespace(namespace)
                 .withName("my-broker")
                 .delete()));
 
-        given(context -> {
+        runner.given(context -> {
             Broker broker = new BrokerBuilder()
                     .withNewMetadata()
                     .withName("my-broker")
@@ -61,7 +63,7 @@ public class VerifyKnativeBrokerIT extends AbstractKnativeIT implements TestActi
                 .create();
         });
 
-        then(knative()
+        runner.then(knative()
                 .client(knativeClient)
                 .brokers()
                 .verify("my-broker")
@@ -71,13 +73,13 @@ public class VerifyKnativeBrokerIT extends AbstractKnativeIT implements TestActi
 
     @Test
     @CitrusTest
-    public void shouldVerifyBrokerWithCondition() {
-        given(doFinally().actions(context -> knativeClient.brokers()
+    public void shouldVerifyBrokerWithCondition(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(doFinally().actions(context -> knativeClient.brokers()
                 .inNamespace(namespace)
                 .withName("my-broker")
                 .delete()));
 
-        given(context -> {
+        runner.given(context -> {
             Broker broker = new BrokerBuilder()
                     .withNewMetadata()
                     .withName("my-broker")
@@ -97,7 +99,7 @@ public class VerifyKnativeBrokerIT extends AbstractKnativeIT implements TestActi
                 .create();
         });
 
-        then(knative()
+        runner.then(knative()
                 .client(knativeClient)
                 .brokers()
                 .verify("my-broker")
@@ -107,13 +109,13 @@ public class VerifyKnativeBrokerIT extends AbstractKnativeIT implements TestActi
 
     @Test
     @CitrusTest
-    public void shouldVerifyBrokerReadyState() {
-        given(doFinally().actions(context -> knativeClient.brokers()
+    public void shouldVerifyBrokerReadyState(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(doFinally().actions(context -> knativeClient.brokers()
                 .inNamespace(namespace)
                 .withName("my-broker")
                 .delete()));
 
-        given(context -> {
+        runner.given(context -> {
             Broker broker = new BrokerBuilder()
                     .withNewMetadata()
                     .withName("my-broker")
@@ -133,7 +135,7 @@ public class VerifyKnativeBrokerIT extends AbstractKnativeIT implements TestActi
                 .create();
         });
 
-        then(assertException().exception(ValidationException.class)
+        runner.then(assertException().exception(ValidationException.class)
                 .when(knative()
                 .client(knativeClient)
                 .brokers()

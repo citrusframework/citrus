@@ -22,11 +22,13 @@ import io.fabric8.knative.duck.v1.KReferenceBuilder;
 import io.fabric8.knative.messaging.v1.Subscription;
 import io.fabric8.knative.messaging.v1.SubscriptionBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DeleteKnativeResourceIT extends AbstractKnativeIT implements TestActionSupport {
 
@@ -40,8 +42,8 @@ public class DeleteKnativeResourceIT extends AbstractKnativeIT implements TestAc
 
     @Test
     @CitrusTest
-    public void shouldDeleteResource() {
-        given(context -> {
+    public void shouldDeleteResource(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             Subscription subscription = new SubscriptionBuilder()
                     .withNewMetadata()
                     .withName("my-subscription")
@@ -69,20 +71,20 @@ public class DeleteKnativeResourceIT extends AbstractKnativeIT implements TestAc
                 .create();
         });
 
-        when(knative()
+        runner.when(knative()
                 .client(k8sClient)
                 .client(knativeClient)
                 .subscriptions()
                 .delete("my-subscription")
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Subscription subscription = knativeClient.subscriptions()
                     .inNamespace(namespace)
                     .withName("my-subscription")
                     .get();
 
-            Assert.assertNull(subscription);
+            Assertions.assertNull(subscription);
         });
     }
 

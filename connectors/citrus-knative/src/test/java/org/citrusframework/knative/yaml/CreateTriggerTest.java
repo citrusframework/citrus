@@ -21,8 +21,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.knative.actions.eventing.CreateTriggerAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateTriggerTest extends AbstractYamlActionTest {
 
@@ -32,30 +32,30 @@ public class CreateTriggerTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateTriggerTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateTriggerAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("CreateTriggerTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CreateTriggerAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         String namespace = "test";
         Trigger trigger = knativeClient.triggers().inNamespace(namespace).withName("my-trigger-1").get();
-        Assert.assertNotNull(trigger);
-        Assert.assertEquals(trigger.getMetadata().getLabels().size(), 1);
-        Assert.assertEquals(trigger.getMetadata().getLabels().get("app"), "citrus");
-        Assert.assertEquals(trigger.getSpec().getBroker(), "my-broker");
-        Assert.assertEquals(trigger.getSpec().getSubscriber().getRef().getKind(), "Service");
-        Assert.assertEquals(trigger.getSpec().getSubscriber().getRef().getName(), "my-service");
+        Assertions.assertNotNull(trigger);
+        Assertions.assertEquals(1, trigger.getMetadata().getLabels().size());
+        Assertions.assertEquals("citrus", trigger.getMetadata().getLabels().get("app"));
+        Assertions.assertEquals("my-broker", trigger.getSpec().getBroker());
+        Assertions.assertEquals("Service", trigger.getSpec().getSubscriber().getRef().getKind());
+        Assertions.assertEquals("my-service", trigger.getSpec().getSubscriber().getRef().getName());
 
         trigger = knativeClient.triggers().inNamespace(namespace).withName("my-trigger-2").get();
-        Assert.assertNotNull(trigger);
-        Assert.assertEquals(trigger.getMetadata().getLabels().size(), 1);
-        Assert.assertEquals(trigger.getMetadata().getLabels().get("app"), "citrus");
-        Assert.assertEquals(trigger.getSpec().getBroker(), "my-broker");
-        Assert.assertEquals(trigger.getSpec().getSubscriber().getRef().getKind(), "Service");
-        Assert.assertEquals(trigger.getSpec().getSubscriber().getRef().getName(), "my-service");
-        Assert.assertEquals(trigger.getSpec().getFilter().getAttributes().size(), 1L);
-        Assert.assertEquals(trigger.getSpec().getFilter().getAttributes().get("foo"), "bar");
+        Assertions.assertNotNull(trigger);
+        Assertions.assertEquals(1, trigger.getMetadata().getLabels().size());
+        Assertions.assertEquals("citrus", trigger.getMetadata().getLabels().get("app"));
+        Assertions.assertEquals("my-broker", trigger.getSpec().getBroker());
+        Assertions.assertEquals("Service", trigger.getSpec().getSubscriber().getRef().getKind());
+        Assertions.assertEquals("my-service", trigger.getSpec().getSubscriber().getRef().getName());
+        Assertions.assertEquals(1L, trigger.getSpec().getFilter().getAttributes().size());
+        Assertions.assertEquals("bar", trigger.getSpec().getFilter().getAttributes().get("foo"));
     }
 }

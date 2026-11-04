@@ -19,11 +19,13 @@ package org.citrusframework.knative.integration;
 import io.fabric8.knative.client.KnativeClient;
 import io.fabric8.knative.eventing.v1.Broker;
 import io.fabric8.knative.eventing.v1.BrokerBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DeleteKnativeBrokerIT extends AbstractKnativeIT implements TestActionSupport {
 
@@ -34,8 +36,8 @@ public class DeleteKnativeBrokerIT extends AbstractKnativeIT implements TestActi
 
     @Test
     @CitrusTest
-    public void shouldDeleteBroker() {
-        given(context -> {
+    public void shouldDeleteBroker(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             Broker broker = new BrokerBuilder()
                     .withNewMetadata()
                     .withName("my-broker")
@@ -49,19 +51,19 @@ public class DeleteKnativeBrokerIT extends AbstractKnativeIT implements TestActi
                 .create();
         });
 
-        when(knative()
+        runner.when(knative()
                 .client(knativeClient)
                 .brokers()
                 .delete("my-broker")
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Broker broker = knativeClient.brokers()
                     .inNamespace(namespace)
                     .withName("my-broker")
                     .get();
 
-            Assert.assertNull(broker);
+            Assertions.assertNull(broker);
         });
     }
 

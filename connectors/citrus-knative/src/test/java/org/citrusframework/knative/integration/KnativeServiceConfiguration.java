@@ -35,7 +35,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.testng.Assert;
+import org.junit.jupiter.api.Assertions;
 
 @Configuration
 public class KnativeServiceConfiguration {
@@ -76,13 +76,13 @@ public class KnativeServiceConfiguration {
         return new StaticEndpointAdapter() {
             @Override
             protected Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeader("Ce-Id"), "say-hello");
-                Assert.assertEquals(message.getHeader("Ce-Specversion"), "1.0");
-                Assert.assertEquals(message.getHeader("Ce-Subject"), "hello");
-                Assert.assertEquals(message.getHeader("Ce-Type"), "greeting");
-                Assert.assertEquals(message.getHeader("Ce-Source"), "https://github.com/citrusframework/citrus");
-                Assert.assertEquals(message.getHeader("Content-Type").toString(), MediaType.APPLICATION_JSON_VALUE + ";charset=utf-8");
-                Assert.assertEquals(message.getPayload(String.class), "{\"msg\": \"Hello Knative!\"}");
+                Assertions.assertEquals("say-hello", message.getHeader("Ce-Id"));
+                Assertions.assertEquals("1.0", message.getHeader("Ce-Specversion"));
+                Assertions.assertEquals("hello", message.getHeader("Ce-Subject"));
+                Assertions.assertEquals("greeting", message.getHeader("Ce-Type"));
+                Assertions.assertEquals("https://github.com/citrusframework/citrus", message.getHeader("Ce-Source"));
+                Assertions.assertEquals(MediaType.APPLICATION_JSON_VALUE + ";charset=utf-8", message.getHeader("Content-Type").toString());
+                Assertions.assertEquals("{\"msg\": \"Hello Knative!\"}", message.getPayload(String.class));
 
                 return new HttpMessage().status(HttpStatus.ACCEPTED);
             }

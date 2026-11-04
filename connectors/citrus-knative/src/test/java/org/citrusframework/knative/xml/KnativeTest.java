@@ -17,14 +17,14 @@
 package org.citrusframework.knative.xml;
 
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KnativeTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(XmlTestActionBuilder.lookup("knative").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("knative").get().getClass(), Knative.class);
+        Assertions.assertTrue(XmlTestActionBuilder.lookup("knative").isPresent());
+        Assertions.assertEquals(Knative.class, XmlTestActionBuilder.lookup("knative").get().getClass());
     }
 }
