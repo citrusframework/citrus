@@ -68,14 +68,10 @@ public class KubernetesBadClientConfigParserTest extends AbstractUnitTest {
 
     @BeforeEach
     public void setup() {
-        
+        context.setReferenceResolver(referenceResolver);
+
         lenient().when(referenceResolver.resolve("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
         lenient().when(referenceResolver.resolve("jsonMapper", JsonMapper.class)).thenReturn(jsonMapper);
-    }
-
-    @BeforeEach
-    public void setMocks() {
-        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
