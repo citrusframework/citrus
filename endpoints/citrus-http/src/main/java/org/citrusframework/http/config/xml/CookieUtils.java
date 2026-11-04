@@ -20,23 +20,23 @@ final class CookieUtils {
             Element cookieElement = (Element) item;
             Cookie cookie = new Cookie(cookieElement.getAttribute("name"), cookieElement.getAttribute("value"));
 
-            if (cookieElement.hasAttribute("path")) {
+            if (cookieElement.hasAttribute("path") && !cookieElement.getAttribute("path").isBlank()) {
                 cookie.setPath(cookieElement.getAttribute("path"));
             }
 
-            if (cookieElement.hasAttribute("domain")) {
+            if (cookieElement.hasAttribute("domain") && !cookieElement.getAttribute("domain").isBlank()) {
                 cookie.setDomain(cookieElement.getAttribute("domain"));
             }
 
-            if (cookieElement.hasAttribute("max-age")) {
+            if (cookieElement.hasAttribute("max-age") && !cookieElement.getAttribute("max-age").isBlank()) {
                 cookie.setMaxAge(parseInt(cookieElement.getAttribute("max-age")));
             }
 
-            if (cookieElement.hasAttribute("secure")) {
+            if (cookieElement.hasAttribute("secure") && !cookieElement.getAttribute("secure").isBlank()) {
                 cookie.setSecure(parseBoolean(cookieElement.getAttribute("secure")));
             }
 
-            if (cookieElement.hasAttribute("http-only")) {
+            if (cookieElement.hasAttribute("http-only") && !cookieElement.getAttribute("http-only").isBlank()) {
                 cookie.setHttpOnly(parseBoolean(cookieElement.getAttribute("http-only")));
             }
 
