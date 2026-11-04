@@ -40,6 +40,7 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.SocketUtils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -435,12 +436,12 @@ public class OpenApiClientIT implements TestActionSupport {
 
     static Stream<Arguments> validationConfigurations() {
         return Stream.of(new Object[][]{
-            {petstoreSpecWithValidationDisabled, null, true},
-            {petstoreSpecWithValidationDisabled, true, false},
-            {petstoreSpecWithValidationDisabled, false, true},
-            {petstoreSpec, null, false},
-            {petstoreSpec, true, false},
-            {petstoreSpec, false, true},
+            {Named.of("petstore-v3.json (validation disabled)", petstoreSpecWithValidationDisabled), null, true},
+            {Named.of("petstore-v3.json (validation disabled)", petstoreSpecWithValidationDisabled), true, false},
+            {Named.of("petstore-v3.json (validation disabled)", petstoreSpecWithValidationDisabled), false, true},
+            {Named.of("petstore-v3.json", petstoreSpec), null, false},
+            {Named.of("petstore-v3.json", petstoreSpec), true, false},
+            {Named.of("petstore-v3.json", petstoreSpec), false, true},
         }).map(Arguments::of);
     }
 

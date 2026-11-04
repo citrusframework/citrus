@@ -40,7 +40,6 @@ import org.springframework.http.HttpStatusCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -78,8 +77,8 @@ public class OpenApiResponseValidatorTest {
 
     @BeforeEach
     public void beforeMethod() {
-        lenient().doReturn(openApiValidationContextMock).when(openApiSpecificationMock).getOpenApiValidationContext();
-        lenient().doReturn(openApiInteractionValidatorMock).when(openApiValidationContextMock).getOpenApiInteractionValidator();
+        doReturn(openApiValidationContextMock).when(openApiSpecificationMock).getOpenApiValidationContext();
+        doReturn(openApiInteractionValidatorMock).when(openApiValidationContextMock).getOpenApiInteractionValidator();
 
         openApiResponseValidator = new OpenApiResponseValidator(openApiSpecificationMock);
     }
@@ -129,8 +128,7 @@ public class OpenApiResponseValidatorTest {
     public void shouldCreateResponseMessage() throws IOException {
         // Given
         when(httpMessageMock.getPayload()).thenReturn("payload");
-        lenient().when(httpMessageMock.getHeaders()).thenReturn(Map.of("Content-Type", APPLICATION_JSON_VALUE));
-        lenient().when(httpMessageMock.getStatusCode()).thenReturn(HttpStatusCode.valueOf(200));
+        when(httpMessageMock.getHeaders()).thenReturn(Map.of("Content-Type", APPLICATION_JSON_VALUE));
 
         // When
         Response response = openApiResponseValidator.createResponseFromMessage(httpMessageMock, 200);

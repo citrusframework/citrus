@@ -44,7 +44,6 @@ import static java.util.Collections.singletonList;
 import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_REQUEST_URI;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -78,8 +77,8 @@ public class OpenApiRequestValidatorTest {
 
     @BeforeEach
     public void beforeMethod() {
-        lenient().doReturn(openApiValidationContextMock).when(openApiSpecificationMock).getOpenApiValidationContext();
-        lenient().doReturn(openApiInteractionValidatorMock).when(openApiValidationContextMock).getOpenApiInteractionValidator();
+        doReturn(openApiValidationContextMock).when(openApiSpecificationMock).getOpenApiValidationContext();
+        doReturn(openApiInteractionValidatorMock).when(openApiValidationContextMock).getOpenApiInteractionValidator();
 
         openApiRequestValidator = new OpenApiRequestValidator(openApiSpecificationMock);
     }
