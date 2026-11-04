@@ -10748,6 +10748,71 @@
                       "title": "ContentType",
                       "description": "Http content type."
                     },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
+                    },
                     "dataDictionary": {
                       "type": "string",
                       "title": "DataDictionary",
@@ -11099,6 +11164,71 @@
                       "type": "string",
                       "title": "ContentType",
                       "description": "Http content type."
+                    },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
                     },
                     "dataDictionary": {
                       "type": "string",
@@ -11452,6 +11582,71 @@
                       "title": "ContentType",
                       "description": "Http content type."
                     },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
+                    },
                     "dataDictionary": {
                       "type": "string",
                       "title": "DataDictionary",
@@ -11803,6 +11998,71 @@
                       "type": "string",
                       "title": "ContentType",
                       "description": "Http content type."
+                    },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
                     },
                     "dataDictionary": {
                       "type": "string",
@@ -12156,6 +12416,71 @@
                       "title": "ContentType",
                       "description": "Http content type."
                     },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
+                    },
                     "dataDictionary": {
                       "type": "string",
                       "title": "DataDictionary",
@@ -12507,6 +12832,71 @@
                       "type": "string",
                       "title": "ContentType",
                       "description": "Http content type."
+                    },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
                     },
                     "dataDictionary": {
                       "type": "string",
@@ -12860,6 +13250,71 @@
                       "title": "ContentType",
                       "description": "Http content type."
                     },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
+                    },
                     "dataDictionary": {
                       "type": "string",
                       "title": "DataDictionary",
@@ -13211,6 +13666,71 @@
                       "type": "string",
                       "title": "ContentType",
                       "description": "Http content type."
+                    },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
                     },
                     "dataDictionary": {
                       "type": "string",
@@ -13697,6 +14217,65 @@
               "type": "string",
               "title": "ContentType",
               "description": "Http content type."
+            },
+            "cookies": {
+              "title": "Cookies",
+              "description": "List of Http cookies.",
+              "$comment": "group:advanced",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "title": "Domain",
+                    "description": "Http cookie domain.",
+                    "$comment": "group:advanced"
+                  },
+                  "httpOnly": {
+                    "type": "boolean",
+                    "title": "HttpOnly",
+                    "description": "Http cookie httpOnly flag.",
+                    "$comment": "group:advanced"
+                  },
+                  "maxAge": {
+                    "type": "integer",
+                    "title": "MaxAge",
+                    "description": "Http cookie max age.",
+                    "$comment": "group:advanced"
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "Http cookie name."
+                  },
+                  "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "Http cookie path.",
+                    "$comment": "group:advanced"
+                  },
+                  "secure": {
+                    "type": "boolean",
+                    "title": "Secure",
+                    "description": "Http cookie secure flag.",
+                    "$comment": "group:advanced"
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "Http cookie value."
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "title": "Cookies",
+                "description": "List of Http cookies.",
+                "$comment": "group:advanced"
+              }
             },
             "dataDictionary": {
               "type": "string",
@@ -14356,6 +14935,71 @@
                       "title": "ContentType",
                       "description": "Http content type."
                     },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
+                    },
                     "dataDictionary": {
                       "type": "string",
                       "title": "DataDictionary",
@@ -14707,6 +15351,71 @@
                       "type": "string",
                       "title": "ContentType",
                       "description": "Http content type."
+                    },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
                     },
                     "dataDictionary": {
                       "type": "string",
@@ -15060,6 +15769,71 @@
                       "title": "ContentType",
                       "description": "Http content type."
                     },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
+                    },
                     "dataDictionary": {
                       "type": "string",
                       "title": "DataDictionary",
@@ -15411,6 +16185,71 @@
                       "type": "string",
                       "title": "ContentType",
                       "description": "Http content type."
+                    },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
                     },
                     "dataDictionary": {
                       "type": "string",
@@ -15764,6 +16603,71 @@
                       "title": "ContentType",
                       "description": "Http content type."
                     },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
+                    },
                     "dataDictionary": {
                       "type": "string",
                       "title": "DataDictionary",
@@ -16115,6 +17019,71 @@
                       "type": "string",
                       "title": "ContentType",
                       "description": "Http content type."
+                    },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
                     },
                     "dataDictionary": {
                       "type": "string",
@@ -16468,6 +17437,71 @@
                       "title": "ContentType",
                       "description": "Http content type."
                     },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
+                    },
                     "dataDictionary": {
                       "type": "string",
                       "title": "DataDictionary",
@@ -16819,6 +17853,71 @@
                       "type": "string",
                       "title": "ContentType",
                       "description": "Http content type."
+                    },
+                    "contextPath": {
+                      "type": "string",
+                      "title": "ContextPath",
+                      "description": "Http context path.",
+                      "$comment": "group:advanced"
+                    },
+                    "cookies": {
+                      "title": "Cookies",
+                      "description": "List of Http cookies.",
+                      "$comment": "group:advanced",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "domain": {
+                            "type": "string",
+                            "title": "Domain",
+                            "description": "Http cookie domain.",
+                            "$comment": "group:advanced"
+                          },
+                          "httpOnly": {
+                            "type": "boolean",
+                            "title": "HttpOnly",
+                            "description": "Http cookie httpOnly flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "maxAge": {
+                            "type": "integer",
+                            "title": "MaxAge",
+                            "description": "Http cookie max age.",
+                            "$comment": "group:advanced"
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Http cookie name."
+                          },
+                          "path": {
+                            "type": "string",
+                            "title": "Path",
+                            "description": "Http cookie path.",
+                            "$comment": "group:advanced"
+                          },
+                          "secure": {
+                            "type": "boolean",
+                            "title": "Secure",
+                            "description": "Http cookie secure flag.",
+                            "$comment": "group:advanced"
+                          },
+                          "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Http cookie value."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "value"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Cookies",
+                        "description": "List of Http cookies.",
+                        "$comment": "group:advanced"
+                      }
                     },
                     "dataDictionary": {
                       "type": "string",
@@ -17293,6 +18392,65 @@
               "type": "string",
               "title": "ContentType",
               "description": "Http content type."
+            },
+            "cookies": {
+              "title": "Cookies",
+              "description": "List of Http cookies.",
+              "$comment": "group:advanced",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "title": "Domain",
+                    "description": "Http cookie domain.",
+                    "$comment": "group:advanced"
+                  },
+                  "httpOnly": {
+                    "type": "boolean",
+                    "title": "HttpOnly",
+                    "description": "Http cookie httpOnly flag.",
+                    "$comment": "group:advanced"
+                  },
+                  "maxAge": {
+                    "type": "integer",
+                    "title": "MaxAge",
+                    "description": "Http cookie max age.",
+                    "$comment": "group:advanced"
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "Http cookie name."
+                  },
+                  "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "Http cookie path.",
+                    "$comment": "group:advanced"
+                  },
+                  "secure": {
+                    "type": "boolean",
+                    "title": "Secure",
+                    "description": "Http cookie secure flag.",
+                    "$comment": "group:advanced"
+                  },
+                  "value": {
+                    "type": "string",
+                    "title": "Value",
+                    "description": "Http cookie value."
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "title": "Cookies",
+                "description": "List of Http cookies.",
+                "$comment": "group:advanced"
+              }
             },
             "dataDictionary": {
               "type": "string",
