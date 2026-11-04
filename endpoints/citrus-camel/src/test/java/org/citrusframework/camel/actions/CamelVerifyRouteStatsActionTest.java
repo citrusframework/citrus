@@ -332,9 +332,7 @@ public class CamelVerifyRouteStatsActionTest extends AbstractTestNGUnitTest {
                 .context(camelContext)
                 .route("route_1")
                 .completed(5)
-                .validate((CamelRouteStats stats, org.citrusframework.context.TestContext ctx) -> {
-                    assertEquals(stats.getMeanProcessingTime(), 42L);
-                })
+                .validate((CamelRouteStats stats, org.citrusframework.context.TestContext ctx) -> assertEquals(stats.getMeanProcessingTime(), 42L))
                 .build();
         action.execute(context);
     }

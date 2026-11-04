@@ -264,9 +264,7 @@ public abstract class CitrusAnnotations {
 
         Arrays.stream(configClass.getDeclaredFields())
                 .filter(f -> f.getAnnotation(BindToRegistry.class) != null)
-                .peek(f -> {
-                    f.setAccessible(true);
-                })
+                .peek(f -> f.setAccessible(true))
                 .forEach(f -> {
                     try {
                         String name = ReferenceRegistry.getName(f.getAnnotation(BindToRegistry.class), f.getName());
