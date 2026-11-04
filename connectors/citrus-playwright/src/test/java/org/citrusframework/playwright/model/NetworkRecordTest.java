@@ -16,8 +16,8 @@
 
 package org.citrusframework.playwright.model;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.microsoft.playwright.Request;
 
@@ -26,7 +26,7 @@ import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Map;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 class NetworkRecordTest {
 

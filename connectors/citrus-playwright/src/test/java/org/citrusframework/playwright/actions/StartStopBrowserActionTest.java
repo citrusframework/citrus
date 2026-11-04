@@ -16,11 +16,11 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -28,14 +28,14 @@ import org.citrusframework.playwright.endpoint.PlaywrightBrowserConfiguration;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowserType;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
 import org.citrusframework.playwright.support.StubStartedBrowser;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 class StartStopBrowserActionTest {
 
     private final TestContext context = new TestContext();
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -52,7 +52,7 @@ class StartStopBrowserActionTest {
 
         assertFalse(action.isAllowAlreadyStarted());
         CitrusRuntimeException exception =
-                expectThrows(CitrusRuntimeException.class, () -> action.execute(context));
+                assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("allowAlreadyStarted=false"));
     }
 

@@ -16,8 +16,8 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,9 +28,9 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.Cookie;
@@ -41,7 +41,7 @@ class ExtractActionTest {
     private TestContext context;
     private Locator locator;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -51,7 +51,7 @@ class ExtractActionTest {
         when(browser.page().locator(anyString())).thenReturn(locator);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -145,13 +145,13 @@ class ExtractActionTest {
 
     @Test
     void shouldFailFastWhenVariableMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new ExtractAction.Builder().locator(".el").text().build());
     }
 
     @Test
     void shouldFailFastWhenLocatorMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new ExtractAction.Builder().text().variable("text").build());
     }
 }

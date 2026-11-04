@@ -16,8 +16,8 @@
 
 package org.citrusframework.playwright.state;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.BoundingBox;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.citrusframework.playwright.model.BoundingBoxResult;
 import org.citrusframework.playwright.model.SecretPatternRedactor;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 class StructuredStateReaderTest {
 

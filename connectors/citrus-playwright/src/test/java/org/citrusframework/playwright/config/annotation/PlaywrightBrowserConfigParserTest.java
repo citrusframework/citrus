@@ -23,12 +23,12 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowserConfiguration;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -116,7 +116,7 @@ class PlaywrightBrowserConfigParserTest {
 
         TestContext context = TestContextFactory.newInstance().getObject();
 
-        CitrusRuntimeException exception = expectThrows(
+        CitrusRuntimeException exception = assertThrows(
                 CitrusRuntimeException.class,
                 () -> new PlaywrightBrowserConfigParser().parse(annotation, new SimpleReferenceResolver(), context));
         assertTrue(exception.getMessage().contains("sometimes"));

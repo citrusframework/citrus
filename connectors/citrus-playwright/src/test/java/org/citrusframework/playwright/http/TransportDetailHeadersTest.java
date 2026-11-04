@@ -34,9 +34,9 @@ import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIG
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_VALID_FROM;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_VALID_TO;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_URL;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.microsoft.playwright.options.SecurityDetails;
 import com.microsoft.playwright.options.ServerAddr;
@@ -45,7 +45,7 @@ import com.microsoft.playwright.options.Timing;
 import java.util.List;
 import java.util.Map;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 class TransportDetailHeadersTest {
 

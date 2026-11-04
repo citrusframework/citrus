@@ -17,9 +17,9 @@
 package org.citrusframework.playwright.actions;
 
 import static org.citrusframework.playwright.actions.PlaywrightActionBuilder.playwright;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -34,12 +34,12 @@ import org.citrusframework.playwright.endpoint.PlaywrightHeaders;
 import org.citrusframework.playwright.model.PlaywrightTarget;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 class PlaywrightActionBuilderTest {
 
-    @AfterMethod
+    @AfterEach
     void clearAmbientBrowserScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -150,19 +150,19 @@ class PlaywrightActionBuilderTest {
 
     @Test
     void shouldFailFastWhenRequiredBuilderFieldsAreMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> playwright().open().build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().click().build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().fill().locator("#name").build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().extract().locator("#message").text().build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().javascript().build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().context().build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().page().build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().frame().build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().download().build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().pageObject().execute("open").build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().network().abort().build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().network().route("**/api/**").fulfill(null).build());
-        expectThrows(CitrusRuntimeException.class, () -> playwright().network().route("**/api/**").continueWithHeader("x", null).build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().open().build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().click().build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().fill().locator("#name").build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().extract().locator("#message").text().build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().javascript().build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().context().build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().page().build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().frame().build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().download().build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().pageObject().execute("open").build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().network().abort().build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().network().route("**/api/**").fulfill(null).build());
+        assertThrows(CitrusRuntimeException.class, () -> playwright().network().route("**/api/**").continueWithHeader("x", null).build());
     }
 
     @Test
@@ -231,7 +231,7 @@ class PlaywrightActionBuilderTest {
         browser.setName("playwrightBrowser");
         browser.start();
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> playwright().browser(browser)
                         .start()
                         .allowAlreadyStarted(false)
@@ -246,7 +246,7 @@ class PlaywrightActionBuilderTest {
 
     @Test
     void shouldFailWhenBrowserIsMissing() {
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> playwright().start().build().execute(new TestContext()));
 
         assertTrue(exception.getMessage().contains("Failed to get active Playwright browser instance"));
@@ -261,7 +261,7 @@ class PlaywrightActionBuilderTest {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         try {
-            Future<CitrusRuntimeException> failure = executor.submit(() -> expectThrows(CitrusRuntimeException.class,
+            Future<CitrusRuntimeException> failure = executor.submit(() -> assertThrows(CitrusRuntimeException.class,
                     () -> playwright().browser(browser).start().build().execute(new TestContext())));
 
             CitrusRuntimeException exception = failure.get(5, TimeUnit.SECONDS);

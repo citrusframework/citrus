@@ -16,11 +16,11 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.testng.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,9 +29,9 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Tracing;
 import com.microsoft.playwright.options.HarContentPolicy;
@@ -43,7 +43,7 @@ class TracingActionTest {
     private TestContext context;
     private Tracing tracing;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -54,7 +54,7 @@ class TracingActionTest {
         when(browser.context().tracing()).thenReturn(tracing);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -129,11 +129,11 @@ class TracingActionTest {
 
     @Test
     void shouldFailFastWhenHarPathMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new TracingAction.Builder().startHar("").build());
+        assertThrows(CitrusRuntimeException.class, () -> new TracingAction.Builder().startHar("").build());
     }
 
     @Test
     void shouldFailFastWhenCommandMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new TracingAction.Builder().build());
+        assertThrows(CitrusRuntimeException.class, () -> new TracingAction.Builder().build());
     }
 }

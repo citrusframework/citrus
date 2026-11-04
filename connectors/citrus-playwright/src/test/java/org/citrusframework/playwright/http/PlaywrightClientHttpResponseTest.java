@@ -21,9 +21,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.PlaywrightException;
@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 class PlaywrightClientHttpResponseTest {
 
@@ -210,7 +210,7 @@ class PlaywrightClientHttpResponseTest {
         APIResponse response = response(200, "OK", "");
         when(response.body()).thenThrow(new PlaywrightException("response body is unavailable"));
 
-        expectThrows(PlaywrightException.class, () -> PlaywrightClientHttpResponse.snapshot(response));
+        assertThrows(PlaywrightException.class, () -> PlaywrightClientHttpResponse.snapshot(response));
 
         verify(response, times(1)).dispose();
     }

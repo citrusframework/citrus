@@ -16,10 +16,10 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,9 +27,9 @@ import static org.mockito.Mockito.when;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.ScreenshotType;
@@ -41,7 +41,7 @@ class ScreenshotActionTest {
     private MockPlaywrightBrowser browser;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -49,7 +49,7 @@ class ScreenshotActionTest {
         PlaywrightBrowserScope.bind(browser, context);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -121,7 +121,7 @@ class ScreenshotActionTest {
 
     @Test
     void shouldRejectQualityForPngScreenshots() {
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> new ScreenshotAction.Builder().path("target/capture.png").quality(50).build());
 
         assertTrue(exception.getMessage().toLowerCase().contains("quality"), exception.getMessage());
@@ -129,7 +129,7 @@ class ScreenshotActionTest {
 
     @Test
     void shouldRejectUnsupportedScreenshotType() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new ScreenshotAction.Builder().type("tiff").build());
     }
 

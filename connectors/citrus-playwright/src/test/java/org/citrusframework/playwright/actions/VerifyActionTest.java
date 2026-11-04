@@ -16,10 +16,10 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -31,9 +31,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.Cookie;
@@ -44,7 +44,7 @@ class VerifyActionTest {
     private TestContext context;
     private Locator locator;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -54,7 +54,7 @@ class VerifyActionTest {
         when(browser.page().locator(anyString())).thenReturn(locator);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -72,7 +72,7 @@ class VerifyActionTest {
 
         VerifyAction action = new VerifyAction.Builder().locator(".el").visible().build();
 
-        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        ValidationException exception = assertThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("visible"));
     }
 
@@ -164,13 +164,13 @@ class VerifyActionTest {
 
     @Test
     void shouldFailFastWhenCountCheckMissingCount() {
-        expectThrows(ValidationException.class,
+        assertThrows(ValidationException.class,
                 () -> new VerifyAction.Builder().locator(".el").check(VerifyAction.Check.COUNT).build());
     }
 
     @Test
     void shouldFailFastWhenLocatorMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new VerifyAction.Builder().visible().build());
     }
 

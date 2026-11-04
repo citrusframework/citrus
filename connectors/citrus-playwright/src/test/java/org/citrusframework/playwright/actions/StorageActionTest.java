@@ -16,10 +16,10 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -32,10 +32,10 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.ArgumentCaptor;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.WebStorage;
@@ -48,7 +48,7 @@ class StorageActionTest {
     private WebStorage localStorage;
     private WebStorage sessionStorage;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -60,7 +60,7 @@ class StorageActionTest {
         when(browser.page().sessionStorage()).thenReturn(sessionStorage);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -94,7 +94,7 @@ class StorageActionTest {
 
         StorageAction action = new StorageAction.Builder().local().verify("theme", "dark").build();
 
-        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        ValidationException exception = assertThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("dark"));
     }
 
@@ -139,18 +139,18 @@ class StorageActionTest {
 
     @Test
     void shouldFailFastWhenCommandMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new StorageAction.Builder().build());
+        assertThrows(CitrusRuntimeException.class, () -> new StorageAction.Builder().build());
     }
 
     @Test
     void shouldFailFastWhenSetValueMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new StorageAction.Builder().local().set("theme", null).build());
     }
 
     @Test
     void shouldFailFastWhenReadVariableMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new StorageAction.Builder().local().read("theme").build());
     }
 

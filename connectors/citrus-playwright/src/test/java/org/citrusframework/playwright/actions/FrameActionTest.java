@@ -16,8 +16,8 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -28,9 +28,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.FrameLocator;
 import com.microsoft.playwright.Locator;
@@ -44,7 +44,7 @@ class FrameActionTest {
     private FrameLocator frameLocator;
     private Locator element;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -56,7 +56,7 @@ class FrameActionTest {
         when(frameLocator.locator("#name")).thenReturn(element);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -90,7 +90,7 @@ class FrameActionTest {
 
         FrameAction action = new FrameAction.Builder().frame("#frame").verifyText("#name", "Ready").build();
 
-        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        ValidationException exception = assertThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("Ready"));
     }
 
@@ -118,18 +118,18 @@ class FrameActionTest {
 
         FrameAction action = new FrameAction.Builder().click("#submit").build();
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("#submit"), exception.getMessage());
     }
 
     @Test
     void shouldFailFastWhenLocatorAndCommandMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new FrameAction.Builder().build());
+        assertThrows(CitrusRuntimeException.class, () -> new FrameAction.Builder().build());
     }
 
     @Test
     void shouldFailFastWhenFillValueMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new FrameAction.Builder().frame("#frame").fill("#name").build());
     }
 }

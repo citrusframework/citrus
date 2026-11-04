@@ -16,9 +16,9 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -27,16 +27,16 @@ import org.citrusframework.playwright.page.PlaywrightPage;
 import org.citrusframework.playwright.page.PlaywrightPageValidator;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class PageObjectActionTest {
 
     private MockPlaywrightBrowser browser;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -44,7 +44,7 @@ class PageObjectActionTest {
         PlaywrightBrowserScope.bind(browser, context);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -70,19 +70,19 @@ class PageObjectActionTest {
     void shouldFailValidationWhenPageIsNotAPlaywrightPage() {
         PageObjectAction action = new PageObjectAction.Builder().type(PlainClass.class).validate(FixtureValidator.class).build();
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("PlaywrightPage"));
     }
 
     @Test
     void shouldFailFastWhenPageTypeMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new PageObjectAction.Builder().execute("open").build());
     }
 
     @Test
     void shouldFailFastWhenNoMethodOrValidatorConfigured() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new PageObjectAction.Builder().type(FixturePage.class).build());
     }
 

@@ -28,26 +28,26 @@ import org.citrusframework.playwright.endpoint.PlaywrightHeaders;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
 import org.citrusframework.playwright.support.StubStartedBrowser;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BrowserResolutionTest {
 
     private final StubStartedBrowser browser = new StubStartedBrowser();
     private final TestContext context = new TestContext();
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         context.setReferenceResolver(new SimpleReferenceResolver());
     }
 
-    @AfterMethod
+    @AfterEach
     void tearDown() {
         PlaywrightBrowserScope.clear();
     }
@@ -88,7 +88,7 @@ class BrowserResolutionTest {
     void shouldFailWithStrategyReportWhenNothingResolvable() {
         ProbeAction probe = probe();
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> probe.resolveFor(context));
 
         assertTrue(exception.getMessage().contains("explicit .browser(<endpoint>) binding: not set"));
@@ -118,7 +118,7 @@ class BrowserResolutionTest {
     void shouldFailFastWhenExplicitNameIsUnresolvable() {
         ProbeAction probe = new ProbeAction.ProbeBuilder().browser("missing-browser").build();
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> probe.resolveFor(context));
 
         assertTrue(exception.getMessage().contains("named 'missing-browser'"));
@@ -131,7 +131,7 @@ class BrowserResolutionTest {
 
         ProbeAction probe = probe();
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> probe.resolveFor(context));
 
         // The report has to distinguish "variable not set" from "set but pointing at
@@ -149,7 +149,7 @@ class BrowserResolutionTest {
         NotAPlaywrightBrowser notABrowser = new NotAPlaywrightBrowser();
         ProbeAction.ProbeBuilder builder = new ProbeAction.ProbeBuilder();
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> builder.browser(notABrowser));
 
         assertTrue(exception.getMessage().contains("Invalid browser object"));
@@ -172,7 +172,7 @@ class BrowserResolutionTest {
 
         ProbeAction probe = probe();
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> probe.resolveFor(secondTest));
 
         assertTrue(exception.getMessage().contains("thread scope"));

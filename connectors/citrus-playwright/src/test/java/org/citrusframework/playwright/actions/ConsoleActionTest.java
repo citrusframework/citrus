@@ -16,9 +16,9 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -31,9 +31,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.ConsoleMessage;
 
@@ -42,7 +42,7 @@ class ConsoleActionTest {
     private MockPlaywrightBrowser browser;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -50,7 +50,7 @@ class ConsoleActionTest {
         PlaywrightBrowserScope.bind(browser, context);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -75,7 +75,7 @@ class ConsoleActionTest {
 
         ConsoleAction action = new ConsoleAction.Builder().verifyContains("ready").build();
 
-        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        ValidationException exception = assertThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("ready"));
     }
 
@@ -111,7 +111,7 @@ class ConsoleActionTest {
 
         ConsoleAction action = new ConsoleAction.Builder().verifyNoPageErrors().build();
 
-        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        ValidationException exception = assertThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("1"));
         assertTrue(exception.getMessage().contains("not a function"));
     }
@@ -129,7 +129,7 @@ class ConsoleActionTest {
 
         ConsoleAction action = new ConsoleAction.Builder().verifyPageErrorsContain("TypeError").build();
 
-        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        ValidationException exception = assertThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("TypeError"));
     }
 
@@ -145,7 +145,7 @@ class ConsoleActionTest {
 
     @Test
     void shouldFailFastWhenPageErrorTextMissing() {
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> new ConsoleAction.Builder().verifyPageErrorsContain(null).build());
         assertTrue(exception.getMessage().contains("page error verification text"));
     }
@@ -187,19 +187,19 @@ class ConsoleActionTest {
     void shouldRejectUnknownFilter() {
         ConsoleAction action = new ConsoleAction.Builder().report().filter("errors-only").build();
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> action.execute(context));
         assertTrue(exception.getMessage().contains("errors-only"));
     }
 
     @Test
     void shouldFailFastWhenCommandMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new ConsoleAction.Builder().build());
+        assertThrows(CitrusRuntimeException.class, () -> new ConsoleAction.Builder().build());
     }
 
     @Test
     void shouldFailFastWhenVerifyTextMissing() {
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> new ConsoleAction.Builder().verifyContains(null).build());
         assertTrue(exception.getMessage().contains("verification text"));
     }

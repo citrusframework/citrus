@@ -23,23 +23,23 @@ import org.citrusframework.container.Sequence;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
 import org.citrusframework.playwright.support.StubStartedBrowser;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ScopedBlockTest {
 
     private final StubStartedBrowser browser = new StubStartedBrowser();
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser.start();
     }
 
-    @AfterMethod
+    @AfterEach
     void tearDown() {
         PlaywrightBrowserScope.clear();
         browser.stop();

@@ -18,10 +18,10 @@ package org.citrusframework.playwright.xml;
 
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.actions.VerifyAction;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Covers how the XML wrapper properties reach the verification action builder.
@@ -73,7 +73,7 @@ class VerifyTest {
         verify.setCheck("count");
         verify.setElement(css("#rows"));
 
-        expectThrows(ValidationException.class, verify::build);
+        assertThrows(ValidationException.class, verify::build);
     }
 
     @Test
@@ -82,7 +82,7 @@ class VerifyTest {
         verify.setCheck("not-a-check");
         verify.setElement(css("#rows"));
 
-        expectThrows(IllegalArgumentException.class, verify::build);
+        assertThrows(IllegalArgumentException.class, verify::build);
     }
 
     private static Element css(String selector) {
