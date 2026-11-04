@@ -142,7 +142,7 @@ public class KubernetesExecuteActionTest extends AbstractUnitTest {
         when(clientOperation.withLabels(anyMap())).thenAnswer(invocation -> {
             Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
             Assertions.assertEquals(2, labels.size());
-            Assertions.assertEquals(null, labels.get("app"));
+            Assertions.assertNull(labels.get("app"));
             Assertions.assertEquals("active", labels.get("pod_label"));
 
             return clientOperation;
@@ -175,7 +175,7 @@ public class KubernetesExecuteActionTest extends AbstractUnitTest {
         when(clientOperation.withoutLabels(anyMap())).thenAnswer(invocation -> {
             Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
             Assertions.assertEquals(2, labels.size());
-            Assertions.assertEquals(null, labels.get("app"));
+            Assertions.assertNull(labels.get("app"));
             Assertions.assertEquals("inactive", labels.get("pod_label"));
 
             return clientOperation;
@@ -208,7 +208,7 @@ public class KubernetesExecuteActionTest extends AbstractUnitTest {
         when(clientOperation.withLabels(anyMap())).thenAnswer(invocation -> {
             Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
             Assertions.assertEquals(2, labels.size());
-            Assertions.assertEquals(null, labels.get("app"));
+            Assertions.assertNull(labels.get("app"));
             Assertions.assertEquals("active", labels.get("with"));
 
             return clientOperation;
@@ -216,7 +216,7 @@ public class KubernetesExecuteActionTest extends AbstractUnitTest {
         when(clientOperation.withoutLabels(anyMap())).thenAnswer(invocation -> {
             Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
             Assertions.assertEquals(2, labels.size());
-            Assertions.assertEquals(null, labels.get("running"));
+            Assertions.assertNull(labels.get("running"));
             Assertions.assertEquals("inactive", labels.get("without"));
 
             return clientOperation;

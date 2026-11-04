@@ -23,7 +23,6 @@ import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusResource;
-import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.jupiter.api.Assertions;
@@ -34,8 +33,6 @@ public class KubernetesCreateServiceIT extends AbstractKubernetesIT implements T
     @Autowired
     private KubernetesClient k8sClient;
 
-    private HttpServer service;
-
     private final String namespace = "test";
 
     @Test
@@ -45,7 +42,6 @@ public class KubernetesCreateServiceIT extends AbstractKubernetesIT implements T
                 .client(k8sClient.getClient())
                 .services()
                 .create("my-service")
-                .server(service)
                 .inNamespace(namespace));
 
         runner.then(context -> {
@@ -72,7 +68,6 @@ public class KubernetesCreateServiceIT extends AbstractKubernetesIT implements T
                 .client(k8sClient.getClient())
                 .services()
                 .create("my-service")
-                .server(service)
                 .portMapping(80, 8888)
                 .withPodSelector(Collections.singletonMap("test", "citrus"))
                 .inNamespace(namespace));
