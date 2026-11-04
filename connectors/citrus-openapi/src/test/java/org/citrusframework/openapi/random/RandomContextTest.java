@@ -80,7 +80,7 @@ public class RandomContextTest {
 
     @Test
     public void testGetSpecification() {
-        assertEquals(randomContext.getSpecification(), specificationMock);
+        assertEquals(specificationMock, randomContext.getSpecification());
     }
 
     @Test

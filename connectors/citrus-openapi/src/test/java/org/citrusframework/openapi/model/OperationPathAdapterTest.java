@@ -37,6 +37,6 @@ public class OperationPathAdapterTest {
         String expectedString = format("%s (%s)", OpenApiUtils.getMethodPath("GET", "/api/path"), "operationId");
 
         // Then
-        assertEquals(adapter.toString(), expectedString);
+        assertEquals(expectedString, adapter.toString());
     }
 }

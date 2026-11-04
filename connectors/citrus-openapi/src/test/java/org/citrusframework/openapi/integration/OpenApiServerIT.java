@@ -41,9 +41,7 @@ import org.citrusframework.util.SocketUtils;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext.Builder;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -63,7 +61,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, Config.class})
 @DirtiesContext
-@TestMethodOrder(MethodOrderer.MethodName.class)
 @Isolated("ITs share one HTTP server instance")
 public class OpenApiServerIT implements TestActionSupport {
 

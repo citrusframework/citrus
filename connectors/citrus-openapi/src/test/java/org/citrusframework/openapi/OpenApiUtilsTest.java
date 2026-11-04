@@ -38,7 +38,7 @@ public class OpenApiUtilsTest {
         // When
         String methodPath = getMethodPath("POST", "/api/path");
         // Then
-        assertEquals(methodPath, "POST_/api/path");
+        assertEquals("POST_/api/path", methodPath);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class OpenApiUtilsTest {
         // When
         String methodPath = getMethodPath("", "/api/path");
         // Then
-        assertEquals(methodPath, "_/api/path");
+        assertEquals("_/api/path", methodPath);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class OpenApiUtilsTest {
         // When
         String methodPath = getMethodPath("", "");
         // Then
-        assertEquals(methodPath, "_/");
+        assertEquals("_/", methodPath);
     }
 
     @Test
@@ -106,6 +106,6 @@ public class OpenApiUtilsTest {
         String result = getKnownOpenApiAliases(resolver);
 
         // Verify the result
-        assertEquals(result, "");
+        assertEquals("", result);
     }
 }

@@ -40,7 +40,7 @@ public class OpenApiActionBuilderTest {
         Assertions.assertTrue(endpointBuilders.containsKey("openapi"));
 
         Assertions.assertTrue(TestActionBuilder.lookup("openapi").isPresent());
-        Assertions.assertEquals(TestActionBuilder.lookup("openapi").get().getClass(), OpenApiActionBuilder.class);
+        Assertions.assertEquals(OpenApiActionBuilder.class, TestActionBuilder.lookup("openapi").get().getClass());
     }
 
     @Test

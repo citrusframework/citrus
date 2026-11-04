@@ -37,14 +37,14 @@ public class RandomModelBuilderTest {
     @Test
     public void testInitialState() {
         String text = builder.writeToJson();
-        assertEquals(text, "");
+        assertEquals("", text);
     }
 
     @Test
     public void testAppendSimple() {
         builder.appendSimple("testValue");
         String json = builder.writeToJson();
-        assertEquals(json, "testValue");
+        assertEquals("testValue", json);
     }
 
     @Test
@@ -52,14 +52,14 @@ public class RandomModelBuilderTest {
         ReflectionTestUtils.setField(builder, "deque", new ArrayDeque<>());
         builder.appendSimple("testValue");
         String json = builder.writeToJson();
-        assertEquals(json, "testValue");
+        assertEquals("testValue", json);
     }
 
     @Test
     public void testAppendSimpleQuoted() {
         builder.appendSimpleQuoted("testValue");
         String json = builder.writeToJson();
-        assertEquals(json, "\"testValue\"");
+        assertEquals("\"testValue\"", json);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class RandomModelBuilderTest {
         ReflectionTestUtils.setField(builder, "quote", false);
         builder.appendSimpleQuoted("testValue");
         String json = builder.writeToJson();
-        assertEquals(json, "testValue");
+        assertEquals("testValue", json);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class RandomModelBuilderTest {
             builder.property("key2", () -> builder.appendSimple("\"value2\""));
         });
         String json = builder.writeToJson();
-        assertEquals(json, "{\"key1\": \"value1\",\"key2\": \"value2\"}");
+        assertEquals("{\"key1\": \"value1\",\"key2\": \"value2\"}", json);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class RandomModelBuilderTest {
                 ))
         );
         String json = builder.writeToJson();
-        assertEquals(json, "{\"outerKey\": {\"innerKey\": \"innerValue\"}}");
+        assertEquals("{\"outerKey\": {\"innerKey\": \"innerValue\"}}", json);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class RandomModelBuilderTest {
             builder.appendSimple("\"value3\"");
         });
         String json = builder.writeToJson();
-        assertEquals(json, "[\"value1\",\"value2\",\"value3\"]");
+        assertEquals("[\"value1\",\"value2\",\"value3\"]", json);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class RandomModelBuilderTest {
             builder.appendSimple("\"value2\"");
         });
         String json = builder.writeToJson();
-        assertEquals(json, "[\"value1\",[\"nestedValue1\",\"nestedValue2\"],\"value2\"]");
+        assertEquals("[\"value1\",[\"nestedValue1\",\"nestedValue2\"],\"value2\"]", json);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class RandomModelBuilderTest {
             builder.property("key2", () -> builder.appendSimple("\"value2\""));
         });
         String json = builder.writeToJson();
-        assertEquals(json, "{\"key1\": [\"value1\",{\"nestedKey\": \"nestedValue\"}],\"key2\": \"value2\"}");
+        assertEquals("{\"key1\": [\"value1\",{\"nestedKey\": \"nestedValue\"}],\"key2\": \"value2\"}", json);
     }
 
     @Test
@@ -138,18 +138,18 @@ public class RandomModelBuilderTest {
         Exception exception = assertThrows(IllegalStateException.class, () ->
                 builder.property("key", () -> builder.appendSimple("value"))
         );
-        assertEquals(exception.getMessage(), "Encountered empty stack!");
+        assertEquals("Encountered empty stack!", exception.getMessage());
 
         exception = assertThrows(IllegalStateException.class, () ->
                 builder.object(() -> {
                 })
         );
-        assertEquals(exception.getMessage(), "Encountered empty stack!");
+        assertEquals("Encountered empty stack!", exception.getMessage());
 
         exception = assertThrows(IllegalStateException.class, () ->
                 builder.array(() -> {
                 })
         );
-        assertEquals(exception.getMessage(), "Encountered empty stack!");
+        assertEquals("Encountered empty stack!", exception.getMessage());
     }
 }

@@ -155,7 +155,7 @@ public class RandomNumberGeneratorTest {
         BigDecimal result = RandomNumberGenerator.calculateMinRelativeToMax(max, multipleOf);
 
         BigDecimal expected = max.subtract(new BigDecimal(multipleOf.toString()).abs().multiply(RandomNumberGenerator.HUNDRED));
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class RandomNumberGeneratorTest {
         BigDecimal result = RandomNumberGenerator.calculateMinRelativeToMax(max, null);
 
         BigDecimal expected = max.subtract(max.multiply(BigDecimal.valueOf(2)).max(RandomNumberGenerator.THOUSAND));
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -176,7 +176,7 @@ public class RandomNumberGeneratorTest {
         BigDecimal result = RandomNumberGenerator.calculateMaxRelativeToMin(min, multipleOf);
 
         BigDecimal expected = min.add(new BigDecimal(multipleOf.toString()).abs().multiply(RandomNumberGenerator.HUNDRED));
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -186,7 +186,7 @@ public class RandomNumberGeneratorTest {
         BigDecimal result = RandomNumberGenerator.calculateMaxRelativeToMin(min, null);
 
         BigDecimal expected = min.add(min.multiply(BigDecimal.valueOf(2)).max(RandomNumberGenerator.THOUSAND));
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -229,6 +229,6 @@ public class RandomNumberGeneratorTest {
     @ParameterizedTest(name = "number={0}, expectedSignificance={1}")
     @MethodSource("findLeastSignificantDecimalPlaceArguments")
     public void findLeastSignificantDecimalPlace(BigDecimal number, int expectedSignificance) {
-        assertEquals(generator.findLeastSignificantDecimalPlace(number), expectedSignificance);
+        assertEquals(expectedSignificance, generator.findLeastSignificantDecimalPlace(number));
     }
 }

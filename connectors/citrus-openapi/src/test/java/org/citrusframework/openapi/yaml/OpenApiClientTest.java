@@ -137,15 +137,15 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assertions.assertEquals(result.getName(), "OpenApiClientTest");
-        Assertions.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assertions.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assertions.assertEquals(result.getActionCount(), 4L);
-        Assertions.assertEquals(result.getTestAction(0).getClass(), SendMessageAction.class);
-        Assertions.assertEquals(result.getTestAction(0).getName(), "openapi:send-request");
+        Assertions.assertEquals("OpenApiClientTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(4L, result.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("openapi:send-request", result.getTestAction(0).getName());
 
-        Assertions.assertEquals(result.getTestAction(1).getClass(), ReceiveMessageAction.class);
-        Assertions.assertEquals(result.getTestAction(1).getName(), "openapi:receive-response");
+        Assertions.assertEquals(ReceiveMessageAction.class, result.getTestAction(1).getClass());
+        Assertions.assertEquals("openapi:receive-response", result.getTestAction(1).getName());
 
         int actionIndex = 0;
 
@@ -154,16 +154,16 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         Assertions.assertTrue(sendMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
         HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
-        Assertions.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
-        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
+        Assertions.assertEquals("", httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()));
+        Assertions.assertEquals(5L, httpMessageBuilder.getMessage().getHeaders().size());
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/petstore/v3/pet/${petId}");
-        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/petstore/v3/pet/${petId}");
+        Assertions.assertEquals(HttpMethod.GET.name(), httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals("/petstore/v3/pet/${petId}", httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertEquals("/petstore/v3/pet/${petId}", httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI));
         Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
-        Assertions.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
+        Assertions.assertEquals("httpClient", sendMessageAction.getEndpointUri());
 
         Message controlMessage = new DefaultMessage("");
         Message request = inboundQueue.receive();
@@ -171,24 +171,24 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         validator.validateMessage(request, controlMessage, context, new DefaultValidationContext());
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assertions.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
-        Assertions.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
-        Assertions.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
+        Assertions.assertEquals(2, receiveMessageAction.getValidationContexts().size());
+        Assertions.assertEquals(0L, receiveMessageAction.getReceiveTimeout());
+        Assertions.assertEquals(2, receiveMessageAction.getValidationContexts().size());
         Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof OpenApiMessageValidationContext);
         Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof HeaderValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
 
-        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 4L);
+        Assertions.assertEquals(4L, httpMessageBuilder.getMessage().getHeaders().size());
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
-        Assertions.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assertions.assertEquals(200, httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals("OK", httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE));
         Assertions.assertNull(receiveMessageAction.getEndpoint());
-        Assertions.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
-        Assertions.assertEquals(receiveMessageAction.getMessageProcessors().size(), 1);
-        Assertions.assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
+        Assertions.assertEquals("httpClient", receiveMessageAction.getEndpointUri());
+        Assertions.assertEquals(1, receiveMessageAction.getMessageProcessors().size());
+        Assertions.assertEquals(0, receiveMessageAction.getControlMessageProcessors().size());
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         Assertions.assertFalse(sendMessageAction.isForkMode());
@@ -199,37 +199,37 @@ public class OpenApiClientTest extends AbstractYamlActionTest {
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
 
         Map<String, Object> requestHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        Assertions.assertEquals(requestHeaders.size(), 4L);
-        Assertions.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
-        Assertions.assertEquals(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/petstore/v3/pet");
-        Assertions.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_URI), "/petstore/v3/pet");
-        Assertions.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
+        Assertions.assertEquals(4L, requestHeaders.size());
+        Assertions.assertEquals(HttpMethod.POST.name(), requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals("/petstore/v3/pet", requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertEquals("/petstore/v3/pet", requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_URI));
+        Assertions.assertEquals(APPLICATION_JSON_VALUE, requestHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE));
         Assertions.assertNull(sendMessageAction.getEndpoint());
-        Assertions.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
+        Assertions.assertEquals("httpClient", sendMessageAction.getEndpointUri());
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex);
-        Assertions.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
+        Assertions.assertEquals(2, receiveMessageAction.getValidationContexts().size());
         Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof OpenApiMessageValidationContext);
         Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof HeaderValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
-        Assertions.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
+        Assertions.assertEquals("", httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()));
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Map<String, Object> responseHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        Assertions.assertEquals(responseHeaders.size(), 2L);
-        Assertions.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE), 201);
-        Assertions.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "CREATED");
+        Assertions.assertEquals(2L, responseHeaders.size());
+        Assertions.assertEquals(201, responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals("CREATED", responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE));
         Assertions.assertNull(receiveMessageAction.getEndpoint());
-        Assertions.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
+        Assertions.assertEquals("httpClient", receiveMessageAction.getEndpointUri());
 
-        Assertions.assertEquals(receiveMessageAction.getVariableExtractors().size(), 0L);
+        Assertions.assertEquals(0L, receiveMessageAction.getVariableExtractors().size());
     }
 
     @Test
     public void shouldLookupTestActionBuilder() {
         Assertions.assertTrue(YamlTestActionBuilder.lookup("openapi").isPresent());
-        Assertions.assertEquals(YamlTestActionBuilder.lookup("openapi").get().getClass(), OpenApi.class);
+        Assertions.assertEquals(OpenApi.class, YamlTestActionBuilder.lookup("openapi").get().getClass());
     }
 }

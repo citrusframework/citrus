@@ -30,6 +30,6 @@ public class OpenApiMessageValidationContextBuilderTest {
         Assertions.assertTrue(endpointBuilders.containsKey("openapi"));
 
         Assertions.assertTrue(ValidationContext.lookup("openapi").isPresent());
-        Assertions.assertEquals(ValidationContext.lookup("openapi").get().getClass(), OpenApiMessageValidationContext.Builder.class);
+        Assertions.assertEquals(OpenApiMessageValidationContext.Builder.class, ValidationContext.lookup("openapi").get().getClass());
     }
 }
