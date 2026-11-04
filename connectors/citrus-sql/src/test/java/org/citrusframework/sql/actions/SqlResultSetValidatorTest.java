@@ -69,10 +69,7 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
 
     @Test
     public void builderAcceptsPlainValidator() {
-        SqlResultSetValidator validator = new SqlResultSetValidator() {
-            @Override
-            public void validateSqlResultSet(List<Map<String, Object>> resultSet, TestContext context) {
-            }
+        SqlResultSetValidator validator = (resultSet, context) -> {
         };
 
         ExecuteSQLQueryAction action = builder

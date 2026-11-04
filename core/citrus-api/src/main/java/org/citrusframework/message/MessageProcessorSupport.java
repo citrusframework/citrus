@@ -172,12 +172,7 @@ public interface MessageProcessorSupport extends Processors, MessageProcessorLoo
 
             @Override
             public SoapMessageProcessors soap() {
-                return new SoapMessageProcessors() {
-                    @Override
-                    public SoapFormattingMessageProcessorBuilder<?, ?> prettyPrint() {
-                        return lookup("soapPrettyPrint");
-                    }
-                };
+                return () -> lookup("soapPrettyPrint");
             }
         };
     }
