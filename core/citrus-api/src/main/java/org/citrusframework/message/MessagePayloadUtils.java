@@ -100,7 +100,7 @@ public class MessagePayloadUtils {
                     indent -= indentNum;
                 }
                 if (!singleLine) {
-                    sb.append(" ".repeat(Math.max(0, indent)));
+                    sb.repeat(" ", Math.max(0, indent));
                 }
                 if (nextChar != '?' && nextChar != '!' && nextChar != '/') {
                     indent += indentNum;
@@ -164,7 +164,7 @@ public class MessagePayloadUtils {
             switch (currentChar) {
                 case '"':
                     if (!inQuote && isKey) {
-                        sb.append(" ".repeat(Math.max(0, indent)));
+                        sb.repeat(" ", Math.max(0, indent));
                     }
                     inQuote = !inQuote;
                     sb.append(currentChar);
@@ -188,7 +188,7 @@ public class MessagePayloadUtils {
                         sb.append(currentChar);
                     } else {
                         if (isKey) {
-                            sb.append(" ".repeat(Math.max(0, indent)));
+                            sb.repeat(" ", Math.max(0, indent));
                         } else {
                             isKey = true;
                         }
@@ -208,7 +208,7 @@ public class MessagePayloadUtils {
                         }
 
                         indent -= indentNum;
-                        sb.append(" ".repeat(Math.max(0, indent)));
+                        sb.repeat(" ", Math.max(0, indent));
                     }
                     sb.append(currentChar);
                     break;

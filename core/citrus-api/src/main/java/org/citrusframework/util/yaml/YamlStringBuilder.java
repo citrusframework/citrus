@@ -46,7 +46,7 @@ public class YamlStringBuilder  implements YamlNodeStringBuilder {
 
     @Override
     public YamlNodeStringBuilder applyIndent() {
-        builder.append(" ".repeat(initialIndent));
+        builder.repeat(" ", initialIndent);
         return this;
     }
 
