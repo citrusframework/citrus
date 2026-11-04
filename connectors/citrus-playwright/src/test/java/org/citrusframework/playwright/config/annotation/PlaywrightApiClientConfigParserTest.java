@@ -16,12 +16,12 @@
 
 package org.citrusframework.playwright.config.annotation;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusEndpointAnnotations;
@@ -34,8 +34,8 @@ import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.builder.PlaywrightEndpoints;
 import org.citrusframework.playwright.http.PlaywrightClientHttpRequestFactory;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class PlaywrightApiClientConfigParserTest {
 
@@ -63,7 +63,7 @@ class PlaywrightApiClientConfigParserTest {
     private TestContext context;
     private PlaywrightBrowser browser;
 
-    @BeforeMethod
+    @BeforeEach
     void createContext() {
         context = TestContextFactory.newInstance().getObject();
         browser = PlaywrightEndpoints.playwright().browser().baseUrl("http://localhost:8080").build();
@@ -112,7 +112,7 @@ class PlaywrightApiClientConfigParserTest {
 
     @Test
     void shouldFailForAnUnknownBrowser() {
-        CitrusRuntimeException error = expectThrows(CitrusRuntimeException.class, () -> parse("unknownBrowser"));
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class, () -> parse("unknownBrowser"));
 
         assertTrue(error.getMessage().contains("'missing'"), error.getMessage());
     }

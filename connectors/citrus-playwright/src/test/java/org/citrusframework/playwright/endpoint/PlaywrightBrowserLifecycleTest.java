@@ -20,12 +20,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
@@ -51,7 +51,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.support.FailureEvidenceWriter;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.StubStartedBrowser;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 class PlaywrightBrowserLifecycleTest {
 
@@ -60,7 +60,7 @@ class PlaywrightBrowserLifecycleTest {
         TestLifecycleBrowser browser = new TestLifecycleBrowser();
         browser.failContextCreation = true;
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, browser::start);
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class, browser::start);
 
         assertTrue(exception.getMessage().contains("context failure"));
         assertFalse(browser.isStarted());
@@ -115,10 +115,10 @@ class PlaywrightBrowserLifecycleTest {
         assertTrue(missing.isEmpty());
 
         browser.closePage("admin-dashboard");
-        expectThrows(CitrusRuntimeException.class, () -> browser.switchPage("admin-dashboard"));
+        assertThrows(CitrusRuntimeException.class, () -> browser.switchPage("admin-dashboard"));
 
         browser.closeContext("admin");
-        expectThrows(CitrusRuntimeException.class, () -> browser.switchContext("admin"));
+        assertThrows(CitrusRuntimeException.class, () -> browser.switchContext("admin"));
     }
 
     @Test
@@ -244,7 +244,7 @@ class PlaywrightBrowserLifecycleTest {
         browser.getEndpointConfiguration().setConnectWsEndpoint("ws://localhost:3000/playwright");
         browser.getEndpointConfiguration().setConnectOverCdpEndpoint("http://localhost:9222");
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, browser::start);
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class, browser::start);
 
         assertTrue(exception.getMessage().contains("not both"));
         assertEquals(0, browser.connects.get());

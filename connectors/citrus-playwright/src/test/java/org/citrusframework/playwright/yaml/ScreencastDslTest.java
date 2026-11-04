@@ -21,11 +21,11 @@ import java.util.Arrays;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.ScreencastAction;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Covers how the YAML screencast wrapper maps onto the action builder, including the deliberate
@@ -107,7 +107,7 @@ class ScreencastDslTest {
         screencast.setSizeWidth(1280);
         screencast.setCommand("start");
 
-        expectThrows(CitrusRuntimeException.class, screencast::build);
+        assertThrows(CitrusRuntimeException.class, screencast::build);
     }
 
     @Test
@@ -116,7 +116,7 @@ class ScreencastDslTest {
 
         screencast.setCommand("rewind");
 
-        expectThrows(CitrusRuntimeException.class, screencast::build);
+        assertThrows(CitrusRuntimeException.class, screencast::build);
     }
 
     @Test

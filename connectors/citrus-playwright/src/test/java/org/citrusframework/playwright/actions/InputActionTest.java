@@ -16,8 +16,8 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -30,9 +30,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.InputAction.Command;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Locator;
 
@@ -41,7 +41,7 @@ class InputActionTest {
     private MockPlaywrightBrowser browser;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -54,7 +54,7 @@ class InputActionTest {
         return mock(Locator.class);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -134,20 +134,20 @@ class InputActionTest {
 
     @Test
     void shouldFailFastWhenFillValueMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new InputAction.Builder(Command.FILL).locator("#name").build());
     }
 
     @Test
     void shouldFailFastWhenSelectValueAndValuesMissing() {
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> new InputAction.Builder(Command.SELECT).locator("#name").build());
         assertTrue(exception.getMessage().contains("select value"));
     }
 
     @Test
     void shouldFailFastWhenLocatorMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new InputAction.Builder(Command.CLEAR).build());
     }
 }

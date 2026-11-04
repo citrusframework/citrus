@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JAXB chooses between overloaded setters of one property by reflection order, which the JVM does

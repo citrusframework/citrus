@@ -21,10 +21,11 @@ import org.citrusframework.playwright.actions.CredentialsAction;
 import org.citrusframework.playwright.actions.DropAction;
 import org.citrusframework.playwright.actions.NetworkAction;
 import org.citrusframework.playwright.dsl.PageObjectFixtures;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Covers how the declarative wrappers reject incomplete or unknown input, and that commands are
@@ -34,7 +35,7 @@ class ActionWrapperTest {
 
     @Test
     void shouldRejectMissingCommand() {
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, () -> new Console().build());
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class, () -> new Console().build());
 
         assertEquals(exception.getMessage(), "Missing Playwright console command");
     }
@@ -71,7 +72,7 @@ class ActionWrapperTest {
         Network network = new Network();
         network.setCommand("rewind");
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, network::build);
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class, network::build);
 
         assertEquals(exception.getMessage(), "Unsupported Playwright network command: rewind");
     }
@@ -118,7 +119,7 @@ class ActionWrapperTest {
         network.setCommand("wait-for-response");
         network.setServerIp("93.184.216.34");
 
-        expectThrows(CitrusRuntimeException.class, network::build);
+        assertThrows(CitrusRuntimeException.class, network::build);
     }
 
     @Test
@@ -126,7 +127,7 @@ class ActionWrapperTest {
         Emulate emulate = new Emulate();
         emulate.setWidth(1280);
 
-        expectThrows(CitrusRuntimeException.class, emulate::build);
+        assertThrows(CitrusRuntimeException.class, emulate::build);
     }
 
     @Test
@@ -134,14 +135,14 @@ class ActionWrapperTest {
         Frame frame = new Frame();
         frame.setCommand("click");
 
-        expectThrows(CitrusRuntimeException.class, frame::build);
+        assertThrows(CitrusRuntimeException.class, frame::build);
     }
 
     @Test
     void shouldRejectValidatorOfWrongType() {
         PageObject pageObject = new PageObject();
 
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> pageObject.setValidator(PageObjectFixtures.FixturePage.class.getName()));
     }
 
@@ -149,7 +150,7 @@ class ActionWrapperTest {
     void shouldRejectUnknownType() {
         PageObject pageObject = new PageObject();
 
-        expectThrows(CitrusRuntimeException.class, () -> pageObject.setType("org.example.Missing"));
+        assertThrows(CitrusRuntimeException.class, () -> pageObject.setType("org.example.Missing"));
     }
 
     @Test
@@ -159,7 +160,7 @@ class ActionWrapperTest {
         pageObject.setMethod("open");
         pageObject.setArguments(",first, second third");
 
-        assertEquals(pageObject.build().getArguments(), new String[] { "first", "second third" });
+        assertArrayEquals(new String[] { "first", "second third" }, pageObject.build().getArguments());
     }
 
     @Test
@@ -170,7 +171,7 @@ class ActionWrapperTest {
         cookies.setValue("abc");
         cookies.setSameSite("lenient");
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, cookies::build);
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class, cookies::build);
 
         assertEquals(exception.getMessage(), "Unsupported Playwright cookie same-site: lenient");
     }
@@ -182,7 +183,7 @@ class ActionWrapperTest {
         page.setAlias("popup");
         page.setIndex(0);
 
-        expectThrows(CitrusRuntimeException.class, page::build);
+        assertThrows(CitrusRuntimeException.class, page::build);
     }
 
     @Test
@@ -190,7 +191,7 @@ class ActionWrapperTest {
         Page page = new Page();
         page.setCommand("switch");
 
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, page::build);
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class, page::build);
 
         assertEquals(exception.getMessage(),
                 "Missing Playwright page switch selector - use one of alias, index, title or url-contains");
@@ -202,7 +203,7 @@ class ActionWrapperTest {
         tracing.setCommand("start");
         tracing.setPath("target/trace.zip");
 
-        expectThrows(CitrusRuntimeException.class, tracing::build);
+        assertThrows(CitrusRuntimeException.class, tracing::build);
     }
 
     @Test
@@ -212,7 +213,7 @@ class ActionWrapperTest {
         context.setAlias("admin");
         context.setStorageState("target/state.json");
 
-        expectThrows(CitrusRuntimeException.class, context::build);
+        assertThrows(CitrusRuntimeException.class, context::build);
     }
 
     @Test
@@ -271,14 +272,14 @@ class ActionWrapperTest {
         drop.setElement(element);
         drop.setPositionX(10D);
 
-        expectThrows(CitrusRuntimeException.class, drop::build);
+        assertThrows(CitrusRuntimeException.class, drop::build);
     }
 
     @Test
     void shouldRejectUnknownStorageScope() {
         Storage storage = new Storage();
 
-        expectThrows(CitrusRuntimeException.class, () -> storage.setScope("cookie"));
+        assertThrows(CitrusRuntimeException.class, () -> storage.setScope("cookie"));
     }
 
     @Test

@@ -21,12 +21,12 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.citrusframework.playwright.actions.VerifyAction.Check;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Covers the DSL check name resolution shared by the XML and YAML wrappers.
@@ -54,7 +54,7 @@ class VerifyCheckNameTest {
 
     @Test
     void shouldRejectUnknownCheckName() {
-        IllegalArgumentException exception = expectThrows(IllegalArgumentException.class,
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> Check.fromName("does-not-exist"));
         assertEquals("Unsupported Playwright verify check: does-not-exist", exception.getMessage());
     }

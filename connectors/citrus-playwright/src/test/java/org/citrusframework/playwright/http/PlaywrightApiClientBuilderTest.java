@@ -16,12 +16,12 @@
 
 package org.citrusframework.playwright.http;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Optional;
 
@@ -34,7 +34,7 @@ import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.PlaywrightEndpointBuilder;
 import org.citrusframework.playwright.endpoint.builder.PlaywrightEndpoints;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 class PlaywrightApiClientBuilderTest {
 
@@ -72,7 +72,7 @@ class PlaywrightApiClientBuilderTest {
 
     @Test
     void shouldRequireABrowser() {
-        CitrusRuntimeException error = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class,
                 () -> new PlaywrightApiClientBuilder().requestUrl("http://localhost:8080").build());
 
         assertTrue(error.getMessage().contains("browser"), error.getMessage());
@@ -80,7 +80,7 @@ class PlaywrightApiClientBuilderTest {
 
     @Test
     void shouldRequireARequestUrlOrABrowserBaseUrl() {
-        CitrusRuntimeException error = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class,
                 () -> new PlaywrightApiClientBuilder().browser(browser(null)).build());
 
         assertTrue(error.getMessage().contains("requestUrl"), error.getMessage());
@@ -104,14 +104,14 @@ class PlaywrightApiClientBuilderTest {
         PlaywrightApiClientBuilder builder = new PlaywrightApiClientBuilder().browser("missing");
         builder.referenceResolver(new SimpleReferenceResolver());
 
-        CitrusRuntimeException error = expectThrows(CitrusRuntimeException.class, builder::build);
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class, builder::build);
 
         assertTrue(error.getMessage().contains("'missing'"), error.getMessage());
     }
 
     @Test
     void shouldFailForABrowserNameWithoutReferenceResolver() {
-        CitrusRuntimeException error = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class,
                 () -> new PlaywrightApiClientBuilder().browser("browser").build());
 
         assertTrue(error.getMessage().contains("'browser'"), error.getMessage());

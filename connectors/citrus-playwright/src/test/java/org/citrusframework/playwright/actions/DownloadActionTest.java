@@ -16,9 +16,9 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -31,9 +31,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.model.DownloadMetadata;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Download;
 import com.microsoft.playwright.Locator;
@@ -43,7 +43,7 @@ class DownloadActionTest {
     private MockPlaywrightBrowser browser;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -51,7 +51,7 @@ class DownloadActionTest {
         PlaywrightBrowserScope.bind(browser, context);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -123,6 +123,6 @@ class DownloadActionTest {
 
     @Test
     void shouldFailFastWhenNoTriggerConfigured() {
-        expectThrows(CitrusRuntimeException.class, () -> new DownloadAction.Builder().build());
+        assertThrows(CitrusRuntimeException.class, () -> new DownloadAction.Builder().build());
     }
 }

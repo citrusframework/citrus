@@ -20,8 +20,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Map;
 
@@ -33,10 +33,10 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 class DropActionTest {
 
@@ -44,7 +44,7 @@ class DropActionTest {
     private TestContext context;
     private Locator element;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -54,7 +54,7 @@ class DropActionTest {
         when(browser.page().locator("#dropzone")).thenReturn(element);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -125,13 +125,13 @@ class DropActionTest {
 
     @Test
     void shouldFailFastWhenLocatorMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new DropAction.Builder().data("text/plain", "x").build());
     }
 
     @Test
     void shouldFailFastWhenPayloadMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new DropAction.Builder().locator("#dropzone").build());
     }
 
@@ -143,7 +143,7 @@ class DropActionTest {
         field.setAccessible(true);
         field.set(builder, Double.valueOf(10));
 
-        expectThrows(CitrusRuntimeException.class, builder::build);
+        assertThrows(CitrusRuntimeException.class, builder::build);
     }
 
     private DropPayload capturedPayload() {

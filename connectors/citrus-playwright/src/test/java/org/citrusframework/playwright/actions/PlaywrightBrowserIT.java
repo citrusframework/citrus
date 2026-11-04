@@ -17,9 +17,9 @@
 package org.citrusframework.playwright.actions;
 
 import static org.citrusframework.playwright.actions.PlaywrightActionBuilder.playwright;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.microsoft.playwright.Page;
 
@@ -49,20 +49,20 @@ import org.citrusframework.playwright.support.FailureEvidenceListener;
 import org.citrusframework.playwright.support.FixtureServer;
 import org.citrusframework.playwright.support.PlaywrightRuntime;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.testng.SkipException;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 class PlaywrightBrowserIT {
 
     private static String originalMaskKeywords;
     private static boolean maskKeywordsConfigured;
 
-    @BeforeClass
-    public void configureMaskKeywords() {
+    @BeforeAll
+    static void configureMaskKeywords() {
         if (!PlaywrightRuntime.chromiumAvailable()) {
-            throw new SkipException("Chromium is not installed for Playwright - install it with -Pplaywright-runtimes");
+            Assumptions.abort("Chromium is not installed for Playwright - install it with -Pplaywright-runtimes");
         }
 
         originalMaskKeywords = System.getProperty("citrus.logger.mask.keywords");
@@ -71,8 +71,8 @@ class PlaywrightBrowserIT {
                 "authorization,x-api-key,api-key,password,token,api_key,apikey,secret,auth,cookie");
     }
 
-    @AfterClass
-    public void restoreMaskKeywords() {
+    @AfterAll
+    static void restoreMaskKeywords() {
         if (!maskKeywordsConfigured) {
             return;
         }
@@ -106,7 +106,7 @@ class PlaywrightBrowserIT {
             playwright().browser(browser).click().locator("#submit").build().execute(context);
             playwright().browser(browser).waitFor().locator("#message").visible().build().execute(context);
             playwright().browser(browser).verify().locator("#message").text("Citrus:ready").build().execute(context);
-            expectThrows(ValidationException.class,
+            assertThrows(ValidationException.class,
                     () -> playwright().browser(browser).verify().locator("#message").text("Citrus:waiting").build().execute(context));
             playwright().browser(browser).verify().locator("#message").attribute("data-state", "ready").build().execute(context);
             playwright().browser(browser).extract().locator("#message").text().variable("message").build().execute(context);
@@ -568,7 +568,7 @@ class PlaywrightBrowserIT {
             playwright().browser(browser).console().pageErrors().variable("pageErrors")
                     .build().execute(context);
             assertTrue(context.getVariable("pageErrors").contains("option-coverage-boom"));
-            expectThrows(ValidationException.class,
+            assertThrows(ValidationException.class,
                     () -> playwright().browser(browser).console().verifyNoPageErrors()
                             .build().execute(context));
 

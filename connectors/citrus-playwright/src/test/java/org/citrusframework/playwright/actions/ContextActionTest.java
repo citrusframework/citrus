@@ -16,24 +16,24 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class ContextActionTest {
 
     private MockPlaywrightBrowser browser;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -41,7 +41,7 @@ class ContextActionTest {
         PlaywrightBrowserScope.bind(browser, context);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -80,7 +80,7 @@ class ContextActionTest {
 
     @Test
     void shouldFailFastWhenCommandOrAliasMissing() {
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> new ContextAction.Builder().build());
         assertTrue(exception.getMessage().contains("command or alias"));
     }

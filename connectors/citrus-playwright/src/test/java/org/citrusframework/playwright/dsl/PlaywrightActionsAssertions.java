@@ -37,10 +37,10 @@ import org.citrusframework.playwright.actions.PermissionAction;
 import org.citrusframework.playwright.actions.StorageAction;
 import org.citrusframework.playwright.actions.TracingAction;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Assertions shared by the XML and YAML loader tests for {@code playwright-actions.citrus.it}, so

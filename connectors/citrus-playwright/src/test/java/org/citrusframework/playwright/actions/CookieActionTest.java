@@ -16,9 +16,9 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,9 +30,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.options.Cookie;
 
@@ -41,7 +41,7 @@ class CookieActionTest {
     private MockPlaywrightBrowser browser;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -49,7 +49,7 @@ class CookieActionTest {
         PlaywrightBrowserScope.bind(browser, context);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -100,7 +100,7 @@ class CookieActionTest {
 
         CookieAction action = new CookieAction.Builder().verify("session", "wrong").build();
 
-        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        ValidationException exception = assertThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("wrong"));
     }
 
@@ -111,16 +111,16 @@ class CookieActionTest {
 
         CookieAction action = new CookieAction.Builder().read("missing").variable("v").build();
 
-        expectThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
     }
 
     @Test
     void shouldFailFastWhenCommandMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new CookieAction.Builder().build());
+        assertThrows(CitrusRuntimeException.class, () -> new CookieAction.Builder().build());
     }
 
     @Test
     void shouldFailFastWhenReadVariableMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new CookieAction.Builder().read("session").build());
+        assertThrows(CitrusRuntimeException.class, () -> new CookieAction.Builder().read("session").build());
     }
 }

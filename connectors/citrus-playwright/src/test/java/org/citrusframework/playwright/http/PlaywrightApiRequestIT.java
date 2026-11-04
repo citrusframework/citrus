@@ -29,11 +29,11 @@ import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIG
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_VALID_FROM;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_TLS_VALID_TO;
 import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIGHT_API_URL;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.options.HttpCredentials;
@@ -75,12 +75,12 @@ import org.citrusframework.report.MessageListener;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.yaml.YamlTestLoader;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.testng.SkipException;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 /**
  * Browser-session HTTP requests against a real Chromium and the local fixture server: the
@@ -98,15 +98,15 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
     private PlaywrightBrowser browser;
     private HttpClient browserApi;
 
-    @BeforeClass
-    public void requireChromium() {
+    @BeforeAll
+    static void requireChromium() {
         if (!PlaywrightRuntime.chromiumAvailable()) {
-            throw new SkipException("Chromium is not installed for Playwright - install it with -Pplaywright-runtimes");
+            Assumptions.abort("Chromium is not installed for Playwright - install it with -Pplaywright-runtimes");
         }
     }
 
-    @BeforeMethod
-    public void startFixture() throws IOException {
+    @BeforeEach
+    void startFixture() throws IOException {
         server = FixtureServer.start()
                 .route("/login", (request, response) -> response
                         .header("Set-Cookie", "SID=ui-session; Path=/; HttpOnly")
@@ -155,8 +155,8 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
                                 request.header("Cookie") == null ? "" : request.header("Cookie"))));
     }
 
-    @AfterMethod(alwaysRun = true)
-    public void stopBrowserAndFixture() {
+    @AfterEach
+    void stopBrowserAndFixture() {
         if (browser != null) {
             browser.stop();
             browser = null;
@@ -252,7 +252,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         playwright().browser(browser).context().newContext("admin").build().execute(context);
         HttpClient opsApi = PlaywrightEndpoints.playwright().apiClient().browser(browser).context("ops").build();
 
-        RuntimeException error = expectThrows(RuntimeException.class,
+        RuntimeException error = assertThrows(RuntimeException.class,
                 () -> http().client(opsApi).send().get("/echo").build().execute(context));
 
         assertTrue(messages(error).contains("'ops'"), messages(error));
@@ -282,7 +282,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
         HttpClientRequestActionBuilder send = http().client(browserApi).send().get("/echo");
         send.message().header("Cookie", "EXTRA=1");
-        RuntimeException error = expectThrows(RuntimeException.class, () -> send.build().execute(context));
+        RuntimeException error = assertThrows(RuntimeException.class, () -> send.build().execute(context));
 
         assertTrue(messages(error).contains("playwright().cookies().add("), messages(error));
         assertTrue(server.lastRequest("/echo").isEmpty());
@@ -452,7 +452,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         startBrowser(builder -> { });
         HttpClient client = PlaywrightEndpoints.playwright().apiClient().browser(browser).requestUrl(startHttps()).build();
 
-        RuntimeException error = expectThrows(RuntimeException.class, () -> send(client, "/echo"));
+        RuntimeException error = assertThrows(RuntimeException.class, () -> send(client, "/echo"));
 
         assertTrue(messages(error).contains("Browser-session request GET https://127.0.0.1"), messages(error));
         assertTrue(httpsServer.lastRequest("/echo").isEmpty());
@@ -507,7 +507,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         startBrowser(builder -> { });
         HttpClient impatient = PlaywrightEndpoints.playwright().apiClient().browser(browser).timeout(300L).build();
 
-        RuntimeException error = expectThrows(RuntimeException.class, () -> send(impatient, "/slow"));
+        RuntimeException error = assertThrows(RuntimeException.class, () -> send(impatient, "/slow"));
 
         assertTrue(messages(error).contains("300"), messages(error));
     }
@@ -546,7 +546,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         try (ResettingServer flaky = new ResettingServer(1)) {
             HttpClient client = PlaywrightEndpoints.playwright().apiClient().browser(browser).requestUrl(flaky.url()).build();
 
-            RuntimeException error = expectThrows(RuntimeException.class, () -> send(client, "/flaky"));
+            RuntimeException error = assertThrows(RuntimeException.class, () -> send(client, "/flaky"));
 
             assertTrue(messages(error).contains("Browser-session request GET " + flaky.url() + "/flaky failed"), messages(error));
             assertEquals(flaky.attempts(), 1);

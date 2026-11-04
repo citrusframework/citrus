@@ -23,11 +23,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
@@ -47,13 +47,13 @@ import java.util.Map;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.model.SecretPatternRedactor;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 class PlaywrightClientHttpRequestFactoryTest {
 
@@ -61,19 +61,19 @@ class PlaywrightClientHttpRequestFactoryTest {
 
     private ApiBrowser browser;
 
-    @BeforeMethod
+    @BeforeEach
     void createBrowser() {
         browser = new ApiBrowser();
     }
 
-    @AfterMethod
+    @AfterEach
     void stopBrowser() {
         browser.stop();
     }
 
     @Test
     void shouldRequireABrowser() {
-        CitrusRuntimeException error = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class,
                 () -> new PlaywrightClientHttpRequestFactory(null));
 
         assertTrue(error.getMessage().contains("browser"));
@@ -87,7 +87,7 @@ class PlaywrightClientHttpRequestFactoryTest {
         owner.join();
 
         ClientHttpRequest request = new PlaywrightClientHttpRequestFactory(browser).createRequest(ORDERS, HttpMethod.GET);
-        CitrusRuntimeException error = expectThrows(CitrusRuntimeException.class, request::execute);
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class, request::execute);
 
         assertTrue(error.getMessage().contains("cannot be shared with thread"));
         verify(browser.api(browser.getCurrentContext()), never()).fetch(anyString(), any(RequestOptions.class));
@@ -127,7 +127,7 @@ class PlaywrightClientHttpRequestFactoryTest {
         browser.createContext("admin");
 
         ClientHttpRequest request = new PlaywrightClientHttpRequestFactory(browser).context("ops").createRequest(ORDERS, HttpMethod.GET);
-        CitrusRuntimeException error = expectThrows(CitrusRuntimeException.class, request::execute);
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class, request::execute);
 
         assertTrue(error.getMessage().contains("'ops'"), error.getMessage());
         assertTrue(error.getMessage().contains("default, admin"), error.getMessage());
@@ -150,7 +150,7 @@ class PlaywrightClientHttpRequestFactoryTest {
         ClientHttpRequest request = new PlaywrightClientHttpRequestFactory(browser).createRequest(ORDERS, HttpMethod.GET);
         request.getHeaders().add("cookie", "EXTRA=1");
 
-        CitrusRuntimeException error = expectThrows(CitrusRuntimeException.class, request::execute);
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class, request::execute);
 
         assertTrue(error.getMessage().contains("Cookie"), error.getMessage());
         assertTrue(error.getMessage().contains("playwright().cookies().add("), error.getMessage());
@@ -178,7 +178,7 @@ class PlaywrightClientHttpRequestFactoryTest {
                 "Error: connect ECONNREFUSED 127.0.0.1:9\nCall log:\n  - → GET http://127.0.0.1:9/api?password=abc\n  -   cookie: SID=secret"));
 
         ClientHttpRequest request = new PlaywrightClientHttpRequestFactory(browser).createRequest(uri, HttpMethod.GET);
-        IOException error = expectThrows(IOException.class, request::execute);
+        IOException error = assertThrows(IOException.class, request::execute);
 
         assertTrue(error.getMessage().contains("http://127.0.0.1:9/api?password=" + SecretPatternRedactor.MASK), error.getMessage());
         assertTrue(error.getMessage().contains("ECONNREFUSED"), error.getMessage());
@@ -204,7 +204,7 @@ class PlaywrightClientHttpRequestFactoryTest {
                         + "-     - cookie: SID=secret\n"));
 
         ClientHttpRequest request = new PlaywrightClientHttpRequestFactory(browser).createRequest(ORDERS, HttpMethod.GET);
-        IOException error = expectThrows(IOException.class, request::execute);
+        IOException error = assertThrows(IOException.class, request::execute);
 
         assertTrue(error.getMessage().endsWith("failed: Timeout 300ms exceeded."), error.getMessage());
         assertFalse(error.getMessage().contains("SID=secret"), error.getMessage());
@@ -218,7 +218,7 @@ class PlaywrightClientHttpRequestFactoryTest {
         when(browser.api(browser.getCurrentContext()).fetch(anyString(), any(RequestOptions.class))).thenReturn(driverResponse);
 
         ClientHttpRequest request = new PlaywrightClientHttpRequestFactory(browser).createRequest(ORDERS, HttpMethod.GET);
-        IOException error = expectThrows(IOException.class, request::execute);
+        IOException error = assertThrows(IOException.class, request::execute);
 
         assertTrue(error.getMessage().startsWith("Browser-session request GET http://localhost:8080/api/orders"), error.getMessage());
         assertTrue(error.getMessage().endsWith("invalid response status code 1000"), error.getMessage());
@@ -303,7 +303,7 @@ class PlaywrightClientHttpRequestFactoryTest {
         when(browser.api(browser.getCurrentContext()).fetch(anyString(), any(RequestOptions.class))).thenReturn(driverResponse);
 
         ClientHttpRequest request = new PlaywrightClientHttpRequestFactory(browser).createRequest(ORDERS, HttpMethod.GET);
-        IOException error = expectThrows(IOException.class, request::execute);
+        IOException error = assertThrows(IOException.class, request::execute);
 
         assertTrue(error.getMessage().contains("socket hang up"), error.getMessage());
         assertFalse(error.getMessage().contains("SID=secret"), error.getMessage());
