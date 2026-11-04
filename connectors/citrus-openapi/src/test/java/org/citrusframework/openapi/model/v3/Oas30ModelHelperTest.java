@@ -245,7 +245,7 @@ public class Oas30ModelHelperTest {
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
                 document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
-        assertEquals(responseForRandomGeneration.get(), okResponse);
+        assertEquals(okResponse, responseForRandomGeneration.get());
     }
 
     @Test
@@ -306,7 +306,7 @@ public class Oas30ModelHelperTest {
 
         Optional<OasSchema> parameterSchema = Oas30ModelHelper.getParameterSchema(parameter);
         assertTrue(parameterSchema.isPresent());
-        assertEquals(parameterSchema.get(), parameter.schema);
+        assertEquals(parameter.schema, parameterSchema.get());
     }
 
     @Test
