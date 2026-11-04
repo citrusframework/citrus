@@ -17,26 +17,27 @@
 package org.citrusframework.selenium.actions;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
+
 
 /**
  * @since 2.7
  */
-public class GetStoredFileActionTest extends AbstractTestNGUnitTest {
+public class GetStoredFileActionTest extends AbstractUnitTest {
 
     private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver);
 
@@ -53,15 +54,18 @@ public class GetStoredFileActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertNotNull(context.getVariable(SeleniumHeaders.SELENIUM_DOWNLOAD_FILE));
+        Assertions.assertNotNull(context.getVariable(SeleniumHeaders.SELENIUM_DOWNLOAD_FILE));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to access stored file.*")
+    @Test
     public void testExecuteError() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         GetStoredFileAction action =  new GetStoredFileAction.Builder()
                 .browser(seleniumBrowser)
                 .fileName("unknown.txt")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to access stored file.*"), e.getMessage());
     }
 }

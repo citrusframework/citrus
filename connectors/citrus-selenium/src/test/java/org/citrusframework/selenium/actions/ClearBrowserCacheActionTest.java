@@ -16,30 +16,31 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.*;
 
+
 /**
  * @since 2.7
  */
-public class ClearBrowserCacheActionTest extends AbstractTestNGUnitTest {
+public class ClearBrowserCacheActionTest extends AbstractUnitTest {
 
     private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebDriver.Options webDriverOptions = Mockito.mock(WebDriver.Options.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, webDriverOptions);
 
@@ -105,8 +106,8 @@ public class ClearBrowserCacheActionTest extends AbstractTestNGUnitTest {
                     .build();
             action.execute(context);
 
-            Assert.assertNull(htmlUnitDriver.executeScript("return window.localStorage.getItem('key');", new Object[]{}));
-            Assert.assertNull(htmlUnitDriver.executeScript("return window.sessionStorage.getItem('key');", new Object[]{}));
+            Assertions.assertNull(htmlUnitDriver.executeScript("return window.localStorage.getItem('key');", new Object[]{}));
+            Assertions.assertNull(htmlUnitDriver.executeScript("return window.sessionStorage.getItem('key');", new Object[]{}));
         } finally {
             htmlUnitDriver.quit();
         }

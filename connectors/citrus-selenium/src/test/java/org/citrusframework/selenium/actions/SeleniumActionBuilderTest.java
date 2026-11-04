@@ -19,17 +19,18 @@ package org.citrusframework.selenium.actions;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 
 public class SeleniumActionBuilderTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("selenium"));
+        Assertions.assertTrue(endpointBuilders.containsKey("selenium"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("selenium").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("selenium").get().getClass(), SeleniumActionBuilder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("selenium").isPresent());
+        Assertions.assertEquals(TestActionBuilder.lookup("selenium").get().getClass(), SeleniumActionBuilder.class);
     }
 }

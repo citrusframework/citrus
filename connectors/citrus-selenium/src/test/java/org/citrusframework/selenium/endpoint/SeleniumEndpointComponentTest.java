@@ -21,20 +21,21 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
-import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
+import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.http.client.HttpEndpointComponent;
 import org.citrusframework.http.client.HttpsEndpointComponent;
 import org.citrusframework.spi.ReferenceResolver;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Browser;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+
 
 /**
  * @since 2.7
@@ -45,7 +46,7 @@ public class SeleniumEndpointComponentTest {
     private WebDriver chromeDriver = Mockito.mock(WebDriver.class);
     private TestContext context = new TestContext();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -56,16 +57,16 @@ public class SeleniumEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("selenium:browser", context);
 
-        Assert.assertEquals(endpoint.getClass(), SeleniumBrowser.class);
+        Assertions.assertEquals(endpoint.getClass(), SeleniumBrowser.class);
 
-        Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
+        Assertions.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
 
         endpoint = component.createEndpoint("selenium:firefox", context);
 
-        Assert.assertEquals(endpoint.getClass(), SeleniumBrowser.class);
+        Assertions.assertEquals(endpoint.getClass(), SeleniumBrowser.class);
 
-        Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getBrowserType(), Browser.FIREFOX.browserName());
-        Assert.assertEquals(((SeleniumBrowser) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getBrowserType(), Browser.FIREFOX.browserName());
+        Assertions.assertEquals(((SeleniumBrowser) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
     }
 
     @Test
@@ -77,32 +78,32 @@ public class SeleniumEndpointComponentTest {
         when(referenceResolver.resolve("chromeDriver", WebDriver.class)).thenReturn(chromeDriver);
         Endpoint endpoint = component.createEndpoint("selenium:chrome?start-page=https://localhost:8080&remote-server=https://localhost:8081&webDriver=chromeDriver&timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), SeleniumBrowser.class);
+        Assertions.assertEquals(endpoint.getClass(), SeleniumBrowser.class);
 
-        Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getWebDriver(), chromeDriver);
-        Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getStartPageUrl(), "https://localhost:8080");
-        Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getRemoteServerUrl(), "https://localhost:8081");
-        Assert.assertEquals(((SeleniumBrowser) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getWebDriver(), chromeDriver);
+        Assertions.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getStartPageUrl(), "https://localhost:8080");
+        Assertions.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getRemoteServerUrl(), "https://localhost:8081");
+        Assertions.assertEquals(((SeleniumBrowser) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 5L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("http"));
-        Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
-        Assert.assertNotNull(validators.get("https"));
-        Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
-        Assert.assertNotNull(validators.get("selenium"));
-        Assert.assertEquals(validators.get("selenium").getClass(), SeleniumEndpointComponent.class);
+        Assertions.assertEquals(validators.size(), 5L);
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
+        Assertions.assertNotNull(validators.get("http"));
+        Assertions.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
+        Assertions.assertNotNull(validators.get("https"));
+        Assertions.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
+        Assertions.assertNotNull(validators.get("selenium"));
+        Assertions.assertEquals(validators.get("selenium").getClass(), SeleniumEndpointComponent.class);
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("selenium").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("selenium").isPresent());
     }
 }

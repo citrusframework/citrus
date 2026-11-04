@@ -17,31 +17,33 @@
 package org.citrusframework.selenium.actions;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Coordinates;
 import org.openqa.selenium.remote.RemoteWebElement;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+
 /**
  * @since 5.1
  */
-public class RightClickActionTest extends AbstractTestNGUnitTest {
+public class RightClickActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
     private final RemoteWebElement element = Mockito.mock(RemoteWebElement.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, element);
 
@@ -66,8 +68,9 @@ public class RightClickActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find element 'By.id: myButton' on page")
+    @Test
     public void testElementNotFound() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(webDriver.findElement(any(By.class))).thenThrow(new NoSuchElementException("no such element: Unable to locate element"));
 
         RightClickAction action =  new RightClickAction.Builder()
@@ -75,5 +78,7 @@ public class RightClickActionTest extends AbstractTestNGUnitTest {
                 .element("id", "myButton")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to find element 'By.id: myButton' on page"), e.getMessage());
     }
 }

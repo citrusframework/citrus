@@ -20,33 +20,35 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
-import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import org.citrusframework.http.config.annotation.HttpClientConfigParser;
 import org.citrusframework.http.config.annotation.HttpServerConfigParser;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.support.events.WebDriverListener;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
+
 
 /**
  * @since 2.7
  */
-public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class SeleniumBrowserConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "browser1")
     @SeleniumBrowserConfig()
@@ -90,17 +92,15 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private FirefoxProfile firefoxProfile;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-
-        when(referenceResolver.resolve("webDriver", WebDriver.class)).thenReturn(webDriver);
-        when(referenceResolver.resolve("firefoxProfile", FirefoxProfile.class)).thenReturn(firefoxProfile);
-        when(referenceResolver.resolve("eventListener", WebDriverListener.class)).thenReturn(eventListener);
-        when(referenceResolver.resolve(new String[] { "eventListener" }, WebDriverListener.class)).thenReturn(Collections.singletonList(eventListener));
+        lenient().when(referenceResolver.resolve("webDriver", WebDriver.class)).thenReturn(webDriver);
+        lenient().when(referenceResolver.resolve("firefoxProfile", FirefoxProfile.class)).thenReturn(firefoxProfile);
+        lenient().when(referenceResolver.resolve("eventListener", WebDriverListener.class)).thenReturn(eventListener);
+        lenient().when(referenceResolver.resolve(new String[] { "eventListener" }, WebDriverListener.class)).thenReturn(Collections.singletonList(eventListener));
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -109,86 +109,86 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     public void parseBrowserConfig_browserUsingMinimalConfig_shouldParseConfigurationSuccessfully() {
         CitrusAnnotations.injectEndpoints(this, context);
 
-        Assert.assertNotNull(browser1);
-        Assert.assertEquals(browser1.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
-        Assert.assertNull(browser1.getEndpointConfiguration().getStartPageUrl());
-        Assert.assertTrue(browser1.getEndpointConfiguration().getEventListeners().isEmpty());
-        Assert.assertTrue(browser1.getEndpointConfiguration().isJavaScript());
-        Assert.assertNull(browser1.getEndpointConfiguration().getWebDriver());
-        Assert.assertNotNull(browser1.getEndpointConfiguration().getFirefoxProfile());
-        Assert.assertNull(browser1.getEndpointConfiguration().getRemoteServerUrl());
-        Assert.assertEquals(browser1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertFalse(browser1.getEndpointConfiguration().isHeadless());
-        Assert.assertTrue(browser1.getEndpointConfiguration().getArguments().isEmpty());
-        Assert.assertNull(browser1.getEndpointConfiguration().getWindowSize());
-        Assert.assertNull(browser1.getEndpointConfiguration().getPageLoadTimeout());
-        Assert.assertNull(browser1.getEndpointConfiguration().getScriptTimeout());
+        Assertions.assertNotNull(browser1);
+        Assertions.assertEquals(browser1.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
+        Assertions.assertNull(browser1.getEndpointConfiguration().getStartPageUrl());
+        Assertions.assertTrue(browser1.getEndpointConfiguration().getEventListeners().isEmpty());
+        Assertions.assertTrue(browser1.getEndpointConfiguration().isJavaScript());
+        Assertions.assertNull(browser1.getEndpointConfiguration().getWebDriver());
+        Assertions.assertNotNull(browser1.getEndpointConfiguration().getFirefoxProfile());
+        Assertions.assertNull(browser1.getEndpointConfiguration().getRemoteServerUrl());
+        Assertions.assertEquals(browser1.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertFalse(browser1.getEndpointConfiguration().isHeadless());
+        Assertions.assertTrue(browser1.getEndpointConfiguration().getArguments().isEmpty());
+        Assertions.assertNull(browser1.getEndpointConfiguration().getWindowSize());
+        Assertions.assertNull(browser1.getEndpointConfiguration().getPageLoadTimeout());
+        Assertions.assertNull(browser1.getEndpointConfiguration().getScriptTimeout());
     }
 
     @Test
     public void parseBrowserConfig_firefoxBrowserUsingFullConfig_shouldParseConfigurationSuccessfully() {
         CitrusAnnotations.injectEndpoints(this, context);
 
-        Assert.assertNotNull(browser2);
-        Assert.assertEquals(browser2.getEndpointConfiguration().getBrowserType(), Browser.FIREFOX.browserName());
-        Assert.assertEquals(browser2.getEndpointConfiguration().getStartPageUrl(), "http://citrusframework.org");
-        Assert.assertEquals(browser2.getEndpointConfiguration().getEventListeners().size(), 1L);
-        Assert.assertEquals(browser2.getEndpointConfiguration().getEventListeners().get(0), eventListener);
-        Assert.assertEquals(browser2.getEndpointConfiguration().getWebDriver(), webDriver);
-        Assert.assertEquals(browser2.getEndpointConfiguration().getFirefoxProfile(), firefoxProfile);
-        Assert.assertFalse(browser2.getEndpointConfiguration().isJavaScript());
-        Assert.assertNull(browser2.getEndpointConfiguration().getRemoteServerUrl());
-        Assert.assertEquals(browser2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertNotNull(browser2);
+        Assertions.assertEquals(browser2.getEndpointConfiguration().getBrowserType(), Browser.FIREFOX.browserName());
+        Assertions.assertEquals(browser2.getEndpointConfiguration().getStartPageUrl(), "http://citrusframework.org");
+        Assertions.assertEquals(browser2.getEndpointConfiguration().getEventListeners().size(), 1L);
+        Assertions.assertEquals(browser2.getEndpointConfiguration().getEventListeners().get(0), eventListener);
+        Assertions.assertEquals(browser2.getEndpointConfiguration().getWebDriver(), webDriver);
+        Assertions.assertEquals(browser2.getEndpointConfiguration().getFirefoxProfile(), firefoxProfile);
+        Assertions.assertFalse(browser2.getEndpointConfiguration().isJavaScript());
+        Assertions.assertNull(browser2.getEndpointConfiguration().getRemoteServerUrl());
+        Assertions.assertEquals(browser2.getEndpointConfiguration().getTimeout(), 10000L);
     }
 
     @Test
     public void parseBrowserConfig_remoteBrowserConfig_shouldParseConfigurationSuccessfully() {
         CitrusAnnotations.injectEndpoints(this, context);
 
-        Assert.assertNotNull(browser3);
-        Assert.assertEquals(browser3.getEndpointConfiguration().getBrowserType(), Browser.IE.browserName());
-        Assert.assertEquals(browser3.getEndpointConfiguration().getRemoteServerUrl(), "http://localhost:9090/selenium");
+        Assertions.assertNotNull(browser3);
+        Assertions.assertEquals(browser3.getEndpointConfiguration().getBrowserType(), Browser.IE.browserName());
+        Assertions.assertEquals(browser3.getEndpointConfiguration().getRemoteServerUrl(), "http://localhost:9090/selenium");
     }
 
     @Test
     public void parseBrowserConfig_htmlUnitBrowserConfig_shouldParseConfigurationSuccessfully() {
         CitrusAnnotations.injectEndpoints(this, context);
 
-        Assert.assertNotNull(browser4);
-        Assert.assertEquals(browser4.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
+        Assertions.assertNotNull(browser4);
+        Assertions.assertEquals(browser4.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
     }
 
     @Test
     public void parseBrowserConfig_browserWithOptions_shouldParseConfigurationSuccessfully() {
         CitrusAnnotations.injectEndpoints(this, context);
 
-        Assert.assertNotNull(browser5);
-        Assert.assertEquals(browser5.getEndpointConfiguration().getBrowserType(), Browser.CHROME.browserName());
-        Assert.assertTrue(browser5.getEndpointConfiguration().isHeadless());
-        Assert.assertEquals(browser5.getEndpointConfiguration().getArguments(), Arrays.asList("--lang=de", "--no-sandbox"));
-        Assert.assertEquals(browser5.getEndpointConfiguration().getWindowSize(), "1280x800");
-        Assert.assertEquals(browser5.getEndpointConfiguration().getPageLoadTimeout(), Long.valueOf(10000L));
-        Assert.assertEquals(browser5.getEndpointConfiguration().getScriptTimeout(), Long.valueOf(5000L));
+        Assertions.assertNotNull(browser5);
+        Assertions.assertEquals(browser5.getEndpointConfiguration().getBrowserType(), Browser.CHROME.browserName());
+        Assertions.assertTrue(browser5.getEndpointConfiguration().isHeadless());
+        Assertions.assertEquals(browser5.getEndpointConfiguration().getArguments(), Arrays.asList("--lang=de", "--no-sandbox"));
+        Assertions.assertEquals(browser5.getEndpointConfiguration().getWindowSize(), "1280x800");
+        Assertions.assertEquals(browser5.getEndpointConfiguration().getPageLoadTimeout(), Long.valueOf(10000L));
+        Assertions.assertEquals(browser5.getEndpointConfiguration().getScriptTimeout(), Long.valueOf(5000L));
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 5L);
-        Assert.assertNotNull(validators.get("direct.async"));
-        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("direct.sync"));
-        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("http.client"));
-        Assert.assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
-        Assert.assertNotNull(validators.get("http.server"));
-        Assert.assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
-        Assert.assertNotNull(validators.get("selenium.browser"));
-        Assert.assertEquals(validators.get("selenium.browser").getClass(), SeleniumBrowserConfigParser.class);
+        Assertions.assertEquals(validators.size(), 5L);
+        Assertions.assertNotNull(validators.get("direct.async"));
+        Assertions.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assertions.assertNotNull(validators.get("direct.sync"));
+        Assertions.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assertions.assertNotNull(validators.get("http.client"));
+        Assertions.assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
+        Assertions.assertNotNull(validators.get("http.server"));
+        Assertions.assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+        Assertions.assertNotNull(validators.get("selenium.browser"));
+        Assertions.assertEquals(validators.get("selenium.browser").getClass(), SeleniumBrowserConfigParser.class);
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("selenium.browser").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("selenium.browser").isPresent());
     }
 }

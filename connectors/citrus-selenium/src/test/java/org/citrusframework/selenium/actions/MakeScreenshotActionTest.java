@@ -19,29 +19,30 @@ package org.citrusframework.selenium.actions;
 import java.io.File;
 
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+
 /**
  * @since 2.7
  */
-public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
+public class MakeScreenshotActionTest extends AbstractUnitTest {
 
     private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver);
 
@@ -57,9 +58,9 @@ public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_SCREENSHOT), "Test_screenshot.png");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_SCREENSHOT), "Test_screenshot.png");
 
-        Assert.assertNotNull(seleniumBrowser.getStoredFile("screenshot.png"));
+        Assertions.assertNotNull(seleniumBrowser.getStoredFile("screenshot.png"));
     }
 
     @Test
@@ -75,6 +76,6 @@ public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         File stored = new File("target/MyTest_screenshot.png");
-        Assert.assertTrue(stored.exists());
+        Assertions.assertTrue(stored.exists());
     }
 }

@@ -18,31 +18,32 @@ package org.citrusframework.selenium.actions;
 
 import java.net.URL;
 
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumBrowserConfiguration;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Browser;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
+
 
 /**
  * @since 2.7
  */
-public class StartBrowserActionTest extends AbstractTestNGUnitTest {
+public class StartBrowserActionTest extends AbstractUnitTest {
 
     private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
     private SeleniumBrowserConfiguration seleniumBrowserConfiguration = Mockito.mock(SeleniumBrowserConfiguration.class);
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebDriver.Navigation navigation = Mockito.mock(WebDriver.Navigation.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(seleniumBrowser, seleniumBrowserConfiguration, webDriver, navigation);
 
@@ -62,7 +63,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(seleniumBrowser, context);
 
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
 
         verify(seleniumBrowser).start();
     }
@@ -73,7 +74,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
         when(seleniumBrowserConfiguration.getStartPageUrl()).thenReturn("http://localhost:8080");
 
         doAnswer((Answer<Object>) invocation -> {
-            Assert.assertEquals(invocation.getArguments()[0].toString(), "http://localhost:8080");
+            Assertions.assertEquals(invocation.getArguments()[0].toString(), "http://localhost:8080");
             return null;
         }).when(navigation).to(any(URL.class));
 
@@ -82,7 +83,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(seleniumBrowser, context);
 
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
 
         verify(seleniumBrowser).start();
         verify(navigation).to(any(URL.class));
@@ -97,7 +98,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
         context.getReferenceResolver().bind("ChromeBrowser", seleniumBrowser);
 
         doAnswer((Answer<Object>) invocation -> {
-            Assert.assertEquals(invocation.getArguments()[0].toString(), "http://localhost:8080");
+            Assertions.assertEquals(invocation.getArguments()[0].toString(), "http://localhost:8080");
             return null;
         }).when(navigation).to(any(URL.class));
 
@@ -105,7 +106,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
 
         verify(seleniumBrowser).start();
         verify(navigation).to(any(URL.class));
@@ -120,7 +121,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(seleniumBrowser, context);
 
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
 
         verify(seleniumBrowser, times(0)).stop();
         verify(seleniumBrowser, times(0)).start();
@@ -136,7 +137,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(seleniumBrowser, context);
 
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
 
         verify(seleniumBrowser).stop();
         verify(seleniumBrowser).start();

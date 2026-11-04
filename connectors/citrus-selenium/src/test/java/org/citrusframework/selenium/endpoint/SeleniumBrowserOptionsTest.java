@@ -27,13 +27,16 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.config.Property;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
+
+@Isolated("Mutates the shared Log4j LoggerContext configuration")
 public class SeleniumBrowserOptionsTest {
 
     @Test
@@ -44,7 +47,7 @@ public class SeleniumBrowserOptionsTest {
 
         ChromeOptions options = browser.chromeOptions();
 
-        Assert.assertTrue(chromeArgs(options).isEmpty());
+        Assertions.assertTrue(chromeArgs(options).isEmpty());
     }
 
     @Test
@@ -58,7 +61,7 @@ public class SeleniumBrowserOptionsTest {
 
         ChromeOptions options = browser.chromeOptions();
 
-        Assert.assertEquals(chromeArgs(options), List.of("--headless=new", "--disable-gpu", "--no-sandbox"));
+        Assertions.assertEquals(chromeArgs(options), List.of("--headless=new", "--disable-gpu", "--no-sandbox"));
     }
 
     @Test
@@ -71,7 +74,7 @@ public class SeleniumBrowserOptionsTest {
 
         EdgeOptions options = browser.edgeOptions();
 
-        Assert.assertEquals(edgeArgs(options), List.of("--headless=new", "--disable-gpu"));
+        Assertions.assertEquals(edgeArgs(options), List.of("--headless=new", "--disable-gpu"));
     }
 
     @Test
@@ -84,8 +87,8 @@ public class SeleniumBrowserOptionsTest {
 
         FirefoxOptions options = browser.firefoxOptions();
 
-        Assert.assertEquals(firefoxArgs(options), List.of("-headless", "--width=1280"));
-        Assert.assertNotNull(options.getProfile());
+        Assertions.assertEquals(firefoxArgs(options), List.of("-headless", "--width=1280"));
+        Assertions.assertNotNull(options.getProfile());
     }
 
     @Test
@@ -113,7 +116,7 @@ public class SeleniumBrowserOptionsTest {
                     .map(event -> event.getMessage().getFormattedMessage())
                     .filter(message -> message.contains("safari"))
                     .toList();
-            Assert.assertEquals(warnings.size(), 1);
+            Assertions.assertEquals(warnings.size(), 1);
         } finally {
             configuration.removeLogger(SeleniumBrowser.class.getName());
             loggerContext.updateLoggers();
@@ -142,7 +145,7 @@ public class SeleniumBrowserOptionsTest {
             List<LogEvent> warnings = appender.events.stream()
                     .filter(event -> event.getLevel() == Level.WARN)
                     .toList();
-            Assert.assertTrue(warnings.isEmpty());
+            Assertions.assertTrue(warnings.isEmpty());
         } finally {
             configuration.removeLogger(SeleniumBrowser.class.getName());
             loggerContext.updateLoggers();
