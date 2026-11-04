@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import graphql.ParseAndValidate;
 import graphql.parser.Parser;
 import graphql.schema.GraphQLSchema;
+import graphql.validation.ValidationError;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.annotations.Test;
 
@@ -72,7 +73,7 @@ public class GraphQlSchemaLoaderTest {
         GraphQLSchema schema = loader("library.graphqls").getSchema();
 
         assertThat(ParseAndValidate.validate(schema, Parser.parse("{ book(id: 1) { isbn } }")))
-                .extracting(error -> error.getMessage())
+                .extracting(ValidationError::getMessage)
                 .anySatisfy(message -> assertThat(message).contains("isbn"));
     }
 
