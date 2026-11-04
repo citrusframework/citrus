@@ -55,7 +55,6 @@ import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.isA;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -302,13 +301,17 @@ public class OpenApiSpecificationTest {
         specification.setRequestUrl(requestUrl);
         specification.setHttpClient("sampleHttpClient");
         specification.setSpecUrl(specSource);
-        lenient().when(testContextMock.replaceDynamicContentInString(isA(String.class))).thenAnswer(returnsFirstArg());
+        when(testContextMock.replaceDynamicContentInString(isA(String.class))).thenAnswer(returnsFirstArg());
 
-        lenient().when(testContextMock.getReferenceResolver()).thenReturn(referenceResolverMock);
-        lenient().when(referenceResolverMock.isResolvable("sampleHttpClient", HttpClient.class)).thenReturn(true);
-        lenient().when(referenceResolverMock.resolve("sampleHttpClient", HttpClient.class)).thenReturn(httpClient);
-        lenient().when(httpClient.getEndpointConfiguration()).thenReturn(endpointConfigurationMock);
-        lenient().when(endpointConfigurationMock.getRequestUrl()).thenReturn("http://org.citrus.sample");
+        // The reference resolver is only consulted when the spec URL is relative
+        // and no explicit request URL is given
+        if (requestUrl == null && specSource.startsWith("/")) {
+            when(testContextMock.getReferenceResolver()).thenReturn(referenceResolverMock);
+            when(referenceResolverMock.isResolvable("sampleHttpClient", HttpClient.class)).thenReturn(true);
+            when(referenceResolverMock.resolve("sampleHttpClient", HttpClient.class)).thenReturn(httpClient);
+            when(httpClient.getEndpointConfiguration()).thenReturn(endpointConfigurationMock);
+            when(endpointConfigurationMock.getRequestUrl()).thenReturn("http://org.citrus.sample");
+        }
 
         // When
         specification.setApiRequestValidationEnabled(false);

@@ -19,7 +19,6 @@ package org.citrusframework.openapi.actions;
 import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.message.Message;
@@ -36,7 +35,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -50,15 +48,11 @@ public class OpenApiClientRequestMessageBuilderTest extends AbstractUnitTest imp
     private Endpoint mockEndpoint;
 
     @Mock
-    private EndpointConfiguration endpointConfiguration;
-
-    @Mock
     private Producer mockProducer;
 
     @BeforeEach
     public void setup() {
-        lenient().when(mockEndpoint.createProducer()).thenReturn(mockProducer);
-        lenient().when(mockEndpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(mockEndpoint.createProducer()).thenReturn(mockProducer);
     }
 
     @Test
