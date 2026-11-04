@@ -20,12 +20,14 @@ import io.fabric8.kubernetes.api.model.ContainerStatusBuilder;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.api.model.PodConditionBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesVerifyPodsIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -36,8 +38,8 @@ public class KubernetesVerifyPodsIT extends AbstractKubernetesIT implements Test
 
     @Test
     @CitrusTest
-    public void shouldVerifyPodStatus() {
-        given(context -> {
+    public void shouldVerifyPodStatus(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             Pod pod = new PodBuilder()
                     .withNewMetadata()
                         .withName("my-pod")
@@ -62,7 +64,7 @@ public class KubernetesVerifyPodsIT extends AbstractKubernetesIT implements Test
                     .create();
         });
 
-        when(kubernetes()
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .pods()
                 .verify("my-pod")
@@ -73,8 +75,8 @@ public class KubernetesVerifyPodsIT extends AbstractKubernetesIT implements Test
 
     @Test
     @CitrusTest
-    public void shouldFailValidationForContainerStatus() {
-        given(context -> {
+    public void shouldFailValidationForContainerStatus(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             Pod pod = new PodBuilder()
                     .withNewMetadata()
                         .withName("my-pod")
@@ -99,7 +101,7 @@ public class KubernetesVerifyPodsIT extends AbstractKubernetesIT implements Test
                     .create();
         });
 
-        then(assertException()
+        runner.then(assertException()
                 .exception(ActionTimeoutException.class)
                 .when(kubernetes()
                     .client(k8sClient.getClient())

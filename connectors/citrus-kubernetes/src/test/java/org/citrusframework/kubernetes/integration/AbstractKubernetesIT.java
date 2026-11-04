@@ -16,12 +16,16 @@
 
 package org.citrusframework.kubernetes.integration;
 
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2.7
  */
-@ContextConfiguration(classes = KubernetesServiceConfiguration.class)
-public class AbstractKubernetesIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = {CitrusSpringConfig.class, KubernetesServiceConfiguration.class})
+@Isolated("Kubernetes ITs share the mock Kubernetes server")
+public abstract class AbstractKubernetesIT {
 }

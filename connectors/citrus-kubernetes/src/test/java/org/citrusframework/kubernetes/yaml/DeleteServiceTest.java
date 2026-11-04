@@ -22,8 +22,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.kubernetes.actions.DeleteServiceAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DeleteServiceTest extends AbstractYamlActionTest {
 
@@ -46,14 +46,14 @@ public class DeleteServiceTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "DeleteServiceTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), DeleteServiceAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("DeleteServiceTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(DeleteServiceAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         service = k8sClient.services().inNamespace(namespace).withName("my-service").get();
-        Assert.assertNull(service);
+        Assertions.assertNull(service);
     }
 }

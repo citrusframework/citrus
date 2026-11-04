@@ -24,8 +24,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.kubernetes.actions.DeleteSecretAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DeleteSecretTest extends AbstractXmlActionTest {
 
@@ -48,14 +48,14 @@ public class DeleteSecretTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "DeleteSecretTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), DeleteSecretAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("DeleteSecretTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(DeleteSecretAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         secret = k8sClient.secrets().inNamespace(namespace).withName("my-secret").get();
-        Assert.assertNull(secret);
+        Assertions.assertNull(secret);
     }
 }

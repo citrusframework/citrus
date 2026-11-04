@@ -17,13 +17,15 @@
 package org.citrusframework.kubernetes.integration;
 
 import io.fabric8.kubernetes.api.model.Pod;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.spi.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesCreateResourceIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -34,8 +36,8 @@ public class KubernetesCreateResourceIT extends AbstractKubernetesIT implements 
 
     @Test
     @CitrusTest
-    public void shouldCreateResource() {
-        when(kubernetes()
+    public void shouldCreateResource(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .resources()
                 .create()
@@ -55,37 +57,37 @@ public class KubernetesCreateResourceIT extends AbstractKubernetesIT implements 
                 """)
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Pod pod = k8sClient.getClient().pods()
                     .inNamespace(namespace)
                     .withName("my-pod")
                     .get();
 
-            Assert.assertNotNull(pod);
-            Assert.assertEquals(pod.getMetadata().getLabels().size(), 1);
-            Assert.assertEquals(pod.getMetadata().getLabels().get("test"), "citrus");
+            Assertions.assertNotNull(pod);
+            Assertions.assertEquals(1, pod.getMetadata().getLabels().size());
+            Assertions.assertEquals("citrus", pod.getMetadata().getLabels().get("test"));
         });
     }
 
     @Test
     @CitrusTest
-    public void shouldCreateResourceFromFile() {
-        when(kubernetes()
+    public void shouldCreateResourceFromFile(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .resources()
                 .create()
                 .resource(Resources.fromClasspath("pod.yaml", KubernetesCreateResourceIT.class))
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Pod pod = k8sClient.getClient().pods()
                     .inNamespace(namespace)
                     .withName("my-pod")
                     .get();
 
-            Assert.assertNotNull(pod);
-            Assert.assertEquals(pod.getMetadata().getLabels().size(), 1);
-            Assert.assertEquals(pod.getMetadata().getLabels().get("name"), "my-pod");
+            Assertions.assertNotNull(pod);
+            Assertions.assertEquals(1, pod.getMetadata().getLabels().size());
+            Assertions.assertEquals("my-pod", pod.getMetadata().getLabels().get("name"));
         });
     }
 

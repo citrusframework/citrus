@@ -20,29 +20,29 @@ import java.util.Map;
 
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.kubernetes.client.KubernetesClientBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("kubernetes"));
-        Assert.assertTrue(endpointBuilders.containsKey("k8s"));
-        Assert.assertTrue(endpointBuilders.containsKey("kubernetes.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("k8s.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("kubernetes"));
+        Assertions.assertTrue(endpointBuilders.containsKey("k8s"));
+        Assertions.assertTrue(endpointBuilders.containsKey("kubernetes.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("k8s.client"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("kubernetes").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("kubernetes").get().getClass(), KubernetesEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("k8s").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("k8s").get().getClass(), KubernetesEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("kubernetes.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("kubernetes.client").get().getClass(), KubernetesClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("k8s.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("k8s.client").get().getClass(), KubernetesClientBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("kubernetes").isPresent());
+        Assertions.assertEquals(KubernetesEndpointBuilder.class, EndpointBuilder.lookup("kubernetes").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("k8s").isPresent());
+        Assertions.assertEquals(KubernetesEndpointBuilder.class, EndpointBuilder.lookup("k8s").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("kubernetes.client").isPresent());
+        Assertions.assertEquals(KubernetesClientBuilder.class, EndpointBuilder.lookup("kubernetes.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("k8s.client").isPresent());
+        Assertions.assertEquals(KubernetesClientBuilder.class, EndpointBuilder.lookup("k8s.client").get().getClass());
     }
 }

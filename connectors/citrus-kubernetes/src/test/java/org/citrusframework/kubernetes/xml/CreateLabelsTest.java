@@ -22,8 +22,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.kubernetes.actions.CreateLabelsAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateLabelsTest extends AbstractXmlActionTest {
 
@@ -49,16 +49,16 @@ public class CreateLabelsTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateLabelsTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateLabelsAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("CreateLabelsTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(CreateLabelsAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         pod = k8sClient.pods().inNamespace(namespace).withName("my-pod").get();
-        Assert.assertNotNull(pod);
-        Assert.assertEquals(pod.getMetadata().getLabels().size(), 1);
-        Assert.assertEquals(pod.getMetadata().getLabels().get("test"), "citrus");
+        Assertions.assertNotNull(pod);
+        Assertions.assertEquals(1, pod.getMetadata().getLabels().size());
+        Assertions.assertEquals("citrus", pod.getMetadata().getLabels().get("test"));
     }
 }

@@ -20,20 +20,22 @@ import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;
 
 import static org.citrusframework.base.annotations.CitrusAnnotations.injectEndpoints;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class KubernetesBadClientConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class KubernetesBadClientConfigParserTest extends AbstractUnitTest {
 
     // Endpoint badly configured with missing password
     @CitrusEndpoint
@@ -64,22 +66,21 @@ public class KubernetesBadClientConfigParserTest extends AbstractTestNGUnitTest 
     @Mock
     private JsonMapper jsonMapper;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-
-        when(referenceResolver.resolve("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("jsonMapper", JsonMapper.class)).thenReturn(jsonMapper);
+        
+        lenient().when(referenceResolver.resolve("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("jsonMapper", JsonMapper.class)).thenReturn(jsonMapper);
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
 
     @Test
     public void testBadConfiguredKubernetesClient() {
-        IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> injectEndpoints(this, context));
-        assertEquals(exception.getMessage(), "Parameters not set correctly - check if either an oauthToke or password and username is set");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> injectEndpoints(this, context));
+        assertEquals("Parameters not set correctly - check if either an oauthToke or password and username is set", exception.getMessage());
     }
 }

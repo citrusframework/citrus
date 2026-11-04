@@ -18,12 +18,14 @@ package org.citrusframework.kubernetes.integration;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesDeleteConfigMapsIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -34,8 +36,8 @@ public class KubernetesDeleteConfigMapsIT extends AbstractKubernetesIT implement
 
     @Test
     @CitrusTest
-    public void shouldDeleteConfigMap() {
-        given(context -> {
+    public void shouldDeleteConfigMap(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             ConfigMap configMap = new ConfigMapBuilder()
                     .withNewMetadata()
                     .withName("my-config-map")
@@ -49,19 +51,19 @@ public class KubernetesDeleteConfigMapsIT extends AbstractKubernetesIT implement
                     .create();
         });
 
-        when(kubernetes()
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .configMaps()
                 .delete("my-config-map")
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             ConfigMap configMap = k8sClient.getClient().configMaps()
                     .inNamespace(namespace)
                     .withName("my-config-map")
                     .get();
 
-            Assert.assertNull(configMap);
+            Assertions.assertNull(configMap);
         });
     }
 

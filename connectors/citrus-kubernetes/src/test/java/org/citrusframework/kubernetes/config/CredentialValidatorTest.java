@@ -16,30 +16,31 @@
 
 package org.citrusframework.kubernetes.config;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import java.util.stream.Stream;
 
-import static org.testng.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class CredentialValidatorTest {
 
-    private static final String IS_VALID_DATA_PROVIDER = "is-valid";
+    private static final String IS_VALID_DATA_PROVIDER = "isValidData";
 
-    @DataProvider(name = IS_VALID_DATA_PROVIDER)
-    public static Object[][] primeNumbers() {
-        return new Object[][]{
-                {"user1", "pass1", null, true},
-                {null, null, "token1", true},
-                {"user1", null, "token1", false},
-                {null, "pass1", "token1", false},
-                {"user1", "pass1", "token1", false},
-                {null, "pass1", null, false},
-                {null, null, null, true}
-        };
+    static Stream<Arguments> isValidData() {
+        return Stream.of(
+                Arguments.of("user1", "pass1", null, true),
+                Arguments.of(null, null, "token1", true),
+                Arguments.of("user1", null, "token1", false),
+                Arguments.of(null, "pass1", "token1", false),
+                Arguments.of("user1", "pass1", "token1", false),
+                Arguments.of(null, "pass1", null, false),
+                Arguments.of(null, null, null, true)
+        );
     }
 
-    @Test(dataProvider = IS_VALID_DATA_PROVIDER)
+    @ParameterizedTest(name = "{0},{1},{2}")
+    @MethodSource(IS_VALID_DATA_PROVIDER)
     public void isValid(String username, String password, String oauthToken, boolean expectedResult) {
-        assertEquals(CredentialValidator.isValid(username, password, oauthToken), expectedResult);
-    }
-}
+        Assertions.assertEquals(expectedResult, CredentialValidator.isValid(username, password, oauthToken));
+    }}

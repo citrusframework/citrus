@@ -20,9 +20,9 @@ import org.citrusframework.kubernetes.actions.KubernetesExecuteAction;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.command.*;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesExecuteActionParserTest extends AbstractActionParserTest<KubernetesExecuteAction> {
 
@@ -32,139 +32,139 @@ public class KubernetesExecuteActionParserTest extends AbstractActionParserTest<
         assertActionClassAndName(KubernetesExecuteAction.class, "kubernetes-execute");
 
         KubernetesExecuteAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), Info.class);
-        Assert.assertEquals(action.getKubernetesClient().getClass(), KubernetesClient.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(Info.class, action.getCommand().getClass());
+        Assertions.assertEquals(KubernetesClient.class, action.getKubernetesClient().getClass());
+        Assertions.assertEquals(0, action.getCommand().getParameters().size());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), Info.class);
-        Assert.assertEquals(action.getKubernetesClient(), beanDefinitionContext.getBean("myK8sClient", KubernetesClient.class));
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(Info.class, action.getCommand().getClass());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myK8sClient", KubernetesClient.class), action.getKubernetesClient());
+        Assertions.assertEquals(0, action.getCommand().getParameters().size());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ListPods.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
-        Assert.assertEquals(action.getCommandResult(), "{}");
-        Assert.assertEquals(action.getCommandResultExpressions().size(), 2L);
-        Assert.assertEquals(action.getCommandResultExpressions().get("$.apiVersion"), "v1");
-        Assert.assertEquals(action.getCommandResultExpressions().get("$..name.toString()"), "[a,b,c,d]");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(ListPods.class, action.getCommand().getClass());
+        Assertions.assertEquals(0, action.getCommand().getParameters().size());
+        Assertions.assertEquals("{}", action.getCommandResult());
+        Assertions.assertEquals(2L, action.getCommandResultExpressions().size());
+        Assertions.assertEquals("v1", action.getCommandResultExpressions().get("$.apiVersion"));
+        Assertions.assertEquals("[a,b,c,d]", action.getCommandResultExpressions().get("$..name.toString()"));
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ListEvents.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(ListEvents.class, action.getCommand().getClass());
+        Assertions.assertEquals(0, action.getCommand().getParameters().size());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ListPods.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString(), "pod_label");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(ListPods.class, action.getCommand().getClass());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("pod_label", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), CreatePod.class);
-        Assert.assertNotNull(((CreatePod) action.getCommand()).getTemplate());
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "default");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(CreatePod.class, action.getCommand().getClass());
+        Assertions.assertNotNull(((CreatePod) action.getCommand()).getTemplate());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("default", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), GetPod.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString(), "myPod");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(GetPod.class, action.getCommand().getClass());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("myPod", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), DeletePod.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString(), "myPod");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(DeletePod.class, action.getCommand().getClass());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("myPod", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ListServices.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 2);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString(), "!service_label");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "myNamespace");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(ListServices.class, action.getCommand().getClass());
+        Assertions.assertEquals(2, action.getCommand().getParameters().size());
+        Assertions.assertEquals("!service_label", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString());
+        Assertions.assertEquals("myNamespace", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), CreateService.class);
-        Assert.assertNotNull(((CreateService) action.getCommand()).getTemplate());
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "default");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(CreateService.class, action.getCommand().getClass());
+        Assertions.assertNotNull(((CreateService) action.getCommand()).getTemplate());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("default", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), GetService.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 2);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString(), "myService");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "myNamespace");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(GetService.class, action.getCommand().getClass());
+        Assertions.assertEquals(2, action.getCommand().getParameters().size());
+        Assertions.assertEquals("myService", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString());
+        Assertions.assertEquals("myNamespace", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), DeleteService.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 2);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString(), "myService");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "myNamespace");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(DeleteService.class, action.getCommand().getClass());
+        Assertions.assertEquals(2, action.getCommand().getParameters().size());
+        Assertions.assertEquals("myService", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString());
+        Assertions.assertEquals("myNamespace", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ListReplicationControllers.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "myNamespace");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(ListReplicationControllers.class, action.getCommand().getClass());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("myNamespace", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ListNodes.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString(), "node_label=active");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(ListNodes.class, action.getCommand().getClass());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("node_label=active", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ListEndpoints.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString(), "endpoint_label!=active");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(ListEndpoints.class, action.getCommand().getClass());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("endpoint_label!=active", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ListNamespaces.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString(), "namespace_label1!=active,namespace_label2=active");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(ListNamespaces.class, action.getCommand().getClass());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("namespace_label1!=active,namespace_label2=active", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), WatchPods.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString(), "pod_label");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(WatchPods.class, action.getCommand().getClass());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("pod_label", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), WatchServices.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 3);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString(), "!service_label");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString(), "myService");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "myNamespace");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(WatchServices.class, action.getCommand().getClass());
+        Assertions.assertEquals(3, action.getCommand().getParameters().size());
+        Assertions.assertEquals("!service_label", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString());
+        Assertions.assertEquals("myService", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString());
+        Assertions.assertEquals("myNamespace", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), WatchReplicationControllers.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 2);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString(), "myController");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "myNamespace");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(WatchReplicationControllers.class, action.getCommand().getClass());
+        Assertions.assertEquals(2, action.getCommand().getParameters().size());
+        Assertions.assertEquals("myController", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString());
+        Assertions.assertEquals("myNamespace", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), WatchNodes.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString(), "node_label");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(WatchNodes.class, action.getCommand().getClass());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("node_label", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), WatchNamespaces.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString(), "namespace_label");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(WatchNamespaces.class, action.getCommand().getClass());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertEquals("namespace_label", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString());
     }
 }

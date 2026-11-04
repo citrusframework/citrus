@@ -20,9 +20,9 @@ import org.citrusframework.kubernetes.actions.KubernetesExecuteAction;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.command.CreateService;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateServiceActionParserTest extends AbstractActionParserTest<KubernetesExecuteAction> {
 
@@ -32,25 +32,25 @@ public class CreateServiceActionParserTest extends AbstractActionParserTest<Kube
         assertActionClassAndName(KubernetesExecuteAction.class, "kubernetes-execute");
 
         KubernetesExecuteAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), CreateService.class);
-        Assert.assertEquals(action.getKubernetesClient().getClass(), KubernetesClient.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
-        Assert.assertEquals(((CreateService) action.getCommand()).getTemplate(), "classpath:templates/hello-service.yml");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(CreateService.class, action.getCommand().getClass());
+        Assertions.assertEquals(KubernetesClient.class, action.getKubernetesClient().getClass());
+        Assertions.assertEquals(0, action.getCommand().getParameters().size());
+        Assertions.assertEquals("classpath:templates/hello-service.yml", ((CreateService) action.getCommand()).getTemplate());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), CreateService.class);
-        Assert.assertEquals(action.getKubernetesClient(), beanDefinitionContext.getBean("myK8sClient", KubernetesClient.class));
-        Assert.assertEquals(action.getCommand().getParameters().size(), 3);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myService");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE), "default");
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "service=new");
-        Assert.assertNull(((CreateService) action.getCommand()).getTemplate());
-        Assert.assertEquals(((CreateService) action.getCommand()).getPort(), "8080");
-        Assert.assertEquals(((CreateService) action.getCommand()).getTargetPort(), "8080");
-        Assert.assertEquals(((CreateService) action.getCommand()).getNodePort(), "31234");
-        Assert.assertEquals(((CreateService) action.getCommand()).getProtocol(), "TCP");
-        Assert.assertEquals(((CreateService) action.getCommand()).getSelector(), "app=myApp");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(CreateService.class, action.getCommand().getClass());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myK8sClient", KubernetesClient.class), action.getKubernetesClient());
+        Assertions.assertEquals(3, action.getCommand().getParameters().size());
+        Assertions.assertEquals("myService", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME));
+        Assertions.assertEquals("default", action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE));
+        Assertions.assertEquals("service=new", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL));
+        Assertions.assertNull(((CreateService) action.getCommand()).getTemplate());
+        Assertions.assertEquals("8080", ((CreateService) action.getCommand()).getPort());
+        Assertions.assertEquals("8080", ((CreateService) action.getCommand()).getTargetPort());
+        Assertions.assertEquals("31234", ((CreateService) action.getCommand()).getNodePort());
+        Assertions.assertEquals("TCP", ((CreateService) action.getCommand()).getProtocol());
+        Assertions.assertEquals("app=myApp", ((CreateService) action.getCommand()).getSelector());
     }
 }

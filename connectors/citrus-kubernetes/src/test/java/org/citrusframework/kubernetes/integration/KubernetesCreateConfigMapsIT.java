@@ -22,14 +22,16 @@ import java.util.Collections;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import org.apache.commons.codec.binary.Base64;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesCreateConfigMapsIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -40,40 +42,40 @@ public class KubernetesCreateConfigMapsIT extends AbstractKubernetesIT implement
 
     @Test
     @CitrusTest
-    public void shouldCreateConfigMap() {
-        given(doFinally().actions(context -> k8sClient.getClient().configMaps()
+    public void shouldCreateConfigMap(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(doFinally().actions(context -> k8sClient.getClient().configMaps()
                 .inNamespace(namespace)
                 .withName("my-config-map")
                 .delete()));
 
-        when(kubernetes()
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .configMaps()
                 .create("my-config-map")
                 .properties(Collections.singletonMap("foo", "bar"))
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             ConfigMap configMap = k8sClient.getClient().configMaps()
                     .inNamespace(namespace)
                     .withName("my-config-map")
                     .get();
 
-            Assert.assertNotNull(configMap);
-            Assert.assertEquals(configMap.getData().size(), 1);
-            Assert.assertEquals(configMap.getData().get("foo"), Base64.encodeBase64String("bar".getBytes(StandardCharsets.UTF_8)));
+            Assertions.assertNotNull(configMap);
+            Assertions.assertEquals(1, configMap.getData().size());
+            Assertions.assertEquals(Base64.encodeBase64String("bar".getBytes(StandardCharsets.UTF_8)), configMap.getData().get("foo"));
         });
     }
 
     @Test
     @CitrusTest
-    public void shouldCreateConfigMapFromFile() throws IOException {
-        given(doFinally().actions(context -> k8sClient.getClient().configMaps()
+    public void shouldCreateConfigMapFromFile(@CitrusResource GherkinTestActionRunner runner) throws IOException {
+        runner.given(doFinally().actions(context -> k8sClient.getClient().configMaps()
                 .inNamespace(namespace)
                 .withName("my-config-map")
                 .delete()));
 
-        when(kubernetes()
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .configMaps()
                 .create("my-config-map")
@@ -82,16 +84,16 @@ public class KubernetesCreateConfigMapsIT extends AbstractKubernetesIT implement
 
         String configMapContent = FileUtils.readToString(Resources.fromClasspath("configMap.properties", KubernetesCreateConfigMapsIT.class));
 
-        then(context -> {
+        runner.then(context -> {
             ConfigMap configMap = k8sClient.getClient().configMaps()
                     .inNamespace(namespace)
                     .withName("my-config-map")
                     .get();
 
-            Assert.assertNotNull(configMap);
-            Assert.assertEquals(configMap.getData().size(), 1);
-            Assert.assertEquals(configMap.getData().get("configMap.properties"),
-                    Base64.encodeBase64String(configMapContent.getBytes(StandardCharsets.UTF_8)));
+            Assertions.assertNotNull(configMap);
+            Assertions.assertEquals(1, configMap.getData().size());
+            Assertions.assertEquals(
+                    Base64.encodeBase64String(configMapContent.getBytes(StandardCharsets.UTF_8)), configMap.getData().get("configMap.properties"));
         });
     }
 

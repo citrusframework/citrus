@@ -23,8 +23,8 @@ import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.kubernetes.actions.CreateServiceAction;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateServiceTest extends AbstractYamlActionTest {
 
@@ -36,32 +36,32 @@ public class CreateServiceTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateServiceTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateServiceAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("CreateServiceTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CreateServiceAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         String namespace = "test";
         Service service = k8sClient.services().inNamespace(namespace).withName("my-service-1").get();
-        Assert.assertNotNull(service);
-        Assert.assertEquals(service.getMetadata().getLabels().size(), 1);
-        Assert.assertEquals(service.getMetadata().getLabels().get("app"), "citrus");
-        Assert.assertEquals(service.getSpec().getPorts().size(), 1);
-        Assert.assertEquals(service.getSpec().getPorts().get(0).getPort(), 80);
-        Assert.assertEquals(service.getSpec().getPorts().get(0).getTargetPort().getIntVal(), 8080);
-        Assert.assertEquals(service.getSpec().getSelector().size(), 1);
-        Assert.assertEquals(service.getSpec().getSelector().get("citrusframework.org/test-id"), "CreateServiceTest");
+        Assertions.assertNotNull(service);
+        Assertions.assertEquals(1, service.getMetadata().getLabels().size());
+        Assertions.assertEquals("citrus", service.getMetadata().getLabels().get("app"));
+        Assertions.assertEquals(1, service.getSpec().getPorts().size());
+        Assertions.assertEquals(80, service.getSpec().getPorts().get(0).getPort());
+        Assertions.assertEquals(8080, service.getSpec().getPorts().get(0).getTargetPort().getIntVal());
+        Assertions.assertEquals(1, service.getSpec().getSelector().size());
+        Assertions.assertEquals("CreateServiceTest", service.getSpec().getSelector().get("citrusframework.org/test-id"));
 
         service = k8sClient.services().inNamespace(namespace).withName("my-service-2").get();
-        Assert.assertNotNull(service);
-        Assert.assertEquals(service.getMetadata().getLabels().size(), 1);
-        Assert.assertEquals(service.getMetadata().getLabels().get("app"), "citrus");
-        Assert.assertEquals(service.getSpec().getPorts().size(), 1);
-        Assert.assertEquals(service.getSpec().getPorts().get(0).getPort(), 80);
-        Assert.assertEquals(service.getSpec().getPorts().get(0).getTargetPort().getIntVal(), 8888);
-        Assert.assertEquals(service.getSpec().getSelector().size(), 1);
-        Assert.assertEquals(service.getSpec().getSelector().get("test"), "citrus");
+        Assertions.assertNotNull(service);
+        Assertions.assertEquals(1, service.getMetadata().getLabels().size());
+        Assertions.assertEquals("citrus", service.getMetadata().getLabels().get("app"));
+        Assertions.assertEquals(1, service.getSpec().getPorts().size());
+        Assertions.assertEquals(80, service.getSpec().getPorts().get(0).getPort());
+        Assertions.assertEquals(8888, service.getSpec().getPorts().get(0).getTargetPort().getIntVal());
+        Assertions.assertEquals(1, service.getSpec().getSelector().size());
+        Assertions.assertEquals("citrus", service.getSpec().getSelector().get("test"));
     }
 }

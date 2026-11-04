@@ -26,8 +26,8 @@ import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.api.kubernetes.ClusterType;
 import org.citrusframework.kubernetes.KubernetesVariableNames;
 import org.citrusframework.kubernetes.UnitTestSupport;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ResolveServiceUrlFunctionTest extends UnitTestSupport {
 
@@ -39,8 +39,8 @@ public class ResolveServiceUrlFunctionTest extends UnitTestSupport {
 
         context.setVariable(KubernetesVariableNames.NAMESPACE.value(), "default");
 
-        Assert.assertEquals(function.execute(Collections.singletonList("test-service"), context), "http://test-service.default");
-        Assert.assertEquals(function.execute(Arrays.asList("test-service", "8080"), context), "http://test-service.default");
+        Assertions.assertEquals("http://test-service.default", function.execute(Collections.singletonList("test-service"), context));
+        Assertions.assertEquals("http://test-service.default", function.execute(Arrays.asList("test-service", "8080"), context));
     }
 
     @Test
@@ -49,8 +49,8 @@ public class ResolveServiceUrlFunctionTest extends UnitTestSupport {
 
         context.setVariable(KubernetesVariableNames.NAMESPACE.value(), "default");
 
-        Assert.assertEquals(function.execute(Arrays.asList("test-service", "TRUE"), context), "https://test-service.default");
-        Assert.assertEquals(function.execute(Arrays.asList("test-service", "8080", "TRUE"), context), "https://test-service.default");
+        Assertions.assertEquals("https://test-service.default", function.execute(Arrays.asList("test-service", "TRUE"), context));
+        Assertions.assertEquals("https://test-service.default", function.execute(Arrays.asList("test-service", "8080", "TRUE"), context));
     }
 
     @Test
@@ -64,9 +64,9 @@ public class ResolveServiceUrlFunctionTest extends UnitTestSupport {
                     .port(8888)
                     .build());
 
-            Assert.assertEquals(function.execute(Collections.singletonList("test-service"), context),"http://localhost:8888");
-            Assert.assertEquals(function.execute(Collections.singletonList("foo-service"), context), "http://localhost");
-            Assert.assertEquals(function.execute(Arrays.asList("foo-service", "8080"), context), "http://localhost:8080");
+            Assertions.assertEquals("http://localhost:8888", function.execute(Collections.singletonList("test-service"), context));
+            Assertions.assertEquals("http://localhost", function.execute(Collections.singletonList("foo-service"), context));
+            Assertions.assertEquals("http://localhost:8080", function.execute(Arrays.asList("foo-service", "8080"), context));
         } finally {
             System.setProperty("citrus.kubernetes.cluster.type", ClusterType.KUBERNETES.name());
         }
@@ -74,6 +74,6 @@ public class ResolveServiceUrlFunctionTest extends UnitTestSupport {
 
     @Test
     public void shouldResolve() {
-        Assert.assertNotNull(new DefaultFunctionLibrary().getFunction("resolveServiceUrl"));
+        Assertions.assertNotNull(new DefaultFunctionLibrary().getFunction("resolveServiceUrl"));
     }
 }

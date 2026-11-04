@@ -18,14 +18,14 @@ package org.citrusframework.kubernetes.config.xml;
 
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.message.MessageConverter;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Map;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class KubernetesClientParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -33,7 +33,7 @@ public class KubernetesClientParserTest extends AbstractBeanDefinitionParserTest
     public void testKubernetesClientParser() {
         Map<String, KubernetesClient> clients = beanDefinitionContext.getBeansOfType(KubernetesClient.class);
 
-        assertEquals(clients.size(), 3);
+        assertEquals(3, clients.size());
 
         // 1st client
         KubernetesClient client = clients.get("k8sClient1");
@@ -42,23 +42,23 @@ public class KubernetesClientParserTest extends AbstractBeanDefinitionParserTest
         // 2nd client
         client = clients.get("k8sClient2");
         assertNotNull(client.getClient());
-        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "http://localhost:8843/");
-        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
-        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");
-        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
-        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
-        assertEquals(client.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
-        assertEquals(client.getEndpointConfiguration().getJsonMapper(), beanDefinitionContext.getBean("jsonMapper", JsonMapper.class));
+        assertEquals("http://localhost:8843/", client.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
+        assertEquals("v1", client.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion());
+        assertEquals("user", client.getEndpointConfiguration().getKubernetesClientConfig().getUsername());
+        assertEquals("s!cr!t", client.getEndpointConfiguration().getKubernetesClientConfig().getPassword());
+        assertEquals("user_namespace", client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace());
+        assertEquals(beanDefinitionContext.getBean("messageConverter", MessageConverter.class), client.getEndpointConfiguration().getMessageConverter());
+        assertEquals(beanDefinitionContext.getBean("jsonMapper", JsonMapper.class), client.getEndpointConfiguration().getJsonMapper());
 
         // 3rd client
         client = clients.get("k8sClient3");
         assertNotNull(client.getClient());
-        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "http://localhost:8843/");
-        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
-        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getOauthToken(), "xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51");
-        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
-        assertEquals(client.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
-        assertEquals(client.getEndpointConfiguration().getJsonMapper(), beanDefinitionContext.getBean("jsonMapper", JsonMapper.class));
+        assertEquals("http://localhost:8843/", client.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
+        assertEquals("v1", client.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion());
+        assertEquals("xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51", client.getEndpointConfiguration().getKubernetesClientConfig().getOauthToken());
+        assertEquals("user_namespace", client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace());
+        assertEquals(beanDefinitionContext.getBean("messageConverter", MessageConverter.class), client.getEndpointConfiguration().getMessageConverter());
+        assertEquals(beanDefinitionContext.getBean("jsonMapper", JsonMapper.class), client.getEndpointConfiguration().getJsonMapper());
 
     }
 }

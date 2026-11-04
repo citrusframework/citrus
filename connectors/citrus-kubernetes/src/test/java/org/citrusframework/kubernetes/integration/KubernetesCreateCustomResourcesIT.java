@@ -19,12 +19,14 @@ package org.citrusframework.kubernetes.integration;
 import java.util.Collections;
 
 import io.fabric8.kubernetes.api.model.ConditionBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesCreateCustomResourcesIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -35,8 +37,8 @@ public class KubernetesCreateCustomResourcesIT extends AbstractKubernetesIT impl
 
     @Test
     @CitrusTest
-    public void shouldCreateCustomResources() {
-        given(doFinally().actions(context -> k8sClient.getClient().resources(Foo.class)
+    public void shouldCreateCustomResources(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(doFinally().actions(context -> k8sClient.getClient().resources(Foo.class)
                 .inNamespace(namespace)
                 .withName("my-foo")
                 .delete()));
@@ -53,21 +55,21 @@ public class KubernetesCreateCustomResourcesIT extends AbstractKubernetesIT impl
                         .withStatus("true")
                         .build()));
 
-        when(kubernetes()
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .customResources()
                 .create()
                 .inNamespace(namespace)
                 .resource(foo));
 
-        then(context -> {
+        runner.then(context -> {
             Foo created = k8sClient.getClient().resources(Foo.class)
                     .inNamespace(namespace)
                     .withName("my-foo")
                     .get();
 
-            Assert.assertNotNull(created);
-            Assert.assertEquals(created.getSpec().getMessage(), "Hello");
+            Assertions.assertNotNull(created);
+            Assertions.assertEquals("Hello", created.getSpec().getMessage());
         });
     }
 

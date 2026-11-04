@@ -25,30 +25,31 @@ import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.command.ListPods;
 import org.citrusframework.kubernetes.command.ListResult;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 @SuppressWarnings({"unchecked", "deprecation"})
-public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
+public class KubernetesExecuteActionTest extends AbstractUnitTest {
 
     private final KubernetesClient client = new KubernetesClient();
 
     @Mock
     private io.fabric8.kubernetes.client.KubernetesClient kubernetesClient;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
         client.getEndpointConfiguration().setKubernetesClient(kubernetesClient);
     }
 
@@ -70,9 +71,9 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
-        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
+        Assertions.assertEquals(0, action.getCommand().getParameters().size());
+        Assertions.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assertions.assertEquals(response.getItems(), ((ListResult) action.getCommand().getCommandResult().getResult()).getItems());
 
         verify(clientOperation).inAnyNamespace();
     }
@@ -95,9 +96,9 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
+        Assertions.assertEquals(1, action.getCommand().getParameters().size());
+        Assertions.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assertions.assertEquals(response.getItems(), ((ListResult) action.getCommand().getCommandResult().getResult()).getItems());
 
         verify(clientOperation).inNamespace("myNamespace");
     }
@@ -121,9 +122,9 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
-        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
+        Assertions.assertEquals(0, action.getCommand().getParameters().size());
+        Assertions.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assertions.assertEquals(response.getItems(), ((ListResult) action.getCommand().getCommandResult().getResult()).getItems());
 
         verify(clientOperation).inNamespace("myNamespace");
     }
@@ -140,9 +141,9 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
         when(clientOperation.withLabels(anyMap())).thenAnswer(invocation -> {
             Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
-            Assert.assertEquals(labels.size(), 2);
-            Assert.assertEquals(labels.get("app"), null);
-            Assert.assertEquals(labels.get("pod_label"), "active");
+            Assertions.assertEquals(2, labels.size());
+            Assertions.assertEquals(null, labels.get("app"));
+            Assertions.assertEquals("active", labels.get("pod_label"));
 
             return clientOperation;
         });
@@ -156,9 +157,9 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "app,pod_label=active");
-        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
+        Assertions.assertEquals("app,pod_label=active", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL));
+        Assertions.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assertions.assertEquals(response.getItems(), ((ListResult) action.getCommand().getCommandResult().getResult()).getItems());
     }
 
     @Test
@@ -173,9 +174,9 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
         when(clientOperation.withoutLabels(anyMap())).thenAnswer(invocation -> {
             Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
-            Assert.assertEquals(labels.size(), 2);
-            Assert.assertEquals(labels.get("app"), null);
-            Assert.assertEquals(labels.get("pod_label"), "inactive");
+            Assertions.assertEquals(2, labels.size());
+            Assertions.assertEquals(null, labels.get("app"));
+            Assertions.assertEquals("inactive", labels.get("pod_label"));
 
             return clientOperation;
         });
@@ -189,9 +190,9 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "!app,pod_label!=inactive");
-        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
+        Assertions.assertEquals("!app,pod_label!=inactive", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL));
+        Assertions.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assertions.assertEquals(response.getItems(), ((ListResult) action.getCommand().getCommandResult().getResult()).getItems());
     }
 
     @Test
@@ -206,17 +207,17 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
         when(clientOperation.withLabels(anyMap())).thenAnswer(invocation -> {
             Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
-            Assert.assertEquals(labels.size(), 2);
-            Assert.assertEquals(labels.get("app"), null);
-            Assert.assertEquals(labels.get("with"), "active");
+            Assertions.assertEquals(2, labels.size());
+            Assertions.assertEquals(null, labels.get("app"));
+            Assertions.assertEquals("active", labels.get("with"));
 
             return clientOperation;
         });
         when(clientOperation.withoutLabels(anyMap())).thenAnswer(invocation -> {
             Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
-            Assert.assertEquals(labels.size(), 2);
-            Assert.assertEquals(labels.get("running"), null);
-            Assert.assertEquals(labels.get("without"), "inactive");
+            Assertions.assertEquals(2, labels.size());
+            Assertions.assertEquals(null, labels.get("running"));
+            Assertions.assertEquals("inactive", labels.get("without"));
 
             return clientOperation;
         });
@@ -232,8 +233,8 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "app,!running,with=active,without!=inactive");
-        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
+        Assertions.assertEquals("app,!running,with=active,without!=inactive", action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL));
+        Assertions.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assertions.assertEquals(response.getItems(), ((ListResult) action.getCommand().getCommandResult().getResult()).getItems());
     }
 }

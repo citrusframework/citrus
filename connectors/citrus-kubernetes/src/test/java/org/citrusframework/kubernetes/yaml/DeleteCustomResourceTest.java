@@ -23,8 +23,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.kubernetes.actions.DeleteCustomResourceAction;
 import org.citrusframework.kubernetes.integration.Foo;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DeleteCustomResourceTest extends AbstractYamlActionTest {
 
@@ -46,14 +46,14 @@ public class DeleteCustomResourceTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "DeleteCustomResourceTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), DeleteCustomResourceAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("DeleteCustomResourceTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(DeleteCustomResourceAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         foo = k8sClient.resources(Foo.class).inNamespace(namespace).withName("my-foo").get();
-        Assert.assertNull(foo);
+        Assertions.assertNull(foo);
     }
 }

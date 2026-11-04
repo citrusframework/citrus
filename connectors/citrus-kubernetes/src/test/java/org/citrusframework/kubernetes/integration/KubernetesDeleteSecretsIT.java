@@ -18,12 +18,14 @@ package org.citrusframework.kubernetes.integration;
 
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesDeleteSecretsIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -34,8 +36,8 @@ public class KubernetesDeleteSecretsIT extends AbstractKubernetesIT implements T
 
     @Test
     @CitrusTest
-    public void shouldDeleteSecret() {
-        given(context -> {
+    public void shouldDeleteSecret(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             Secret secret = new SecretBuilder()
                     .withNewMetadata()
                     .withName("my-secret")
@@ -49,19 +51,19 @@ public class KubernetesDeleteSecretsIT extends AbstractKubernetesIT implements T
                     .create();
         });
 
-        when(kubernetes()
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .secrets()
                 .delete("my-secret")
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Secret secret = k8sClient.getClient().secrets()
                     .inNamespace(namespace)
                     .withName("my-secret")
                     .get();
 
-            Assert.assertNull(secret);
+            Assertions.assertNull(secret);
         });
     }
 

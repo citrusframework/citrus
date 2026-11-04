@@ -19,21 +19,21 @@ package org.citrusframework.kubernetes.actions;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesActionBuilderTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("k8s"));
-        Assert.assertTrue(endpointBuilders.containsKey("kubernetes"));
+        Assertions.assertTrue(endpointBuilders.containsKey("k8s"));
+        Assertions.assertTrue(endpointBuilders.containsKey("kubernetes"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("k8s").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("k8s").get().getClass(), KubernetesActionBuilder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("k8s").isPresent());
+        Assertions.assertEquals(KubernetesActionBuilder.class, TestActionBuilder.lookup("k8s").get().getClass());
 
-        Assert.assertTrue(TestActionBuilder.lookup("kubernetes").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("kubernetes").get().getClass(), KubernetesActionBuilder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("kubernetes").isPresent());
+        Assertions.assertEquals(KubernetesActionBuilder.class, TestActionBuilder.lookup("kubernetes").get().getClass());
     }
 }

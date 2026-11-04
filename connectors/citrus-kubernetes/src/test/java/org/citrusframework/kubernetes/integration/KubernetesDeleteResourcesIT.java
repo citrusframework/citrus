@@ -20,12 +20,14 @@ import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.ContainerPortBuilder;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodBuilder;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KubernetesDeleteResourcesIT extends AbstractKubernetesIT implements TestActionSupport {
 
@@ -36,8 +38,8 @@ public class KubernetesDeleteResourcesIT extends AbstractKubernetesIT implements
 
     @Test
     @CitrusTest
-    public void shouldDeleteResource() {
-        given(context -> {
+    public void shouldDeleteResource(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(context -> {
             Pod pod = new PodBuilder()
                     .withNewMetadata()
                         .withName("my-pod")
@@ -63,7 +65,7 @@ public class KubernetesDeleteResourcesIT extends AbstractKubernetesIT implements
                     .create();
         });
 
-        when(kubernetes()
+        runner.when(kubernetes()
                 .client(k8sClient.getClient())
                 .resources()
                 .delete("""
@@ -80,13 +82,13 @@ public class KubernetesDeleteResourcesIT extends AbstractKubernetesIT implements
                 """)
                 .inNamespace(namespace));
 
-        then(context -> {
+        runner.then(context -> {
             Pod pod = k8sClient.getClient().pods()
                     .inNamespace(namespace)
                     .withName("my-pod")
                     .get();
 
-            Assert.assertNull(pod);
+            Assertions.assertNull(pod);
         });
     }
 

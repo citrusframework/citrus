@@ -30,16 +30,18 @@ import io.fabric8.kubernetes.client.dsl.ServiceResource;
 import org.citrusframework.base.functions.DefaultFunctionLibrary;
 import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.kubernetes.UnitTestSupport;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class ResolveExternalServiceUrlFunctionTest extends UnitTestSupport {
 
     @Mock
@@ -49,10 +51,6 @@ public class ResolveExternalServiceUrlFunctionTest extends UnitTestSupport {
     @Mock
     private MixedOperation<Service, ServiceList, ServiceResource<Service>> clientOperation;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     private final ResolveExternalServiceUrlFunction function = new ResolveExternalServiceUrlFunction();
 
@@ -76,11 +74,11 @@ public class ResolveExternalServiceUrlFunctionTest extends UnitTestSupport {
         when(clientOperation.withName("myService")).thenReturn(serviceResource);
         when(serviceResource.get()).thenReturn(service);
 
-        Assert.assertEquals(function.execute(List.of("myService"), context), "http://10.0.0.41:4567");
+        Assertions.assertEquals("http://10.0.0.41:4567", function.execute(List.of("myService"), context));
     }
 
     @Test
     public void shouldResolve() {
-        Assert.assertNotNull(new DefaultFunctionLibrary().getFunction("resolveExternalServiceUrl"));
+        Assertions.assertNotNull(new DefaultFunctionLibrary().getFunction("resolveExternalServiceUrl"));
     }
 }
