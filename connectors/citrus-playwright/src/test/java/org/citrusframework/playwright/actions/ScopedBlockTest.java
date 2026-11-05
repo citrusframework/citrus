@@ -55,9 +55,9 @@ class ScopedBlockTest {
 
         assertEquals(3, block.getActionCount());
         List<TestAction> actions = block.getActions();
-        assertEquals(actions.get(0).getClass(), OpenAction.class);
-        assertEquals(actions.get(1).getClass(), JavaScriptAction.class);
-        assertEquals(actions.get(2).getClass(), ConsoleAction.class);
+        assertEquals(OpenAction.class, actions.get(0).getClass());
+        assertEquals(JavaScriptAction.class, actions.get(1).getClass());
+        assertEquals(ConsoleAction.class, actions.get(2).getClass());
     }
 
     @Test

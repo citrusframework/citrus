@@ -53,7 +53,7 @@ class TransportDetailHeadersTest {
     void shouldReportServerAddressAndTimingOverPlainHttp() {
         Map<String, String> headers = TransportDetailHeaders.from("http://127.0.0.1:8080/api/me", plainHttpTiming(), serverAddr("127.0.0.1", 8080), null);
 
-        assertEquals(List.copyOf(headers.keySet()), List.of(
+        assertEquals(List.of(
                 PLAYWRIGHT_API_URL,
                 PLAYWRIGHT_API_SERVER_IP,
                 PLAYWRIGHT_API_SERVER_PORT,
@@ -62,12 +62,12 @@ class TransportDetailHeadersTest {
                 PLAYWRIGHT_API_TIMING_CONNECT_END,
                 PLAYWRIGHT_API_TIMING_REQUEST_START,
                 PLAYWRIGHT_API_TIMING_RESPONSE_START,
-                PLAYWRIGHT_API_TIMING_RESPONSE_END));
-        assertEquals(headers.get(PLAYWRIGHT_API_URL), "http://127.0.0.1:8080/api/me");
-        assertEquals(headers.get(PLAYWRIGHT_API_SERVER_IP), "127.0.0.1");
-        assertEquals(headers.get(PLAYWRIGHT_API_SERVER_PORT), "8080");
-        assertEquals(headers.get(PLAYWRIGHT_API_TIMING_CONNECT_START), "0");
-        assertEquals(headers.get(PLAYWRIGHT_API_TIMING_RESPONSE_END), "3.38");
+                PLAYWRIGHT_API_TIMING_RESPONSE_END), List.copyOf(headers.keySet()));
+        assertEquals("http://127.0.0.1:8080/api/me", headers.get(PLAYWRIGHT_API_URL));
+        assertEquals("127.0.0.1", headers.get(PLAYWRIGHT_API_SERVER_IP));
+        assertEquals("8080", headers.get(PLAYWRIGHT_API_SERVER_PORT));
+        assertEquals("0", headers.get(PLAYWRIGHT_API_TIMING_CONNECT_START));
+        assertEquals("3.38", headers.get(PLAYWRIGHT_API_TIMING_RESPONSE_END));
     }
 
     @Test
@@ -91,12 +91,12 @@ class TransportDetailHeadersTest {
 
         Map<String, String> headers = TransportDetailHeaders.from(null, null, null, security);
 
-        assertEquals(headers, Map.of(
+        assertEquals(Map.of(
                 PLAYWRIGHT_API_TLS_PROTOCOL, "TLS 1.3",
                 PLAYWRIGHT_API_TLS_SUBJECT_NAME, "api.example.com",
                 PLAYWRIGHT_API_TLS_ISSUER, "Example CA",
                 PLAYWRIGHT_API_TLS_VALID_FROM, "1700000000",
-                PLAYWRIGHT_API_TLS_VALID_TO, "1800000000"));
+                PLAYWRIGHT_API_TLS_VALID_TO, "1800000000"), headers);
     }
 
     @Test
@@ -106,7 +106,7 @@ class TransportDetailHeadersTest {
 
         Map<String, String> headers = TransportDetailHeaders.from(null, null, null, security);
 
-        assertEquals(headers, Map.of(PLAYWRIGHT_API_TLS_PROTOCOL, "TLS 1.2"));
+        assertEquals(Map.of(PLAYWRIGHT_API_TLS_PROTOCOL, "TLS 1.2"), headers);
     }
 
     @Test
@@ -142,9 +142,9 @@ class TransportDetailHeadersTest {
 
         Map<String, String> headers = TransportDetailHeaders.from(null, timing, null, null);
 
-        assertEquals(headers.get(PLAYWRIGHT_API_TIMING_START_TIME), "1790324158581");
-        assertEquals(headers.get(PLAYWRIGHT_API_TIMING_REQUEST_START), "1.9209999999999923");
-        assertEquals(headers.get(PLAYWRIGHT_API_TIMING_RESPONSE_START), "5");
+        assertEquals("1790324158581", headers.get(PLAYWRIGHT_API_TIMING_START_TIME));
+        assertEquals("1.9209999999999923", headers.get(PLAYWRIGHT_API_TIMING_REQUEST_START));
+        assertEquals("5", headers.get(PLAYWRIGHT_API_TIMING_RESPONSE_START));
         assertFalse(headers.containsKey(PLAYWRIGHT_API_TIMING_RESPONSE_END));
     }
 

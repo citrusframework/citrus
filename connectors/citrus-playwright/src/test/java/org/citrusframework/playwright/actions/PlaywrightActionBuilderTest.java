@@ -48,17 +48,17 @@ class PlaywrightActionBuilderTest {
     void shouldBuildEveryDelegatedMouseInputAndNavigationAction() {
         // Each of these registers itself with the enclosing builder, which is what makes
         // scoped blocks work; exercising them here keeps that wiring under test.
-        assertEquals(playwright().navigate().back().build().getClass(), NavigateAction.class);
-        assertEquals(playwright().doubleClick().locator("#row").build().getClass(), MouseAction.class);
-        assertEquals(playwright().rightClick().locator("#row").build().getClass(), MouseAction.class);
-        assertEquals(playwright().hover().locator("#row").build().getClass(), MouseAction.class);
-        assertEquals(playwright().focus().locator("#row").build().getClass(), MouseAction.class);
-        assertEquals(playwright().tap().locator("#row").build().getClass(), MouseAction.class);
-        assertEquals(playwright().enter().locator("#name").value("alice").build().getClass(), InputAction.class);
-        assertEquals(playwright().clear().locator("#name").build().getClass(), InputAction.class);
-        assertEquals(playwright().press().locator("#name").value("Enter").build().getClass(), InputAction.class);
-        assertEquals(playwright().check().locator("#agree").build().getClass(), InputAction.class);
-        assertEquals(playwright().uncheck().locator("#agree").build().getClass(), InputAction.class);
+        assertEquals(NavigateAction.class, playwright().navigate().back().build().getClass());
+        assertEquals(MouseAction.class, playwright().doubleClick().locator("#row").build().getClass());
+        assertEquals(MouseAction.class, playwright().rightClick().locator("#row").build().getClass());
+        assertEquals(MouseAction.class, playwright().hover().locator("#row").build().getClass());
+        assertEquals(MouseAction.class, playwright().focus().locator("#row").build().getClass());
+        assertEquals(MouseAction.class, playwright().tap().locator("#row").build().getClass());
+        assertEquals(InputAction.class, playwright().enter().locator("#name").value("alice").build().getClass());
+        assertEquals(InputAction.class, playwright().clear().locator("#name").build().getClass());
+        assertEquals(InputAction.class, playwright().press().locator("#name").value("Enter").build().getClass());
+        assertEquals(InputAction.class, playwright().check().locator("#agree").build().getClass());
+        assertEquals(InputAction.class, playwright().uncheck().locator("#agree").build().getClass());
     }
 
     @Test
@@ -66,86 +66,86 @@ class PlaywrightActionBuilderTest {
         PlaywrightActionBuilder builder = playwright();
         builder.start();
 
-        assertEquals(builder.getDelegate().getClass(), StartBrowserAction.Builder.class);
-        assertEquals(builder.build().getClass(), StartBrowserAction.class);
+        assertEquals(StartBrowserAction.Builder.class, builder.getDelegate().getClass());
+        assertEquals(StartBrowserAction.class, builder.build().getClass());
     }
 
     @Test
     void shouldBuildDelegatedActions() {
         PlaywrightTarget submit = PlaywrightTarget.the("submit button").locatedBy("#submit");
 
-        assertEquals(playwright().start().build().getClass(), StartBrowserAction.class);
-        assertEquals(playwright().stop().build().getClass(), StopBrowserAction.class);
-        assertEquals(playwright().open().url("http://localhost").build().getClass(), OpenAction.class);
-        assertEquals(playwright().click().locator("#save").build().getClass(), MouseAction.class);
-        assertEquals(playwright().click().locator(submit).build().getClass(), MouseAction.class);
-        assertEquals(playwright().fill().locator("#name").value("Citrus").build().getClass(), InputAction.class);
-        assertEquals(playwright().waitFor().locator("#ready").visible().build().getClass(), WaitForAction.class);
-        assertEquals(playwright().screenshot().path("target/s.png").build().getClass(), ScreenshotAction.class);
-        assertEquals(playwright().javascript().script("() => 1").build().getClass(), JavaScriptAction.class);
-        assertEquals(playwright().verify().locator("#message").visible().build().getClass(), VerifyAction.class);
-        assertEquals(playwright().extract().locator("#message").text().variable("message").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().context().newContext("admin").build().getClass(), ContextAction.class);
-        assertEquals(playwright().page().newPage("dashboard").build().getClass(), PageAction.class);
-        assertEquals(playwright().frame().frame("#frame").fill("#name").value("Citrus").build().getClass(), FrameAction.class);
-        assertEquals(playwright().dialog().accept().triggerScript("() => alert('ready')").build().getClass(), DialogAction.class);
-        assertEquals(playwright().download().click("#export").saveAs("target/export.txt").build().getClass(), DownloadAction.class);
-        assertEquals(playwright().cookies().read("session").variable("session").build().getClass(), CookieAction.class);
-        assertEquals(playwright().storage().local().set("theme", "dark").build().getClass(), StorageAction.class);
-        assertEquals(playwright().permissions().grant("geolocation").build().getClass(), PermissionAction.class);
-        assertEquals(playwright().emulate().viewport(1280, 720).build().getClass(), EmulationAction.class);
-        assertEquals(playwright().console().capture().build().getClass(), ConsoleAction.class);
-        assertEquals(playwright().network().capture().build().getClass(), NetworkAction.class);
-        assertEquals(playwright().network().route("**/api/**").abort().build().getClass(), NetworkAction.class);
-        assertEquals(playwright().network()
+        assertEquals(StartBrowserAction.class, playwright().start().build().getClass());
+        assertEquals(StopBrowserAction.class, playwright().stop().build().getClass());
+        assertEquals(OpenAction.class, playwright().open().url("http://localhost").build().getClass());
+        assertEquals(MouseAction.class, playwright().click().locator("#save").build().getClass());
+        assertEquals(MouseAction.class, playwright().click().locator(submit).build().getClass());
+        assertEquals(InputAction.class, playwright().fill().locator("#name").value("Citrus").build().getClass());
+        assertEquals(WaitForAction.class, playwright().waitFor().locator("#ready").visible().build().getClass());
+        assertEquals(ScreenshotAction.class, playwright().screenshot().path("target/s.png").build().getClass());
+        assertEquals(JavaScriptAction.class, playwright().javascript().script("() => 1").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().locator("#message").visible().build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().locator("#message").text().variable("message").build().getClass());
+        assertEquals(ContextAction.class, playwright().context().newContext("admin").build().getClass());
+        assertEquals(PageAction.class, playwright().page().newPage("dashboard").build().getClass());
+        assertEquals(FrameAction.class, playwright().frame().frame("#frame").fill("#name").value("Citrus").build().getClass());
+        assertEquals(DialogAction.class, playwright().dialog().accept().triggerScript("() => alert('ready')").build().getClass());
+        assertEquals(DownloadAction.class, playwright().download().click("#export").saveAs("target/export.txt").build().getClass());
+        assertEquals(CookieAction.class, playwright().cookies().read("session").variable("session").build().getClass());
+        assertEquals(StorageAction.class, playwright().storage().local().set("theme", "dark").build().getClass());
+        assertEquals(PermissionAction.class, playwright().permissions().grant("geolocation").build().getClass());
+        assertEquals(EmulationAction.class, playwright().emulate().viewport(1280, 720).build().getClass());
+        assertEquals(ConsoleAction.class, playwright().console().capture().build().getClass());
+        assertEquals(NetworkAction.class, playwright().network().capture().build().getClass());
+        assertEquals(NetworkAction.class, playwright().network().route("**/api/**").abort().build().getClass());
+        assertEquals(NetworkAction.class, playwright().network()
                 .route("**/api/**")
                 .fulfillJson("{\"ok\":true}")
                 .status(201)
                 .header("x-test", "true")
-                .build().getClass(), NetworkAction.class);
-        assertEquals(playwright().network()
+                .build().getClass());
+        assertEquals(NetworkAction.class, playwright().network()
                 .route("**/api/**")
                 .continueWithHeader("x-test", "true")
-                .build().getClass(), NetworkAction.class);
-        assertEquals(playwright().network().unroute("**/api/**").build().getClass(), NetworkAction.class);
-        assertEquals(playwright().network()
+                .build().getClass());
+        assertEquals(NetworkAction.class, playwright().network().unroute("**/api/**").build().getClass());
+        assertEquals(NetworkAction.class, playwright().network()
                 .waitForResponse()
                 .urlContains("/api")
                 .status(200)
                 .click(submit)
                 .includeBody()
                 .variable("response")
-                .build().getClass(), NetworkAction.class);
-        assertEquals(playwright().tracing().start().build().getClass(), TracingAction.class);
-        assertEquals(playwright().pdf().path("target/page.pdf").build().getClass(), PdfAction.class);
-        assertEquals(playwright().pageObject().type(TestPage.class).execute("open").build().getClass(), PageObjectAction.class);
+                .build().getClass());
+        assertEquals(TracingAction.class, playwright().tracing().start().build().getClass());
+        assertEquals(PdfAction.class, playwright().pdf().path("target/page.pdf").build().getClass());
+        assertEquals(PageObjectAction.class, playwright().pageObject().type(TestPage.class).execute("open").build().getClass());
 
-        assertEquals(playwright().extract().locator(".row").allTextContents().variable("rows").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().locator("#card").boundingBox().variable("box").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().locator("#card").cssClasses().variable("classes").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().locator("#card").cssValue("display").variable("display").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().locator("#main").ariaSnapshot().variable("snapshot").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().pageCount().variable("pages").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().frameContent("#frame").variable("frame").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().storageLocal("token").variable("token").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().cookie("session").variable("session").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().consoleMessages().variable("console").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().networkRecords().variable("network").build().getClass(), ExtractAction.class);
-        assertEquals(playwright().extract().downloadMetadata().variable("download").build().getClass(), ExtractAction.class);
+        assertEquals(ExtractAction.class, playwright().extract().locator(".row").allTextContents().variable("rows").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().locator("#card").boundingBox().variable("box").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().locator("#card").cssClasses().variable("classes").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().locator("#card").cssValue("display").variable("display").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().locator("#main").ariaSnapshot().variable("snapshot").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().pageCount().variable("pages").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().frameContent("#frame").variable("frame").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().storageLocal("token").variable("token").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().cookie("session").variable("session").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().consoleMessages().variable("console").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().networkRecords().variable("network").build().getClass());
+        assertEquals(ExtractAction.class, playwright().extract().downloadMetadata().variable("download").build().getClass());
 
-        assertEquals(playwright().verify().locator("#card").cssValue("display", "block").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().locator("#card").cssClass("primary").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().locator("#status").optionText("Ready").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().locator("#status").selectedOptionText("Ready").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().locator("#card").innerHtmlContains("Inner").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().locator("#main").ariaSnapshotContains("button").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().pageCount(1).build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().frameContentContains("#frame", "Ready").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().storageLocal("token", "value").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().cookie("session", "abc").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().consoleContains("ready").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().networkUrlContains("/api").build().getClass(), VerifyAction.class);
-        assertEquals(playwright().verify().downloadFilename("export.csv").build().getClass(), VerifyAction.class);
+        assertEquals(VerifyAction.class, playwright().verify().locator("#card").cssValue("display", "block").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().locator("#card").cssClass("primary").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().locator("#status").optionText("Ready").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().locator("#status").selectedOptionText("Ready").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().locator("#card").innerHtmlContains("Inner").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().locator("#main").ariaSnapshotContains("button").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().pageCount(1).build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().frameContentContains("#frame", "Ready").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().storageLocal("token", "value").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().cookie("session", "abc").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().consoleContains("ready").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().networkUrlContains("/api").build().getClass());
+        assertEquals(VerifyAction.class, playwright().verify().downloadFilename("export.csv").build().getClass());
     }
 
     @Test

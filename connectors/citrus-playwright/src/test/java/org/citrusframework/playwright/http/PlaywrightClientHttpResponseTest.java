@@ -44,15 +44,15 @@ class PlaywrightClientHttpResponseTest {
 
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
 
-        assertEquals(snapshot.getStatusCode().value(), 201);
-        assertEquals(snapshot.getStatusText(), "Created");
+        assertEquals(201, snapshot.getStatusCode().value());
+        assertEquals("Created", snapshot.getStatusText());
     }
 
     @Test
     void shouldAcceptNonStandardStatusCodes() throws IOException {
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response(599, "", ""));
 
-        assertEquals(snapshot.getStatusCode().value(), 599);
+        assertEquals(599, snapshot.getStatusCode().value());
     }
 
     @Test
@@ -65,8 +65,8 @@ class PlaywrightClientHttpResponseTest {
 
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
 
-        assertEquals(snapshot.getHeaders().get("Set-Cookie"), List.of("SID=abc; Path=/", "API_SID=xyz; Path=/"));
-        assertEquals(snapshot.getHeaders().getFirst("Content-Type"), "text/plain");
+        assertEquals(List.of("SID=abc; Path=/", "API_SID=xyz; Path=/"), snapshot.getHeaders().get("Set-Cookie"));
+        assertEquals("text/plain", snapshot.getHeaders().getFirst("Content-Type"));
     }
 
     @Test
@@ -81,8 +81,8 @@ class PlaywrightClientHttpResponseTest {
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
 
         assertNull(snapshot.getHeaders().getFirst("Content-Encoding"));
-        assertEquals(snapshot.getHeaders().getContentLength(), json.length());
-        assertEquals(snapshot.getHeaders().getFirst("Content-Type"), "application/json");
+        assertEquals(json.length(), snapshot.getHeaders().getContentLength());
+        assertEquals("application/json", snapshot.getHeaders().getFirst("Content-Type"));
     }
 
     @Test
@@ -95,8 +95,8 @@ class PlaywrightClientHttpResponseTest {
 
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
 
-        assertEquals(snapshot.getHeaders().getFirst("Content-Encoding"), "gzip");
-        assertEquals(snapshot.getHeaders().getContentLength(), 48213L);
+        assertEquals("gzip", snapshot.getHeaders().getFirst("Content-Encoding"));
+        assertEquals(48213L, snapshot.getHeaders().getContentLength());
     }
 
     @Test
@@ -111,7 +111,7 @@ class PlaywrightClientHttpResponseTest {
 
         assertNull(snapshot.getHeaders().getFirst("Content-Encoding"));
         assertNull(snapshot.getHeaders().getFirst("Transfer-Encoding"));
-        assertEquals(snapshot.getHeaders().getContentLength(), json.length());
+        assertEquals(json.length(), snapshot.getHeaders().getContentLength());
     }
 
     @Test
@@ -126,7 +126,7 @@ class PlaywrightClientHttpResponseTest {
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
 
         assertNull(snapshot.getHeaders().getFirst("Content-Encoding"));
-        assertEquals(snapshot.getHeaders().getContentLength(), json.length());
+        assertEquals(json.length(), snapshot.getHeaders().getContentLength());
     }
 
     @Test
@@ -139,8 +139,8 @@ class PlaywrightClientHttpResponseTest {
 
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
 
-        assertEquals(snapshot.getHeaders().getFirst("Content-Encoding"), "zstd");
-        assertEquals(snapshot.getHeaders().getContentLength(), 10L);
+        assertEquals("zstd", snapshot.getHeaders().getFirst("Content-Encoding"));
+        assertEquals(10L, snapshot.getHeaders().getContentLength());
     }
 
     @Test
@@ -159,7 +159,7 @@ class PlaywrightClientHttpResponseTest {
 
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
 
-        assertEquals(snapshot.getHeaders().getContentLength(), 900L);
+        assertEquals(900L, snapshot.getHeaders().getContentLength());
     }
 
     @Test
@@ -172,7 +172,7 @@ class PlaywrightClientHttpResponseTest {
 
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
 
-        assertEquals(snapshot.getHeaders().getFirst(PLAYWRIGHT_API_SERVER_IP), "127.0.0.1");
+        assertEquals("127.0.0.1", snapshot.getHeaders().getFirst(PLAYWRIGHT_API_SERVER_IP));
     }
 
     @Test
@@ -182,8 +182,8 @@ class PlaywrightClientHttpResponseTest {
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
 
         verify(response, times(1)).dispose();
-        assertEquals(new String(snapshot.getBody().readAllBytes(), StandardCharsets.UTF_8), "{\"user\":\"alice\"}");
-        assertEquals(new String(snapshot.getBody().readAllBytes(), StandardCharsets.UTF_8), "{\"user\":\"alice\"}");
+        assertEquals("{\"user\":\"alice\"}", new String(snapshot.getBody().readAllBytes(), StandardCharsets.UTF_8));
+        assertEquals("{\"user\":\"alice\"}", new String(snapshot.getBody().readAllBytes(), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -193,7 +193,7 @@ class PlaywrightClientHttpResponseTest {
 
         PlaywrightClientHttpResponse snapshot = PlaywrightClientHttpResponse.snapshot(response);
 
-        assertEquals(snapshot.getBody().readAllBytes().length, 0);
+        assertEquals(0, snapshot.getBody().readAllBytes().length);
     }
 
     @Test

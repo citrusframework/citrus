@@ -63,7 +63,7 @@ class SecretPatternRedactorTest {
 
     @Test
     void shouldDefaultToCitrusLogMaskKeywords() {
-        assertEquals(CitrusLogSettings.getLogMaskValue(), SecretPatternRedactor.MASK);
+        assertEquals(SecretPatternRedactor.MASK, CitrusLogSettings.getLogMaskValue());
 
         // secretKey is a citrus.logger default keyword but nothing else is hard-coded
         SecretPatternRedactor redactor = new SecretPatternRedactor();

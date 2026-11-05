@@ -118,9 +118,9 @@ class PlaywrightApiClientHttpClientTest extends AbstractUnitTest {
         ArgumentCaptor<String> url = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<RequestOptions> options = ArgumentCaptor.forClass(RequestOptions.class);
         verify(api).fetch(url.capture(), options.capture());
-        assertEquals(url.getValue(), "http://localhost:8080/api/orders?source=ui");
-        assertEquals(field(options.getValue(), "method"), "POST");
-        assertEquals(new String((byte[]) field(options.getValue(), "data"), StandardCharsets.UTF_8), "{\"item\":\"book\"}");
+        assertEquals("http://localhost:8080/api/orders?source=ui", url.getValue());
+        assertEquals("POST", field(options.getValue(), "method"));
+        assertEquals("{\"item\":\"book\"}", new String((byte[]) field(options.getValue(), "data"), StandardCharsets.UTF_8));
         @SuppressWarnings("unchecked")
         Map<String, String> headers = (Map<String, String>) field(options.getValue(), "headers");
         assertTrue(headers.get("Content-Type").startsWith("application/json"), String.valueOf(headers));
@@ -159,7 +159,7 @@ class PlaywrightApiClientHttpClientTest extends AbstractUnitTest {
 
         RequestOptions options = captureOptions();
         assertTrue(headers(options).get("Content-Type").startsWith(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
-        assertEquals(new String((byte[]) field(options, "data"), StandardCharsets.UTF_8), "name=citrus&item=book");
+        assertEquals("name=citrus&item=book", new String((byte[]) field(options, "data"), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -185,7 +185,7 @@ class PlaywrightApiClientHttpClientTest extends AbstractUnitTest {
         http().client(client).send().get("/api/me").build().execute(context);
         Message received = client.createConsumer().receive(context, 1000L);
 
-        assertEquals(received.getPayload(String.class), json);
+        assertEquals(json, received.getPayload(String.class));
     }
 
     @Test
@@ -234,7 +234,7 @@ class PlaywrightApiClientHttpClientTest extends AbstractUnitTest {
         Message received = client.createConsumer().receive(context, 1000L);
 
         // HttpClient joins repeated header values with a comma, exactly as for a plain client.
-        assertEquals(received.getHeader("Set-Cookie"), "SID=abc; Path=/,API_SID=xyz; Path=/");
+        assertEquals("SID=abc; Path=/,API_SID=xyz; Path=/", received.getHeader("Set-Cookie"));
     }
 
     @Test
@@ -252,8 +252,8 @@ class PlaywrightApiClientHttpClientTest extends AbstractUnitTest {
         HttpMessage received = (HttpMessage) cookieClient.createConsumer().receive(context, 1000L);
 
         // citrus-http's cookie converter does not keep header order.
-        assertEquals(received.getCookies().size(), 2);
-        assertEquals(received.getCookies().stream().map(Cookie::getName).collect(Collectors.toSet()), Set.of("SID", "API_SID"));
+        assertEquals(2, received.getCookies().size());
+        assertEquals(Set.of("SID", "API_SID"), received.getCookies().stream().map(Cookie::getName).collect(Collectors.toSet()));
     }
 
     @Test

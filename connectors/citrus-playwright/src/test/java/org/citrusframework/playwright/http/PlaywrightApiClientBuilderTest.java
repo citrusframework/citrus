@@ -57,7 +57,7 @@ class PlaywrightApiClientBuilderTest {
     void shouldDefaultTheRequestUrlToTheBrowserBaseUrl() {
         HttpClient client = new PlaywrightApiClientBuilder().browser(browser("http://localhost:8080")).build();
 
-        assertEquals(client.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080");
+        assertEquals("http://localhost:8080", client.getEndpointConfiguration().getRequestUrl());
     }
 
     @Test
@@ -67,7 +67,7 @@ class PlaywrightApiClientBuilderTest {
                 .requestUrl("http://api.localhost:9090")
                 .build();
 
-        assertEquals(client.getEndpointConfiguration().getRequestUrl(), "http://api.localhost:9090");
+        assertEquals("http://api.localhost:9090", client.getEndpointConfiguration().getRequestUrl());
     }
 
     @Test
@@ -131,16 +131,16 @@ class PlaywrightApiClientBuilderTest {
                 .build();
 
         PlaywrightClientHttpRequestFactory factory = factory(client);
-        assertEquals(factory.getContextAlias(), "admin");
-        assertEquals(factory.getTimeout(), 10_000.0);
-        assertEquals(factory.getMaxRedirects(), Integer.valueOf(0));
-        assertEquals(factory.getMaxRetries(), Integer.valueOf(2));
+        assertEquals("admin", factory.getContextAlias());
+        assertEquals(10_000.0, factory.getTimeout());
+        assertEquals(Integer.valueOf(0), factory.getMaxRedirects());
+        assertEquals(Integer.valueOf(2), factory.getMaxRetries());
         assertTrue(factory.isIgnoreHttpsErrors());
 
         HttpEndpointConfiguration configuration = client.getEndpointConfiguration();
-        assertEquals(configuration.getTimeout(), 10_000L);
+        assertEquals(10_000L, configuration.getTimeout());
         assertTrue(configuration.isHandleCookies());
-        assertEquals(configuration.getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
+        assertEquals(ErrorHandlingStrategy.THROWS_EXCEPTION, configuration.getErrorHandlingStrategy());
     }
 
     @Test
@@ -150,7 +150,7 @@ class PlaywrightApiClientBuilderTest {
                 .name("browserApi")
                 .build();
 
-        assertEquals(client.getName(), "browserApi");
+        assertEquals("browserApi", client.getName());
     }
 
     @Test
@@ -159,9 +159,9 @@ class PlaywrightApiClientBuilderTest {
         Optional<EndpointBuilder<?>> browser = EndpointBuilder.lookup("playwright.browser");
 
         assertTrue(apiClient.isPresent());
-        assertEquals(apiClient.get().getClass(), PlaywrightApiClientBuilder.class);
+        assertEquals(PlaywrightApiClientBuilder.class, apiClient.get().getClass());
         assertTrue(browser.isPresent());
-        assertEquals(browser.get().getClass(), PlaywrightEndpointBuilder.class);
+        assertEquals(PlaywrightEndpointBuilder.class, browser.get().getClass());
     }
 
     @Test
