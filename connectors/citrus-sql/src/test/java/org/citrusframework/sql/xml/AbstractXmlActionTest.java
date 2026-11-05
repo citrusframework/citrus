@@ -37,7 +37,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,7 +62,7 @@ public class AbstractXmlActionTest extends AbstractUnitTest {
         lenient().when(citrusContext.getReferenceResolver()).thenReturn(context.getReferenceResolver());
         lenient().when(citrusContext.getMessageValidatorRegistry()).thenReturn(context.getMessageValidatorRegistry());
         lenient().when(citrusContext.getTestContextFactory()).thenReturn(new StaticTestContextFactory(context));
-        doAnswer(invocationOnMock -> {
+        lenient().doAnswer(invocationOnMock -> {
             CitrusAnnotations.parseConfiguration(invocationOnMock.getArgument(0, Object.class), citrusContext);
             return null;
         }).when(citrusContext).parseConfiguration((Object) any());
