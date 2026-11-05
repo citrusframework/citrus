@@ -89,11 +89,19 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
             flowReport.getEntries()
                 .forEach(reportEntry -> {
                     if (TestFlowReporterSettings.isJsonReport()) {
-                        writeTestFlowReport(targetDirectory, "%s-flow%s.json".formatted(reportEntry.getName(), reportFileSuffix), MessagePayloadUtils.prettyPrintJson(reportEntry.toJson()));
+                        String jsonContent = MessagePayloadUtils.prettyPrintJson(reportEntry.toJson());
+                        writeTestFlowReport(targetDirectory, "%s-flow%s.json".formatted(reportEntry.getName(), reportFileSuffix), jsonContent);
+                        if (!reportFileSuffix.isEmpty()) {
+                            writeTestFlowReport(targetDirectory, "%s-flow.json".formatted(reportEntry.getName()), jsonContent);
+                        }
                     }
 
                     if (TestFlowReporterSettings.isYamlReport()) {
-                        writeTestFlowReport(targetDirectory, "%s-flow%s.yaml".formatted(reportEntry.getName(), reportFileSuffix), reportEntry.toYaml());
+                        String yamlContent = reportEntry.toYaml();
+                        writeTestFlowReport(targetDirectory, "%s-flow%s.yaml".formatted(reportEntry.getName(), reportFileSuffix), yamlContent);
+                        if (!reportFileSuffix.isEmpty()) {
+                            writeTestFlowReport(targetDirectory, "%s-flow.yaml".formatted(reportEntry.getName()), yamlContent);
+                        }
                     }
                 });
         }
