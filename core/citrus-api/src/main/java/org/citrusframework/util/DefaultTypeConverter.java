@@ -125,7 +125,7 @@ public class DefaultTypeConverter implements TypeConverter {
         if (InputStream.class.isAssignableFrom(type)) {
             switch (target) {
                 case InputStream inputStream -> {
-                    return (T) target;
+                    return (T) inputStream;
                 }
                 case byte[] bytes -> {
                     return (T) new ByteArrayInputStream(bytes);

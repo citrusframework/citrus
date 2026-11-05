@@ -153,8 +153,7 @@ public class WaitForTest extends AbstractYamlActionTest {
                 Assert.assertEquals(condition.getAction().getName(), actionCondition.getAction().getName());
                 Assert.assertEquals(((EchoAction) condition.getAction()).getMessage(), ((EchoAction) actionCondition.getAction()).getMessage());
             }
-            default -> {
-            }
+            default -> Assert.fail("Unexpected condition type: " + expectedCondition.getClass());
         }
     }
 }
