@@ -17,12 +17,12 @@
 package org.citrusframework.sql.config.xml;
 
 import org.citrusframework.sql.actions.ExecuteSQLQueryAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.citrusframework.validation.context.script.DefaultScriptValidationContext;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<ExecuteSQLQueryAction> {
 
@@ -33,96 +33,92 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
 
         // 1st action
         ExecuteSQLQueryAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 2);
-        Assert.assertEquals(action.getStatements().get(0), "select A, B, C from D where E='${id}'");
-        Assert.assertEquals(action.getStatements().get(1), "select COUNT(F) as cnt_f from G");
-        Assert.assertEquals(action.getControlResultSet().size(), 4);
-        Assert.assertEquals(action.getControlResultSet().get("A").size(), 1);
-        Assert.assertEquals(action.getControlResultSet().get("A").get(0), "a");
-        Assert.assertEquals(action.getControlResultSet().get("B").size(), 1);
-        Assert.assertEquals(action.getControlResultSet().get("B").get(0), "b");
-        Assert.assertEquals(action.getControlResultSet().get("C").size(), 1);
-        Assert.assertEquals(action.getControlResultSet().get("C").get(0), "NULL");
-        Assert.assertEquals(action.getControlResultSet().get("CNT_F").get(0), "${count}");
-        Assert.assertNull(action.getTransactionManager());
-        Assert.assertEquals(action.getTransactionTimeout(), "-1");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
-        Assert.assertNull(action.getScriptValidationContext());
-        Assert.assertEquals(action.getExtractVariables().size(), 0);
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertNull(action.getSqlResourcePath());
+        Assertions.assertEquals(2, action.getStatements().size());
+        Assertions.assertEquals("select A, B, C from D where E='${id}'", action.getStatements().get(0));
+        Assertions.assertEquals("select COUNT(F) as cnt_f from G", action.getStatements().get(1));
+        Assertions.assertEquals(4, action.getControlResultSet().size());
+        Assertions.assertEquals(1, action.getControlResultSet().get("A").size());
+        Assertions.assertEquals("a", action.getControlResultSet().get("A").get(0));
+        Assertions.assertEquals(1, action.getControlResultSet().get("B").size());
+        Assertions.assertEquals("b", action.getControlResultSet().get("B").get(0));
+        Assertions.assertEquals(1, action.getControlResultSet().get("C").size());
+        Assertions.assertEquals("NULL", action.getControlResultSet().get("C").get(0));
+        Assertions.assertEquals("${count}", action.getControlResultSet().get("CNT_F").get(0));
+        Assertions.assertNull(action.getTransactionManager());
+        Assertions.assertEquals("-1", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_DEFAULT", action.getTransactionIsolationLevel());
+        Assertions.assertNull(action.getScriptValidationContext());
+        Assertions.assertEquals(0, action.getExtractVariables().size());
 
         // 2nd action
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertNotNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getSqlResourcePath(), "classpath:org/citrusframework/sql/actions/test-sql-query-statements.sql");
-        Assert.assertEquals(action.getStatements().size(), 0);
-        Assert.assertEquals(action.getControlResultSet().size(), 1);
-        Assert.assertEquals(action.getControlResultSet().get("foo").get(0), "1");
-        Assert.assertNotNull(action.getTransactionManager());
-        Assert.assertEquals(action.getTransactionManager(), beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class));
-        Assert.assertEquals(action.getTransactionTimeout(), "5000");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
-        Assert.assertNull(action.getScriptValidationContext());
-        Assert.assertEquals(action.getExtractVariables().size(), 0);
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertNotNull(action.getSqlResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/sql/actions/test-sql-query-statements.sql", action.getSqlResourcePath());
+        Assertions.assertEquals(0, action.getStatements().size());
+        Assertions.assertEquals(1, action.getControlResultSet().size());
+        Assertions.assertEquals("1", action.getControlResultSet().get("foo").get(0));
+        Assertions.assertNotNull(action.getTransactionManager());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class), action.getTransactionManager());
+        Assertions.assertEquals("5000", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_READ_COMMITTED", action.getTransactionIsolationLevel());
+        Assertions.assertNull(action.getScriptValidationContext());
+        Assertions.assertEquals(0, action.getExtractVariables().size());
 
         // 3rd action
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 1);
-        Assert.assertEquals(action.getStatements().get(0), "select A as A_COLUMN, B as B_COLUMN from C");
-        Assert.assertEquals(action.getControlResultSet().size(), 2);
-        Assert.assertEquals(action.getControlResultSet().get("A_COLUMN").size(), 2);
-        Assert.assertEquals(action.getControlResultSet().get("A_COLUMN").get(0), "a");
-        Assert.assertEquals(action.getControlResultSet().get("A_COLUMN").get(1), "@ignore@");
-        Assert.assertEquals(action.getControlResultSet().get("B_COLUMN").size(), 2);
-        Assert.assertEquals(action.getControlResultSet().get("B_COLUMN").get(0), "b");
-        Assert.assertEquals(action.getControlResultSet().get("B_COLUMN").get(1), "NULL");
-        Assert.assertNull(action.getScriptValidationContext());
-        Assert.assertEquals(action.getExtractVariables().size(), 2);
-        Assert.assertEquals(action.getExtractVariables().get("A_COLUMN"), "a_values");
-        Assert.assertEquals(action.getExtractVariables().get("B_COLUMN"), "b_values");
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertNull(action.getSqlResourcePath());
+        Assertions.assertEquals(1, action.getStatements().size());
+        Assertions.assertEquals("select A as A_COLUMN, B as B_COLUMN from C", action.getStatements().get(0));
+        Assertions.assertEquals(2, action.getControlResultSet().size());
+        Assertions.assertEquals(2, action.getControlResultSet().get("A_COLUMN").size());
+        Assertions.assertEquals("a", action.getControlResultSet().get("A_COLUMN").get(0));
+        Assertions.assertEquals("@ignore@", action.getControlResultSet().get("A_COLUMN").get(1));
+        Assertions.assertEquals(2, action.getControlResultSet().get("B_COLUMN").size());
+        Assertions.assertEquals("b", action.getControlResultSet().get("B_COLUMN").get(0));
+        Assertions.assertEquals("NULL", action.getControlResultSet().get("B_COLUMN").get(1));
+        Assertions.assertNull(action.getScriptValidationContext());
+        Assertions.assertEquals(2, action.getExtractVariables().size());
+        Assertions.assertEquals("a_values", action.getExtractVariables().get("A_COLUMN"));
+        Assertions.assertEquals("b_values", action.getExtractVariables().get("B_COLUMN"));
 
         // 4th action
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 1);
-        Assert.assertEquals(action.getStatements().get(0), "select A as A_COLUMN, B as B_COLUMN from C");
-        Assert.assertEquals(action.getControlResultSet().size(), 0);
-        Assert.assertEquals(action.getExtractVariables().size(), 0);
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertNull(action.getSqlResourcePath());
+        Assertions.assertEquals(1, action.getStatements().size());
+        Assertions.assertEquals("select A as A_COLUMN, B as B_COLUMN from C", action.getStatements().get(0));
+        Assertions.assertEquals(0, action.getControlResultSet().size());
+        Assertions.assertEquals(0, action.getExtractVariables().size());
 
-        Assert.assertNotNull(action.getScriptValidationContext());
+        Assertions.assertNotNull(action.getScriptValidationContext());
         DefaultScriptValidationContext scriptValidationContext = (DefaultScriptValidationContext) action.getScriptValidationContext();
-        Assert.assertNull(scriptValidationContext.getValidationScriptResourcePath());
-        Assert.assertEquals(scriptValidationContext.getValidationScript().trim(), "assert rows.size() == 2");
+        Assertions.assertNull(scriptValidationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals("assert rows.size() == 2", scriptValidationContext.getValidationScript().trim());
 
         // 5th action
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 1);
-        Assert.assertEquals(action.getStatements().get(0), "select A as A_COLUMN, B as B_COLUMN from C");
-        Assert.assertEquals(action.getControlResultSet().size(), 0);
-        Assert.assertEquals(action.getExtractVariables().size(), 0);
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertNull(action.getSqlResourcePath());
+        Assertions.assertEquals(1, action.getStatements().size());
+        Assertions.assertEquals("select A as A_COLUMN, B as B_COLUMN from C", action.getStatements().get(0));
+        Assertions.assertEquals(0, action.getControlResultSet().size());
+        Assertions.assertEquals(0, action.getExtractVariables().size());
 
-        Assert.assertNotNull(action.getScriptValidationContext());
+        Assertions.assertNotNull(action.getScriptValidationContext());
         scriptValidationContext = (DefaultScriptValidationContext) action.getScriptValidationContext();
-        Assert.assertNotNull(scriptValidationContext.getValidationScriptResourcePath());
-        Assert.assertEquals(scriptValidationContext.getValidationScriptResourcePath(), "classpath:org/citrusframework/script/example.groovy");
-        Assert.assertEquals(scriptValidationContext.getValidationScript(), "");
+        Assertions.assertNotNull(scriptValidationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/script/example.groovy", scriptValidationContext.getValidationScriptResourcePath());
+        Assertions.assertEquals("", scriptValidationContext.getValidationScript());
     }
 
     @Test
     public void testMissingDataSourceBeanRef() {
-        try {
-            createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to invalid data source");
-        } catch (BeanDefinitionStoreException e) {
-            Assert.assertTrue(e.getCause().getMessage().contains(
-                    "Missing proper data source reference"));
-        }
+        BeanDefinitionStoreException e = Assertions.assertThrows(BeanDefinitionStoreException.class, () -> createApplicationContext("failed"));
+        Assertions.assertTrue(e.getCause().getMessage().contains(
+                "Missing proper data source reference"));
     }
 }

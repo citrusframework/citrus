@@ -24,10 +24,12 @@ import org.citrusframework.yaml.YamlTestLoader;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.mockito.Mockito;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PlsqlTest extends AbstractYamlActionTest {
 
     @BindToRegistry
@@ -36,7 +38,7 @@ public class PlsqlTest extends AbstractYamlActionTest {
     @BindToRegistry
     private final PlatformTransactionManager mockTransactionManager = Mockito.mock(PlatformTransactionManager.class);
 
-    @BeforeClass
+    @BeforeAll
     public void setupDataSource() {
         dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
         dataSource.setUrl("jdbc:hsqldb:mem:plsql-yaml-test");
@@ -50,34 +52,34 @@ public class PlsqlTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "PlsqlTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), ExecutePLSQLAction.class);
+        Assertions.assertEquals("PlsqlTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(ExecutePLSQLAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         ExecutePLSQLAction action = (ExecutePLSQLAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getName(), "plsql:dataSource");
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertNotNull(action.getSqlResourcePath());
-        Assert.assertNull(action.getScript());
-        Assert.assertTrue(action.isIgnoreErrors());
-        Assert.assertNull(action.getTransactionManager());
-        Assert.assertEquals(action.getTransactionTimeout(), "-1");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
+        Assertions.assertEquals("plsql:dataSource", action.getName());
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertEquals(dataSource, action.getDataSource());
+        Assertions.assertNotNull(action.getSqlResourcePath());
+        Assertions.assertNull(action.getScript());
+        Assertions.assertTrue(action.isIgnoreErrors());
+        Assertions.assertNull(action.getTransactionManager());
+        Assertions.assertEquals("-1", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_DEFAULT", action.getTransactionIsolationLevel());
 
         action = (ExecutePLSQLAction) result.getTestAction(actionIndex);
-        Assert.assertEquals(action.getName(), "plsql:dataSource");
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertTrue(!action.getScript().isEmpty());
-        Assert.assertTrue(action.isIgnoreErrors());
-        Assert.assertEquals(action.getTransactionManager(), mockTransactionManager);
-        Assert.assertEquals(action.getTransactionTimeout(), "5000");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
+        Assertions.assertEquals("plsql:dataSource", action.getName());
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertEquals(dataSource, action.getDataSource());
+        Assertions.assertNull(action.getSqlResourcePath());
+        Assertions.assertTrue(!action.getScript().isEmpty());
+        Assertions.assertTrue(action.isIgnoreErrors());
+        Assertions.assertEquals(mockTransactionManager, action.getTransactionManager());
+        Assertions.assertEquals("5000", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_READ_COMMITTED", action.getTransactionIsolationLevel());
     }
 }

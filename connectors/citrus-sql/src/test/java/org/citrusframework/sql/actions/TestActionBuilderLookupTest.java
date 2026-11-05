@@ -19,26 +19,26 @@ package org.citrusframework.sql.actions;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestActionBuilderLookupTest {
 
     @Test
     public void shouldLookupTestActions() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("sql"));
-        Assert.assertTrue(endpointBuilders.containsKey("query"));
-        Assert.assertTrue(endpointBuilders.containsKey("plsql"));
+        Assertions.assertTrue(endpointBuilders.containsKey("sql"));
+        Assertions.assertTrue(endpointBuilders.containsKey("query"));
+        Assertions.assertTrue(endpointBuilders.containsKey("plsql"));
     }
 
     @Test
     public void shouldLookupTestActionByName() {
-        Assert.assertTrue(TestActionBuilder.lookup("sql").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("sql").get().getClass(), ExecuteSQLAction.Builder.class);
-        Assert.assertTrue(TestActionBuilder.lookup("query").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("query").get().getClass(), ExecuteSQLQueryAction.Builder.class);
-        Assert.assertTrue(TestActionBuilder.lookup("plsql").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("plsql").get().getClass(), ExecutePLSQLAction.Builder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("sql").isPresent());
+        Assertions.assertEquals(ExecuteSQLAction.Builder.class, TestActionBuilder.lookup("sql").get().getClass());
+        Assertions.assertTrue(TestActionBuilder.lookup("query").isPresent());
+        Assertions.assertEquals(ExecuteSQLQueryAction.Builder.class, TestActionBuilder.lookup("query").get().getClass());
+        Assertions.assertTrue(TestActionBuilder.lookup("plsql").isPresent());
+        Assertions.assertEquals(ExecutePLSQLAction.Builder.class, TestActionBuilder.lookup("plsql").get().getClass());
     }
 }

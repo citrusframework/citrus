@@ -16,13 +16,7 @@
 
 package org.citrusframework.sql;
 
-import org.citrusframework.context.TestContextFactory;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 
-public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
-
-    @Override
-    protected TestContextFactory createTestContextFactory() {
-        return TestContextFactory.newInstance();
-    }
+public abstract class UnitTestSupport extends AbstractUnitTest {
 }

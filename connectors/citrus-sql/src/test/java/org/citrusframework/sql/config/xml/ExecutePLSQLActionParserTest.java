@@ -18,10 +18,10 @@ package org.citrusframework.sql.config.xml;
 
 import org.citrusframework.sql.actions.ExecutePLSQLAction;
 import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ExecutePLSQLActionParserTest extends AbstractActionParserTest<ExecutePLSQLAction> {
 
@@ -30,31 +30,31 @@ public class ExecutePLSQLActionParserTest extends AbstractActionParserTest<Execu
         assertActionCount(2);
 
         ExecutePLSQLAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getName(), "plsql:testDataSource");
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertNotNull(action.getSqlResourcePath());
-        Assert.assertNull(action.getScript());
-        Assert.assertFalse(action.isIgnoreErrors());
-        Assert.assertNull(action.getTransactionManager());
-        Assert.assertEquals(action.getTransactionTimeout(), "-1");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
+        Assertions.assertEquals("plsql:testDataSource", action.getName());
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertNotNull(action.getSqlResourcePath());
+        Assertions.assertNull(action.getScript());
+        Assertions.assertFalse(action.isIgnoreErrors());
+        Assertions.assertNull(action.getTransactionManager());
+        Assertions.assertEquals("-1", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_DEFAULT", action.getTransactionIsolationLevel());
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getName(), "plsql:testDataSource");
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertTrue(!action.getScript().isEmpty());
-        Assert.assertTrue(action.isIgnoreErrors());
-        Assert.assertEquals(action.getTransactionManager(), beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class));
-        Assert.assertEquals(action.getTransactionTimeout(), "5000");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
+        Assertions.assertEquals("plsql:testDataSource", action.getName());
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertNull(action.getSqlResourcePath());
+        Assertions.assertTrue(!action.getScript().isEmpty());
+        Assertions.assertTrue(action.isIgnoreErrors());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class), action.getTransactionManager());
+        Assertions.assertEquals("5000", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_READ_COMMITTED", action.getTransactionIsolationLevel());
     }
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("plsql"));
-        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("plsql").getClass(), ExecutePLSQLActionParser.class);
+        Assertions.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("plsql"));
+        Assertions.assertEquals(ExecutePLSQLActionParser.class, CitrusNamespaceParserRegistry.lookupBeanParser().get("plsql").getClass());
 
-        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("plsql").getClass(), ExecutePLSQLActionParser.class);
+        Assertions.assertEquals(ExecutePLSQLActionParser.class, CitrusNamespaceParserRegistry.getBeanParser("plsql").getClass());
     }
 }

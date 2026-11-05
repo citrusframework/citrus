@@ -31,9 +31,9 @@ import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.citrusframework.validation.script.sql.SqlResultSetValidator;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -61,7 +61,7 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
         return factory;
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         builder = new ExecuteSQLQueryAction.Builder()
                 .jdbcTemplate(jdbcTemplate);
@@ -77,7 +77,7 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
                 .validator(validator)
                 .build();
 
-        Assert.assertSame(action.getResultSetValidator(), validator);
+        Assertions.assertSame(validator, action.getResultSetValidator());
     }
 
     @Test
@@ -90,8 +90,8 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
                 .validator(validator)
                 .build();
 
-        Assert.assertSame(action.getResultSetValidator(), validator);
-        Assert.assertNull(action.getScriptValidationContext());
+        Assertions.assertSame(validator, action.getResultSetValidator());
+        Assertions.assertNull(action.getScriptValidationContext());
     }
 
     @Test
@@ -100,7 +100,7 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
                 .statements(Collections.singletonList(DB_STMT))
                 .build();
 
-        Assert.assertNull(action.getResultSetValidator());
+        Assertions.assertNull(action.getResultSetValidator());
     }
 
     @Test
@@ -123,9 +123,9 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
                 })
                 .build().execute(context);
 
-        Assert.assertTrue(called[0], "plain validator never ran without a script context (#619)");
-        Assert.assertEquals(captured.size(), 1);
-        Assert.assertEquals(captured.get(0).get("STATUS"), "in_progress");
+        Assertions.assertTrue(called[0], "plain validator never ran without a script context (#619)");
+        Assertions.assertEquals(1, captured.size());
+        Assertions.assertEquals("in_progress", captured.get(0).get("STATUS"));
     }
 
     @Test
@@ -144,8 +144,8 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
                 })
                 .build().execute(context);
 
-        Assert.assertTrue(called[0], "plain validator never ran on an empty result set");
-        Assert.assertTrue(captured.isEmpty());
+        Assertions.assertTrue(called[0], "plain validator never ran on an empty result set");
+        Assertions.assertTrue(captured.isEmpty());
     }
 
     @Test
@@ -157,18 +157,13 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
 
         when(jdbcTemplate.queryForList(DB_STMT)).thenReturn(Collections.singletonList(resultMap));
 
-        try {
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
             builder.statements(Collections.singletonList(DB_STMT))
                     .validator((resultSet, context) -> {
                         throw new ValidationException("plain validation failed");
                     })
-                    .build().execute(context);
-        } catch (ValidationException e) {
-            Assert.assertEquals(e.getMessage(), "plain validation failed");
-            return;
-        }
-
-        Assert.fail("Expected ValidationException from plain validator");
+                    .build().execute(context));
+        Assertions.assertEquals("plain validation failed", e.getMessage());
     }
 
     @Test
@@ -187,7 +182,7 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
                 .validator((resultSet, context) -> called[0] = true)
                 .build().execute(context);
 
-        Assert.assertTrue(called[0], "plain validator did not run alongside script validation");
+        Assertions.assertTrue(called[0], "plain validator did not run alongside script validation");
         verify(resultSetScriptValidator).validateSqlResultSet(any(List.class),
                 any(org.citrusframework.validation.context.script.ScriptValidationContext.class), eq(context));
     }
@@ -202,21 +197,16 @@ public class SqlResultSetValidatorTest extends UnitTestSupport {
 
         when(jdbcTemplate.queryForList(DB_STMT)).thenReturn(Collections.singletonList(resultMap));
 
-        try {
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
             builder.statements(Collections.singletonList(DB_STMT))
                     .validateScript("assert true", ScriptTypes.GROOVY)
                     .validator((resultSet, context) -> {
                         throw new ValidationException("java boom");
                     })
-                    .build().execute(context);
-        } catch (ValidationException e) {
-            Assert.assertEquals(e.getMessage(), "java boom");
-            verify(resultSetScriptValidator, Mockito.never()).validateSqlResultSet(any(List.class),
-                    any(org.citrusframework.validation.context.script.ScriptValidationContext.class),
-                    eq(context));
-            return;
-        }
-
-        Assert.fail("Expected the plain validator failure to surface first");
+                    .build().execute(context));
+        Assertions.assertEquals("java boom", e.getMessage());
+        verify(resultSetScriptValidator, Mockito.never()).validateSqlResultSet(any(List.class),
+                any(org.citrusframework.validation.context.script.ScriptValidationContext.class),
+                eq(context));
     }
 }

@@ -31,10 +31,12 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SqlTest extends AbstractXmlActionTest {
 
     @BindToRegistry
@@ -46,7 +48,7 @@ public class SqlTest extends AbstractXmlActionTest {
     @BindToRegistry
     private final SqlResultSetScriptValidator validator = Mockito.mock(SqlResultSetScriptValidator.class);
 
-    @BeforeClass
+    @BeforeAll
     public void setupDataSource() {
         dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
         dataSource.setUrl("jdbc:hsqldb:mem:sql-xml-test");
@@ -62,36 +64,36 @@ public class SqlTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "SqlTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), ExecuteSQLAction.class);
+        Assertions.assertEquals("SqlTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(ExecuteSQLAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         ExecuteSQLAction action = (ExecuteSQLAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 2);
-        Assert.assertEquals(action.getStatements().get(0), "insert into message values (100, 'Hello from Citrus!')");
-        Assert.assertEquals(action.getStatements().get(1), "update message set text='Hello' where id=100");
-        Assert.assertFalse(action.isIgnoreErrors());
-        Assert.assertNull(action.getTransactionManager());
-        Assert.assertEquals(action.getTransactionTimeout(), "-1");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertEquals(dataSource, action.getDataSource());
+        Assertions.assertNull(action.getSqlResourcePath());
+        Assertions.assertEquals(2, action.getStatements().size());
+        Assertions.assertEquals("insert into message values (100, 'Hello from Citrus!')", action.getStatements().get(0));
+        Assertions.assertEquals("update message set text='Hello' where id=100", action.getStatements().get(1));
+        Assertions.assertFalse(action.isIgnoreErrors());
+        Assertions.assertNull(action.getTransactionManager());
+        Assertions.assertEquals("-1", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_DEFAULT", action.getTransactionIsolationLevel());
 
         action = (ExecuteSQLAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertNotNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getSqlResourcePath(), "classpath:org/citrusframework/sql/test-statements.sql");
-        Assert.assertEquals(action.getStatements().size(), 0);
-        Assert.assertTrue(action.isIgnoreErrors());
-        Assert.assertEquals(action.getTransactionManager(), mockTransactionManager);
-        Assert.assertEquals(action.getTransactionTimeout(), "5000");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertEquals(dataSource, action.getDataSource());
+        Assertions.assertNotNull(action.getSqlResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/sql/test-statements.sql", action.getSqlResourcePath());
+        Assertions.assertEquals(0, action.getStatements().size());
+        Assertions.assertTrue(action.isIgnoreErrors());
+        Assertions.assertEquals(mockTransactionManager, action.getTransactionManager());
+        Assertions.assertEquals("5000", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_READ_COMMITTED", action.getTransactionIsolationLevel());
     }
 
     @Test
@@ -100,15 +102,15 @@ public class SqlTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getActionCount(), 1L);
+        Assertions.assertEquals(1L, result.getActionCount());
 
         ExecuteSQLAction action = (ExecuteSQLAction) result.getTestAction(0);
-        Assert.assertEquals(action.getStatements().size(), 1);
-        Assert.assertEquals(action.getStatements().get(0), "insert into message values (302, 'Inline')");
-        Assert.assertEquals(action.getSqlResourcePaths(), List.of("classpath:org/citrusframework/sql/test-statements-a.sql"));
+        Assertions.assertEquals(1, action.getStatements().size());
+        Assertions.assertEquals("insert into message values (302, 'Inline')", action.getStatements().get(0));
+        Assertions.assertEquals(List.of("classpath:org/citrusframework/sql/test-statements-a.sql"), action.getSqlResourcePaths());
 
         Integer count = new JdbcTemplate(dataSource).queryForObject("select count(*) from message where id in (300, 302)", Integer.class);
-        Assert.assertEquals(count, Integer.valueOf(2));
+        Assertions.assertEquals(Integer.valueOf(2), count);
     }
 
     @Test
@@ -117,92 +119,92 @@ public class SqlTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "SqlQueryTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 6L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), ExecuteSQLAction.class);
+        Assertions.assertEquals("SqlQueryTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(6L, result.getActionCount());
+        Assertions.assertEquals(ExecuteSQLAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         ExecuteSQLAction action = (ExecuteSQLAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 2);
-        Assert.assertEquals(action.getStatements().get(0), "insert into message values (1000, 'Hello from Citrus!')");
-        Assert.assertEquals(action.getStatements().get(1), "insert into message values (1001, 'Citrus rocks!')");
-        Assert.assertFalse(action.isIgnoreErrors());
-        Assert.assertNull(action.getTransactionManager());
-        Assert.assertEquals(action.getTransactionTimeout(), "-1");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertEquals(dataSource, action.getDataSource());
+        Assertions.assertNull(action.getSqlResourcePath());
+        Assertions.assertEquals(2, action.getStatements().size());
+        Assertions.assertEquals("insert into message values (1000, 'Hello from Citrus!')", action.getStatements().get(0));
+        Assertions.assertEquals("insert into message values (1001, 'Citrus rocks!')", action.getStatements().get(1));
+        Assertions.assertFalse(action.isIgnoreErrors());
+        Assertions.assertNull(action.getTransactionManager());
+        Assertions.assertEquals("-1", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_DEFAULT", action.getTransactionIsolationLevel());
 
         ExecuteSQLQueryAction queryAction = (ExecuteSQLQueryAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(queryAction.getDataSource());
-        Assert.assertEquals(queryAction.getDataSource(), dataSource);
-        Assert.assertNull(queryAction.getSqlResourcePath());
-        Assert.assertEquals(queryAction.getStatements().size(), 1);
-        Assert.assertEquals(queryAction.getStatements().get(0), "select text from message where id=1000");
-        Assert.assertEquals(queryAction.getControlResultSet().size(), 1L);
-        Assert.assertEquals(queryAction.getControlResultSet().get("text").size(), 1L);
-        Assert.assertEquals(queryAction.getControlResultSet().get("text").get(0), "Hello from Citrus!");
-        Assert.assertEquals(queryAction.getExtractVariables().size(), 1);
-        Assert.assertEquals(queryAction.getExtractVariables().get("text"), "greeting");
+        Assertions.assertNotNull(queryAction.getDataSource());
+        Assertions.assertEquals(dataSource, queryAction.getDataSource());
+        Assertions.assertNull(queryAction.getSqlResourcePath());
+        Assertions.assertEquals(1, queryAction.getStatements().size());
+        Assertions.assertEquals("select text from message where id=1000", queryAction.getStatements().get(0));
+        Assertions.assertEquals(1L, queryAction.getControlResultSet().size());
+        Assertions.assertEquals(1L, queryAction.getControlResultSet().get("text").size());
+        Assertions.assertEquals("Hello from Citrus!", queryAction.getControlResultSet().get("text").get(0));
+        Assertions.assertEquals(1, queryAction.getExtractVariables().size());
+        Assertions.assertEquals("greeting", queryAction.getExtractVariables().get("text"));
 
-        Assert.assertEquals(context.getVariable("greeting"), "Hello from Citrus!");
-
-        queryAction = (ExecuteSQLQueryAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(queryAction.getDataSource());
-        Assert.assertEquals(queryAction.getDataSource(), dataSource);
-        Assert.assertNull(queryAction.getSqlResourcePath());
-        Assert.assertEquals(queryAction.getStatements().size(), 1);
-        Assert.assertEquals(queryAction.getStatements().get(0), "select text from message where id>=1000");
-        Assert.assertEquals(queryAction.getControlResultSet().size(), 1L);
-        Assert.assertEquals(queryAction.getControlResultSet().get("text").size(), 2L);
-        Assert.assertEquals(queryAction.getControlResultSet().get("text").get(0), "Hello from Citrus!");
-        Assert.assertEquals(queryAction.getControlResultSet().get("text").get(1), "Citrus rocks!");
+        Assertions.assertEquals("Hello from Citrus!", context.getVariable("greeting"));
 
         queryAction = (ExecuteSQLQueryAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(queryAction.getDataSource());
-        Assert.assertEquals(queryAction.getDataSource(), dataSource);
-        Assert.assertNull(queryAction.getSqlResourcePath());
-        Assert.assertEquals(queryAction.getStatements().size(), 1);
-        Assert.assertEquals(queryAction.getStatements().get(0), "select * from message where id>=1000");
-        Assert.assertEquals(queryAction.getControlResultSet().size(), 2L);
-        Assert.assertEquals(queryAction.getControlResultSet().get("id").size(), 2L);
-        Assert.assertEquals(queryAction.getControlResultSet().get("id").get(0), "1000");
-        Assert.assertEquals(queryAction.getControlResultSet().get("id").get(1), "1001");
-        Assert.assertEquals(queryAction.getControlResultSet().get("text").size(), 2L);
-        Assert.assertEquals(queryAction.getControlResultSet().get("text").get(0), "Hello from Citrus!");
-        Assert.assertEquals(queryAction.getControlResultSet().get("text").get(1), "Citrus rocks!");
+        Assertions.assertNotNull(queryAction.getDataSource());
+        Assertions.assertEquals(dataSource, queryAction.getDataSource());
+        Assertions.assertNull(queryAction.getSqlResourcePath());
+        Assertions.assertEquals(1, queryAction.getStatements().size());
+        Assertions.assertEquals("select text from message where id>=1000", queryAction.getStatements().get(0));
+        Assertions.assertEquals(1L, queryAction.getControlResultSet().size());
+        Assertions.assertEquals(2L, queryAction.getControlResultSet().get("text").size());
+        Assertions.assertEquals("Hello from Citrus!", queryAction.getControlResultSet().get("text").get(0));
+        Assertions.assertEquals("Citrus rocks!", queryAction.getControlResultSet().get("text").get(1));
 
         queryAction = (ExecuteSQLQueryAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(queryAction.getDataSource());
-        Assert.assertEquals(queryAction.getDataSource(), dataSource);
-        Assert.assertNull(queryAction.getSqlResourcePath());
-        Assert.assertEquals(queryAction.getStatements().size(), 1);
-        Assert.assertEquals(queryAction.getStatements().get(0), "select * from message where id>=1000");
-        Assert.assertEquals(queryAction.getControlResultSet().size(), 0L);
-        Assert.assertNotNull(queryAction.getScriptValidationContext());
-        Assert.assertEquals(((DefaultScriptValidationContext) queryAction.getScriptValidationContext()).getValidationScript().trim(), "assert rows.size() == 2");
+        Assertions.assertNotNull(queryAction.getDataSource());
+        Assertions.assertEquals(dataSource, queryAction.getDataSource());
+        Assertions.assertNull(queryAction.getSqlResourcePath());
+        Assertions.assertEquals(1, queryAction.getStatements().size());
+        Assertions.assertEquals("select * from message where id>=1000", queryAction.getStatements().get(0));
+        Assertions.assertEquals(2L, queryAction.getControlResultSet().size());
+        Assertions.assertEquals(2L, queryAction.getControlResultSet().get("id").size());
+        Assertions.assertEquals("1000", queryAction.getControlResultSet().get("id").get(0));
+        Assertions.assertEquals("1001", queryAction.getControlResultSet().get("id").get(1));
+        Assertions.assertEquals(2L, queryAction.getControlResultSet().get("text").size());
+        Assertions.assertEquals("Hello from Citrus!", queryAction.getControlResultSet().get("text").get(0));
+        Assertions.assertEquals("Citrus rocks!", queryAction.getControlResultSet().get("text").get(1));
+
+        queryAction = (ExecuteSQLQueryAction) result.getTestAction(actionIndex++);
+        Assertions.assertNotNull(queryAction.getDataSource());
+        Assertions.assertEquals(dataSource, queryAction.getDataSource());
+        Assertions.assertNull(queryAction.getSqlResourcePath());
+        Assertions.assertEquals(1, queryAction.getStatements().size());
+        Assertions.assertEquals("select * from message where id>=1000", queryAction.getStatements().get(0));
+        Assertions.assertEquals(0L, queryAction.getControlResultSet().size());
+        Assertions.assertNotNull(queryAction.getScriptValidationContext());
+        Assertions.assertEquals("assert rows.size() == 2", ((DefaultScriptValidationContext) queryAction.getScriptValidationContext()).getValidationScript().trim());
 
         queryAction = (ExecuteSQLQueryAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(queryAction.getDataSource());
-        Assert.assertEquals(queryAction.getDataSource(), dataSource);
-        Assert.assertNull(queryAction.getSqlResourcePath());
-        Assert.assertEquals(queryAction.getStatements().size(), 1);
-        Assert.assertEquals(queryAction.getStatements().get(0), "select * from message where id>=1000");
-        Assert.assertEquals(queryAction.getControlResultSet().size(), 0L);
-        Assert.assertNotNull(queryAction.getScriptValidationContext());
-        Assert.assertEquals(((DefaultScriptValidationContext) queryAction.getScriptValidationContext()).getValidationScriptResourcePath(), "classpath:org/citrusframework/sql/validate.groovy");
+        Assertions.assertNotNull(queryAction.getDataSource());
+        Assertions.assertEquals(dataSource, queryAction.getDataSource());
+        Assertions.assertNull(queryAction.getSqlResourcePath());
+        Assertions.assertEquals(1, queryAction.getStatements().size());
+        Assertions.assertEquals("select * from message where id>=1000", queryAction.getStatements().get(0));
+        Assertions.assertEquals(0L, queryAction.getControlResultSet().size());
+        Assertions.assertNotNull(queryAction.getScriptValidationContext());
+        Assertions.assertEquals("classpath:org/citrusframework/sql/validate.groovy", ((DefaultScriptValidationContext) queryAction.getScriptValidationContext()).getValidationScriptResourcePath());
     }
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(XmlTestActionBuilder.lookup("sql").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("sql").get().getClass(), Sql.class);
+        Assertions.assertTrue(XmlTestActionBuilder.lookup("sql").isPresent());
+        Assertions.assertEquals(Sql.class, XmlTestActionBuilder.lookup("sql").get().getClass());
 
-        Assert.assertTrue(XmlTestActionBuilder.lookup("plsql").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("plsql").get().getClass(), Plsql.class);
+        Assertions.assertTrue(XmlTestActionBuilder.lookup("plsql").isPresent());
+        Assertions.assertEquals(Plsql.class, XmlTestActionBuilder.lookup("plsql").get().getClass());
     }
 }
