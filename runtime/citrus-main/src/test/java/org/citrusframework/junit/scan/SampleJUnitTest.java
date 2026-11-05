@@ -16,16 +16,16 @@
 
 package org.citrusframework.junit.scan;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.7.4
  */
-public class SampleJUnit4Test {
+public class SampleJUnitTest {
 
     @Test
     public void sampleTest() {
-        Assert.assertEquals(2, 1 + 1);
+        Assertions.assertEquals(2, 1 + 1);
     }
 }
