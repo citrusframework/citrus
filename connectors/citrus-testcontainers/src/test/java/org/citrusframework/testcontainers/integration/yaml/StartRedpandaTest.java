@@ -26,8 +26,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testcontainers.redpanda.StartRedpandaAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StartRedpandaTest extends AbstractYamlActionTest {
 
@@ -37,12 +37,12 @@ public class StartRedpandaTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "StartRedpandaTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), StartRedpandaAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("StartRedpandaTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(StartRedpandaAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         verifyContainer(context);
     }
@@ -52,8 +52,8 @@ public class StartRedpandaTest extends AbstractYamlActionTest {
             InspectContainerResponse response = dockerClient.inspectContainerCmd(context.getVariable("${CITRUS_TESTCONTAINERS_REDPANDA_CONTAINER_ID}"))
                     .exec();
 
-            Assert.assertNotNull(response.getState().getRunning());
-            Assert.assertTrue(response.getState().getRunning());
+            Assertions.assertNotNull(response.getState().getRunning());
+            Assertions.assertTrue(response.getState().getRunning());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to verify Docker container", e);
         }

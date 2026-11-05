@@ -123,8 +123,13 @@
     </dependency>
     <dependency>
       <groupId>org.citrusframework</groupId>
-      <artifactId>citrus-testng</artifactId>
+      <artifactId>citrus-junit-jupiter</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -157,6 +162,13 @@
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit-platform</artifactId>
+              <version>${maven.surefire.plugin.version}</version>
+            </dependency>
+          </dependencies>
           <configuration>
           <skip>${skipContainerTests}</skip>
         </configuration>
@@ -164,6 +176,13 @@
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit-platform</artifactId>
+              <version>${maven.failsafe.plugin.version}</version>
+            </dependency>
+          </dependencies>
           <configuration>
           <skip>${skipContainerTests}</skip>
         </configuration>

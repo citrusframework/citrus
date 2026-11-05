@@ -27,42 +27,44 @@ import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.model.Frame;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testcontainers.containers.GenericContainer;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StartGenericTestcontainersIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldStartContainer() {
+    public void shouldStartContainer(@CitrusResource TestCaseRunner runner) {
         GenericContainer<?> busyBox = new GenericContainer<>("busybox:latest")
                 .withCommand("echo", "Hello World");
 
-        given(doFinally().actions(testcontainers().stop()
+        runner.given(doFinally().actions(testcontainers().stop()
                 .containerName("my-container")));
 
-        when(testcontainers().start()
+        runner.when(testcontainers().start()
                 .container("my-container", busyBox));
 
-        then(this::verifyContainerLogs);
+        runner.then(this::verifyContainerLogs);
     }
 
     @Test
     @CitrusTest
-    public void shouldStartContainerImage() {
-        given(doFinally().actions(testcontainers().stop()
+    public void shouldStartContainerImage(@CitrusResource TestCaseRunner runner) {
+        runner.given(doFinally().actions(testcontainers().stop()
                 .containerName("my-container")));
 
-        when(testcontainers().start()
+        runner.when(testcontainers().start()
                 .image("busybox:latest")
                 .containerName("my-container")
                 .withCommand("echo", "Hello", "World"));
 
-        then(this::verifyContainerLogs);
+        runner.then(this::verifyContainerLogs);
     }
 
     private void verifyContainerLogs(TestContext context) {
@@ -77,7 +79,7 @@ public class StartGenericTestcontainersIT extends AbstractTestcontainersIT imple
                 }
             });
 
-            Assert.assertEquals(containerLogs.get(5000L, TimeUnit.MILLISECONDS), "Hello World");
+            Assertions.assertEquals("Hello World", containerLogs.get(5000L, TimeUnit.MILLISECONDS));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to verify Docker container", e);
         } catch (ExecutionException | InterruptedException | TimeoutException e) {

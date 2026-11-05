@@ -21,8 +21,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.testcontainers.actions.StopTestcontainersAction;
 import org.citrusframework.xml.XmlTestLoader;
 import org.testcontainers.containers.GenericContainer;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StopContainerTest extends AbstractXmlActionTest {
 
@@ -32,7 +32,7 @@ public class StopContainerTest extends AbstractXmlActionTest {
                 .withCommand("/bin/sh", "-ec", "while :; do echo 'Hello World'; sleep 5 ; done")) {
 
             busyBox.start();
-            Assert.assertTrue(busyBox.isRunning());
+            Assertions.assertTrue(busyBox.isRunning());
 
             context.getReferenceResolver().bind("my-container", busyBox);
 
@@ -40,14 +40,14 @@ public class StopContainerTest extends AbstractXmlActionTest {
 
             testLoader.load();
             TestCase result = testLoader.getTestCase();
-            Assert.assertEquals(result.getName(), "StopContainerTest");
-            Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-            Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-            Assert.assertEquals(result.getActionCount(), 1L);
-            Assert.assertEquals(result.getTestAction(0).getClass(), StopTestcontainersAction.class);
-            Assert.assertTrue(result.getTestResult().isSuccess());
+            Assertions.assertEquals("StopContainerTest", result.getName());
+            Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+            Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+            Assertions.assertEquals(1L, result.getActionCount());
+            Assertions.assertEquals(StopTestcontainersAction.class, result.getTestAction(0).getClass());
+            Assertions.assertTrue(result.getTestResult().isSuccess());
 
-            Assert.assertFalse(busyBox.isRunning());
+            Assertions.assertFalse(busyBox.isRunning());
         }
     }
 }
