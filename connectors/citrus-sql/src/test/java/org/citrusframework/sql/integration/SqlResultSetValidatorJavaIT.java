@@ -27,6 +27,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
@@ -99,12 +100,14 @@ public class SqlResultSetValidatorJavaIT implements TestActionSupport {
     public void failingPlainValidatorFailsTest(@CitrusResource TestCaseRunner runner) {
         seed(runner);
 
-        Exception e = Assertions.assertThrows(Exception.class, () ->
+        TestCaseFailedException e = Assertions.assertThrows(TestCaseFailedException.class, () ->
             runner.run(query().dataSource(dataSource)
                 .statement("select DESCRIPTION from ORDERS where ORDER_ID=1")
                 .validator((resultSet, context) -> {
                     throw new ValidationException("always fails");
                 })));
+        Assertions.assertInstanceOf(ValidationException.class, e.getCause(),
+                "expected a ValidationException as cause, got: " + e.getCause());
         Assertions.assertTrue(containsCause(e, "always fails"),
                 "expected the validator failure in the cause chain, got: " + e);
     }
