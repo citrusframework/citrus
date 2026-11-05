@@ -77,12 +77,12 @@ public class CitrusSettingsTest {
     }
 
     @Test
-    public void getCustomValidatorStrategy_shouldReturnExclusiveByDefault() {
+    public void getCustomValidatorStrategy_shouldReturnCombinedByDefault() {
         systemProperties.remove(CUSTOM_VALIDATOR_STRATEGY_PROPERTY);
         environmentVariables.remove(CUSTOM_VALIDATOR_STRATEGY_ENV);
 
         assertThat(CitrusSettings.getCustomValidatorStrategy())
-                .isEqualTo(EXCLUSIVE);
+                .isEqualTo(COMBINED);
     }
 
     public static String[] combinedPropertyValues() {
