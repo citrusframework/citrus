@@ -24,8 +24,10 @@ import org.citrusframework.util.DefaultTypeConverter;
 import org.citrusframework.util.TypeConversionUtils;
 import org.citrusframework.util.TypeConverter;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.api.Test;
 
+@Isolated("Changes global type converter state")
 public class TypeConverterTest {
 
     @Test
