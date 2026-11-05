@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import org.citrusframework.TestClass;
 import org.citrusframework.base.main.scan.ClassPathTestScanner;
+import org.citrusframework.junit.scan.SampleJUnit4Test;
 import org.citrusframework.junit.scan.SampleJUnitTest;
 import org.citrusframework.testng.scan.SampleTestNGTest;
 import org.junit.jupiter.api.Assertions;
@@ -48,6 +49,9 @@ public class ClassPathTestScannerTest {
 
     static Stream<Arguments> scannerDataProvider() {
         return Stream.of(
+                Arguments.of(".*Test", SampleJUnit4Test.class, org.junit.Test.class, 1L),
+                Arguments.of(".*Test", SampleTestNGTest.class, org.junit.Test.class, 0L),
+                Arguments.of(".*IT", SampleJUnit4Test.class, org.junit.Test.class, 0L),
                 Arguments.of(".*Test", SampleJUnitTest.class, org.junit.jupiter.api.Test.class, 1L),
                 Arguments.of(".*Test", SampleJUnitTest.class, org.testng.annotations.Test.class, 0L),
                 Arguments.of(".*Test", SampleTestNGTest.class, org.junit.jupiter.api.Test.class, 0L),
