@@ -24,6 +24,7 @@ import org.citrusframework.testcontainers.TestcontainersActor;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.shaded.com.github.dockerjava.core.DefaultDockerClientConfig;
 import org.testcontainers.shaded.com.github.dockerjava.core.DockerClientConfig;
@@ -35,10 +36,11 @@ import org.testcontainers.shaded.com.github.dockerjava.core.DockerClientImpl;
  */
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-public class AbstractTestcontainersIT {
+@Isolated("Testcontainers ITs share the Docker client and the Ryuk resource reaper")
+public abstract class AbstractTestcontainersIT {
 
-    /** Docker connection state, checks connectivity only once per test run */
-    private static boolean disabled = false;
+    /** Docker connection state, checked before each integration test class */
+    private static volatile boolean disabled = false;
 
     @BeforeAll
     static void checkDockerEnvironment() {
