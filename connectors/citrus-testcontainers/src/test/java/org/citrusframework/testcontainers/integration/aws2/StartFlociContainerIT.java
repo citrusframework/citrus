@@ -21,29 +21,31 @@ import java.io.IOException;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.FlociSettings;
 import org.citrusframework.testcontainers.integration.AbstractTestcontainersIT;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StartFlociContainerIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldStartContainer() {
-        given(doFinally().actions(testcontainers().stop()
+    public void shouldStartContainer(@CitrusResource TestCaseRunner runner) {
+        runner.given(doFinally().actions(testcontainers().stop()
                 .containerName(FlociSettings.CONTAINER_NAME_DEFAULT)));
 
-        when(testcontainers()
+        runner.when(testcontainers()
                 .floci()
                 .start()
                 .withService(AwsService.S3));
 
-        then(this::verifyContainer);
+        runner.then(this::verifyContainer);
     }
 
     private void verifyContainer(TestContext context) {
@@ -51,13 +53,13 @@ public class StartFlociContainerIT extends AbstractTestcontainersIT implements T
             InspectContainerResponse response = dockerClient.inspectContainerCmd(context.getVariable("${CITRUS_TESTCONTAINERS_FLOCI_CONTAINER_ID}"))
                     .exec();
 
-            Assert.assertNotNull(response.getState().getRunning());
-            Assert.assertTrue(response.getState().getRunning());
+            Assertions.assertNotNull(response.getState().getRunning());
+            Assertions.assertTrue(response.getState().getRunning());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to verify Docker container", e);
         }
 
         // verify auto created S3 client
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
     }
 }

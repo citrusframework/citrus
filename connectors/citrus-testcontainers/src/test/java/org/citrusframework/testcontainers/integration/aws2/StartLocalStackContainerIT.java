@@ -21,46 +21,48 @@ import java.io.IOException;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.api.actions.testcontainers.aws2.AwsService;
 import org.citrusframework.testcontainers.aws2.LocalStackSettings;
 import org.citrusframework.testcontainers.integration.AbstractTestcontainersIT;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StartLocalStackContainerIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldStartContainer() {
-        given(doFinally().actions(testcontainers().stop()
+    public void shouldStartContainer(@CitrusResource TestCaseRunner runner) {
+        runner.given(doFinally().actions(testcontainers().stop()
                 .containerName(LocalStackSettings.CONTAINER_NAME_DEFAULT)));
 
-        when(testcontainers()
+        runner.when(testcontainers()
                 .localstack()
                 .start()
                 .withService(AwsService.S3));
 
-        then(this::verifyContainer);
+        runner.then(this::verifyContainer);
     }
 
     @Test
     @CitrusTest
-    public void shouldOverwriteExistingClient() {
-        given(doFinally().actions(testcontainers().stop()
+    public void shouldOverwriteExistingClient(@CitrusResource TestCaseRunner runner) {
+        runner.given(doFinally().actions(testcontainers().stop()
                 .containerName(LocalStackSettings.CONTAINER_NAME_DEFAULT)));
 
-        given((TestContext context) ->
+        runner.given((TestContext context) ->
                 context.getReferenceResolver().bind("s3Client", "staleClient"));
 
-        when(testcontainers()
+        runner.when(testcontainers()
                 .localstack()
                 .start()
                 .withService(AwsService.S3));
 
-        then(this::verifyClientOverwritten);
+        runner.then(this::verifyClientOverwritten);
     }
 
     private void verifyContainer(TestContext context) {
@@ -68,20 +70,20 @@ public class StartLocalStackContainerIT extends AbstractTestcontainersIT impleme
             InspectContainerResponse response = dockerClient.inspectContainerCmd(context.getVariable("${CITRUS_TESTCONTAINERS_LOCALSTACK_CONTAINER_ID}"))
                     .exec();
 
-            Assert.assertNotNull(response.getState().getRunning());
-            Assert.assertTrue(response.getState().getRunning());
+            Assertions.assertNotNull(response.getState().getRunning());
+            Assertions.assertTrue(response.getState().getRunning());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to verify Docker container", e);
         }
 
         // verify auto created S3 client
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
     }
 
     private void verifyClientOverwritten(TestContext context) {
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
         Object client = context.getReferenceResolver().resolve("s3Client");
-        Assert.assertNotEquals(client, "staleClient",
+        Assertions.assertNotEquals("staleClient", client,
                 "Expected s3Client to be overwritten with a real client instance");
     }
 }

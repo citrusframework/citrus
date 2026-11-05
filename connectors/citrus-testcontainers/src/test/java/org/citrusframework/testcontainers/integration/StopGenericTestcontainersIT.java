@@ -17,29 +17,31 @@
 package org.citrusframework.testcontainers.integration;
 
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.testcontainers.containers.GenericContainer;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StopGenericTestcontainersIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldStopContainer() {
+    public void shouldStopContainer(@CitrusResource TestCaseRunner runner) {
         try (GenericContainer<?> busyBox = new GenericContainer("busybox:latest")
                 .withCommand("/bin/sh", "-ec", "while :; do echo 'Hello World'; sleep 5 ; done")) {
 
-            given(context -> {
+            runner.given(context -> {
                 busyBox.start();
-                Assert.assertTrue(busyBox.isRunning());
+                Assertions.assertTrue(busyBox.isRunning());
                 context.getReferenceResolver().bind("my-container", busyBox);
             });
 
-            when(testcontainers().stop()
+            runner.when(testcontainers().stop()
                     .containerName("my-container"));
 
-            then(context -> Assert.assertFalse(busyBox.isRunning()));
+            runner.then(context -> Assertions.assertFalse(busyBox.isRunning()));
         }
     }
 }

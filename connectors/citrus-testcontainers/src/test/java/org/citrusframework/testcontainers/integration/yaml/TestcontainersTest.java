@@ -18,14 +18,14 @@ package org.citrusframework.testcontainers.integration.yaml;
 
 import org.citrusframework.testcontainers.yaml.Testcontainers;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestcontainersTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(YamlTestActionBuilder.lookup("testcontainers").isPresent());
-        Assert.assertEquals(YamlTestActionBuilder.lookup("testcontainers").get().getClass(), Testcontainers.class);
+        Assertions.assertTrue(YamlTestActionBuilder.lookup("testcontainers").isPresent());
+        Assertions.assertEquals(Testcontainers.class, YamlTestActionBuilder.lookup("testcontainers").get().getClass());
     }
 }

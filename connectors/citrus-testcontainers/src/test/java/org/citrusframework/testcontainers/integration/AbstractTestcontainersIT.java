@@ -18,36 +18,36 @@ package org.citrusframework.testcontainers.integration;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.testcontainers.TestcontainersActor;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.shaded.com.github.dockerjava.core.DefaultDockerClientConfig;
 import org.testcontainers.shaded.com.github.dockerjava.core.DockerClientConfig;
 import org.testcontainers.shaded.com.github.dockerjava.core.DockerClientImpl;
-import org.testng.IHookCallBack;
-import org.testng.ITestResult;
-import org.testng.annotations.BeforeSuite;
 
 /**
  * Makes sure tests are executed only on hosts that meet prerequisites such as a Docker compatible engine installed and
  * clients able to connect.
  */
-public class AbstractTestcontainersIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class AbstractTestcontainersIT {
 
     /** Docker connection state, checks connectivity only once per test run */
     private static boolean disabled = false;
 
-    @BeforeSuite(alwaysRun = true)
-    public void checkDockerEnvironment() {
+    @BeforeAll
+    static void checkDockerEnvironment() {
         disabled = new TestcontainersActor().isDisabled();
     }
 
-    @Override
-    public void run(IHookCallBack callBack, ITestResult testResult) {
-        if (disabled) {
-            testResult.setStatus(ITestResult.SKIP);
-        } else {
-            super.run(callBack, testResult);
-        }
+    @BeforeEach
+    void assumeDockerAvailable() {
+        Assumptions.assumeTrue(!disabled, "Skipping test execution as no proper Docker environment is available on host system!");
     }
 
     protected DockerClient createDockerClient() {

@@ -32,8 +32,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StartContainerTest extends AbstractYamlActionTest {
 
@@ -43,12 +43,12 @@ public class StartContainerTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "StartContainerTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), StartTestcontainersAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("StartContainerTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(StartTestcontainersAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         verifyContainerLogs(context);
     }
@@ -65,7 +65,7 @@ public class StartContainerTest extends AbstractYamlActionTest {
                         }
                     });
 
-            Assert.assertEquals(containerLogs.get(5000L, TimeUnit.MILLISECONDS), "Hello World");
+            Assertions.assertEquals("Hello World", containerLogs.get(5000L, TimeUnit.MILLISECONDS));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to verify Docker container", e);
         } catch (ExecutionException | InterruptedException | TimeoutException e) {

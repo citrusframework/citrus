@@ -19,17 +19,17 @@ package org.citrusframework.testcontainers.actions;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestcontainersActionBuilderTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("testcontainers"));
+        Assertions.assertTrue(endpointBuilders.containsKey("testcontainers"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("testcontainers").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("testcontainers").get().getClass(), TestcontainersActionBuilder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("testcontainers").isPresent());
+        Assertions.assertEquals(TestcontainersActionBuilder.class, TestActionBuilder.lookup("testcontainers").get().getClass());
     }
 }

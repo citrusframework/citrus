@@ -18,9 +18,9 @@ package org.citrusframework.testcontainers;
 
 import static org.citrusframework.testcontainers.TestContainersSettings.TESTCONTAINERS_PROPERTY_PREFIX;
 
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 public class TestContainersSettingsTest {
 
@@ -28,7 +28,7 @@ public class TestContainersSettingsTest {
     private static final String REGISTRY_MIRROR_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "registry.mirror";
     private static final String REGISTRY_PROPERTY = TESTCONTAINERS_PROPERTY_PREFIX + "registry";
 
-    @AfterMethod
+    @AfterEach
     public void cleanup() {
         System.clearProperty(REGISTRY_MIRROR_ENABLED_PROPERTY);
         System.clearProperty(REGISTRY_MIRROR_PROPERTY);
@@ -37,28 +37,28 @@ public class TestContainersSettingsTest {
 
     @Test
     public void shouldReturnImageUnchangedWhenMirrorDisabled() {
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("postgres"), "postgres");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("apache/kafka"), "apache/kafka");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("quay.io/strimzi/kafka"), "quay.io/strimzi/kafka");
+        Assertions.assertEquals("postgres", TestContainersSettings.getDockerImageName("postgres"));
+        Assertions.assertEquals("apache/kafka", TestContainersSettings.getDockerImageName("apache/kafka"));
+        Assertions.assertEquals("quay.io/strimzi/kafka", TestContainersSettings.getDockerImageName("quay.io/strimzi/kafka"));
     }
 
     @Test
     public void shouldApplyMirrorToDockerHubImages() {
         System.setProperty(REGISTRY_MIRROR_ENABLED_PROPERTY, "true");
 
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("postgres"), "mirror.gcr.io/postgres");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("apache/kafka"), "mirror.gcr.io/apache/kafka");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("confluentinc/cp-kafka"), "mirror.gcr.io/confluentinc/cp-kafka");
+        Assertions.assertEquals("mirror.gcr.io/postgres", TestContainersSettings.getDockerImageName("postgres"));
+        Assertions.assertEquals("mirror.gcr.io/apache/kafka", TestContainersSettings.getDockerImageName("apache/kafka"));
+        Assertions.assertEquals("mirror.gcr.io/confluentinc/cp-kafka", TestContainersSettings.getDockerImageName("confluentinc/cp-kafka"));
     }
 
     @Test
     public void shouldNotApplyMirrorToAlternateRegistryImages() {
         System.setProperty(REGISTRY_MIRROR_ENABLED_PROPERTY, "true");
 
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("quay.io/strimzi/kafka"), "quay.io/strimzi/kafka");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("ghcr.io/some/image"), "ghcr.io/some/image");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("localhost:5000/myimage"), "localhost:5000/myimage");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("registry.example.com/image"), "registry.example.com/image");
+        Assertions.assertEquals("quay.io/strimzi/kafka", TestContainersSettings.getDockerImageName("quay.io/strimzi/kafka"));
+        Assertions.assertEquals("ghcr.io/some/image", TestContainersSettings.getDockerImageName("ghcr.io/some/image"));
+        Assertions.assertEquals("localhost:5000/myimage", TestContainersSettings.getDockerImageName("localhost:5000/myimage"));
+        Assertions.assertEquals("registry.example.com/image", TestContainersSettings.getDockerImageName("registry.example.com/image"));
     }
 
     @Test
@@ -66,17 +66,17 @@ public class TestContainersSettingsTest {
         System.setProperty(REGISTRY_MIRROR_ENABLED_PROPERTY, "true");
         System.setProperty(REGISTRY_MIRROR_PROPERTY, "my-mirror.example.com");
 
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("postgres"), "my-mirror.example.com/postgres");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("apache/kafka"), "my-mirror.example.com/apache/kafka");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("quay.io/strimzi/kafka"), "quay.io/strimzi/kafka");
+        Assertions.assertEquals("my-mirror.example.com/postgres", TestContainersSettings.getDockerImageName("postgres"));
+        Assertions.assertEquals("my-mirror.example.com/apache/kafka", TestContainersSettings.getDockerImageName("apache/kafka"));
+        Assertions.assertEquals("quay.io/strimzi/kafka", TestContainersSettings.getDockerImageName("quay.io/strimzi/kafka"));
     }
 
     @Test
     public void shouldApplyCustomRegistryToDockerHubImages() {
         System.setProperty(REGISTRY_PROPERTY, "my-registry.example.com");
 
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("postgres"), "my-registry.example.com/postgres");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("apache/kafka"), "my-registry.example.com/apache/kafka");
-        Assert.assertEquals(TestContainersSettings.getDockerImageName("quay.io/strimzi/kafka"), "quay.io/strimzi/kafka");
+        Assertions.assertEquals("my-registry.example.com/postgres", TestContainersSettings.getDockerImageName("postgres"));
+        Assertions.assertEquals("my-registry.example.com/apache/kafka", TestContainersSettings.getDockerImageName("apache/kafka"));
+        Assertions.assertEquals("quay.io/strimzi/kafka", TestContainersSettings.getDockerImageName("quay.io/strimzi/kafka"));
     }
 }
