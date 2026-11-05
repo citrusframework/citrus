@@ -99,7 +99,7 @@ public class DragAndDropActionTest extends AbstractUnitTest {
                 .build();
         action.execute(context);
     });
-        Assertions.assertTrue(e.getMessage().matches("Failed to find element 'By.id: target' on page"), e.getMessage());
+        Assertions.assertTrue(e.getMessage().matches("Failed to find element 'By\\.id: target' on page"), e.getMessage());
     }
 
     @Test

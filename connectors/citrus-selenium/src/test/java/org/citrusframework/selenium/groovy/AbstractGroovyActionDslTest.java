@@ -38,7 +38,7 @@ import static org.mockito.Mockito.lenient;
 
 
 @ExtendWith(MockitoExtension.class)
-@Isolated("XmlTestLoader uses a static non-thread-safe JAXB Unmarshaller cache")
+@Isolated("Shared static JAXB Unmarshaller cache is not thread-safe")
 public class AbstractGroovyActionDslTest extends AbstractUnitTest {
 
     protected Citrus citrus;

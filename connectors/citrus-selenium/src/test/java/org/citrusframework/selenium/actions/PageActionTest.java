@@ -179,11 +179,6 @@ public class PageActionTest extends AbstractUnitTest {
                 .argument("Citrus")
                 .build();
         action.execute(context);
-
-        verify(inputElement).clear();
-        verify(inputElement).sendKeys("Citrus");
-
-        verify(formElement).submit();
     });
         Assertions.assertTrue(e.getMessage().matches("Unsupported method signature for page action.*"), e.getMessage());
     }
