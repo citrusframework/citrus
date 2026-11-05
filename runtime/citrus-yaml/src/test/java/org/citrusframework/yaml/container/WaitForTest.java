@@ -126,28 +126,34 @@ public class WaitForTest extends AbstractYamlActionTest {
             Assert.assertEquals(action.getCondition().getClass(), expectedCondition.getClass());
         }
 
-        if (expectedCondition instanceof HttpCondition) {
-            HttpCondition condition = (HttpCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getName(), expectedCondition.getName());
-            Assert.assertEquals(condition.getUrl(), ((HttpCondition) expectedCondition).getUrl());
-            Assert.assertEquals(condition.getTimeout(), ((HttpCondition) expectedCondition).getTimeout());
-            Assert.assertEquals(condition.getMethod(), ((HttpCondition) expectedCondition).getMethod());
-        } else if (expectedCondition instanceof FileCondition) {
-            FileCondition condition = (FileCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getName(), expectedCondition.getName());
-            Assert.assertEquals(condition.getFilePath(), ((FileCondition) expectedCondition).getFilePath());
-        } else if (expectedCondition instanceof MessageCondition) {
-            MessageCondition condition = (MessageCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getName(), expectedCondition.getName());
-            Assert.assertEquals(condition.getMessageName(), ((MessageCondition) expectedCondition).getMessageName());
-        } else if (expectedCondition instanceof ActionCondition) {
-            ActionCondition condition = (ActionCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getAction().getName(), ((ActionCondition) expectedCondition).getAction().getName());
-            Assert.assertEquals(((EchoAction) condition.getAction()).getMessage(), ((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage());
+        switch (expectedCondition) {
+            case HttpCondition httpCondition -> {
+                HttpCondition condition = (HttpCondition) action.getCondition();
+                Assert.assertNotNull(condition);
+                Assert.assertEquals(condition.getName(), expectedCondition.getName());
+                Assert.assertEquals(condition.getUrl(), httpCondition.getUrl());
+                Assert.assertEquals(condition.getTimeout(), httpCondition.getTimeout());
+                Assert.assertEquals(condition.getMethod(), httpCondition.getMethod());
+            }
+            case FileCondition fileCondition -> {
+                FileCondition condition = (FileCondition) action.getCondition();
+                Assert.assertNotNull(condition);
+                Assert.assertEquals(condition.getName(), expectedCondition.getName());
+                Assert.assertEquals(condition.getFilePath(), fileCondition.getFilePath());
+            }
+            case MessageCondition messageCondition -> {
+                MessageCondition condition = (MessageCondition) action.getCondition();
+                Assert.assertNotNull(condition);
+                Assert.assertEquals(condition.getName(), expectedCondition.getName());
+                Assert.assertEquals(condition.getMessageName(), messageCondition.getMessageName());
+            }
+            case ActionCondition actionCondition -> {
+                ActionCondition condition = (ActionCondition) action.getCondition();
+                Assert.assertNotNull(condition);
+                Assert.assertEquals(condition.getAction().getName(), actionCondition.getAction().getName());
+                Assert.assertEquals(((EchoAction) condition.getAction()).getMessage(), ((EchoAction) actionCondition.getAction()).getMessage());
+            }
+            default -> Assert.fail("Unexpected condition type: " + expectedCondition.getClass());
         }
     }
 }

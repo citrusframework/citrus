@@ -80,24 +80,24 @@ public class JmsMessageConverter implements MessageConverter<jakarta.jms.Message
             MessageHeaders headers = endpointConfiguration.getHeaderMapper().toHeaders(jmsMessage);
             Object payload;
 
-            if (jmsMessage instanceof TextMessage) {
-                payload = ((TextMessage) jmsMessage).getText();
-            } else if (jmsMessage instanceof BytesMessage) {
-                byte[] bytes = new byte[(int) ((BytesMessage) jmsMessage).getBodyLength()];
-                ((BytesMessage) jmsMessage).readBytes(bytes);
-                payload = bytes;
-            } else if (jmsMessage instanceof MapMessage) {
-                Map<String, Object> map = new HashMap<>();
-                Enumeration en = ((MapMessage) jmsMessage).getMapNames();
-                while (en.hasMoreElements()) {
-                    String key = (String) en.nextElement();
-                    map.put(key, ((MapMessage) jmsMessage).getObject(key));
+            switch (jmsMessage) {
+                case TextMessage textMessage -> payload = textMessage.getText();
+                case BytesMessage bytesMessage -> {
+                    byte[] bytes = new byte[(int) bytesMessage.getBodyLength()];
+                    bytesMessage.readBytes(bytes);
+                    payload = bytes;
                 }
-                payload = map;
-            } else if (jmsMessage instanceof ObjectMessage) {
-                payload = ((ObjectMessage) jmsMessage).getObject();
-            } else {
-                payload = jmsMessage;
+                case MapMessage mapMessage -> {
+                    Map<String, Object> map = new HashMap<>();
+                    Enumeration en = mapMessage.getMapNames();
+                    while (en.hasMoreElements()) {
+                        String key = (String) en.nextElement();
+                        map.put(key, mapMessage.getObject(key));
+                    }
+                    payload = map;
+                }
+                case ObjectMessage objectMessage -> payload = objectMessage.getObject();
+                default -> payload = jmsMessage;
             }
 
             if (payload instanceof Message nestedMessage) {

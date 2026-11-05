@@ -355,17 +355,15 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @return {@link Source} representation of the payload
      */
     private Source getPayloadAsSource(Object replyPayload) {
-        if (replyPayload instanceof Source) {
-            return (Source) replyPayload;
-        } else if (replyPayload instanceof Document) {
-            return new DOMSource((Document) replyPayload);
-        } else if (replyPayload instanceof String) {
-            return new StringSource((String) replyPayload);
-        } else {
-            throw new CitrusRuntimeException("Unknown type for reply message payload (" + replyPayload.getClass().getName() + ") " +
-                    "Supported types are " + "'" + Source.class.getName() + "', " + "'" + Document.class.getName() + "'" +
-                    ", or '" + String.class.getName() + "'");
-        }
+        return switch (replyPayload) {
+            case Source source -> source;
+            case Document document -> new DOMSource(document);
+            case String s -> new StringSource(s);
+            default ->
+                    throw new CitrusRuntimeException("Unknown type for reply message payload (" + replyPayload.getClass().getName() + ") " +
+                            "Supported types are " + "'" + Source.class.getName() + "', " + "'" + Document.class.getName() + "'" +
+                            ", or '" + String.class.getName() + "'");
+        };
     }
 
     /**

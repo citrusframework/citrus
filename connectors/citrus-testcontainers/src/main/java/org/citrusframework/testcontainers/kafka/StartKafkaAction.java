@@ -60,16 +60,12 @@ public class StartKafkaAction<T extends GenericContainer<?>> extends StartTestco
     }
 
     private void createTopics(T container, TestContext context) {
-        String bootstrapServers;
-        if (container instanceof KafkaContainer kafkaContainer) {
-            bootstrapServers = kafkaContainer.getBootstrapServers();
-        } else if (container instanceof ConfluentKafkaContainer confluentContainer) {
-            bootstrapServers = confluentContainer.getBootstrapServers();
-        } else if (container instanceof StrimziContainer strimziContainer) {
-            bootstrapServers = strimziContainer.getBootstrapServers();
-        } else {
-            bootstrapServers = "localhost:%d".formatted(container.getMappedPort(KafkaSettings.KAFKA_PORT));
-        }
+        String bootstrapServers = switch (container) {
+            case KafkaContainer kafkaContainer -> kafkaContainer.getBootstrapServers();
+            case ConfluentKafkaContainer confluentContainer -> confluentContainer.getBootstrapServers();
+            case StrimziContainer strimziContainer -> strimziContainer.getBootstrapServers();
+            default -> "localhost:%d".formatted(container.getMappedPort(KafkaSettings.KAFKA_PORT));
+        };
 
         try (Admin adminClient = Admin.create(Collections.singletonMap(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers))) {
             Set<NewTopic> newTopics = new HashSet<>();
