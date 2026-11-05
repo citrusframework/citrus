@@ -18,25 +18,32 @@ package org.citrusframework.groovy.integration.dsl;
 
 import java.io.IOException;
 
+import org.citrusframework.Citrus;
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.groovy.dsl.actions.ActionsScript;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.FileUtils;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 
-public class ActionsScriptIT extends TestNGCitrusSpringSupport {
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class ActionsScriptIT {
+
+    @CitrusFramework
+    private Citrus citrus;
 
     @Test
-    @Parameters({"runner", "context"})
     @CitrusTest
-    public void shouldRunActionsScript(@Optional @CitrusResource TestActionRunner runner,
-                                       @Optional @CitrusResource TestContext context) throws IOException {
+    public void shouldRunActionsScript(@CitrusResource TestActionRunner runner,
+                                       @CitrusResource TestContext context) throws IOException {
         ActionsScript script = new ActionsScript(FileUtils.readToString(Resources.fromClasspath("org/citrusframework/groovy/dsl/actions.groovy")), citrus);
         script.execute(runner, context);
     }

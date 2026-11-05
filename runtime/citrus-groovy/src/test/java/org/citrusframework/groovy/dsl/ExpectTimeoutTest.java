@@ -21,8 +21,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.ReceiveTimeoutAction;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.groovy.GroovyTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.3
@@ -35,34 +35,34 @@ public class ExpectTimeoutTest extends AbstractGroovyActionDslTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "ExpectTimeoutTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), ReceiveTimeoutAction.class);
+        Assertions.assertEquals("ExpectTimeoutTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(4L, result.getActionCount());
+        Assertions.assertEquals(ReceiveTimeoutAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         ReceiveTimeoutAction action = (ReceiveTimeoutAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getTimeout(), 1000L);
-        Assert.assertNull(action.getEndpointUri());
-        Assert.assertEquals(action.getEndpoint(), context.getReferenceResolver().resolve("helloEndpoint", DirectEndpoint.class));
-        Assert.assertNull(action.getMessageSelector());
+        Assertions.assertEquals(1000L, action.getTimeout());
+        Assertions.assertNull(action.getEndpointUri());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("helloEndpoint", DirectEndpoint.class), action.getEndpoint());
+        Assertions.assertNull(action.getMessageSelector());
 
         action = (ReceiveTimeoutAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
+        Assertions.assertEquals("direct:helloQueue", action.getEndpointUri());
 
         action = (ReceiveTimeoutAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getTimeout(), 500L);
-        Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
-        Assert.assertEquals(action.getMessageSelector(), "operation='Test'");
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 0L);
+        Assertions.assertEquals(500L, action.getTimeout());
+        Assertions.assertEquals("helloEndpoint", action.getEndpointUri());
+        Assertions.assertEquals("operation='Test'", action.getMessageSelector());
+        Assertions.assertEquals(0L, action.getMessageSelectorMap().size());
 
         action = (ReceiveTimeoutAction) result.getTestAction(actionIndex);
-        Assert.assertEquals(action.getTimeout(), 500L);
-        Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
-        Assert.assertNull(action.getMessageSelector());
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 1L);
-        Assert.assertEquals(action.getMessageSelectorMap().get("operation"), "Test");
+        Assertions.assertEquals(500L, action.getTimeout());
+        Assertions.assertEquals("helloEndpoint", action.getEndpointUri());
+        Assertions.assertNull(action.getMessageSelector());
+        Assertions.assertEquals(1L, action.getMessageSelectorMap().size());
+        Assertions.assertEquals("Test", action.getMessageSelectorMap().get("operation"));
     }
 }

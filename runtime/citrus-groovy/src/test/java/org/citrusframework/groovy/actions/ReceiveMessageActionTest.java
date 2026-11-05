@@ -29,19 +29,21 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.groovy.message.builder.GroovyFileResourcePayloadBuilder;
 import org.citrusframework.groovy.message.builder.GroovyScriptPayloadBuilder;
 import org.citrusframework.messaging.SelectiveConsumer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.ValidationContext;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.Mockito.*;
 
-public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class ReceiveMessageActionTest extends AbstractUnitTest {
 
     @Mock
     private Endpoint endpoint;
@@ -57,7 +59,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.openMocks(this);
         when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
 
         TestContextFactory factory = super.createTestContextFactory();

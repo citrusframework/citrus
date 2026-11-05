@@ -16,18 +16,24 @@
 
 package org.citrusframework.groovy.integration.actions;
 
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class CreateVariablesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class CreateVariablesJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void createVariablesAction() {
-        variable("myVariable", "12345");
+    public void createVariablesAction(@CitrusResource TestCaseRunner runner) {
+        runner.variable("myVariable", "12345");
 
-        run(script().groovy("assert ${myVariable} == 12345"));
+        runner.run(script().groovy("assert ${myVariable} == 12345"));
     }
 }

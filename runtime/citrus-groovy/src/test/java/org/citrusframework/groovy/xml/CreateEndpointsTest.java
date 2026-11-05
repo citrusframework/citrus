@@ -20,8 +20,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.groovy.actions.CreateEndpointsAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateEndpointsTest extends AbstractXmlActionTest {
 
@@ -31,21 +31,21 @@ public class CreateEndpointsTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateEndpointsTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateEndpointsAction.class);
+        Assertions.assertEquals("CreateEndpointsTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CreateEndpointsAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         CreateEndpointsAction action = (CreateEndpointsAction) result.getTestAction(actionIndex++);
-        Assert.assertNull(action.getScriptResourcePath());
-        Assert.assertNotNull(action.getScript().trim());
+        Assertions.assertNull(action.getScriptResourcePath());
+        Assertions.assertNotNull(action.getScript().trim());
 
         action = (CreateEndpointsAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getScriptResourcePath());
-        Assert.assertEquals(action.getScriptResourcePath(), "classpath:org/citrusframework/groovy/dsl/endpoints.groovy");
-        Assert.assertNull(action.getScript());
+        Assertions.assertNotNull(action.getScriptResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/groovy/dsl/endpoints.groovy", action.getScriptResourcePath());
+        Assertions.assertNull(action.getScript());
     }
 }

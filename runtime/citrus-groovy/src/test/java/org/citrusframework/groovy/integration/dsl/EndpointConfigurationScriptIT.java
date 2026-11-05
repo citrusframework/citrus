@@ -18,7 +18,9 @@ package org.citrusframework.groovy.integration.dsl;
 
 import java.io.IOException;
 
+import org.citrusframework.Citrus;
 import org.citrusframework.TestActionRunner;
+import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
@@ -27,55 +29,59 @@ import org.citrusframework.groovy.dsl.configuration.endpoints.EndpointConfigurat
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
 
-public class EndpointConfigurationScriptIT extends TestNGCitrusSpringSupport {
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class EndpointConfigurationScriptIT {
+
+    @CitrusFramework
+    private Citrus citrus;
 
     @Test
-    @Parameters({"runner", "context"})
     @CitrusTest
-    public void shouldLoadEndpointsFromScript(@Optional @CitrusResource TestActionRunner runner,
-                                       @Optional @CitrusResource TestContext context) throws IOException {
+    public void shouldLoadEndpointsFromScript(@CitrusResource TestActionRunner runner,
+                                       @CitrusResource TestContext context) throws IOException {
         context.getReferenceResolver().bind("say-hello", new DefaultMessageQueue("say-hello"));
         context.getReferenceResolver().bind("say-goodbye", new DefaultMessageQueue("say-goodbye"));
 
         EndpointConfigurationScript script = new EndpointConfigurationScript(FileUtils.readToString(Resources.fromClasspath("org/citrusframework/groovy/dsl/endpoints.groovy")), citrus);
         script.execute(context);
 
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("say-hello", MessageQueue.class));
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("say-goodbye", MessageQueue.class));
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("hello", DirectEndpoint.class));
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("goodbye", DirectEndpoint.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("say-hello", MessageQueue.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("say-goodbye", MessageQueue.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("hello", DirectEndpoint.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("goodbye", DirectEndpoint.class));
 
         DirectEndpoint hello = context.getReferenceResolver().resolve("hello", DirectEndpoint.class);
-        Assert.assertEquals(hello.getName(), "hello");
-        Assert.assertEquals(hello.getEndpointConfiguration().getQueueName(), "say-hello");
+        Assertions.assertEquals("hello", hello.getName());
+        Assertions.assertEquals("say-hello", hello.getEndpointConfiguration().getQueueName());
 
         DirectEndpoint goodbye = context.getReferenceResolver().resolve("goodbye", DirectEndpoint.class);
-        Assert.assertEquals(goodbye.getName(), "goodbye");
-        Assert.assertEquals(goodbye.getEndpointConfiguration().getQueueName(), "say-goodbye");
+        Assertions.assertEquals("goodbye", goodbye.getName());
+        Assertions.assertEquals("say-goodbye", goodbye.getEndpointConfiguration().getQueueName());
     }
 
     @Test
-    @Parameters({"runner", "context"})
     @CitrusTest
-    public void shouldLoadEndpointFromScript(@Optional @CitrusResource TestActionRunner runner,
-                                              @Optional @CitrusResource TestContext context) throws IOException {
+    public void shouldLoadEndpointFromScript(@CitrusResource TestActionRunner runner,
+                                              @CitrusResource TestContext context) throws IOException {
         context.getReferenceResolver().bind("say-hello", new DefaultMessageQueue("say-hello"));
 
         EndpointConfigurationScript script = new EndpointConfigurationScript(FileUtils.readToString(Resources.fromClasspath("org/citrusframework/groovy/dsl/endpoint.groovy")), citrus);
         script.execute(context);
 
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("say-hello", MessageQueue.class));
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("hello", DirectEndpoint.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("say-hello", MessageQueue.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("hello", DirectEndpoint.class));
 
         DirectEndpoint hello = context.getReferenceResolver().resolve("hello", DirectEndpoint.class);
-        Assert.assertEquals(hello.getName(), "hello");
-        Assert.assertEquals(hello.getEndpointConfiguration().getQueueName(), "say-hello");
+        Assertions.assertEquals("hello", hello.getName());
+        Assertions.assertEquals("say-hello", hello.getEndpointConfiguration().getQueueName());
     }
 }

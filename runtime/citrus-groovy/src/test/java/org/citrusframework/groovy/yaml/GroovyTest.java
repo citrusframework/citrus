@@ -21,8 +21,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.groovy.actions.GroovyAction;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class GroovyTest extends AbstractYamlActionTest {
 
@@ -32,39 +32,39 @@ public class GroovyTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "GroovyTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), GroovyAction.class);
+        Assertions.assertEquals("GroovyTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(4L, result.getActionCount());
+        Assertions.assertEquals(GroovyAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         GroovyAction action = (GroovyAction) result.getTestAction(actionIndex++);
-        Assert.assertNull(action.getScriptResourcePath());
-        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:org/citrusframework/script/script-template.groovy");
-        Assert.assertEquals(action.getScript().trim(), "println 'Hello Citrus'");
+        Assertions.assertNull(action.getScriptResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/script/script-template.groovy", action.getScriptTemplatePath());
+        Assertions.assertEquals("println 'Hello Citrus'", action.getScript().trim());
 
         action = (GroovyAction) result.getTestAction(actionIndex++);
-        Assert.assertNull(action.getScriptResourcePath());
-        Assert.assertNotNull(action.getScript());
-        Assert.assertFalse(action.isUseScriptTemplate());
+        Assertions.assertNull(action.getScriptResourcePath());
+        Assertions.assertNotNull(action.getScript());
+        Assertions.assertFalse(action.isUseScriptTemplate());
 
         action = (GroovyAction) result.getTestAction(actionIndex++);
-        Assert.assertNull(action.getScriptResourcePath());
-        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:org/citrusframework/groovy/script/custom-script-template.groovy");
-        Assert.assertNotNull(action.getScript());
+        Assertions.assertNull(action.getScriptResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/groovy/script/custom-script-template.groovy", action.getScriptTemplatePath());
+        Assertions.assertNotNull(action.getScript());
 
         action = (GroovyAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getScriptResourcePath());
-        Assert.assertEquals(action.getScriptResourcePath(), "classpath:org/citrusframework/groovy/script/example.groovy");
-        Assert.assertNull(action.getScript());
+        Assertions.assertNotNull(action.getScriptResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/groovy/script/example.groovy", action.getScriptResourcePath());
+        Assertions.assertNull(action.getScript());
     }
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(YamlTestActionBuilder.lookup().containsKey("groovy"));
-        Assert.assertTrue(YamlTestActionBuilder.lookup("groovy").isPresent());
-        Assert.assertEquals(YamlTestActionBuilder.lookup("groovy").get().getClass(), Groovy.class);
+        Assertions.assertTrue(YamlTestActionBuilder.lookup().containsKey("groovy"));
+        Assertions.assertTrue(YamlTestActionBuilder.lookup("groovy").isPresent());
+        Assertions.assertEquals(Groovy.class, YamlTestActionBuilder.lookup("groovy").get().getClass());
     }
 }

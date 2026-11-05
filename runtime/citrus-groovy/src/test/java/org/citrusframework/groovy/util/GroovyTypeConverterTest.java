@@ -17,8 +17,8 @@
 package org.citrusframework.groovy.util;
 
 import org.codehaus.groovy.runtime.GStringImpl;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class GroovyTypeConverterTest {
 
@@ -26,7 +26,7 @@ public class GroovyTypeConverterTest {
 
     @Test
     public void testConverter() {
-        Assert.assertEquals(converter.convertIfNecessary(new GStringImpl(new Object[]{ "foo" }, new String[]{ "", "" }), String.class), "foo");
-        Assert.assertEquals(converter.convertIfNecessary(new GStringImpl(new Object[]{ "foo" }, new String[]{ "the message is: ", "!" }), String.class), "the message is: foo!");
+        Assertions.assertEquals("foo", converter.convertIfNecessary(new GStringImpl(new Object[]{ "foo" }, new String[]{ "", "" }), String.class));
+        Assertions.assertEquals("the message is: foo!", converter.convertIfNecessary(new GStringImpl(new Object[]{ "foo" }, new String[]{ "the message is: ", "!" }), String.class));
     }
 }

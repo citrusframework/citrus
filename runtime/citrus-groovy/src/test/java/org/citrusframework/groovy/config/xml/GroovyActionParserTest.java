@@ -18,9 +18,9 @@ package org.citrusframework.groovy.config.xml;
 
 import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;
 import org.citrusframework.groovy.actions.GroovyAction;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class GroovyActionParserTest extends AbstractActionParserTest<GroovyAction> {
 
@@ -30,31 +30,31 @@ public class GroovyActionParserTest extends AbstractActionParserTest<GroovyActio
         assertActionClassAndName(GroovyAction.class, "groovy");
 
         GroovyAction action = getNextTestActionFromTest();
-        Assert.assertNull(action.getScriptResourcePath());
-        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:org/citrusframework/script/script-template.groovy");
-        Assert.assertEquals(action.getScript().trim(), "println 'Hello Citrus'");
+        Assertions.assertNull(action.getScriptResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/script/script-template.groovy", action.getScriptTemplatePath());
+        Assertions.assertEquals("println 'Hello Citrus'", action.getScript().trim());
 
         action = getNextTestActionFromTest();
-        Assert.assertNull(action.getScriptResourcePath());
-        Assert.assertNotNull(action.getScript());
-        Assert.assertFalse(action.isUseScriptTemplate());
+        Assertions.assertNull(action.getScriptResourcePath());
+        Assertions.assertNotNull(action.getScript());
+        Assertions.assertFalse(action.isUseScriptTemplate());
 
         action = getNextTestActionFromTest();
-        Assert.assertNull(action.getScriptResourcePath());
-        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:org/citrusframework/script/custom-script-template.groovy");
-        Assert.assertNotNull(action.getScript());
+        Assertions.assertNull(action.getScriptResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/script/custom-script-template.groovy", action.getScriptTemplatePath());
+        Assertions.assertNotNull(action.getScript());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getScriptResourcePath());
-        Assert.assertEquals(action.getScriptResourcePath(), "classpath:org/citrusframework/script/example.groovy");
-        Assert.assertNull(action.getScript());
+        Assertions.assertNotNull(action.getScriptResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/script/example.groovy", action.getScriptResourcePath());
+        Assertions.assertNull(action.getScript());
     }
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("groovy"));
-        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("groovy").getClass(), GroovyActionParser.class);
+        Assertions.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("groovy"));
+        Assertions.assertEquals(GroovyActionParser.class, CitrusNamespaceParserRegistry.lookupBeanParser().get("groovy").getClass());
 
-        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("groovy").getClass(), GroovyActionParser.class);
+        Assertions.assertEquals(GroovyActionParser.class, CitrusNamespaceParserRegistry.getBeanParser("groovy").getClass());
     }
 }

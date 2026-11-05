@@ -18,10 +18,10 @@ package org.citrusframework.groovy.config.xml;
 
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SendMessageActionParserTest extends AbstractActionParserTest<SendMessageAction> {
 
@@ -36,26 +36,26 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         SendMessageAction action = getNextTestActionFromTest();
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 2);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("header1"), "Test");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("header2"), "Test");
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
-        Assert.assertNull(action.getEndpointUri());
+        Assertions.assertEquals("<TestMessage>Hello Citrus</TestMessage>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(2, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("Test", messageBuilder.buildMessageHeaders(context).get("header1"));
+        Assertions.assertEquals("Test", messageBuilder.buildMessageHeaders(context).get("header2"));
+        Assertions.assertEquals(beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class), action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
 
         // 2nd action
         action = getNextTestActionFromTest();
         messageBuilder = (DefaultMessageBuilder) action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
-        Assert.assertNull(action.getEndpointUri());
+        Assertions.assertEquals("<TestMessage>Hello Citrus</TestMessage>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class), action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
 
         // 3nd action
         action = getNextTestActionFromTest();
 
-        Assert.assertTrue(action.isSchemaValidation());
-        Assert.assertEquals(action.getSchema(), "fooSchema");
-        Assert.assertEquals(action.getSchemaRepository(), "fooRepository");
+        Assertions.assertTrue(action.isSchemaValidation());
+        Assertions.assertEquals("fooSchema", action.getSchema());
+        Assertions.assertEquals("fooRepository", action.getSchemaRepository());
     }
 }

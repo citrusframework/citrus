@@ -25,15 +25,15 @@ import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.base.DefaultCitrusContext;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GroovyTestLoaderTest extends UnitTestSupport {
 
     private Citrus citrus;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         citrus = Citrus.newInstance(() -> DefaultCitrusContext.Builder.defaultContext().referenceResolver(context.getReferenceResolver()).build());
     }
@@ -44,11 +44,11 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
         testLoader.load();
         TestCase test = testLoader.getTestCase();
 
-        Assert.assertEquals(test.getName(), "sample.citrus.test");
-        Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
-        Assert.assertEquals(test.getTestClass(), getClass());
-        Assert.assertEquals(test.getActionCount(), 6L);
-        Assert.assertEquals(((DefaultTestCase)test).getFinalActions().size(), 2L);
+        Assertions.assertEquals("sample.citrus.test", test.getName());
+        Assertions.assertEquals(this.getClass().getPackageName() + ".dsl", test.getPackageName());
+        Assertions.assertEquals(getClass(), test.getTestClass());
+        Assertions.assertEquals(6L, test.getActionCount());
+        Assertions.assertEquals(2L, ((DefaultTestCase)test).getFinalActions().size());
     }
 
     @Test
@@ -57,10 +57,10 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
         testLoader.load();
         TestCase test = testLoader.getTestCase();
 
-        Assert.assertEquals(test.getName(), "json.citrus.test");
-        Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
-        Assert.assertEquals(test.getTestClass(), getClass());
-        Assert.assertEquals(test.getActionCount(), 3L);
+        Assertions.assertEquals("json.citrus.test", test.getName());
+        Assertions.assertEquals(this.getClass().getPackageName() + ".dsl", test.getPackageName());
+        Assertions.assertEquals(getClass(), test.getTestClass());
+        Assertions.assertEquals(3L, test.getActionCount());
     }
 
     @Test
@@ -69,17 +69,17 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
         testLoader.load();
         TestCase test = testLoader.getTestCase();
 
-        Assert.assertEquals(test.getName(), "xml.citrus.test");
-        Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
-        Assert.assertEquals(test.getTestClass(), getClass());
-        Assert.assertEquals(test.getActionCount(), 3L);
+        Assertions.assertEquals("xml.citrus.test", test.getName());
+        Assertions.assertEquals(this.getClass().getPackageName() + ".dsl", test.getPackageName());
+        Assertions.assertEquals(getClass(), test.getTestClass());
+        Assertions.assertEquals(3L, test.getActionCount());
     }
 
     @Test
     public void shouldLookupTestLoader() {
-        Assert.assertTrue(TestLoader.lookup().containsKey(TestLoader.GROOVY));
-        Assert.assertTrue(TestLoader.lookup(TestLoader.GROOVY).isPresent());
-        Assert.assertEquals(TestLoader.lookup(TestLoader.GROOVY).get().getClass(), GroovyTestLoader.class);
+        Assertions.assertTrue(TestLoader.lookup().containsKey(TestLoader.GROOVY));
+        Assertions.assertTrue(TestLoader.lookup(TestLoader.GROOVY).isPresent());
+        Assertions.assertEquals(GroovyTestLoader.class, TestLoader.lookup(TestLoader.GROOVY).get().getClass());
     }
 
     private TestLoader getTestLoader(String testName) {

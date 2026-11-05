@@ -25,8 +25,8 @@ import org.citrusframework.groovy.UnitTestSupport;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -44,13 +44,13 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport implements Test
                         .skipTemplate());
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "groovy");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(GroovyAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("groovy", test.getActions().get(0).getName());
 
         GroovyAction action = (GroovyAction)test.getActions().get(0);
-        Assert.assertEquals(action.getScript(), "println 'Wow groovy!'");
-        Assert.assertFalse(action.isUseScriptTemplate());
+        Assertions.assertEquals("println 'Wow groovy!'", action.getScript());
+        Assertions.assertFalse(action.isUseScriptTemplate());
 
     }
 
@@ -61,12 +61,12 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport implements Test
                         .skipTemplate());
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(GroovyAction.class, test.getActions().get(0).getClass());
 
         GroovyAction action = (GroovyAction)test.getActions().get(0);
-        Assert.assertEquals(action.getScript(), "println 'Groovy!'");
-        Assert.assertFalse(action.isUseScriptTemplate());
+        Assertions.assertEquals("println 'Groovy!'", action.getScript());
+        Assertions.assertFalse(action.isUseScriptTemplate());
     }
 
     @Test
@@ -75,16 +75,16 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport implements Test
         builder.$(script().groovy().script("context.setVariable('message', 'Groovy!')")
                         .template(Resources.fromClasspath("org/citrusframework/script/script-template.groovy")));
 
-        Assert.assertNotNull(context.getVariable("message"));
-        Assert.assertEquals(context.getVariable("message"), "Groovy!");
+        Assertions.assertNotNull(context.getVariable("message"));
+        Assertions.assertEquals("Groovy!", context.getVariable("message"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(GroovyAction.class, test.getActions().get(0).getClass());
 
         GroovyAction action = (GroovyAction)test.getActions().get(0);
-        Assert.assertNotNull(action.getScriptTemplate());
-        Assert.assertTrue(action.isUseScriptTemplate());
+        Assertions.assertNotNull(action.getScriptTemplate());
+        Assertions.assertTrue(action.isUseScriptTemplate());
     }
 
     @Test
@@ -93,15 +93,15 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport implements Test
         builder.$(script().groovy().script("context.setVariable('message', 'Groovy!')")
                         .template("classpath:org/citrusframework/script/script-template.groovy"));
 
-        Assert.assertNotNull(context.getVariable("message"));
-        Assert.assertEquals(context.getVariable("message"), "Groovy!");
+        Assertions.assertNotNull(context.getVariable("message"));
+        Assertions.assertEquals("Groovy!", context.getVariable("message"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(GroovyAction.class, test.getActions().get(0).getClass());
 
         GroovyAction action = (GroovyAction)test.getActions().get(0);
-        Assert.assertNotNull(action.getScriptTemplatePath());
-        Assert.assertTrue(action.isUseScriptTemplate());
+        Assertions.assertNotNull(action.getScriptTemplatePath());
+        Assertions.assertTrue(action.isUseScriptTemplate());
     }
 }

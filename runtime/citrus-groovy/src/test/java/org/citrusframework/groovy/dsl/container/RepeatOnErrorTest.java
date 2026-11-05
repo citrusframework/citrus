@@ -22,8 +22,8 @@ import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.RepeatOnErrorUntilTrue;
 import org.citrusframework.groovy.GroovyTestLoader;
 import org.citrusframework.groovy.dsl.AbstractGroovyActionDslTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class RepeatOnErrorTest extends AbstractGroovyActionDslTest {
 
@@ -34,44 +34,44 @@ public class RepeatOnErrorTest extends AbstractGroovyActionDslTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "RepeatOnErrorTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
+        Assertions.assertEquals("RepeatOnErrorTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(4L, result.getActionCount());
 
-        Assert.assertEquals(result.getTestAction(0).getClass(), RepeatOnErrorUntilTrue.class);
+        Assertions.assertEquals(RepeatOnErrorUntilTrue.class, result.getTestAction(0).getClass());
 
         RepeatOnErrorUntilTrue action = (RepeatOnErrorUntilTrue) result.getTestAction(0);
-        Assert.assertEquals(action.getCondition(), "i > 3");
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(1000L));
-        Assert.assertEquals(action.getActionCount(), 1);
-        Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
+        Assertions.assertEquals("i > 3", action.getCondition());
+        Assertions.assertEquals("i", action.getIndexName());
+        Assertions.assertEquals(1, action.getStart());
+        Assertions.assertEquals(Long.valueOf(1000L), action.getAutoSleep());
+        Assertions.assertEquals(1, action.getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getTestAction(0).getClass());
 
         action = (RepeatOnErrorUntilTrue) result.getTestAction(1);
-        Assert.assertEquals(action.getCondition(), "index >= 2");
-        Assert.assertEquals(action.getIndexName(), "index");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(1000L));
-        Assert.assertEquals(action.getActionCount(), 1);
-        Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
+        Assertions.assertEquals("index >= 2", action.getCondition());
+        Assertions.assertEquals("index", action.getIndexName());
+        Assertions.assertEquals(1, action.getStart());
+        Assertions.assertEquals(Long.valueOf(1000L), action.getAutoSleep());
+        Assertions.assertEquals(1, action.getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getTestAction(0).getClass());
 
         action = (RepeatOnErrorUntilTrue) result.getTestAction(2);
-        Assert.assertEquals(action.getCondition(), "i >= 10");
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(500L));
-        Assert.assertEquals(action.getActionCount(), 2);
-        Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
-        Assert.assertEquals(action.getTestAction(1).getClass(), EchoAction.class);
+        Assertions.assertEquals("i >= 10", action.getCondition());
+        Assertions.assertEquals("i", action.getIndexName());
+        Assertions.assertEquals(1, action.getStart());
+        Assertions.assertEquals(Long.valueOf(500L), action.getAutoSleep());
+        Assertions.assertEquals(2, action.getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getTestAction(0).getClass());
+        Assertions.assertEquals(EchoAction.class, action.getTestAction(1).getClass());
 
         action = (RepeatOnErrorUntilTrue) result.getTestAction(3);
-        Assert.assertEquals(action.getCondition(), "i >= 5");
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(250L));
-        Assert.assertEquals(action.getActionCount(), 1);
-        Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
+        Assertions.assertEquals("i >= 5", action.getCondition());
+        Assertions.assertEquals("i", action.getIndexName());
+        Assertions.assertEquals(1, action.getStart());
+        Assertions.assertEquals(Long.valueOf(250L), action.getAutoSleep());
+        Assertions.assertEquals(1, action.getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getTestAction(0).getClass());
     }
 }
