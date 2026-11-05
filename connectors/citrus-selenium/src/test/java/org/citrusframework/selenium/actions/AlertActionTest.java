@@ -136,8 +136,6 @@ public class AlertActionTest extends AbstractUnitTest {
                 .text("This is not a warning!")
                 .build();
         action.execute(context);
-
-        verify(alert).accept();
     });
         Assertions.assertTrue(e.getMessage().matches("Failed to validate alert dialog text.*"), e.getMessage());
     }
