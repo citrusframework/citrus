@@ -17,16 +17,16 @@
 package org.citrusframework.groovy.config.xml.parser;
 
 import org.citrusframework.spring.config.xml.parser.CitrusXmlConfigParser;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class GroovyScriptMessageBuilderParserTest {
 
     @Test
     public void shouldLookupTestConfigParser() {
-        Assert.assertTrue(CitrusXmlConfigParser.lookup("script").containsKey("groovy"));
-        Assert.assertEquals(CitrusXmlConfigParser.lookup("script").get("groovy").getClass(), GroovyScriptMessageBuilderParser.class);
+        Assertions.assertTrue(CitrusXmlConfigParser.lookup("script").containsKey("groovy"));
+        Assertions.assertEquals(GroovyScriptMessageBuilderParser.class, CitrusXmlConfigParser.lookup("script").get("groovy").getClass());
 
-        Assert.assertTrue(CitrusXmlConfigParser.lookup("script", "groovy").isPresent());
+        Assertions.assertTrue(CitrusXmlConfigParser.lookup("script", "groovy").isPresent());
     }
 }

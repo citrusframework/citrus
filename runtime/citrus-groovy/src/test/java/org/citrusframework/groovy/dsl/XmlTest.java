@@ -21,8 +21,8 @@ import org.citrusframework.actions.CreateVariablesAction;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.groovy.GroovyTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class XmlTest extends AbstractGroovyActionDslTest {
 
@@ -32,9 +32,9 @@ public class XmlTest extends AbstractGroovyActionDslTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "test");
-        Assert.assertEquals(result.getActions().get(0).getClass(), CreateVariablesAction.class);
-        Assert.assertEquals(result.getActions().get(1).getClass(), SendMessageAction.class);
-        Assert.assertEquals(result.getActions().get(2).getClass(), ReceiveMessageAction.class);
+        Assertions.assertEquals("test", result.getName());
+        Assertions.assertEquals(CreateVariablesAction.class, result.getActions().get(0).getClass());
+        Assertions.assertEquals(SendMessageAction.class, result.getActions().get(1).getClass());
+        Assertions.assertEquals(ReceiveMessageAction.class, result.getActions().get(2).getClass());
     }
 }

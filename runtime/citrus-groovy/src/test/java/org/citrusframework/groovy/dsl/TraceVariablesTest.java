@@ -20,8 +20,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.TraceVariablesAction;
 import org.citrusframework.groovy.GroovyTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TraceVariablesTest extends AbstractGroovyActionDslTest {
 
@@ -31,25 +31,25 @@ public class TraceVariablesTest extends AbstractGroovyActionDslTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "TraceVariablesTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), TraceVariablesAction.class);
+        Assertions.assertEquals("TraceVariablesTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(3L, result.getActionCount());
+        Assertions.assertEquals(TraceVariablesAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         TraceVariablesAction action = (TraceVariablesAction) result.getTestAction(actionIndex++);
 
-        Assert.assertEquals(action.getVariableNames().size(), 0L);
+        Assertions.assertEquals(0L, action.getVariableNames().size());
 
         action = (TraceVariablesAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getVariableNames().size(), 1L);
-        Assert.assertEquals(action.getVariableNames().get(0), "foo");
+        Assertions.assertEquals(1L, action.getVariableNames().size());
+        Assertions.assertEquals("foo", action.getVariableNames().get(0));
 
         action = (TraceVariablesAction) result.getTestAction(actionIndex);
-        Assert.assertEquals(action.getVariableNames().size(), 2L);
-        Assert.assertEquals(action.getVariableNames().get(0), "foo");
-        Assert.assertEquals(action.getVariableNames().get(1), "bar");
+        Assertions.assertEquals(2L, action.getVariableNames().size());
+        Assertions.assertEquals("foo", action.getVariableNames().get(0));
+        Assertions.assertEquals("bar", action.getVariableNames().get(1));
     }
 }

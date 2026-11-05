@@ -21,8 +21,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.container.Timer;
 import org.citrusframework.groovy.GroovyTestLoader;
 import org.citrusframework.groovy.dsl.AbstractGroovyActionDslTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TimerTest extends AbstractGroovyActionDslTest {
 
@@ -32,38 +32,38 @@ public class TimerTest extends AbstractGroovyActionDslTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "TimerTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
+        Assertions.assertEquals("TimerTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(3L, result.getActionCount());
 
-        Assert.assertEquals(result.getTestAction(0).getClass(), Timer.class);
+        Assertions.assertEquals(Timer.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         Timer action = (Timer) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getTimerId(), "timer1");
-        Assert.assertEquals(action.getDelay(), 5000L);
-        Assert.assertEquals(action.getRepeatCount(), 1);
-        Assert.assertEquals(action.getInterval(), 2000L);
-        Assert.assertEquals(action.getActionCount(), 1);
+        Assertions.assertEquals("timer1", action.getTimerId());
+        Assertions.assertEquals(5000L, action.getDelay());
+        Assertions.assertEquals(1, action.getRepeatCount());
+        Assertions.assertEquals(2000L, action.getInterval());
+        Assertions.assertEquals(1, action.getActionCount());
 
         action = (Timer) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getTimerId(), "timer2");
-        Assert.assertEquals(action.getDelay(), 500L);
-        Assert.assertEquals(action.getRepeatCount(), 2);
-        Assert.assertEquals(action.getInterval(), 200L);
-        Assert.assertEquals(action.getActionCount(), 2);
+        Assertions.assertEquals("timer2", action.getTimerId());
+        Assertions.assertEquals(500L, action.getDelay());
+        Assertions.assertEquals(2, action.getRepeatCount());
+        Assertions.assertEquals(200L, action.getInterval());
+        Assertions.assertEquals(2, action.getActionCount());
 
         long defaultDelay = 0L;
         int defaultRepeat = Integer.MAX_VALUE;
         long defaultInterval = 1000L;
 
         action = (Timer) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getTimerId());
-        Assert.assertEquals(action.getDelay(), defaultDelay);
-        Assert.assertEquals(action.getRepeatCount(), defaultRepeat);
-        Assert.assertEquals(action.getInterval(), defaultInterval);
-        Assert.assertEquals(action.getActionCount(), 1);
+        Assertions.assertNotNull(action.getTimerId());
+        Assertions.assertEquals(defaultDelay, action.getDelay());
+        Assertions.assertEquals(defaultRepeat, action.getRepeatCount());
+        Assertions.assertEquals(defaultInterval, action.getInterval());
+        Assertions.assertEquals(1, action.getActionCount());
     }
 }

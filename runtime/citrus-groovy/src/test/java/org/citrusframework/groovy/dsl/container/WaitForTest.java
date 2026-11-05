@@ -31,9 +31,9 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageStore;
 import org.citrusframework.message.MessageStore;
 import org.citrusframework.util.TestUtils;
-import org.testng.Assert;
-import org.testng.SkipException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.util.TestUtils.HTTPS_CITRUSFRAMEWORK_ORG;
 
@@ -48,7 +48,7 @@ public class WaitForTest extends AbstractGroovyActionDslTest {
     public void shouldLoadWaitFor() {
 
         if (!TestUtils.isNetworkReachable()) {
-            throw new SkipException("Test skipped because citrus is not reachable. We are probably running behind a proxy.");
+            Assumptions.abort("Test skipped because citrus is not reachable. We are probably running behind a proxy.");
         }
 
         String filePath = "classpath:org/citrusframework/groovy/test-request-payload.xml";
@@ -61,12 +61,12 @@ public class WaitForTest extends AbstractGroovyActionDslTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "WaitForTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 6L);
+        Assertions.assertEquals("WaitForTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(6L, result.getActionCount());
 
-        Assert.assertEquals(result.getTestAction(0).getClass(), Wait.class);
+        Assertions.assertEquals(Wait.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
@@ -120,41 +120,41 @@ public class WaitForTest extends AbstractGroovyActionDslTest {
     }
 
     private void validateWaitAction(Wait action, String expectedMilliseconds, String expectedInterval, Condition expectedCondition) {
-        Assert.assertEquals(action.getTime(), expectedMilliseconds);
-        Assert.assertEquals(action.getInterval(), expectedInterval);
+        Assertions.assertEquals(expectedMilliseconds, action.getTime());
+        Assertions.assertEquals(expectedInterval, action.getInterval());
 
         if (!(expectedCondition instanceof ActionCondition)) {
-            Assert.assertEquals(action.getCondition().getClass(), expectedCondition.getClass());
+            Assertions.assertEquals(expectedCondition.getClass(), action.getCondition().getClass());
         }
 
         switch (expectedCondition) {
             case HttpCondition httpCondition -> {
                 HttpCondition condition = (HttpCondition) action.getCondition();
-                Assert.assertNotNull(condition);
-                Assert.assertEquals(condition.getName(), expectedCondition.getName());
-                Assert.assertEquals(condition.getUrl(), httpCondition.getUrl());
-                Assert.assertEquals(condition.getTimeout(), httpCondition.getTimeout());
-                Assert.assertEquals(condition.getMethod(), httpCondition.getMethod());
+                Assertions.assertNotNull(condition);
+                Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+                Assertions.assertEquals(httpCondition.getUrl(), condition.getUrl());
+                Assertions.assertEquals(httpCondition.getTimeout(), condition.getTimeout());
+                Assertions.assertEquals(httpCondition.getMethod(), condition.getMethod());
             }
             case FileCondition fileCondition -> {
                 FileCondition condition = (FileCondition) action.getCondition();
-                Assert.assertNotNull(condition);
-                Assert.assertEquals(condition.getName(), expectedCondition.getName());
-                Assert.assertEquals(condition.getFilePath(), fileCondition.getFilePath());
+                Assertions.assertNotNull(condition);
+                Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+                Assertions.assertEquals(fileCondition.getFilePath(), condition.getFilePath());
             }
             case MessageCondition messageCondition -> {
                 MessageCondition condition = (MessageCondition) action.getCondition();
-                Assert.assertNotNull(condition);
-                Assert.assertEquals(condition.getName(), expectedCondition.getName());
-                Assert.assertEquals(condition.getMessageName(), messageCondition.getMessageName());
+                Assertions.assertNotNull(condition);
+                Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+                Assertions.assertEquals(messageCondition.getMessageName(), condition.getMessageName());
             }
             case ActionCondition actionCondition -> {
                 ActionCondition condition = (ActionCondition) action.getCondition();
-                Assert.assertNotNull(condition);
-                Assert.assertEquals(condition.getAction().getName(), actionCondition.getAction().getName());
-                Assert.assertEquals(((EchoAction) condition.getAction()).getMessage(), ((EchoAction) actionCondition.getAction()).getMessage());
+                Assertions.assertNotNull(condition);
+                Assertions.assertEquals(actionCondition.getAction().getName(), condition.getAction().getName());
+                Assertions.assertEquals(((EchoAction) actionCondition.getAction()).getMessage(), ((EchoAction) condition.getAction()).getMessage());
             }
-            default -> Assert.fail("Unexpected condition type: " + expectedCondition.getClass());
+            default -> Assertions.fail("Unexpected condition type: " + expectedCondition.getClass());
         }
     }
 }

@@ -19,27 +19,24 @@ package org.citrusframework.groovy;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.TestUtils;
 import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TemplateBasedScriptBuilderTest {
 
     @Test
     public void testTemplateScriptResource() {
-        Assert.assertEquals(
-            TestUtils.normalizeLineEndings(
-                TemplateBasedScriptBuilder.fromTemplateResource(
-                        Resources.fromClasspath("org/citrusframework/groovy/script-template.groovy")
-                    ).withCode("BODY")
-                    .build()
-            ),
-            """
+        Assertions.assertEquals("""
             +++HEAD+++
 
             BODY
 
             +++TAIL+++
-            """
-        );
+            """, TestUtils.normalizeLineEndings(
+                TemplateBasedScriptBuilder.fromTemplateResource(
+                        Resources.fromClasspath("org/citrusframework/groovy/script-template.groovy")
+                    ).withCode("BODY")
+                    .build()
+            ));
     }
 }

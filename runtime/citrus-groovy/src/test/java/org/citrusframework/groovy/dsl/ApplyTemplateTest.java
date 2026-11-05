@@ -21,8 +21,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.container.Template;
 import org.citrusframework.groovy.GroovyTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ApplyTemplateTest extends AbstractGroovyActionDslTest implements TestActionSupport {
 
@@ -42,31 +42,31 @@ public class ApplyTemplateTest extends AbstractGroovyActionDslTest implements Te
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "ApplyTemplateTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), Template.class);
+        Assertions.assertEquals("ApplyTemplateTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(3L, result.getActionCount());
+        Assertions.assertEquals(Template.class, result.getTestAction(0).getClass());
 
         Template action = (Template) result.getTestAction(0);
-        Assert.assertEquals(action.getName(), "template:myTemplate");
-        Assert.assertEquals(action.getTemplateName(), "myTemplate");
+        Assertions.assertEquals("template:myTemplate", action.getName());
+        Assertions.assertEquals("myTemplate", action.getTemplateName());
 
         action = (Template) result.getTestAction(1);
-        Assert.assertEquals(action.getName(), "template:print");
-        Assert.assertEquals(action.getTemplateName(), "print");
-        Assert.assertEquals(action.getParameter().size(), 2);
-        Assert.assertEquals(action.getParameter().get("text"), "Hello from Citrus!");
-        Assert.assertTrue(action.getParameter().get("message").contains("<Text>Hello from Citrus!</Text>"));
+        Assertions.assertEquals("template:print", action.getName());
+        Assertions.assertEquals("print", action.getTemplateName());
+        Assertions.assertEquals(2, action.getParameter().size());
+        Assertions.assertEquals("Hello from Citrus!", action.getParameter().get("text"));
+        Assertions.assertTrue(action.getParameter().get("message").contains("<Text>Hello from Citrus!</Text>"));
 
-        Assert.assertEquals(printTemplate.getParameter().size(), 1L);
-        Assert.assertEquals(printTemplate.getParameter().get("text"), "Should be overwritten");
+        Assertions.assertEquals(1L, printTemplate.getParameter().size());
+        Assertions.assertEquals("Should be overwritten", printTemplate.getParameter().get("text"));
 
         action = (Template) result.getTestAction(2);
-        Assert.assertEquals(action.getName(), "template:echo");
-        Assert.assertEquals(action.getTemplateName(), "echo");
+        Assertions.assertEquals("template:echo", action.getName());
+        Assertions.assertEquals("echo", action.getTemplateName());
 
-        Assert.assertFalse(context.getReferenceResolver().isResolvable("echo", Template.class));
-        Assert.assertFalse(context.getReferenceResolver().isResolvable("echo", Template.Builder.class));
+        Assertions.assertFalse(context.getReferenceResolver().isResolvable("echo", Template.class));
+        Assertions.assertFalse(context.getReferenceResolver().isResolvable("echo", Template.Builder.class));
     }
 }

@@ -23,30 +23,30 @@ import org.citrusframework.spring.util.SpringBeanTypeConverter;
 import org.citrusframework.util.DefaultTypeConverter;
 import org.citrusframework.util.TypeConversionUtils;
 import org.citrusframework.util.TypeConverter;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TypeConverterTest {
 
     @Test
     public void testLookup() {
         try {
-            Assert.assertEquals(TypeConverter.lookupDefault().getClass(), DefaultTypeConverter.class);
+            Assertions.assertEquals(DefaultTypeConverter.class, TypeConverter.lookupDefault().getClass());
 
             System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, TypeConverter.GROOVY);
             TypeConversionUtils.loadDefaultConverter();
 
             Map<String, TypeConverter> converters = TypeConverter.lookup();
-            Assert.assertEquals(converters.size(), 2L);
-            Assert.assertEquals(converters.get(TypeConverter.GROOVY).getClass(), GroovyTypeConverter.class);
-            Assert.assertEquals(converters.get(TypeConverter.GROOVY), TypeConverter.lookupDefault());
+            Assertions.assertEquals(2L, converters.size());
+            Assertions.assertEquals(GroovyTypeConverter.class, converters.get(TypeConverter.GROOVY).getClass());
+            Assertions.assertEquals(TypeConverter.lookupDefault(), converters.get(TypeConverter.GROOVY));
 
-            Assert.assertEquals(converters.get(TypeConverter.SPRING).getClass(), SpringBeanTypeConverter.class);
+            Assertions.assertEquals(SpringBeanTypeConverter.class, converters.get(TypeConverter.SPRING).getClass());
 
-            Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.DEFAULT));
+            Assertions.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.DEFAULT));
         } finally {
             System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, CitrusSettings.TYPE_CONVERTER_DEFAULT);
-            Assert.assertEquals(TypeConverter.lookupDefault().getClass(), DefaultTypeConverter.class);
+            Assertions.assertEquals(DefaultTypeConverter.class, TypeConverter.lookupDefault().getClass());
             TypeConversionUtils.loadDefaultConverter();
         }
     }

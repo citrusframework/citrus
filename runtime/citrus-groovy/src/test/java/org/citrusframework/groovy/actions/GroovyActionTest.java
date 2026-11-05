@@ -16,13 +16,13 @@
 
 package org.citrusframework.groovy.actions;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 
-public class GroovyActionTest extends AbstractTestNGUnitTest {
+public class GroovyActionTest extends AbstractUnitTest {
 
     @Test
     public void testScript() {
@@ -40,20 +40,20 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
         bean.execute(context);
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testScriptFailure() {
         GroovyAction bean = new GroovyAction.Builder()
                 .script("Some wrong script")
                 .build();
-        bean.execute(context);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> bean.execute(context));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testScriptResourceNotFound() {
         GroovyAction bean = new GroovyAction.Builder()
                 .scriptResourcePath("file:some/wrong/path/test.groovy")
                 .build();
-        bean.execute(context);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> bean.execute(context));
     }
 
     @Test
@@ -127,11 +127,7 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
                 .script("println 'This should not work!'")
                 .build();
 
-        try {
-            bean.execute(context);
-            Assert.fail("Missing exception because of invalid script template");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Invalid script template"));
-        }
+        CitrusRuntimeException e = Assertions.assertThrows(CitrusRuntimeException.class, () -> bean.execute(context));
+        Assertions.assertTrue(e.getMessage().startsWith("Invalid script template"));
     }
 }

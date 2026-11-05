@@ -18,13 +18,17 @@ package org.citrusframework.groovy.integration.script;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2009
  */
-public class GroovyActionIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class GroovyActionIT {
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
     public void GroovyActionIT() {}

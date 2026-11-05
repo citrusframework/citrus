@@ -19,17 +19,17 @@ package org.citrusframework.groovy.actions;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class GroovyActionBuilderTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("groovy"));
+        Assertions.assertTrue(endpointBuilders.containsKey("groovy"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("groovy").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("groovy").get().getClass(), GroovyActionBuilder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("groovy").isPresent());
+        Assertions.assertEquals(GroovyActionBuilder.class, TestActionBuilder.lookup("groovy").get().getClass());
     }
 }

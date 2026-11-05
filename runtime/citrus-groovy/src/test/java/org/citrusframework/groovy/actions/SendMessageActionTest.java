@@ -26,21 +26,21 @@ import org.citrusframework.message.Message;
 import org.citrusframework.groovy.message.builder.GroovyFileResourcePayloadBuilder;
 import org.citrusframework.groovy.message.builder.GroovyScriptPayloadBuilder;
 import org.citrusframework.messaging.Producer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.util.TestUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class SendMessageActionTest extends AbstractTestNGUnitTest {
+public class SendMessageActionTest extends AbstractUnitTest {
 
     private final Endpoint endpoint = Mockito.mock(Endpoint.class);
     private final Producer producer = Mockito.mock(Producer.class);
@@ -152,7 +152,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     private void validateMessageToSend(Message toSend, Message controlMessage) {
-        Assert.assertEquals(TestUtils.normalizeLineEndings(toSend.getPayload(String.class).trim()), TestUtils.normalizeLineEndings(controlMessage.getPayload(String.class).trim()));
+        Assertions.assertEquals(TestUtils.normalizeLineEndings(controlMessage.getPayload(String.class).trim()), TestUtils.normalizeLineEndings(toSend.getPayload(String.class).trim()));
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
         validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext.Builder().build());
     }
