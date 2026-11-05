@@ -18,27 +18,35 @@ package org.citrusframework.sql.integration;
 
 import javax.sql.DataSource;
 
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class ExecutePLSQLJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@Isolated("ITs share one HSQLDB in-memory database (jdbc:hsqldb:mem:test)")
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class ExecutePLSQLJavaIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("testDataSource")
     private DataSource dataSource;
 
+    @Test
     @CitrusTest
-    public void executePLSQLAction() {
-        run(plsql().dataSource(dataSource)
+    public void executePLSQLAction(@CitrusResource TestCaseRunner runner) {
+        runner.run(plsql().dataSource(dataSource)
             .sqlResource("classpath:org/citrusframework/sql/integration/plsql.sql")
             .ignoreErrors(true));
 
-        run(plsql().dataSource(dataSource)
+        runner.run(plsql().dataSource(dataSource)
             .sqlScript("""
                     BEGIN
                     EXECUTE IMMEDIATE 'create or replace function test(v_id in number)

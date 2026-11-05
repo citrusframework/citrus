@@ -18,36 +18,44 @@ package org.citrusframework.sql.integration;
 
 import javax.sql.DataSource;
 
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class FinallyBlockJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@Isolated("ITs share one HSQLDB in-memory database (jdbc:hsqldb:mem:test)")
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class FinallyBlockJavaIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("testDataSource")
     private DataSource dataSource;
 
+    @Test
     @CitrusTest
-    public void finallyBlock() {
-        variable("orderId", "citrus:randomNumber(5)");
+    public void finallyBlock(@CitrusResource TestCaseRunner runner) {
+        runner.variable("orderId", "citrus:randomNumber(5)");
 
-        run(doFinally().actions(
+        runner.run(doFinally().actions(
                 sql().dataSource(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'"),
                 echo("ORDER deletion time: ${date}")
         ));
 
-        run(sql().dataSource(dataSource)
+        runner.run(sql().dataSource(dataSource)
             .statement("INSERT INTO ORDERS (ORDER_ID, REQUEST_TAG, CONVERSATION_ID, CREATION_DATE) VALUES (${orderId},1,1,'citrus:currentDate(dd.MM.yyyy)')"));
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("SELECT CREATION_DATE FROM ORDERS WHERE ORDER_ID='${orderId}'")
             .extract("CREATION_DATE", "date"));
 
-        run(echo("ORDER creation time: ${date}"));
+        runner.run(echo("ORDER creation time: ${date}"));
     }
 }

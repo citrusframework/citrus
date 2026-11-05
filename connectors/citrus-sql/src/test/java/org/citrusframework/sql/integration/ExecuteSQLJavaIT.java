@@ -18,29 +18,37 @@ package org.citrusframework.sql.integration;
 
 import javax.sql.DataSource;
 
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class ExecuteSQLJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@Isolated("ITs share one HSQLDB in-memory database (jdbc:hsqldb:mem:test)")
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class ExecuteSQLJavaIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("testDataSource")
     private DataSource dataSource;
 
+    @Test
     @CitrusTest
-    public void executeSQLAction() {
-        variable("rowsCount", "0");
-        variable("customerId", "1");
+    public void executeSQLAction(@CitrusResource TestCaseRunner runner) {
+        runner.variable("rowsCount", "0");
+        runner.variable("customerId", "1");
 
-        run(sql().dataSource(dataSource)
+        runner.run(sql().dataSource(dataSource)
             .sqlResource("classpath:org/citrusframework/sql/integration/script.sql"));
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("select NAME from CUSTOMERS where CUSTOMER_ID='${customerId}'")
             .statement("select COUNT(1) as overall_cnt from ERRORS")
             .statement("select ORDER_ID from ORDERS where DESCRIPTION LIKE 'Migrate%'")
@@ -50,14 +58,14 @@ public class ExecuteSQLJavaIT extends TestNGCitrusSpringSupport implements TestA
             .validate("OVERALL_CNT", "${rowsCount}")
             .validate("DESCRIPTION", "NULL"));
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .sqlResource("classpath:org/citrusframework/sql/integration/query-script.sql")
             .validate("ORDER_ID", "1")
             .validate("NAME", "Christoph")
             .validate("OVERALL_CNT", "${rowsCount}")
             .validate("DESCRIPTION", "NULL"));
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("select REQUEST_TAG as RTAG, DESCRIPTION as DESC from ORDERS")
             .validate("RTAG", "requestTag", "@ignore@")
             .validate("DESC", "Migrate")
@@ -65,10 +73,10 @@ public class ExecuteSQLJavaIT extends TestNGCitrusSpringSupport implements TestA
             .extract("RTAG", "tags")
             .extract("DESC", "description"));
 
-        run(sql().dataSource(dataSource)
+        runner.run(sql().dataSource(dataSource)
             .statement("DELETE FROM CUSTOMERS"));
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("select DESCRIPTION as desc from ORDERS where ORDER_ID = 2")
             .validate("DESC", ""));
     }

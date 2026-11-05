@@ -26,8 +26,8 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * POJO mapping for result-set callbacks (T4): rows map to the caller type
@@ -86,14 +86,14 @@ public class SqlPojoValidationCallbackTest {
             }
         }.validateSqlResultSet(Collections.singletonList(row("in_progress")), context);
 
-        Assert.assertEquals(seen.size(), 1);
+        Assertions.assertEquals(1, seen.size());
         OrderRow pojo = seen.get(0);
-        Assert.assertEquals(pojo.getStatus(), "in_progress");
-        Assert.assertEquals(pojo.getOrderName(), "Mickey");
-        Assert.assertEquals(pojo.getOrderType(), "small");
-        Assert.assertEquals(pojo.getCreated(), Timestamp.valueOf("2026-10-08 12:00:00"));
-        Assert.assertEquals(new String(pojo.getPayload()), "binary");
-        Assert.assertNull(pojo.getNote());
+        Assertions.assertEquals("in_progress", pojo.getStatus());
+        Assertions.assertEquals("Mickey", pojo.getOrderName());
+        Assertions.assertEquals("small", pojo.getOrderType());
+        Assertions.assertEquals(Timestamp.valueOf("2026-10-08 12:00:00"), pojo.getCreated());
+        Assertions.assertEquals("binary", new String(pojo.getPayload()));
+        Assertions.assertNull(pojo.getNote());
     }
 
     @Test
@@ -111,62 +111,47 @@ public class SqlPojoValidationCallbackTest {
             }
         }.validateSqlResultSet(rows, context);
 
-        Assert.assertEquals(validated, List.of("started", "in_progress"));
+        Assertions.assertEquals(List.of("started", "in_progress"), validated);
     }
 
     @Test
     public void assertionErrorAlsoCountsAsMismatch() {
         List<Map<String, Object>> rows = List.of(row("started"), row("finished"));
 
-        try {
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
             new SqlPojoValidationCallback<OrderRow>(OrderRow.class) {
                 @Override
                 protected void validate(OrderRow row, TestContext context) {
-                    Assert.assertEquals(row.getStatus(), "in_progress");
+                    Assertions.assertEquals("in_progress", row.getStatus());
                 }
-            }.validateSqlResultSet(rows, context);
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("2 row(s)"));
-            return;
-        }
-
-        Assert.fail("Expected ValidationException when no row satisfies");
+            }.validateSqlResultSet(rows, context));
+        Assertions.assertTrue(e.getMessage().contains("2 row(s)"));
     }
 
     @Test
     public void totalFailureListsRowsSeen() {
         List<Map<String, Object>> rows = List.of(row("started"), row("finished"));
 
-        try {
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
             new SqlPojoValidationCallback<OrderRow>(OrderRow.class) {
                 @Override
                 protected void validate(OrderRow row, TestContext context) {
                     throw new ValidationException("never matches");
                 }
-            }.validateSqlResultSet(rows, context);
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("started"), e.getMessage());
-            Assert.assertTrue(e.getMessage().contains("finished"), e.getMessage());
-            return;
-        }
-
-        Assert.fail("Expected ValidationException listing rows seen");
+            }.validateSqlResultSet(rows, context));
+        Assertions.assertTrue(e.getMessage().contains("started"), e.getMessage());
+        Assertions.assertTrue(e.getMessage().contains("finished"), e.getMessage());
     }
 
     @Test
     public void emptyResultSetFailsNamingZeroRows() {
-        try {
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
             new SqlPojoValidationCallback<OrderRow>(OrderRow.class) {
                 @Override
                 protected void validate(OrderRow row, TestContext context) {
                 }
-            }.validateSqlResultSet(Collections.emptyList(), context);
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("0 rows"), e.getMessage());
-            return;
-        }
-
-        Assert.fail("Expected ValidationException for empty result set");
+            }.validateSqlResultSet(Collections.emptyList(), context));
+        Assertions.assertTrue(e.getMessage().contains("0 rows"), e.getMessage());
     }
 
     @Test
@@ -177,7 +162,7 @@ public class SqlPojoValidationCallbackTest {
             @Override
             public void validate(List<OrderRow> rows, TestContext context) {
                 listCalled[0] = true;
-                Assert.assertTrue(rows.isEmpty());
+                Assertions.assertTrue(rows.isEmpty());
             }
 
             @Override
@@ -185,26 +170,21 @@ public class SqlPojoValidationCallbackTest {
             }
         }.validateSqlResultSet(Collections.emptyList(), context);
 
-        Assert.assertTrue(listCalled[0], "list-level override never received the empty list");
+        Assertions.assertTrue(listCalled[0], "list-level override never received the empty list");
     }
 
     @Test
     public void unknownColumnFailsLoudly() {        Map<String, Object> badRow = row("in_progress");
         badRow.put("BOGUS", "x");
 
-        try {
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
             new SqlPojoValidationCallback<OrderRow>(OrderRow.class) {
                 @Override
                 protected void validate(OrderRow row, TestContext context) {
                 }
-            }.validateSqlResultSet(Collections.singletonList(badRow), context);
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("BOGUS"), e.getMessage());
-            Assert.assertTrue(e.getMessage().contains("STATUS"), e.getMessage());
-            return;
-        }
-
-        Assert.fail("Expected loud failure for unmappable column");
+            }.validateSqlResultSet(Collections.singletonList(badRow), context));
+        Assertions.assertTrue(e.getMessage().contains("BOGUS"), e.getMessage());
+        Assertions.assertTrue(e.getMessage().contains("STATUS"), e.getMessage());
     }
 
     public static class IntRow {
@@ -225,35 +205,25 @@ public class SqlPojoValidationCallbackTest {
 
     @Test
     public void nullTypeFailsFast() {
-        try {
+        NullPointerException e = Assertions.assertThrows(NullPointerException.class, () ->
             new SqlPojoValidationCallback<OrderRow>(null) {
                 @Override
                 protected void validate(OrderRow row, TestContext context) {
                 }
-            };
-        } catch (NullPointerException e) {
-            Assert.assertTrue(e.getMessage().contains("type"), e.getMessage());
-            return;
-        }
-
-        Assert.fail("Expected NullPointerException for null POJO type");
+            });
+        Assertions.assertTrue(e.getMessage().contains("type"), e.getMessage());
     }
 
     @Test
     public void missingNoArgConstructorFailsLoudly() {
-        try {
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
             new SqlPojoValidationCallback<NoDefaultConstructor>(NoDefaultConstructor.class) {
                 @Override
                 protected void validate(NoDefaultConstructor row, TestContext context) {
                 }
-            }.validateSqlResultSet(Collections.singletonList(row("in_progress")), context);
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("no-arg"), e.getMessage());
-            Assert.assertTrue(e.getMessage().contains("NoDefaultConstructor"), e.getMessage());
-            return;
-        }
-
-        Assert.fail("Expected loud failure for missing no-arg constructor");
+            }.validateSqlResultSet(Collections.singletonList(row("in_progress")), context));
+        Assertions.assertTrue(e.getMessage().contains("no-arg"), e.getMessage());
+        Assertions.assertTrue(e.getMessage().contains("NoDefaultConstructor"), e.getMessage());
     }
 
     @Test
@@ -261,19 +231,14 @@ public class SqlPojoValidationCallbackTest {
         Map<String, Object> colliding = row("in_progress");
         colliding.put("status", "other");
 
-        try {
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
             new SqlPojoValidationCallback<OrderRow>(OrderRow.class) {
                 @Override
                 protected void validate(OrderRow row, TestContext context) {
                 }
-            }.validateSqlResultSet(Collections.singletonList(colliding), context);
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("Duplicate"), e.getMessage());
-            Assert.assertTrue(e.getMessage().contains("status"), e.getMessage());
-            return;
-        }
-
-        Assert.fail("Expected loud failure for duplicate column-to-property mapping");
+            }.validateSqlResultSet(Collections.singletonList(colliding), context));
+        Assertions.assertTrue(e.getMessage().contains("Duplicate"), e.getMessage());
+        Assertions.assertTrue(e.getMessage().contains("status"), e.getMessage());
     }
 
     @Test
@@ -281,20 +246,15 @@ public class SqlPojoValidationCallbackTest {
         Map<String, Object> row = new HashMap<>();
         row.put("COUNT", null);
 
-        try {
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
             new SqlPojoValidationCallback<IntRow>(IntRow.class) {
                 @Override
                 protected void validate(IntRow row, TestContext context) {
                 }
-            }.validateSqlResultSet(Collections.singletonList(row), context);
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("NULL"), e.getMessage());
-            Assert.assertTrue(e.getMessage().contains("primitive"), e.getMessage());
-            Assert.assertTrue(e.getMessage().contains("count"), e.getMessage());
-            return;
-        }
-
-        Assert.fail("Expected clear failure for NULL into primitive property");
+            }.validateSqlResultSet(Collections.singletonList(row), context));
+        Assertions.assertTrue(e.getMessage().contains("NULL"), e.getMessage());
+        Assertions.assertTrue(e.getMessage().contains("primitive"), e.getMessage());
+        Assertions.assertTrue(e.getMessage().contains("count"), e.getMessage());
     }
 
     @Test
@@ -302,19 +262,14 @@ public class SqlPojoValidationCallbackTest {
         Map<String, Object> row = new HashMap<>();
         row.put("COUNT", "not-a-number");
 
-        try {
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () ->
             new SqlPojoValidationCallback<IntRow>(IntRow.class) {
                 @Override
                 protected void validate(IntRow row, TestContext context) {
                 }
-            }.validateSqlResultSet(Collections.singletonList(row), context);
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("COUNT"), e.getMessage());
-            Assert.assertTrue(e.getMessage().contains("row 0"), e.getMessage());
-            Assert.assertTrue(e.getMessage().contains("count"), e.getMessage());
-            return;
-        }
-
-        Assert.fail("Expected loud failure for type conversion mismatch");
+            }.validateSqlResultSet(Collections.singletonList(row), context));
+        Assertions.assertTrue(e.getMessage().contains("COUNT"), e.getMessage());
+        Assertions.assertTrue(e.getMessage().contains("row 0"), e.getMessage());
+        Assertions.assertTrue(e.getMessage().contains("count"), e.getMessage());
     }
 }

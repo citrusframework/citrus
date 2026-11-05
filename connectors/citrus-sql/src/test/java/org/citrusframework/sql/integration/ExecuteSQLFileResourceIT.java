@@ -21,31 +21,39 @@ import java.net.URISyntaxException;
 
 import javax.sql.DataSource;
 
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class ExecuteSQLFileResourceIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@Isolated("ITs share one HSQLDB in-memory database (jdbc:hsqldb:mem:test)")
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class ExecuteSQLFileResourceIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("testDataSource")
     private DataSource dataSource;
 
+    @Test
     @CitrusTest
-    public void executeSQLActionWithFileSystemResources() {
-        run(sql().dataSource(dataSource)
+    public void executeSQLActionWithFileSystemResources(@CitrusResource TestCaseRunner runner) {
+        runner.run(sql().dataSource(dataSource)
             .sqlResource("file:" + absolutePathOf("org/citrusframework/sql/integration/script.sql"))
             .sqlResource("file:" + absolutePathOf("org/citrusframework/sql/integration/second-script.sql")));
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("select COUNT(1) as overall_cnt from CUSTOMERS")
             .validate("OVERALL_CNT", "2"));
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("select NAME from CUSTOMERS where CUSTOMER_ID = 2")
             .validate("NAME", "John"));
     }

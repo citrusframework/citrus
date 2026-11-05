@@ -18,11 +18,11 @@ package org.citrusframework.sql.config.xml;
 
 import org.citrusframework.sql.actions.ExecuteSQLAction;
 import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ExecuteSQLActionParserTest extends AbstractActionParserTest<ExecuteSQLAction> {
 
@@ -33,44 +33,40 @@ public class ExecuteSQLActionParserTest extends AbstractActionParserTest<Execute
 
         // 1st action
         ExecuteSQLAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getStatements().size(), 2);
-        Assert.assertEquals(action.getStatements().get(0), "insert into foo_table values (foo, foo)");
-        Assert.assertEquals(action.getStatements().get(1), "update foo_table set foo=foo where foo=foo");
-        Assert.assertFalse(action.isIgnoreErrors());
-        Assert.assertNull(action.getTransactionManager());
-        Assert.assertEquals(action.getTransactionTimeout(), "-1");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertNull(action.getSqlResourcePath());
+        Assertions.assertEquals(2, action.getStatements().size());
+        Assertions.assertEquals("insert into foo_table values (foo, foo)", action.getStatements().get(0));
+        Assertions.assertEquals("update foo_table set foo=foo where foo=foo", action.getStatements().get(1));
+        Assertions.assertFalse(action.isIgnoreErrors());
+        Assertions.assertNull(action.getTransactionManager());
+        Assertions.assertEquals("-1", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_DEFAULT", action.getTransactionIsolationLevel());
 
         // 2nd action
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getDataSource());
-        Assert.assertNotNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getSqlResourcePath(), "classpath:org/citrusframework/sql/actions/test-sql-statements.sql");
-        Assert.assertEquals(action.getStatements().size(), 0);
-        Assert.assertTrue(action.isIgnoreErrors());
-        Assert.assertEquals(action.getTransactionManager(), beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class));
-        Assert.assertEquals(action.getTransactionTimeout(), "5000");
-        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
+        Assertions.assertNotNull(action.getDataSource());
+        Assertions.assertNotNull(action.getSqlResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/sql/actions/test-sql-statements.sql", action.getSqlResourcePath());
+        Assertions.assertEquals(0, action.getStatements().size());
+        Assertions.assertTrue(action.isIgnoreErrors());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class), action.getTransactionManager());
+        Assertions.assertEquals("5000", action.getTransactionTimeout());
+        Assertions.assertEquals("ISOLATION_READ_COMMITTED", action.getTransactionIsolationLevel());
     }
 
     @Test
     public void testMissingDataSourceBeanRef() {
-        try {
-            createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to invalid data source");
-        } catch (BeanDefinitionStoreException e) {
-            Assert.assertTrue(e.getCause().getMessage().contains(
-                    "Missing proper data source reference"));
-        }
+        BeanDefinitionStoreException e = Assertions.assertThrows(BeanDefinitionStoreException.class, () -> createApplicationContext("failed"));
+        Assertions.assertTrue(e.getCause().getMessage().contains(
+                "Missing proper data source reference"));
     }
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("sql"));
-        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("sql").getClass(), SQLActionParser.class);
+        Assertions.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("sql"));
+        Assertions.assertEquals(SQLActionParser.class, CitrusNamespaceParserRegistry.lookupBeanParser().get("sql").getClass());
 
-        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("sql").getClass(), SQLActionParser.class);
+        Assertions.assertEquals(SQLActionParser.class, CitrusNamespaceParserRegistry.getBeanParser("sql").getClass());
     }
 }

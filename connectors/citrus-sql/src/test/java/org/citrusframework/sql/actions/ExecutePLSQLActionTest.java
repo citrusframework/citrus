@@ -21,27 +21,27 @@ import java.net.URL;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
+public class ExecutePLSQLActionTest extends AbstractUnitTest {
 
     private ExecutePLSQLAction.Builder executePLSQLActionBuilder;
 
     private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         executePLSQLActionBuilder = new ExecutePLSQLAction.Builder()
                 .jdbcTemplate(jdbcTemplate);
@@ -169,16 +169,16 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
     public void testPLSQLExecutionWithMissingFileSystemResource() {
         executePLSQLActionBuilder.sqlResource("file:/nonexistent/path/to/plsql-script.sql");
 
-        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class,
                 () -> executePLSQLActionBuilder.build().execute(context));
 
-        Assert.assertTrue(exception.getMessage().contains("plsql-script.sql"),
+        Assertions.assertTrue(exception.getMessage().contains("plsql-script.sql"),
                 "Exception message should name the missing resource but was: " + exception.getMessage());
     }
 
     private static String absolutePathOf(String classpathLocation) throws Exception {
         URL resource = ExecutePLSQLActionTest.class.getClassLoader().getResource(classpathLocation);
-        Assert.assertNotNull(resource, "Test resource not found on classpath: " + classpathLocation);
+        Assertions.assertNotNull(resource, "Test resource not found on classpath: " + classpathLocation);
         return new File(resource.toURI()).getAbsolutePath();
     }
 
@@ -364,7 +364,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 
         reset(jdbcTemplate);
         ExecutePLSQLAction action = executePLSQLActionBuilder.build();
-        Assert.assertEquals(action.getScript(), stmt);
+        Assertions.assertEquals(stmt, action.getScript());
 
         action.execute(context);
         verify(jdbcTemplate).execute(controlStatement);
@@ -376,8 +376,8 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
         executePLSQLActionBuilder = new ExecutePLSQLAction.Builder().jdbcTemplate(null);
         executePLSQLActionBuilder.statements(Collections.singletonList("statement"));
 
-        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class, () -> executePLSQLActionBuilder.build().execute(context));
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class, () -> executePLSQLActionBuilder.build().execute(context));
 
-        Assert.assertEquals(exception.getMessage(), "No JdbcTemplate configured for sql execution!");
+        Assertions.assertEquals("No JdbcTemplate configured for sql execution!", exception.getMessage());
     }
 }

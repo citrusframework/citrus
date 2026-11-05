@@ -24,45 +24,51 @@ import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.base.context.StaticTestContextFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.groovy.GroovyTestLoader;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeClass;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class AbstractGroovyActionDslTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+@Isolated("CitrusInstanceManager publishes a shared static Citrus instance on every test method")
+public class AbstractGroovyActionDslTest extends AbstractUnitTest {
 
     protected Citrus citrus;
 
     @Mock
     protected CitrusContext citrusContext;
 
-    @BeforeClass
-    public void setupMocks() {
-        MockitoAnnotations.openMocks(this);
+    @BeforeEach
+    @Override
+    public void prepareTest() {
         citrus = CitrusInstanceManager.newInstance(() -> citrusContext);
+
+        super.prepareTest();
     }
 
     @Override
     protected TestContext createTestContext() {
         TestContext context = super.createTestContext();
-        doAnswer(invocation -> {
+        lenient().doAnswer(invocation -> {
             context.getReferenceResolver().bind(invocation.getArgument(0, String.class), invocation.getArgument(1));
             return null;
         }).when(citrusContext).bind(any(String.class), any());
 
-        when(citrusContext.getReferenceResolver()).thenReturn(context.getReferenceResolver());
-        when(citrusContext.getMessageValidatorRegistry()).thenReturn(context.getMessageValidatorRegistry());
-        when(citrusContext.getTestContextFactory()).thenReturn(new StaticTestContextFactory(context));
+        lenient().when(citrusContext.getReferenceResolver()).thenReturn(context.getReferenceResolver());
+        lenient().when(citrusContext.getMessageValidatorRegistry()).thenReturn(context.getMessageValidatorRegistry());
+        lenient().when(citrusContext.getTestContextFactory()).thenReturn(new StaticTestContextFactory(context));
         doAnswer(invocationOnMock -> {
             CitrusAnnotations.parseConfiguration(invocationOnMock.getArgument(0, Object.class), citrusContext);
             return null;
         }).when(citrusContext).parseConfiguration((Object) any());
-        doAnswer(invocationOnMock-> {
+        lenient().doAnswer(invocationOnMock-> {
             context.getReferenceResolver().bind(invocationOnMock.getArgument(0), invocationOnMock.getArgument(1));
             return null;
         }).when(citrusContext).addComponent(anyString(), any());

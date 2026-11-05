@@ -18,27 +18,35 @@ package org.citrusframework.sql.integration;
 
 import javax.sql.DataSource;
 
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class QueryDatabaseRetriesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@Isolated("ITs share one HSQLDB in-memory database (jdbc:hsqldb:mem:test)")
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class QueryDatabaseRetriesJavaIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("testDataSource")
     private DataSource dataSource;
 
+    @Test
     @SuppressWarnings("deprecation")
     @CitrusTest
-    public void sqlQueryRetries() {
-        run(sql().dataSource(dataSource)
+    public void sqlQueryRetries(@CitrusResource TestCaseRunner runner) {
+        runner.run(sql().dataSource(dataSource)
                 .sqlResource("classpath:org/citrusframework/sql/integration/script.sql"));
 
-        run(parallel().actions(
+        runner.run(parallel().actions(
             repeatOnError()
                 .autoSleep(500).index("i").until("i = 10")
                 .actions(query().dataSource(dataSource)
