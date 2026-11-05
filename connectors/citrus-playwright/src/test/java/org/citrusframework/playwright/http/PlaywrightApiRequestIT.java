@@ -218,8 +218,8 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         exchange(browserApi, "/echo");
 
         RecordedRequest request = lastRequest("/echo");
-        assertEquals(request.header("X-Extra"), "from-context");
-        assertEquals(request.header("User-Agent"), "citrus-it");
+        assertEquals("from-context", request.header("X-Extra"));
+        assertEquals("citrus-it", request.header("User-Agent"));
     }
 
     @Test
@@ -270,10 +270,10 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         send.build().execute(context);
 
         RecordedRequest request = lastRequest("/api/orders");
-        assertEquals(request.method(), "POST");
-        assertEquals(request.query(), "source=ui");
+        assertEquals("POST", request.method());
+        assertEquals("source=ui", request.query());
         assertTrue(request.header("Content-Type").startsWith("application/json"), request.header("Content-Type"));
-        assertEquals(request.body(), "{\"item\":\"book\"}");
+        assertEquals("{\"item\":\"book\"}", request.body());
     }
 
     @Test
@@ -297,7 +297,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
         // The JDK fixture server sends the name as "Set-cookie"; Citrus message headers keep the
         // name as received, exactly as for a plain HttpClient.
-        assertEquals(header(cookies, "Set-Cookie"), "FIRST=1; Path=/,SECOND=2; Path=/");
+        assertEquals("FIRST=1; Path=/,SECOND=2; Path=/", header(cookies, "Set-Cookie"));
         http().client(browserApi).receive().response(HttpStatus.NOT_FOUND).build().execute(context);
     }
 
@@ -379,8 +379,8 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
         Message response = exchange(browserApi, "/echo");
 
-        assertEquals(String.valueOf(response.getHeader(PLAYWRIGHT_API_SERVER_IP)), "127.0.0.1");
-        assertEquals(String.valueOf(response.getHeader(PLAYWRIGHT_API_SERVER_PORT)), server.url("").replaceAll(".*:", ""));
+        assertEquals("127.0.0.1", String.valueOf(response.getHeader(PLAYWRIGHT_API_SERVER_IP)));
+        assertEquals(server.url("").replaceAll(".*:", ""), String.valueOf(response.getHeader(PLAYWRIGHT_API_SERVER_PORT)));
         assertTrue(Double.parseDouble(String.valueOf(response.getHeader(PLAYWRIGHT_API_TIMING_RESPONSE_END))) >= 0);
         assertTrue(response.getHeaders().keySet().stream().noneMatch(name -> name.startsWith(PLAYWRIGHT_API_PREFIX + "tls_")),
                 String.valueOf(response.getHeaders()));
@@ -468,11 +468,11 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
         Message response = exchange(client, "/echo");
 
-        assertEquals(String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "200");
-        assertEquals(String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_SUBJECT_NAME)), "Citrus");
-        assertEquals(String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_ISSUER)), "Citrus");
-        assertEquals(String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_VALID_FROM)), "1475601682");
-        assertEquals(String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_VALID_TO)), "1483377682");
+        assertEquals("200", String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)));
+        assertEquals("Citrus", String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_SUBJECT_NAME)));
+        assertEquals("Citrus", String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_ISSUER)));
+        assertEquals("1475601682", String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_VALID_FROM)));
+        assertEquals("1483377682", String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_VALID_TO)));
         assertTrue(String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_PROTOCOL)).startsWith("TLS"),
                 String.valueOf(response.getHeader(PLAYWRIGHT_API_TLS_PROTOCOL)));
         assertTrue(response.getHeaders().containsKey(PLAYWRIGHT_API_TIMING_SECURE_CONNECTION_START), String.valueOf(response.getHeaders()));
@@ -485,7 +485,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
         Message response = exchange(client, "/echo");
 
-        assertEquals(String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "200");
+        assertEquals("200", String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)));
     }
 
     @Test
@@ -496,10 +496,10 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         Message redirect = exchange(noRedirects, "/redirect");
         Message followed = exchange(browserApi, "/redirect");
 
-        assertEquals(String.valueOf(redirect.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "302");
-        assertEquals(header(redirect, "Location"), "/echo");
-        assertEquals(String.valueOf(followed.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "200");
-        assertEquals(String.valueOf(followed.getHeader(PLAYWRIGHT_API_URL)), server.url("/echo"));
+        assertEquals("302", String.valueOf(redirect.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)));
+        assertEquals("/echo", header(redirect, "Location"));
+        assertEquals("200", String.valueOf(followed.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)));
+        assertEquals(server.url("/echo"), String.valueOf(followed.getHeader(PLAYWRIGHT_API_URL)));
     }
 
     @Test
@@ -518,7 +518,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
         Message response = exchange(browserApi, "/api/gzip");
 
-        assertEquals(response.getPayload(String.class), GZIP_JSON);
+        assertEquals(GZIP_JSON, response.getPayload(String.class));
         assertNull(header(response, "Content-Encoding"));
     }
 
@@ -534,8 +534,8 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
             Message response = exchange(client, "/flaky");
 
-            assertEquals(String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "200");
-            assertEquals(flaky.attempts(), 2);
+            assertEquals("200", String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)));
+            assertEquals(2, flaky.attempts());
         }
     }
 
@@ -549,7 +549,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
             RuntimeException error = assertThrows(RuntimeException.class, () -> send(client, "/flaky"));
 
             assertTrue(messages(error).contains("Browser-session request GET " + flaky.url() + "/flaky failed"), messages(error));
-            assertEquals(flaky.attempts(), 1);
+            assertEquals(1, flaky.attempts());
         }
     }
 
@@ -560,7 +560,7 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
         Message response = exchange(browserApi, "/echo");
 
-        assertEquals(String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)), "200");
+        assertEquals("200", String.valueOf(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE)));
         lastRequest("/echo");
     }
 

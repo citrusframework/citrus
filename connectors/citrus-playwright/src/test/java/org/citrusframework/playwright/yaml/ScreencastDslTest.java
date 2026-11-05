@@ -48,7 +48,7 @@ class ScreencastDslTest {
         screencast.setCommand("start");
         screencast.setPath("target/playwright/run.webm");
 
-        assertEquals(screencast.build().getCommand(), ScreencastAction.Command.START);
+        assertEquals(ScreencastAction.Command.START, screencast.build().getCommand());
     }
 
     @Test

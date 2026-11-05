@@ -79,9 +79,9 @@ class PlaywrightEndpointBuilderTest {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
         Map<String, EndpointComponent> endpointComponents = EndpointComponent.lookup();
 
-        assertEquals(actionBuilders.get("playwright").getClass(), PlaywrightActionBuilder.class);
-        assertEquals(endpointBuilders.get("playwright").getClass(), PlaywrightEndpointBuilder.class);
-        assertEquals(endpointComponents.get("playwright").getClass(), PlaywrightEndpointComponent.class);
+        assertEquals(PlaywrightActionBuilder.class, actionBuilders.get("playwright").getClass());
+        assertEquals(PlaywrightEndpointBuilder.class, endpointBuilders.get("playwright").getClass());
+        assertEquals(PlaywrightEndpointComponent.class, endpointComponents.get("playwright").getClass());
     }
 
     @Test

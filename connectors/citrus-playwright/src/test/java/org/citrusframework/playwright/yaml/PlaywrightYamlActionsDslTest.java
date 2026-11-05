@@ -34,7 +34,7 @@ class PlaywrightYamlActionsDslTest extends AbstractDslLoaderTest {
     void shouldLoadDiagnosticsAndContextActions() {
         TestCase result = loadTestCase();
 
-        assertEquals(result.getName(), "PlaywrightActionsDslTest");
+        assertEquals("PlaywrightActionsDslTest", result.getName());
         PlaywrightActionsAssertions.assertDiagnosticsAndContextActions(result);
     }
 

@@ -74,8 +74,7 @@ class PlaywrightApiClientConfigParserTest {
     @Test
     void shouldLookupParserByQualifier() {
         assertTrue(AnnotationConfigParser.lookup().containsKey("playwright.api-client"));
-        assertEquals(AnnotationConfigParser.lookup("playwright.api-client").orElseThrow().getClass(),
-                PlaywrightApiClientConfigParser.class);
+        assertEquals(PlaywrightApiClientConfigParser.class, AnnotationConfigParser.lookup("playwright.api-client").orElseThrow().getClass());
     }
 
     @Test
@@ -84,15 +83,15 @@ class PlaywrightApiClientConfigParserTest {
 
         PlaywrightClientHttpRequestFactory factory = factory(client);
         assertSame(factory.getBrowser(), browser);
-        assertEquals(factory.getContextAlias(), "admin");
-        assertEquals(factory.getTimeout(), 10_000.0);
-        assertEquals(factory.getMaxRedirects(), Integer.valueOf(0));
-        assertEquals(factory.getMaxRetries(), Integer.valueOf(2));
+        assertEquals("admin", factory.getContextAlias());
+        assertEquals(10_000.0, factory.getTimeout());
+        assertEquals(Integer.valueOf(0), factory.getMaxRedirects());
+        assertEquals(Integer.valueOf(2), factory.getMaxRetries());
         assertTrue(factory.isIgnoreHttpsErrors());
 
         HttpEndpointConfiguration configuration = client.getEndpointConfiguration();
-        assertEquals(configuration.getRequestUrl(), "http://api.localhost:9090");
-        assertEquals(configuration.getTimeout(), 10_000L);
+        assertEquals("http://api.localhost:9090", configuration.getRequestUrl());
+        assertEquals(10_000L, configuration.getTimeout());
         assertTrue(configuration.isHandleCookies());
     }
 
@@ -106,7 +105,7 @@ class PlaywrightApiClientConfigParserTest {
         assertNull(factory.getMaxRedirects());
         assertNull(factory.getMaxRetries());
         assertFalse(factory.isIgnoreHttpsErrors());
-        assertEquals(client.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080");
+        assertEquals("http://localhost:8080", client.getEndpointConfiguration().getRequestUrl());
         assertFalse(client.getEndpointConfiguration().isHandleCookies());
     }
 
@@ -122,7 +121,7 @@ class PlaywrightApiClientConfigParserTest {
         CitrusEndpointAnnotations.injectEndpoints(this, context);
 
         assertSame(factory(browserApi).getBrowser(), browser);
-        assertEquals(browserApi.getName(), "browserApi");
+        assertEquals("browserApi", browserApi.getName());
     }
 
     private HttpClient parse(String field) throws NoSuchFieldException {

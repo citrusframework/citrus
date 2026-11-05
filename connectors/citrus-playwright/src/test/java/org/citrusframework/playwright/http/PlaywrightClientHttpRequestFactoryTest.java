@@ -165,8 +165,8 @@ class PlaywrightClientHttpRequestFactoryTest {
 
         ClientHttpResponse response = new PlaywrightClientHttpRequestFactory(browser).createRequest(ORDERS, HttpMethod.POST).execute();
 
-        assertEquals(response.getStatusCode().value(), 201);
-        assertEquals(new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8), "{\"id\":1}");
+        assertEquals(201, response.getStatusCode().value());
+        assertEquals("{\"id\":1}", new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8));
         verify(driverResponse).dispose();
     }
 
@@ -239,11 +239,11 @@ class PlaywrightClientHttpRequestFactoryTest {
 
         FetchSpec spec = FetchSpec.of(HttpMethod.POST, ORDERS, headers, body, new TransportOptions(5000.0, 0, null, false));
 
-        assertEquals(spec.method(), "POST");
-        assertEquals(spec.url(), "http://localhost:8080/api/orders?source=ui");
-        assertEquals(spec.headers(), Map.of("Content-Type", "application/json", "Accept", "application/json, text/plain"));
-        assertEquals(new String(spec.body(), StandardCharsets.UTF_8), "{\"item\":\"book\"}");
-        assertEquals(spec.options(), new TransportOptions(5000.0, 0, null, false));
+        assertEquals("POST", spec.method());
+        assertEquals("http://localhost:8080/api/orders?source=ui", spec.url());
+        assertEquals(Map.of("Content-Type", "application/json", "Accept", "application/json, text/plain"), spec.headers());
+        assertEquals("{\"item\":\"book\"}", new String(spec.body(), StandardCharsets.UTF_8));
+        assertEquals(new TransportOptions(5000.0, 0, null, false), spec.options());
     }
 
     @Test
@@ -252,8 +252,8 @@ class PlaywrightClientHttpRequestFactoryTest {
 
         RequestOptions options = spec.toRequestOptions();
 
-        assertEquals(field(options, "method"), "GET");
-        assertEquals(field(options, "failOnStatusCode"), Boolean.FALSE);
+        assertEquals("GET", field(options, "method"));
+        assertEquals(Boolean.FALSE, field(options, "failOnStatusCode"));
         assertNull(field(options, "data"));
         assertNull(field(options, "timeout"));
         assertNull(field(options, "maxRedirects"));
@@ -269,14 +269,14 @@ class PlaywrightClientHttpRequestFactoryTest {
 
         RequestOptions options = FetchSpec.of(HttpMethod.PUT, ORDERS, headers, body, new TransportOptions(2500.0, 3, 2, true)).toRequestOptions();
 
-        assertEquals(field(options, "method"), "PUT");
-        assertEquals(field(options, "headers"), Map.of("Content-Type", "application/json"));
-        assertEquals(field(options, "data"), body);
-        assertEquals(field(options, "failOnStatusCode"), Boolean.FALSE);
-        assertEquals(field(options, "timeout"), 2500.0);
-        assertEquals(field(options, "maxRedirects"), 3);
-        assertEquals(field(options, "maxRetries"), 2);
-        assertEquals(field(options, "ignoreHTTPSErrors"), Boolean.TRUE);
+        assertEquals("PUT", field(options, "method"));
+        assertEquals(Map.of("Content-Type", "application/json"), field(options, "headers"));
+        assertEquals(body, field(options, "data"));
+        assertEquals(Boolean.FALSE, field(options, "failOnStatusCode"));
+        assertEquals(2500.0, field(options, "timeout"));
+        assertEquals(3, field(options, "maxRedirects"));
+        assertEquals(2, field(options, "maxRetries"));
+        assertEquals(Boolean.TRUE, field(options, "ignoreHTTPSErrors"));
     }
 
     @Test
@@ -290,8 +290,8 @@ class PlaywrightClientHttpRequestFactoryTest {
 
         factory.createRequest(ORDERS, HttpMethod.GET).execute();
 
-        assertEquals(factory.options(), new TransportOptions(2500.0, 0, 2, true));
-        assertEquals(factory.getMaxRetries(), Integer.valueOf(2));
+        assertEquals(new TransportOptions(2500.0, 0, 2, true), factory.options());
+        assertEquals(Integer.valueOf(2), factory.getMaxRetries());
         assertTrue(factory.isIgnoreHttpsErrors());
     }
 
