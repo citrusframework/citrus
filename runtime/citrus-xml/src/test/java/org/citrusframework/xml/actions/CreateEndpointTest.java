@@ -23,8 +23,8 @@ import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.DirectEndpointsBuilder;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateEndpointTest extends AbstractXmlActionTest {
 
@@ -34,34 +34,34 @@ public class CreateEndpointTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateEndpointTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateEndpointAction.class);
-        Assert.assertEquals(((CreateEndpointAction) result.getTestAction(0)).getEndpointUri(), "direct:hello");
-        Assert.assertEquals(((CreateEndpointAction) result.getTestAction(1)).getEndpointUri(), "direct?autoClose=true&autoRemove=true&queueName=hello&timeout=2000");
-        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder());
-        Assert.assertEquals(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder().getClass(), DirectEndpointsBuilder.class);
+        Assertions.assertEquals("CreateEndpointTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(4L, result.getActionCount());
+        Assertions.assertEquals(CreateEndpointAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("direct:hello", ((CreateEndpointAction) result.getTestAction(0)).getEndpointUri());
+        Assertions.assertEquals("direct?autoClose=true&autoRemove=true&queueName=hello&timeout=2000", ((CreateEndpointAction) result.getTestAction(1)).getEndpointUri());
+        Assertions.assertNotNull(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder());
+        Assertions.assertEquals(DirectEndpointsBuilder.class, ((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder().getClass());
 
         DirectEndpointsBuilder endpointBuilder = (DirectEndpointsBuilder) ((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder();
         endpointBuilder.setReferenceResolver(context.getReferenceResolver());
 
         DirectEndpoint directEndpoint = (DirectEndpoint) endpointBuilder.build();
-        Assert.assertEquals(directEndpoint.getName(), "foo");
-        Assert.assertEquals(directEndpoint.getEndpointConfiguration().getQueueName(), "fooQueue");
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("fooQueue", MessageQueue.class),
+        Assertions.assertEquals("foo", directEndpoint.getName());
+        Assertions.assertEquals("fooQueue", directEndpoint.getEndpointConfiguration().getQueueName());
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("fooQueue", MessageQueue.class),
                 "Expected auto-create-queue to create the message queue in the reference resolver");
 
-        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder());
-        Assert.assertEquals(((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder().getClass(), DirectEndpointsBuilder.class);
+        Assertions.assertNotNull(((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder());
+        Assertions.assertEquals(DirectEndpointsBuilder.class, ((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder().getClass());
 
         DirectEndpointsBuilder simplifiedBuilder = (DirectEndpointsBuilder) ((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder();
         simplifiedBuilder.setReferenceResolver(context.getReferenceResolver());
 
         DirectEndpoint simplifiedEndpoint = (DirectEndpoint) simplifiedBuilder.build();
-        Assert.assertEquals(simplifiedEndpoint.getName(), "simplified");
-        Assert.assertEquals(simplifiedEndpoint.getEndpointConfiguration().getQueueName(), "simpleQueue");
-        Assert.assertEquals(simplifiedEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("simplified", simplifiedEndpoint.getName());
+        Assertions.assertEquals("simpleQueue", simplifiedEndpoint.getEndpointConfiguration().getQueueName());
+        Assertions.assertEquals(5000L, simplifiedEndpoint.getEndpointConfiguration().getTimeout());
     }
 }

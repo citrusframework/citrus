@@ -16,31 +16,45 @@
 
 package org.citrusframework.integration;
 
+import java.util.stream.Stream;
+
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.citrusframework.junit.jupiter.CitrusTestFactory;
+import org.citrusframework.junit.jupiter.CitrusTestFactorySupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.TestNGCitrusSupport;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.1
  */
-@Test
-public class XmlTestLoaderIT extends TestNGCitrusSupport {
+@CitrusSupport
+public class XmlTestLoaderIT {
 
     @BindToRegistry
     DefaultTextEqualsMessageValidator textEqualsMessageValidator = new DefaultTextEqualsMessageValidator();
 
+    @Test
     @CitrusTestSource(type = TestLoader.XML, name = { "sample.citrus.it" })
     public void XmlTestLoader_1_IT() {}
 
-    @CitrusTestSource(type = TestLoader.XML, name = { "echo.citrus.it", "sleep.citrus.it" }, packageName = "org.citrusframework.xml.actions")
-    public void XmlTestLoader_2_IT() {}
+    @CitrusTestFactory
+    public Stream<DynamicTest> XmlTestLoader_2_IT() {
+        return Stream.of(
+                CitrusTestFactorySupport.xml().dynamicTest("org.citrusframework.xml.actions", "echo.citrus.it.xml"),
+                CitrusTestFactorySupport.xml().dynamicTest("org.citrusframework.xml.actions", "sleep.citrus.it.xml")
+        );
+    }
 
-    @CitrusTestSource(type = TestLoader.XML, packageScan = "org.citrusframework.integration")
-    public void XmlTestLoader_3_IT() {}
+    @CitrusTestFactory
+    public Stream<DynamicTest> XmlTestLoader_3_IT() {
+        return CitrusTestFactorySupport.xml().packageScan("org.citrusframework.integration");
+    }
 
+    @Test
     @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:org/citrusframework/xml/actions/create-variables.citrus.it.xml" })
     public void XmlTestLoader_4_IT() {}
 }
