@@ -21,8 +21,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.container.Sequence;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.AbstractYamlActionTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SequentialTest extends AbstractYamlActionTest {
 
@@ -32,12 +32,12 @@ public class SequentialTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "SequentialTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
+        Assertions.assertEquals("SequentialTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
 
-        Assert.assertEquals(result.getTestAction(0).getClass(), Sequence.class);
-        Assert.assertEquals(((Sequence) result.getTestAction(0)).getActionCount(), 2L);
+        Assertions.assertEquals(Sequence.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals(2L, ((Sequence) result.getTestAction(0)).getActionCount());
     }
 }

@@ -22,8 +22,8 @@ import org.citrusframework.actions.CreateVariablesAction;
 import org.citrusframework.container.FinallySequence;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.AbstractYamlActionTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DoFinallyTest extends AbstractYamlActionTest {
 
@@ -33,15 +33,15 @@ public class DoFinallyTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "DoFinallyTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
+        Assertions.assertEquals("DoFinallyTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
 
-        Assert.assertEquals(result.getTestAction(0).getClass(), FinallySequence.class);
-        Assert.assertEquals(result.getTestAction(1).getClass(), CreateVariablesAction.class);
+        Assertions.assertEquals(FinallySequence.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals(CreateVariablesAction.class, result.getTestAction(1).getClass());
 
-        Assert.assertTrue(context.getVariables().containsKey("finallyRun"));
-        Assert.assertTrue(context.getVariable("finallyRun", boolean.class));
+        Assertions.assertTrue(context.getVariables().containsKey("finallyRun"));
+        Assertions.assertTrue(context.getVariable("finallyRun", boolean.class));
     }
 }

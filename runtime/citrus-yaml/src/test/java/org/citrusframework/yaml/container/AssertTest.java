@@ -22,8 +22,8 @@ import org.citrusframework.actions.FailAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.AbstractYamlActionTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AssertTest extends AbstractYamlActionTest {
 
@@ -33,14 +33,14 @@ public class AssertTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "AssertTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), org.citrusframework.container.Assert.class);
-        Assert.assertEquals(((org.citrusframework.container.Assert) result.getTestAction(0)).getException(), CitrusRuntimeException.class);
-        Assert.assertEquals(((org.citrusframework.container.Assert) result.getTestAction(0)).getMessage(), "Something went wrong");
-        Assert.assertEquals(((org.citrusframework.container.Assert) result.getTestAction(0)).getActionCount(), 1L);
-        Assert.assertEquals(((org.citrusframework.container.Assert) result.getTestAction(0)).getAction().getClass(), FailAction.class);
+        Assertions.assertEquals("AssertTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(org.citrusframework.container.Assert.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals(CitrusRuntimeException.class, ((org.citrusframework.container.Assert) result.getTestAction(0)).getException());
+        Assertions.assertEquals("Something went wrong", ((org.citrusframework.container.Assert) result.getTestAction(0)).getMessage());
+        Assertions.assertEquals(1L, ((org.citrusframework.container.Assert) result.getTestAction(0)).getActionCount());
+        Assertions.assertEquals(FailAction.class, ((org.citrusframework.container.Assert) result.getTestAction(0)).getAction().getClass());
     }
 }

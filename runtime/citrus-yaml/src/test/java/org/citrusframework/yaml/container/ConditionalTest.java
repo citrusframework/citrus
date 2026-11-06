@@ -23,8 +23,8 @@ import org.citrusframework.actions.FailAction;
 import org.citrusframework.container.Conditional;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.AbstractYamlActionTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ConditionalTest extends AbstractYamlActionTest {
 
@@ -34,18 +34,18 @@ public class ConditionalTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "ConditionalTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), Conditional.class);
-        Assert.assertEquals(((Conditional) result.getTestAction(0)).getCondition(), "${shouldRun}");
-        Assert.assertEquals(((Conditional) result.getTestAction(0)).getActionCount(), 1L);
-        Assert.assertEquals(((Conditional) result.getTestAction(0)).getTestAction(0).getClass(), EchoAction.class);
+        Assertions.assertEquals("ConditionalTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(Conditional.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("${shouldRun}", ((Conditional) result.getTestAction(0)).getCondition());
+        Assertions.assertEquals(1L, ((Conditional) result.getTestAction(0)).getActionCount());
+        Assertions.assertEquals(EchoAction.class, ((Conditional) result.getTestAction(0)).getTestAction(0).getClass());
 
-        Assert.assertEquals(result.getTestAction(1).getClass(), Conditional.class);
-        Assert.assertEquals(((Conditional) result.getTestAction(1)).getCondition(), "${shouldNotRun}");
-        Assert.assertEquals(((Conditional) result.getTestAction(1)).getActionCount(), 1L);
-        Assert.assertEquals(((Conditional) result.getTestAction(1)).getTestAction(0).getClass(), FailAction.class);
+        Assertions.assertEquals(Conditional.class, result.getTestAction(1).getClass());
+        Assertions.assertEquals("${shouldNotRun}", ((Conditional) result.getTestAction(1)).getCondition());
+        Assertions.assertEquals(1L, ((Conditional) result.getTestAction(1)).getActionCount());
+        Assertions.assertEquals(FailAction.class, ((Conditional) result.getTestAction(1)).getTestAction(0).getClass());
     }
 }

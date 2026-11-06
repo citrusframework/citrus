@@ -22,8 +22,8 @@ import org.citrusframework.actions.PurgeEndpointAction;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 
@@ -42,57 +42,57 @@ public class PurgeEndpointTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "PurgeEndpointTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 5L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), PurgeEndpointAction.class);
+        Assertions.assertEquals("PurgeEndpointTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(5L, result.getActionCount());
+        Assertions.assertEquals(PurgeEndpointAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         PurgeEndpointAction action = (PurgeEndpointAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getReceiveTimeout(), 100L);
-        Assert.assertEquals(action.getSleepTime(), 350L);
-        Assert.assertNull(action.getMessageSelector());
-        Assert.assertNotNull(action.getMessageSelectorMap());
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
-        Assert.assertEquals(action.getEndpoints().size(), 0);
-        Assert.assertEquals(action.getEndpointNames().size(), 3);
-        Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
-        Assert.assertEquals(action.getEndpointNames().get(1), "testEndpoint2");
-        Assert.assertEquals(action.getEndpointNames().get(2), "testEndpoint3");
+        Assertions.assertEquals(100L, action.getReceiveTimeout());
+        Assertions.assertEquals(350L, action.getSleepTime());
+        Assertions.assertNull(action.getMessageSelector());
+        Assertions.assertNotNull(action.getMessageSelectorMap());
+        Assertions.assertEquals(0, action.getMessageSelectorMap().size());
+        Assertions.assertEquals(0, action.getEndpoints().size());
+        Assertions.assertEquals(3, action.getEndpointNames().size());
+        Assertions.assertEquals("testEndpoint1", action.getEndpointNames().get(0));
+        Assertions.assertEquals("testEndpoint2", action.getEndpointNames().get(1));
+        Assertions.assertEquals("testEndpoint3", action.getEndpointNames().get(2));
 
         action = (PurgeEndpointAction) result.getTestAction(actionIndex++);
-        Assert.assertNull(action.getMessageSelector());
-        Assert.assertNotNull(action.getMessageSelectorMap());
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
-        Assert.assertEquals(action.getEndpointNames().size(), 0);
-        Assert.assertEquals(action.getEndpoints().size(), 1);
-        Assert.assertEquals(action.getEndpoints().get(0), context.getReferenceResolver().resolve("testEndpoint"));
+        Assertions.assertNull(action.getMessageSelector());
+        Assertions.assertNotNull(action.getMessageSelectorMap());
+        Assertions.assertEquals(0, action.getMessageSelectorMap().size());
+        Assertions.assertEquals(0, action.getEndpointNames().size());
+        Assertions.assertEquals(1, action.getEndpoints().size());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("testEndpoint"), action.getEndpoints().get(0));
 
         action = (PurgeEndpointAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getMessageSelector(), "operation = 'sayHello'");
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
-        Assert.assertEquals(action.getEndpoints().size(), 0);
-        Assert.assertEquals(action.getEndpointNames().size(), 1);
-        Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint");
+        Assertions.assertEquals("operation = 'sayHello'", action.getMessageSelector());
+        Assertions.assertEquals(0, action.getMessageSelectorMap().size());
+        Assertions.assertEquals(0, action.getEndpoints().size());
+        Assertions.assertEquals(1, action.getEndpointNames().size());
+        Assertions.assertEquals("testEndpoint", action.getEndpointNames().get(0));
 
         action = (PurgeEndpointAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getReceiveTimeout(), 500L);
-        Assert.assertEquals(action.getSleepTime(), 100L);
-        Assert.assertEquals(action.getMessageSelector(), "operation = 'sayHello'");
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
-        Assert.assertEquals(action.getEndpoints().size(), 0);
-        Assert.assertEquals(action.getEndpointNames().size(), 1);
-        Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint");
+        Assertions.assertEquals(500L, action.getReceiveTimeout());
+        Assertions.assertEquals(100L, action.getSleepTime());
+        Assertions.assertEquals("operation = 'sayHello'", action.getMessageSelector());
+        Assertions.assertEquals(0, action.getMessageSelectorMap().size());
+        Assertions.assertEquals(0, action.getEndpoints().size());
+        Assertions.assertEquals(1, action.getEndpointNames().size());
+        Assertions.assertEquals("testEndpoint", action.getEndpointNames().get(0));
 
         action = (PurgeEndpointAction) result.getTestAction(actionIndex);
-        Assert.assertNull(action.getMessageSelector());
-        Assert.assertEquals(action.getMessageSelectorMap().size(), 2);
-        Assert.assertEquals(action.getMessageSelectorMap().get("operation"), "sayHello");
-        Assert.assertEquals(action.getMessageSelectorMap().get("id"), "12345");
-        Assert.assertEquals(action.getEndpoints().size(), 0);
-        Assert.assertEquals(action.getEndpointNames().size(), 1);
-        Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
+        Assertions.assertNull(action.getMessageSelector());
+        Assertions.assertEquals(2, action.getMessageSelectorMap().size());
+        Assertions.assertEquals("sayHello", action.getMessageSelectorMap().get("operation"));
+        Assertions.assertEquals("12345", action.getMessageSelectorMap().get("id"));
+        Assertions.assertEquals(0, action.getEndpoints().size());
+        Assertions.assertEquals(1, action.getEndpointNames().size());
+        Assertions.assertEquals("testEndpoint1", action.getEndpointNames().get(0));
     }
 }

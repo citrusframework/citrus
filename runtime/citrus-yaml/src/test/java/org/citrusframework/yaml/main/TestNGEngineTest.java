@@ -25,10 +25,10 @@ import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.TestNGEngine;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
-import org.testng.annotations.Test;
 
 /**
  * @since 2.7.4
@@ -44,8 +44,8 @@ public class TestNGEngineTest {
         engine.addTestListener(new ISuiteListener() {
             @Override
             public void onFinish(ISuite suite) {
-                Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getFailedTests().size(), 0L);
-                Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getPassedTests().size(), 1L);
+                Assertions.assertEquals(0L, suite.getResults().values().iterator().next().getTestContext().getFailedTests().size());
+                Assertions.assertEquals(1L, suite.getResults().values().iterator().next().getTestContext().getPassedTests().size());
             }
 
             @Override
@@ -65,8 +65,8 @@ public class TestNGEngineTest {
         engine.addTestListener(new ISuiteListener() {
             @Override
             public void onFinish(ISuite suite) {
-                Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getFailedTests().size(), 0L);
-                Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getPassedTests().size(), 1L);
+                Assertions.assertEquals(0L, suite.getResults().values().iterator().next().getTestContext().getFailedTests().size());
+                Assertions.assertEquals(1L, suite.getResults().values().iterator().next().getTestContext().getPassedTests().size());
             }
 
             @Override

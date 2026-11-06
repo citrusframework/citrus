@@ -23,8 +23,8 @@ import org.citrusframework.actions.FailAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.AbstractYamlActionTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CatchTest extends AbstractYamlActionTest {
 
@@ -34,14 +34,14 @@ public class CatchTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CatchTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), org.citrusframework.container.Catch.class);
-        Assert.assertEquals(((org.citrusframework.container.Catch) result.getTestAction(0)).getException(), CitrusRuntimeException.class.getName());
-        Assert.assertEquals(((org.citrusframework.container.Catch) result.getTestAction(0)).getActionCount(), 2L);
-        Assert.assertEquals(((org.citrusframework.container.Catch) result.getTestAction(0)).getTestAction(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((org.citrusframework.container.Catch) result.getTestAction(0)).getTestAction(1).getClass(), FailAction.class);
+        Assertions.assertEquals("CatchTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(org.citrusframework.container.Catch.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals(CitrusRuntimeException.class.getName(), ((org.citrusframework.container.Catch) result.getTestAction(0)).getException());
+        Assertions.assertEquals(2L, ((org.citrusframework.container.Catch) result.getTestAction(0)).getActionCount());
+        Assertions.assertEquals(EchoAction.class, ((org.citrusframework.container.Catch) result.getTestAction(0)).getTestAction(0).getClass());
+        Assertions.assertEquals(FailAction.class, ((org.citrusframework.container.Catch) result.getTestAction(0)).getTestAction(1).getClass());
     }
 }
