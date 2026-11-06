@@ -22,8 +22,8 @@ import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Async;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.AbstractXmlActionTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AsyncTest extends AbstractXmlActionTest {
 
@@ -33,26 +33,26 @@ public class AsyncTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "AsyncTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
+        Assertions.assertEquals("AsyncTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
 
-        Assert.assertEquals(result.getTestAction(0).getClass(), org.citrusframework.container.Async.class);
+        Assertions.assertEquals(org.citrusframework.container.Async.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         org.citrusframework.container.Async action = (Async) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getActionCount(), 2L);
-        Assert.assertEquals(action.getSuccessActions().size(), 0L);
-        Assert.assertEquals(action.getErrorActions().size(), 0L);
+        Assertions.assertEquals(2L, action.getActionCount());
+        Assertions.assertEquals(0L, action.getSuccessActions().size());
+        Assertions.assertEquals(0L, action.getErrorActions().size());
 
         action = (Async) result.getTestAction(actionIndex);
-        Assert.assertEquals(action.getActionCount(), 1L);
-        Assert.assertEquals(action.getSuccessActions().size(), 1L);
-        Assert.assertEquals(((EchoAction)action.getSuccessActions().get(0)).getMessage(), "Success!");
-        Assert.assertEquals(action.getErrorActions().size(), 1L);
-        Assert.assertEquals(((EchoAction)action.getErrorActions().get(0)).getMessage(), "Failed!");
+        Assertions.assertEquals(1L, action.getActionCount());
+        Assertions.assertEquals(1L, action.getSuccessActions().size());
+        Assertions.assertEquals("Success!", ((EchoAction)action.getSuccessActions().get(0)).getMessage());
+        Assertions.assertEquals(1L, action.getErrorActions().size());
+        Assertions.assertEquals("Failed!", ((EchoAction)action.getErrorActions().get(0)).getMessage());
 
     }
 }

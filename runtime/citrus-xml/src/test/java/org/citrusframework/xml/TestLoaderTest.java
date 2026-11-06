@@ -17,15 +17,15 @@
 package org.citrusframework.xml;
 
 import org.citrusframework.api.common.TestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestLoaderTest {
 
     @Test
     public void shouldLookupTestLoader() {
-        Assert.assertTrue(TestLoader.lookup().containsKey(TestLoader.XML));
-        Assert.assertTrue(TestLoader.lookup(TestLoader.XML).isPresent());
-        Assert.assertEquals(TestLoader.lookup(TestLoader.XML).get().getClass(), XmlTestLoader.class);
+        Assertions.assertTrue(TestLoader.lookup().containsKey(TestLoader.XML));
+        Assertions.assertTrue(TestLoader.lookup(TestLoader.XML).isPresent());
+        Assertions.assertEquals(XmlTestLoader.class, TestLoader.lookup(TestLoader.XML).get().getClass());
     }
 }

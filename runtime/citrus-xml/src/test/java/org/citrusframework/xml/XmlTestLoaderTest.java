@@ -16,26 +16,24 @@
 
 package org.citrusframework.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class XmlTestLoaderTest {
 
     @Test
     public void shouldApplyNamespace() {
-        Assert.assertEquals(XmlTestLoader.applyNamespace(""), "");
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<test></test>"), "<test></test>");
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<test xmlns=\"foo\"></test>"), "<test xmlns=\"foo\"></test>");
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<test name=\"FooTest\" xmlns=\"foo\"></test>"), "<test name=\"FooTest\" xmlns=\"foo\"></test>");
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<test " + System.lineSeparator() + "    name=\"FooTest\" " + System.lineSeparator() + "    xmlns=\"foo\"></test>"),
-                "<test " + System.lineSeparator() + "    name=\"FooTest\" " + System.lineSeparator() + "    xmlns=\"foo\"></test>");
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<test name=\"FooTest\" xmlns=\"foo\" status=\"FINAL\"></test>"), "<test name=\"FooTest\" xmlns=\"foo\" status=\"FINAL\"></test>");
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<ns:test xmlns:ns=\"foo\"></ns:test>"), "<ns:test xmlns:ns=\"foo\"></ns:test>");
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<ns1:test xmlns:ns1=\"foo\"></ns1:test>"), "<ns1:test xmlns:ns1=\"foo\"></ns1:test>");
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<ns-1:test xmlns:ns-1=\"foo\"></ns-1:test>"), "<ns-1:test xmlns:ns-1=\"foo\"></ns-1:test>");
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<ns:test " + System.lineSeparator() + "xmlns:ns=\"foo\"></ns:test>"), "<ns:test " + System.lineSeparator() + "xmlns:ns=\"foo\"></ns:test>");
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<test name=\"FooTest\"></test>"), String.format("<test xmlns=\"%s\" name=\"FooTest\"></test>", XmlTestLoader.TEST_NS));
-        Assert.assertEquals(XmlTestLoader.applyNamespace("<test " + System.lineSeparator() + "name=\"FooTest\"></test>"),
-                String.format("<test xmlns=\"%s\" " + System.lineSeparator() + "name=\"FooTest\"></test>", XmlTestLoader.TEST_NS));
+        Assertions.assertEquals("", XmlTestLoader.applyNamespace(""));
+        Assertions.assertEquals("<test></test>", XmlTestLoader.applyNamespace("<test></test>"));
+        Assertions.assertEquals("<test xmlns=\"foo\"></test>", XmlTestLoader.applyNamespace("<test xmlns=\"foo\"></test>"));
+        Assertions.assertEquals("<test name=\"FooTest\" xmlns=\"foo\"></test>", XmlTestLoader.applyNamespace("<test name=\"FooTest\" xmlns=\"foo\"></test>"));
+        Assertions.assertEquals("<test " + System.lineSeparator() + "    name=\"FooTest\" " + System.lineSeparator() + "    xmlns=\"foo\"></test>", XmlTestLoader.applyNamespace("<test " + System.lineSeparator() + "    name=\"FooTest\" " + System.lineSeparator() + "    xmlns=\"foo\"></test>"));
+        Assertions.assertEquals("<test name=\"FooTest\" xmlns=\"foo\" status=\"FINAL\"></test>", XmlTestLoader.applyNamespace("<test name=\"FooTest\" xmlns=\"foo\" status=\"FINAL\"></test>"));
+        Assertions.assertEquals("<ns:test xmlns:ns=\"foo\"></ns:test>", XmlTestLoader.applyNamespace("<ns:test xmlns:ns=\"foo\"></ns:test>"));
+        Assertions.assertEquals("<ns1:test xmlns:ns1=\"foo\"></ns1:test>", XmlTestLoader.applyNamespace("<ns1:test xmlns:ns1=\"foo\"></ns1:test>"));
+        Assertions.assertEquals("<ns-1:test xmlns:ns-1=\"foo\"></ns-1:test>", XmlTestLoader.applyNamespace("<ns-1:test xmlns:ns-1=\"foo\"></ns-1:test>"));
+        Assertions.assertEquals("<ns:test " + System.lineSeparator() + "xmlns:ns=\"foo\"></ns:test>", XmlTestLoader.applyNamespace("<ns:test " + System.lineSeparator() + "xmlns:ns=\"foo\"></ns:test>"));
+        Assertions.assertEquals(String.format("<test xmlns=\"%s\" name=\"FooTest\"></test>", XmlTestLoader.TEST_NS), XmlTestLoader.applyNamespace("<test name=\"FooTest\"></test>"));
+        Assertions.assertEquals(String.format("<test xmlns=\"%s\" " + System.lineSeparator() + "name=\"FooTest\"></test>", XmlTestLoader.TEST_NS), XmlTestLoader.applyNamespace("<test " + System.lineSeparator() + "name=\"FooTest\"></test>"));
     }
 }

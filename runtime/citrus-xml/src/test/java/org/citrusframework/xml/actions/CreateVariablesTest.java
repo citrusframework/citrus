@@ -20,8 +20,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.CreateVariablesAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateVariablesTest extends AbstractXmlActionTest {
 
@@ -31,15 +31,15 @@ public class CreateVariablesTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateVariablesTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateVariablesAction.class);
-        Assert.assertEquals(((CreateVariablesAction) result.getTestAction(0)).getVariables().size(), 4L);
-        Assert.assertEquals(((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var1"), "test1");
-        Assert.assertEquals(((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var2"), "test2");
-        Assert.assertEquals(((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var3"), "test3");
-        Assert.assertEquals(((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var4"), "script:<groovy>return \"test4\"");
+        Assertions.assertEquals("CreateVariablesTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(CreateVariablesAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals(4L, ((CreateVariablesAction) result.getTestAction(0)).getVariables().size());
+        Assertions.assertEquals("test1", ((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var1"));
+        Assertions.assertEquals("test2", ((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var2"));
+        Assertions.assertEquals("test3", ((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var3"));
+        Assertions.assertEquals("script:<groovy>return \"test4\"", ((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var4"));
     }
 }
